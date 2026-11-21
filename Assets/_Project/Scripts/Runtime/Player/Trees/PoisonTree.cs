@@ -87,9 +87,9 @@ namespace Clover.Player.Trees
                 new SpellSpec { Reach = 8f, Seconds = 12f, Count = 1, Radius = 3f, Damage = 40f, Stagger = 30f, Stacks = 4 },
                 "You raise a blister on the enemy you face. It swells each time its poison bites, through three sizes. A heavy blow breaks it: 20, 40 or 70 damage in two, three or four metres, and 2, 4 or 6 doses on everyone else it reaches. Left too long, it withers.",
                 UpgradeIcons.Orb,
-                // A second less on the wait as well, since the roster gives none (phase4_questions.md, Poison).
-                new Empower { Cooldown = 9f, Damage = 50f },
-                "Blister waits 9 seconds, not 10, and breaks for 25, 50 or 85.",
+                // The roster's numbers alone (the owner's answer of 2026-11-20: an Empower may strengthen without a shorter wait).
+                new Empower { Damage = 50f },
+                "It breaks for 25, 50 or 85.",
                 // NEEDS: the blister set aside, never broken by a blow (shape-sets-aside), and a heavy blow bursting every
                 // puddle where it lies (puddles-burst). Until then the sore weeps a puddle at each bite, and a heavy blow on the
                 // sore bursts round it for 12 and two doses.
@@ -127,9 +127,10 @@ namespace Clover.Player.Trees
                 new SpellSpec { Count = 6, Reach = 10f, Radius = 1f, Delay = 0.5f, Damage = 0f, Stagger = 0f, Stacks = 0 },
                 "Raise a hand. A green line runs along the ground from poisoned enemy to poisoned enemy, nearest first, then you snap your fingers and each one's poison bursts in turn, 6 damage and 4 stagger a dose, each passing its doses to the next before it goes. The last burst is the largest. 50 mana.",
                 UpgradeIcons.Chain,
-                // NEEDS: 7 a dose (empower-effects).
-                new Empower { Mana = 45f },
-                "One by One costs 45 mana, not 50, and its bursts strike for 7 a dose.",
+                // The roster's numbers alone (the owner's answer of 2026-11-20): 7 a dose, the Learn's set-off striking 1 more
+                // for each dose over poison's own 6.
+                new Empower { Effects = new[] { new EffectChange { Index = 0, Damage = 1f } } },
+                "Its bursts strike for 7 for each dose, not 6.",
                 // NEEDS: nothing burst by the snap (shape-sets-aside), the next on the line rather than the nearest, and one pushed
                 // past eight bursting and passing on (depth-moved). Until then the snap still bursts, and for eight seconds each
                 // enemy it struck that dies poisoned passes twice its doses to the nearest other within ten metres.
@@ -186,11 +187,10 @@ namespace Clover.Player.Trees
                 new SpellSpec { Reach = 8f, Arc = 12f, Damage = 15f, Stagger = 50f, Stacks = 5 },
                 "Five long needles, venom beading on them, are thrown in a narrow fan eight metres at the enemy you face: 3 damage, 10 stagger and a dose each. An enemy struck by all five is pinned at its points: held 0.8 seconds, less for a god or an elite, and 40 stagger more.",
                 UpgradeIcons.Spike,
-                // NEEDS: 14 stagger a needle and 50 for the pin, kept off Spread's own numbers (empower-after-shape: a stagger
-                // set here would be set on each of Spread's needles too, empower-effects), and a second less on the wait, since
-                // the roster gives none (phase4_questions.md, Poison).
-                new Empower { Cooldown = 8f },
-                "Five Needles waits 8 seconds, not 9, its needles break 14 stagger each, and all five 50 more.",
+                // The roster's numbers alone, with no shorter wait (the owner's answer of 2026-11-20). The pin's 50 is the Learn's
+                // own burst (empower-effects); the needles' 14 is laid on the fan alone, not on Spread's own needles (LearnOnly).
+                new Empower { Stagger = 70f, LearnOnly = true, Effects = new[] { new EffectChange { Index = 1, Stagger = 50f } } },
+                "Its needles break 14 stagger each, and an enemy struck by all five takes 50 more.",
                 // NEEDS: one needle for each enemy (form-pieces), and the Learn's pin set aside (shape-sets-aside). Until then the
                 // wide fan strikes all in it, each for one needle and two doses, and its poison bites at once.
                 new ShapeDef { Name = "Spread",
@@ -219,9 +219,9 @@ namespace Clover.Player.Trees
                 new SpellSpec { Reach = 6f, Damage = 24f, Stagger = 25f, Stacks = 4, Seconds = 3f },
                 "Coil for as long as you dare, up to 2.4 seconds, three fangs lighting over your head. Let go to strike through the enemy you face and stand behind it: 14, 24 or 38 damage and 2, 4 or 8 doses by the fangs lit. Let go as a blow is about to land and it passes through you, and the strike counts as three fangs.",
                 UpgradeIcons.Arrow,
-                // A second less on the wait as well, since the roster gives none (phase4_questions.md, Poison).
-                new Empower { Cooldown = 9f, Damage = 30f },
-                "Coiled Strike waits 9 seconds, not 10, and strikes for 18, 30 or 46.",
+                // The roster's numbers alone (the owner's answer of 2026-11-20: an Empower may strengthen without a shorter wait).
+                new Empower { Damage = 30f },
+                "It strikes for 18, 30 or 46.",
                 // NEEDS: a zigzag of short rushes through three at most, the fangs' doses shared between them (form-pieces). Until
                 // then the drill form runs twelve metres through all on its line, each struck for one fang's strike and two doses.
                 new ShapeDef { Name = "Centipede's Run", Form = SpellForms.Drill,
@@ -301,9 +301,9 @@ namespace Clover.Player.Trees
                 new SpellSpec { Reach = 7f, Radius = 1f, Count = 1, Damage = 10f, Stagger = 10f, Stacks = 2, Speed = 20f },
                 "You rush seven metres through everything before you, untouchable: 10 damage and 10 stagger to each enemy passed, and then every one of them is raised to the depth of the sickest, two at least.",
                 UpgradeIcons.Comet,
-                // A second less on the wait as well, since the roster gives none (phase4_questions.md, Poison).
-                new Empower { Cooldown = 8f, Reach = 9f },
-                "Share Alike waits 8 seconds, not 9, and rushes nine metres.",
+                // The roster's numbers alone (the owner's answer of 2026-11-20: an Empower may strengthen without a shorter wait).
+                new Empower { Reach = 9f },
+                "It rushes nine metres.",
                 // NEEDS: the sickest one's depth carried on the blade for five blows (depth-moved). Until then every weapon blow
                 // for five seconds after the rush lays two doses more.
                 new ShapeDef { Name = "Carried on the Blade",

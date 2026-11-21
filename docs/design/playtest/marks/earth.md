@@ -79,7 +79,7 @@ Rise's rocks, a pillar, a heap of rubble.
 
 **Works with.** Tremor and everything that lays it: heavy blows, finishers, Quake Step, The Slow Hand. Unbroken Cairn and your heavy blows, Rooted for its Master.
 
-**Not built yet.** The slow as 15% a stone (for now 30% whatever the depth), and the Empower's 14 a stone (for now 12).
+**Not built yet.** The slow as 15% a stone (for now 30% whatever the depth).
 
 **Example.** Three soldiers each shaken three deep: one stamp drops nine stones and leaves all three slowed and with their shaking spent.
 
@@ -179,7 +179,7 @@ Rise's rocks, a pillar, a heap of rubble.
 
 **When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4), then any blow while you stand.
 
-**The numbers.** 4 Shards, no mana: it waits 10 seconds after a cast, less with weapon play (its Empower: 9, and 3 seconds). As built it is the stance of stone: up to 2.5 seconds, and the first blow to land is turned for nothing and answered by a jar of stone 3 metres long and 120 degrees wide toward the one who struck: 6 damage, 10 stagger and two Tremor. Its wind-ups come at 0.7 of their pace for 3 seconds, and for 3.5 seconds your next blow that lands breaks 50% more balance.
+**The numbers.** 4 Shards, no mana: it waits 10 seconds after a cast, less with weapon play (its Empower: you stand up to 3 seconds). As built it is the stance of stone: up to 2.5 seconds, and the first blow to land is turned for nothing and answered by a jar of stone 3 metres long and 120 degrees wide toward the one who struck: 6 damage, 10 stagger and two Tremor. Its wind-ups come at 0.7 of their pace for 3 seconds, and for 3.5 seconds your next blow that lands breaks 50% more balance.
 
 **Works with.** Rooted (stand, and it counts), Immovable, which grows from it, Heavy Hand, Cairn's Master, Buckled on the Forge branch.
 
@@ -240,20 +240,20 @@ Rise's rocks, a pillar, a heap of rubble.
 **Example.** Stone Rise under an archer, and half a second later a pillar lands on it as well.
 
 ## earth.base
-**What it does.** Stone Rise, Earth's own spell, comes with the element and is never bought. A quarter second after the cast the ground breaks under the enemy faced and throws it up for a moment, and three rocks stand behind it that nothing walks through.
+**What it does.** Stone Rise, Earth's own spell, comes with the element and is never bought. A quarter second after the cast big stones burst up under the enemy you face and knock it up into the air for a moment. Then they sink back into the ground. No wall is left behind.
 
 **When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4). Carrying Earth, it is always yours to put in a slot.
 
-**The numbers.** Given with Earth. No mana: it waits 7 seconds after a cast, less with weapon play; its Empower makes that 6. An enemy within 5 metres, 1.3 metres round it: 14 damage, 30 stagger and one Tremor. The rocks stand 4.5 seconds.
+**The numbers.** Given with Earth. No mana: it waits 7 seconds after a cast, less with weapon play; its Empower makes that 6. An enemy within 5 metres, 1.3 metres round it: 14 damage, 30 stagger and one Tremor.
 
 **Works with.** Its Empower, its two shapes and its Master; Tremor and Cairn; Standing Stones (a pillar on what it strikes); the charged blade, which its landing charges with Earth.
 
 **Not built yet.** The Empower's 18 damage and 36 stagger: the base spell is cast by Earth's kit, which takes only the Empower's shorter wait.
 
-**Example.** Rise the stone under the archer at the back: it is thrown up, shaken, and walled off from the fight behind it.
+**Example.** Rise the stone under the archer at the back: it is knocked up into the air and shaken.
 
 ## earth.base.shape
-**What it does.** Opens two shapes of Stone Rise, chosen at any rest fire. **Raised Stone**: no rocks behind; the pillar that lifted the enemy stays beside it, blocking bodies and thrown attacks, and a heavy blow of yours on it shatters it into a cone of shards away from you. Raise it, fight round it, break it through them. **Dropped From the Apron**: a boulder falls from above onto the spot, its shadow growing, and lies there; a heavy blow on it rolls it along the blow, crushing a lane, until it breaks on a wall or a large enemy.
+**What it does.** Opens two shapes of Stone Rise, chosen at any rest fire. **Raised Stone**: the pillar that lifted the enemy stays beside it, blocking bodies and thrown attacks, and a heavy blow of yours on it shatters it into a cone of shards away from you. Raise it, fight round it, break it through them. **Dropped From the Apron**: a boulder falls from above onto the spot, its shadow growing, and lies there; a heavy blow on it rolls it along the blow, crushing a lane, until it breaks on a wall or a large enemy.
 
 **When it happens.** Whenever you cast Stone Rise, as the shape it wears. Before this is bought, the plain stone rises.
 
@@ -261,7 +261,7 @@ Rise's rocks, a pillar, a heap of rubble.
 
 **Works with.** Raised Stone: Heavy Hand, The Slow Hand. Dropped From the Apron: a pack in a corridor, Cairn on the lane it shook.
 
-**Not built yet.** Raised Stone's pillar left standing beside the enemy, blocking and struck itself (for now the kit's rocks stand behind it, and the heavy blow lands on the enemy). Dropped From the Apron's boulder falling from above and lying as a thing to strike, breaking on a wall or a large enemy (for now stone rises under the nearest enemy, and the heavy blow on it sends the lane on).
+**Not built yet.** Raised Stone's pillar left standing beside the enemy, blocking and struck itself (for now the stones sink back as usual, and the heavy blow lands on the enemy). Dropped From the Apron's boulder falling from above and lying as a thing to strike, breaking on a wall or a large enemy (for now stone rises under the nearest enemy, and the heavy blow on it sends the lane on).
 
 **Example.** Dropped From the Apron on the first of three soldiers in a corridor: one heavy blow on it crushes the two behind.
 
@@ -274,7 +274,7 @@ Rise's rocks, a pillar, a heap of rubble.
 
 **Works with.** Rooted, Immovable, Mountain Stance; Cairn on the two stacks it leaves.
 
-**Not built yet.** Still for a second as the moment (for now Rooted only), and the throw before the rocks stand.
+**Not built yet.** Still for a second as the moment (for now Rooted only), and the throw before the stones sink back.
 
 **Example.** Stand your ground and rise the stone under a brute that has come too close: it is thrown off you, two deep.
 
@@ -335,7 +335,7 @@ Rise's rocks, a pillar, a heap of rubble.
 
 **When it happens.** Only while Earth is carried twice (all in). Always on then.
 
-**The numbers.** 6 Shards. As built: what you leave on the ground (a spell's ground, a hazard from your marks, Left in Rubble's heaps) stands three times as long, and a heavy blow that lands strikes its enemy as if driven into stone, 1 metre round it, 20 damage, 35 stagger and one Tremor, once in 3 seconds. All in, L2 with R2 is the deep strike, Mountain Cleaver.
+**The numbers.** 6 Shards. As built: what you leave on the ground (a spell's ground, a hazard from your marks, Left in Rubble's heaps) stands three times as long, and a heavy blow that lands strikes its enemy as if driven into stone, 1 metre round it, 20 damage, 35 stagger and one Tremor, once in 3 seconds. Buying this also gives you the deep strike, Mountain Cleaver. Use it with L2 and R2 while you carry this element alone or twice.
 
 **Works with.** Left in Rubble, which it grows from, Fissure, Stone Rise, Standing Stones, Heavy Hand.
 

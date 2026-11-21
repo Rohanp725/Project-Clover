@@ -35,6 +35,11 @@ namespace Clover.Player
         public bool StartsWithNone;
         /// <summary>False while the player holds no element at all.</summary>
         public bool HasElement { get; private set; } = true;
+        // The surge slot's third choice: a duo surge of the carried pair, with a kit of its own for its price and clock.
+        private const int DuoIndex = 2;
+        private Upgrade duoMark;
+        private ElementKit duoKit;
+        private ElementInfo duoInfo;
         /// <summary>Seconds a surge press is remembered while the player is busy.</summary>
         public float PressBufferTime = 0.25f;
         public float GlowWhenCasting = 9f;
@@ -53,9 +58,13 @@ namespace Clover.Player
         public bool Mixed => HasElement && infos[1] != null && infos[1] != infos[0];
         /// <summary>True when the same element is carried twice.</summary>
         public bool AllIn => HasElement && infos[1] != null && infos[1] == infos[0];
-        /// <summary>The kit whose surge a tap of L2 lights (the Hand's surge slot) and its element.</summary>
-        public ElementKit SurgeKit => kits[surgeIndex] ?? kits[0];
-        public ElementInfo SurgeInfo => infos[surgeIndex] ?? infos[0];
+        /// <summary>The kit whose surge a tap of L2 lights (the Hand's surge slot) and its element: an element's, or a duo surge's.</summary>
+        public ElementKit SurgeKit => surgeIndex == DuoIndex ? duoKit ?? kits[0] : kits[surgeIndex] ?? kits[0];
+        public ElementInfo SurgeInfo => surgeIndex == DuoIndex ? duoInfo ?? infos[0] : infos[surgeIndex] ?? infos[0];
+        /// <summary>The duo surge worn in the surge slot, or null while an element's surge is worn.</summary>
+        public Upgrade DuoSurgeWorn => surgeIndex == DuoIndex ? duoMark : null;
+        /// <summary>The id of the surge worn, as the Hand keeps it: an element's (<c>fire.surge</c>) or a duo surge's mark id.</summary>
+        public string SurgeId => DuoSurgeWorn != null ? DuoSurgeWorn.Id : SurgeInfo != null ? Build.HandRules.SurgeId(SurgeInfo.Name) : "";
         /// <summary>True while the worn surge burns.</summary>
         public bool SurgeActive => SurgeKit != null && SurgeKit.SurgeActive;
         /// <summary>The first element's colour as light; brighter than white so it blooms.</summary>
@@ -111,6 +120,7 @@ namespace Clover.Player
             outfit = GetComponent<PlayerOutfit>();
             sheen = new MetalSheen();
             glaze = new GlazeIce();
+            armour = new StoneArmour();
             if (Elements.StartsEmpty(StartsWithNone, RunState.Element)) TakeNone();
             else
             {
@@ -118,7 +128,7 @@ namespace Clover.Player
                 Take(ElementKit.ByName(first, RunState.ElementConsumed));
                 // The run carries the second attunement and the surge worn from scene to scene.
                 if (!string.IsNullOrEmpty(RunState.Element2)) Attune(first, RunState.Element2);
-                WearSurge(Build.HandRules.ElementOfSurge(RunState.Surge));
+                WearSurgeById(RunState.Surge);
             }
             if (glow != null) glow.intensity = 0f;
         }
@@ -165,6 +175,37 @@ namespace Clover.Player
                 return;
             }
             SetAttunements(KitFor(first), second ?? "");
+        }
+
+        /// <summary>The surge a tap of L2 lights, by the Hand's id: an element's (<c>fire.surge</c>) or a duo surge's mark id.</summary>
+        public void WearSurgeById(string id)
+        {
+            var mark = Upgrade.ById(id);
+            if (DuoSurge.Is(mark)) WearDuoSurge(mark);
+            else WearSurge(Build.HandRules.ElementOfSurge(id));
+        }
+
+        /// <summary>
+        /// Wears a duo surge in the surge slot while both its elements are carried; otherwise the first element's surge. It
+        /// has its own kit, so its own price and time.
+        /// </summary>
+        public void WearDuoSurge(Upgrade mark)
+        {
+            if (!DuoSurge.Is(mark) || !Mixed || !Carries(mark.Element) || !Carries(mark.Element2))
+            {
+                WearSurge(Info != null ? Info.Name : "");
+                return;
+            }
+            if (surgeIndex == DuoIndex && duoMark == mark) return;
+            EndSurgeShown();
+            if (duoMark != mark)
+            {
+                duoMark = mark;
+                duoKit = DuoSurge.KitFor(mark);
+                duoInfo = Elements.ByNameOrFire(mark.Element);
+            }
+            surgeIndex = DuoIndex;
+            Version++;
         }
 
         /// <summary>The surge a tap of L2 lights: a carried element's, by name. Any other name wears the first's.</summary>
@@ -252,8 +293,10 @@ namespace Clover.Player
                 kits[1] = kept;
                 infos[1] = Elements.ByNameOrFire(second);
             }
-            // The surge stays on the element it was worn in if that is still carried; else the first's.
-            surgeIndex = Mixed && infos[1].Name == oldSurgeName ? 1 : 0;
+            // The surge stays on the element it was worn in if that is still carried; else the first's. A duo surge stays
+            // while its pair is still carried.
+            bool keepDuo = surgeIndex == DuoIndex && duoMark != null && Mixed && Carries(duoMark.Element) && Carries(duoMark.Element2);
+            surgeIndex = keepDuo ? DuoIndex : Mixed && infos[1].Name == oldSurgeName ? 1 : 0;
             var newSurge = SurgeKit;
             if (newSurge != oldSurge && surgeShown)
             {
@@ -481,9 +524,10 @@ namespace Clover.Player
                 combat.ClearEmpower();
                 if (upgrades != null) upgrades.OnSurgeEnd();
             }
-            // The other kit's surge cannot burn, but a wait it carries still runs down.
+            // The other kits' surges cannot burn, but a wait they carry still runs down.
             var other = surgeKit == kits[0] ? kits[1] : kits[0];
             if (other != null && other != surgeKit && other.SurgeWaiting) other.TickSurge(deltaTime);
+            if (surgeIndex == DuoIndex && kits[1] != null && kits[1] != kits[0] && kits[1].SurgeWaiting) kits[1].TickSurge(deltaTime);
 
             if (surgeKit.SurgeActive)
             {
@@ -508,6 +552,8 @@ namespace Clover.Player
         private MetalSheen sheen;
         // Glaze grows ice out of the body (crystals on its bones, its material frozen over).
         private GlazeIce glaze;
+        // Bedrock grows earthen armour over the body (plates on its bones, its material closed over in stone).
+        private StoneArmour armour;
         private PlayerOutfit outfit;
 
         /// <summary>How far the body is turned to steel now (Temper), 0 to 1, for probes.</summary>
@@ -516,6 +562,10 @@ namespace Clover.Player
         /// <summary>How far the body is iced over now (Glaze), 0 to 1, and how many crystals stand out of it, for probes.</summary>
         public float IceLevel => glaze != null ? glaze.Frost : 0f;
         public int GlazeCrystals => glaze != null ? glaze.Standing : 0;
+
+        /// <summary>How far the body is armoured in stone now (Bedrock), 0 to 1, and how many plates stand on it, for probes.</summary>
+        public float StoneLevel => armour != null ? armour.Level : 0f;
+        public int BedrockPlates => armour != null ? armour.Standing : 0;
 
         // True while the surge's own look is the element art's, which draws Overdrive's arcs in place of the old sparks.
         private bool ArtDrawsSurge(ElementInfo info) => info != null && Forms.ElementArt.Ready && Forms.SurgeArt.ReplacesBuilt(info);
@@ -527,6 +577,7 @@ namespace Clover.Player
             // No steel left on the body when the element goes (Temper's sheen is written only as it changes).
             sheen?.Clear();
             glaze?.Clear();
+            armour?.Clear();
         }
 
         private void LateUpdate()
@@ -548,6 +599,8 @@ namespace Clover.Player
             sheen?.Tick(surging && SurgeInfo != null && SurgeInfo.Name == Elements.Metal && Forms.ElementArt.Ready, Time.deltaTime, transform.position.y);
             if (outfit != null && glaze != null) glaze.Watch(outfit.Body, transform);
             glaze?.Tick(surging && SurgeInfo != null && SurgeInfo.Name == Elements.Ice && Forms.ElementArt.Ready, Time.deltaTime, transform.position.y);
+            if (outfit != null && armour != null) armour.Watch(outfit.Body, transform);
+            armour?.Tick(surging && SurgeInfo != null && SurgeInfo.Name == Elements.Earth && Forms.ElementArt.Ready, Time.deltaTime, transform.position.y);
             if (glow == null) return;
             float resting = surging ? GlowWhenSurging * Forms.SurgeArt.Glow(SurgeInfo) * (0.85f + 0.15f * Mathf.Sin(Time.time * 17f)) : 0f;
             glowLevel = Mathf.MoveTowards(glowLevel, resting, Time.deltaTime * 30f);

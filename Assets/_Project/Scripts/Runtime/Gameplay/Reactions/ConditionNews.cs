@@ -23,5 +23,7 @@ namespace Clover.Gameplay
         public float Damage;
         public bool Heavy;
         public bool Spell;
+        /// <summary>For a blow: it broke the ice. The shatter ends the Chill before the news is answered, so this keeps it.</summary>
+        public bool Shattered;
     }
 }

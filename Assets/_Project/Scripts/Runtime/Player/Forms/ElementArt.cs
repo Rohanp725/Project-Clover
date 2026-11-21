@@ -274,7 +274,14 @@ namespace Clover.Player.Forms
         public static void Floor(int piece, Vector3 at, float yaw, float scale, float endScale, float seconds, float revealSeconds = 0f, bool fades = true) =>
             Floor(piece, at, yaw, scale, endScale, seconds, revealSeconds, fades, Color.white);
 
-        public static void Floor(int piece, Vector3 at, float yaw, float scale, float endScale, float seconds, float revealSeconds, bool fades, Color tint, float spinDegrees = 0f)
+        /// <summary>Fades out over some seconds every mark of a floor piece lying within <paramref name="radius"/> metres of a point.</summary>
+        public static void Hush(int piece, Vector3 at, float radius, float seconds)
+        {
+            if (!Valid(piece)) return;
+            FormFx.Hush(instance.set.Pieces[piece].Material, at, radius, seconds);
+        }
+
+        public static void Floor(int piece, Vector3 at, float yaw, float scale, float endScale, float seconds, float revealSeconds, bool fades, Color tint, float spinDegrees = 0f, float fadeInSeconds = 0f)
         {
             if (!Valid(piece)) return;
             ref var one = ref instance.set.Pieces[piece];
@@ -288,7 +295,7 @@ namespace Clover.Player.Forms
             Vector3 middle = at + turn * new Vector3(one.Centre.x * scale, 0f, one.Centre.z * scale);
             var size = new Vector3(one.Size.x * scale, 1f, one.Size.z * scale);
             var endSize = new Vector3(one.Size.x * endScale, 1f, one.Size.z * endScale);
-            FormFx.LayDecal(one.Material, middle, turn, size, endSize, tint, seconds, revealSeconds, fades, spinDegrees);
+            FormFx.LayDecal(one.Material, middle, turn, size, endSize, tint, seconds, revealSeconds, fades, spinDegrees, fadeInSeconds);
         }
 
         /// <summary>The yaw that turns a kit piece drawn toward <paramref name="kitForward"/> to face <paramref name="forward"/>.</summary>

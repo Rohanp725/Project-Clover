@@ -67,7 +67,7 @@ Rock does.
 
 **When it happens.** Each time you light the surge with the surge button, whichever element's surge you wear.
 
-**The numbers.** A god's gift, never sold; in the playtest it can be bought. Everything within 7 metres of you is held for 2 seconds (elites and gods for less) and takes three stacks of Tremor and one of Seeded. When the hold ends, everything within 7 metres takes 15 damage and 20 stagger, and you mend 5 for each enemy held.
+**The numbers.** 5 Shards, bought once both elements are carried; no god gives it. Everything within 7 metres of you is held for 2 seconds (elites and gods for less) and takes three stacks of Tremor and one of Seeded. When the hold ends, everything within 7 metres takes 15 damage and 20 stagger, and you mend 5 for each enemy held.
 
 **Works with.** Split Rock, Seeded, Living Rampart.
 

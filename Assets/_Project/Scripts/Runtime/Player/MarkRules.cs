@@ -101,10 +101,14 @@ namespace Clover.Player
         /// </summary>
         public static bool InForce(Upgrade mark, Build.Loadout loadout)
         {
-            if (mark == null || loadout == null) return false;
+            // A hidden mark (a spare spell kept for the Evolutions, a plain reaction) is never in force as a mark: a
+            // reaction runs through the reaction table, not through what is learned.
+            if (mark == null || loadout == null || mark.IsHidden) return false;
             if (mark.IsWay) return Way.WayRules.InForce(mark, loadout);
             if (!WeaponCarried(mark, loadout) || !Carried(mark, loadout)) return false;
             if (mark.IsMix && mark.IsSpell && !loadout.Slotted(mark.Id)) return false;
+            // A duo surge only while it is the surge worn (the ledger's duo-surge-slot).
+            if (mark.Surge != null && mark.IsMix && loadout.Surge != mark.Id) return false;
             if (BranchNeedsSlot(mark) && !loadout.Slotted(mark.Branch)) return false;
             // The all-in passive (STEEL_AND_ELEMENT.md 5.6): the same element in both attunements.
             if (mark.Kind == UpgradeKind.Devotion && !(loadout.AllIn && loadout.First == mark.Element)) return false;
@@ -124,7 +128,7 @@ namespace Clover.Player
 
         /// <summary>True when a spell mark may sit in a slot under the loadout: its elements and its weapon (if it names one) carried. Learning is asked elsewhere.</summary>
         public static bool Slottable(Upgrade mark, Build.Loadout loadout) =>
-            mark != null && mark.IsSpell && WeaponCarried(mark, loadout) && Carried(mark, loadout);
+            mark != null && !mark.IsHidden && mark.IsSpell && WeaponCarried(mark, loadout) && Carried(mark, loadout);
 
         /// <summary>True when the mark names no weapon, or the loadout's weapon is that kind (a god's weapon counts as its kind).</summary>
         public static bool WeaponCarried(Upgrade mark, Build.Loadout loadout)

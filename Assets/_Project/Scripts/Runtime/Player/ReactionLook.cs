@@ -30,8 +30,11 @@ namespace Clover.Player
             {
                 // The bespoke look made for the pair (the Blender worker's combos 4, the owner's review of 2026-11-20: "breaking
                 // away from the copy paste effect concept"), where it has been built; else the earlier designed or composed look.
-                if (body != null && Forms.ElementLooks.PlayReaction(SlugOf(pair), body, away, player,
-                    (1 << (int)AfflictionPairs.First(pair)) | (1 << (int)AfflictionPairs.Second(pair))))
+                // What it spends is hidden under its look, save a Burn the real flame field goes on drawing (Smoulder's
+                // black fire, Steam's lower flame).
+                int spends = (1 << (int)AfflictionPairs.First(pair)) | (1 << (int)AfflictionPairs.Second(pair));
+                if (Forms.ElementLooks.KeepsBodyFlame(SlugOf(pair))) spends &= ~(1 << (int)AfflictionKind.Burn);
+                if (body != null && Forms.ElementLooks.PlayReaction(SlugOf(pair), body, away, player, spends))
                 {
                     Bespoke++;
                     return;

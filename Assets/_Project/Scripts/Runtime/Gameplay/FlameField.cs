@@ -126,12 +126,14 @@ namespace Clover.Gameplay
             var data = new Color[count];
             for (int i = 0; i < count; i++)
             {
-                // Round the body evenly (a golden-angle walk), up it in strata, each jittered.
+                // Round the body evenly (a golden-angle walk), rooted low (shins to hips) and licking up the whole body.
+                // Rooted in strata from the shins to the shoulders, the tongues read as rows stacked up the body, "a
+                // overlayed staircase of flames upward" (the owner, 2026-11-20; still so in the audit's films).
                 float turn = i * 2.39996f + (float)random.NextDouble() * 0.5f;
-                float up = Mathf.Clamp01((i + (float)random.NextDouble()) / count * 0.85f + 0.05f);
+                float up = Mathf.Clamp01((i + (float)random.NextDouble()) / count * 0.32f + 0.03f);
                 float radius = 0.8f + 0.25f * (float)random.NextDouble();
                 feet[i] = new Vector3(Mathf.Sin(turn) * radius, up, Mathf.Cos(turn) * radius);
-                float tall = Mathf.Lerp(1.15f, 0.55f, up) * Mathf.Lerp(0.75f, 1.2f, (float)random.NextDouble());
+                float tall = Mathf.Lerp(1.5f, 1.05f, up / 0.35f) * Mathf.Lerp(0.7f, 1.2f, (float)random.NextDouble());
                 if (random.NextDouble() < 0.1) tall *= 1.4f;
                 sizes[i] = new Vector2(tall, Mathf.Lerp(0.65f, 1.15f, (float)random.NextDouble()));
                 data[i] = new Color((float)random.NextDouble(), Mathf.Lerp(0.05f, 0.9f, (float)random.NextDouble()), (float)random.NextDouble(), 0f);

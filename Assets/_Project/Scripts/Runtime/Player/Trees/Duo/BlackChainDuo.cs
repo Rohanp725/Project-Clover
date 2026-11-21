@@ -7,7 +7,7 @@ namespace Clover.Player.Trees.Duo
     /// The duo branch of Metal and Dark (pairs_d1_d2.md, "Metal and Dark", distance 2; task 4.15), named by its reaction,
     /// Black Chain. Drawn in the chart's heart (<see cref="HeartPattern"/>) and open while both are carried. Its Shape mark,
     /// Hidden Chain, opens Drawn Tight and Shared Wound; Dead Weight and Rust in the Curse, the keystone One Noose for Two,
-    /// and the duo spell The Smith's Net, the crown. Metal is written first: the duo spell is cast in Metal.
+    /// and the duo spell The Smith's Net. Metal is written first: the duo spell is cast in Metal.
     /// </summary>
     public static class BlackChainDuo
     {
@@ -85,7 +85,7 @@ namespace Clover.Player.Trees.Duo
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.FinisherHit, Needs = AfflictionKind.Cursed, Needs2 = AfflictionKind.Sundered, Do = UpgradeAction.Arc, FromTarget = true, Count = 1, Reach = 4f, Amount = 0.5f, Stagger = 30f } },
             }, HeartPattern.Keystone));
 
-            // The duo spell, the crown: an opener on a 16 s cooldown (SpellTimings). The bomb form drops a weight on the aim
+            // The duo spell, bought with Shards once both are carried (no god gives it): an opener on a 16 s cooldown (SpellTimings). The bomb form drops a weight on the aim
             // point; what is under it is notched (the branch's first element), Cursed and held, so Black Chain binds them.
             // NEEDS: a net that chains everything under it to everything else under it for 6 s, none leaving the circle for 3 s,
             // and a quarter of every weapon blow on one landing on all the others (linked enemies).

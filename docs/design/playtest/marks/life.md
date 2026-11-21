@@ -38,7 +38,7 @@ ground: Briar Patch's bed, a thornbush, a sapling, a thicket, a tuft of briar.
 
 **Works with.** Fallen Seeds and Sapling (the things it bursts), Briar Patch, Seeded and Ripening, Wood Grows Back (the garden comes again), Wildwood (more to burst), and the charged blade: it charges your weapon with Life when it lands.
 
-**Not built yet.** Every Seeded enemy in the fight bursting, not only those within the call's 6 metres; the Empower's 7 mending a burst (for now 5).
+**Not built yet.** Every Seeded enemy in the fight bursting, not only those within the call's 6 metres.
 
 **Example.** Three saplings stand round you and a pack closes in: reap, and four bursts go off at once while you mend 20.
 
@@ -125,7 +125,7 @@ ground: Briar Patch's bed, a thornbush, a sapling, a thicket, a tuft of briar.
 
 **When it happens.** Only while Life is carried twice (all in). A sapling is sown each time a spell strikes.
 
-**The numbers.** 6 Shards. A sapling where a spell strikes, at most one every 2 seconds: it reaches 3.5 metres, stands 12 seconds, and every 1.5 seconds strikes for 6 damage, 8 stagger and Seeded; four stand at once at most. All in, L2 with R2 is the deep strike, Briar Root: the cutting grows into a briar round the enemy's feet and roots it for a second.
+**The numbers.** 6 Shards. A sapling where a spell strikes, at most one every 2 seconds: it reaches 3.5 metres, stands 12 seconds, and every 1.5 seconds strikes for 6 damage, 8 stagger and Seeded; four stand at once at most. Buying this also gives you the deep strike, Briar Root. Use it with L2 and R2 while you carry this element alone or twice: the cutting grows into a briar round the enemy's feet and roots it for a second.
 
 **Works with.** Every spell of the tree; Reap What Is Sown and Drawn From the Wood, which spend the garden; Root Walk, which goes to it.
 
@@ -153,7 +153,7 @@ ground: Briar Patch's bed, a thornbush, a sapling, a thicket, a tuft of briar.
 
 **Works with.** Fallen Seeds, Sapling, Briar Patch and Root Walk for the garden it spends; Wood Grows Back to have it again; Ripening, which it grows from; Seeded mending on top.
 
-**Not built yet.** The window as a second and a half for each grown thing withered, ten seconds at most, and only those within 12 metres; the half-second kneel; the Empower's 16-damage thorns (for now 12).
+**Not built yet.** The window as a second and a half for each grown thing withered, ten seconds at most, and only those within 12 metres; the half-second kneel.
 
 **Example.** Three bushes stand round a brute: draw them in, and cut it with six seconds of critical, mending blows.
 
@@ -358,3 +358,36 @@ ground: Briar Patch's bed, a thornbush, a sapling, a thicket, a tuft of briar.
 **Works with.** Seeded, Regrowth (4 health a second while it lasts), Briar Patch's Burrs and Seed Pods to seed a crowd, Root and Branch.
 
 **Example.** Seed a pack with Briar Patch, light Regrowth, press again: the whole pack stands held while you cut your health back out of them.
+
+## life.sharedroots
+**What it does.** Enemies with your seeds in them take part of your wounds for you. Thin roots run from your heels to each Seeded enemy near you. But your seeds no longer heal you when you hit.
+
+**When it happens.** Every blow that hurts you, while Life is carried, if a Seeded enemy is within 8 metres.
+
+**The numbers.** Keystone, 6 Shards. A third of each wound is taken off you and dealt to the Seeded enemies within 8 metres instead, split evenly between them (up to eight of them). With no Seeded enemy near, you take the whole wound. Blows on Seeded enemies no longer heal you.
+
+**Works with.** Briar Coat, which it grows from, and seeds the enemies that strike you. Briar Patch and Seeded, to plant seeds in a crowd.
+
+**Example.** Seed a whole pack with Briar Patch, then wade in: every blow you take is split between them.
+
+## life.inseason
+**What it does.** Your seeds ripen if you leave them alone. A ripe seed flowers and stops fading. When a ripe seed bursts, it hits three times as hard and leaves a thornbush behind. A seed that bursts before it is ripe hits only half as hard.
+
+**When it happens.** A seed ripens when it has stayed six seconds in an enemy with no new seed planted on it, while Life is carried. A seed bursts when you set it off (Ripening, Reap What Is Sown), when the enemy dies, or in a reaction.
+
+**The numbers.** Keystone, 6 Shards. Ripe after 6 seconds alone. A ripe seed does not fade until it bursts. Ripe burst: three times the damage, and a thornbush grows there that stands 8 seconds and bites what stands in it for 4 damage and a seed every half second (four bushes at most). Unripe burst: half the damage.
+
+**Works with.** Root and Branch, which it grows from. Ripening, Reap What Is Sown, Fallen Seeds, and the reactions that use Seeded.
+
+**Example.** Plant seeds in three enemies, then fight a fourth for six seconds. Now reap: three ripe bursts and three thornbushes.
+
+## life.shade
+**What it does.** While you stand near anything you have grown, you heal slowly and your stamina comes back faster.
+
+**When it happens.** Every second, while something you grew stands within 4 metres of you and Life is carried.
+
+**The numbers.** Major, 3 Shards. 2 health and 5 stamina each second.
+
+**Works with.** Root and Branch, which it grows from. Briar Patch, Elder Tree, Sapling and Fallen Seeds, which grow things to stand by.
+
+**Example.** Fight beside your Elder Tree: each second you heal a little and your stamina refills for the next dodge.

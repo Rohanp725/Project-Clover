@@ -66,7 +66,7 @@ carried. Its reaction is Rime; its Shape mark lets you choose what Rime does.
 
 **When it happens.** Each time a frozen enemy is shattered, four shards join the ring round you. The next dodge throws them.
 
-**The numbers.** A god's gift, never sold; in the playtest it can be bought. Four shards for each shatter, twelve at most; they wait up to 40 seconds after the last shatter. The dodge throws them down a lane 9 metres long and 1.1 metres to each side, in volleys of four: each volley deals 24 damage, 16 stagger and one stack of Chill to everything in the lane.
+**The numbers.** 5 Shards, bought once both elements are carried; no god gives it. Four shards for each shatter, twelve at most; they wait up to 40 seconds after the last shatter. The dodge throws them down a lane 9 metres long and 1.1 metres to each side, in volleys of four: each volley deals 24 damage, 16 stagger and one stack of Chill to everything in the lane.
 
 **Works with.** Windchill, Cold Front, Rime Tree, a heavy blow on a frozen enemy to shatter it, Ice's charged blade (its blows shatter), Long Stride.
 

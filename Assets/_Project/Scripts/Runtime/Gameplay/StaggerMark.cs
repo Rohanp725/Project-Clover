@@ -23,6 +23,8 @@ namespace Clover.Gameplay
 
         public bool IsShown { get; private set; }
 
+        private static readonly Color LandingGold = new Color(1f, 0.72f, 0.2f);
+
         private Quaternion facing;
         private float age;
         private float spun;
@@ -52,7 +54,9 @@ namespace Clover.Gameplay
             if (!show) return;
             age = 0f;
             spun = 0f;
-            Vfx.Play(VfxKind.Burst, transform.position, Vector3.up, 0.45f);
+            // The landing burst in the mark's gold, held below white: untinted it was a pure-white disc behind the mark on
+            // every staggered enemy (the swing films of 2026-11-20). 0.22 is the brightness a heavy blow's star is lit to.
+            Vfx.Play(VfxKind.Burst, transform.position, Vector3.up, 0.45f, StruckLook.Glow(LandingGold, 0.22f));
             Place();
         }
 

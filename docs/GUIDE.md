@@ -10,7 +10,7 @@ Numbers are first values from the code and have not been tuned by play. Where th
 2. [How a fight works](#2-how-a-fight-works)
 3. [Weapons](#3-weapons)
 4. [Elements](#4-elements)
-5. [Gods' gifts and mix crowns](#5-gods-gifts-and-mix-crowns)
+5. [Gods' gifts and duo branch tops](#5-gods-gifts-and-duo-branch-tops)
 6. [Spell forms](#6-spell-forms)
 7. [The upgrade chart](#7-the-upgrade-chart)
 8. [Where to try things](#8-where-to-try-things)
@@ -66,8 +66,14 @@ touched; pressing keys does not end it, touching a pad does.
 ### At a rest fire: the rest menu and the Hand
 
 Using a rest fire opens the **rest menu** (`Runtime/UI/RestMenu.cs`, made at play under the HUD): **Set the Hand**,
-**The chart** and **Leave the fire**. The world stays stopped while it, or a screen opened from it, is open; closing the
-chart or the Hand comes back to it. The stick, the d-pad, W and S, the wheel or the mouse choose; use (or a click) acts;
+**Shapes**, **The chart** and **Leave the fire**. The world stays stopped while it, or a screen opened from it, is open;
+closing the chart, the Hand or the shapes comes back to it.
+
+**Shapes** (`Runtime/UI/ShapeMenu.cs`) lists every learned spell's Shape mark, then every learned reaction's, each with
+the shape worn, and shows the chosen line's two shapes in full on the right, the worn one lit. Up and down (W S, the
+wheel, the stick or the d-pad) choose a line; left and right (A D, the stick or the d-pad), use or a click wear the
+other shape; a click on a shape wears it. A spell's shape not in a slot, or a reaction's with one of its elements not
+carried, is kept for when it is. Shapes change only at a fire. The stick, the d-pad, W and S, the wheel or the mouse choose; use (or a click) acts;
 dodge, Esc or Start leaves. Words a fire speaks as it is lit are read first: the menu waits for them.
 
 **The Hand** (`Runtime/UI/HandMenu.cs`) is the build: the four spell slots in a diamond laid out like the face buttons,
@@ -511,23 +517,23 @@ Critical blows: none by chance to begin with; marks add a chance. A critical blo
 
 ### Taking and consuming
 
-When a god falls it leaves two things on the floor; walk up and use one. **Take**: your element and tree switch to the god's, the old tree is forgotten and the Shards spent on it are given back, you receive the god's own weapon and the **god's gift** at the crown of the new tree. **Consume**: you keep your element and gain 4 Shards; if the god's element is your neighbour on the ring you also receive the **crown** of the branch the two share, and a plain version of the god's weapon. Either choice restores you. A gift that is a spell is worn at once.
+When a god falls it leaves two things on the floor; walk up and use one. **Take**: your element and tree switch to the god's, the old tree is forgotten and the Shards spent on it are given back, you receive the god's own weapon and the **god's gift** at the crown of the new tree. **Consume**: you keep your element and gain 4 Shards, which only strengthen the element you already own, and a plain version of the god's weapon. No god gives a duo branch's spells: they are bought with Shards once both elements are carried. Either choice restores you. A gift that is a spell is worn at once.
 
 A **mixed branch** opens when you hold one of its two elements and have held or consumed the other in this run. Sealed, it is still drawn on the chart, and the words panel says which element opens it.
 
 **Not yet**
 
-- Only one god exists: Narukami, of Lightning. In play the choice is therefore Take (Lightning, the Storm Katana, Storm Step) or Consume (stay as you are, 4 Shards, a plain Katana; for a Fire holder also Plasma and a stronger Flame Wave and Kindle).
+- Only one god exists: Narukami, of Lightning. In play the choice is therefore Take (Lightning, the Storm Katana, Storm Step) or Consume (stay as you are, 4 Shards, a plain Katana; for a Fire holder also a stronger Flame Wave and Kindle).
 - The other nine elements have no gods. Their braziers in the hub are lit from the start as a stopgap. Lightning's stays cold until it has been taken once.
 - Gust and Riptide move everything within reach, not only what the cone touched. Stone Rise's pillar does not stand to be broken. Flung Blade deals nothing as it lands. Grasp does not drag you to what cannot be dragged.
 - Glaze, Wellspring, Bedrock, Temper, Clarity and Fever have only the plain halves listed above.
-- Dark's "one revive as a zombie" is not the surge; it exists only as the god's gift A Life for a Life (section 5).
+- Dark's "one revive as a zombie" is not the surge; it is the Rise, given by Dark's root, Curse, and bought back by the god's gift A Life for a Life (section 5).
 
 ---
 
-## 5. Gods' gifts and mix crowns
+## 5. Gods' gifts and duo branch tops
 
-A gift is never bought. It sits at the crown of its tree, drawn as a crowned sun. Most cost nothing to use and are begun by something you already do. In the practice yard two debug shrines hand them out (section 8).
+A god's gift is never bought. It sits at the crown of its element's tree, drawn as a crowned sun. Most cost nothing to use and are begun by something you already do. In the practice yard a debug shrine hands them out (section 8). Gods give only single-element gifts: a duo branch's top marks are bought, not given.
 
 ### Gods' gifts: one per element
 
@@ -544,14 +550,14 @@ Given by **taking** the element from its god.
 | Earth | **Hand of the Mountain** | Light Bedrock (L2), then land heavy blows. | A hand of stone hangs over your sword shoulder. Each heavy blow that lands, it goes over that enemy and half a second later comes down: 70% of the blow in 3 m, heavy, with Tremor. |
 | Metal | **Hanging Swords** | Light Temper (L2), then hold guard (L1). | While Temper lasts every blow held on your guard is a perfect guard, and a sword is forged above the attacker, eight at most. When Temper ends they fall in turn. |
 | Light | **The Scales** | Light Clarity (L2), then deal more than you take. | Two pans of light hang over you: gold for damage your weapon deals, red for health you lose. When Clarity ends: if you dealt more, a sword of light falls on every Marked enemy within 12 m for 60% of the difference (120 at most). If not, your mana is emptied. |
-| Dark | **A Life for a Life** | Take a blow that would kill you. | Once, you stand again at half health, and it drains 4 a second down to a sliver. Brackets and a sign mark the one that killed you. Land a finisher on it (on anyone, if it is gone) to stop the drain, return to half health, and earn the right to rise once more. |
+| Dark | **A Life for a Life** | Be Risen (Dark's root stands you up once from a blow that would kill you, at half health, draining 4 a second down to a sliver). | Brackets and a sign mark the one that killed you. Land a finisher on it (on anyone, if it is gone) to stop the drain, return to half health, and earn the right to rise once more. |
 | Poison | **Clean Blade** | Light Fever (L2), then land weapon blows. | While Fever lasts poison on every enemy neither bites nor fades, and every blow doses twice. When Fever ends time slows, you flick the blade, and each poisoned enemy within 14 m takes every bite it was owed at once. |
 
-### Mix crowns: one per mixed branch
+### Duo branch tops: bought with Shards
 
-Given by **consuming** a god whose element is your neighbour on the ring.
+Each of the eleven reshaped branches keeps the mark that was once its crown. Since 2026-11-20 none is given by a god: each is bought for **5 Shards** on the chart's heart once both elements are carried, growing from the branch's duo spell (Six Mirrors and Light the Pyres are their branches' duo spells, growing from the branch's first two marks). Every other duo branch's duo spell is bought for 5 Shards the same way.
 
-| Branch | Crown | How you trigger it | What it does |
+| Branch | Top | How you trigger it | What it does |
 |---|---|---|---|
 | Plasma (Fire + Lightning) | **Plasma** | Land a heavy blow or a finisher on a burning enemy. | It bursts for 18 damage and 16 stagger in 3.2 m and sets alight everyone it reaches. |
 | Tempest (Lightning + Wind) | **Falling Thunder** | Land any finisher. | The enemy is thrown up, you vanish in a line of light, and 0.34 s later you land on it as a bolt: 22 damage in 4.5 m with Static and Unsteady three deep, everything pushed 3 m. You are untouchable throughout. |
@@ -581,7 +587,7 @@ These are bought on the chart like any spell, then worn and cast with hold Trian
 
 - The design asked for "hold the surge button" on four gifts; as built it is "press the surge button again".
 - The Scales: the design's "no mana for five seconds" is "mana is emptied".
-- The Rise comes from A Life for a Life. Dark's keystone Dead Already makes you Risen for good in its place.
+- The Rise comes from Dark's root, Curse; A Life for a Life is the finisher that buys it back. Dark's keystone Dead Already makes you Risen for good in its place.
 - The Wave Stands Still soaks and freezes training dummies but does not carry them along.
 - Hanging Swords works by making the perfect-guard window very long during Temper.
 - None of the gifts has been played or tuned.
@@ -1025,7 +1031,7 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 
 | Mark | Kind | Shards | What it does | How it happens |
 |---|---|---|---|---|
-| **Curse** | Root | 2 | Blows of the weapon curse an enemy. A Cursed enemy deals less, and killing it heals you. | Always on once it is yours. |
+| **Curse** | Root | 2 | Blows of the weapon curse an enemy. A Cursed enemy deals less, and killing it heals you. Once, the blow that would kill you does not: you rise, Risen, your health draining away. | Always on once it is yours. |
 | **Blood Price** | Major | 3 | With too little mana for a spell, the rest is paid in health. Health paid this way is only owed: blows win it back. | Always on once it is yours. |
 | **Near the Grave** | Major | 3 | Below a third of your health you strike harder, and each kill wraps you in a shade that takes the next blow. | Happens when an enemy dies. |
 | **Feast** | Major | 3 | A finisher on a Cursed enemy feeds you. It heals, and heals more while Hunger lasts. | Happens when a finisher lands (heavy on a staggered enemy). |
@@ -1055,7 +1061,7 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 | **Long Hunger** | Minor | 1 | Hunger lasts longer. | Always on once it is yours. |
 | **Dead Already** | Keystone | 6 | You do not wait to die. You are Risen from now on: in every fight your health drains to its last point, and dealing damage feeds you. You strike far harder. There is no second rising. | Always on once it is yours. |
 | **Never Sated** | Keystone | 6 | You carry no flasks. Every blow you land feeds you a little, and every kill and finisher a great deal. | Happens when an enemy dies. |
-| **A Life for a Life** | Signature | gift | The blow that would kill you does not, once. You rise with half your health, and it drains away. A sigil marks the one that killed you: land a finisher on it and you live again, and may rise once more. | Always on once it is yours. |
+| **A Life for a Life** | Signature | gift | When you are Risen a sigil marks the one that killed you: land a finisher on it and you live again, with half your health back, and may rise once more. | Always on once it is yours. |
 
 #### Poison (31)
 
@@ -1274,7 +1280,7 @@ that hits back stands to the west, for practising the guard and the dodge.
 | South wall | 24 stones, one for each spell form that has a sample, each named | Stand by one and a card shows what it does and how to cast it. Use it to wear the spell, then hold Triangle (U). Mana comes back by itself while a stone's spell is worn. |
 | In front of the stones, middle | ELEMENT stone | Use it to hold the next element round the ring. Its card says what you hold and what comes next. |
 | Left of the element stone | GOD GIFT shrine | Its card names the gift of the element you hold, what it does and what sets it going. Use it to be given that gift. |
-| Right of the element stone | CONSUME NEXT shrine | Its card names the crown of the branch your element shares with the next one. Use it to open that branch and be given the crown. |
+| Right of the element stone | CONSUME NEXT shrine | Consumes the next element round the ring: 4 Shards for the element you hold. No god gives a duo crown, so it gives none. |
 
 To try a particular god's gift: use the ELEMENT stone until you hold its element, read the GOD GIFT card, use the
 shrine, then do what the card says (most begin with the surge, L2 or I).

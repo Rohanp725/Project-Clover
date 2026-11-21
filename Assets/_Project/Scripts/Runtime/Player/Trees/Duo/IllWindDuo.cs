@@ -7,7 +7,7 @@ namespace Clover.Player.Trees.Duo
     /// The duo branch of Poison and Wind (pairs_d3.md, "Poison and Wind", distance 3; task 4.16), named by its reaction,
     /// Ill Wind. Drawn in the chart's heart (<see cref="HeartPattern"/>) and open while both are carried. Its Shape mark opens
     /// Dust on the Blade and Dust Bank; Spring Dust and Gust at the Heel (majors), Fine Dust (a minor), the keystone No Still
-    /// Air, and the duo spell The Yellow Gale, the crown. Poison is written first, as the ring names the pair.
+    /// Air, and the duo spell The Yellow Gale. Poison is written first, as the ring names the pair.
     /// </summary>
     public static class IllWindDuo
     {
@@ -87,11 +87,18 @@ namespace Clover.Player.Trees.Duo
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, At = EffectAt.Self, Do = UpgradeAction.Push, Radius = 2.5f, Amount = 3f, Cooldown = 0.5f } },
             }, HeartPattern.RightLow));
 
-            // NEEDS: ground laid by one reaction lasting longer for a mark (reaction-numbers); until then it does nothing.
+            // Changes its reaction's own numbers while it is in force (reaction-numbers, ReactionNumbers):
+            // the trails lasting 2 s longer.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = FineDust, Name = "Fine Dust", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 1, Requires = new[] { SpringDust }, Icon = UpgradeIcons.Hourglass,
                 Description = "Ill Wind's trails last 2 s longer.",
+                ReactionChanges = new[]
+                {
+                    new ReactionChange { Shape = -1, Index = 2, Seconds = 5f },
+                    new ReactionChange { Shape = 1, Index = 2, Seconds = 5f },
+                    new ReactionChange { Shape = 1, Index = 3, Seconds = 6f },
+                },
             }, HeartPattern.LeftHigh));
 
             // The restless wind: while an enemy carries both after Ill Wind fires, every 2 s it is shoved 1 m away from you and
@@ -110,7 +117,7 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.Keystone));
 
-            // The duo spell, the crown: a detonator on a 12 s cooldown (SpellTimings). The wave form throws the gale, a cone 9 m
+            // The duo spell, bought with Shards once both are carried (no god gives it): a detonator on a 12 s cooldown (SpellTimings). The wave form throws the gale, a cone 9 m
             // long and 60 degrees wide; it doses (the branch's first element), throws 4 m, unsteadies three deep and bites.
             // NEEDS: the held press drinking for 1.5 s (held-press), every cloud, trail and half of each poisoned enemy's doses
             // within 6 m drunk into a store and shared among those the gale strikes (depth-moved), and two more doses for each

@@ -76,6 +76,9 @@ namespace Clover.Player
                 case UpgradeTrigger.ConditionStruck: return "you strike an enemy in a state this laid";
                 case UpgradeTrigger.ConditionEnded: return "a state this laid on an enemy ends";
                 case UpgradeTrigger.ConditionDied: return "an enemy dies in a state this laid";
+                case UpgradeTrigger.TheirBlow: return "an enemy's blow lands on you or is turned";
+                case UpgradeTrigger.ConditionAttacked: return "an enemy in a state this laid strikes at you";
+                case UpgradeTrigger.RipeBurst: return "a ripe seed bursts";
                 default: return "its moment comes";
             }
         }

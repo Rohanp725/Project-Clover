@@ -7,7 +7,7 @@ namespace Clover.Player.Trees.Duo
     /// The duo branch of Earth and Dark (pairs_d3.md, "Earth and Dark", distance 3; task 4.16), named by its reaction,
     /// Turned to Stone. Drawn in the chart's heart (<see cref="HeartPattern"/>) and open while both are carried. Its Shape
     /// mark opens The King's Men and Grave Marker; Grave Dirt and Broken Idol (majors), Heavy Curse (a minor), the keystone
-    /// Stone Does Not Forgive, and the duo spell Stone Underfoot, the crown. Earth is written first.
+    /// Stone Does Not Forgive, and the duo spell Stone Underfoot. Earth is written first.
     /// </summary>
     public static class TurnedToStoneDuo
     {
@@ -81,11 +81,18 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.RightLow));
 
-            // NEEDS: a mark that changes the reaction's own numbers (reaction-numbers); until then it does nothing.
+            // Changes its reaction's own numbers while it is in force (reaction-numbers, ReactionNumbers):
+            // the stone climbing in half a second, not one.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = HeavyCurse, Name = "Heavy Curse", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 1, Requires = new[] { GraveDirt }, Icon = UpgradeIcons.Hourglass,
                 Description = "Stone climbs half a second faster.",
+                ReactionChanges = new[]
+                {
+                    new ReactionChange { Shape = -1, Index = 0, ConditionSeconds = 0.5f },
+                    new ReactionChange { Shape = 0, Index = 0, ConditionSeconds = 0.5f },
+                    new ReactionChange { Shape = 1, Index = 0, ConditionSeconds = 0.5f },
+                },
             }, HeartPattern.LeftHigh));
 
             // NEEDS: afflictions kept for the rest of the fight on one enemy (fades-never); until then it does nothing.
@@ -95,7 +102,7 @@ namespace Clover.Player.Trees.Duo
                 Description = "An enemy turned to stone once keeps its Tremor and its Curse until it dies.",
             }, HeartPattern.Keystone));
 
-            // The duo spell, the crown: a movement on a 10 s cooldown (SpellTimings). The step form carries you to the enemy
+            // The duo spell, bought with Shards once both are carried (no god gives it): a movement on a 10 s cooldown (SpellTimings). The step form carries you to the enemy
             // faced; your foot on its shadow shakes it (the branch's first element) and Curses it, so it begins to turn.
             // NEEDS: turned to stone at once, past its climb; those passed slowed; the heavy blow that breaks it out within
             // 1.5 s at double stagger.

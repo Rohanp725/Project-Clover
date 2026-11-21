@@ -88,13 +88,11 @@ namespace Clover.World
             {
                 if (string.IsNullOrEmpty(RunState.Element)) RunState.Element = element != null ? element.Kit.Name : ElementKit.FireName;
                 RunState.ElementConsumed = true;
-                // The god's element, swallowed, opens the branch it shares with the one held.
+                // The god's element, swallowed, is noted; it gives no duo crown (the owner's decision of 2026-11-20).
                 RunState.ElementsConsumed.Add(Element);
                 if (element != null) element.Take(ElementKit.ByName(RunState.Element, true));
-                // What is consumed feeds the tree the player already has.
+                // What is consumed only strengthens what the player already has: its Shards feed the element owned.
                 if (upgrades != null) upgrades.Earn(ConsumeEmbers);
-                // Swallowed, it mixes with the element held when the two stand side by side on the ring: the crown of their branch.
-                if (upgrades != null) upgrades.Give(Gifts.CrownOf(RunState.Element, Element));
                 if (who.Combat != null) who.Combat.Equip(Weapons.ByName(Weapons.KatanaName));
                 Vfx.Play(VfxKind.Fire, who.transform.position + Vector3.up, Vector3.up, 3f);
                 if (who.Defence != null) who.Defence.Callout("The storm feeds the fire");

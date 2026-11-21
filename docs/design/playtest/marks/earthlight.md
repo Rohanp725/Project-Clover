@@ -48,13 +48,11 @@ are both carried.
 
 **When it happens.** Each time Earthlight fires, plain or shaped.
 
-**The numbers.** Mix, a minor, 1 Shard. As built: a Mark on everything within 3.5 metres as it fires.
+**The numbers.** Mix, a minor, 1 Shard. The star reaches 3.5 metres, not 3, and so does Lit Seam's. In Down the Passage the lane is half a metre wider.
 
 **Works with.** Keeping the Hour, which it grows from, Earthlight.
 
 **Example.** The soldier just outside the light is marked as well.
-
-**Not built yet.** The star itself does not grow; a ring of Marks half a metre wider stands in.
 
 ## earthlight.stone
 **What it does.** A standing stone rises ahead of you, and a line of sunlight wheels round it like a dial's shadow: every enemy it crosses is struck, shaken and Marked. It never harms you.

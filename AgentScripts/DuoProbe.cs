@@ -109,6 +109,11 @@ public class DuoProbeRunner : MonoBehaviour
         while (ReadingBox.Instance != null && ReadingBox.Instance.IsOpen && guard++ < 40) yield return Tap(Key.E);
         guard = 0;
         while (GuidePage.Showing && guard++ < 40) yield return Tap(Key.E);
+        // A guide opened as a list (the playtest's guide since Phase 4b) turns its pages on E and never closes on it:
+        // the back key closes it, and failing that it is closed outright, so time is never left stopped.
+        if (GuidePage.Showing) yield return Tap(Key.Space);
+        if (GuidePage.Showing) GuidePage.Instance.Close();
+        if (Time.timeScale <= 0f) Debug.Log("[Probe] WRONG: time still stopped after the guide");
     }
 
     private TrainingDummy Copy(TrainingDummy from, string name, Vector3 at)
@@ -324,8 +329,8 @@ public class DuoProbeRunner : MonoBehaviour
         yield return Real(0.8f);
         yield return Shot("duo_heart_sleet");
         // Every pair at distance 1 and 2 is written now (tasks 4.5 and 4.15): the picker steps round them in ring order.
-        string next = HeartLayout.NextPartner(Elements.Lightning, Elements.Ice, 1, Upgrade.All);
-        Judge("the shoulder buttons' partner picker steps to the next written partner round the ring", menu.ViewPartner(1) && menu.HeartPartner == next && next != Elements.Ice,
+        string next = HeartLayout.NextPartner(Elements.Lightning, Elements.Ice, 1);
+        Judge("the shoulder buttons' partner picker steps to the next partner round the ring, built or not", menu.ViewPartner(1) && menu.HeartPartner == next && next != Elements.Ice,
             $"heart with '{menu.HeartPartner}', expected '{next}'");
         Judge("and it can be set to Fire by name", menu.ViewHeart(Elements.Fire) && menu.HeartPartner == Elements.Fire && menu.HeartPair == Flashover, $"heart with '{menu.HeartPartner}'");
         Judge("Ball Lightning can be chosen in the heart now", menu.Choose(PlasmaTree.BallLightning));

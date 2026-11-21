@@ -126,7 +126,7 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Only while Water is carried twice (all in). A pool is left each time a spell strikes.
 
-**The numbers.** 6 Shards. A pool 4 metres across where a spell strikes, at most one every 2.5 seconds, for 10 seconds, biting once a second for 1 damage and Soaked. For now everywhere, not only in water: the dodge goes half again as far, and every spell clock runs 30% faster. All in, L2 with R2 is the deep strike, Thrown on the Reef: the lash wraps the enemy and a wave throws it 5 metres away from you.
+**The numbers.** 6 Shards. A pool 4 metres across where a spell strikes, at most one every 2.5 seconds, for 10 seconds, biting once a second for 1 damage and Soaked. For now everywhere, not only in water: the dodge goes half again as far, and every spell clock runs 30% faster. Buying this also gives you the deep strike, Thrown on the Reef. Use it with L2 and R2 while you carry this element alone or twice: the lash wraps the enemy and a wave throws it 5 metres away from you.
 
 **Works with.** Every spell of the tree; Deep Crack and Spreading Water on the soaked crowd; Undertow to draw them onto the water.
 
@@ -361,3 +361,36 @@ design yet, its **Not built yet** line says what is missing.
 **Works with.** Wellspring, Soaked, Heavy Water, Drawn From the Drowned (for the flask), Deep Crack after the sea breaks, a second element's Static or Chill.
 
 **Example.** Flood a crowd, cut into the middle of it for six seconds, then roll clear and face them as the sea breaks.
+
+## water.highlow
+**What it does.** Your own tide turns back and forth. At high water your spells hit harder and your weapon softer. At low water it is the other way round. A perfect guard or a perfect dodge turns the tide at once.
+
+**When it happens.** Always on once learned, while Water is carried. The tide turns by itself every six seconds. "High water" or "Low water" shows when it turns.
+
+**The numbers.** Keystone, 6 Shards. High water: spells hit 33% harder, your weapon hits 20% softer. Low water: your weapon hits 33% harder, spells hit 20% softer. The tide starts high. A perfect guard or a perfect dodge turns it and starts the six seconds again.
+
+**Works with.** Spreading Water, which it grows from. Ebb and Flood. Every spell in your Hand, and a weapon you like to swing.
+
+**Example.** Cast your spells at high water. When it turns low, close in and use the blade. Need spells now? Make a perfect dodge to turn the tide back.
+
+## water.drawnback
+**What it does.** Each time you dodge away from the enemy you face, the sea comes back with you as a wave. Your next weapon blow that lands breaks all your waves at once in front of you. If you hold no wave, your blows are weaker.
+
+**When it happens.** A wave comes with each dodge away from the enemy you face, while Water is carried. The waves break on your next weapon blow that lands. "Waves" shows how many you hold, next to the weapon.
+
+**The numbers.** Keystone, 6 Shards. Three waves at most. For each wave, the break deals 12 damage and 20 stagger in front of you, out to 4 metres. Everything it hits is Soaked and thrown 2 metres back. With no wave held, your weapon hits 20% softer.
+
+**Works with.** Heavy Water, which it grows from. Undertow and The Tide Turns, which pull enemies back in after you. Anything that sets off Soaked.
+
+**Example.** Dodge back three times from a pack, then step in with one blow: three waves break, 36 damage and 60 stagger, and they are all thrown back and soaked.
+
+## water.spilled
+**What it does.** When you drink a flask, a ring of water bursts out from you. It soaks everyone near and pushes them back, so you get room to breathe.
+
+**When it happens.** Each time you drink a flask, while Water is carried.
+
+**The numbers.** Major, 3 Shards. The ring reaches 3.5 metres. Everything in it takes 1 damage and 15 stagger, is Soaked, and is pushed 2.5 metres away.
+
+**Works with.** Spreading Water, which it grows from. Everything that sets off Soaked. Deep Well and Broken Gourd, the other flask marks.
+
+**Example.** Surrounded and hurt, you drink: the ring throws the pack back and soaks them, ready for your next reaction.

@@ -66,7 +66,7 @@ carried. Its reaction is Shut in the Dark, the jar; its Shape mark lets you choo
 
 **When it happens.** Every finisher (a heavy blow on a staggered enemy) that lands on an enemy carrying both Curse and poison.
 
-**The numbers.** A god's gift, never sold; in the playtest it can be bought. The sweep takes 0.42 seconds and reaches 9 metres round the finished enemy. Each poisoned enemy in it has its poison set off and spent: 9 damage a dose (72 at eight) and 4 stagger a dose. Half the total heals you.
+**The numbers.** 5 Shards, bought once both elements are carried; no god gives it. The sweep takes 0.42 seconds and reaches 9 metres round the finished enemy. Each poisoned enemy in it has its poison set off and spent: 9 damage a dose (72 at eight) and 4 stagger a dose. Half the total heals you.
 
 **Works with.** Wither, Shut in the Dark (spread the doses first), Devouring Maw, Miasma, Grasp, Never Sated.
 

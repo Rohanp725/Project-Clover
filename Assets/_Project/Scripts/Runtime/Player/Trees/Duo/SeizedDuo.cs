@@ -7,7 +7,7 @@ namespace Clover.Player.Trees.Duo
     /// The duo branch of Lightning and Water (pairs_d3.md, "Lightning and Water", distance 3; task 4.16), named by its
     /// reaction, Seized. Drawn in the chart's heart (<see cref="HeartPattern"/>) and open while both are carried. Its Shape
     /// mark opens Can't Let Go and Running Water; Wet Thread and Grounded (majors), Salt Water (a minor), the keystone The
-    /// Sea Finds Land, and the duo spell The Flashing, the crown. Lightning is written first.
+    /// Sea Finds Land, and the duo spell The Flashing. Lightning is written first.
     /// </summary>
     public static class SeizedDuo
     {
@@ -72,12 +72,16 @@ namespace Clover.Player.Trees.Duo
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.HeavyHit, Needs = AfflictionKind.Soaked, Needs2 = AfflictionKind.Static, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Static, Radius = 4f, Stagger = 5f, Cooldown = 0.3f } },
             }, HeartPattern.RightLow));
 
-            // NEEDS: a mark that changes the reaction's own numbers (reaction-numbers); now a second film for 2 s after the first.
+            // Changes its reaction's own numbers while it is in force (reaction-numbers, ReactionNumbers):
+            // the film standing 5 s, not 3.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = SaltWater, Name = "Salt Water", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 1, Requires = new[] { WetThread }, Icon = UpgradeIcons.Drop,
                 Description = "The film of live water stays 2 s longer.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = Reaction, Do = UpgradeAction.Hazard, Radius = 2.5f, Seconds = 2f, Delay = 3f, Interval = 0.5f, Affliction = AfflictionKind.Static, Stacks = 1 } },
+                ReactionChanges = new[]
+                {
+                    new ReactionChange { Shape = -1, Index = 1, Seconds = 5f },
+                },
             }, HeartPattern.LeftHigh));
 
             // NEEDS: a discharge by itself at full depth, through the water to the Soaked only (now to all within 8 m).
@@ -88,7 +92,7 @@ namespace Clover.Player.Trees.Duo
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.AfflictionFull, Needs = AfflictionKind.Static, NeedsFull = true, Needs2 = AfflictionKind.Soaked, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Static, Radius = 8f, Stagger = 5f, Cooldown = 1f } },
             }, HeartPattern.Keystone));
 
-            // The duo spell, the crown: an opener on a 10 s cooldown (SpellTimings). The bolt form leaps from enemy to enemy;
+            // The duo spell, bought with Shards once both are carried (no god gives it): an opener on a 10 s cooldown (SpellTimings). The bolt form leaps from enemy to enemy;
             // each it reaches is charged twice (the branch's first element) and Soaked, so it is seized at once.
             // NEEDS: a flash along the floor from the nearest Soaked enemy (aim-at-afflicted), the path staying wet 2 s, and
             // the next blow on the last reached discharging all the flash touched (the cast remembering its targets).

@@ -65,6 +65,7 @@ namespace Clover.UI
         private float scale;
         private int shownSlots = -1, shownDevice = -1, shownBlade = -1;
         private int shownElement = -1;
+        private bool shownDeep;
         private bool shownLarge;
         private string layerLine = "", surgeLine = "";
         private int shownHas = -1;
@@ -229,7 +230,8 @@ namespace Clover.UI
                 strikeSecond.Name.gameObject.SetActive(large);
             }
 
-            if (spells.SlotsVersion != shownSlots || ControlDevices.Version != shownDevice || element.Version != shownElement) Rewrite();
+            bool deep = spells.DeepOnSecond;
+            if (spells.SlotsVersion != shownSlots || ControlDevices.Version != shownDevice || element.Version != shownElement || deep != shownDeep) Rewrite();
 
             var mana = combat.Mana.Current;
             for (int i = 0; i < Slots; i++)
@@ -239,8 +241,8 @@ namespace Clover.UI
                 Clocked(slot, spells.Cooldowns.Fraction(i), spells.Cooldowns.Remaining(i), price <= 0f || mana >= price);
             }
             Clocked(strikeFirst, spells.Cooldowns.Fraction(SpellCooldowns.StrikeFirst), spells.Cooldowns.Remaining(SpellCooldowns.StrikeFirst), true);
-            // R2 asks mana only as the deep strike (all in, or one element); with two elements it is the second's own strike.
-            Clocked(strikeSecond, spells.Cooldowns.Fraction(SpellCooldowns.StrikeSecond), spells.Cooldowns.Remaining(SpellCooldowns.StrikeSecond), element.Mixed || mana >= spells.Strikes.DeepMana);
+            // R2 asks mana only as the deep strike (all in or one element, its Devotion bought); otherwise it is a plain strike.
+            Clocked(strikeSecond, spells.Cooldowns.Fraction(SpellCooldowns.StrikeSecond), spells.Cooldowns.Remaining(SpellCooldowns.StrikeSecond), !deep || mana >= spells.Strikes.DeepMana);
 
             // The surge the Hand wears: its ring fills while it burns and shades while it waits to be lit again.
             var kit = element.SurgeKit;
@@ -340,9 +342,11 @@ namespace Clover.UI
             string surgePrice = kit != null && kit.SurgeCost > 0f ? ", " + Mathf.RoundToInt(kit.SurgeCost) + " mana" : kit != null && kit.SurgeCooldown > 0f ? ", health" : "";
             surgeLine = surgeName.Length > 0 ? "Surge " + surgeName + ": " + ControlNames.Of("Surge", device) + surgePrice : "";
 
-            // R1 is the first element's strike; R2 the second's, or the first's deep strike all in or with one element.
-            bool deepOnSecond = !element.Mixed;
-            var secondInfo = deepOnSecond ? info : element.SecondInfo;
+            // R1 is the first element's strike; R2 the second's, or with one element (or all in) the first's deep strike
+            // once its Devotion is bought, and its plain strike before.
+            bool deepOnSecond = spells.DeepOnSecond;
+            shownDeep = deepOnSecond;
+            var secondInfo = element.Mixed ? element.SecondInfo : info;
             string first = ElementSteel.StrikeName(info.Name, false), second = ElementSteel.StrikeName(secondInfo.Name, deepOnSecond);
             Dress(strikeFirst, first, null, info.Colour);
             Dress(strikeSecond, second, null, secondInfo.Colour);

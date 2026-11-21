@@ -9,7 +9,7 @@ strike weaker, and whose death feeds you. "Risen" is the state after the Rise: s
 draining.
 
 ## dark.curse
-**What it does.** Every blow of your weapon that lands curses the enemy. A Cursed enemy hits you more weakly, and killing it heals you.
+**What it does.** Every blow of your weapon that lands curses the enemy. A Cursed enemy hits you more weakly, and killing it heals you. And once, the blow that would kill you does not: you rise, Risen, with half your health, and it drains away.
 
 **When it happens.** Always on once learned: every weapon blow that lands, light or heavy, while Dark is your first element. Weapon blows lay only the first element's affliction; carried second, Dark curses through Grasp, its other spells, the charged blade and its strike.
 
@@ -17,7 +17,7 @@ draining.
 
 **Works with.** Grasp and every Dark spell (each one Curses), Dread, Devouring Maw (it spends the Curse), Collected Twice, Nothing Stays Buried, Never Sated, Hunger (every blow curses while it burns), and the charged blade, Shadow Cut Loose.
 
-**Not built yet.** The Rise on the root, so that every Dark player rises once: for now the god's gift, A Life for a Life, gives it.
+**The Rise.** Once, while Dark is carried, the blow that would kill you does not. You stand again with half your health, and it drains 4 a second, never the last point. A blow that kills you while Risen is a fall; after a fall you may rise again. Only the god's gift, A Life for a Life, buys the Rise back sooner, with a finisher on the one that killed you. Dead Already turns it off.
 
 **Example.** Cut the brute first: while it is Cursed every swing of its takes 15% less of your health, and when it falls you get 6 back.
 
@@ -39,11 +39,9 @@ draining.
 
 **When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4).
 
-**The numbers.** 4 Shards, no mana: it waits 11 seconds after a cast, less with weapon play (its Empower: 10). It runs 5 metres along its lane: 24 damage and 30 stagger. Each Cursed enemy it bites loses its Curse, takes 20 damage more and heals you 12. The jaw itself lays no Curse: curse first, then bite.
+**The numbers.** 4 Shards, no mana: it waits 11 seconds after a cast, less with weapon play (its Empower: 10, and each Cursed enemy bitten heals you 18). It runs 5 metres along its lane: 24 damage and 30 stagger. Each Cursed enemy it bites loses its Curse, takes 20 damage more and heals you 12. The jaw itself lays no Curse: curse first, then bite.
 
 **Works with.** The root, Grasp and Debts Called (curse first), Dread, which it grows from, Never Sated, Hunger, and the charged blade.
-
-**Not built yet.** The Empower's heal of 18: for now it only shortens the wait.
 
 **Example.** Curse a row of soldiers in a corridor with Grasp, then loose the jaw down it: each one bitten takes 44 and gives you 12.
 
@@ -82,7 +80,7 @@ draining.
 
 **Works with.** The root, Dread, which it grows from, Devouring Maw (bite what you came out behind), Near the Grave, and a heavy weapon.
 
-**Not built yet.** The wait of 5 seconds when nothing struck. The scattering into ash and standing again a moment later: for now you step at once. The blow struck as a heavy: for now it strikes twice as hard. The Empower's heal of 15.
+**Not built yet.** The wait of 5 seconds when nothing struck. The scattering into ash and standing again a moment later: for now you step at once. The blow struck as a heavy: for now it strikes twice as hard.
 
 **Example.** A captain swings at you: you scatter, stand at its back, and your cut lands double and gives you 10.
 
@@ -141,7 +139,7 @@ draining.
 
 **When it happens.** Only while Dark is carried twice (all in). Each Cursed death, and each death while you are Risen.
 
-**The numbers.** 6 Shards. Each shade stands where its body fell for 6 seconds and strikes what is within 2.5 metres of it every 0.8 seconds: 12 damage, 12 stagger and a Curse each time. All in, L2 with R2 is the deep strike, Yama's Noose.
+**The numbers.** 6 Shards. Each shade stands where its body fell for 6 seconds and strikes what is within 2.5 metres of it every 0.8 seconds: 12 damage, 12 stagger and a Curse each time. Buying this also gives you the deep strike, Yama's Noose. Use it with L2 and R2 while you carry this element alone or twice.
 
 **Works with.** The root and every Dark spell (Curse them before they die), Dread, Collected Twice, which it grows from, Dead Already (Risen for good, every death stands up), A Life for a Life.
 
@@ -171,7 +169,7 @@ draining.
 
 **Works with.** The root, Blood Price, which it grows from, Near the Grave and Pawned Heart (low health), Dread, Devouring Maw, and the charged blade.
 
-**Not built yet.** The damage rising smoothly as your health falls, 36 at one point: for now a step at half your health. The burst throwing back what it struck. The Empower's eight metres: for now it only shortens the wait.
+**Not built yet.** The damage rising smoothly as your health falls, 36 at one point: for now a step at half your health. The burst throwing back what it struck.
 
 **Example.** Four soldiers spread round you: one cast draws them into a knot at your sword's point, all Cursed, ready for a wide swing.
 
@@ -217,7 +215,7 @@ draining.
 
 **When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4). It cannot be cast at one point of health.
 
-**The numbers.** 4 Shards, no mana: the price is health, and it waits 40 seconds after a cast, less with weapon play (its Empower: 36, 70% more and a ring of 12 seconds). The heart lies 1.8 metres behind you and beats for 10 seconds. While it beats: 60% more weapon damage. You must step 2.6 metres from it, then come within 1 metre of it again: back come all the health pawned and 30% of the damage you dealt. A blow that lands on you while it beats can kill you.
+**The numbers.** 4 Shards, no mana: the price is health, and it waits 40 seconds after a cast, less with weapon play (its Empower: 70% more and a ring of 12 seconds). The heart lies 1.8 metres behind you and beats for 10 seconds. While it beats: 60% more weapon damage. You must step 2.6 metres from it, then come within 1 metre of it again: back come all the health pawned and 30% of the damage you dealt. A blow that lands on you while it beats can kill you.
 
 **Works with.** Near the Grave, which it grows from (you are below a third the whole time), Debts Called's Master, Dead Already, Hunger, and the wards of Near the Grave and Gone to Ash.
 
@@ -319,7 +317,7 @@ draining.
 
 **Works with.** The root, Hollow Strength, which it grows from, Pawned Heart (half of a much bigger blow), Near the Grave, Hunger.
 
-**Not built yet.** Pressing again to change places with the shadow, once. The Empower's 60%: for now it only shortens the wait.
+**Not built yet.** Pressing again to change places with the shadow, once.
 
 **Example.** Cast it as a brute kneels staggered: every cut of the finisher's opening lands twice.
 
@@ -350,14 +348,12 @@ draining.
 **Example.** Cast the shadow before a brute's chain: its first blow breaks on nothing.
 
 ## dark.lifeforalife
-**What it does.** Once, the blow that would kill you does not. You stand again with half your health, and it drains away. A sigil hangs over the enemy that killed you: land a finisher on it and you live again, health returns, and you may rise once more.
+**What it does.** When you are Risen (Dark's root stood you up from a blow that would have killed you), a sigil hangs over the enemy that killed you: land a finisher on it and you live again, health returns, and you may rise once more.
 
-**When it happens.** The moment a blow would kill you, if you have not risen yet. The finisher on the killer, or on anyone if the killer is already gone, ends it.
+**When it happens.** While Risen. The finisher on the killer, or on anyone if the killer is already gone, ends the Rise.
 
-**The numbers.** A god's gift, never sold; in the playtest it can be bought. You rise at half your full health. It drains 4 a second, never the last point. The finisher gives back half your full health and readies the rising again. Without it you stay Risen, draining to one point, and a blow that kills you then is a fall; after a fall you may rise again. Dead Already turns it off.
+**The numbers.** A god's gift, never sold; in the playtest it can be bought. The finisher gives back half your full health and readies the rising again. Without the gift you stay Risen, draining to one point, and a blow that kills you then is a fall; after a fall you may rise again.
 
 **Works with.** Hollow Strength, Nothing Stays Buried (Risen, every death stands up), Near the Grave, Never Sated, Hunger.
 
-**Not built yet.** The design moves the Rise itself to the root, so every Dark player rises once, and leaves the gift the finisher that buys it back. For now the gift gives both.
-
-**Example.** A brute's red overhead kills you: rise, break its balance, finish it, and stand with half your health and your rising ready again.
+**Example.** A brute's red overhead kills you: the root stands you up, Risen. Break its balance, finish it, and stand with half your health and your rising ready again.

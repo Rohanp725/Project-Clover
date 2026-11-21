@@ -56,6 +56,8 @@ namespace Clover.Gameplay
             // The last play's Devotion must not keep this play's burns alight.
             Rules.Clear();
             PoisonBeatOff = false;
+            PoisonQuickWhenSoaked = false;
+            BurnBiteOff = false;
             PoisonKeeps = false;
             PoisonRipens = 0f;
             PoisonOnCursed = 0f;
@@ -79,6 +81,13 @@ namespace Clover.Gameplay
 
         /// <summary>While true, poison does not bite on its beat at all (it is only ever set off).</summary>
         public static bool PoisonBeatOff { get; set; }
+        /// <summary>
+        /// While true, poison on a Soaked enemy bites twice as often and fades twice as fast, on that enemy's own beat (Fast
+        /// Water, the keystone of Fish Poison). On the shared beat it still fades twice as fast.
+        /// </summary>
+        public static bool PoisonQuickWhenSoaked { get; set; }
+        /// <summary>While true, Burn does no damage by itself on any enemy: it is fuel for the blade (The Blade Drinks Fire).</summary>
+        public static bool BurnBiteOff { get; set; }
         /// <summary>While true, poison does not fade while its bearer lives.</summary>
         public static bool PoisonKeeps { get; set; }
         /// <summary>Each bite that comes with no fresh dose since the last is this share stronger than the one before.</summary>

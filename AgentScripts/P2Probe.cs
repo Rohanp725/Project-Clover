@@ -187,6 +187,11 @@ public class P2ProbeRunner : MonoBehaviour
         while (ReadingBox.Instance != null && ReadingBox.Instance.IsOpen && guard++ < 40) yield return Tap(Key.E);
         guard = 0;
         while (GuidePage.Showing && guard++ < 40) yield return Tap(Key.E);
+        // A guide opened as a list (the playtest's guide since Phase 4b) turns its pages on E and never closes on it:
+        // the back key closes it, and failing that it is closed outright, so time is never left stopped.
+        if (GuidePage.Showing) yield return Tap(Key.Space);
+        if (GuidePage.Showing) GuidePage.Instance.Close();
+        if (Time.timeScale <= 0f) Debug.Log("[Probe] WRONG: time still stopped after the guide");
     }
 
     private IEnumerator WhenFree()
@@ -334,7 +339,8 @@ public class P2ProbeRunner : MonoBehaviour
         yield return Press(pad.buttonEast);
         yield return Real(0.2f);
         Judge("the dodge button backs out of the Hand to the rest menu", !HandMenu.Showing && RestMenu.Showing && !RestMenu.Instance.Away);
-        yield return Tap(Key.S);
+        // Down to the chart, however many entries stand above it (the Shapes entry came in Phase 4, between the Hand and it).
+        for (int step = 0; step < 6 && RestMenu.Instance.Choices.Current != RestEntry.Chart; step++) yield return Tap(Key.S);
         yield return Tap(Key.E);
         yield return Real(0.2f);
         Judge("The chart opens from the rest menu", UpgradeMenu.Instance != null && UpgradeMenu.Instance.IsOpen);
@@ -441,6 +447,18 @@ public class P2ProbeRunner : MonoBehaviour
         Judge("the Fire altar with Fire alone offers all in", offered == "Carry Fire all in (lays Burn)", $"'{offered}'");
         yield return Altar(fireAltar, true);
         Judge("all in on Fire", element.AllIn && build.Read().AllIn && defence.LastCallout == "Fire all in", $"said '{defence.LastCallout}'");
+        // The deep strike asks for Fire's Devotion bought (the owner's answer of 2026-11-20): without it R2 is the plain strike.
+        spells.Cooldowns.ResetAll();
+        combat.Mana.Gain(60f);
+        yield return AtDummy();
+        deep = combat.DeepStrikes;
+        paid = spells.StrikeManaPaid;
+        yield return PadStrike(pad.rightTrigger);
+        yield return Until(() => combat.InfusedNow, 1f);
+        yield return WhenFree();
+        Judge("all in without the Devotion, L2 + RT is Fire's plain strike for no mana", combat.DeepStrikes == deep && spells.StrikeManaPaid == paid, $"paid {spells.StrikeManaPaid - paid:0}");
+        RunState.Unlocked.Add(Clover.Player.Trees.FireTree.FireWithoutEnd);
+        combat.GetComponent<PlayerUpgrades>().RefreshNow();
         spells.Cooldowns.ResetAll();
         combat.Mana.Gain(60f);
         yield return AtDummy();

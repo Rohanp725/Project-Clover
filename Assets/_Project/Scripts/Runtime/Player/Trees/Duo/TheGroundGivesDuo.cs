@@ -7,7 +7,7 @@ namespace Clover.Player.Trees.Duo
     /// The duo branch of Water and Earth (pairs_d1_d2.md, "Water and Earth", distance 2; task 4.15), named by its reaction,
     /// The Ground Gives. Drawn in the chart's heart (<see cref="HeartPattern"/>) and open while both are carried. Its Shape
     /// mark, Wet Ground, opens Quicksand and Sand Boil; Given to the Bog and Driven Down, the keystone The Land Was Sea, and
-    /// the duo spell The Island Breathes, the crown. Water is written first: the duo spell is cast in Water.
+    /// the duo spell The Island Breathes. Water is written first: the duo spell is cast in Water.
     /// </summary>
     public static class TheGroundGivesDuo
     {
@@ -88,7 +88,7 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.Keystone));
 
-            // The duo spell, the crown: a breaker on a 15 s cooldown (SpellTimings). The pillars form heaves the ground up under
+            // The duo spell, bought with Shards once both are carried (no god gives it): a breaker on a 15 s cooldown (SpellTimings). The pillars form heaves the ground up under
             // the enemies at the aim point; each one struck is shaken twice as well as soaked, so The Ground Gives sinks it.
             // NEEDS: the in-breath and out-breath as one place (the heave, then 4 s of wet sand); blows on the lifted holding
             // them up and a heavy blow on the sunk at double stagger.

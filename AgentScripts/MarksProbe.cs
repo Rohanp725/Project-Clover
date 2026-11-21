@@ -134,6 +134,12 @@ public class MarksProbeRunner : MonoBehaviour
         else element.Attune(held, "");
         upgrades.Forget();
         upgrades.Give(mark);
+        // A duo surge is in force only while it is the surge worn (duo-surge-slot): wear it in the surge slot.
+        if (DuoSurge.Is(mark))
+        {
+            element.WearDuoSurge(mark);
+            upgrades.RefreshNow();
+        }
         defence.DamageTaken = 0f;
         defence.Restore();
         if (real == null)

@@ -154,11 +154,11 @@ namespace Clover.Player
                 if (!run.Active || !run.AnswersDeath || run.Mark < 0 || run.Mark >= all.Count) continue;
                 var mark = all[run.Mark];
                 var source = SourceOf(mark);
-                AnswerDeath(mark.Effects, run, who, at, source, afflictions);
+                AnswerDeath(OwnEffects(mark), run, who, at, source, afflictions);
                 // A reaction's shape sets conditions of its own; their answers are the shape's (each shape's ids are its own).
                 if (ReactionTable.IsReactionShape(mark))
-                    foreach (var shape in mark.Shapes)
-                        if (shape != null) AnswerDeath(shape.Effects, run, who, at, source, afflictions);
+                    for (int shape = 0; shape < mark.Shapes.Length; shape++)
+                        if (mark.Shapes[shape] != null) AnswerDeath(ShapeEffects(mark, shape), run, who, at, source, afflictions);
             }
         }
 
@@ -171,6 +171,25 @@ namespace Clover.Player
                 upgrades.Fire(effect, who, at, source, 0f, run.Blows, afflictions);
                 ConditionAnswers++;
             }
+        }
+
+        // A mark's own effects as they run now: a plain reaction's with its branch's changes, any other's through the runner
+        // (a Learn's Empower twins).
+        private UpgradeEffect[] OwnEffects(Upgrade mark)
+        {
+            if (mark.Kind == UpgradeKind.Reaction)
+            {
+                int pair = ReactionTable.PairOf(mark.Id);
+                if (pair >= 0) return upgrades.ReactionEffects(pair, -1);
+            }
+            return upgrades.EffectsOf(mark);
+        }
+
+        // A reaction shape's effects as they run now, with its branch's changes.
+        private UpgradeEffect[] ShapeEffects(Upgrade shapeMark, int shape)
+        {
+            int pair = HeartLayout.PairOf(shapeMark);
+            return pair >= 0 ? upgrades.ReactionEffects(pair, shape) : shapeMark.Shapes[shape].Effects;
         }
 
         // What a reaction lays starts nothing: its plain mark's and its shapes'.
@@ -227,12 +246,17 @@ namespace Clover.Player
             Shown?.Invoke(who, pair);
             if (upgrades == null) return false;
             // The shape chosen at the rest fire runs instead of the plain reaction, once its Shape mark is learned and in force.
-            var shape = ReactionTable.WornShape(pair, Loadout(), RunState.Unlocked);
+            int worn = ReactionTable.WornShapeIndex(pair, Loadout(), RunState.Unlocked);
+            var shape = worn >= 0 ? ReactionTable.ShapeMarkFor(pair).Shapes[worn] : null;
             LastShape = shape != null ? shape.Name : "";
             if (shape != null) ShapedCount++;
-            var effects = shape != null ? shape.Effects : ReactionTable.EffectsFor(pair, Loadout());
-            for (int i = 0; i < effects.Count; i++)
+            // As written, or with the numbers of the duo branch's marks in force that change this reaction (Dry Pods, Deep Swell).
+            var effects = upgrades.ReactionEffects(pair, worn);
+            // A ripe seed in the pair makes the reaction's blows stronger, an unripe one softer (In Its Season).
+            upgrades.ReactingOn(who, pair);
+            for (int i = 0; i < effects.Length; i++)
                 if (effects[i].On == UpgradeTrigger.Reacted) upgrades.Fire(effects[i], who, at, LaySource.Reaction);
+            upgrades.ReactedOn();
             // The marks in force that answer this reaction (or any): lifts and duo marks.
             upgrades.Fire(UpgradeTrigger.Reacted, who, at, mark.Id, LaySource.Reaction);
             return true;
@@ -245,18 +269,23 @@ namespace Clover.Player
             if (news.Mark < 0 || news.Mark >= all.Count) return false;
             var mark = all[news.Mark];
             var trigger = news.Moment == ConditionMoment.Beat ? UpgradeTrigger.ConditionBeat
-                : news.Moment == ConditionMoment.Struck ? UpgradeTrigger.ConditionStruck : UpgradeTrigger.ConditionEnded;
+                : news.Moment == ConditionMoment.Struck ? UpgradeTrigger.ConditionStruck
+                : news.Moment == ConditionMoment.Attacked ? UpgradeTrigger.ConditionAttacked : UpgradeTrigger.ConditionEnded;
             var source = SourceOf(mark);
             Vector3 at = who.transform.position;
             // Nerve Fire is seen at each bite as small jolts over the body, not as one big burst when it begins.
             if (news.Moment == ConditionMoment.Beat && news.Id == Trees.Reactions.Nerves) Forms.AfflictionArt.Jolt(at, news.Count);
             // An end carries the weapon blows the condition took (Burning Sap's weals), for what it does per blow.
-            int spent = trigger == UpgradeTrigger.ConditionEnded ? news.Blows : 0;
-            bool any = AnswerFrom(mark.Effects, trigger, news, who, at, source, spent);
+            // So does its carrier's blow on the player (Ash Plume's storm, a flash for each blow it took).
+            int spent = trigger == UpgradeTrigger.ConditionEnded || trigger == UpgradeTrigger.ConditionAttacked ? news.Blows : 0;
+            // The marks in force that answer this condition whoever set it go first, so they can count what the condition's
+            // own answers are about to spend (The Exile Returns counts the Static the Grudge's bolt discharges).
+            bool any = news.Moment != ConditionMoment.Beat && upgrades.FireCondition(trigger, news, who, at);
+            any |= AnswerFrom(OwnEffects(mark), trigger, news, who, at, source, spent);
             // A reaction's shape sets conditions of its own; their moments are answered from the shape.
             if (ReactionTable.IsReactionShape(mark))
-                foreach (var shape in mark.Shapes)
-                    if (shape != null) any |= AnswerFrom(shape.Effects, trigger, news, who, at, source, spent);
+                for (int shape = 0; shape < mark.Shapes.Length; shape++)
+                    if (mark.Shapes[shape] != null) any |= AnswerFrom(ShapeEffects(mark, shape), trigger, news, who, at, source, spent);
             return any;
         }
 
@@ -276,8 +305,9 @@ namespace Clover.Player
             return any;
         }
 
-        private static bool Answers(StruckBy by, in ConditionNews news) =>
-            by == StruckBy.Any || (by == StruckBy.Weapon && !news.Spell) || (by == StruckBy.Heavy && news.Heavy);
+        /// <summary>True when a condition's blow is one the answer asks for (<see cref="UpgradeEffect.By"/>).</summary>
+        internal static bool Answers(StruckBy by, in ConditionNews news) =>
+            by == StruckBy.Any || (by == StruckBy.Weapon && !news.Spell) || (by == StruckBy.Heavy && news.Heavy) || (by == StruckBy.Shatter && news.Shattered);
 
         // A host's poison bit: each enemy joined to it takes its share, as a reaction's blow (it starts nothing).
         private bool PassBite(Component host, float damage)
@@ -294,7 +324,9 @@ namespace Clover.Player
                     continue;
                 }
                 if (!(joined is IAfflictable carrier) || !carrier.Afflictions.Conditions.LinkedTo(host, out float share) || share <= 0f) continue;
-                var blow = new SpellBlow { Damage = damage * share, Effect = VfxKind.TintPuff, Tinted = true, Tint = colour, FromReaction = true };
+                // The joined body flashes poison's colour, not a plain blow's white (Rot Roots' film of 2026-11-20 at 2.1 s:
+                // three bodies lit pure white at the shared bite).
+                var blow = new SpellBlow { Damage = damage * share, Effect = VfxKind.TintPuff, Tinted = true, Tint = colour, Struck = colour, FromReaction = true };
                 if (combat.StrikeOne(joined, blow, host.transform.position))
                 {
                     BitesPassed++;
@@ -322,7 +354,8 @@ namespace Clover.Player
             return false;
         }
 
-        private static bool Alive(Component who)
+        /// <summary>Whether a thing that can be struck is still there and living: a god's piece answers for its god.</summary>
+        internal static bool Alive(Component who)
         {
             if (who == null || !who.gameObject.activeInHierarchy) return false;
             if (who is Enemy enemy) return !enemy.IsDead;

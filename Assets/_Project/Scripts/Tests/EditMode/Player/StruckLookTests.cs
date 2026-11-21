@@ -19,6 +19,7 @@ namespace Clover.Tests
         private static readonly Color StreakInk = new Color(0.05f, 0.04f, 0.08f, 1f);
 
         private static float Peak(Color colour) => Mathf.Max(colour.r, Mathf.Max(colour.g, colour.b));
+        private static float Palest(Color colour) => Mathf.Min(colour.r, Mathf.Min(colour.g, colour.b));
 
         private static void SameHue(Color expected, Color actual, string what)
         {
@@ -59,11 +60,16 @@ namespace Clover.Tests
 
                 Color flash = Enemy.FlashColour(hit.Tint);
                 SameHue(tint, flash, look.Name + "'s flash");
-                Assert.AreEqual(Peak(Enemy.StruckFlash) * StruckLook.FlashStrength, Peak(flash), 1e-4f, look.Name + "'s flash is softened");
+                Assert.LessOrEqual(Peak(flash), Peak(Enemy.StruckFlash) * StruckLook.FlashStrength + 1e-4f, look.Name + "'s flash is softened");
+                Assert.LessOrEqual(Palest(flash), StruckLook.PalestFlash + 1e-4f, look.Name + "'s flash is lit to white");
+                // Softened, not put out: either at the chosen strength or held just under white.
+                Assert.That(Mathf.Abs(Peak(flash) - Peak(Enemy.StruckFlash) * StruckLook.FlashStrength) < 1e-4f || Mathf.Abs(Palest(flash) - StruckLook.PalestFlash) < 1e-4f, look.Name + "'s flash is dimmer than it needs to be");
 
                 Color streak = StruckLook.Stroke(StreakWhite, hit.Tint);
                 SameHue(tint, streak, look.Name + "'s streak");
-                Assert.AreEqual(Peak(StreakWhite) * StruckLook.TintStrength, Peak(streak), 1e-4f, look.Name + "'s streak is softened");
+                Assert.LessOrEqual(Peak(streak), Peak(StreakWhite) * StruckLook.TintStrength + 1e-4f, look.Name + "'s streak is softened");
+                Assert.LessOrEqual(Palest(streak), StruckLook.PalestStroke + 1e-4f, look.Name + "'s streak is lit to white");
+                Assert.That(Mathf.Abs(Peak(streak) - Peak(StreakWhite) * StruckLook.TintStrength) < 1e-4f || Mathf.Abs(Palest(streak) - StruckLook.PalestStroke) < 1e-4f, look.Name + "'s streak is dimmer than it needs to be");
                 Assert.AreEqual(StreakWhite.a * StruckLook.TintStrength, streak.a, 1e-4f, look.Name + "'s streak lets the trail through");
 
                 Color ink = StruckLook.Ink(StreakInk, hit.Tint);
@@ -74,14 +80,22 @@ namespace Clover.Tests
         [Test]
         public void TheColouredElementsAreNotWhite()
         {
-            // Wind's and Metal's trails are pale air and steel, so their tint is near white; every other one is its colour.
+            // Metal's trail is steel, so its tint is pale; every other one is its colour, Wind's the teal of its trail.
             foreach (var look in SwingLooks.All)
             {
-                if (look.Name == Elements.Wind || look.Name == Elements.Metal) continue;
+                if (look.Name == Elements.Metal) continue;
                 Color tint = look.Tint;
                 float low = Mathf.Min(tint.r, Mathf.Min(tint.g, tint.b));
                 Assert.Less(low / Peak(tint), 0.8f, look.Name + "'s tint reads as white");
             }
+        }
+
+        [Test]
+        public void OnlyWindsBlowsGoRoundTheBody()
+        {
+            // The owner, 2026-11-20: "Wind is a line through the enemy". Its blows draw no cut streak; every other element's do.
+            foreach (var look in SwingLooks.All)
+                Assert.AreEqual(look.Name == Elements.Wind, look.CutsRound, look.Name);
         }
     }
 }

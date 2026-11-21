@@ -1,8 +1,29 @@
-# Combat Playtest 0.4 (unreleased)
+# Combat Playtest 0.5 (unreleased)
 
 ## What this playtest is
 
 A testbed for the combat. It grows with each update as the fighting is reworked. Everything is open: try anything, and tell us what felt good, what felt wrong and what you did not understand.
+
+## New in 0.5 (phase 4: keystones, pairs and shapes)
+
+- **Six new keystones.** A keystone is a big mark at the top of a tree. It changes how the whole tree plays.
+  - **Into the Fire.** Dodge toward the enemy you face and you cannot be hurt for the whole roll. You roll through bodies and set them burning. A dodge away costs twice the stamina.
+  - **The Blade Drinks Fire.** Your Fire weapon no longer lays Burn, and burns do not hurt. Instead, each blow on a burning enemy drinks its Burn and hits harder for it.
+  - **High Water, Low Water.** A tide turns every 6 seconds. At high water your spells hit harder and your weapon hits softer. At low water it is the other way round. A perfect guard or a perfect dodge turns the tide at once.
+  - **Drawn Back to Break.** Each dodge away stores a wave, up to three. Your next blow breaks them all in a cone. The cone soaks the enemy and throws it 2 metres back. With no wave stored, your weapon hits 20% softer.
+  - **Shared Roots.** A third of each wound you deal spreads to Seeded enemies within 8 metres. Blows on Seeded enemies no longer heal you.
+  - **In Its Season.** Leave a seed alone for 6 seconds and it ripens. A ripe seed bursts three times as hard and grows a thornbush. An unripe one bursts at half strength.
+- **Four old keystones are back.** The Closed Ring, All Blades Home, Two Suns and Plague Bearer stand at the top of their trees again. Two Suns now makes your spells wait a fifth longer instead of costing mana.
+- **A branch for every pair.** Carry two elements and a small diamond of marks opens in the middle of the chart. It is named for the pair and its reaction. Every pair of elements has one now. Its marks work only while you carry both elements.
+- **Pair marks change their reaction.** Many pair marks change the numbers of their own reaction: bigger, longer or harder. The guide shows the new numbers when the mark is yours.
+- **A surge for every pair.** Each pair has a surge of its own. Choose it at a rest fire while you carry both elements. It goes in the Hand's surge slot and uses its own mana and time.
+- **Devotion.** Carry one element twice (all in) and you can buy its Devotion, a strong mark no pair can have. The deep strike (L2 with R2, all in) now needs the Devotion. Until you buy it, R2 all in is the plain infused strike and costs no mana.
+- **Shapes at the rest fire.** A new Shapes entry, after the Hand, lists each spell and reaction that has a Shape mark. Pick which shape it wears.
+- **Spells that move you.** Some pair spells now take more than one press of their button. Three Weasels rushes in and stops just in front of the enemy, then the next press cuts straight through. Under the Black Water swaps places with the enemy. Elites and gods stay put, and you come up behind them. Its pool curses, and your next blow hits half again as hard.
+- **Dodges remember the enemy.** A run of dodges keeps counting "toward" and "away" against the first enemy. It lets go when that enemy dies, when you get 16 metres away, or after 3 seconds with no dodge.
+- **New effects.** 32 reactions are redrawn under their game names. 13 element looks are new, among them Glaze's frost and Bedrock's earth armour on your body. Gust and Stone Rise are now looks. Nothing is drawn on your blade any more: the slashes and their colours stay. Bright white flashes are gone. A finished enemy gets a pale gold cross, and the ring that grows as an enemy staggers is gold too. A Burn set off and an ice shatter each burst in their own colour. A soldier's guard arc hides while its guard is held open.
+- **Ice swings like ice.** Ice's swing trail is now pale glacier ice with a steel-blue edge. It no longer looks like Water or Metal.
+- **Not yet:** some new marks still use a stand-in look or none (the tide, the waves behind you, a ripe seed, the blade drinking fire, Shared Roots' roots, Into the Fire's lunge). Pair surges wear their first element's look. A few pair spells still wait for their extra presses, and the guide says which under "Not yet".
 
 ## New in 0.4 (phase 3: reactions)
 

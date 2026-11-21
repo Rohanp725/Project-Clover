@@ -32,6 +32,7 @@ namespace Clover.Tests
         private static readonly Upgrade RushMaster = new Upgrade { Id = "t.rush.master", Element = Elements.Fire, Kind = UpgradeKind.Major, Part = BranchPart.Master, Branch = "t.rush" };
         private static readonly Upgrade BaseMaster = new Upgrade { Id = "fire.base.master", Element = Elements.Fire, Kind = UpgradeKind.Major, Part = BranchPart.Master, Branch = "fire.base" };
         private static readonly Upgrade FireDevotion = new Upgrade { Id = "t.devotion", Element = Elements.Fire, Kind = UpgradeKind.Devotion };
+        private static readonly Upgrade SpareSpell = new Upgrade { Id = "t.lance", Element = Elements.Fire, Element2 = Elements.Lightning, Kind = UpgradeKind.Mix, Tree = MarkTree.Hidden, Form = "bolt", Spell = new SpellSpec() };
 
         private static Loadout Hand(string first, string second, string weapon = "", string slotted = "")
         {
@@ -76,6 +77,7 @@ namespace Clover.Tests
             new object[] { FireDevotion, Elements.Fire, "", "", "", false, "a Devotion with its element once" },
             new object[] { FireDevotion, Elements.Fire, Elements.Lightning, "", "", false, "a Devotion in a mix" },
             new object[] { FireDevotion, Elements.Lightning, Elements.Lightning, "", "", false, "a Devotion all in on another element" },
+            new object[] { SpareSpell, Elements.Fire, Elements.Lightning, "", "t.lance", false, "a hidden spare spell, even with both carried and slotted" },
         };
 
         [TestCaseSource(nameof(Cases))]
@@ -146,12 +148,19 @@ namespace Clover.Tests
         [Test]
         public void AllInTheSecondStrikeIsTheDeepStrike()
         {
-            // L2 with R2: the deep strike all in (and with one element, Phase 1's rule), the second element's strike in a mix.
-            Assert.IsTrue(StrikeRules.IsDeep(true, Hand(Elements.Fire, Elements.Fire).Mixed), "all in on Fire: Burnt Offering");
-            Assert.IsTrue(StrikeRules.IsDeep(true, Hand(Elements.Lightning, Elements.Lightning).Mixed), "all in on Lightning: Down the Channel");
-            Assert.IsTrue(StrikeRules.IsDeep(true, Hand(Elements.Fire, "").Mixed), "one element carried");
-            Assert.IsFalse(StrikeRules.IsDeep(true, Hand(Elements.Fire, Elements.Lightning).Mixed), "a mix: Lightning's Flash Cut");
-            Assert.IsFalse(StrikeRules.IsDeep(false, Hand(Elements.Fire, Elements.Fire).Mixed), "R1 is never the deep strike");
+            // L2 with R2: the deep strike all in (and with one element), once the element's Devotion is bought (the owner's
+            // answer of 2026-11-20); the second element's strike in a mix.
+            Assert.IsTrue(StrikeRules.IsDeep(true, Hand(Elements.Fire, Elements.Fire).Mixed, true), "all in on Fire with its Devotion: Burnt Offering");
+            Assert.IsTrue(StrikeRules.IsDeep(true, Hand(Elements.Lightning, Elements.Lightning).Mixed, true), "all in on Lightning with its Devotion: Down the Channel");
+            Assert.IsTrue(StrikeRules.IsDeep(true, Hand(Elements.Fire, "").Mixed, true), "one element carried, its Devotion bought");
+            Assert.IsFalse(StrikeRules.IsDeep(true, Hand(Elements.Fire, Elements.Fire).Mixed, false), "all in without the Devotion: the plain infused strike");
+            Assert.IsFalse(StrikeRules.IsDeep(true, Hand(Elements.Fire, "").Mixed, false), "one element without the Devotion: the plain infused strike");
+            Assert.IsFalse(StrikeRules.IsDeep(true, Hand(Elements.Fire, Elements.Lightning).Mixed, true), "a mix: Lightning's Flash Cut");
+            Assert.IsFalse(StrikeRules.IsDeep(false, Hand(Elements.Fire, Elements.Fire).Mixed, true), "R1 is never the deep strike");
+            // Every element's Devotion is found by the strike.
+            foreach (var element in Elements.All)
+                Assert.AreEqual(UpgradeKind.Devotion, Upgrade.ById(StrikeRules.DevotionOf(element.Name))?.Kind, element.Name + "'s Devotion");
+            Assert.AreEqual(FireTree.FireWithoutEnd, StrikeRules.DevotionOf(Elements.Fire));
             Assert.AreEqual("Burnt Offering", ElementSteel.StrikeName(Elements.Fire, true));
             Assert.AreEqual("Down the Channel", ElementSteel.StrikeName(Elements.Lightning, true));
             var rules = new StrikeRules();

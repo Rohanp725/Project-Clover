@@ -59,6 +59,21 @@ namespace Clover.Player
         public ShapeDef[] Shapes = Array.Empty<ShapeDef>();
         /// <summary>On an Empower mark: the numbers it changes on its branch's spell. Null on every other mark.</summary>
         public Empower Empower;
+        /// <summary>
+        /// On a duo branch's mark: the numbers it changes on its branch's own reaction while it is in force (the ledger's
+        /// reaction-numbers), the plain reaction's or its shapes'. Null for none.
+        /// </summary>
+        public ReactionChange[] ReactionChanges;
+        /// <summary>On a duo surge's mark: its own price and time in the Hand's surge slot (<see cref="DuoSurge"/>). Null otherwise.</summary>
+        public DuoSurge Surge;
+        /// <summary>
+        /// On a spell of several presses (Three Weasels): what each press after the first does, in order. The slot's button
+        /// pressed again within <see cref="PressWindow"/> of the cast does the next press instead of casting again (the
+        /// ledger's second-press); the cast's own clock runs from the first. Null for a spell of one press.
+        /// </summary>
+        public UpgradeEffect[][] Presses;
+        /// <summary>Seconds after the cast in which the later presses may come.</summary>
+        public float PressWindow = 4f;
         /// <summary>On a Learn mark (and a duo spell): what the spell is for, the role icon in the Hand.</summary>
         public SpellRole Role = SpellRole.None;
         /// <summary>On a reaction lift: the element whose reactions it lifts (its effects ride <see cref="UpgradeTrigger.Reacted"/>). Empty otherwise.</summary>
@@ -80,6 +95,9 @@ namespace Clover.Player
         public Action<Growth.RuleBook> Rules;
         /// <summary>Its place in <see cref="All"/>.</summary>
         public int Index { get; internal set; }
+        /// <summary>For a Learn mark whose Empower changes its effects: the Empower mark, and the Learn's effects as changed (same slots); null otherwise.</summary>
+        public Upgrade EmpowerMark { get; internal set; }
+        public UpgradeEffect[] EmpoweredEffects { get; internal set; }
 
         /// <summary>
         /// True for an element's base spell's Learn mark: its id is the base id (<c>fire.base</c>), it comes with its element
@@ -229,6 +247,17 @@ namespace Clover.Player
                     effect.Slot = slots++;
                     effect.Owner = upgrade;
                 }
+                // A later press's effects are its spell's own, done when the press comes (PlayerUpgrades.Press).
+                if (upgrade.Presses != null)
+                    foreach (var press in upgrade.Presses)
+                    {
+                        if (press == null) continue;
+                        foreach (var effect in press)
+                        {
+                            effect.Slot = slots++;
+                            effect.Owner = upgrade;
+                        }
+                    }
                 // A shape's effects belong to its Shape mark: they run only while that shape is worn (SpellBranches.ShapeOf).
                 if (upgrade.Shapes != null)
                     foreach (var shape in upgrade.Shapes)
@@ -240,6 +269,24 @@ namespace Clover.Player
                             effect.Owner = upgrade;
                         }
                     }
+            }
+            // A Learn whose Empower changes its effects keeps a twin of each, with the Empower's numbers, in the same slots:
+            // the runner reads the twins while the Empower is in force (PlayerUpgrades.EffectsOf).
+            foreach (var upgrade in list)
+            {
+                upgrade.EmpowerMark = null;
+                upgrade.EmpoweredEffects = null;
+            }
+            foreach (var upgrade in list)
+            {
+                if (upgrade.Part != BranchPart.Empower || upgrade.Empower?.Effects == null) continue;
+                if (!index.TryGetValue(upgrade.Branch, out var learn) || learn.Effects.Length == 0) continue;
+                var twins = new UpgradeEffect[learn.Effects.Length];
+                for (int i = 0; i < twins.Length; i++) twins[i] = learn.Effects[i].Twin();
+                foreach (var change in upgrade.Empower.Effects)
+                    if (change != null && change.Index >= 0 && change.Index < twins.Length) change.ApplyTo(twins[change.Index]);
+                learn.EmpowerMark = upgrade;
+                learn.EmpoweredEffects = twins;
             }
             all = list;
             byId = index;

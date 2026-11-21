@@ -1181,6 +1181,12 @@ affliction of the element not held on top of what the held element's root alread
 the Signature of the element held; **CONSUME NEXT** marks the next element round the ring as consumed, which opens
 the branch between them and gives its crown. With the element stone that is every gift in the game, tried by hand.
 
+**Changed 2026-11-20 (the owner's decision): gods give no duo crowns.** Consuming a god only strengthens an element
+already owned (its Shards); it gives no branch's crown, and the summit gives a Fire holder no Plasma. The eleven old
+crowns (Plasma, Falling Thunder, Diamond Dust, Weight of Ice, Great Lotus, The Ground Wakes, World Anvil, Six Mirrors,
+Totality, The Reaping, Light the Pyres) are bought for 5 Shards on the chart's heart once both elements are carried,
+as every duo branch's duo spell is. CONSUME NEXT now gives the 4 Shards alone.
+
 **The engine grew to say what the marks say.** Stats that hold only in a state (guarding, the surge, low or high
 health, unhurt, planted, owing health, full mana, near something grown), on a kind of blow (heavy, light, critical,
 the last of a chain, on an enemy in the air) or against a named affliction; stamina split into attacks, guard and
@@ -2067,6 +2073,21 @@ the Proving Ground's real enemies, afflictions on the group of five and surges o
 
 | date | decision | why |
 |---|---|---|
+| 2026-11-20 | The Khepharu relook (docs/design/khepharu_relook.md 5.9): at "Noon breaks" the court's outer ring cracks and drops into a moat of molten gold and the floor shrinks to radius 16; the fight stays silent for now, with named sound hooks in the code and no audio; he opens seated in the colossus's lap, rises as the player enters and steps down into the court while the camera pulls back to show the colossus; all the moves stay and unlock in stages (the scarab alone, then the falcon joins, then everything in the fury) | the owner, answering the brief's D1 to D4 (D1, D3 and D4 as recommended; D2 silent rather than sound effects now) |
+| 2026-11-20 | Stone Rise keeps no wall: big stones burst up under the enemy, knock it up and sink back, and nothing is left standing behind it (as built in the third effects review) | the owner |
+| 2026-11-20 | Three Weasels' first press is a short rush of its own that stops just in front of the enemy (1.2 m short); the second press is the one that passes straight through and comes out beyond it | the owner, after the Phase 4b probe found the first press used the step form and already went 1 m through |
+| 2026-11-20 | A run of dodges remembers its enemy: the enemy the first dodge was measured against stays the one that counts for the dodges after it (toward, away or across), until it dies, the player is more than 16 m from it (`DodgeRules.HoldRange`, the fight's 12 m and most of a roll), or 3 s pass without a dodge, counted from the last one (`DodgeRules.HoldSeconds`); Into the Fire and Drawn Back to Break read this | the owner: a roll turns you, so in a crowd a second dodge away could count as toward another enemy |
+| 2026-11-20 | Water-land enemies (generated, cleaned in Blender, still in staging): the reef-grown gets a back plate, a 10-15 degree stoop and 1.05 scale, and its young rank keeps one shoulder plate; the drowned keeps its too-long arms; the bait's lure must pass as a person calling for help, its jaws buried to the lip; the Water palette is approved | the owner, on staging/comfyui/2026-11-20_water_enemies |
+| 2026-11-20 | Third-review picks: Thermal Shock is option B (the enemy's flames freeze mid-flicker into ice, then shatter); Chokedamp is option A (cracks run to the other shaken enemies and green damp breathes up out of them); Bedrock becomes the earthen armour (a stone skin closes over you, thick plates on shins, hips, chest and shoulders) | the owner, choosing among the Blender options in staging/blender/2026-11-20_reactions5 and elements4 |
+| 2026-11-20 | The swings are settled: keep the slash trails and the element-coloured highlight on each weapon; remove every element piece drawn on the blade itself (flame flags, icicles, stone spine, thorn vine, water skin, venom coat) | the owner, after the swing re-film: "As long as you take those out and keep the actual slashes how they are and the color highlights on the weapon it will be perfect" |
+| 2026-11-20 | Every stand-in gets a real solution in a later pass: the ledger's NEEDS lines (docs/design/steel/content_open.tsv) are worked down to zero, and no stand-in counts as finished | the owner: "make sure that all of those get a actual solution on a pass and not just left with the stand in" |
+| 2026-11-20 | All text a player reads (mark details, effects, the guide, the playtest texts, the menus) is written plainly enough for an eighth grader, with a full language pass over it once Phase 4b is merged | the owner: "it needs to be readable as if they were a 8th grader" |
+| 2026-11-20 | New keystones: Fire gets Into the Fire and The Blade Drinks Fire; Water gets High Water, Low Water and Drawn Back to Break; Life gets Shared Roots and In Its Season (docs/design/steel/keystones_fire_water_life.md) | the owner's picks |
+| 2026-11-20 | Build before the playtest: the reaction-numbers piece (finishes about twenty minors), the duo spells' own form pieces, and a duo-surge slot in the Hand | the owner |
+| 2026-11-20 | Empowers stay flexible: an Empower may make the spell stronger or shorten its wait; it need not do both | the owner: "Keep it flexible" |
+| 2026-11-20 | Kept, not retired: Hammer Down (Wind), Clean Break (Ice), Spilled Water (Water), Shade (Life), each in an empty place on its tree | the owner |
+| 2026-11-20 | The deep strike (L2+R2 all in) needs the element's Devotion bought; without it R2 all in is the plain infused strike | the owner |
+| 2026-11-20 | Smaller answers: the heart's picker steps through all partners; Fast Water per enemy; The Exile Returns and Given Bones answer only the Grudge's bolt; Ash Plume capped at five; every other Phase 4 question keeps its default (phase4_questions.md, "Owner's answers") | the owner |
 | 2026-11-20 | Phase 4: merge Devotion and every step after it (the heart, the ten mixes, the duo branches), each tested in the editor before the next | the owner |
 | 2026-11-20 | An element's base spell (its branch's Learn) comes free with the element | the owner |
 | 2026-11-20 | Trees may have three keystones: The Closed Ring, All Blades Home, Two Suns and Plague Bearer come back as keystones; Fire, Water and Life (one each) are to be researched for more keystones | the owner: "Allow the three, and fire water and life might need to be researched and have more keystones" |
@@ -2502,7 +2523,7 @@ Everything else in this pass is **Claude's default, not yet played by the owner*
 - The other ten tap spells each do what their stuff would do (table in `docs/design/FORMS.md`). Costs, damage and
   afflictions are as they were. What changed in play: Gust throws straight down the wind instead of outward; Hoarfrost
   leaves crystals a weapon blow can shatter (5 damage, one more Chill); Flame Wave leaves three patches burning 3 s;
-  Stone Rise leaves a wall behind the enemy for 4.5 s; Flung Blade bites for a quarter as it lands and cuts on its way
+  Stone Rise bursts big stones up under the enemy that knock it up and sink back, with no wall left behind (the owner, 2026-11-20); Flung Blade bites for a quarter as it lands and cuts on its way
   back to the hand; Glare is a narrow ray, not a wide flash (it rewards facing); Grasp is slow enough to watch, draws
   in what it passes and drags up to five; Miasma creeps after the nearest enemy.
 - The surge is worn on the body as the element's stuff, and each affliction is seen on the enemy as its element's

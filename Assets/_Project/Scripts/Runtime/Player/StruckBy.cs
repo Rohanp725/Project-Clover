@@ -9,5 +9,7 @@ namespace Clover.Player
         Weapon,
         /// <summary>A heavy blow only (a finisher counts).</summary>
         Heavy,
+        /// <summary>A blow that broke the ice of a frozen enemy (the shatter ends its Chill, so Needs cannot ask for it).</summary>
+        Shatter,
     }
 }

@@ -7,7 +7,7 @@ namespace Clover.Player.Trees.Duo
     /// The duo branch of Wind and Life (pairs_d3.md, "Wind and Life", distance 3; task 4.16), named by its reaction,
     /// Windthrow. Drawn in the chart's heart (<see cref="HeartPattern"/>) and open while both are carried. Its Shape mark
     /// opens Blown Seed and Deep Roots; Seed on the Wind and Torn Up (majors), Green Wood (a minor), the keystone The Fairy
-    /// Wind, and the duo spell Thistledown, the crown. Wind is written first.
+    /// Wind, and the duo spell Thistledown. Wind is written first.
     /// </summary>
     public static class WindthrowDuo
     {
@@ -81,11 +81,17 @@ namespace Clover.Player.Trees.Duo
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.HeavyHit, Needs = AfflictionKind.Seeded, Needs2 = AfflictionKind.Unsteady, Do = UpgradeAction.Push, Shape = HazardShape.Downwind, Amount = 3f, Cooldown = 0.5f } },
             }, HeartPattern.RightLow));
 
-            // NEEDS: a mark that changes the reaction's own numbers (reaction-numbers); until then it does nothing.
+            // Changes its reaction's own numbers while it is in force (reaction-numbers, ReactionNumbers):
+            // torn pits standing 8 s, not 5, and seeding two deep.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = GreenWood, Name = "Green Wood", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 1, Requires = new[] { SeedOnTheWind }, Icon = UpgradeIcons.Tower,
                 Description = "Torn pits stand longer and seed one deeper.",
+                ReactionChanges = new[]
+                {
+                    new ReactionChange { Shape = -1, Index = 2, Seconds = 8f, Stacks = 2 },
+                    new ReactionChange { Shape = 1, Index = 3, Seconds = 8f, Stacks = 2 },
+                },
             }, HeartPattern.LeftHigh));
 
             // NEEDS: a small whirlwind that wanders where an enemy is torn out (now a still patch where it reacts that
@@ -101,7 +107,7 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.Keystone));
 
-            // The duo spell, the crown: a movement on a 9 s cooldown (SpellTimings). The drill form carries you through
+            // The duo spell, bought with Shards once both are carried (no god gives it): a movement on a 9 s cooldown (SpellTimings). The drill form carries you through
             // enemies; each is unsteadied (the branch's first element) and seeded, so it roots as you go by.
             // NEEDS: untouchable for the drift; a ring of flowers where you form again, counting as grown and healing you; a
             // light blow within 1 s counting as a shove.

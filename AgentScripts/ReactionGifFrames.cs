@@ -79,8 +79,13 @@ public class ReactionGifFramesRunner : MonoBehaviour
     // The reactions whose condition beats at the poison's bites: filmed long enough to see them.
     private static readonly string[] Biting = { "Nerve Fire", "Venom Rime" };
     private const int Rate = 20, Before = 3, After = 8, MostFrames = 260, Width = 960, Height = 540;
-    private const float LeastSeconds = 2.6f, BitingSeconds = 4.5f;
-    private const string Root = "review/gifs/reactions/frames/";
+    private const float LeastSeconds = 4.2f, BitingSeconds = 4.5f;
+    // AgentScripts/reaction_gif_close.txt present: each film is a close-up, the game camera drawn in to about 5 m from the
+    // struck one (the owner's note of 2026-11-20 on pieces floating off the body), to review/gifs/reactions/close/.
+    // The only-list may also name an affliction alone, "aff:Chill:2" (the kind and its depth), laid on every enemy stood.
+    private static bool Close => System.IO.File.Exists("AgentScripts/reaction_gif_close.txt");
+    private static string Root => Close ? "review/gifs/reactions/close/" : "review/gifs/reactions/frames/";
+    private const float CloseDistance = 5f;
 
     private Texture2D picture;
     private FieldInfo instanceField, showingsField;
@@ -177,7 +182,9 @@ public class ReactionGifFramesRunner : MonoBehaviour
         {
             if (!(bool)type.GetField("Active").GetValue(one)) continue;
             var body = (Transform)type.GetField("Body").GetValue(one);
-            text.Append(set.Looks[(int)type.GetField("Look").GetValue(one)].Key).Append(" on ").Append(body != null ? body.name : "-").Append("; ");
+            float age = (float)type.GetField("Age").GetValue(one), veiledAt = (float)type.GetField("VeiledAt").GetValue(one), keptAt = (float)type.GetField("KeptAt").GetValue(one);
+            text.Append(set.Looks[(int)type.GetField("Look").GetValue(one)].Key).Append(" on ").Append(body != null ? body.name : "-")
+                .Append($" age {age:0.00}{(veiledAt >= 0f && veiledAt >= keptAt ? " veiled" : "")}").Append("; ");
         }
         text.Append($"reaction art parts {ReactionArt.PartsShown}, lamps {ReactionArt.LampsShown}");
         return text.ToString();
@@ -185,6 +192,44 @@ public class ReactionGifFramesRunner : MonoBehaviour
 
     // A bespoke reaction look (combos 4) plays once through the element looks' pool: it counts too.
     private bool PoolEmpty() => ReactionArt.PartsShown == 0 && ReactionArt.LampsShown == 0 && ActiveShowings() == 0 && ElementLooks.PlayingOnce == 0;
+
+    // The window about a group the look reaches: centred on the middle of all their bodies as the camera sees them (feet
+    // and heads), so a look carried to enemies 5 m behind (Golden Feathers) is filmed reaching them, not leaving the frame.
+    private RectInt GroupWindow(Vector3 main, int count)
+    {
+        var cam = Camera.main;
+        float scaleX = 1920f / Screen.width, scaleY = 1080f / Screen.height;
+        float low = float.MaxValue, high = float.MinValue, under = float.MaxValue, over = float.MinValue;
+        for (int i = 0; i < count && i < Mathf.Max(1, layout.Count); i++)
+        {
+            Vector3 feet = main + (i == 0 ? Vector3.zero : layout[i]);
+            foreach (var point in new[] { cam.WorldToScreenPoint(feet), cam.WorldToScreenPoint(feet + Vector3.up * 3f) })
+            {
+                low = Mathf.Min(low, point.x * scaleX);
+                high = Mathf.Max(high, point.x * scaleX);
+                under = Mathf.Min(under, point.y * scaleY);
+                over = Mathf.Max(over, point.y * scaleY);
+            }
+        }
+        // As wide as the group needs with a margin (the game camera's own view, drawn smaller), never less than the
+        // usual 1:1 window nor more than the whole view.
+        float wide = Mathf.Clamp(Mathf.Max(high - low + 500f, (over - under + 240f) * 16f / 9f), Width, 1440f);
+        int across = Mathf.RoundToInt(wide), up = Mathf.RoundToInt(wide * 9f / 16f);
+        int left = Mathf.Clamp(Mathf.RoundToInt((low + high) * 0.5f) - across / 2, 0, 1920 - across);
+        int bottom = Mathf.Clamp(Mathf.RoundToInt((under + over) * 0.5f) - up / 2, 0, 1080 - up);
+        return new RectInt(left, bottom, across, up);
+    }
+
+    // A close-up's window: 1440x810 of the 1920x1080 view (drawn down to the film's size) about the struck one's chest.
+    private RectInt CloseWindow(Vector3 host)
+    {
+        var cam = Camera.main;
+        Vector3 onScreen = cam.WorldToScreenPoint(host + Vector3.up * 1.1f);
+        float scaleX = 1920f / Screen.width, scaleY = 1080f / Screen.height;
+        int left = Mathf.Clamp(Mathf.RoundToInt(onScreen.x * scaleX) - 720, 0, 1920 - 1440);
+        int bottom = Mathf.Clamp(Mathf.RoundToInt(onScreen.y * scaleY) - 405, 0, 1080 - 810);
+        return new RectInt(left, bottom, 1440, 810);
+    }
 
     private RectInt Window(Vector3 host)
     {
@@ -199,7 +244,28 @@ public class ReactionGifFramesRunner : MonoBehaviour
     private void Grab(string folder, int index, RectInt window)
     {
         var shot = ScreenCapture.CaptureScreenshotAsTexture();
-        if (shot.width != 1920 || shot.height != 1080)
+        if ((window.width != Width || window.height != Height) && shot.width == 1920 && shot.height == 1080)
+        {
+            // A window wider than the film: the game view's part drawn down to the film's size, averaged on the CPU from
+            // the screenshot's own bytes (a blit through a render texture lightened every frame, a second gamma).
+            var source = shot.GetPixels32();
+            var drawn = new Color32[Width * Height];
+            float step = window.width / (float)Width;
+            for (int y = 0; y < Height; y++)
+                for (int x = 0; x < Width; x++)
+                {
+                    float sx = window.x + (x + 0.5f) * step - 0.5f, sy = window.y + (y + 0.5f) * step - 0.5f;
+                    int x0 = Mathf.Clamp((int)sx, 0, 1918), y0 = Mathf.Clamp((int)sy, 0, 1078);
+                    float fx = Mathf.Clamp01(sx - x0), fy = Mathf.Clamp01(sy - y0);
+                    var a = source[y0 * 1920 + x0];
+                    var b = source[y0 * 1920 + x0 + 1];
+                    var c = source[(y0 + 1) * 1920 + x0];
+                    var d = source[(y0 + 1) * 1920 + x0 + 1];
+                    drawn[y * Width + x] = Color32.Lerp(Color32.Lerp(a, b, fx), Color32.Lerp(c, d, fx), fy);
+                }
+            picture.SetPixels32(drawn);
+        }
+        else if (shot.width != 1920 || shot.height != 1080)
         {
             var whole = RenderTexture.GetTemporary(1920, 1080, 0, RenderTextureFormat.ARGB32);
             Graphics.Blit(shot, whole);
@@ -322,6 +388,11 @@ public class ReactionGifFramesRunner : MonoBehaviour
         while (ReadingBox.Instance != null && ReadingBox.Instance.IsOpen && guard++ < 40) yield return Tap(Key.E);
         guard = 0;
         while (GuidePage.Showing && guard++ < 40) yield return Tap(Key.E);
+        // A guide opened as a list (the playtest's guide since Phase 4b) turns its pages on E and never closes on it:
+        // the back key closes it, and failing that it is closed outright, so time is never left stopped.
+        if (GuidePage.Showing) yield return Tap(Key.Space);
+        if (GuidePage.Showing) GuidePage.Instance.Close();
+        if (Time.timeScale <= 0f) Debug.Log("[Probe] WRONG: time still stopped after the guide");
 
         const BindingFlags Private = BindingFlags.NonPublic | BindingFlags.Instance;
         instanceField = typeof(ReactionArt).GetField("instance", BindingFlags.NonPublic | BindingFlags.Static);
@@ -353,10 +424,26 @@ public class ReactionGifFramesRunner : MonoBehaviour
             yield break;
         }
         Say($"cast: {string.Join(", ", cast.Select(enemy => enemy.Kind.Name))}");
+        // What each body measures out from its upright at its knees, its chest and its head (BodyGirth).
+        foreach (var enemy in cast)
+        {
+            int girth = BodyGirth.Slot(enemy.transform);
+            Say($"{enemy.Kind.Name} girth: {BodyGirth.RadiusAt(girth, enemy.BodyHeight * 0.3f):0.00} m at the knee, {BodyGirth.RadiusAt(girth, enemy.BodyHeight * 0.65f):0.00} at the chest, {BodyGirth.RadiusAt(girth, enemy.BodyHeight * 0.9f):0.00} at the head");
+        }
         // The floor's painted words, the training dummies and the afflicted row near the floor are not the look.
         hidden.AddRange(FindObjectsByType<TextMesh>(FindObjectsInactive.Exclude).Where(text => (text.transform.position - Middle).magnitude < 14f).Select(text => text.gameObject));
         hidden.AddRange(FindObjectsByType<TrainingDummy>(FindObjectsInactive.Exclude).Where(dummy => (dummy.transform.position - Middle).magnitude < 14f).Select(dummy => dummy.gameObject));
         foreach (var thing in hidden) thing.SetActive(false);
+        // The player's target brackets under the main enemy are the game's aim, not the reaction: on film they read as
+        // the "dashed rings" round the enemy's feet (the audit of 2026-11-20, Rime). Put away while filming.
+        var reticle = player.GetComponent<TargetReticle>();
+        var reticleRing = typeof(TargetReticle).GetField("ringRenderer", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(reticle) as Renderer;
+        if (reticle != null) reticle.enabled = false;
+        if (reticleRing != null) reticleRing.enabled = false;
+        // A group's window can reach the screen's edges: the screen's own HUD (the player's bars, the boss's name, the
+        // Shards) is put away while filming, so only the game world is in the film.
+        var huds = FindObjectsByType<Canvas>(FindObjectsInactive.Exclude).Where(canvas => canvas.isRootCanvas && canvas.renderMode != RenderMode.WorldSpace && canvas.enabled).ToList();
+        foreach (var canvas in huds) canvas.enabled = false;
         player.Teleport(Middle + Stand, Quaternion.LookRotation(Away, Vector3.up));
         StandCast(1);
         yield return Real(1.5f);
@@ -405,6 +492,21 @@ public class ReactionGifFramesRunner : MonoBehaviour
             player.Teleport(Middle + Stand, Quaternion.LookRotation(Away, Vector3.up));
             lane = look == "The Bolt Runs True";
             StandCast(count);
+            // A group the look reaches is framed by the game camera itself: it looks ahead from the player to the middle of
+            // the group, at the game's own distance and angle, as it frames a fight (TopDownCamera.SetFraming). The film's
+            // window is then cut about the group (GroupWindow).
+            var gameCamera = Camera.main != null ? Camera.main.GetComponent<TopDownCamera>() : null;
+            if (gameCamera != null && layout.Count > 1 && !lane && !Binding.Contains(look))
+            {
+                Vector3 middle = Vector3.zero;
+                for (int i = 0; i < count && i < layout.Count; i++) middle += i == 0 ? Vector3.zero : layout[i];
+                middle /= Mathf.Max(1, count);
+                Vector3 ahead = Middle + middle * 0.8f - (Middle + Stand);
+                ahead.y = 0f;
+                gameCamera.SetFraming(1f, ahead);
+            }
+            else if (gameCamera != null) gameCamera.ClearFraming();
+            if (gameCamera != null && Close) gameCamera.SetFraming(CloseDistance / gameCamera.Distance, -Stand);
             float clear = Time.unscaledTime + 8f;
             while ((!PoolEmpty() || Hazards.Alive > 0) && Time.unscaledTime < clear) yield return null;
             bool wasClean = PoolEmpty();
@@ -412,14 +514,20 @@ public class ReactionGifFramesRunner : MonoBehaviour
             // while it lasts: cleared once more now it is gone, or the next reaction starts on a third affliction and
             // sets off others beside it (Girdled showed Diamond Ring and Shining Herb, 2026-11-20).
             foreach (var enemy in cast) if (enemy != null && enemy.gameObject.activeInHierarchy) enemy.Afflictions.Clear();
-            yield return Real(1f);
+            // Long enough for a sun-wheel the last film's Marked laid (1.5 s) to be gone: it stood under Girdled, Smoulder
+            // and Breath Taken at t 0 as a "beige compass ring" (the audit of 2026-11-20).
+            yield return Real(1.8f);
             var main = cast[0];
 
             // A film turned toward the screen's right edge has the spell slots' corner in its window: put away while filming.
-            var slots = (Facings.ContainsKey(look) || Binding.Contains(look)) && SpellDiamondHud.Instance != null ? SpellDiamondHud.Instance.gameObject : null;
+            // The spell slots' corner is put away while filming: a window carried to the group's side has it in view.
+            var slots = SpellDiamondHud.Instance != null ? SpellDiamondHud.Instance.gameObject : null;
             if (slots != null) slots.SetActive(false);
             var window = Window(main.transform.position + (lane ? Away * 2.4f : Binding.Contains(look) && layout.Count > 1 ? NearestOther(count) * 0.5f
                 : Facings.ContainsKey(look) && recipeLayout != null && recipeLayout.Count > 1 ? recipeLayout[1] * 0.5f : Vector3.zero));
+            if (!lane && !Binding.Contains(look) && layout.Count > 1 && !Close) window = GroupWindow(main.transform.position, count);
+            if (Close) window = CloseWindow(main.transform.position);
+            Say($"{name} window {window.x},{window.y} {window.width}x{window.height}");
             Time.captureFramerate = Rate;
             int frame = 0;
             for (; frame < Before; frame++)
@@ -449,6 +557,20 @@ public class ReactionGifFramesRunner : MonoBehaviour
                 }
                 // What is drawn 0.8 s in, to tell the reaction's own look from the afflictions' and the game's.
                 if (frame - start == 16) Say($"{name} at 0.8 s: {LooksPlaying()}");
+                // After the reaction's look and its held aftermath: what the struck one still carries, and its looks' ages
+                // (an affliction cast again shows an age under the time since the reaction).
+                if (frame - start == 70 || frame - start == 80)
+                {
+                    var others = new StringBuilder();
+                    for (int i = 1; i < count && i < cast.Count; i++)
+                    {
+                        var other = cast[i];
+                        if (other == null || !other.gameObject.activeInHierarchy) continue;
+                        Vector3 off = other.transform.position - main.transform.position;
+                        others.Append($"{other.Kind.Name} {Vector3.Dot(off, Away):0.0} m on, {Vector3.Cross(Away, off).magnitude:0.0} m off: {AfflictionPairs.First(pair)} {other.Afflictions.Stacks(AfflictionPairs.First(pair))} {AfflictionPairs.Second(pair)} {other.Afflictions.Stacks(AfflictionPairs.Second(pair))}; ");
+                    }
+                    Say($"{name} at {(frame - start) / (float)Rate:0.0} s: {AfflictionPairs.First(pair)} {main.Afflictions.Stacks(AfflictionPairs.First(pair))}, {AfflictionPairs.Second(pair)} {main.Afflictions.Stacks(AfflictionPairs.Second(pair))}; others: {others}; {LooksPlaying()}");
+                }
                 bool longEnough = (frame - start) / (float)Rate >= least;
                 if (tail < 0 && frame - start >= 4 && PoolEmpty() && longEnough && (shownAt >= 0 || frame - start > 40)) tail = 0;
                 if (tail >= 0 && tail++ >= After) break;
@@ -456,6 +578,7 @@ public class ReactionGifFramesRunner : MonoBehaviour
             }
             Time.captureFramerate = 0;
             if (slots != null) slots.SetActive(true);
+            if (gameCamera != null) gameCamera.ClearFraming();
             int lookStart = shownAt >= 0 ? shownAt - 1 : start;
             int impactFrame = lookStart + Mathf.RoundToInt(Mathf.Max(0f, impact) * Rate);
             bool wentOff = shownAt >= 0;
@@ -469,16 +592,80 @@ public class ReactionGifFramesRunner : MonoBehaviour
             if (group) grouped++;
             yield return null;
         }
+        foreach (var entry in Only)
+        {
+            if (!entry.StartsWith("aff:")) continue;
+            yield return FilmAffliction(entry, player, summary);
+            filmed++;
+        }
         Time.captureFramerate = 0;
         if (Only.Length == 0) System.IO.File.WriteAllText(Root + "summary.txt", summary.ToString());
         Destroy(picture);
         foreach (var pen in pens) pen.Clear();
         foreach (var thing in hidden) if (thing != null) thing.SetActive(true);
+        if (reticle != null) reticle.enabled = true;
+        foreach (var canvas in huds) if (canvas != null) canvas.enabled = true;
         InputSystem.settings.backgroundBehavior = backgroundWas;
         InputSystem.settings.editorInputBehaviorInPlayMode = editorWas;
         Say($"filmed {filmed}, set off {setOff}, on a group {grouped}");
         Say("done");
         Destroy(gameObject);
+    }
+
+    // One affliction alone, laid to the depth named on every enemy stood (the main one and four round it), filmed 3.5 s.
+    private IEnumerator FilmAffliction(string entry, PlayerController player, StringBuilder summary)
+    {
+        var parts = entry.Split(':');
+        if (parts.Length < 3 || !System.Enum.TryParse(parts[1], out AfflictionKind kind) || !int.TryParse(parts[2], out int depth)) yield break;
+        string name = $"aff_{kind.ToString().ToLowerInvariant()}{depth}";
+        string folder = Root + name;
+        if (System.IO.Directory.Exists(folder)) System.IO.Directory.Delete(folder, true);
+        System.IO.Directory.CreateDirectory(folder);
+        layout.Clear();
+        Away = Vector3.right;
+        Stand = -3f * Away;
+        lane = false;
+        player.Teleport(Middle + Stand, Quaternion.LookRotation(Away, Vector3.up));
+        int count = Mathf.Min(cast.Count, 5);
+        StandCast(count);
+        var gameCamera = Camera.main != null ? Camera.main.GetComponent<TopDownCamera>() : null;
+        if (gameCamera != null)
+        {
+            if (Close) gameCamera.SetFraming(CloseDistance / gameCamera.Distance, -Stand);
+            else gameCamera.ClearFraming();
+        }
+        float clear = Time.unscaledTime + 8f;
+        while ((!PoolEmpty() || Hazards.Alive > 0) && Time.unscaledTime < clear) yield return null;
+        foreach (var enemy in cast) if (enemy != null && enemy.gameObject.activeInHierarchy) enemy.Afflictions.Clear();
+        yield return Real(1.8f);
+        var main = cast[0];
+        var slots = SpellDiamondHud.Instance != null ? SpellDiamondHud.Instance.gameObject : null;
+        if (slots != null) slots.SetActive(false);
+        var window = Close ? CloseWindow(main.transform.position) : GroupWindow(main.transform.position, count);
+        Time.captureFramerate = Rate;
+        int frame = 0;
+        for (; frame < Before; frame++)
+        {
+            yield return new WaitForEndOfFrame();
+            Grab(folder, frame, window);
+            yield return null;
+        }
+        for (int i = 0; i < count; i++)
+            if (cast[i] != null && cast[i].gameObject.activeInHierarchy) cast[i].Afflictions.Lay(kind, depth, 0f, 1f, LaySource.Spell, cast[i]);
+        int start = frame;
+        while (frame - start < 70)
+        {
+            yield return new WaitForEndOfFrame();
+            Grab(folder, frame, window);
+            frame++;
+            yield return null;
+        }
+        Time.captureFramerate = 0;
+        if (slots != null) slots.SetActive(true);
+        if (gameCamera != null) gameCamera.ClearFraming();
+        System.IO.File.WriteAllText(folder + "/info.txt",
+            $"name={kind} {depth}\nkind=affliction\nstart={start}\nshown_frame={start}\nimpact=0\nimpact_frame={start}\nframes={frame}\nended=True\nclean_before=True\nenemies={count}\nset_off=True\n");
+        Say($"{name}: {count} enemies, {frame} frames, main carries {main.Afflictions.Stacks(kind)}");
     }
 
     private void OnDestroy() => Time.captureFramerate = 0;

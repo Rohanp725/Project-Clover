@@ -67,7 +67,7 @@ infusion marks on its Way.
 
 **When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4).
 
-**The numbers.** A god's gift, never sold; in the playtest it can be bought. 60 mana. An enemy within 8 metres; the ring is 3 metres in radius. Six crossings 0.13 seconds apart, then 0.3 seconds still. Each cut deals 14 damage and 12 stagger to the enemy (84 and 72 in all), and half to anything else its line crossed. Then everything within 1.2 metres of the ring's middle is Marked and notched three deep.
+**The numbers.** 5 Shards, bought once both elements are carried; no god gives it. 60 mana. An enemy within 8 metres; the ring is 3 metres in radius. Six crossings 0.13 seconds apart, then 0.3 seconds still. Each cut deals 14 damage and 12 stagger to the enemy (84 and 72 in all), and half to anything else its line crossed. Then everything within 1.2 metres of the ring's middle is Marked and notched three deep.
 
 **Works with.** Bright Steel, Halo of Blades (the Marked blows after are critical), Sunder, Counter Cut, the charged blade (it charges your weapon with Metal).
 

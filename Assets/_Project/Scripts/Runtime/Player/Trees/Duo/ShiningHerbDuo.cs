@@ -7,7 +7,7 @@ namespace Clover.Player.Trees.Duo
     /// The duo branch of Life and Light (pairs_d3.md, "Life and Light", distance 3; task 4.16), named by its reaction,
     /// Shining Herb. Drawn in the chart's heart (<see cref="HeartPattern"/>) and open while both are carried. Its Shape mark
     /// opens Bitter Leaf and Seed of Light; Sixth Moon and Open to the Sun (majors), Long Day (a minor), the keystone The
-    /// Whole Mountain, and the duo spell Turned to the Sun, the crown. Life is written first.
+    /// Whole Mountain, and the duo spell Turned to the Sun. Life is written first.
     /// </summary>
     public static class ShiningHerbDuo
     {
@@ -72,11 +72,18 @@ namespace Clover.Player.Trees.Duo
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Needs = AfflictionKind.Marked, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Seeded, Stacks = 3 } },
             }, HeartPattern.RightLow));
 
-            // NEEDS: a mark that changes the reaction's own numbers (reaction-numbers); until then it does nothing.
+            // Changes its reaction's own numbers while it is in force (reaction-numbers, ReactionNumbers):
+            // herbs standing 9 s before they flower, not 6.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = LongDay, Name = "Long Day", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 1, Requires = new[] { SixthMoon }, Icon = UpgradeIcons.Hourglass,
                 Description = "Herbs stand 3 s longer before they flower.",
+                ReactionChanges = new[]
+                {
+                    new ReactionChange { Shape = -1, Index = 0, ConditionSeconds = 9f },
+                    new ReactionChange { Shape = 0, Index = 0, ConditionSeconds = 9f },
+                    new ReactionChange { Shape = 1, Index = 0, ConditionSeconds = 9f },
+                },
             }, HeartPattern.LeftHigh));
 
             // NEEDS: pickups (herbs drawn to you when one is picked; each after the first healing twice); now each herb that
@@ -88,7 +95,7 @@ namespace Clover.Player.Trees.Duo
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = Reaction, Do = UpgradeAction.Heal, Amount = 4f } },
             }, HeartPattern.Keystone));
 
-            // The duo spell, the crown: an opener on an 11 s cooldown (SpellTimings). The field form lays a lit patch at the aim
+            // The duo spell, bought with Shards once both are carried (no god gives it): an opener on an 11 s cooldown (SpellTimings). The field form lays a lit patch at the aim
             // point that flares every 2 s, seeding (the branch's first element) and Marking what stands in it.
             // NEEDS: enemies turned to face a point (now none turn), and blows on their backs made critical.
             to.Add(HeartPattern.Put(new Upgrade

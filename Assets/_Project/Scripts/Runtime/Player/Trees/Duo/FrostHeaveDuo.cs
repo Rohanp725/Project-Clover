@@ -7,7 +7,7 @@ namespace Clover.Player.Trees.Duo
     /// The duo branch of Ice and Earth (pairs_d3.md, "Ice and Earth", distance 3; task 4.16), named by its reaction, Frost
     /// Heave. Drawn in the chart's heart (<see cref="HeartPattern"/>) and open while both are carried. Its Shape mark opens
     /// Sorted Stones and Pingo; Hard Frost and Frozen Footing (majors), Permafrost (a minor), the keystone Winter in the
-    /// Bones, and the duo spell The Hag's Staff, the crown. Ice is written first.
+    /// Bones, and the duo spell The Hag's Staff. Ice is written first.
     /// </summary>
     public static class FrostHeaveDuo
     {
@@ -102,7 +102,7 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.Keystone));
 
-            // The duo spell, the crown: a breaker on a 12 s cooldown (SpellTimings). The field form hardens the ground round
+            // The duo spell, bought with Shards once both are carried (no god gives it): a breaker on a 12 s cooldown (SpellTimings). The field form hardens the ground round
             // you; each second it chills (the branch's first element) and shakes what stands on it, so it heaves.
             // NEEDS: heavy blows on the frozen ground driving frost under the one struck (25 more stagger and a small heave).
             to.Add(HeartPattern.Put(new Upgrade

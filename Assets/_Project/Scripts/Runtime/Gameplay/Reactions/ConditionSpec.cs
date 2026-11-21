@@ -8,6 +8,9 @@ namespace Clover.Gameplay
     {
         /// <summary>Its name: the effects that answer its beat, a blow on it and its end name it (<c>UpgradeEffect.Condition</c>).</summary>
         public string Id = "";
+
+        /// <summary>A copy with every number (a mark that changes a reaction's own numbers changes its copy, never this).</summary>
+        public ConditionSpec Copy() => (ConditionSpec)MemberwiseClone();
         public float Seconds = 4f;
         /// <summary>Seconds between beats; zero for none.</summary>
         public float Beat;

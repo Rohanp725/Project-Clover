@@ -7,8 +7,8 @@ namespace Clover.Player.Trees
     /// Bloom: the duo branch Water and Life share, reshaped by pairs_d1_d2.md ("Water and Life", task 4.15) and drawn in the
     /// chart's heart (<see cref="HeartPattern"/>). Its reaction is Quickening; the Shape mark opens its two shapes, Floating
     /// Flower and Rootlets. Wet Seed is cut (the Shape mark takes its place), Flowering is now the reaction without its wait,
-    /// and Lotus Step, offered to Water's tree, is cut because that roster is full; all three are in
-    /// <see cref="RetiredMarks"/>. Kept: Drowned Roots, Morning Dew, Strangling Vine (the duo spell, re-aimed at the flower)
+    /// both in <see cref="RetiredMarks"/>, and Lotus Step, offered to Water's tree, whose roster is full, is
+    /// kept hidden for the Evolutions (<see cref="SpareSpells"/>). Kept: Drowned Roots, Morning Dew, Strangling Vine (the duo spell, re-aimed at the flower)
     /// and Great Lotus, begun by a flask in the surge, the branch's duo surge and top mark. Open while both are carried.
     /// </summary>
     public static class BloomTree
@@ -101,11 +101,12 @@ namespace Clover.Player.Trees
             }, HeartPattern.Spell));
 
             // BESPOKE (built): LotusForm. The branch's duo surge, begun by a flask drunk in the surge (pairs_d1_d2.md), and its top mark.
-            // NEEDS: a duo surge chosen in the Hand's surge slot (now it answers any surge while both are carried).
+            // Worn in the Hand's surge slot with its own 40 mana and 10 s (DuoSurge): a flask drunk while it burns opens the lotus.
             to.Add(HeartPattern.Put(new Upgrade
             {
-                Id = Gift, Name = "Great Lotus", Element = A, Element2 = B, Kind = UpgradeKind.Signature, Icon = UpgradeIcons.Crown,
-                Description = "A flask drunk while your surge lasts opens a great lotus under you. Inside it you mend and enemies are Soaked and Seeded. Each perfect guard inside closes a petal on the attacker and holds it, up to five. When the last petal closes, or its ten seconds are done, the lotus bursts.",
+                Id = Gift, Name = "Great Lotus", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { StranglingVine }, Icon = UpgradeIcons.Crown,
+                Description = "A duo surge for your surge slot: 40 mana, 10 seconds. A flask drunk while it lasts opens a great lotus under you. Inside it you mend and enemies are Soaked and Seeded. Each perfect guard inside closes a petal on the attacker and holds it, up to five. When the last petal closes, or its ten seconds are done, the lotus bursts.",
+                Surge = new DuoSurge { Mana = 40f, Seconds = 10f },
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.FlaskDrunk, Do = UpgradeAction.Form, Form = SpellForms.Lotus, WhileSurge = true, Affliction = AfflictionKind.Seeded, Spell = new SpellSpec { Cost = 0f, Radius = 3f, Seconds = 10f, Damage = 30f, Stagger = 40f, Count = 5, LingerDamage = 2f, Stacks = 1 } } },
             }, HeartPattern.Crown));
         }

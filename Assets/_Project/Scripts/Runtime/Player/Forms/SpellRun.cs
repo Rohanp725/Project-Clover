@@ -24,6 +24,8 @@ namespace Clover.Player.Forms
         public float T0, T1, T2, T3;
         public Vector3 A, B, C;
         public bool Flag, Flag2;
+        /// <summary>The handle of the run's elements 3 look (ElementLooks.Held), moved with it; -1 for none.</summary>
+        public int Look;
         /// <summary>The enemy this run is about, as a thing that can be struck and as a place.</summary>
         public Component Victim;
     }

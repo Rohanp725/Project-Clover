@@ -6,8 +6,8 @@ namespace Clover.Player.Trees
     /// <summary>
     /// Eclipse: the duo branch Light and Dark share, reshaped by pairs_d1_d2.md ("Light and Dark", task 4.15) and drawn in
     /// the chart's heart (<see cref="HeartPattern"/>). Its reaction is Diamond Ring; the Shape mark opens its two shapes,
-    /// Shadow Bands and Through the Throat. Twilight is cut (it only laid both; the Shape mark takes its place) and Black
-    /// Sun, offered to Dark's tree, is cut because that roster is full; both are in <see cref="RetiredMarks"/>. Kept: Day
+    /// Shadow Bands and Through the Throat. Twilight is cut (it only laid both; the Shape mark takes its place; <see cref="RetiredMarks"/>)
+    /// and Black Sun, offered to Dark's tree, whose roster is full, is kept hidden for the Evolutions (<see cref="SpareSpells"/>). Kept: Day
     /// and Night, Low Sun, The Dividing Line (the keystone), Dusk and Dawn (the duo spell, re-aimed at the pair) and
     /// Totality, begun by the surge, the branch's duo surge and top mark. Open while both are carried.
     /// </summary>
@@ -109,7 +109,7 @@ namespace Clover.Player.Trees
             // The branch's duo surge, begun by the surge, and its top mark. NEEDS: a duo surge chosen in the Hand's surge slot.
             to.Add(HeartPattern.Put(new Upgrade
             {
-                Id = Totality, Name = "Totality", Element = A, Element2 = B, Kind = UpgradeKind.Signature, Icon = UpgradeIcons.Crown,
+                Id = Totality, Name = "Totality", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { DuskAndDawn }, Icon = UpgradeIcons.Crown,
                 Description = "When your surge begins, the sun is covered. While the dark lasts every enemy is Marked and Cursed and every blow you land is critical and feeds you. When the light returns, it strikes all you wounded.",
                 Stats = new[] { new StatMod(PlayerStat.CritChance, 1f, StatWhen.Surge) },
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.AnyHit, Do = UpgradeAction.Heal, WhileSurge = true, Amount = 1f, Cooldown = 0.2f }, new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.Form, Form = SpellForms.Totality, Affliction = AfflictionKind.Marked, Spell = new SpellSpec { Cost = 0f, Reach = 14f, Stacks = 3, Damage = 50f, Count = 80, Stagger = 30f } } },

@@ -73,7 +73,7 @@ namespace Clover.Gameplay
         /// takes (an elite's is half), and of a root's time likewise. Returns the slot, or -1 when nothing was asked.
         /// </summary>
         public int Set(ConditionSpec spec, Component who, int mark = -1, Component link = null, bool answersStruck = false, bool answersEnd = false, float slowShare = 1f,
-            bool answersDeath = false)
+            bool answersDeath = false, bool answersAttack = false)
         {
             if (spec == null || string.IsNullOrEmpty(spec.Id) || spec.Seconds <= 0f) return -1;
             if (who != null) Who = who;
@@ -103,6 +103,7 @@ namespace Clover.Gameplay
             run.AnswersStruck = answersStruck;
             run.AnswersEnd = answersEnd;
             run.AnswersDeath = answersDeath;
+            run.AnswersAttack = answersAttack;
             run.KeepsMask = Bit(spec.Keeps);
             run.WhileMask = Bit(spec.While) | Bit(spec.While2);
             run.OnBite = spec.OnBite;
@@ -170,7 +171,7 @@ namespace Clover.Gameplay
         /// each the blow spends, or that has had its last blow, ends without its end being told. A reaction's own blow is
         /// not one (the caller keeps those out).
         /// </summary>
-        public void Struck(float damage, bool heavy, bool spell)
+        public void Struck(float damage, bool heavy, bool spell, bool shattered = false)
         {
             if (Count == 0) return;
             bool spentAny = false;
@@ -179,8 +180,28 @@ namespace Clover.Gameplay
                 if (!runs[i].Active) continue;
                 ref var run = ref runs[i];
                 if (!spell) run.Blows++;
-                if (run.AnswersStruck) Tell(ConditionMoment.Struck, in run, damage, heavy, spell);
+                if (run.AnswersStruck) Tell(ConditionMoment.Struck, in run, damage, heavy, spell, shattered);
                 if (!SpentBy(in run, heavy, spell)) continue;
+                runs[i] = default;
+                spentAny = true;
+            }
+            if (spentAny) Recount();
+        }
+
+        /// <summary>
+        /// The enemy struck at the player and the blow landed or was turned: each condition that answers it is told, and
+        /// each that such a blow spends (<see cref="ConditionBlow.TheirBlow"/>) ends without its end being told.
+        /// </summary>
+        public void Attacked()
+        {
+            if (Count == 0) return;
+            bool spentAny = false;
+            for (int i = 0; i < Slots; i++)
+            {
+                if (!runs[i].Active) continue;
+                ref var run = ref runs[i];
+                if (run.AnswersAttack) Tell(ConditionMoment.Attacked, in run, 0f, false, false);
+                if (run.EndsWith != ConditionBlow.TheirBlow) continue;
                 runs[i] = default;
                 spentAny = true;
             }
@@ -287,12 +308,12 @@ namespace Clover.Gameplay
             Sight = sight;
         }
 
-        private void Tell(ConditionMoment moment, in ConditionRun run, float damage, bool heavy, bool spell)
+        private void Tell(ConditionMoment moment, in ConditionRun run, float damage, bool heavy, bool spell, bool shattered = false)
         {
             var news = new ConditionNews
             {
                 Moment = moment, Id = run.Id, Mark = run.Mark, Count = run.Count, Blows = run.Blows, Flags = run.Flags, Scale = run.Scale, Link = run.Link,
-                Damage = damage, Heavy = heavy, Spell = spell,
+                Damage = damage, Heavy = heavy, Spell = spell, Shattered = shattered,
             };
             if (Report != null) Report(Who, news);
             else CombatEvents.RaiseCondition(Who, news);

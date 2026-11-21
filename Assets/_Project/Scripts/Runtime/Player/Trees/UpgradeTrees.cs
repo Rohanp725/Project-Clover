@@ -53,9 +53,33 @@ namespace Clover.Player.Trees
             Duo.KindlingPointDuo.Add(to);
             Duo.TheGrudgeDuo.Add(to);
             Duo.IllWindDuo.Add(to);
+            Duo.SteamDuo.Add(to);
+            Duo.LightningFlowerDuo.Add(to);
+            Duo.LoganStoneDuo.Add(to);
+            Duo.ColdShortDuo.Add(to);
+            Duo.CaughtLightDuo.Add(to);
+            Duo.GirdledDuo.Add(to);
+            Duo.ChokedampDuo.Add(to);
+            Duo.RedHotDuo.Add(to);
+            Duo.TheBoltRunsTrueDuo.Add(to);
+            Duo.BreathTakenDuo.Add(to);
+            Duo.VenomRimeDuo.Add(to);
+            Duo.FirebloomDuo.Add(to);
+            Duo.EarthedDuo.Add(to);
+            Duo.SickleWindDuo.Add(to);
+            Duo.MockSunsDuo.Add(to);
+            Duo.DrownedWeightDuo.Add(to);
+            Duo.RotRootsDuo.Add(to);
+            Duo.BurntMoundDuo.Add(to);
+            Duo.LiveIronDuo.Add(to);
+            Duo.GoldenFeathersDuo.Add(to);
+            Duo.StolenWarmthDuo.Add(to);
+            Duo.FishPoisonDuo.Add(to);
             // The weapons' Ways (phase 5), one file per weapon under Trees/Ways/, after the element charts.
             Ways.KatanaWay.Add(to);
-            // The plain reactions, one hidden mark per pair, after every tree (they are on none).
+            // The spare spells kept hidden for Phase 6's Evolutions, and the plain reactions, one hidden mark per pair, after
+            // every tree (they are on none).
+            SpareSpells.Add(to);
             Reactions.Add(to);
         }
     }

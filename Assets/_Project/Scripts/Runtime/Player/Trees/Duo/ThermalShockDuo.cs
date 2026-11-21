@@ -7,7 +7,7 @@ namespace Clover.Player.Trees.Duo
     /// The duo branch of Fire and Ice (pairs_d3.md, "Fire and Ice", distance 3; task 4.16), named by its reaction, Thermal
     /// Shock. Drawn in the chart's heart (<see cref="HeartPattern"/>) and open while both are carried. Its Shape mark opens
     /// Hot Shards and Crazing; Spark and Rime and Hot Stone, Cold Water (majors), Neither Wins (a minor), the keystone Fire
-    /// Under the Ice, the duo spell Fire-Setting (the crown) and the duo surge The Yawning Gap. Fire is written first.
+    /// Under the Ice, the duo spell Fire-Setting and the duo surge The Yawning Gap. Fire is written first.
     /// </summary>
     public static class ThermalShockDuo
     {
@@ -95,7 +95,7 @@ namespace Clover.Player.Trees.Duo
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Shatter, Needs = AfflictionKind.Burn, Do = UpgradeAction.Afflict, Radius = 3f, Affliction = AfflictionKind.Burn, Stacks = 2, Cooldown = 0.2f } },
             }, HeartPattern.Keystone));
 
-            // The duo spell, the crown: a detonator on a 12 s cooldown (SpellTimings). The brand form sets a fire against the
+            // The duo spell, bought with Shards once both are carried (no god gives it): a detonator on a 12 s cooldown (SpellTimings). The brand form sets a fire against the
             // enemy that blows set off; each landing lays rime as the quench.
             // NEEDS: a second press of a slot spell (the quench on the second press; now the brand's own set-off), the Burn
             // deepening each second while the fire is banked, and blows before the quench making it harder.
@@ -108,13 +108,14 @@ namespace Clover.Player.Trees.Duo
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 3 } },
             }, HeartPattern.Spell));
 
-            // The duo surge. NEEDS: blows that alternate affliction, Thermal Shock once per enemy every 2 s while it lasts, and
-            // a surge of its own in the Hand's surge slot (duo-surge-slot); now while any surge lasts each blow lays a Chill,
-            // and each Thermal Shock heals you 2.
+            // The duo surge, worn in the Hand's surge slot with its own 40 mana and 10 s (DuoSurge). NEEDS: blows that alternate
+            // affliction, Thermal Shock once per enemy every 2 s while it lasts (alternate-blows); now while it burns each blow
+            // lays a Chill, and each Thermal Shock heals you 2.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = TheYawningGap, Name = "The Yawning Gap", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { FireSetting }, Icon = UpgradeIcons.Sun,
-                Description = "A duo surge. While your surge lasts your weapon blows take turns, burning and chilling, so Thermal Shock keeps setting off, and each split lets fall drops of melt that heal you.",
+                Description = "A duo surge for your surge slot: 40 mana, 10 seconds. While it lasts your weapon blows take turns, burning and chilling, so Thermal Shock keeps setting off, and each split lets fall drops of melt that heal you.",
+                Surge = new DuoSurge { Mana = 40f, Seconds = 10f },
                 Effects = new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.AnyHit, WhileSurge = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 1 },

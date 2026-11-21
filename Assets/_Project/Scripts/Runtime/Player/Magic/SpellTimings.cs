@@ -7,7 +7,7 @@ namespace Clover.Player.Magic
     /// How every built spell is paid for, by the shared rules of docs/design/steel/README.md: basic spells run on
     /// cooldowns of 6 to 12 s and never cost mana; each element has one larger spell paid in mana (35 to 50); the eleven
     /// built ring-mix duo spells stay larger spells paid in mana (40 to 60); the new duo branches' duo spells wait 12 to
-    /// 16 s, each its own (the twelve spare ring-mix spells are retired). Numbers come from the rosters in elements_a.md and
+    /// 16 s, each its own (the twelve spare spells are hidden marks kept for the Evolutions, on a duo spell's cooldown). Numbers come from the rosters in elements_a.md and
     /// elements_b.md where the spell is listed there, and from its role where it is not (marked "not in the roster").
     /// Applied to the catalogue as it is gathered (<see cref="Apply"/>), so a spell's <see cref="SpellSpec.Cooldown"/>
     /// and <see cref="SpellSpec.Cost"/> are the table's. Earth's larger spell is the new Cairn.
@@ -128,6 +128,20 @@ namespace Clover.Player.Magic
             ["blight.wastinggrip"] = Mana(40f, SpellRole.Opener),
             ["pyre.lightthepyres"] = Mana(60f, SpellRole.Detonator),
 
+            // The twelve spare spells, hidden marks kept for Phase 6's Evolutions (Trees/SpareSpells): a duo spell's cooldown.
+            ["plasma.lance"] = Cd(DuoCooldown, SpellRole.Opener),
+            ["tempest.cloud"] = Cd(DuoCooldown, SpellRole.Breaker),
+            ["blizzard.whiteout"] = Cd(DuoCooldown, SpellRole.Breaker),
+            ["glacier.creeping"] = Cd(DuoCooldown, SpellRole.Opener),
+            ["bloom.lotus"] = Cd(DuoCooldown, SpellRole.Movement),
+            ["overgrowth.thornwall"] = Cd(DuoCooldown, SpellRole.Counter),
+            ["forge.triphammer"] = Cd(DuoCooldown, SpellRole.Breaker),
+            ["halo.sunwheels"] = Cd(DuoCooldown, SpellRole.Opener),
+            ["eclipse.blacksun"] = Cd(DuoCooldown, SpellRole.Detonator),
+            ["blight.gravesoil"] = Cd(DuoCooldown, SpellRole.Breaker),
+            ["pyre.fireeater"] = Cd(DuoCooldown, SpellRole.Breaker),
+            ["pyre.slowfuse"] = Cd(DuoCooldown, SpellRole.Detonator),
+
             // The new duo branches' duo spells (pairs_d1_d2.md to pairs_d5.md, task 4.5 on): basic spells of the pair, on a
             // duo spell's cooldown of 12 to 16 s, each its own.
             ["sleetcharge.glassstorm"] = Cd(14f, SpellRole.Opener),
@@ -152,6 +166,28 @@ namespace Clover.Player.Magic
             ["kindlingpoint.hands"] = Cd(12f, SpellRole.Opener),
             ["thegrudge.exilesgrudge"] = Cd(12f, SpellRole.Counter),
             ["illwind.yellowgale"] = Cd(12f, SpellRole.Detonator),
+            ["steam.quarrel"] = Cd(12f, SpellRole.Breaker),
+            ["lightningflower.sowing"] = Cd(10f, SpellRole.Detonator),
+            ["loganstone.dune"] = Cd(12f, SpellRole.Breaker),
+            ["coldshort.chisel"] = Cd(10f, SpellRole.Detonator),
+            ["caughtlight.road"] = Cd(9f, SpellRole.Movement),
+            ["girdled.deathturnedback"] = Cd(12f, SpellRole.Counter),
+            ["chokedamp.clayrank"] = Cd(14f, SpellRole.Opener),
+            ["redhot.crucible"] = Mana(35f, SpellRole.Breaker),
+            ["boltrunstrue.diamondthunder"] = Cd(11f, SpellRole.Detonator),
+            ["breathtaken.blownthrough"] = Cd(9f, SpellRole.Counter),
+            ["venomrime.rimeoverrime"] = Cd(10f, SpellRole.Opener),
+            ["firebloom.needfire"] = Cd(12f, SpellRole.Opener),
+            ["earthed.capstone"] = Cd(12f, SpellRole.Breaker),
+            ["sicklewind.weasels"] = Cd(10f, SpellRole.Movement),
+            ["mocksuns.sunstone"] = Cd(10f, SpellRole.Counter),
+            ["drownedweight.blackwater"] = Cd(10f, SpellRole.Movement),
+            ["rotroots.stalks"] = Cd(14f, SpellRole.Detonator),
+            ["burntmound.wall"] = Cd(12f, SpellRole.Breaker),
+            ["liveiron.seeksiron"] = Cd(10f, SpellRole.Movement),
+            ["goldenfeathers.sweep"] = Cd(9f, SpellRole.Opener),
+            ["stolenwarmth.iceinblood"] = Cd(12f, SpellRole.Detonator),
+            ["fishpoison.lagoon"] = Cd(12f, SpellRole.Opener),
             // The twelve spare ring-mix spells were cut as their branches were reshaped (tasks 4.5 and 4.15): each was offered
             // to an element's tree whose roster of six was full (pairs_d1_d2.md), and is in RetiredMarks.
         };

@@ -93,6 +93,7 @@ public class SwingLookProbeRunner : MonoBehaviour
     private InputSettings.EditorInputBehaviorInPlayMode editorWas;
     private readonly List<GameObject> hidden = new List<GameObject>();
     private readonly List<Canvas> screens = new List<Canvas>();
+    private TargetReticle reticle;
     private int idleSolids, idleMarks, idleHazards;
     private string[] only = new string[0];
     // AgentScripts/swing_gif_alone.txt present: the enemies stand 30 m off, so the swing is seen with no blow landing.
@@ -101,11 +102,58 @@ public class SwingLookProbeRunner : MonoBehaviour
     private bool filming, keepCalm;
     private int frame;
     private string folder;
+
+    // What is thrown or begun on the floor each frame of a clip, to trace a ring at the feet to its source: births in the
+    // ring emitters (Ring, TintRing) with their place and colour, and element looks begun (their key and body). Written
+    // to <clip>/rings.txt.
+    private readonly StringBuilder ringLog = new StringBuilder();
+    private ParticleSystem[] ringEmitters;
+    private readonly int[] ringCounts = new int[2];
+    private readonly ParticleSystem.Particle[] ringParticles = new ParticleSystem.Particle[256];
+    private readonly HashSet<int> stampsSeen = new HashSet<int>();
+
+    private void LogRings()
+    {
+        if (ringEmitters == null)
+        {
+            var vfx = FindAnyObjectByType<Vfx>();
+            var all = vfx != null ? (ParticleSystem[])typeof(Vfx).GetField("emitters", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(vfx) : null;
+            if (all == null) return;
+            ringEmitters = new[] { all[(int)VfxKind.Ring], all[(int)VfxKind.TintRing] };
+        }
+        for (int e = 0; e < ringEmitters.Length; e++)
+        {
+            var emitter = ringEmitters[e];
+            if (emitter == null) continue;
+            int count = emitter.GetParticles(ringParticles);
+            for (int p = 0; p < count; p++)
+            {
+                if (ringParticles[p].startLifetime - ringParticles[p].remainingLifetime > Time.deltaTime * 1.5f) continue;
+                var c = ringParticles[p].startColor;
+                ringLog.AppendLine($"f{frame} {(e == 0 ? "Ring" : "TintRing")} at {ringParticles[p].position - (player != null ? player.transform.position : Vector3.zero)} from player, colour {c.r},{c.g},{c.b}, size {ringParticles[p].startSize:0.00}");
+            }
+        }
+        var looksField = typeof(ElementLooks).GetField("instance", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+        var looks = looksField.GetValue(null);
+        if (looks == null) return;
+        var showings = (System.Array)typeof(ElementLooks).GetField("showings", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(looks);
+        var set = (ElementLookSet)typeof(ElementLooks).GetField("set", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(looks);
+        var type = showings.GetType().GetElementType();
+        foreach (var one in showings)
+        {
+            if (!(bool)type.GetField("Active").GetValue(one)) continue;
+            int stamp = (int)type.GetField("Stamp").GetValue(one);
+            if (!stampsSeen.Add(stamp)) continue;
+            var body = (Transform)type.GetField("Body").GetValue(one);
+            ringLog.AppendLine($"f{frame} look {set.Looks[(int)type.GetField("Look").GetValue(one)].Key} on {(body != null ? body.name : "the ground")}");
+        }
+    }
     private RectInt window;
-    private int mostRibbons, mostSheaths;
-    // The frames on which a cut streak was drawn (CutMarks.Drawn rose): the moments of contact, for the strips.
+    private int mostRibbons, mostSheaths, mostBladeSheaths;
+    // The frames on which a cut streak was drawn (CutMarks.Drawn rose) or a blow landed (Wind's draw no streak): the
+    // moments of contact, for the strips.
     private readonly List<int> contacts = new List<int>();
-    private int drawnWas;
+    private int drawnWas, landedWas;
     // Frames on which an enemy showed a struck flash, and of those how many were plain white (the blow carried no tint).
     private int flashFrames, whiteFlashFrames;
     private readonly List<int> whiteAt = new List<int>();
@@ -144,6 +192,7 @@ public class SwingLookProbeRunner : MonoBehaviour
         {
             mostRibbons = Mathf.Max(mostRibbons, trails.RibbonsShown);
             mostSheaths = Mathf.Max(mostSheaths, trails.SheathsShown);
+            mostBladeSheaths = Mathf.Max(mostBladeSheaths, trails.BladeSheathsShown);
         }
     }
 
@@ -194,6 +243,11 @@ public class SwingLookProbeRunner : MonoBehaviour
         while (ReadingBox.Instance != null && ReadingBox.Instance.IsOpen && guard++ < 40) yield return Tap(Key.E);
         guard = 0;
         while (GuidePage.Showing && guard++ < 40) yield return Tap(Key.E);
+        // A guide opened as a list (the playtest's guide since Phase 4b) turns its pages on E and never closes on it:
+        // the back key closes it, and failing that it is closed outright, so time is never left stopped.
+        if (GuidePage.Showing) yield return Tap(Key.Space);
+        if (GuidePage.Showing) GuidePage.Instance.Close();
+        if (Time.timeScale <= 0f) Debug.Log("[Probe] WRONG: time still stopped after the guide");
     }
 
     private bool Busy() =>
@@ -243,11 +297,16 @@ public class SwingLookProbeRunner : MonoBehaviour
         {
             yield return new WaitForEndOfFrame();
             if (!filming) break;
-            if (CutMarks.Drawn != drawnWas)
+            // With no one to stop it, Lightning's infused strike carries the player out of a held camera and the clip
+            // ends on empty floor (the alone films of 2026-11-20): alone, the camera follows the player.
+            if (alone && anchor != null && player != null) anchor.position = player.transform.position;
+            if (CutMarks.Drawn != drawnWas || combat.BlowsLanded != landedWas)
             {
                 drawnWas = CutMarks.Drawn;
+                landedWas = combat.BlowsLanded;
                 contacts.Add(frame);
             }
+            LogRings();
             Grab(frame);
             frame++;
         }
@@ -311,6 +370,13 @@ public class SwingLookProbeRunner : MonoBehaviour
         hidden.AddRange(FindObjectsByType<TextMesh>(FindObjectsInactive.Exclude).Where(text => (text.transform.position - Middle).magnitude < 14f).Select(text => text.gameObject));
         hidden.AddRange(FindObjectsByType<TrainingDummy>(FindObjectsInactive.Exclude).Where(dummy => (dummy.transform.position - Middle).magnitude < 14f).Select(dummy => dummy.gameObject));
         foreach (var thing in hidden) thing.SetActive(false);
+        // The player's target brackets under the enemy aimed at are the game's aim, not the swing: on film they read as
+        // a dashed ring round the middle enemy's feet that flashes white on every blow (the swing films of 2026-11-20).
+        // Put away while filming, as the reaction films do.
+        reticle = player.GetComponent<TargetReticle>();
+        var reticleRing = typeof(TargetReticle).GetField("ringRenderer", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.GetValue(reticle) as Renderer;
+        if (reticle != null) reticle.enabled = false;
+        if (reticleRing != null) reticleRing.enabled = false;
         foreach (var canvas in FindObjectsByType<Canvas>(FindObjectsInactive.Exclude))
             if (canvas.isRootCanvas && canvas.renderMode != RenderMode.WorldSpace && canvas.enabled)
             {
@@ -375,8 +441,8 @@ public class SwingLookProbeRunner : MonoBehaviour
                 }
                 var clip = new Clip();
                 yield return Film(info, weaponName, tag, stand, place, clip);
-                summary.AppendLine($"{tag}_{name}: {clip.Frames} frames ({clip.Frames / (float)Rate:0.00} s), blows {clip.Blows}, landings {clip.Landings}, ground {clip.Ground}, trails {clip.Ribbons}, sheaths {clip.Sheaths}, lines {clip.Lines} ({clip.Fitted} measured), flashes {flashFrames} ({whiteFlashFrames} white){(clip.Ended ? "" : ", CUT at the cap")}{(clip.SetOff ? "" : ", NOT set off")}");
-                Say($"{tag}_{name}: {clip.Frames} frames, blows {clip.Blows}, landings {clip.Landings}, trails {clip.Ribbons}, sheaths {clip.Sheaths}{(clip.Ended ? "" : ", WRONG: cut at the cap (" + clip.Dirty + ")")}{(clip.SetOff ? "" : ", WRONG: not set off")}");
+                summary.AppendLine($"{tag}_{name}: {clip.Frames} frames ({clip.Frames / (float)Rate:0.00} s), blows {clip.Blows}, landings {clip.Landings}, ground {clip.Ground}, trails {clip.Ribbons}, sheaths {clip.Sheaths}, blade sheaths {clip.BladeSheaths}, lines {clip.Lines} ({clip.Fitted} measured), flashes {flashFrames} ({whiteFlashFrames} white){(clip.Ended ? "" : ", CUT at the cap")}{(clip.SetOff ? "" : ", NOT set off")}");
+                Say($"{tag}_{name}: {clip.Frames} frames, blows {clip.Blows}, landings {clip.Landings}, trails {clip.Ribbons}, sheaths {clip.Sheaths}, blade sheaths {clip.BladeSheaths}{(clip.Ended ? "" : ", WRONG: cut at the cap (" + clip.Dirty + ")")}{(clip.SetOff ? "" : ", WRONG: not set off")}");
                 filmed++;
                 if (clip.Ended && clip.SetOff) whole++;
             }
@@ -447,7 +513,7 @@ public class SwingLookProbeRunner : MonoBehaviour
 
     private class Clip
     {
-        public int Start, Peak, Frames, Blows, Landings, Ground, Ribbons, Sheaths, Lines, Fitted;
+        public int Start, Peak, Frames, Blows, Landings, Ground, Ribbons, Sheaths, BladeSheaths, Lines, Fitted;
         public bool Ended, SetOff;
         public string Dirty = "";
     }
@@ -580,7 +646,7 @@ public class SwingLookProbeRunner : MonoBehaviour
         spells.Cooldowns.ResetAll();
         combat.Mana.Gain(100f);
         int swingsWere = trails.SwingsDrawn, landingsWere = trails.Landings, groundWere = trails.GroundBlows, blowsWere = combat.BlowsLanded, strikesWere = combat.InfusedStrikes;
-        mostRibbons = mostSheaths = 0;
+        mostRibbons = mostSheaths = mostBladeSheaths = 0;
         window = WindowAbout(standAt + Vector3.forward * (stand * 0.6f) + Vector3.up * 1.7f);
         Time.captureFramerate = Rate;
         frame = 0;
@@ -588,6 +654,8 @@ public class SwingLookProbeRunner : MonoBehaviour
         flashFrames = whiteFlashFrames = 0;
         whiteAt.Clear();
         drawnWas = CutMarks.Drawn;
+        landedWas = combat.BlowsLanded;
+        ringLog.Clear();
         filming = true;
         StartCoroutine(Filmer());
         yield return Until(() => frame >= Before, 20);
@@ -646,10 +714,12 @@ public class SwingLookProbeRunner : MonoBehaviour
         clip.Ground = trails.GroundBlows - groundWere;
         clip.Ribbons = mostRibbons;
         clip.Sheaths = mostSheaths;
+        clip.BladeSheaths = mostBladeSheaths;
         clip.Fitted = trails.SourcesFitted;
+        System.IO.File.WriteAllText(folder + "/rings.txt", ringLog.ToString());
         System.IO.File.WriteAllText(folder + "/info.txt",
             $"weapon={weaponName}\ntag={tag}\nelement={info.Name}\nstart={clip.Start}\npeak_frame={clip.Peak}\nframes={clip.Frames}\nended={clip.Ended}\nset_off={clip.SetOff}\n" +
-            $"blows={clip.Blows}\nlandings={clip.Landings}\nground={clip.Ground}\nmost_trails={clip.Ribbons}\nmost_sheaths={clip.Sheaths}\nlines={clip.Lines}\nfitted={clip.Fitted}\norder={order}\ncontacts={string.Join(",", contacts)}\nflash_frames={flashFrames}\nwhite_flash_frames={whiteFlashFrames}\nwhite_at={string.Join(",", whiteAt)}\n");
+            $"blows={clip.Blows}\nlandings={clip.Landings}\nground={clip.Ground}\nmost_trails={clip.Ribbons}\nmost_sheaths={clip.Sheaths}\nmost_blade_sheaths={clip.BladeSheaths}\nlines={clip.Lines}\nfitted={clip.Fitted}\norder={order}\ncontacts={string.Join(",", contacts)}\nflash_frames={flashFrames}\nwhite_flash_frames={whiteFlashFrames}\nwhite_at={string.Join(",", whiteAt)}\n");
     }
 
     private void Finish()
@@ -662,6 +732,7 @@ public class SwingLookProbeRunner : MonoBehaviour
         if (view != null && player != null) view.Configure(player.transform);
         if (anchor != null) Destroy(anchor.gameObject);
         foreach (var thing in hidden) if (thing != null) thing.SetActive(true);
+        if (reticle != null) reticle.enabled = true;
         foreach (var canvas in screens) if (canvas != null) canvas.enabled = true;
         if (combat != null)
         {

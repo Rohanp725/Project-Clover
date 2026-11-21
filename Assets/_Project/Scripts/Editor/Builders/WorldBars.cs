@@ -128,15 +128,23 @@ namespace Clover.EditorTools
         }
 
         /// <summary>
+        /// The finish mark's crossed cut: a pale gold held below white, so it still stands out from the deeper gold ring
+        /// without blooming to pure white (the swing films of 2026-11-20: about 2,000 near-white pixels on every staggered
+        /// enemy, read as a white starburst). Public so the material can be remade without rebuilding a scene.
+        /// </summary>
+        public static Material FinishCutMaterial() =>
+            BuildKit.Glow(Folder, "m_mark_cut", new Color(1.75f, 1.3f, 0.48f, 1f), 9, false, 1f, 0f, true).Graphic(0.54f);
+
+        /// <summary>
         /// The mark that stands over a staggered fighter: a broken ring that turns, round a crossed cut that beats, in
-        /// white-gold on ink. It is drawn through whatever is in front of it, since it is the one thing that must be seen.
+        /// gold on ink. It is drawn through whatever is in front of it, since it is the one thing that must be seen.
         /// </summary>
         public static StaggerMark FinishMark(Transform parent, Vector3 localPosition, float size, Quaternion towardCamera)
         {
             var ringInk = BuildKit.Glow(Folder, "m_mark_ring_ink", UiArt.Ink, 8, false, 1f, 0f, true).Graphic(0.36f);
             var ringGold = BuildKit.Glow(Folder, "m_mark_ring", new Color(1.9f, 1.25f, 0.22f, 1f), 8, false, 1f, 0f, true).Graphic(0.62f);
             var cutInk = BuildKit.Glow(Folder, "m_mark_cut_ink", UiArt.Ink, 9, false, 1f, 0f, true).Graphic(0.36f);
-            var cutGold = BuildKit.Glow(Folder, "m_mark_cut", new Color(2.3f, 2.05f, 1.3f, 1f), 9, false, 1f, 0f, true).Graphic(0.54f);
+            var cutGold = FinishCutMaterial();
 
             var mark = BuildKit.Group("Finish Mark", parent);
             mark.localPosition = localPosition;

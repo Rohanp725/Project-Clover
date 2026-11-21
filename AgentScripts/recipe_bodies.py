@@ -6,6 +6,10 @@
 # in a piece's name as its body ("spark15", "heavechip4" counted as bodies 15 and 4), which dropped pieces or put them
 # on the wrong enemy. Run again whenever the recipe is exported anew:
 #   python -I AgentScripts/recipe_bodies.py staging/blender/2026-11-20_reactions4/tools Assets/_Project/Art/VFX/Combos/combos4_recipe.json </dev/null
+# Later passes name their pieces with their own tag (elements 4 "e4", reactions 5 "r5"): give it as the third argument.
+#   python -I AgentScripts/recipe_bodies.py staging/blender/2026-11-20_reactions5/tools Assets/_Project/Art/VFX/Combos/combos5_recipe.json r5 </dev/null
+# A pass that wrote a look's specs more than once (elements 4's Overdrive and Clarity) is read oldest file first, so the
+# specs the recipe was exported from, the newest, are the ones kept.
 # Keeps the file's own layout (indent 1, CRLF) so only the new fields change.
 import glob
 import json
@@ -13,8 +17,9 @@ import os
 import sys
 
 tools, recipe_path = sys.argv[1], sys.argv[2]
+tag = sys.argv[3] if len(sys.argv) > 3 else 'r4'
 truth = {}
-for path in sorted(glob.glob(os.path.join(tools, 'specs_*.gltf'))):
+for path in sorted(glob.glob(os.path.join(tools, 'specs_*.gltf')), key=os.path.getmtime):
     with open(path, encoding='utf-8') as handle:
         nodes = json.load(handle).get('nodes', [])
     for node in nodes:
@@ -23,7 +28,7 @@ for path in sorted(glob.glob(os.path.join(tools, 'specs_*.gltf'))):
             continue
         spec = json.loads(spec)
         for index, piece in enumerate(spec['pieces']):
-            name = 'r4_%s_%03d_%s' % (spec['slug'], index, piece.get('n', 'ribbon' if 'path' in piece else 'piece'))
+            name = '%s_%s_%03d_%s' % (tag, spec['slug'], index, piece.get('n', 'ribbon' if 'path' in piece else 'piece'))
             truth[name] = 'player' if piece.get('pl') else piece.get('body', 0)
 
 with open(recipe_path, 'rb') as handle:
@@ -67,7 +72,7 @@ for look in recipe['looks']:
 conventions = recipe['conventions']
 conventions['motion.body'] = (
     "The body (index into bodies; 0 is the main body) the piece belongs to: it is placed about that body and shown on "
-    "it. Restored from the pass's own specs (staging/blender/2026-11-20_reactions4/tools/specs_*.gltf) by "
+    "it. Restored from the pass's own specs (" + tools.replace('\\', '/') + "/specs_*.gltf) by "
     "AgentScripts/recipe_bodies.py, as the export wrote only follow_body and orbit.centre_is. Numbers in a piece's name "
     "are not bodies (spark15, heavechip4). Pieces on the player carry on_player instead.")
 out = json.dumps(recipe, indent=1)

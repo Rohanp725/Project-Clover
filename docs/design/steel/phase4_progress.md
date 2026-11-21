@@ -229,3 +229,353 @@ reaction looks (`docs/design/feedback/2026-11-20_owed_audit.md`) can go first.
    other empty place, `L.mid`, would sit on the line from the left foot to the left bough's second spell.
 4. Decisions 2 to 6 (the spare mixes as hidden marks, the Rise on Dark's root, no duo crowns from gods, the shape screen,
    the enemy's-blow moment) wait for the reaction pass.
+
+## 2026-11-20 (evening): steps 5 and 6 merged, and the owner's decisions 2 to 6 built
+
+**Merged:** `9c0eaa8` (task 4.17: pairs_d4 and pairs_d5, twenty-two duo branches, DuoProbeAll, the 4.17 questions) with
+`--no-ff`. Merge commit: `b1b2a45`. There was one conflict, in `content_open.tsv`: both sides had added rows after
+`turn-to-face`. Both sides' rows were kept: phase4's longer `depth-passed` and `quickened-beat` rows, main's three keystone
+rows and phase4's seven new rows. Compile clean. Playtest Texts rebuilt (89 effects, 610 marks' details). The twenty-two
+`.meta` files are committed (`97a1647`). Every one of the 55 pairs now has its branch in the heart.
+
+**EditMode:** 793 run and 1 failed after the merge. New Face said "gives 6 mana." and the chart test read that as a price.
+It now says "gives you 6 mana back", as every mark that gives mana does (`9e54217`). After all the work below: **802 run,
+802 passed.**
+
+**DuoProbeAll** (ProvingGround, about eight minutes, read whole with `console get -- --tail 700`): **333 OK, 1 WRONG**
+after the merge.
+- The one WRONG was Red Hot in Slag, which read shape `''`. Slag's own condition was held on the host, so the shape had
+  run. Then Chokedamp's leftover poison ground made Fire Medicine react on the same host in the same frame, and the probe
+  read `LastShape` after that second reaction.
+- The probe now notes such a second reaction and reads its own pair's shape from the table. The PlayerPrefs key
+  `clover.probe.duoall.only` runs only the pairs named.
+- Re-run on Fire Medicine, Chokedamp, Red Hot and The Bolt Runs True: 28 OK, 0 WRONG.
+- Two pairs reacting on one body from one laying is real play, not a fault.
+- **After all six commits below, DuoProbeAll ran whole again: 334 OK, 0 WRONG.** Four lines noted a second pair shown on
+  the same host in the same frame, each from ground an earlier pair left.
+
+**ReactionProbe2: 336 OK, 0 WRONG** (heard 54, shown 54, dropped 0), after the merge and again after the Grudge change.
+**CrowdProbe: 6 OK, 0 WRONG** (p95 5.7 ms, mean 4.4 ms, 346 reactions shown, no runaway).
+
+**The watch items (merge plan item 8).** `WatchProbe` ends at 16 OK, 0 WRONG. Fixes are in `14ba73c`.
+- **Cold Damage never fired**, as the plan feared. The heavy blow's `Shatter()` ends the Chill inside `TakeHit`, and the
+  answer runs later, asking for `Needs = Chill, NeedsFull`.
+  - Fix: a blow that breaks the ice is now told as `Shattered` (in `ConditionNews`, `EnemyConditions.Struck` and
+    `AfflictionSet.TakeFrom`), and Cold Damage answers `StruckBy.Shatter`.
+  - In play: four doses were set off on the shatter (55 for the shatter and the blow, 79 in all). A heavy blow on the
+    enemy unfrozen set none off.
+- **Six Levels Down did nothing.** A Chill laid on a frozen enemy is refused, because the freeze is already full.
+  - Fix: a new action, `KeepFrozen` (`AfflictionSet.KeepFrozen`), keeps the freeze 0.3 s longer for each bite.
+  - In play: the freeze lasted 2.50 s without the mark and 2.80 s with it.
+- **A reaction laid and then forced in one frame was shown twice.** This is the pattern of The Sisters' Quarrel, Cold
+  Chisel, Held Down and Diamond Guard: `ReactionEngine.Force` went through the rest.
+  - Fix: the engine now remembers what it found this frame (in fixed arrays, so nothing is allocated). A force on the
+    same enemy and pair in that frame is the same single reaction. In a later frame a force goes through the rest as before.
+  - Tests: ReactionEngineTests, and ReactionHookupTests, whose same-frame force was moved a frame on.
+- **Fast Water** is bounded: its bite does not feed itself.
+  - Its 0.5 s cooldown is shared by every enemy. In the yard, where other dummies are poisoned and Soaked, it answered
+    the host's first bite but not its second.
+  - That is the ledger's stand-in ("once in half a second for all").
+- **Runaway cascades:** none seen in CrowdProbe or DuoProbeAll.
+
+## The owner's decisions 2 to 6
+
+| Decision | Commit | Proof |
+|---|---|---|
+| 2. Spare spells kept hidden for the Evolutions | `c2ee406` | SaveMigrationTests: a save keeps Plasma Lance and Fire Eater, refunds nothing and takes them out of its Hands; each of the twelve is hidden, never sold, never open, never slotted, never in force and never drawn. An InForceTests case. |
+| 3. Dark's Rise on the root | `9af1ed2` | RiseProbe (CombatTest): 9 OK, 0 WRONG |
+| 4. Gods give no duo crowns | `6c3b874` | UpgradeChartTests `EveryElementHasItsTreeAndItsGiftAndNoGodGivesADuoCrown` |
+| 5. The shape screen | `5667873` | ShapeChoicesTests, RestChoicesTests, ShapeProbe 15 OK, 0 WRONG; frames `review/shots/current/shape_screen.png` and `shape_screen_pad.png` |
+| 6. The enemy's-blow moment | `3f51389` | ConditionPiecesTests, GrudgeProbe 13 OK, 0 WRONG; ReactionProbe2 336 OK, 0 WRONG |
+
+### 2. Spare spells
+
+- The twelve are hidden marks in `Trees/SpareSpells.cs`, as they stood before the reshaping, with their timings: Plasma
+  Lance, Storm Overhead, Whiteout, Creeping Ice, Lotus Step, Thorn Wall, Trip Hammer, Sun Wheels, Black Sun, Grave Soil,
+  Fire Eater and Lit Fuse.
+- No d2 to d5 branch cut a spare spell; phase4_questions.md says so for each task.
+- `MarkRules.InForce` and `Slottable` refuse hidden marks.
+- The twelve are out of `RetiredMarks`, so a save keeps them with no refund. `SaveMigration.ClearHidden` takes them out
+  of the Hands, since they can sit in no slot.
+
+### 3. The Rise
+
+- `PlayerUpgrades.Rise` asks for Dark's root, Curse.
+- The Rise's cast names the root, so forgetting the root ends the Rise.
+- RiseForm's finisher buys the Rise back only with A Life for a Life. A Rise that is not bought back stays spent until a
+  real death.
+- Curse's words, the gift's words, dark.md, the guide and the ledger say so. The ledger row `rise-on-root` is taken out.
+
+### 4. No duo crowns
+
+- The eleven old crowns are `Mix` marks that cost 5 Shards and open once both elements are carried.
+  - Each grows from its branch's duo spell.
+  - Six Mirrors and Light the Pyres move to the duo spell's place and grow from their branch's first two marks. They still
+    cost 60 mana to cast.
+- `Gifts.CrownOf` is gone. A consumed god (`GodReward`) gives only the 4 Shards.
+- The CONSUME NEXT shrine gives the 4 Shards and no crown. Its prompt is set when it wakes, because the scene still holds
+  the old words.
+- "The crown" is gone from the duo branch files.
+- Texts updated:
+  - the details texts;
+  - GUIDE.md section 5, now "Gods' gifts and duo branch tops";
+  - a dated note under GAME.md's "Gifts are by rule".
+- "An element's base spell comes free with its element" holds. The same test now checks it: each base Learn is given and
+  never sold.
+
+### 5. The shape screen
+
+The screen is `UI/ShapeMenu.cs`, with `ShapeChoices.cs` and `ShapeRow.cs`. At the rest fire it is the **Shapes** entry,
+after Set the Hand.
+- **The list** shows every learned spell's Shape mark, then every learned reaction's, each with the shape worn.
+  - A line whose shape is kept but not in force says "(not in a slot)" or "(both elements not carried)".
+- **The right side** shows the chosen line's two shapes in full, with the worn one lit.
+- **The controls:**
+  - W S, the wheel, the stick or the d-pad choose a line.
+  - A D, left and right, use or a click wear the other shape, through `ChooseShape(key, i, atRestFire: true)`.
+  - Dodge, Esc or Start go back to the fire.
+- **ShapeProbe** drove the screen with the keys and with a pad (d-pad up to choose, south to wear, east to back out).
+  After leaving the fire, Steam ran as Scald.
+- **The frames** read well, and the hint names the pad's own buttons (A, B) when a pad is in hand.
+
+### 6. The enemy's-blow moment
+
+- There are two new moments:
+  - `UpgradeTrigger.TheirBlow`, for marks. Its target is the attacker.
+  - The condition moment `Attacked` (`UpgradeTrigger.ConditionAttacked`), with `ConditionBlow.TheirBlow` to spend a
+    condition on it.
+- Both are told whenever an enemy's blow lands, is guarded, is perfectly guarded or is turned by a ward.
+- **The plain Grudge's cloud** now waits for that blow, then strikes. The enemy's Static is discharged at double (with
+  3 Static it lost 42), the enemy is held 0.6 s, and the cloud is spent. A guarded blow and a warded blow do the same.
+- **Ash Plume's storm** falls on that blow, or when its 6 s run out.
+- **Left in the ledger row** `their-blow-moment`: the other marks there need the moment a blow is *about to* land, which
+  is a different piece. They are the shared movement rule, Coiled Strike and Daybreak's Master.
+
+## For the owner (this pass)
+
+1. **Fast Water's half-second is shared by all enemies.** In a crowd of poisoned, Soaked enemies it adds about two bites a
+   second in all, not "twice as often" on each. A cooldown kept for each enemy would match the words. It is left as the
+   ledger's stand-in.
+2. **Ash Plume and the cloud.** Ash Plume's storm is not capped at five flashes (it makes one per weapon blow on the
+   cloud). The cloud does not drift to the next enemy when its host dies. Both stay in the ledger.
+3. **The Exile Returns** still answers any discharge on a Cursed enemy, not only the Grudge's own bolt.
+4. **The rest menu has five rows.** Once the Way and the hub are built it will have six entries (the Hand, Shapes, the
+   chart, the Way, the hub and leave). `RestMenu.MostRows` and the note's place will need a sixth row then.
+5. **The CombatTest scene still holds the shrine's old prompt.** It is replaced when the shrine wakes. Rebuilding the scene
+   with its builder would store the new words; the scene was not rebuilt here.
+6. **Halo and Pyre in the heart** now have their duo spell at the spell's place and nothing at the crown. This has not been
+   looked at on the chart.
+7. **The Grudge's cloud has no look of its own yet** (effects.md: "Not yet: the cloud itself").
+
+## 2026-11-20 (night): the owner's answers built offline on `phase4b` (not merged yet)
+
+Branch `phase4b`, from `main` at `7bc85df`. It was built with no editor, and every commit compiles clean in all four
+assemblies. The EditMode fixtures that run outside the editor pass: 708 in all, with the same 114 editor-only failures as
+`main`. The merge steps, fixtures and probes are in `phase4b_merge_plan.md`. `// NEEDS` lines went from 493 to 455.
+
+| Task | Commit | What was built |
+|---|---|---|
+| 1. Six keystones | `1bbd191` | See "The six keystones" below. |
+| 2. `reaction-numbers` | `234bb48` | A duo mark changes its own reaction's numbers. `ReactionNumbers` keeps copies of the reaction's effects and of its shapes' effects, one copy for each set of changing marks in force, in the original slots. 18 minors are finished. See below for the 7 that need other pieces. |
+| 3. `duo-surge-slot` | `4ec7497` | Each of the nine duo surges is its own surge in the Hand's surge slot. It is chosen at a rest fire while both elements are carried. It has its own kit for its own mana and time, and is in force only while worn. Open the Gourd lasts a second longer for each capsize, to 15 s. Ash and Thunder lasts a second longer for each kill. |
+| 4. `form-pieces` | `2b52de6` | See "Form pieces" below. |
+| 5. Empowers | `3581206` | See "Empowers" below. |
+| 6. Four marks kept | `48171c0` | See "Four marks kept" below. |
+| 7. The deep strike | `1e07c7f` | It needs the element's Devotion bought (`StrikeRules.IsDeep`). Without it, R2 alone or all in is the plain infused strike and costs no mana. The HUD, the guide and the Devotions' texts say so. |
+| 8. Smaller changes | `552fdf4` | See "Smaller changes" below. |
+| Review | `83dde33` | Nine fixes from a code review, and `Phase4bProbe`. |
+
+### The six keystones
+
+- **Into the Fire.** A dodge toward the enemy you face (within 60 degrees) is safe for its whole length and goes through
+  bodies. It sets everything on its path burning two deep. A perfect dodge toward the enemy raises Heat a level. A dodge
+  away costs twice the stamina and is never perfect.
+- **The Blade Drinks Fire.** Fire's root lays nothing with the weapon. Burns do not bite. Each blow takes Burn off a
+  burning enemy and hits 6 harder for each: one for a light blow, three for a heavy blow, all for a finisher.
+- **High Water, Low Water.** A tide clock turns every 6 s, and a perfect guard or dodge turns it at once. High water: spells
+  x1.33 and the weapon x0.8. Low water: the other way round.
+- **Drawn Back to Break.** Each dodge away banks a wave, three at most. The next blow breaks them all as a 4 m cone that
+  soaks and throws. With no wave held, the weapon is 20% softer (a count's empty state).
+- **Shared Roots (`life.sharedroots`).** A third of each wound goes to the Seeded enemies within 8 m, split between them.
+  Blows on Seeded enemies no longer heal you.
+- **In Its Season.** A seed left alone for 6 s ripens and stops fading. A ripe burst is three times as strong and grows a
+  thornbush (`RipeBurst`). An unripe burst is half as strong. A burst means set off, its bearer's death, or a reaction.
+
+### Smaller changes (task 8)
+
+- The heart's picker steps through all ten partners.
+- Fast Water quickens each Soaked enemy's own poison clock: it bites twice as often and fades twice as fast.
+- The Exile Returns and Given Bones answer only the Grudge's bolt, in any of its three shapes (`AnyMark`). Given Bones adds
+  14 a Static.
+- Ash Plume's storm is capped at five bolts.
+
+### Empowers (task 5)
+
+- The "a second less" defaults are undone, and the chart test lets an Empower strengthen or shorten.
+- Empowers can now change their Learn's own effects (`empower-effects`) or lay their numbers on the Learn's spell alone
+  (`LearnOnly`).
+- This finishes Poured Bronze, Reckoning, One by One, Daybreak, Five Needles, Returning Edge, Cairn, Reap What Is Sown,
+  Drawn From the Wood, Devouring Maw, Gone to Ash, Debts Called and Second Shadow.
+
+### Four marks kept (task 6)
+
+- Hammer Down and Clean Break are in the empty middle place of Wind's and Ice's right boughs. Indrawn Breath and Ski Run now
+  grow from them, as the pattern grows those stalks: a line from the foot would run over the kept mark, and the ring check
+  refuses that. So those two spells are 3 Shards dearer to reach. Hammer Down's heavy blow on an enemy in the air also hits
+  half again as hard.
+- Spilled Water and Shade are at a new place, the top of the trunk (`T.3`). Water and Life had no empty place left after
+  their keystones.
+
+### Form pieces (task 4)
+
+- A spell's later presses: `Upgrade.Presses`, done by the slot's own button within its window.
+- A change of places (`SwapPlaces`), a step straight back (`StepBack`), and a moment untouchable (`Untouchable`).
+- Three Weasels now has all three presses.
+- Under the Black Water now changes places. Elites and gods stay put and you rise behind them. Its pool curses, and your
+  next blow hits half again as hard.
+
+### What is left (all in the ledger)
+
+- **Reaction-numbers marks that need other pieces:**
+  - Goes Up (`reaction-numbers-when`)
+  - Held Down and What the Yew Keeps (`reaction-start-count`)
+  - Clear Sky (`mark-blows-on`)
+  - Bellows and Wind Sickle (`whirl-fed`)
+  - Bright Venom (`poison-held`)
+- **Empowers:**
+  - Standing Light's does nothing until `in-own-ground`.
+  - Flung Blade's now does nothing until `base-spell-marks`, since its shorter wait was the only part that worked.
+  - The `empower-after-shape` row is left for the rest.
+- **Second presses:** those a Shape or a Master adds, those that act on a thing the spell left standing, and Fire-Setting.
+  Fire-Setting needs a brand that lays the fire without a blow setting it off.
+- **The other duo spells' form pieces.** They stay in `form-pieces`, each with what it needs.
+- **The Yawning Gap:** alternating blows (`alternate-blows`).
+- **Looks**, in the `looks` row:
+  - the bud and flower of a ripe seed
+  - the tide ring and HUD sign
+  - the blade drinking fire
+  - Shared Roots' roots
+  - the waves behind the shoulders
+  - Into the Fire's lunge
+  - duo surges have no look of their own and wear their first element's
+
+## For the owner (this pass)
+
+1. **The top of the trunk.** Spilled Water and Shade are at a new place, `T.3`, at (0, 9.75). It grows from the middle
+   bough's crown (Spreading Water, Root and Branch), because their trees had no empty place left after the new keystones.
+   Alternatives: make one of them a minor somewhere else, or cut it again.
+2. **Indrawn Breath and Ski Run are dearer.** They now grow from Hammer Down and Clean Break, so each is 3 Shards dearer
+   to reach. Growing them from the foot as well would draw a line over the kept mark, which the ring check refuses. The
+   other choice is to put Hammer Down and Clean Break somewhere else.
+3. **Readings of the rosters**, as built:
+   - Grit: 6 a cut, not 3, and the whirl about 4 s.
+   - Green Wood: torn pits stand 8 s, not 5.
+   - Riding High: the farthest feather lands 9 m beyond the enemy.
+   - Wide Fan: Prism's five rays reach 7 m beyond the enemy.
+   - Reckoning's Empower: 10 a blow, 180 at most (60% of the approved 8 a blow).
+   - Daybreak's Empower: 10 a ring on the beam only.
+4. **Prices undone.** Daybreak's and One by One's price defaults were undone too, as the roster gave only stronger numbers
+   for them.
+5. **Duo surges start with no affliction of their own on the blows.** Their marks do everything.
+6. **Three Weasels' clock** starts at the first press. A press refused (nothing to do) ends the run of presses.
+7. **What "toward" means for Into the Fire and Drawn Back to Break.** A dodge counts when it is within 60 degrees of the line
+   to the enemy faced: the one ahead, or else the nearest, within 12 m. A dodge to the side is neither.
+
+## 2026-11-20 (late night): `phase4b` merged into main and partly proven in the editor
+
+**Merged:** `phase4b` (12 commits, `1e07c7f` to `9ff2272`) with `--no-ff`. Merge commit: `f4ecf80`. There were no conflicts in
+the text. Both sides touched `PlayerCombat.cs`, `PlayerUpgrades.cs`, `effects.md` and `carriedembers.md`, and git merged them
+cleanly. Main's effects fixes (`1d990fc`, `b863f3c`) survive, such as the tinted heavy-blow star, no affliction-full ring
+under the new art, and Carried Embers' column sparing its target. Reaction-numbers copies are made with `MemberwiseClone`,
+so they carry main's `SparesTarget` too.
+
+**Compile:** 0 errors, 0 warnings. **Playtest Texts** rebuilt, with ten new entries: Fire +2, Ice +1, Life +3, Water +3 and
+Wind +1. The three `.meta` files and the new `PlaytestTexts.asset` are committed (`2f96a1b`).
+
+**EditMode.** The merge plan's fixtures all passed:
+
+| Fixture | Passed |
+|---|---|
+| KeystoneRuleTests | 15 |
+| UpgradeChartTests | 31 |
+| SpellBranchTests | 12 |
+| DuoBranchTests | 10 |
+| HandRulesTests | 18 |
+| InForceTests | 53 |
+| PoisonBeatTests | 11 |
+| SaveMigrationTests | 12 |
+| RuleBookTests | 19 |
+| MarksBuiltTests | 9 |
+| SpellCooldownTests | 14 |
+| SpellSlotsTests | 10 |
+| ReactionCatalogueTests | 6 |
+
+The full suite: **822 run, 822 passed.**
+
+**Probes.** Each probe below had at least one WRONG on its first run. All of them were faults in the probe; the code was
+right.
+
+- **Phase4bProbe: 32 OK, 0 WRONG.** It first ran with 30 OK and 2 WRONG.
+  - **Drawn Back to Break: "waves 1".** A roll turns the player the way it goes. After the first dodge south, the player
+    faced the afflicted dummies 4 m away at z -5, so the second dodge counted as toward them. The probe now turns the player
+    back to the host before the second dodge.
+  - **Three Weasels: "comes out beyond the enemy".** The first press is the step form, which already steps through the
+    enemy (z 2 to 7, the host at 6). The second press then passes back through it, to z 3. The probe now checks that the
+    player ends on the other side of the enemy from where the rush left them.
+- **GrudgeProbe: 16 OK, 0 WRONG.** It first ran with 15 OK and 1 WRONG.
+  - **"Seven blows call down five bolts".** The probe read the host's health. But `Falling` drops its first bolt on the
+    enemy and the rest round it, so the health shows one bolt whatever the count (31 lost with three blows and with seven).
+    The probe now counts the bolts as they are laid: **5 laid from seven blows**.
+
+**Put off by the owner's change of priority** (the effects build needs the editor), and still to run: P1bProbe, P2Probe,
+DuoProbe, MarksProbe, and the end-of-job regression of ReactionProbe2, DuoProbeAll and CrowdProbe. DevotionProbe and the
+`HeartCrowdProbe` profiler pass from the merge plan have not been run either.
+
+## For the owner (this merge)
+
+1. **Three Weasels' first weasel steps through the enemy.** It is the plain step form, so the "rush to the enemy that throws
+   it" ends 1 m beyond the enemy. The second weasel's "pass straight through" then runs back the way you came. To make the
+   first press stop in front of the enemy, it would need a rush of its own.
+   **Answered 2026-11-20 (evening): give it a rush of its own that stops in front; the second press goes through.** Built
+   on `phase4c` (below).
+2. **"The enemy you face" after a roll away.** A roll turns you the way it goes. A second dodge away is measured against
+   whatever is ahead of you then, and only against the first enemy if nothing is ahead within 12 m. In a crowd, two dodges
+   back from one enemy can count as one away and one toward another. Drawn Back to Break and Into the Fire both read it.
+   **Answered 2026-11-20 (evening): remember the target until it dies or you get far from it.** Built on `phase4c`, with
+   16 m as "far" (below). Then also: **let it go after 3 s without a dodge.**
+3. **Drawn Back to Break's throw** was not seen in the probe: the still dummy cannot be shoved, so "moved 0.0 m". The cone
+   did soak it and spend the waves.
+
+## 2026-11-20 (evening): `phase4c`, the owner's two answers
+
+Built offline in the worktree `Clover-phase4c` (branch `phase4c`), while the editor was busy with other work. Not yet run
+in the editor.
+
+**Three Weasels' first press stops in front.** A new bespoke form, `rush` (`RushForm`, a `StepForm` that stops short and
+keeps facing the enemy). It stops `FormRules.RushShort` (1.2 m) in front of the enemy faced, within the spell's 5 m reach,
+and cuts on into it. It still throws the enemy 2 m and lays two Unsteady. The second press is unchanged: straight through
+to 3 m beyond (`FormRules.MarkStep`, which `UpgradeAction.Step` now uses). In the probe's layout (you at z 2, the enemy at
+z 6) the first press now ends at z 4.8, and the second at z 9. The rush still promises a critical heavy blow when it lands,
+as the step did. Its look is the step's streak and cut, stopped short: a stand-in, in the ledger's `looks` row.
+
+**A run of dodges remembers its enemy.** `DodgeHold<T>` and `DodgeRules.StillHeld` (in `DodgeWay.cs`). The first dodge
+holds the enemy it was measured against (the one ahead, else the nearest, within 12 m). Every later dodge is measured
+against that enemy while it lives and stands within `PlayerUpgrades.DodgeHoldRange`, 16 m (`DodgeRules.HoldRange`: the
+fight's 12 m and most of a 4.5 m roll). When it dies or the player gets farther, the next dodge takes the enemy faced then.
+The one helper (`PlayerUpgrades.WayOf`) feeds both readers of a dodge's way: `OnDodge` (Drawn Back to Break's waves, Into
+the Fire's lunge and its perfect-dodge Heat) and `DodgeTermsFor` (Into the Fire's cost and safety). No other mark reads it.
+The owner then added a clock: the hold also ends 3 s after the last dodge (`DodgeRules.HoldSeconds`, exposed as
+`PlayerUpgrades.DodgeHoldSeconds`, read on `Time.time`; every dodge starts the 3 s again). After a longer pause the next
+dodge takes whoever is faced then.
+
+**Tests.** `KeystoneRuleTests` gains `TheEnemyFirstDodgedFromStillCountsInACrowd`,
+`TheHeldEnemyIsLetGoWhenItDiesOrThePlayerGetsFarFromIt` and `TheHeldEnemyIsLetGoAfterThreeSecondsWithoutADodge` (held
+2.9 s after a dodge, let go 3.1 s after); `DuoBranchTests` gains
+`ThreeWeaselsFirstPressStopsInFrontAndTheSecondPassesThrough`; `SpellFormTests` knows the new form.
+
+**Probe.** `Phase4bProbe` drops the teleport back to the host before Drawn Back to Break's second dodge, and judges that
+the host is held and the second roll south counts as away. Three Weasels now judges that the first press stops just in
+front (0.6 to 2 m short, on the near side) and the second comes out beyond.
+
+**Still to do in the editor:** compile, the three fixtures, `Phase4bProbe`, and commit the `.meta` Unity writes for
+`RushForm.cs`.

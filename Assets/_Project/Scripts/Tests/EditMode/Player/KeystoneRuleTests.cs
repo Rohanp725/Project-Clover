@@ -4,6 +4,7 @@ using Clover.Player;
 using Clover.Player.Forms;
 using Clover.Player.Trees;
 using NUnit.Framework;
+using UnityEngine;
 
 namespace Clover.Tests
 {
@@ -19,6 +20,268 @@ namespace Clover.Tests
             Afflictions.BrittleShare = 0.2f;
             Afflictions.BuckledShare = 0f;
             Afflictions.FlashFreezeAt = 0;
+            Afflictions.BurnBiteOff = false;
+            Afflictions.Rules.Clear();
+        }
+
+        // ---- The six keystones of 2026-11-20 (keystones_fire_water_life.md) and the pieces they stand on.
+
+        [Test]
+        public void TheSixNewKeystonesStandInTheEmptyPlacesOfTheirBoughs()
+        {
+            var places = new (string id, string tree, string place, string from)[]
+            {
+                (FireTree.IntoTheFire, Elements.Fire, BranchPattern.LeftCrown, Upgrade.FlameTrail),
+                (FireTree.BladeDrinksFire, Elements.Fire, BranchPattern.RightCrown, FireTree.CatchingFire),
+                (WaterTree.HighWaterLowWater, Elements.Water, BranchPattern.TrunkLeft, WaterTree.SpreadingWater),
+                (WaterTree.DrawnBackToBreak, Elements.Water, BranchPattern.LeftCrown, WaterTree.HeavyWater),
+                (LifeTree.SharedRoots, Elements.Life, BranchPattern.RightCrown, LifeTree.BriarCoat),
+                (LifeTree.InItsSeason, Elements.Life, BranchPattern.TrunkLeft, LifeTree.RootAndBranch),
+            };
+            foreach (var (id, tree, place, from) in places)
+            {
+                var mark = Upgrade.ById(id);
+                Assert.IsNotNull(mark, id);
+                Assert.AreEqual(UpgradeKind.Keystone, mark.Kind, id);
+                Assert.AreEqual(tree, mark.Element, id);
+                Assert.AreEqual(6, mark.Cost, id);
+                CollectionAssert.AreEqual(new[] { from }, mark.Requires, id);
+                var at = BranchPattern.Of(place);
+                Assert.AreEqual(at.X, mark.X, 0.001f, id + " stands at " + place);
+                Assert.AreEqual(at.Y, mark.Y, 0.001f, id + " stands at " + place);
+                Assert.IsFalse(RetiredMarks.IsRetired(id), id + " is a new id, never a retired one");
+                Assert.IsNotEmpty(mark.Description, id);
+            }
+            // Each of the three trees now has three keystones beside its Devotion.
+            foreach (string tree in new[] { Elements.Fire, Elements.Water, Elements.Life })
+                Assert.AreEqual(3, Upgrade.All.Count(mark => mark.Element == tree && !mark.IsMix && mark.Kind == UpgradeKind.Keystone), tree);
+            Assert.IsTrue(RetiredMarks.IsRetired("life.roots"), "the old Shared Roots stays retired and refunded");
+        }
+
+        [Test]
+        public void ADodgeIsTowardAwayOrAcrossTheEnemyFaced()
+        {
+            var from = Vector3.zero;
+            var enemy = new Vector3(0f, 0f, 5f);
+            Assert.AreEqual(DodgeWay.Toward, DodgeRules.WayOf(Vector3.forward, from, enemy, true));
+            Assert.AreEqual(DodgeWay.Toward, DodgeRules.WayOf(new Vector3(0.6f, 0f, 1f), from, enemy, true), "within 60 degrees is toward");
+            Assert.AreEqual(DodgeWay.Away, DodgeRules.WayOf(Vector3.back, from, enemy, true));
+            Assert.AreEqual(DodgeWay.Any, DodgeRules.WayOf(Vector3.right, from, enemy, true), "across its line is neither");
+            Assert.AreEqual(DodgeWay.Any, DodgeRules.WayOf(Vector3.forward, from, enemy, false), "with no enemy, neither");
+        }
+
+        [Test]
+        public void TheEnemyFirstDodgedFromStillCountsInACrowd()
+        {
+            // The owner's answer of 2026-11-20, as the Phase 4b probe found it: the host stands north at z 6, the player at
+            // z 3.5 facing it, and other enemies stand south at z -5. A roll south is away from the host and turns the
+            // player to face south, where the crowd is now the enemy ahead. The rolls come a second apart.
+            const float wait = DodgeRules.HoldSeconds, range = DodgeRules.HoldRange;
+            var hold = new DodgeHold<string>();
+            Vector3 host = new Vector3(0f, 0f, 6f), crowd = new Vector3(0f, 0f, -5f);
+            Vector3 from = new Vector3(0f, 0f, 3.5f);
+            string against = hold.Against(from, "host", false, Vector3.zero, range, 10f, wait);
+            Assert.AreEqual("host", against, "the first dodge takes the enemy faced");
+            Assert.AreEqual(DodgeWay.Away, DodgeRules.WayOf(Vector3.back, from, host, true));
+            hold.Took(against, 10f);
+            Assert.AreEqual("host", hold.Held);
+
+            // The second roll south: measured against the crowd ahead it would be toward; held to the host it is away again.
+            from = new Vector3(0f, 0f, -1f);
+            Assert.AreEqual(DodgeWay.Toward, DodgeRules.WayOf(Vector3.back, from, crowd, true), "the crowd ahead would make it toward");
+            against = hold.Against(from, "crowd", true, host, range, 11f, wait);
+            Assert.AreEqual("host", against, "the host is held, not the crowd ahead");
+            Assert.AreEqual(DodgeWay.Away, DodgeRules.WayOf(Vector3.back, from, host, true), "so the second roll south is away too");
+            hold.Took("crowd", 11f);
+            Assert.AreEqual("host", hold.Held, "a later dodge never takes the hold from the first one's enemy");
+
+            // A third roll, still near the host: still the host.
+            from = new Vector3(0f, 0f, -5.5f);
+            Assert.AreEqual("host", hold.Against(from, "crowd", true, host, range, 12f, wait));
+        }
+
+        [Test]
+        public void TheHeldEnemyIsLetGoWhenItDiesOrThePlayerGetsFarFromIt()
+        {
+            Assert.AreEqual(16f, DodgeRules.HoldRange, "the fight's 12 m and most of a 4.5 m roll more");
+            const float wait = DodgeRules.HoldSeconds, range = DodgeRules.HoldRange;
+            var hold = new DodgeHold<string>();
+            hold.Took("host", 0f);
+            Vector3 host = new Vector3(0f, 0f, 6f);
+
+            // Dead: the next dodge takes the enemy faced then, and holds it.
+            Assert.AreEqual("crowd", hold.Against(Vector3.zero, "crowd", false, host, range, 1f, wait));
+            Assert.IsNull(hold.Held);
+            hold.Took("crowd", 1f);
+            Assert.AreEqual("crowd", hold.Held);
+
+            // Far: 16 m on the ground still holds, a step more lets go. Height does not count.
+            hold.Clear();
+            hold.Took("host", 2f);
+            Assert.IsTrue(hold.Keeps(new Vector3(0f, 3f, 6f - 16f), true, host, range, 3f, wait), "16 m off, on a ledge below, still held");
+            Assert.AreEqual("other", hold.Against(new Vector3(0f, 0f, 6f - 16.5f), "other", true, host, range, 3f, wait), "16.5 m off, let go");
+            Assert.IsNull(hold.Held);
+
+            // With nothing held and no enemy faced, the dodge holds nothing.
+            Assert.IsNull(hold.Against(Vector3.zero, null, false, Vector3.zero, range, 4f, wait));
+            hold.Took(null, 4f);
+            Assert.IsNull(hold.Held);
+        }
+
+        [Test]
+        public void TheHeldEnemyIsLetGoAfterThreeSecondsWithoutADodge()
+        {
+            // The owner's answer of 2026-11-20 (evening): measured from the last dodge, not the first.
+            Assert.AreEqual(3f, DodgeRules.HoldSeconds);
+            const float wait = DodgeRules.HoldSeconds, range = DodgeRules.HoldRange;
+            Vector3 host = new Vector3(0f, 0f, 6f), from = new Vector3(0f, 0f, 2f);
+            var hold = new DodgeHold<string>();
+            hold.Took("host", 20f);
+
+            Assert.AreEqual("host", hold.Against(from, "crowd", true, host, range, 22.9f, wait), "2.9 s after the dodge, still held");
+            Assert.AreEqual("host", hold.Held);
+
+            // Each dodge starts the pause again: a dodge at 22.9 s keeps the host to 25.9 s.
+            hold.Took("host", 22.9f);
+            Assert.AreEqual("host", hold.Against(from, "crowd", true, host, range, 25.8f, wait), "2.9 s after the second dodge, still held");
+
+            Assert.AreEqual("crowd", hold.Against(from, "crowd", true, host, range, 26.0f, wait), "3.1 s after the last dodge, let go");
+            Assert.IsNull(hold.Held);
+            hold.Took("crowd", 26.0f);
+            Assert.AreEqual("crowd", hold.Held, "and the next dodge takes whoever is faced");
+        }
+
+        [Test]
+        public void IntoTheFireMakesADodgeSafeWholeAndThroughBodiesOrDearAndNeverPerfect()
+        {
+            var stamina = new StaminaPool();
+            stamina.Fill();
+            var roll = new DodgeRoll();
+            Assert.IsTrue(roll.TryStart(Vector3.forward, stamina, new DodgeTerms { CostScale = 1f, WholeSafe = true, PassesBodies = true }));
+            Assert.AreEqual(stamina.Maximum - roll.StaminaCost, stamina.Current, 0.01f);
+            Assert.IsTrue(roll.PassesBodies);
+            for (int i = 0; i < 3; i++) roll.Tick(0.1f);
+            Assert.Greater(roll.Elapsed, roll.InvulnerableUntil, "past the usual window");
+            Assert.IsTrue(roll.IsInvulnerable, "toward the enemy: safe for the whole roll");
+            while (roll.IsRolling) roll.Tick(0.1f);
+            for (int i = 0; i < 5; i++) roll.Tick(0.1f);
+            stamina.Fill();
+            Assert.IsTrue(roll.TryStart(Vector3.back, stamina, new DodgeTerms { CostScale = 2f, NoPerfect = true }));
+            Assert.AreEqual(stamina.Maximum - roll.StaminaCost * 2f, stamina.Current, 0.01f, "away: twice the stamina");
+            Assert.IsTrue(roll.NoPerfect);
+            Assert.IsFalse(roll.PassesBodies, "the terms are this roll's alone");
+            for (int i = 0; i < 3; i++) roll.Tick(0.1f);
+            Assert.IsFalse(roll.IsInvulnerable, "away: only the usual window");
+            // The plain roll as written.
+            while (roll.IsRolling) roll.Tick(0.1f);
+            for (int i = 0; i < 5; i++) roll.Tick(0.1f);
+            stamina.Fill();
+            Assert.IsTrue(roll.TryStart(Vector3.right, stamina));
+            Assert.IsFalse(roll.NoPerfect || roll.WholeSafe || roll.PassesBodies);
+            // A perfect dodge toward the enemy raises Heat.
+            var into = Upgrade.ById(FireTree.IntoTheFire);
+            Assert.IsTrue(into.Effects.Any(effect => effect.On == UpgradeTrigger.PerfectDodge && effect.Way == DodgeWay.Toward && effect.Do == UpgradeAction.RaiseHeat));
+        }
+
+        [Test]
+        public void TheBladeDrinksFireStopsBurnsBitingButLetsThemRunDown()
+        {
+            var burning = new AfflictionSet();
+            burning.Apply(AfflictionKind.Burn, 3);
+            float bitten = 0f;
+            for (int i = 0; i < 10; i++) bitten += burning.Tick(0.1f);
+            Assert.Greater(bitten, 0f, "a burn bites as written");
+            Afflictions.BurnBiteOff = true;
+            var drunk = new AfflictionSet();
+            drunk.Apply(AfflictionKind.Burn, 3);
+            float none = 0f;
+            for (int i = 0; i < 10; i++) none += drunk.Tick(0.1f);
+            Assert.AreEqual(0f, none, 0.0001f, "burns no longer bite by themselves");
+            Assert.IsTrue(drunk.Burn.IsBurning, "the fuel is still there for the blade");
+            Assert.AreEqual(2, drunk.Spend(AfflictionKind.Burn, 2), "a blow drinks what it takes");
+            Assert.AreEqual(1, drunk.Stacks(AfflictionKind.Burn));
+            Assert.IsEmpty(Upgrade.ById(FireTree.BladeDrinksFire).Effects, "built by hand, with no stand-in effects");
+        }
+
+        [Test]
+        public void HighWaterLowWaterSwapsSpellAndWeaponByTheTide()
+        {
+            var stats = new PlayerStats();
+            foreach (var mod in Upgrade.ById(WaterTree.HighWaterLowWater).Stats) stats.AddLearned(mod);
+            Assert.AreEqual(1f, stats.Multiplier(PlayerStat.SpellDamage), 0.001f, "neither half holds before the clock runs");
+            stats.SetWhen(StatWhen.HighWater, true);
+            Assert.AreEqual(1.33f, stats.Multiplier(PlayerStat.SpellDamage), 0.001f, "high water: spells a third harder");
+            Assert.AreEqual(0.8f, stats.Multiplier(PlayerStat.WeaponDamage), 0.001f, "and the weapon a fifth softer");
+            stats.SetWhen(StatWhen.HighWater, false);
+            stats.SetWhen(StatWhen.LowWater, true);
+            Assert.AreEqual(1.33f, stats.Multiplier(PlayerStat.WeaponDamage), 0.001f, "low water: the other way round");
+            Assert.AreEqual(0.8f, stats.Multiplier(PlayerStat.SpellDamage), 0.001f);
+            var effects = Upgrade.ById(WaterTree.HighWaterLowWater).Effects;
+            Assert.IsTrue(effects.Any(effect => effect.On == UpgradeTrigger.PerfectGuard && effect.Do == UpgradeAction.TurnTide));
+            Assert.IsTrue(effects.Any(effect => effect.On == UpgradeTrigger.PerfectDodge && effect.Do == UpgradeAction.TurnTide));
+        }
+
+        [Test]
+        public void DrawnBackToBreakBanksAWaveForEachDodgeAwayAndBreaksThemAllOnTheNextBlow()
+        {
+            var mark = Upgrade.ById(WaterTree.DrawnBackToBreak);
+            Assert.AreEqual(3, mark.Tally.Cap);
+            Assert.AreEqual(PlayerStat.WeaponDamage, mark.Tally.EmptyStat);
+            Assert.AreEqual(-0.2f, mark.Tally.EmptyAmount, 0.001f, "with no wave drawn, blows a fifth softer");
+            var bank = mark.Effects.Single(effect => effect.Do == UpgradeAction.Bank);
+            Assert.AreEqual(UpgradeTrigger.DodgeEnd, bank.On);
+            Assert.AreEqual(DodgeWay.Away, bank.Way, "only a dodge away from the enemy faced");
+            var breaker = mark.Effects.Single(effect => effect.Do == UpgradeAction.Cone);
+            Assert.AreEqual(UpgradeTrigger.AnyHit, breaker.On);
+            Assert.IsTrue(breaker.SpendsAll && breaker.PerStack, "all the waves break at once, each counted");
+            Assert.AreEqual(4f, breaker.Reach);
+            Assert.AreEqual(12f, breaker.Damage);
+            Assert.AreEqual(20f, breaker.Stagger);
+            Assert.AreEqual(AfflictionKind.Soaked, breaker.Affliction);
+            Assert.AreEqual(2f, breaker.Amount, "thrown 2 m away");
+        }
+
+        [Test]
+        public void ASeedLeftAloneRipensStopsFadingAndBurstsThreeTimesAsHard()
+        {
+            var book = new Clover.Player.Growth.RuleBook();
+            Assert.IsTrue(book.Apply(Upgrade.ById(LifeTree.InItsSeason)));
+            book.Publish();
+            Assert.AreEqual(LifeTree.RipensAfter, Afflictions.Rules.RipensAfter(AfflictionKind.Seeded), 0.001f);
+            var seed = new AfflictionSet();
+            seed.Apply(AfflictionKind.Seeded, 2);
+            Assert.AreEqual(LifeTree.UnripeShare, seed.RipeShare(AfflictionKind.Seeded), 0.001f, "unripe: half as strong");
+            float unripeBurst = seed.DeathBurst(out _);
+            for (int i = 0; i < 61; i++) seed.Tick(0.1f);
+            Assert.IsTrue(seed.IsRipe(AfflictionKind.Seeded), "six seconds alone");
+            Assert.AreEqual(LifeTree.RipeShare, seed.RipeShare(AfflictionKind.Seeded), 0.001f);
+            Assert.AreEqual(unripeBurst * 6f, seed.DeathBurst(out _), 0.01f, "the ripe death burst is six times the unripe one (three against a half)");
+            for (int i = 0; i < 60; i++) seed.Tick(0.1f);
+            Assert.AreEqual(2, seed.Stacks(AfflictionKind.Seeded), "a ripe seed stops fading (Seeded lasts 8 s)");
+            seed.Apply(AfflictionKind.Seeded, 1);
+            Assert.IsFalse(seed.IsRipe(AfflictionKind.Seeded), "a fresh seed starts the ripening over");
+            for (int i = 0; i < 61; i++) seed.Tick(0.1f);
+            Assert.IsTrue(seed.IsRipe(AfflictionKind.Seeded), "ripe again after six seconds more");
+            // Without the rule a seed fades and bursts as written; one ripe when the mark leaves force fades again.
+            Afflictions.Rules.Clear();
+            for (int i = 0; i < 90; i++) seed.Tick(0.1f);
+            Assert.IsFalse(seed.Has(AfflictionKind.Seeded), "a ripe seed fades once the mark is gone");
+            var plain = new AfflictionSet();
+            plain.Apply(AfflictionKind.Seeded, 2);
+            Assert.AreEqual(1f, plain.RipeShare(AfflictionKind.Seeded), 0.001f);
+            for (int i = 0; i < 90; i++) plain.Tick(0.1f);
+            Assert.IsFalse(plain.Has(AfflictionKind.Seeded));
+            // A ripe burst grows a thornbush.
+            Assert.IsTrue(Upgrade.ById(LifeTree.InItsSeason).Effects.Any(effect => effect.On == UpgradeTrigger.RipeBurst && effect.Do == UpgradeAction.Hazard && effect.Grown));
+        }
+
+        [Test]
+        public void SharedRootsIsBuiltByHandWithNoStandIn()
+        {
+            var mark = Upgrade.ById(LifeTree.SharedRoots);
+            Assert.IsEmpty(mark.Effects, "the wound is passed by PlayerDefence and PlayerUpgrades, not by an arc stand-in");
+            StringAssert.Contains("third", mark.Description);
+            StringAssert.Contains("no longer heal", mark.Description);
         }
 
         [Test]

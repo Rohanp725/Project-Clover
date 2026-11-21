@@ -80,7 +80,7 @@ reaction is Flashover; its Shape mark lets you choose what Flashover does.
 
 **When it happens.** Every heavy blow or finisher that lands on a burning enemy, while Fire and Lightning are both carried.
 
-**The numbers.** A god's gift, never sold; in the playtest it can be bought. The burst is 3.2 metres in radius: 18 damage and 16 stagger. Each enemy in it that was burning takes its burn set off as well, 10 damage and 10 more a stack, and every enemy in it burns for 4 seconds afterward. Nothing of the first enemy's Burn is spent.
+**The numbers.** 5 Shards, bought once both elements are carried; no god gives it. The burst is 3.2 metres in radius: 18 damage and 16 stagger. Each enemy in it that was burning takes its burn set off as well, 10 damage and 10 more a stack, and every enemy in it burns for 4 seconds afterward. Nothing of the first enemy's Burn is spent.
 
 **Works with.** Cinder, Heat, Catching Fire, Flashover's shapes, Ionised Air.
 

@@ -14,7 +14,15 @@ namespace Clover.Player.Forms
 
         private const float StepSeconds = 0.11f;
         private const float AfterSeconds = 0.16f;
-        private const float Past = 1.8f;
+
+        /// <summary>
+        /// Whether the step comes out beyond the enemy it went for and turns back to face it (the step), or stops in front of
+        /// it still facing it (a rush, <see cref="RushForm"/>).
+        /// </summary>
+        protected virtual bool Through => true;
+
+        /// <summary>How far the body goes toward an enemy that far off, within the spell's reach.</summary>
+        protected virtual float RunTo(float gap, float reach) => FormRules.StepRun(gap, reach);
 
         public override int Cast(in SpellCast cast)
         {
@@ -32,7 +40,7 @@ namespace Clover.Player.Forms
             {
                 Vector3 gap = cast.Target.position - cast.Origin;
                 gap.y = 0f;
-                wanted = Mathf.Min(cast.Reach, gap.magnitude + Past);
+                wanted = RunTo(gap.magnitude, cast.Reach);
             }
             run.T0 = cast.Player.ClearRun(cast.Forward, wanted);
             SpellWorks.Ghost(0.4f, FormKit.Lit(cast.Colour, 2.6f, 0.85f));
@@ -62,11 +70,13 @@ namespace Clover.Player.Forms
                 run.Phase = 1;
                 run.T1 = run.Age;
                 // Through, and turned to face what was passed: the heavy blow that is owed goes back into it.
-                if (run.T0 > 0.5f) player.transform.rotation = Quaternion.LookRotation(-run.B, Vector3.up);
-                int hits = cast.Combat.StrikeLane(run.A, run.B, run.T0, 1.1f, cast.Blow(cast.Damage, cast.Stagger));
-                Vector3 middle = run.A + run.B * (run.T0 * 0.5f) + Vector3.up * 1.1f;
-                FormFx.Run(FormMark.Streak, run.A, run.B, run.T0, 1.5f, FormKit.Lit(cast.Colour, 3.2f), 0.32f, 0.1f);
-                FormFx.Cut(middle, run.B, run.T0 * 1.3f, 0.6f, FormKit.Lit(cast.Colour, 4f), 0.14f);
+                if (Through && run.T0 > 0.5f) player.transform.rotation = Quaternion.LookRotation(-run.B, Vector3.up);
+                // A rush that stopped short cuts on past where it stopped, into the enemy standing there.
+                float lane = Through ? run.T0 : run.T0 + FormRules.RushShort + 0.4f;
+                int hits = cast.Combat.StrikeLane(run.A, run.B, lane, 1.1f, cast.Blow(cast.Damage, cast.Stagger));
+                Vector3 middle = run.A + run.B * (Through ? run.T0 * 0.5f : run.T0 + FormRules.RushShort * 0.6f) + Vector3.up * 1.1f;
+                FormFx.Run(FormMark.Streak, run.A, run.B, lane, 1.5f, FormKit.Lit(cast.Colour, 3.2f), 0.32f, 0.1f);
+                FormFx.Cut(middle, run.B, Through ? run.T0 * 1.3f : Mathf.Max(1.5f, run.T0 * 1.3f), 0.6f, FormKit.Lit(cast.Colour, 4f), 0.14f);
                 ElementLook.Sparks(cast.Element, middle, run.B, 0.8f);
                 if (hits > 0)
                 {

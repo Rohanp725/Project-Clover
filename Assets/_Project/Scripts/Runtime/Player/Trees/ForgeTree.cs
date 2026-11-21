@@ -6,8 +6,8 @@ namespace Clover.Player.Trees
     /// <summary>
     /// Forge: the duo branch Earth and Metal share, reshaped by pairs_d1_d2.md ("Earth and Metal", task 4.15) and drawn in
     /// the chart's heart (<see cref="HeartPattern"/>). Its reaction is Anvil Stone; a new Shape mark opens its two shapes,
-    /// Ringing Iron (the old plain reaction) and Hammer Scale. Trip Hammer, offered to Earth's or Metal's tree, is cut because
-    /// both rosters are full (<see cref="RetiredMarks"/>). Kept: Hammer and Anvil (the reaction's stone feeds it), Struck Ore,
+    /// Ringing Iron (the old plain reaction) and Hammer Scale. Trip Hammer, offered to Earth's or Metal's tree, whose rosters
+    /// are full, is kept hidden for the Evolutions (<see cref="SpareSpells"/>). Kept: Hammer and Anvil (the reaction's stone feeds it), Struck Ore,
     /// Buckled (the standing rule while both are on), Folded Steel (its folds now a fight's growth, kept to the next rest
     /// fire), Drawn From Stone (the duo spell) and World Anvil, begun by a finisher, the branch's top mark.
     /// </summary>
@@ -117,7 +117,7 @@ namespace Clover.Player.Trees
             // BESPOKE (built): AnvilForm. The branch's top mark, begun by a finisher.
             to.Add(HeartPattern.Put(new Upgrade
             {
-                Id = WorldAnvil, Name = "World Anvil", Element = A, Element2 = B, Kind = UpgradeKind.Signature, Icon = UpgradeIcons.Crown,
+                Id = WorldAnvil, Name = "World Anvil", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { DrawnFromStone }, Icon = UpgradeIcons.Crown,
                 Description = "Your finisher is struck on an anvil that rises out of the ground. Its ring breaks the armour of everyone near and shakes them, and a blade is forged for each one it reaches, up to six. They fly with your next heavy blow.",
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.FinisherHit, Do = UpgradeAction.Form, Form = SpellForms.Anvil, Affliction = AfflictionKind.Tremor, Spell = new SpellSpec { Cost = 0f, Radius = 6f, Damage = 15f, Stagger = 30f, Stacks = 3, Count = 6, LingerDamage = 10f } } },
             }, HeartPattern.Crown));

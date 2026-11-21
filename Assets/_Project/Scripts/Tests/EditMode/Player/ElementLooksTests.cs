@@ -61,13 +61,40 @@ namespace Clover.Tests
             }
         }
 
+        /// <summary>
+        /// The elements 3 moments (staging/blender/2026-11-20_elements3): each charged blade but Lightning's lands in its
+        /// own three blows and wears nothing on the blade (the owner, 2026-11-20: "take out all the elements on top of the
+        /// blade effects"), each reworked spell and infused strike has its look, Tailwind is the wind's surge, and Red Hot
+        /// blasts on.
+        /// </summary>
+        [Test]
+        public void EveryElements3MomentIsBuilt()
+        {
+            var set = ElementLookBuilder.Set();
+            if (set == null || UnityEditor.AssetDatabase.LoadAssetAtPath<TextAsset>(ElementLookBuilder.RevisionRecipePath) == null)
+                Assert.Ignore("The elements 3 recipe is not in the project, or the looks are not built.");
+            for (int element = 0; element < 11; element++)
+            {
+                string blade = ElementMoves.BladeSlug(element);
+                if (blade == null) continue;
+                for (int blow = 1; blow <= 3; blow++) Assert.GreaterOrEqual(set.Find(ElementMoves.HitKey(element, blow)), 0, $"{blade}, blow {blow}");
+                Assert.Less(set.FindSheath(element), 0, $"{blade} wears a sheath on the blade");
+                string spell = ElementMoves.SpellKey(element, false), strike = ElementMoves.StrikeKey(element, false);
+                if (spell != null) Assert.GreaterOrEqual(set.Find(spell), 0, spell);
+                if (strike != null) Assert.IsTrue(set.Find(strike) >= 0 || set.Find(ElementMoves.StrikeKey(element, true)) >= 0, strike);
+            }
+            Assert.GreaterOrEqual(set.Find(ElementMoves.Tailwind), 0, "Tailwind");
+            Assert.GreaterOrEqual(set.FindVariant("red_hot", '+'), 0, "Red Hot's blast");
+            Assert.AreEqual(0, set.Sheaths.Length, "blade sheaths built");
+        }
+
         [Test]
         public void EveryLookTheGameAsksForIsBuilt()
         {
             var set = ElementLookBuilder.Set();
             if (set == null) Assert.Ignore("The element looks have not been built; run Clover > Build > Element Looks.");
-            Assert.AreEqual(23, set.Looks.Count(look => !look.Key.Contains("@") && System.Array.IndexOf(ElementLookBuilder.ReactionsBuilt, look.Key) < 0),
-                "21 looks of batches 1 and 2, Unsteady built for one, three and five stacks");
+            Assert.AreEqual(26, set.Looks.Count(look => !look.Key.Contains("@") && !look.Key.StartsWith(ElementMoves.Prefix) && System.Array.IndexOf(ElementLookBuilder.ReactionsBuilt, look.Key) < 0),
+                "21 looks of batches 1 and 2, Unsteady built for one, three and five stacks, and elements 4's Marked, Glaze and Bedrock");
             foreach (AfflictionKind kind in System.Enum.GetValues(typeof(AfflictionKind)))
                 for (int depth = 1; depth <= 6; depth++)
                 {
@@ -302,7 +329,11 @@ namespace Clover.Tests
             Assert.AreEqual(ElementLookSet.Venom, set.Looks[set.Find("venom_rime")].Shell, "Venom Rime's shell is poisoned ice");
             // The stone stands as long as the enemy is stone (3.5 s), not only the look's 1.6 s.
             Assert.AreEqual(3.5f, ElementLookSet.ShownFor(set.Looks[set.Find("turned_to_stone")]), 0.001f, "Turned to Stone holds while it stands as stone");
-            Assert.AreEqual(set.Looks[set.Find("glint")].Seconds, ElementLookSet.ShownFor(set.Looks[set.Find("glint")]), 0.001f, "a look with no hold ends at its length");
+            // Every other reaction keeps its aftermath standing (the crack, the grown plants, the waiting cloud), the
+            // afflictions it spent hidden under it, for the aftermath's hold; its player's part ends at its length.
+            Assert.AreEqual(ElementLookBuilder.AftermathHold, ElementLookSet.ShownFor(set.Looks[set.Find("glint")]), 0.001f, "a reaction's aftermath is held");
+            int onPlayer = set.FindVariant("glint", 'p');
+            if (onPlayer >= 0) Assert.AreEqual(set.Looks[onPlayer].Seconds, ElementLookSet.ShownFor(set.Looks[onPlayer]), 0.001f, "the player's part ends at its length");
         }
 
         /// <summary>
@@ -331,19 +362,37 @@ namespace Clover.Tests
                 }
             var wrong = new System.Collections.Generic.List<string>();
             int checkedPieces = 0;
-            foreach (bool reactions in new[] { true, false })
+            // The third review's recipes too: reactions 5's looks under the game's slugs (the options not picked left out),
+            // elements 4's under the game's keys; the earlier recipes' looks they replace are not built.
+            var combos5 = UnityEditor.AssetDatabase.LoadAssetAtPath<TextAsset>(ElementLookBuilder.R5RecipePath);
+            var elements4 = UnityEditor.AssetDatabase.LoadAssetAtPath<TextAsset>(ElementLookBuilder.E4RecipePath);
+            var e4Keys = ElementLookBuilder.E4Looks.ToDictionary(pair => pair.Value, pair => pair.Key);
+            var passes = new System.Collections.Generic.List<(TextAsset recipe, bool reactions, bool redrawn)> { (combos, true, false), (elements, false, false) };
+            if (combos5 != null) passes.Add((combos5, true, true));
+            if (elements4 != null) passes.Add((elements4, false, true));
+            foreach (var (recipe, reactions, redrawn) in passes)
             {
-                var root = (System.Collections.Generic.Dictionary<string, object>)ReactionRecipe.ReadJson((reactions ? combos : elements).text);
+                var root = (System.Collections.Generic.Dictionary<string, object>)ReactionRecipe.ReadJson(recipe.text);
                 foreach (System.Collections.Generic.Dictionary<string, object> look in (System.Collections.Generic.List<object>)root["looks"])
                 {
                     string slug = (string)look["slug"];
+                    if (redrawn && reactions)
+                    {
+                        if (ElementLookBuilder.R5NotPicked.Contains(slug)) continue;
+                        if (ElementLookBuilder.R5GameSlugs.TryGetValue(slug, out var game)) slug = game;
+                    }
+                    else if (redrawn)
+                    {
+                        if (!e4Keys.TryGetValue(slug, out var key)) continue;
+                        slug = key;
+                    }
+                    else if (!reactions && elements4 != null && ElementLookBuilder.E4Looks.ContainsKey(slug)) continue;
                     var bodies = new System.Collections.Generic.List<Vector3>();
                     foreach (System.Collections.Generic.Dictionary<string, object> body in (System.Collections.Generic.List<object>)look["bodies"]) bodies.Add(Vec(body["position"]));
                     foreach (System.Collections.Generic.Dictionary<string, object> group in (System.Collections.Generic.List<object>)look["groups"])
                     {
                         var instances = (System.Collections.Generic.List<object>)group["instances"];
                         var motions = (System.Collections.Generic.List<object>)group["motion"];
-                        string notAMesh = ElementLookBuilder.NotAMesh(slug, (string)group["kit"], (string)group["kit_object"]);
                         for (int n = 0; n < instances.Count; n++)
                         {
                             var instance = (System.Collections.Generic.List<object>)instances[n];
@@ -351,6 +400,10 @@ namespace Clover.Tests
                             string piece = (string)instance[0];
                             bool onPlayer = motion.TryGetValue("on_player", out var flag) && flag is bool yes && yes || instance.Count > 4 && (string)instance[4] == "p";
                             int body = onPlayer ? -1 : RecipeBody(motion, Vec(instance[1]), bodies, reactions, piece, wrong);
+                            // A burning body's own tongues are its real flame (BodyFlames), by where the piece stands on its body.
+                            var fromItsBody = Vec(instance[1]) - (body >= 0 && body < bodies.Count ? bodies[body] : Vector3.zero);
+                            string notAMesh = ElementLookBuilder.NotAMesh(slug, (string)group["kit"], (string)group["kit_object"],
+                                reactions ? (string)group["material"] : null, fromItsBody, piece, redrawn);
                             string expected = reactions ? ElementLookBuilder.ReactionKey(slug, body)
                                 : ElementLookBuilder.PerBody.TryGetValue(slug, out var variants) ? (body < 0 ? variants[0] : body < variants.Length ? variants[body] : null)
                                 : body <= 0 ? slug : null;

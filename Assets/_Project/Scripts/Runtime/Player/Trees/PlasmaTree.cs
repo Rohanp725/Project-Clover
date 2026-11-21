@@ -8,9 +8,9 @@ namespace Clover.Player.Trees
     /// drawn in the chart's heart (<see cref="HeartPattern"/>). Its reaction is Flashover; the branch's Shape mark opens
     /// Flashover's two shapes, Corona and Fulgurite, chosen at a rest fire, and before it is bought the plain Flashover
     /// works. Charged Embers is cut (both afflictions are laid by carrying both; the Shape mark takes its place), Arc Fire
-    /// folds into Corona, Fused Core is cut as a plain number, Plasma Lance is cut (Lightning's roster is full at six);
-    /// all four are in <see cref="RetiredMarks"/>. Kept under their ids: Twin Break, Chain Reaction, Meltdown (the
-    /// keystone), Ionised Air (re-aimed at Flashover), Ball Lightning (the duo spell) and the crown, Plasma, the branch's
+    /// folds into Corona, Fused Core is cut as a plain number, all three in <see cref="RetiredMarks"/>;
+    /// Plasma Lance (Lightning's roster is full at six) is kept hidden for the Evolutions (<see cref="SpareSpells"/>). Kept under their ids: Twin Break, Chain Reaction, Meltdown (the
+    /// keystone), Ionised Air (re-aimed at Flashover), Ball Lightning (the duo spell) and Plasma, bought from it, the branch's
     /// top mark. Open while both are carried (<see cref="MarkRules.Open(Upgrade, Build.Loadout, bool)"/>).
     /// </summary>
     public static class PlasmaTree
@@ -116,13 +116,14 @@ namespace Clover.Player.Trees
                 Spell = new SpellSpec { Cost = 40f, Speed = 2f, Seconds = 8f, Radius = 2.5f, Damage = 16f, Stagger = 20f, Stacks = 2, LingerDamage = 12f },
             }, HeartPattern.Spell));
 
-            // The crown, now the branch's top mark (pairs_d1_d2.md): the burst on a burning enemy is done by hand in
+            // The branch's top mark (pairs_d1_d2.md), bought with 5 Shards once both are carried, from Ball Lightning: gods give
+            // no duo crowns (the owner's decision of 2026-11-20), so a Fire holder consuming the storm is not given it. the burst on a burning enemy is done by hand in
             // PlayerUpgrades under Upgrade.Plasma and spends nothing. On one that carries Static as well, the burst is a
             // Flashover too, whatever its rest.
             // NEEDS: a Flashover with no Static on the enemy (the burst as the reaction itself, rather than beside it).
             to.Add(HeartPattern.Put(new Upgrade
             {
-                Id = Upgrade.Plasma, Name = "Plasma", Element = A, Element2 = B, Kind = UpgradeKind.Signature, Icon = UpgradeIcons.Crown,
+                Id = Upgrade.Plasma, Name = "Plasma", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { BallLightning }, Icon = UpgradeIcons.Crown,
                 Description = "A heavy blow or a finisher on a burning enemy bursts, and sets alight everyone near. If it carries Static too, Flashover goes off at once, whatever its rest. Nothing is spent.",
                 Effects = new[]
                 {

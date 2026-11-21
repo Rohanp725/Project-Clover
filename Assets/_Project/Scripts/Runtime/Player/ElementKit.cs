@@ -299,6 +299,24 @@ namespace Clover.Player
             return true;
         }
 
+        /// <summary>
+        /// Adds seconds to a surge that burns, never past <paramref name="most"/> seconds in all (0: no cap): Open the Gourd's
+        /// capsizes and Ash and Thunder's kills. Nothing on a surge that is not lit.
+        /// </summary>
+        public void Lengthen(float seconds, float most = 0f)
+        {
+            if (!SurgeActive || seconds <= 0f) return;
+            float total = surgeLength + seconds;
+            if (most > 0f) total = Math.Min(total, most);
+            float added = total - surgeLength;
+            if (added <= 0f) return;
+            surgeLength = total;
+            SurgeLeft += added;
+        }
+
+        /// <summary>The whole length of the surge burning now, lengthened or not.</summary>
+        public float SurgeLength => surgeLength;
+
         /// <summary>A blow or a dodge breaks the cast. The mana is gone either way: casting next to an enemy is a risk.</summary>
         public void Interrupt() => IsCasting = false;
 

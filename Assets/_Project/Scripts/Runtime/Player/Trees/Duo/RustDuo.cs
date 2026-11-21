@@ -7,7 +7,7 @@ namespace Clover.Player.Trees.Duo
     /// The duo branch of Water and Metal (pairs_d3.md, "Water and Metal", distance 3; task 4.16), named by its reaction,
     /// Rust. Drawn in the chart's heart (<see cref="HeartPattern"/>) and open while both are carried. Its Shape mark opens
     /// Seized Joints and Flaking; Salt Edge and Salt Guard (majors), Brine (a minor), the keystone The Wreck, and the duo
-    /// spell The Sea Takes It, the crown. Water is written first.
+    /// spell The Sea Takes It. Water is written first.
     /// </summary>
     public static class RustDuo
     {
@@ -97,7 +97,7 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.Keystone));
 
-            // The duo spell, the crown: a breaker on a 13 s cooldown (SpellTimings). The wave form throws a cone of brine ahead
+            // The duo spell, bought with Shards once both are carried (no god gives it): a breaker on a 13 s cooldown (SpellTimings). The wave form throws a cone of brine ahead
             // that Soaks (the branch's first element); every notched enemy it crosses rusts through to full.
             // NEEDS: its joints seizing (40% slower turning for 4 s) and a heavy blow on a seized enemy knocking a plate off.
             to.Add(HeartPattern.Put(new Upgrade

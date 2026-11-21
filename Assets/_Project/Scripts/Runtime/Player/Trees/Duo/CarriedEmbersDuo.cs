@@ -7,7 +7,7 @@ namespace Clover.Player.Trees.Duo
     /// The duo branch of Fire and Wind (pairs_d1_d2.md, "Fire and Wind", distance 2; task 4.15), named by its reaction,
     /// Carried Embers. Drawn in the chart's heart (<see cref="HeartPattern"/>) and open while both are carried. Its Shape mark
     /// opens Fire Whirl and Hot Wind; Fan the Flame and Long Embers, the keystone The Wind Carries It, and the duo spell The
-    /// Fire Breathes In, the crown. Fire is written first: the duo spell is cast in Fire.
+    /// Fire Breathes In. Fire is written first: the duo spell is cast in Fire.
     /// </summary>
     public static class CarriedEmbersDuo
     {
@@ -68,15 +68,16 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.LeftLow));
 
-            // NEEDS: a mark that changes the reaction's own numbers (reaction-numbers); now a fourth ember flies 7 m.
+            // Changes its reaction's own numbers while it is in force (reaction-numbers, ReactionNumbers):
+            // four embers, not three, flying 2 m further.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = LongEmbers, Name = "Long Embers", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 1, Requires = new[] { Shape }, Icon = UpgradeIcons.Flame,
                 Description = "When Carried Embers fires, one more ember flies 2 m further.",
-                Effects = new[]
+                ReactionChanges = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = Reaction, Do = UpgradeAction.Hazard, Shape = HazardShape.Downwind, Count = 1, Reach = 7f, Amount = 1f,
-                        Radius = 1f, Seconds = 3f, Interval = 0.5f, Damage = 3f, Affliction = AfflictionKind.Burn, Stacks = 1, Delay = 0.45f },
+                    new ReactionChange { Shape = -1, Index = 0, Count = 4, Reach = 7f },
+                    new ReactionChange { Shape = -1, Index = 1, Count = 4, Reach = 7f },
                 },
             }, HeartPattern.RightLow));
 
@@ -93,7 +94,7 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.Keystone));
 
-            // The duo spell, the crown: an opener on a 16 s cooldown (SpellTimings). The reverse form draws enemies in to a
+            // The duo spell, bought with Shards once both are carried (no god gives it): an opener on a 16 s cooldown (SpellTimings). The reverse form draws enemies in to a
             // point and bursts there.
             // NEEDS: a ring of flame that stands 6 s and burns inside it every half second, Unsteady every 2 s on all within
             // 8 m, and heavy blows that throw toward it (pull-to-point); now a 3 s draw that bursts in fire.

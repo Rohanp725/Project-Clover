@@ -210,5 +210,59 @@ namespace Clover.Tests
             Assert.AreEqual(weapon, enemy.DamageTakenMultiplier(false), 0.001f);
             Assert.AreEqual(stagger, enemy.StaggerTakenMultiplier, 0.001f);
         }
+
+        [Test]
+        public void TheBlowThatShattersIsToldSoItsAnswerNeedNotAskForTheChillItEnded()
+        {
+            // Cold Damage (Venom Rime): its doses go off on the blow that shatters, which has ended the Chill by then.
+            var enemy = NewEnemy();
+            enemy.Conditions.Set(new ConditionSpec { Id = "test.bone", Seconds = 10f }, null, 1, null, true);
+            enemy.Apply(AfflictionKind.Chill, 5);
+            Assert.IsTrue(enemy.IsFrozen);
+            // As Enemy and TrainingDummy do: the ice breaks first, then the blow is told.
+            bool shattered = enemy.Shatter() > 0f;
+            enemy.TakeFrom(new Hit(5f, 0f, Vector3.forward, heavy: true), null, shattered);
+            Assert.IsTrue(Last(ConditionMoment.Struck).Shattered, "the blow that broke the ice says so");
+            Assert.IsFalse(enemy.Has(AfflictionKind.Chill), "and the Chill is gone before anyone answers it");
+            enemy.TakeFrom(new Hit(5f, 0f, Vector3.forward, heavy: true), null);
+            Assert.IsFalse(Last(ConditionMoment.Struck).Shattered, "a heavy blow on nothing frozen breaks nothing");
+        }
+
+        [Test]
+        public void TheCarriersBlowAtThePlayerIsToldAndSpendsWhatItSpends()
+        {
+            // The their-blow moment: The Grudge's cloud answers the enemy's next blow at you, and that blow spends it.
+            var enemy = NewEnemy();
+            enemy.Conditions.Set(new ConditionSpec { Id = "test.cloud", Seconds = 8f, EndsWith = ConditionBlow.TheirBlow }, null, 1, null, false, false, 1f, false, true);
+            enemy.Conditions.Set(new ConditionSpec { Id = "test.quiet", Seconds = 8f }, null, 2);
+            enemy.TakeFrom(new Hit(5f, 0f, Vector3.forward, heavy: true), null);
+            Assert.IsTrue(enemy.Conditions.Holds("test.cloud"), "no blow of the player's spends it");
+            Assert.AreEqual(0, Count(ConditionMoment.Attacked));
+            enemy.Conditions.Attacked();
+            Assert.AreEqual(1, Count(ConditionMoment.Attacked), "told once, and only for the one that answers it");
+            Assert.AreEqual("test.cloud", Last(ConditionMoment.Attacked).Id);
+            Assert.IsFalse(enemy.Conditions.Holds("test.cloud"), "its blow spends the cloud");
+            Assert.AreEqual(0, Count(ConditionMoment.Ended), "spent, not run out: no end is told");
+            Assert.IsTrue(enemy.Conditions.Holds("test.quiet"), "one that is not spent by it stays");
+            enemy.Conditions.Attacked();
+            Assert.AreEqual(1, Count(ConditionMoment.Attacked), "the next blow finds nothing to answer");
+        }
+
+        [Test]
+        public void AFrozenEnemyIsKeptFrozenLongerAndOneNotFrozenIsNot()
+        {
+            // Six Levels Down: a Chill laid on a frozen enemy does nothing, so the bite keeps the freeze itself.
+            var enemy = NewEnemy();
+            Assert.IsFalse(enemy.KeepFrozen(0.3f), "nothing frozen, nothing kept");
+            enemy.Apply(AfflictionKind.Chill, 5);
+            float left = enemy.FrozenLeft;
+            Assert.IsTrue(enemy.KeepFrozen(0.3f));
+            Assert.AreEqual(left + 0.3f, enemy.FrozenLeft, 0.0001f);
+            Run(enemy, left + 0.1f);
+            Assert.IsTrue(enemy.IsFrozen, "still frozen past its own time");
+            Run(enemy, 0.3f);
+            Assert.IsFalse(enemy.IsFrozen, "and thawed once the kept time is done");
+            Assert.AreEqual(0, enemy.Stacks(AfflictionKind.Chill));
+        }
     }
 }

@@ -11,5 +11,10 @@ namespace Clover.Gameplay
         Struck,
         /// <summary>Its time ran out.</summary>
         Ended,
+        /// <summary>
+        /// The enemy carrying it struck at the player and the blow landed or was turned (guarded, perfectly guarded or
+        /// warded): only for a condition that answers this (the ledger's their-blow-moment; The Grudge's cloud).
+        /// </summary>
+        Attacked,
     }
 }

@@ -66,14 +66,12 @@ both carried.
 **Not built yet.** You are not yet untouchable on the ride, and casting it out of a perfect dodge does not yet skip its cooldown or make the next blow critical.
 
 ## capsize.gourd
-**What it does.** A duo surge. While your surge lasts a gourd of winds hangs at your hip: each dodge lets one out, a gust down the dodge's line that Soaks, unsteadies twice and shoves everything near, and each capsize gives you mana.
+**What it does.** A duo surge. While it burns a gourd of winds hangs at your hip: each dodge lets one out, a gust down the dodge's line that Soaks, unsteadies twice and shoves everything near, and each capsize gives you mana.
 
-**When it happens.** Each dodge while your surge lasts, while Wind and Water are both carried.
+**When it happens.** Choose it for your surge slot in the Hand at a rest fire, while Wind and Water are both carried, and light it with the surge button. Each dodge while it burns lets out a wind.
 
-**The numbers.** Mix, duo surge, 5 Shards. A lane 6 metres long and 2 metres wide: 2 Unsteady and a Soaked. Everything within 3 metres of you is shoved 2 metres. 6 mana for each capsize.
+**The numbers.** Mix, duo surge, 5 Shards. 40 mana, 10 seconds; each capsize while it burns adds 1 second, up to 15. A lane 6 metres long and 2 metres wide: 2 Unsteady and a Soaked. Everything within 3 metres of you is shoved 2 metres. 6 mana for each capsize.
 
 **Works with.** Capsize, Ride the Squall, Wake.
 
 **Example.** Light your surge and roll through the fight: every roll knocks a line of them over.
-
-**Not built yet.** It is not yet a surge of its own in the Hand's surge slot (its own 40 mana and 10 seconds, a second more for each capsize up to 15): for now it rides whichever surge you light while both are carried.

@@ -77,7 +77,7 @@ carried. Its reaction is Anvil Stone; its Shape mark lets you choose what Anvil 
 
 **When it happens.** Every finisher that lands. The blades wait for your next heavy swing.
 
-**The numbers.** A god's gift, never sold; in the playtest it can be bought. The ring reaches 6 metres from the finished enemy: 15 damage, 30 stagger, three stacks of Tremor and three notches of Sundered to each other enemy in it. One blade for each enemy reached, six at most, kept up to 14 seconds. Each flies at an enemy within 10 metres for 10 damage, 12 stagger and one notch of Sundered.
+**The numbers.** 5 Shards, bought once both elements are carried; no god gives it. The ring reaches 6 metres from the finished enemy: 15 damage, 30 stagger, three stacks of Tremor and three notches of Sundered to each other enemy in it. One blade for each enemy reached, six at most, kept up to 14 seconds. Each flies at an enemy within 10 metres for 10 damage, 12 stagger and one notch of Sundered.
 
 **Works with.** Buckled (every enemy it reaches is left shaken and notched), Folded Steel, Hammer and Anvil.
 

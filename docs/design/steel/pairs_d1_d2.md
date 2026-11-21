@@ -298,6 +298,10 @@ from you, along your line to it) and land 1 m apart as small fires (1 m, 3 s, 3 
 of a landing is set alight. Order does not matter, but the direction is the player's: they aim the fire by where they
 stand. Seen: a short stream of orange sparks and smoke carried in one direction, flames springing up where they fall.
 (The document's first idea, "spreads to every enemy near", is kept but given a direction, so it is a choice.)
+*Changed 2026-11-20 (the owner's third effects review):* the fire is carried as a whirling column that runs 5 m downwind
+in about two thirds of a second, lighting (1 Burn) only what comes within 1 m of it, as it reaches it, and dropping its
+three small fires along the last of its run as it blows out; the embers no longer light what stands near a landing the
+column never reached.
 
 **Shape A: Fire Whirl.** The flame stands up on the enemy as a turning column 1.5 m across for 3 s: it pulls enemies
 within 3 m toward it at 1 m a second and sets everything within 2 m burning once a second. **Shape B: Hot Wind.** One

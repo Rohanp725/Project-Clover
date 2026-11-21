@@ -86,6 +86,12 @@ namespace Clover.Player
         public float StatSwing = 1f;
         /// <summary>What damage to an enemy that carries any affliction is multiplied by.</summary>
         public float StatAfflicted = 1f;
+        /// <summary>The Blade Drinks Fire: damage added to a weapon blow for each Burn it takes off the enemy struck; 0 for none.</summary>
+        [System.NonSerialized] public float DrinksBurn;
+        /// <summary>Burns the blade has drunk, counted for probes.</summary>
+        public int BurnsDrunk { get; private set; }
+        /// <summary>Shared Roots: blows on a Seeded enemy no longer mend the player.</summary>
+        [System.NonSerialized] public bool SeedMendingOff;
         /// <summary>The chance that a blow of the weapon is critical, and what a critical blow multiplies its damage by.</summary>
         public float CritChance;
         public float CritMultiplier = 1.5f;
@@ -127,6 +133,9 @@ namespace Clover.Player
         public event System.Action<AttackStep> Swung;
         /// <summary>A blow of the weapon met a body (not a guard): where on it, and the way the blow was going. The swing looks throw their element there.</summary>
         public event System.Action<Vector3, Vector3> BladeMet;
+
+        /// <summary>The colour of the star a blow's sweet spot throws.</summary>
+        public static readonly Color SweetStar = new Color(1f, 0.78f, 0.38f);
         private bool cutGiven;
 
         /// <summary>
@@ -165,6 +174,9 @@ namespace Clover.Player
         /// weapon carries one (<see cref="SwingElement"/>), so the flash and the cut streak are tinted and softened and the
         /// trail shows through (the owner's choice, 2026-11-19); clear for a plain move, which keeps its white.
         /// </summary>
+        /// <summary>What a heavy blow's star is lit to under an element: its material glows six times past white.</summary>
+        public const float ImpactGlow = 0.22f;
+
         public Color StruckTint
         {
             get
@@ -1658,6 +1670,9 @@ namespace Clover.Player
             Component nearest = null;
             float nearestAt = float.MaxValue;
             Color struckTint = StruckTint;
+            // Wind's blows go round the body: no cut streak through it.
+            var struckLook = Clover.Player.Swings.SwingLooks.For(SwingElement);
+            bool cutsRound = struckLook != null && struckLook.CutsRound;
             int count = Overlap(step.Radius > 0f ? discCentre : origin, step.Radius > 0f ? step.Radius + 0.5f : reach);
             for (int i = 0; i < count; i++)
             {
@@ -1706,8 +1721,10 @@ namespace Clover.Player
                     var light = Combo.Steps;
                     bool endsChain = step == Combo.ChainHeavy || (light.Count > 0 && step == light[light.Count - 1]);
                     bool inAir = carried != null && carried.IsAirborne;
-                    damage *= Mathf.Max(0.1f, 1f + Stats.Blow(PlayerStat.WeaponDamage, step.Heavy, critical, endsChain) + Stats.Against(PlayerStat.WeaponDamage, carried) + (inAir ? Stats.InAir(PlayerStat.WeaponDamage) : 0f));
-                    staggerShare = Mathf.Max(0.1f, 1f + Stats.Blow(PlayerStat.StaggerDealt, step.Heavy, critical, endsChain) + Stats.Against(PlayerStat.StaggerDealt, carried) + (inAir ? Stats.InAir(PlayerStat.StaggerDealt) : 0f));
+                    damage *= Mathf.Max(0.1f, 1f + Stats.Blow(PlayerStat.WeaponDamage, step.Heavy, critical, endsChain) + Stats.Against(PlayerStat.WeaponDamage, carried)
+                        + (inAir ? Stats.InAir(PlayerStat.WeaponDamage) + (step.Heavy ? Stats.InAirHeavy(PlayerStat.WeaponDamage) : 0f) : 0f));
+                    staggerShare = Mathf.Max(0.1f, 1f + Stats.Blow(PlayerStat.StaggerDealt, step.Heavy, critical, endsChain) + Stats.Against(PlayerStat.StaggerDealt, carried)
+                        + (inAir ? Stats.InAir(PlayerStat.StaggerDealt) + (step.Heavy ? Stats.InAirHeavy(PlayerStat.StaggerDealt) : 0f) : 0f));
                 }
                 if (critical) damage *= CritMultiplier;
                 // A back is a back: the knives' blows count for more on it. The finisher has its own number.
@@ -1719,7 +1736,19 @@ namespace Clover.Player
                     fromBehind = toMe.sqrMagnitude > 0.01f && Vector3.Dot(back.transform.forward, toMe.normalized) < BackDot;
                     if (fromBehind) damage *= Weapon.BackMultiplier;
                 }
+                // Read before the blade drinks: a burn that was the enemy's only affliction still counts it afflicted.
                 bool wasAfflicted = afflictable != null && afflictable.Afflictions.Any;
+                // The Blade Drinks Fire: the blow takes Burn off a burning enemy (one, three for a heavy blow, all for a
+                // finisher) and strikes harder for each Burn it drinks.
+                if (DrinksBurn > 0f && afflictable != null && afflictable.Afflictions.Burn.IsBurning)
+                {
+                    int drunk = afflictable.Afflictions.Spend(AfflictionKind.Burn, Combo.IsFinishing ? int.MaxValue : step.Heavy ? 3 : 1);
+                    if (drunk > 0)
+                    {
+                        damage += DrinksBurn * drunk;
+                        BurnsDrunk += drunk;
+                    }
+                }
                 if (wasAfflicted) damage *= StatAfflicted;
                 float burn = (BurnStacksOnHit > 0 ? Mathf.Max(BurnOnHit, StackBurnSeconds) : BurnOnHit) * AfflictionSeconds;
                 // What the root of the tree and the surge lay, together, in the element's own affliction. The owner's rule
@@ -1804,9 +1833,10 @@ namespace Clover.Player
                 LastBlowDistance = distance;
                 if (step.IsSweet(distance) && outcome != HitOutcome.Blocked)
                 {
-                    // The tip: a white star where it bit, so the right distance can be learned by eye.
+                    // The tip: a star where it bit, so the right distance can be learned by eye; a warm gold, never white
+                    // (the swing films of 2026-11-20: white stars on every heavy weapon's tip).
                     SweetBlows++;
-                    Vfx.Play(VfxKind.TintSpark, other.bounds.center, transform.forward, 1.2f, Color.white);
+                    Vfx.Play(VfxKind.TintSpark, other.bounds.center, transform.forward, 1.2f, SweetStar);
                 }
                 if (outcome != HitOutcome.Blocked && distance < nearestAt && target is Component nearBody)
                 {
@@ -1834,7 +1864,10 @@ namespace Clover.Player
                 if (Stats != null && afflictable != null) earned *= Mathf.Max(0.1f, 1f + Stats.Against(PlayerStat.ManaFromBlows, afflictable.Afflictions) + (afflictable.Afflictions.IsAirborne ? Stats.InAir(PlayerStat.ManaFromBlows) : 0f));
                 if (outcome != HitOutcome.Blocked && pays)
                 {
-                    if (critical || NextBlowDamage > 1f)
+                    // A charged blow of an element drawn in its elements 3 look lands in that look, not under a white star.
+                    var charge = SwingElement;
+                    bool chargeDrawn = !critical && charge != null && Clover.Player.Forms.ElementArt.Ready && Clover.Player.Forms.ElementMoves.HasBlade(charge.Index);
+                    if (critical || (NextBlowDamage > 1f && !chargeDrawn))
                     {
                         // The sign of a critical blow: a gold star with long points where it lands. A stored charge shows the same.
                         if (critical) Criticals++;
@@ -1844,7 +1877,7 @@ namespace Clover.Player
                     if (afflictable != null)
                     {
                         // Seeded: the blow feeds the one who struck it. Marked: it gives more mana.
-                        float fed = afflictable.Afflictions.HealOnBlow;
+                        float fed = SeedMendingOff ? 0f : afflictable.Afflictions.HealOnBlow;
                         if (fed > 0f && defence != null) defence.Heal(fed, false);
                         earned += afflictable.Afflictions.ManaOnBlow;
                         // A mark of light carries a few critical blows and is spent by them.
@@ -1868,7 +1901,12 @@ namespace Clover.Player
                 if (outcome != HitOutcome.Blocked)
                 {
                     Vector3 contact = other.ClosestPoint(origin);
-                    Vfx.Play(step.Heavy ? VfxKind.HeavySpark : VfxKind.HitSpark, contact, transform.forward);
+                    // A blow whose element lands in its own elements 3 look throws no white spark streak through the body
+                    // beside it (the owner, 2026-11-20: "Wind is a line through the enemy").
+                    var landing = SwingElement;
+                    bool drawnByLook = landing != null && Clover.Player.Forms.ElementArt.Ready
+                        && (SwingInfused ? Clover.Player.Forms.ElementMoves.HasStrike(landing.Index) : Clover.Player.Forms.ElementMoves.HasBlade(landing.Index));
+                    if (!drawnByLook) Vfx.Play(step.Heavy ? VfxKind.HeavySpark : VfxKind.HitSpark, contact, transform.forward);
                     BladeMet?.Invoke(contact, transform.forward);
                 }
                 else
@@ -1880,7 +1918,7 @@ namespace Clover.Player
                     Vfx.Play(VfxKind.Clang, other.ClosestPoint(origin));
                     if (shaker != null) shaker.Shake(0.06f, 0.1f);
                 }
-                if (outcome != HitOutcome.Blocked)
+                if (outcome != HitOutcome.Blocked && !cutsRound)
                 {
                     // The cut line: which way the blade went through, drawn over the sparks.
                     Vector3 through = CutDirection(step);
@@ -1889,8 +1927,19 @@ namespace Clover.Player
                     else CutMarks.Light(other.bounds.center, through, struckTint);
                 }
                 if (reticle != null && target is Component struckThing) reticle.Struck(struckThing.transform);
-                if (outcome == HitOutcome.Finisher) Vfx.Play(VfxKind.Burst, other.bounds.center);
-                if (step.Heavy && outcome != HitOutcome.Blocked) Vfx.Play(VfxKind.Impact, other.bounds.center);
+                // A finisher's flash: white for a plain weapon, the element's hue under one, as the heavy blow's star.
+                if (outcome == HitOutcome.Finisher)
+                {
+                    if (StruckLook.Tinted(struckTint)) Vfx.Play(VfxKind.Burst, other.bounds.center, Vector3.up, 1f, StruckLook.Glow(struckTint, ImpactGlow));
+                    else Vfx.Play(VfxKind.Burst, other.bounds.center);
+                }
+                // A heavy blow's star: white for a plain weapon, the element's hue at a moderate brightness under one (the
+                // swing films of 2026-11-20: a white starburst on every element's infused strike).
+                if (step.Heavy && outcome != HitOutcome.Blocked)
+                {
+                    if (StruckLook.Tinted(struckTint)) Vfx.Play(VfxKind.Impact, other.bounds.center, Vector3.up, 1f, StruckLook.Glow(struckTint, ImpactGlow));
+                    else Vfx.Play(VfxKind.Impact, other.bounds.center);
+                }
                 Mana.Gain(earned);
                 BlowsLanded++;
                 if (defence != null && pays) defence.DealtDamage(damage);

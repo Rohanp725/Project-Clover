@@ -8,7 +8,7 @@ namespace Clover.Player.Trees.Duo
     /// new branches, named by its reaction, Sleet Charge (IMPLEMENTATION.md 2.3: one file per pair under Trees/Duo/). Drawn in
     /// the chart's heart (<see cref="HeartPattern"/>) and open while both are carried. Its Shape mark opens Sleet Charge's two
     /// shapes, Thundersnow and Glass Spear; two majors (Charged Hail, Cold Snap), a keystone (Nothing Resists) and the duo
-    /// spell, Glass Storm, the crown.
+    /// spell, Glass Storm.
     ///
     /// Ice is written first, though the ring puts Lightning first: a duo branch's first element is the one its duo spell is
     /// cast in, and Glass Storm is clear ice that lays Chill with each pass and charges the blade with Ice (the design's
@@ -110,7 +110,7 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.Keystone));
 
-            // The duo spell, the crown (pairs_d1_d2.md): an opener on a 14 s cooldown (SpellTimings). The Discs form turns the
+            // The duo spell (pairs_d1_d2.md), bought with Shards once both are carried (no god gives it): an opener on a 14 s cooldown (SpellTimings). The Discs form turns the
             // shards; each pass lays the branch's first element's Chill, and half the passes (by chance) a Static.
             // NEEDS: a count of passes per enemy, so it is every other pass and not half of them at random.
             // NEEDS: a weapon blow that flings an orbiting piece (each landed blow flings the nearest shard into the enemy struck,

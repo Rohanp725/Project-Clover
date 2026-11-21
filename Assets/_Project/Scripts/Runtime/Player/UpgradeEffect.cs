@@ -84,6 +84,21 @@ namespace Clover.Player
         public StruckBy By;
         /// <summary>For ConditionStruck: only the condition's Nth weapon blow (Logan Stone's third). For ConditionBeat: only its Nth beat. Zero: every one.</summary>
         public int AtCount;
+        /// <summary>
+        /// For the condition triggers: it answers the condition named in <see cref="Condition"/> whoever set it (a reaction,
+        /// its shape), not only one its own mark set, while its own mark is in force (The Exile Returns at the Grudge's bolt).
+        /// Done before the answers of the mark that set the condition, so it can count what they are about to spend.
+        /// </summary>
+        public bool AnyMark;
+        /// <summary>With <see cref="PerStack"/>: the most it is multiplied by (Ash Plume's five flashes); zero for no cap.</summary>
+        public int PerMost;
+        /// <summary>With <see cref="PerStack"/>: added to what it is multiplied by, before <see cref="PerMost"/> (one more seed).</summary>
+        public int PerMore;
+        /// <summary>
+        /// For the dodge triggers (DodgeStart, DodgeEnd, PerfectDodge): only a dodge that went this way against the enemy
+        /// faced (the ledger's dodge-direction). Any: every dodge.
+        /// </summary>
+        public DodgeWay Way;
 
         // Numbers.
         /// <summary>The affliction laid or set off. None means the element's own.</summary>
@@ -129,6 +144,9 @@ namespace Clover.Player
         public AfflictionKind LeapsTo = AfflictionKind.None;
         /// <summary>For an Arc: it starts from the target without striking it and leaps to whoever is nearest, carrying anything (Glint's ray).</summary>
         public bool FromTarget;
+
+        /// <summary>A copy with every number, its slot and its mark (an Empower's twin of its Learn's effect).</summary>
+        internal UpgradeEffect Twin() => (UpgradeEffect)MemberwiseClone();
 
         /// <summary>Its place among all the effects in the catalogue; set when the catalogue is gathered.</summary>
         public int Slot { get; internal set; } = -1;

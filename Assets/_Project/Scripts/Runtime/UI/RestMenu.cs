@@ -7,7 +7,7 @@ using UnityEngine.UI;
 namespace Clover.UI
 {
     /// <summary>
-    /// What a rest fire opens (IMPLEMENTATION.md 4.1): set the Hand, the chart, and leave (the Way and the road to the
+    /// What a rest fire opens (IMPLEMENTATION.md 4.1): set the Hand, choose the shapes, the chart, and leave (the Way and the road to the
     /// hub join when they are built). The entries are <see cref="RestChoices"/>; this draws them and reads the buttons.
     /// The stick, the d-pad, the keys, the mouse and its wheel choose; the use button (or a click) acts; the dodge
     /// button (or Esc, or Start) leaves. The world stays stopped while it is open, and while the Hand or the chart opened
@@ -198,6 +198,13 @@ namespace Clover.UI
                     Leave(RestEntry.Hand);
                     return true;
                 }
+                case RestEntry.Shapes:
+                {
+                    var shapes = ShapeMenu.Ensure();
+                    if (shapes == null || !shapes.Open()) return false;
+                    Leave(RestEntry.Shapes);
+                    return true;
+                }
                 case RestEntry.Chart:
                 {
                     var chart = UpgradeMenu.Instance;
@@ -270,8 +277,9 @@ namespace Clover.UI
             if (waiting != RestEntry.None)
             {
                 // Back in front once the screen opened from here has closed (and on the frame after, so its last press is its own).
-                bool stillOpen = waiting == RestEntry.Chart ? UpgradeMenu.Instance != null && UpgradeMenu.Instance.IsOpen : HandMenu.Showing;
-                if (!stillOpen && !GuidePage.BusyThisFrame && !HandMenu.BusyThisFrame) Return();
+                bool stillOpen = waiting == RestEntry.Chart ? UpgradeMenu.Instance != null && UpgradeMenu.Instance.IsOpen
+                    : waiting == RestEntry.Shapes ? ShapeMenu.Showing : HandMenu.Showing;
+                if (!stillOpen && !GuidePage.BusyThisFrame && !HandMenu.BusyThisFrame && !ShapeMenu.BusyThisFrame) Return();
                 return;
             }
             if (Time.frameCount == openedOnFrame || moveAction == null || interactAction == null || dodgeAction == null) return;

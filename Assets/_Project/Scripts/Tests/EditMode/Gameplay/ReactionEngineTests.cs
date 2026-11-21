@@ -262,5 +262,26 @@ namespace Clover.Tests
             enemy.Clear();
             Assert.AreEqual(0, (int)enemy.PresentMask);
         }
+
+        [Test]
+        public void AReactionForcedInTheFrameItWasFoundOnThatEnemyIsReportedOnce()
+        {
+            // The Sisters' Quarrel, Cold Chisel, Held Down and Diamond Guard lay the pair's second affliction and then force it.
+            var enemy = NewEnemy();
+            Lay(enemy, AfflictionKind.Static);
+            Lay(enemy, AfflictionKind.Burn);
+            Assert.AreEqual(1, reported.Count);
+            Assert.IsTrue(engine.Force(enemy, null, Flashover, AfflictionKind.Burn), "it has reacted");
+            Assert.AreEqual(1, reported.Count, "laid and then forced in one frame, it is shown once");
+
+            var other = NewEnemy();
+            Lay(other, AfflictionKind.Static);
+            Lay(other, AfflictionKind.Burn);
+            Assert.AreEqual(2, reported.Count, "another enemy reacts for itself");
+
+            frame++;
+            Assert.IsTrue(engine.Force(enemy, null, Flashover, AfflictionKind.Burn));
+            Assert.AreEqual(3, reported.Count, "in a later frame a force goes through the rest as before");
+        }
     }
 }

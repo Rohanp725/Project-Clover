@@ -45,6 +45,10 @@ namespace Clover.Player.Forms
         {
             if (!ElementArt.Ready || element == null) return false;
             int index = element.Index;
+            // An element drawn in the elements 3 language lands in those looks (the blade's blows, the spells' and the
+            // strikes' looks on each body they reach): these older pieces (Dark's white-hearted hole, Metal's clang
+            // rings, the white flashes the owner turned down) are not drawn beside them.
+            if (ElementMoves.HasBlade(index)) return true;
             float now = Time.time;
             for (int i = 0; i < Remembered; i++)
                 if (lastElement[i] == index && now - lastTime[i] < 0.2f && (lastAt[i] - at).sqrMagnitude < 0.36f) return true;

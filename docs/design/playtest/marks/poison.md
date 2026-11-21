@@ -37,7 +37,7 @@ a blow or a cast "on the beat" comes within a fifth of a second of it.
 
 **When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4). With no enemy faced, nothing is raised and the slot waits all the same.
 
-**The numbers.** 4 Shards, no mana: it waits 10 seconds after a cast, less with weapon play (its Empower: 9, and 50 damage). An enemy within 8 metres; one blister at a time; it waits 12 seconds. The burst is 3 metres in radius round the enemy: 40 damage, 30 stagger and four doses.
+**The numbers.** 4 Shards, no mana: it waits 10 seconds after a cast, less with weapon play (its Empower: 50 damage). An enemy within 8 metres; one blister at a time; it waits 12 seconds. The burst is 3 metres in radius round the enemy: 40 damage, 30 stagger and four doses.
 
 **Works with.** The root, Rupture, which it grows from (four doses toward full), Coiled Strike (step in and break it from behind), In Time, and the charged blade.
 
@@ -76,11 +76,11 @@ a blow or a cast "on the beat" comes within a fifth of a second of it.
 
 **When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4).
 
-**The numbers.** 4 Shards, 50 mana (its Empower: 45). Up to six enemies within 10 metres of you; half a second's warning, then a column under each in turn, every 0.07 seconds, 1 metre round. The column itself does no damage; each poisoned enemy it strikes has its poison set off: 6 damage and 4 stagger a dose to everything within 1 metre, 48 and 32 at eight. What a column strikes is thrown up for 0.8 seconds.
+**The numbers.** 4 Shards, 50 mana (its Empower: 7 damage a dose, not 6). Up to six enemies within 10 metres of you; half a second's warning, then a column under each in turn, every 0.07 seconds, 1 metre round. The column itself does no damage; each poisoned enemy it strikes has its poison set off: 6 damage and 4 stagger a dose to everything within 1 metre, 48 and 32 at eight. What a column strikes is thrown up for 0.8 seconds.
 
 **Works with.** Rupture, which it grows from, Venom, Blister, Catching and Miasma to lay the poison first, the root's healing (every burst feeds you), and the charged blade.
 
-**Not built yet.** The line from poisoned enemy to poisoned enemy alone: for now the columns come up under the six nearest, poisoned or not. Each passing its doses to the next, the last the largest: for now each bursts with what it carries. The Empower's 7 a dose.
+**Not built yet.** The line from poisoned enemy to poisoned enemy alone: for now the columns come up under the six nearest, poisoned or not. Each passing its doses to the next, the last the largest: for now each bursts with what it carries.
 
 **Example.** Dose a pack with Miasma and a rush of Share Alike, then snap: six bursts in a breath, each one feeding you.
 
@@ -137,11 +137,11 @@ a blow or a cast "on the beat" comes within a fifth of a second of it.
 
 **When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4).
 
-**The numbers.** 4 Shards, no mana: it waits 9 seconds after a cast, less with weapon play (its Empower: 8). A fan 8 metres long and 12 degrees wide: 15 damage, 50 stagger and five doses, the five needles' worth, to everything in it. The first enemy it strikes is pinned: held 0.8 seconds (0.32 for a god or an elite) and 40 stagger more.
+**The numbers.** 4 Shards, no mana: it waits 9 seconds after a cast, less with weapon play (its Empower: 14 stagger a needle, 70 in all, and 50 for the pin). A fan 8 metres long and 12 degrees wide: 15 damage, 50 stagger and five doses, the five needles' worth, to everything in it. The first enemy it strikes is pinned: held 0.8 seconds (0.32 for a god or an elite) and 40 stagger more.
 
 **Works with.** In Time, which it grows from, Rupture (five doses toward full), Coiled Strike (strike through the pinned one), and the charged blade.
 
-**Not built yet.** Five needles thrown, each its own strike: for now the fan strikes as one, and the pin falls on the first enemy struck, not the one struck by all five. The Empower's 14 stagger a needle and 50 for the pin.
+**Not built yet.** Five needles thrown, each its own strike: for now the fan strikes as one, and the pin falls on the first enemy struck, not the one struck by all five.
 
 **Example.** A shield-bearer turns to face you: the needles pin it, and you have most of a second to walk round its shield.
 
@@ -176,7 +176,7 @@ a blow or a cast "on the beat" comes within a fifth of a second of it.
 
 **When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4).
 
-**The numbers.** 4 Shards, no mana: it waits 10 seconds after a cast, less with weapon play (its Empower: 9, and 30 damage). It goes up to 6 metres, ending 1.8 metres past the enemy faced (with none, 4.5 metres ahead). The cut is 1.1 metres to each side of the line: 24 damage, 25 stagger and four doses, the strength of two fangs. A heavy blow within 3 seconds is critical.
+**The numbers.** 4 Shards, no mana: it waits 10 seconds after a cast, less with weapon play (its Empower: 30 damage). It goes up to 6 metres, ending 1.8 metres past the enemy faced (with none, 4.5 metres ahead). The cut is 1.1 metres to each side of the line: 24 damage, 25 stagger and four doses, the strength of two fangs. A heavy blow within 3 seconds is critical.
 
 **Works with.** In Time, which it grows from, Slow Death, which grows from it, Rupture (four doses toward full), Blister, and the charged blade: if it lands it charges your weapon with Poison.
 
@@ -289,7 +289,7 @@ a blow or a cast "on the beat" comes within a fifth of a second of it.
 
 **When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4).
 
-**The numbers.** 4 Shards, no mana: it waits 9 seconds after a cast, less with weapon play (its Empower: 8, and nine metres). Up to 7 metres along a lane 2 metres wide; a wall or something too big to shove stops you. Passing: 10 damage, 10 stagger and two doses.
+**The numbers.** 4 Shards, no mana: it waits 9 seconds after a cast, less with weapon play (its Empower: nine metres). Up to 7 metres along a lane 2 metres wide; a wall or something too big to shove stops you. Passing: 10 damage, 10 stagger and two doses.
 
 **Works with.** The Delayed Touch, which it grows from, Catching, One by One (a line of poisoned enemies), Rupture, and the charged blade: if it lands it charges your weapon with Poison.
 
@@ -328,7 +328,7 @@ a blow or a cast "on the beat" comes within a fifth of a second of it.
 
 **When it happens.** Only while Poison is carried twice (all in).
 
-**The numbers.** 6 Shards. You heal 2 a second while an enemy is near, and every lay of doses lays one more. All in, L2 with R2 is the deep strike, Nine Times Refined.
+**The numbers.** 6 Shards. You heal 2 a second while an enemy is near, and every lay of doses lays one more. Buying this also gives you the deep strike, Nine Times Refined. Use it with L2 and R2 while you carry this element alone or twice.
 
 **Works with.** Miasma and its Low Mist, Venom, The Delayed Touch, which it grows from, Fever, Clean Blade.
 

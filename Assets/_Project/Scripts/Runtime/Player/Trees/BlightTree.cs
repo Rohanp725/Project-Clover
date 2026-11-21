@@ -6,8 +6,8 @@ namespace Clover.Player.Trees
     /// <summary>
     /// Blight: the duo branch Dark and Poison share, reshaped by pairs_d1_d2.md ("Dark and Poison", task 4.15) and drawn in
     /// the chart's heart (<see cref="HeartPattern"/>). Its reaction is Shut in the Dark; the Shape mark opens its two shapes,
-    /// Swarm and Rot to the Bone. Carrion Flies is now Swarm and Grave Soil, offered to Dark's or Poison's tree, is cut
-    /// because both rosters are full; both are in <see cref="RetiredMarks"/>. Wither is re-aimed to a minor (the curse's half
+    /// Swarm and Rot to the Bone. Carrion Flies is now Swarm (<see cref="RetiredMarks"/>) and Grave Soil, offered to
+    /// Dark's or Poison's tree, whose rosters are full, is kept hidden for the Evolutions (<see cref="SpareSpells"/>). Wither is re-aimed to a minor (the curse's half
     /// of it overlapped the jar). Kept: Feeding Rot, One Death Feeds (the keystone), Wasting Grip (the duo spell, re-aimed at
     /// the jar) and The Reaping, begun by a finisher, the branch's top mark. Open while both are carried.
     /// </summary>
@@ -108,7 +108,7 @@ namespace Clover.Player.Trees
             // BESPOKE (built): ReapingForm. The branch's top mark, begun by a finisher.
             to.Add(HeartPattern.Put(new Upgrade
             {
-                Id = TheReaping, Name = "The Reaping", Element = A, Element2 = B, Kind = UpgradeKind.Signature, Icon = UpgradeIcons.Crown,
+                Id = TheReaping, Name = "The Reaping", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { WastingGrip }, Icon = UpgradeIcons.Crown,
                 Description = "Your finisher on a Cursed, poisoned enemy reaps the field. All the poison in it and in every enemy near lands at once, and half of it is yours.",
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.FinisherHit, Do = UpgradeAction.Form, Form = SpellForms.Reaping, Needs = AfflictionKind.Cursed, Needs2 = AfflictionKind.Poison, Affliction = AfflictionKind.Poison, Spell = new SpellSpec { Cost = 0f, Radius = 9f, Damage = 3f, Stagger = 4f } } },
             }, HeartPattern.Crown));

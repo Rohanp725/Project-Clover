@@ -17,6 +17,13 @@ namespace Clover.Player.Swings
         private static readonly Color Rockface = new Color(0.47f, 0.38f, 0.29f);
         private static readonly Color Venom = new Color(0.3f, 0.78f, 0.26f);
         private static readonly Color Gilt = new Color(1f, 0.78f, 0.35f);
+        private static readonly Color FrostMist = new Color(0.36f, 0.6f, 0.86f);
+
+        /// <summary>
+        /// What a glint's and a crackle's colour is lit to: their materials glow five to eight times past white, so the
+        /// colour thrown is kept low and the glow comes out the element's hue at a moderate brightness.
+        /// </summary>
+        public const float GlintGlow = 0.17f, ShockGlow = 0.3f;
 
         private static Color ColourOf(int element)
         {
@@ -54,9 +61,9 @@ namespace Clover.Player.Swings
                     FormFx.Lay(FormMark.Scorch, feet, 1.1f * weight, Soot, 2.2f);
                     break;
                 case ElementSubstance.Lightning:
-                    // The crack where it struck, white-blue and gone.
-                    FormFx.Lay(FormMark.Crack, feet, 1.5f * weight, FormKit.Lit(colour, 3f), 0.4f, 1.8f * weight, 0f, Random.value * 360f);
-                    Vfx.Play(VfxKind.Shock, at, flat, 0.9f * weight);
+                    // The crack where it struck and its crackle in the bolt's violet-blue, not a white starburst (2026-11-20).
+                    FormFx.Lay(FormMark.Crack, feet, 1.5f * weight, FormKit.Lit(colour, 1.6f), 0.4f, 1.8f * weight, 0f, Random.value * 360f);
+                    Vfx.Play(VfxKind.Shock, at, flat, 0.9f * weight, StruckLook.Glow(colour, ShockGlow));
                     break;
                 case ElementSubstance.Wind:
                     FormFx.Fly(FormMesh.Gust, at, at + flat * (2.4f * weight) + Vector3.up * 0.3f, Quaternion.LookRotation(flat), new Vector3(1.4f, 1.4f, 1.8f) * weight, ElementSubstance.Pale(colour), 0.35f);
@@ -90,11 +97,12 @@ namespace Clover.Player.Swings
                     Vfx.Play(VfxKind.Dust, feet, Vector3.up, 0.9f * weight);
                     break;
                 case ElementSubstance.Metal:
-                    Vfx.Play(VfxKind.Glint, at);
-                    Vfx.Play(VfxKind.GuardSpark, at, flat, 0.9f * weight);
+                    // Only a glint of steel where it bit: the guard's white spark burst read as a white starburst (2026-11-20).
+                    Vfx.Play(VfxKind.Glint, at, Vector3.up, 1f, StruckLook.Glow(colour, GlintGlow));
                     break;
                 case ElementSubstance.Light:
-                    FormFx.Face(FormMark.Star, at, 1.1f * weight, FormKit.Lit(Gilt, 3f), 0.14f);
+                    // Gold, lit only so far: three times over it came out a cream-white star.
+                    FormFx.Face(FormMark.Star, at, 1.1f * weight, FormKit.Lit(Gilt, 1.5f), 0.14f);
                     break;
                 case ElementSubstance.Dark:
                     Vfx.Play(VfxKind.TintPuff, at, Vector3.down, 0.9f * weight, ElementSubstance.Shade(colour));
@@ -122,7 +130,7 @@ namespace Clover.Player.Swings
                     Vfx.Play(VfxKind.Embers, feet + Vector3.up * 0.3f, Vector3.up, 1.4f * weight);
                     break;
                 case ElementSubstance.Lightning:
-                    FormFx.Lay(FormMark.Crack, feet, radius * 1.8f, FormKit.Lit(colour, 3f), 0.5f, radius * 2.2f, 0f, Random.value * 360f);
+                    FormFx.Lay(FormMark.Crack, feet, radius * 1.8f, FormKit.Lit(colour, 1.6f), 0.5f, radius * 2.2f, 0f, Random.value * 360f);
                     Clover.World.LightningBolts.Strike(feet, 0.3f);
                     break;
                 case ElementSubstance.Wind:
@@ -138,7 +146,7 @@ namespace Clover.Player.Swings
                         FormFx.Erupt(FormMesh.Crystal, feet + Outward(i, ring, flat, 0f) * (radius * 0.55f), Quaternion.Euler(0f, Random.value * 360f, 0f), new Vector3(0.6f, 0.9f + 0.4f * Random.value, 0.6f) * weight, ElementSubstance.Pale(colour), 0.07f, 0.6f, 0.3f);
                     break;
                 case ElementSubstance.Water:
-                    FormFx.Lay(FormMark.Ring, feet, radius * 0.5f, FormKit.Lit(colour, 1.6f), 0.6f, radius * 2.4f);
+                    // No ring of light round the slam (the owner: no rings or circles, 2026-11-20): the water thrown out alone.
                     for (int i = 0; i < ring; i++) Spray(feet + Vector3.up * 0.2f, Outward(i, ring, flat, 0f), ground, 0.5f * weight, colour);
                     break;
                 case ElementSubstance.Life:
@@ -151,19 +159,21 @@ namespace Clover.Player.Swings
                     Vfx.Play(VfxKind.Dust, feet, Vector3.up, 1.5f * weight);
                     break;
                 case ElementSubstance.Metal:
-                    Vfx.Play(VfxKind.Glint, feet + Vector3.up * 0.2f);
-                    for (int i = 0; i < 4; i++) Vfx.Play(VfxKind.GuardSpark, feet + Outward(i, 4, flat, 0f) * 0.4f + Vector3.up * 0.1f, Outward(i, 4, flat, 0f), 0.8f);
+                    Vfx.Play(VfxKind.Glint, feet + Vector3.up * 0.2f, Vector3.up, 1f, StruckLook.Glow(colour, GlintGlow));
+                    for (int i = 0; i < 4; i++) Vfx.Play(VfxKind.TintSpark, feet + Outward(i, 4, flat, 0f) * 0.4f + Vector3.up * 0.1f, Outward(i, 4, flat, 0f), 0.5f, StruckLook.Glow(colour, 0.8f));
                     break;
                 case ElementSubstance.Light:
-                    FormFx.Lay(FormMark.Ring, feet, radius * 0.4f, FormKit.Lit(Gilt, 2.6f), 0.35f, radius * 2f);
-                    FormFx.Face(FormMark.Star, feet + Vector3.up * 0.4f, 1.6f * weight, FormKit.Lit(Gilt, 3f), 0.16f);
+                    // Gold flecks thrown up off the slam, cooling to burnt gold: no ring and no white-hot star (2026-11-20).
+                    Vfx.Play(VfxKind.TintSpark, feet + Vector3.up * 0.3f, Vector3.up, 1.2f * weight, Gilt);
+                    FormFx.Lay(FormMark.Scorch, feet, radius * 0.9f, FormKit.Stain(new Color(0.42f, 0.2f, 0.02f), 0.6f), 1.2f);
                     break;
                 case ElementSubstance.Dark:
                     FormFx.Lay(FormMark.Scorch, feet, radius * 1.5f, FormKit.Stain(colour, 0.85f), 1.4f, radius * 0.6f);
                     Vfx.Play(VfxKind.TintPuff, feet + Vector3.up * 0.3f, Vector3.down, 1.2f * weight, ElementSubstance.Shade(colour));
                     break;
                 case ElementSubstance.Poison:
-                    FormFx.Lay(FormMark.Disc, feet, radius * 1.2f, FormKit.Lit(Venom, 1.1f, 0.6f), 1.4f, radius * 1.6f);
+                    // A venom stain, not a lit disc (no circles, 2026-11-20).
+                    FormFx.Lay(FormMark.Scorch, feet, radius * 1.2f, FormKit.Stain(new Color(0.17f, 0.28f, 0.025f), 0.7f), 1.4f);
                     for (int i = 0; i < ring; i++) Spray(feet + Vector3.up * 0.2f, Outward(i, ring, flat, 0f), ground, 0.4f * weight, Venom);
                     break;
             }
@@ -182,7 +192,8 @@ namespace Clover.Player.Swings
                     Vfx.Play(VfxKind.Shock, tip, way, 0.3f * weight);
                     break;
                 case SwingShed.FrostBreath:
-                    Vfx.Play(VfxKind.TintPuff, tip, Vector3.down, 0.1f * weight, ElementSubstance.Pale(colour));
+                    // Cold breath in the elements 3 frost mist's blue: the pale of ice lit to a white dot on film (2026-11-20).
+                    Vfx.Play(VfxKind.TintPuff, tip, Vector3.down, 0.1f * weight, FrostMist);
                     break;
                 case SwingShed.Grit:
                     Vfx.Play(VfxKind.Dust, tip, Vector3.down, 0.25f * weight);

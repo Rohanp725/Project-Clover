@@ -57,7 +57,7 @@ carried. Its reaction is Fire Medicine; its Shape mark lets you choose what Fire
 
 **When it happens.** Cast it from its spell slot (hold L2 and a face button, or 1 to 4) and stay still.
 
-**The numbers.** A god's gift, never sold; in the playtest it can be bought. 60 mana. Up to six enemies within 9 metres. The three breaths take 2.2 seconds. Each pillar is 2 metres in radius: 40 damage and 40 stagger, a heavy blow, two doses of poison, plus 6 a dose of poison and 10 and 10 a stack of Burn set off.
+**The numbers.** 5 Shards, bought once both elements are carried; no god gives it. 60 mana. Up to six enemies within 9 metres. The three breaths take 2.2 seconds. Each pillar is 2 metres in radius: 40 damage and 40 stagger, a heavy blow, two doses of poison, plus 6 a dose of poison and 10 and 10 a stack of Burn set off.
 
 **Works with.** Goes Up, Fire Medicine, Cinder, Slow Burn.
 

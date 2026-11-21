@@ -107,8 +107,8 @@ namespace Clover.Player.Trees
                 new SpellSpec { Radius = 10f, Delay = 0.3f, Damage = 0f, Stagger = 0f, Stacks = 0 },
                 "You stamp the weapon's butt, and stones fall from the Cailleach's apron onto every enemy within ten metres that carries Tremor, one stone for each depth. Each stone lands for 12 damage and 15 stagger, and the heap for 10 more. The Tremor is spent, and the stones stay heaped on it for four seconds, each slowing it 15%. 40 mana.",
                 UpgradeIcons.Comet,
-                // NEEDS: the stones landing for 14 (an Empower that changes its Learn's effects, empower-effects).
-                new Empower { Mana = 35f },
+                // The stones landing for 14 is the Learn's own fall, set by the Empower (empower-effects).
+                new Empower { Mana = 35f, Effects = new[] { new EffectChange { Index = 1, Damage = 14f } } },
                 "Cairn costs 35 mana, not 40, and each stone lands for 14.",
                 // NEEDS: the stones landing soft and waiting, so nothing falls at the cast (shape-sets-aside), and the burst as 18
                 // a stone (count-from-depth). Until then the stones still fall, and the heavy blow bursts the heap for 36.
@@ -209,9 +209,10 @@ namespace Clover.Player.Trees
                 new SpellSpec { Seconds = 2.5f, Reach = 3f, Arc = 120f, Damage = 6f, Stagger = 10f, Stacks = 2 },
                 "You go wholly to stone for up to two and a half seconds, unable to move or answer. Every blow is turned, red ones too, and each one that strikes the stone jars its attacker: two Tremor, and its next attack comes late. Let go, and your next heavy blow within a second carries 20 more stagger for each blow the stone turned.",
                 UpgradeIcons.Fist,
+                // The roster's numbers alone (the owner's answer of 2026-11-20: an Empower may strengthen without a shorter wait).
                 // NEEDS: 25 stagger a blow turned (held-press).
-                new Empower { Cooldown = 9f, Seconds = 3f },
-                "Mountain Stance waits 9 seconds, not 10, you stand as stone up to three seconds, and each blow turned loads 25 stagger.",
+                new Empower { Seconds = 3f },
+                "You stand as stone for up to three seconds, and each blow you turn loads 25 stagger.",
                 // Stone Skin, once a major, folded in with Aftershock. NEEDS: the answer set aside (shape-sets-aside), and a plate
                 // taking 60% of one blow, not the whole of it (plates). Until then the plates are wards, given when the stance
                 // turns a blow.
@@ -265,16 +266,16 @@ namespace Clover.Player.Trees
 
             // Stone Rise, the base spell: cast by Earth's kit, so its Learn carries no form; its shapes cast their own or add to it.
             SpellBranch.Add(to, E, StoneRise, "Stone Rise", SpellRole.Opener, BranchPattern.RightA, Root, "", null,
-                "Earth's own spell, given with the element. A quarter second after the cast the ground breaks under the enemy faced, within five metres: 14 damage, 30 stagger and Tremor, and it is thrown up for a moment. Three rocks stand behind it for four and a half seconds, and nothing walks through them.",
+                "Earth's own spell, given with the element. A quarter second after the cast the ground breaks under the enemy faced, within five metres: 14 damage, 30 stagger and Tremor, and it is knocked up into the air for a moment. Then the stones sink back. No wall is left behind.",
                 UpgradeIcons.Rock,
                 // NEEDS: 18 damage and 36 stagger (base-spell-marks). The base spell is cast by its kit, which takes only the Empower's wait.
                 new Empower { Cooldown = 6f, Damage = 18f, Stagger = 36f },
                 "Stone Rise waits 6 seconds, not 7, and strikes for 18 damage and 36 stagger.",
-                // NEEDS: no rocks behind, and the pillar left beside the enemy for 6 s, blocking bodies and thrown attacks, and
-                // struck itself (standing-things). Until then the kit's rocks stand, and a heavy blow on the lifted enemy within
+                // NEEDS: the pillar left beside the enemy for 6 s, blocking bodies and thrown attacks, and
+                // struck itself (standing-things). Until then the stones sink back as usual, and a heavy blow on the lifted enemy within
                 // 6 s shatters the stone as a cone of shards from you through it.
                 new ShapeDef { Name = "Raised Stone",
-                    Description = "No rocks behind. The pillar that lifted the enemy stays beside it for six seconds and blocks bodies and thrown attacks. A heavy blow of yours on it shatters it into a cone of shards away from you, five metres and 70 degrees: 18 damage, 20 stagger and Tremor. Raise it, fight round it, break it through them.",
+                    Description = "The pillar that lifted the enemy stays beside it for six seconds and blocks bodies and thrown attacks. A heavy blow of yours on it shatters it into a cone of shards away from you, five metres and 70 degrees: 18 damage, 20 stagger and Tremor. Raise it, fight round it, break it through them.",
                     Effects = new[]
                     {
                         new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Raised, Seconds = 6f, EndsWith = ConditionBlow.Heavy } },
@@ -292,7 +293,7 @@ namespace Clover.Player.Trees
                         new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Boulder, By = StruckBy.Heavy, Do = UpgradeAction.Lane, Reach = 8f, Radius = 0.8f, Interval = 0.04f, Damage = 16f, Stagger = 30f, Affliction = T, Stacks = 1 },
                     } },
                 "Opens two shapes of Stone Rise, chosen at any rest fire: Raised Stone, a pillar to fight round and break, or Dropped From the Apron, a boulder to roll through them.",
-                // NEEDS: still for 1 s as well as Rooted (stood-still), and the throw before the rocks stand. Until then, cast
+                // NEEDS: still for 1 s as well as Rooted (stood-still), and the throw before the stones sink. Until then, cast
                 // while Rooted, what it strikes is thrown three metres away from you and shaken once more.
                 new[]
                 {

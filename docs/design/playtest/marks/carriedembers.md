@@ -7,7 +7,7 @@ are both carried.
 ## carriedembers.shape
 **What it does.** Opens Carried Embers' two shapes. At a rest fire you choose which one your Carried Embers wears, and from then on it runs instead of the plain one. **Fire Whirl**: the flame stands up on the enemy as a turning column that draws the enemies near into it and lights them. **Hot Wind**: one long gust downwind, away from you, instead of embers.
 
-**When it happens.** Every time Carried Embers fires (Unsteady landing on a burning enemy, or Burn on an unsteady one) while Fire and Wind are both carried. Before this mark is bought, or with only one of the two carried, the plain Carried Embers runs (three embers 5 metres downwind).
+**When it happens.** Every time Carried Embers fires (Unsteady landing on a burning enemy, or Burn on an unsteady one) while Fire and Wind are both carried. Before this mark is bought, or with only one of the two carried, the plain Carried Embers runs (a column of fire running 5 metres downwind, lighting what it reaches).
 
 **The numbers.** Mix, 3 Shards. Fire Whirl: 3 seconds; once a second every enemy within 3 metres is drawn 1 metre toward it and everything within 2 metres takes a Burn. Hot Wind: a lane 8 metres long and 2 metres wide beyond it lays a Burn on all in it, and the enemy is shoved 2 metres. Carried Embers rests 4 seconds on each enemy.
 
@@ -33,13 +33,11 @@ are both carried.
 
 **When it happens.** Each time Carried Embers fires, plain or shaped, while Fire and Wind are both carried.
 
-**The numbers.** Mix, a minor, 1 Shard. A fourth small fire 7 metres downwind: 1 metre across, 3 seconds, 3 damage and a Burn every half second.
+**The numbers.** Mix, a minor, 1 Shard. Four embers fly, not three, and they land 2 metres further downwind: the farthest about 8.5 metres away.
 
 **Works with.** Carried Embers, The Wind Carries It.
 
 **Example.** Embers land among the archers at the back as well as the soldiers in front.
-
-**Not built yet.** The three embers themselves do not fly further: a fourth one does.
 
 ## carriedembers.carries
 **What it does.** Your heavy blows on a burning enemy throw its embers downwind as if it had reacted, with no Unsteady needed and no rest. Each throw costs it one Burn. Where you stand when you strike aims the fire, so every heavy blow is a choice of where it lands.

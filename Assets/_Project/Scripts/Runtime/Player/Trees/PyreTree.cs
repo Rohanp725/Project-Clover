@@ -6,10 +6,10 @@ namespace Clover.Player.Trees
     /// <summary>
     /// Pyre: the duo branch Poison and Fire share, reshaped by pairs_d1_d2.md ("Poison and Fire", task 4.15) and drawn in the
     /// chart's heart (<see cref="HeartPattern"/>). Its reaction is Fire Medicine; the Shape mark opens its two shapes, Fire
-    /// Lance and Flying Fire. Fuel is cut (the Shape mark takes its place), and Fire Eater and Lit Fuse, offered to Poison's
-    /// and Fire's trees, are cut because those rosters are full; all three are in <see cref="RetiredMarks"/>. Goes Up is
-    /// re-aimed at the reaction. Kept: Funeral Fire, Slow Burn (the keystone) and Light the Pyres, the god's gift at the top
-    /// that is also the branch's spell. Open while both are carried.
+    /// Lance and Flying Fire. Fuel is cut (the Shape mark takes its place; <see cref="RetiredMarks"/>), and Fire Eater and Lit
+    /// Fuse, offered to Poison's and Fire's trees, whose rosters are full, are kept hidden for the Evolutions (<see cref="SpareSpells"/>). Goes Up is
+    /// re-aimed at the reaction. Kept: Funeral Fire, Slow Burn (the keystone) and Light the Pyres, the branch's duo spell, bought
+    /// with 5 Shards once both are carried (no god gives a duo crown, the owner's decision of 2026-11-20). Open while both are carried.
     /// </summary>
     public static class PyreTree
     {
@@ -59,7 +59,8 @@ namespace Clover.Player.Trees
             }, HeartPattern.Foot));
 
             // Re-aimed by the pair file: at full depth of poison, Fire Medicine spends nothing and strikes twice as hard.
-            // NEEDS: a mark that changes the reaction's own numbers; now a second bang of the same size and the spent doses laid
+            // NEEDS: the reaction's own numbers changed only on an enemy that meets a test as it fires (reaction-numbers-when);
+            // now a second bang of the same size and the spent doses laid
             // back, on an enemy whose poison is full as it reacts.
             to.Add(HeartPattern.Put(new Upgrade
             {
@@ -88,15 +89,15 @@ namespace Clover.Player.Trees
                 Stats = new[] { new StatMod(PlayerStat.AfflictionPower, 0.3f) },
             }, HeartPattern.Keystone));
 
-            // BESPOKE (built): PyresForm. The god's gift at the top, which the pair file names the branch's duo spell; kept a gift
-            // so the crown a consumed god gives is still there (phase4_questions.md, task 4.15).
+            // BESPOKE (built): PyresForm. The branch's duo spell, as the pair file names it, bought with 5 Shards once both are
+            // carried: gods give no duo crowns (the owner's decision of 2026-11-20). Still paid in mana, 60, when cast.
             to.Add(HeartPattern.Put(new Upgrade
             {
-                Id = LightThePyres, Name = "Light the Pyres", Element = A, Element2 = B, Kind = UpgradeKind.Signature, Icon = UpgradeIcons.Crown,
+                Id = LightThePyres, Name = "Light the Pyres", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { GoesUp, FuneralFire }, Icon = UpgradeIcons.Crown,
                 Description = "You drive your weapon into the ground. A line of fire runs to every poisoned or burning enemy near. Stand through three breaths, and a pillar of flame rises under each. 60 mana.",
                 Form = SpellForms.Pyres,
                 Spell = new SpellSpec { Cost = 60f, Count = 6, Reach = 9f, Radius = 2f, Damage = 40f, Stagger = 40f, Stacks = 2, Delay = 2.2f },
-            }, HeartPattern.Crown));
+            }, HeartPattern.Spell));
         }
     }
 }

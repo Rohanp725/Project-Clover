@@ -54,9 +54,9 @@ Quickening does.
 ## bloom.great
 **What it does.** A flask drunk while your surge burns opens a great lotus under you. Inside it you mend, and enemies are Soaked and Seeded. Each perfect guard you make inside closes a petal on the attacker and holds it. When the last petal closes, or its time is done, the lotus bursts, harder for every petal closed.
 
-**When it happens.** Drink a flask while Wellspring or Regrowth burns.
+**When it happens.** Choose it for your surge slot in the Hand at a rest fire, while Water and Life are both carried, and light it with the surge button. Drink a flask while it burns to open the lotus.
 
-**The numbers.** A god's gift, never sold; in the playtest it can be bought. The lotus is 3 metres in radius and lasts 10 seconds. Each second, Soaked and a stack of Seeded on every enemy in it, and 2 health to you while you stand in it. Five petals; each holds its enemy 3 seconds. The burst is about 5 metres in radius: 30 damage and 30% more for each petal closed (75 at five), 40 stagger and a stack of Seeded.
+**The numbers.** 40 mana, 10 seconds. 5 Shards, bought once both elements are carried; no god gives it. The lotus is 3 metres in radius and lasts 10 seconds. Each second, Soaked and a stack of Seeded on every enemy in it, and 2 health to you while you stand in it. Five petals; each holds its enemy 3 seconds. The burst is about 5 metres in radius: 30 damage and 30% more for each petal closed (75 at five), 40 stagger and a stack of Seeded.
 
 **Works with.** Wellspring (the flask heals half again as much), Morning Dew (the flask's ward), Drowned Roots.
 

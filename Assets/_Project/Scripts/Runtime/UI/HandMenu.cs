@@ -318,7 +318,7 @@ namespace Clover.UI
         private void ListFor(int item)
         {
             var loadout = build.Read();
-            if (item == SurgeItem) build.Rules.SurgesFor(loadout, choices);
+            if (item == SurgeItem) build.Rules.SurgesFor(loadout, RunState.Unlocked, choices);
             else
             {
                 build.Rules.ChoicesFor(item, loadout, RunState.Unlocked, choices);
@@ -413,8 +413,13 @@ namespace Clover.UI
             }
             string surgeElement = HandRules.ElementOfSurge(loadout.Surge);
             var surgeKit = surgeElement.Length > 0 ? ElementKit.ByName(surgeElement, false) : null;
+            // A duo surge is named by its mark and coloured by its first element.
+            var duoSurge = Upgrade.ById(loadout.Surge);
+            if (!DuoSurge.Is(duoSurge)) duoSurge = null;
+            if (duoSurge != null) surgeElement = duoSurge.Element;
             boxes[SurgeItem].Key.text = "Surge   " + ControlNames.Of("Surge", device);
-            Dress(boxes[SurgeItem], surgeKit != null ? surgeKit.SurgeName : "None", surgeElement, surgeElement.Length > 0 ? Elements.Colour(surgeElement) : MenuParts.Faint);
+            Dress(boxes[SurgeItem], duoSurge != null ? duoSurge.Name : surgeKit != null ? surgeKit.SurgeName : "None", duoSurge != null ? duoSurge.Element + " and " + duoSurge.Element2 : surgeElement,
+                surgeElement.Length > 0 ? Elements.Colour(surgeElement) : MenuParts.Faint);
 
             actionRows[0].text = "Suggested Hand";
             for (int i = 0; i < RunState.SavedHands.Length; i++)
@@ -486,8 +491,14 @@ namespace Clover.UI
             {
                 string element = HandRules.ElementOfSurge(loadout.Surge);
                 var kit = element.Length > 0 ? ElementKit.ByName(element, false) : null;
-                infoTitle.text = "Surge: " + (kit != null ? kit.SurgeName : "none");
-                if (kit != null)
+                var duo = Upgrade.ById(loadout.Surge);
+                infoTitle.text = "Surge: " + (DuoSurge.Is(duo) ? duo.Name : kit != null ? kit.SurgeName : "none");
+                if (DuoSurge.Is(duo))
+                {
+                    words.Append("A duo surge of ").Append(duo.Element).Append(" and ").Append(duo.Element2).Append(", lit with ").Append(ControlNames.Of("Surge")).Append('.');
+                    if (Details) words.Append("\n\n").Append(Mathf.RoundToInt(duo.Surge.Mana)).Append(" mana, ").Append(Mathf.RoundToInt(duo.Surge.Seconds)).Append(" s. ").Append(duo.Description);
+                }
+                else if (kit != null)
                 {
                     // The surge's own binding names the press for the device in hand ("F" on the keys, "LT tap" on a pad).
                     words.Append(element).Append("'s surge, lit with ").Append(ControlNames.Of("Surge")).Append('.');

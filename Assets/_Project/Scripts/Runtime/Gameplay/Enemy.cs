@@ -39,6 +39,9 @@ namespace Clover.Gameplay
         public float FinisherDamageMultiplier = 3f;
         /// <summary>Metres a blow shoves the enemy back.</summary>
         public float Shove = 0.7f;
+        // A shove moves the body at ShoveRate times its size and dies away at ShoveDecay a second, so a shove of one
+        // carries it ShoveTravel metres in all: a throw that promises metres divides by it to get there.
+        public const float ShoveRate = 6f, ShoveDecay = 9f, ShoveTravel = ShoveRate / ShoveDecay;
         public float Gravity = 25f;
         /// <summary>Seconds after dying before the body is cleared away.</summary>
         public float CorpseSeconds = 2.2f;
@@ -84,8 +87,26 @@ namespace Clover.Gameplay
         public Color FrozenGlow = new Color(0.22f, 0.5f, 0.85f);
         /// <summary>The white flash of a plain blow landing.</summary>
         public static readonly Color StruckFlash = new Color(1.6f, 1.6f, 1.6f);
+
+        /// <summary>The hue an untinted reaction's blow flashes the body in (StruckLook softens it), so no reaction lights a body white.</summary>
+        public static readonly Color ReactionFlashTint = new Color(0.55f, 0.5f, 0.92f, 1f);
         /// <summary>The flash a landed blow gives the body: white for a plain one, the element's colour softened under one (<see cref="StruckLook"/>).</summary>
         public static Color FlashColour(Color tint) => StruckLook.Flash(StruckFlash, tint);
+
+        /// <summary>
+        /// The guard's flash as a blow is turned on it: a cold white for a plain blow, but a blow of an element or a
+        /// reaction lights it in that hue, never white (the films of Thunder Gust and Glint, 2026-11-20: a white crescent
+        /// where a reaction's chained blow met a guard, 0.05 to 0.10 s in).
+        /// </summary>
+        public static Color GuardFlash(in Hit hit)
+        {
+            // A plain blow: the guard's own cold blue, not lit past its hue (bloom took any brighter pulse to white) (the element films of 2026-11-20 showed the
+            // white pulse as a bright ring segment under the enemy at the blow).
+            if (!hit.FromReaction && !StruckLook.Tinted(hit.Tint)) return new Color(0.4f, 0.65f, 1.1f, 1f);
+            Color hue = StruckLook.Tinted(hit.Tint) ? hit.Tint : ReactionFlashTint;
+            float peak = Mathf.Max(0.001f, Mathf.Max(hue.r, Mathf.Max(hue.g, hue.b)));
+            return new Color(hue.r / peak * 0.95f, hue.g / peak * 0.95f, hue.b / peak * 0.95f, 1f);
+        }
         public bool IsStaggered => Brain.State == EnemyState.Staggered;
         public bool IsDead => Brain.State == EnemyState.Dead;
         public bool IsCharged => chargedLeft > 0f;
@@ -174,6 +195,10 @@ namespace Clover.Gameplay
         [System.NonSerialized] public float GroundPace = 1f;
         /// <summary>Seconds left during which its guard is down whatever it is doing (a broken shield wall).</summary>
         [System.NonSerialized] public float GuardOpenFor;
+        // The ring that widens as it is staggered, in the finish mark's gold below white. Its material is lit far past white
+        // and blue (4, 5.5, 7), so plain it was a pale blue-white disc behind every finish mark (the swing films of
+        // 2026-11-20); this tint, multiplied by it, comes out about (1.3, 0.8, 0.15).
+        private static readonly Color StaggerRingTint = new Color(0.32f, 0.145f, 0.02f, 1f);
         // Somewhere it has been sent by something other than the fight (water to drink, its place in a line).
         private bool steered;
         private Vector3 steerTo;
@@ -385,11 +410,14 @@ namespace Clover.Gameplay
 
         // Shaken while it carries Tremor: the model only, side to side and a little up and down, never the body that
         // moves and is struck, so nothing it does changes. Deeper Tremor shakes it harder.
+        // Raised by a reaction's look too (Anvil Stone's anvil, Frost Heave's ice heaving up under its feet): the model rides
+        // up on what rises under it instead of the stone or ice passing through it; the body that is struck stays put.
         private void LateUpdate()
         {
             if (animator == null || animator.transform == transform) return;
             int tremor = IsDead ? 0 : Afflictions.Stacks(AfflictionKind.Tremor);
-            if (tremor <= 0)
+            float raise = IsDead ? 0f : Clover.Player.Forms.ElementLooks.RaiseOf(transform);
+            if (tremor <= 0 && raise <= 0f)
             {
                 if (shaking) animator.transform.localPosition = modelRest;
                 shaking = false;
@@ -397,8 +425,13 @@ namespace Clover.Gameplay
             }
             if (!shaking) modelRest = animator.transform.localPosition;
             shaking = true;
-            float t = Time.time * TremorRate, size = TremorShake * (1f + 0.25f * (tremor - 1));
-            animator.transform.localPosition = modelRest + new Vector3(Mathf.Sin(t) * size, Mathf.Abs(Mathf.Sin(t * 1.7f + 1f)) * size * 0.5f, Mathf.Sin(t * 1.3f + 2f) * size * 0.6f);
+            Vector3 offset = animator.transform.parent != null ? animator.transform.parent.InverseTransformVector(Vector3.up * raise) : Vector3.up * raise;
+            if (tremor > 0)
+            {
+                float t = Time.time * TremorRate, size = TremorShake * (1f + 0.25f * (tremor - 1));
+                offset += new Vector3(Mathf.Sin(t) * size, Mathf.Abs(Mathf.Sin(t * 1.7f + 1f)) * size * 0.5f, Mathf.Sin(t * 1.3f + 2f) * size * 0.6f);
+            }
+            animator.transform.localPosition = modelRest + offset;
         }
 
         private void Awake()
@@ -458,8 +491,13 @@ namespace Clover.Gameplay
             if (markerOutline != null) outlineRenderer = markerOutline.GetComponent<Renderer>();
             if (markerFill != null) fillRenderer = markerFill.GetComponent<Renderer>();
             ReadOwnColours();
+            // The bars stand a hand over the head: the body's height, read once, for looks fitted to the body.
+            BodyHeight = bars != null ? Mathf.Max(1.2f, bars.localPosition.y - 0.3f) : 2f;
             Restore();
         }
+
+        /// <summary>Metres from the feet to the top of the head, from where the bars stand over it (2 before it wakes).</summary>
+        public float BodyHeight { get; private set; } = 2f;
 
         private void OnDestroy()
         {
@@ -595,17 +633,20 @@ namespace Clover.Gameplay
             if (hit.Detonate && Burn.IsBurning)
             {
                 detonated = Burn.Detonate();
-                Vfx.Play(VfxKind.Burst, transform.position + Vector3.up * 1.2f);
+                // In the fire's own colour below white: plain, it was a pale-white disc over every Burn a blow set off (the
+                // Katana's Fire infused strike in the swing films of 2026-11-20). 0.22 is a heavy blow's star brightness.
+                Vfx.Play(VfxKind.Burst, transform.position + Vector3.up * 1.2f, Vector3.up, 1f, StruckLook.Glow(Gameplay.Afflictions.Spec(AfflictionKind.Burn).Colour, 0.22f));
                 Vfx.Play(VfxKind.Fire, transform.position + Vector3.up * 1.2f, Vector3.up, 2f);
                 Vfx.Play(VfxKind.Embers, transform.position + Vector3.up * 1.4f, Vector3.up, 2f);
             }
             Afflictions.IgniteFrom(hit, this);
             // Ice breaks under a heavy blow, and what it held takes the breaking.
-            if (hit.Heavy && Afflictions.IsFrozen)
+            bool shattered = hit.Heavy && Afflictions.IsFrozen;
+            if (shattered)
             {
                 detonated += Afflictions.Shatter();
                 CombatEvents.RaiseShattered(this);
-                Vfx.Play(VfxKind.Burst, transform.position + Vector3.up * 1.2f);
+                Vfx.Play(VfxKind.Burst, transform.position + Vector3.up * 1.2f, Vector3.up, 1f, StruckLook.Glow(Gameplay.Afflictions.Spec(AfflictionKind.Chill).Colour, 0.22f));
                 Vfx.Play(VfxKind.TintSpark, transform.position + Vector3.up * 1.2f, Vector3.up, 2.5f, Gameplay.Afflictions.Spec(AfflictionKind.Chill).Colour);
                 Vfx.Play(VfxKind.TintRing, transform.position + Vector3.up * 0.3f, Vector3.up, 1f, Gameplay.Afflictions.Spec(AfflictionKind.Chill).Colour);
             }
@@ -613,7 +654,7 @@ namespace Clover.Gameplay
             float takes = Afflictions.DamageTakenMultiplier(hit.Spell) * harder;
             float unsteadies = Afflictions.StaggerTakenMultiplier * harder;
             float shoved = Afflictions.ShoveMultiplier;
-            Afflictions.TakeFrom(hit, this);
+            Afflictions.TakeFrom(hit, this, shattered);
             // Ground that only lays an affliction is not a blow: it does not shove, flinch, wear poise or meet the guard.
             if (hit.OnlyLays && detonated <= 0f) return HitOutcome.Landed;
 
@@ -622,7 +663,7 @@ namespace Clover.Gameplay
                 && Vector3.Angle(transform.forward, -hit.Direction) < 75f)
             {
                 BlowsGuarded++;
-                if (guardArc != null) guardArc.Pulse(new Color(3f, 3.4f, 4f, 1f), 0.18f, 0.25f);
+                if (guardArc != null) guardArc.Pulse(GuardFlash(hit), 0.18f, 0.25f);
                 Health.Damage(hit.Damage * takes * (hit.Heavy ? Kind.HeavyGuardedDamage : Kind.GuardedDamage));
                 Vfx.Play(VfxKind.GuardSpark, transform.position + Vector3.up * 1.2f + transform.forward * 0.5f, transform.forward);
                 Vector3 back = hit.Direction;
@@ -638,7 +679,7 @@ namespace Clover.Gameplay
                 {
                     Brain.Stagger();
                     Clover.Player.Tips.EnemyStaggered(transform.position);
-                    Vfx.Play(VfxKind.Ring, transform.position + Vector3.up * 1.4f, Vector3.up);
+                    Vfx.Play(VfxKind.Ring, transform.position + Vector3.up * 1.4f, Vector3.up, 1f, StaggerRingTint);
                 }
                 else if (++blocked >= Kind.BlocksBeforeCounter)
                 {
@@ -653,7 +694,9 @@ namespace Clover.Gameplay
             float multiplier = finisher ? FinisherDamageMultiplier : IsStaggered || busy == BusyDrink ? StaggeredDamageMultiplier : 1f;
             // A god is not cut down by one blow, however good: a finisher takes a fixed share of him.
             Health.Damage(detonated + (finisher && Kind.FinisherHealthShare > 0f ? Mathf.Max(hit.Damage * multiplier * takes, Kind.Health * Kind.FinisherHealthShare) : hit.Damage * multiplier * takes));
-            Flash(FlashColour(hit.Tint));
+            // A reaction's blow that carries no element's tint flashes a soft lilac, not a plain blow's white (the films of
+            // 2026-11-20: Flashover's, Thunder Gust's, Glint's and The Bolt Runs True's strikes lit whole soldiers pure white).
+            Flash(FlashColour(hit.FromReaction && !StruckLook.Tinted(hit.Tint) ? ReactionFlashTint : hit.Tint));
             Vector3 away = hit.Direction;
             away.y = 0f;
             // Flat on its back it is not slid along the floor by the blows that follow the one that felled it.
@@ -675,7 +718,7 @@ namespace Clover.Gameplay
             {
                 Brain.Stagger();
                 Clover.Player.Tips.EnemyStaggered(transform.position);
-                Vfx.Play(VfxKind.Ring, transform.position + Vector3.up * 1.4f, Vector3.up);
+                Vfx.Play(VfxKind.Ring, transform.position + Vector3.up * 1.4f, Vector3.up, 1f, StaggerRingTint);
             }
             else
             {
@@ -1031,8 +1074,8 @@ namespace Clover.Gameplay
             bool rooted = Afflictions.Conditions.Has(ConditionFlags.Rooted);
             if (rooted) step = Vector3.zero;
             // Ice holds it where it stands, whatever shoves.
-            if (!Afflictions.IsFrozen && !rooted) step += shove * (deltaTime * 6f);
-            shove = Vector3.Lerp(shove, Vector3.zero, 1f - Mathf.Exp(-9f * deltaTime));
+            if (!Afflictions.IsFrozen && !rooted) step += shove * (deltaTime * ShoveRate);
+            shove = Vector3.Lerp(shove, Vector3.zero, 1f - Mathf.Exp(-ShoveDecay * deltaTime));
             if (Afflictions.IsLifted)
             {
                 // Thrown into the air: it goes nowhere of its own will, rises, hangs and comes down over where it left the ground.
@@ -1054,7 +1097,9 @@ namespace Clover.Gameplay
             if (body.enabled) body.Move(step);
 
             // Its guard is up only while it stands ready and knows the player is there: the band going out is the opening.
-            if (guardArc != null) guardArc.Show(Kind.Guards && Brain.State == EnemyState.Stalk && !Afflictions.Conditions.Has(ConditionFlags.CannotGuard));
+            // Nor while its guard is held open (a broken shield wall), when every blow lands: the band showed a guard that
+            // was not there, a pale crescent at the feet of every soldier in the films that hold guards open.
+            if (guardArc != null) guardArc.Show(Kind.Guards && GuardOpenFor <= 0f && Brain.State == EnemyState.Stalk && !Afflictions.Conditions.Has(ConditionFlags.CannotGuard));
             ShowAttack(attack);
             Animate(deltaTime, Kind.WalkSpeed > 0f ? walked / Kind.WalkSpeed : 0f);
             Paint(deltaTime);
@@ -1503,7 +1548,9 @@ namespace Clover.Gameplay
             int glow = 0;
             if (flashLeft > 0f) glow = 1;
             // Held in stone (Turned to Stone) it does not glow the frozen pale blue: that lit the stone near white.
-            else if (Afflictions.IsFrozen && !IsDead && !(ice > 0f && shell == Clover.Player.Forms.ElementLookSet.Stone)) glow = 5;
+            // Nor under Winter Seed's ice flower (the coordinator, 2026-11-20: "remove the frozen body's pale glow").
+            // Nor in Stolen Warmth's dark violet ice (the owner, 2026-11-20: "make the ice a bit darker"): the glow paled it.
+            else if (Afflictions.IsFrozen && !IsDead && !(ice > 0f && (shell == Clover.Player.Forms.ElementLookSet.Stone || shell == Clover.Player.Forms.ElementLookSet.DarkIce)) && !Clover.Player.Forms.ElementLooks.Thawed(transform)) glow = 5;
             else if (IsStaggered && Mathf.Repeat(Time.unscaledTime * 5f, 1f) < 0.5f) glow = 2;
             else if (IsCharged && !IsDead && Mathf.Repeat(Time.unscaledTime * 3f, 1f) < 0.6f) glow = 3;
             // Close to losing its balance, it flickers amber: one or two more blows will open it.
@@ -1528,14 +1575,16 @@ namespace Clover.Gameplay
                 shownFrost = shell == Clover.Player.Forms.ElementLookSet.Rime ? 1f : 0f;
                 shownStone = shell == Clover.Player.Forms.ElementLookSet.Stone ? 1f : 0f;
                 shownVenom = shell == Clover.Player.Forms.ElementLookSet.Venom ? 1f : 0f;
+                shownDark = shell == Clover.Player.Forms.ElementLookSet.DarkIce ? 1f : 0f;
                 SetGlow(glow);
             }
         }
 
-        private float shownIce, shownIceReveal = 1f, shownFrost, shownStone, shownVenom, shownWet, shownWetReveal = 1f;
+        private float shownIce, shownIceReveal = 1f, shownFrost, shownStone, shownVenom, shownDark, shownWet, shownWetReveal = 1f;
         private byte shownShell;
         private static readonly int IceStoneId = Shader.PropertyToID("_IceStone");
         private static readonly int IceVenomId = Shader.PropertyToID("_IceVenom");
+        private static readonly int IceDarkId = Shader.PropertyToID("_IceDark");
         private static readonly int WetId = Shader.PropertyToID("_Wet");
         private static readonly int WetRevealId = Shader.PropertyToID("_WetReveal");
         private static readonly int IceId = Shader.PropertyToID("_Ice");
@@ -1568,6 +1617,7 @@ namespace Clover.Gameplay
                     block.SetFloat(IceFrostId, shownFrost);
                     block.SetFloat(IceStoneId, shownStone);
                     block.SetFloat(IceVenomId, shownVenom);
+                    block.SetFloat(IceDarkId, shownDark);
                     block.SetFloat(RevealBaseId, feet);
                     block.SetFloat(RevealHeightId, Mathf.Max(0.8f, bodyRenderer.bounds.max.y - feet));
                 }

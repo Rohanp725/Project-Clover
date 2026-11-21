@@ -7,7 +7,7 @@ namespace Clover.Player.Trees.Duo
     /// The duo branch of Poison and Lightning (pairs_d1_d2.md, "Poison and Lightning", distance 2; task 4.15), named by its
     /// reaction, Nerve Fire. Drawn in the chart's heart (<see cref="HeartPattern"/>) and open while both are carried. Its
     /// Shape mark, Struck Nerve, opens Ozone and Lockjaw; Strike on the Beat and Five Thunders, the keystone Hidden Crimes,
-    /// and the duo spell Paper Seal, the crown. Poison is written first, as the ring names the pair: the duo spell is cast in
+    /// and the duo spell Paper Seal. Poison is written first, as the ring names the pair: the duo spell is cast in
     /// Poison.
     /// </summary>
     public static class NerveFireDuo
@@ -88,7 +88,7 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.Keystone));
 
-            // The duo spell, the crown: a detonator on a 13 s cooldown (SpellTimings). The brand form sets a sign on the enemy
+            // The duo spell, bought with Shards once both are carried (no god gives it): a detonator on a 13 s cooldown (SpellTimings). The brand form sets a sign on the enemy
             // faced that the next weapon blows burn down and set off; it is held as the seal is slapped on.
             // NEEDS: the step to the enemy; its Static discharged and each dose passed to all within 3 m at the thunder; the
             // thunder at half if the 6 s run out first; elites held 0.5 s and gods not at all.

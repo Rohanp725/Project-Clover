@@ -46,13 +46,11 @@ are both carried.
 
 **When it happens.** Each time Turned to Stone fires.
 
-**The numbers.** Mix, a minor, 1 Shard.
+**The numbers.** Mix, a minor, 1 Shard. The stone climbs in half a second, not one, so the enemy is caught sooner. The same in both shapes.
 
 **Works with.** Grave Dirt, which it grows from, Turned to Stone.
 
 **Example.** The stone closes before the enemy can strike.
-
-**Not built yet.** It does nothing yet: a mark that changes the reaction's own numbers is still to come.
 
 ## turnedtostone.forgive
 **What it does.** An enemy turned to stone once keeps its Tremor and its Curse until it dies.

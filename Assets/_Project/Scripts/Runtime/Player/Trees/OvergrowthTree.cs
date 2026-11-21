@@ -6,8 +6,8 @@ namespace Clover.Player.Trees
     /// <summary>
     /// Overgrowth: the duo branch Life and Earth share, reshaped by pairs_d1_d2.md ("Life and Earth", task 4.15) and drawn
     /// in the chart's heart (<see cref="HeartPattern"/>). Its reaction is Split Rock; the Shape mark opens its two shapes,
-    /// Taking Root and Root Web. Root Grip is now the reaction (the Shape mark takes its place) and Thorn Wall, offered to
-    /// Earth's tree, is cut because that roster is full; both are in <see cref="RetiredMarks"/>. Kept: Moss on Stone, Thorns
+    /// Taking Root and Root Web. Root Grip is now the reaction (the Shape mark takes its place) (<see cref="RetiredMarks"/>) and
+    /// Thorn Wall, offered to Earth's tree, whose roster is full, is kept hidden for the Evolutions (<see cref="SpareSpells"/>). Kept: Moss on Stone, Thorns
     /// Take Root (once Briar Patch), Living Rampart (the keystone), Stone Oak (the duo spell) and The Ground Wakes, begun by
     /// the surge, the branch's duo surge and top mark. Open while both are carried.
     /// </summary>
@@ -92,7 +92,7 @@ namespace Clover.Player.Trees
             // NEEDS: a duo surge chosen in the Hand's surge slot (now it answers any surge while both are carried).
             to.Add(HeartPattern.Put(new Upgrade
             {
-                Id = TheGroundWakes, Name = "The Ground Wakes", Element = A, Element2 = B, Kind = UpgradeKind.Signature, Icon = UpgradeIcons.Crown,
+                Id = TheGroundWakes, Name = "The Ground Wakes", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { StoneOak }, Icon = UpgradeIcons.Crown,
                 Description = "When your surge begins, the ground rises round you in a ring of root and stone and holds every enemy inside it. Then it flowers, and you are healed for each one held.",
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.Form, Form = SpellForms.GroundWakes, Affliction = AfflictionKind.Tremor, Spell = new SpellSpec { Cost = 0f, Radius = 7f, Seconds = 2f, Damage = 15f, Stagger = 20f, Stacks = 3, LingerDamage = 5f } } },
             }, HeartPattern.Crown));

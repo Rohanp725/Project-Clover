@@ -1016,7 +1016,8 @@ branch is written the same way with the base id (`fire.base`), an empty form and
 shape with a form of its own is cast through the mark instead (`SpellBranches.CastsThroughMark`). Optional arguments:
 `weapon`, `tally` and `learnEffects` (on the Learn: Ring of Drums keeps its drums there), `masterStats`.
 
-The pattern, upright (X across, Y outward), 36 places for a tree's 34 marks, proved for all eleven elements beside every
+The pattern, upright (X across, Y outward), 37 places for a tree's 34 marks and the three a tree may add (the top of the
+trunk, `T.3`, was added on 2026-11-20 for the marks the owner kept), proved for all eleven elements beside every
 mixed branch by `UpgradeChartTests.TheSpellBranchPatternFillsAllElevenElementsAndEveryMixWithoutACrowdAndTheStickReachesAll`:
 
 | Place | X, Y | Grows from | Used for |
@@ -1026,6 +1027,7 @@ mixed branch by `UpgradeChartTests.TheSpellBranchPatternFillsAllElevenElementsAn
 | `M.a`, `M.b` | -0.48 and 0.48; 3.45, 4.4, 5.35, 6.3 | M.foot | two branches |
 | `M.crown` | 0, 7.35 | M.foot | a passive up the trunk (the lift, a Devotion) |
 | `T.1`, `T.2` | -0.62 and 0.62, 8.5 | M.crown | the top of the trunk (a keystone, a Devotion) |
+| `T.3` | 0, 9.75 | M.crown | above and between them (Spilled Water, Shade) |
 | `L.foot`, `R.foot` | -1.55 and 1.55, 2.55 | root | each side bough's first passive |
 | `L.a`, `R.a` | -1.38 to -1.6 (mirrored), 3.6 to 6.4 | its foot | a branch; also the base spell's, grown from the root (its line passes clear) |
 | `L.mid`, `R.mid` | -2.45 and 2.45, 6.0 | its foot | the side bough's middle passive |

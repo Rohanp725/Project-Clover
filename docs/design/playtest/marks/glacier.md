@@ -56,7 +56,7 @@ Supercooled does.
 
 **When it happens.** Plates come with each blocked blow and each perfect guard. They are spent by your next heavy swing, whether or not it lands, or fall away 30 seconds after the last was laid.
 
-**The numbers.** A god's gift, never sold; in the playtest it can be bought. Each plate takes 6% off the damage you take, 30% at five. The edge reaches 2.5 metres and 1.2 more a plate (8.5 at five), 1.3 metres to each side: 12 damage, 12 stagger and one stack of Chill a plate, as a heavy blow. Five plates: 60 damage, 60 stagger and five Chill, enough to freeze.
+**The numbers.** 5 Shards, bought once both elements are carried; no god gives it. Each plate takes 6% off the damage you take, 30% at five. The edge reaches 2.5 metres and 1.2 more a plate (8.5 at five), 1.3 metres to each side: 12 damage, 12 stagger and one stack of Chill a plate, as a heavy blow. Five plates: 60 damage, 60 stagger and five Chill, enough to freeze.
 
 **Works with.** Cold Read, Cold in the Bones, Chill.
 

@@ -208,8 +208,13 @@ namespace Clover.Tests
                     Assert.That(effect.Chance, Is.InRange(0.01f, 1f), upgrade.Id);
                 }
             }
-            // A Shape mark's two shapes carry effects of their own, each with its slot and its Shape mark as owner.
-            var every = Upgrade.All.SelectMany(upgrade => upgrade.Effects.Concat(upgrade.Shapes.SelectMany(shape => shape.Effects))).ToList();
+            // A Shape mark's two shapes carry effects of their own, each with its slot and its Shape mark as owner; so do a
+            // spell's later presses (Three Weasels).
+            var every = Upgrade.All.SelectMany(upgrade => upgrade.Effects.Concat(upgrade.Shapes.SelectMany(shape => shape.Effects))
+                .Concat(upgrade.Presses != null ? upgrade.Presses.SelectMany(press => press) : Enumerable.Empty<UpgradeEffect>())).ToList();
+            foreach (var upgrade in Upgrade.All.Where(upgrade => upgrade.Presses != null))
+                foreach (var effect in upgrade.Presses.SelectMany(press => press))
+                    Assert.AreSame(upgrade, effect.Owner, upgrade.Id + "'s press");
             foreach (var upgrade in Upgrade.All)
                 foreach (var effect in upgrade.Shapes.SelectMany(shape => shape.Effects))
                     Assert.AreSame(upgrade, effect.Owner, upgrade.Id + "'s shape");
@@ -253,7 +258,7 @@ namespace Clover.Tests
         }
 
         [Test]
-        public void EveryElementHasItsTreeItsGiftAndTheCrownOfEachBranchItShares()
+        public void EveryElementHasItsTreeAndItsGiftAndNoGodGivesADuoCrown()
         {
             foreach (var element in Elements.All)
             {
@@ -263,17 +268,46 @@ namespace Clover.Tests
                 Assert.IsNotNull(gift, element.Name + " has no god's gift");
                 Assert.AreEqual(element.Name, gift.Element);
                 Assert.IsFalse(gift.IsMix);
-                var crown = Gifts.CrownOf(element.Name, element.MixWith);
-                Assert.IsNotNull(crown, element.MixName + " has no crown");
-                Assert.AreSame(crown, Gifts.CrownOf(element.MixWith, element.Name), "in either order of holding");
-                Assert.IsTrue(crown.IsMix && crown.BelongsTo(element.Name) && crown.BelongsTo(element.MixWith));
-                // A branch reshaped into the heart is four to eight marks with its crown (pairs_d1_d2.md); one still on the ring six or more.
-                Assert.GreaterOrEqual(Upgrade.All.Count(upgrade => upgrade.Kind == UpgradeKind.Mix && upgrade.BelongsTo(element.Name) && upgrade.BelongsTo(element.MixWith)), 4, element.MixName);
+                // A branch reshaped into the heart is four to eight marks (pairs_d1_d2.md).
+                Assert.GreaterOrEqual(Upgrade.All.Count(upgrade => upgrade.Kind == UpgradeKind.Mix && !upgrade.IsHidden && upgrade.BelongsTo(element.Name) && upgrade.BelongsTo(element.MixWith)), 4, element.MixName);
+                // An element's base spell (its branch's Learn) comes free with the element, and is never sold (the 4.1 default, the owner's of 2026-11-20).
+                var learn = Upgrade.ById(SpellSlots.BaseId(element.Name));
+                if (learn != null)
+                {
+                    Assert.IsTrue(learn.Given, learn.Id + " comes with its element");
+                    Assert.IsFalse(MarkRules.CanBuy(learn, new HashSet<string>(), 999, true, true), learn.Id + " is never sold");
+                }
             }
-            Assert.IsNull(Gifts.CrownOf(Elements.Fire, Elements.Water), "no branch between elements that are not neighbours");
-            Assert.IsNull(Gifts.CrownOf(Elements.Fire, Elements.Fire));
             Assert.AreEqual(Upgrade.StormStep, Gifts.SignatureOf(Elements.Lightning).Id, "the storm's own gift is unchanged");
-            Assert.AreEqual(Upgrade.Plasma, Gifts.CrownOf(Elements.Fire, Elements.Lightning).Id, "and Plasma is still what the storm leaves the fire");
+
+            // The owner's decision of 2026-11-20: consuming a god gives no duo crown. No duo mark is a god's gift, and every
+            // duo branch's top marks (the old crowns too) are bought for 5 Shards once both elements are carried.
+            Assert.IsFalse(Upgrade.All.Any(upgrade => upgrade.Signature && upgrade.IsMix), "no duo mark is a god's gift");
+            var tops = new[]
+            {
+                Upgrade.Plasma, TempestTree.FallingThunder, BlizzardTree.Gift, GlacierTree.Gift, BloomTree.Gift, OvergrowthTree.TheGroundWakes,
+                ForgeTree.WorldAnvil, HaloTree.SixMirrors, EclipseTree.Totality, BlightTree.TheReaping, PyreTree.LightThePyres,
+            };
+            foreach (string id in tops)
+            {
+                var top = Upgrade.ById(id);
+                Assert.IsNotNull(top, id);
+                Assert.AreEqual(UpgradeKind.Mix, top.Kind, id);
+                Assert.AreEqual(5, top.Cost, id + " costs 5 Shards");
+                Assert.IsFalse(top.Given, id + " is bought, not given");
+                var learned = new HashSet<string>(top.Requires.Take(1));
+                Assert.IsTrue(MarkRules.CanBuy(top, learned, 5, true, false), id + " is sold once what it grows from is learned");
+                var both = new Clover.Player.Build.Loadout();
+                both.Attune(top.Element, top.Element2);
+                Assert.IsTrue(MarkRules.Open(top, both, false), id + " is open with both carried");
+                var one = new Clover.Player.Build.Loadout();
+                one.Attune(top.Element, "");
+                Assert.IsFalse(MarkRules.Open(top, one, false), id + " is shut with one");
+            }
+            Assert.IsTrue(Upgrade.ById(HaloTree.SixMirrors).IsSpell && Upgrade.ById(PyreTree.LightThePyres).IsSpell, "Six Mirrors and Light the Pyres are their branches' duo spells");
+            // Every duo branch's duo spell, the new ones too, is a mark bought with Shards.
+            foreach (var spell in Upgrade.All.Where(upgrade => upgrade.IsMix && upgrade.IsSpell && !upgrade.IsHidden))
+                Assert.IsTrue(spell.Kind == UpgradeKind.Mix && spell.Cost == 5 && !spell.Given, spell.Id + " is a duo spell for 5 Shards");
         }
 
         // The cheapest road from the root to a mark: every mark on the way is paid for, taking the cheapest parent each time.
@@ -350,7 +384,8 @@ namespace Clover.Tests
             Assert.AreEqual(SpellForms.Leap, Upgrade.ById(Upgrade.MeteorLeap).Form);
             Assert.AreEqual(SpellForms.Rod, Upgrade.ById(Upgrade.LightningRod).Form);
             Assert.IsTrue(Upgrade.ById(Upgrade.StormStep).Signature);
-            Assert.IsTrue(Upgrade.ById(Upgrade.Plasma).Signature);
+            // Plasma is bought with Shards since gods give no duo crowns (the owner's decision of 2026-11-20).
+            Assert.IsFalse(Upgrade.ById(Upgrade.Plasma).Signature);
         }
 
         [Test]
@@ -382,9 +417,11 @@ namespace Clover.Tests
             // The two trees reshaped into spell branches (Phase 4): six branches of four and their passives, and the branch they
             // share, reshaped as a duo branch (task 4.5): the Shape mark, Twin Break, Ionised Air, Chain Reaction, Meltdown and
             // Ball Lightning, with Plasma at its top.
-            Assert.AreEqual(33, Upgrade.All.Count(upgrade => upgrade.Element == Elements.Fire && !upgrade.IsMix && !upgrade.IsWay && !upgrade.Signature && !upgrade.IsHidden));
+            // Fire has its two new keystones, Into the Fire and The Blade Drinks Fire (the owner's picks of 2026-11-20).
+            Assert.AreEqual(35, Upgrade.All.Count(upgrade => upgrade.Element == Elements.Fire && !upgrade.IsMix && !upgrade.IsWay && !upgrade.Signature && !upgrade.IsHidden));
             Assert.AreEqual(32, Upgrade.All.Count(upgrade => upgrade.Element == Elements.Lightning && !upgrade.IsMix && !upgrade.IsWay && !upgrade.Signature && !upgrade.IsHidden));
-            Assert.AreEqual(6, Upgrade.All.Count(upgrade => upgrade.Kind == UpgradeKind.Mix && upgrade.Element == Elements.Fire && upgrade.Element2 == Elements.Lightning));
+            // Plasma Lance, the spare spell kept hidden for the Evolutions, is on no chart; Plasma itself is a duo mark now.
+            Assert.AreEqual(7, Upgrade.All.Count(upgrade => upgrade.Kind == UpgradeKind.Mix && !upgrade.IsHidden && upgrade.Element == Elements.Fire && upgrade.Element2 == Elements.Lightning));
         }
 
         [Test]
@@ -486,7 +523,8 @@ namespace Clover.Tests
         {
             // The worked layout of docs/UPGRADE_SCHEMA.md 20.4: three boughs, two stalks of four on each, passives on the boughs and trunk.
             var pattern = BranchPattern.All;
-            Assert.AreEqual(36, pattern.Count);
+            // 36 places, and the top of the trunk added for the marks the owner kept on 2026-11-20.
+            Assert.AreEqual(37, pattern.Count);
             Assert.AreEqual(pattern.Count, pattern.Select(place => place.Name).Distinct().Count());
             foreach (var place in pattern)
             {
@@ -516,7 +554,7 @@ namespace Clover.Tests
             {
                 var places = chart.Where(mark => mark.element == element.Name || mark.element2 == element.Name)
                     .Select(mark => UpgradeTree.Upright(mark.place, element.Bearing)).ToList();
-                Assert.AreEqual(36 + 8 + 8, places.Count);
+                Assert.AreEqual(37 + 8 + 8, places.Count);
                 Assert.IsTrue(Walkable(places, 0, out int reached), $"{element.Name}: the stick reaches {reached} of {places.Count}");
             }
         }
@@ -525,12 +563,15 @@ namespace Clover.Tests
         // keystones, Devotion, lift and gift). A tree is added here when it is reshaped.
         private static readonly Dictionary<string, int> ReshapedPassives = new Dictionary<string, int>
         {
-            [Elements.Fire] = 10,
+            // Fire, Water and Life have three keystones since the owner's picks of 2026-11-20 (keystones_fire_water_life.md).
+            [Elements.Fire] = 12,
             [Elements.Lightning] = 9,
-            [Elements.Wind] = 10,
-            [Elements.Ice] = 10,
-            [Elements.Water] = 10,
-            [Elements.Life] = 10,
+            // Wind and Ice keep Hammer Down and Clean Break as marks (the owner's answer of 2026-11-20).
+            [Elements.Wind] = 11,
+            [Elements.Ice] = 11,
+            // Water and Life keep Spilled Water and Shade as marks too.
+            [Elements.Water] = 13,
+            [Elements.Life] = 13,
             // Earth's table gives three keystones, and it keeps all three since the owner allowed it (2026-11-20).
             [Elements.Earth] = 10,
             // Metal's table gives three keystones too: Edge Guard, Master's Answer and All Blades Home.
@@ -629,7 +670,11 @@ namespace Clover.Tests
                 Assert.IsTrue(learn.IsBaseSpell || learn.IsSpell, learn.Id);
                 var empower = branch[1].Empower;
                 Assert.IsNotNull(empower, learn.Id);
-                Assert.Greater(empower.Cooldown + empower.Mana, 0f, learn.Id + ": Empower is always a shorter cooldown or a lower price");
+                // An Empower strengthens the spell or shortens its wait (or lowers its price), or both (the owner's answer of
+                // 2026-11-20). Standing Light's waits on its ledger piece (in-own-ground) and does nothing yet.
+                bool shortens = empower.Cooldown + empower.Mana > 0f;
+                if (learn.Id != LightTree.StandingLight)
+                    Assert.IsTrue(shortens || empower.Strengthens, learn.Id + ": an Empower makes the spell stronger or its wait shorter");
                 var shapes = branch[2].Shapes;
                 Assert.AreEqual(2, shapes.Length, learn.Id + " has two shapes");
                 foreach (var shape in shapes)
@@ -823,6 +868,42 @@ namespace Clover.Tests
             }
             foreach (var moving in RetiredMarks.Moving)
                 Assert.IsNotNull(Upgrade.ById(moving.Id), moving.Id + " has its home on a weapon's Way");
+        }
+
+        [Test]
+        public void TheFourMarksTheOwnerKeptStandOnTheirTreesUnderTheirOldIds()
+        {
+            // The owner's answer of 2026-11-20: Hammer Down, Clean Break, Spilled Water and Shade are marks, not retired.
+            var kept = new (string id, string tree, string place, string from)[]
+            {
+                (WindTree.HammerDown, Elements.Wind, BranchPattern.RightMiddle, WindTree.AgainstTheWall),
+                (IceTree.CleanBreak, Elements.Ice, BranchPattern.RightMiddle, IceTree.Brittle),
+                (WaterTree.SpilledWater, Elements.Water, BranchPattern.TrunkTop, WaterTree.SpreadingWater),
+                (LifeTree.Shade, Elements.Life, BranchPattern.TrunkTop, LifeTree.RootAndBranch),
+            };
+            foreach (var (id, tree, place, from) in kept)
+            {
+                var mark = Upgrade.ById(id);
+                Assert.IsNotNull(mark, id + " is a mark again");
+                Assert.IsFalse(RetiredMarks.IsRetired(id), id + " is out of RetiredMarks, so a save keeps it and is refunded nothing");
+                Assert.AreEqual(UpgradeKind.Major, mark.Kind, id);
+                Assert.AreEqual(3, mark.Cost, id);
+                Assert.AreEqual(tree, mark.Element, id);
+                CollectionAssert.AreEqual(new[] { from }, mark.Requires, id);
+                var at = BranchPattern.Of(place);
+                Assert.AreEqual(at.X, mark.X, 0.001f, id + " stands at " + place);
+                Assert.AreEqual(at.Y, mark.Y, 0.001f, id + " stands at " + place);
+            }
+            // The stalk above each middle place grows from it, as the pattern grows its stalks: a line from the foot would
+            // run over the kept mark.
+            CollectionAssert.AreEqual(new[] { WindTree.HammerDown }, Upgrade.ById(WindTree.IndrawnBreath).Requires);
+            CollectionAssert.AreEqual(new[] { IceTree.CleanBreak }, Upgrade.ById(IceTree.SkiRun).Requires);
+            // Hammer Down's heavy blow on an enemy in the air strikes half again as hard.
+            var stats = new PlayerStats();
+            foreach (var mod in Upgrade.ById(WindTree.HammerDown).Stats) stats.AddLearned(mod);
+            Assert.AreEqual(0.5f, stats.InAirHeavy(PlayerStat.WeaponDamage), 0.001f);
+            Assert.AreEqual(0f, stats.InAir(PlayerStat.WeaponDamage), 0.001f, "a light blow in the air is not raised by it");
+            Assert.AreEqual(0f, stats.Blow(PlayerStat.WeaponDamage, true, false, false), 0.001f, "nor a heavy blow on the ground");
         }
 
         [Test]

@@ -36,11 +36,11 @@ the next blows on that enemy critical.
 
 **When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4). With no enemy faced nothing is sealed, and the slot still waits. Then fight that enemy for six seconds.
 
-**The numbers.** 4 Shards, no mana: it waits 12 seconds after a cast, less with weapon play (its Empower: 11). An enemy within 10 metres. The sign flashes, striking nothing, at each blow you land on it. When the six seconds end: 8 damage for each weapon blow that landed on it in that time, and 40 stagger.
+**The numbers.** 4 Shards, no mana: it waits 12 seconds after a cast, less with weapon play. An enemy within 10 metres. The sign flashes, striking nothing, at each blow you land on it. When the six seconds end: 8 damage for each weapon blow that landed on it in that time, and 40 stagger. Its Empower makes it 10 for each blow, up to 180.
 
 **Works with.** Quick weapons (more blows counted), the root and Just Cut (critical blows), Weighed, Condemned (the column's stagger with a full mark's), Ring of Spears (held still while you cut), the charged blade.
 
-**Not built yet.** Half of the damage your weapon did in the six seconds, 150 at most: for now 8 a blow, whatever the blow. The clock face drawn on the ground. The Empower's 60% and 180 at most: for now it only shortens the wait.
+**Not built yet.** Half of the damage your weapon did in the six seconds, 150 at most: for now 8 a blow, whatever the blow. The clock face drawn on the ground.
 
 **Example.** Seal a captain behind its guard, then cut it eight times in six seconds: the column takes 64 more and 40 stagger as the seal breaks.
 
@@ -75,7 +75,7 @@ the next blows on that enemy critical.
 
 **When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4). With no enemy faced they close on a spot ahead of you, and the slot still waits.
 
-**The numbers.** 4 Shards, no mana: it waits 10 seconds after a cast, less with weapon play (its Empower: 9, and 40 stagger in all). It finds an enemy within 10 metres. The ring is 3 metres in radius and closes after 0.6 seconds. Each spear deals 6 damage and 5 stagger and Marks: 36 damage and 30 stagger in all. What it strikes is held still 1.5 seconds (a god or an elite 0.4 of that).
+**The numbers.** 4 Shards, no mana: it waits 10 seconds after a cast, less with weapon play (its Empower: 40 stagger in all). It finds an enemy within 10 metres. The ring is 3 metres in radius and closes after 0.6 seconds. Each spear deals 6 damage and 5 stagger and Marks: 36 damage and 30 stagger in all. What it strikes is held still 1.5 seconds (a god or an elite 0.4 of that).
 
 **Works with.** Weighed (each spear lays a mark), Reckoning (held still while the seal counts), Condemned, Spoken Sentence, and the charged blade, which it charges with Light.
 
@@ -175,11 +175,11 @@ the next blows on that enemy critical.
 
 **When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4). Then guard.
 
-**The numbers.** 4 Shards, no mana: it waits 12 seconds after a cast, less with weapon play (its Empower: 11). Planted 2.5 metres ahead; the glow is 5 metres in radius and lasts 10 seconds. It strikes 0.2 seconds after planting and then every 2.5 seconds: 2 damage and Marked each time. Each lamp gives three perfect-guard bursts, shown beside the weapon as Lamp: each is 10 damage and 25 stagger within 3.5 metres of you.
+**The numbers.** 4 Shards, no mana: it waits 12 seconds after a cast, less with weapon play. Planted 2.5 metres ahead; the glow is 5 metres in radius and lasts 10 seconds. It strikes 0.2 seconds after planting and then every 2.5 seconds: 2 damage and Marked each time. Each lamp gives three perfect-guard bursts, shown beside the weapon as Lamp: each is 10 damage and 25 stagger within 3.5 metres of you.
 
 **Works with.** The root (a fresh mark, and three fresh critical blows, every 2.5 seconds), Unblemished, which grows from it, Clarity's longer perfect moments, Reckoning's Witnessed, Condemned.
 
-**Not built yet.** The burst only for a perfect guard made inside the glow: for now the next three perfect guards after each lamp burst, wherever you stand. No enemy cloud, flame or frost lying inside the glow. The Empower's longer perfect windows inside the glow: for now it only shortens the wait.
+**Not built yet.** The burst only for a perfect guard made inside the glow: for now the next three perfect guards after each lamp burst, wherever you stand. No enemy cloud, flame or frost lying inside the glow. The Empower's longer perfect guard and dodge inside the glow: for now the Empower does nothing.
 
 **Example.** Plant it in a doorway and fight on its edge: everything that comes through arrives Marked, and each perfect guard throws them back.
 
@@ -288,11 +288,11 @@ the next blows on that enemy critical.
 
 **When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4).
 
-**The numbers.** 4 Shards, 45 mana (its Empower: 40). A brace, then a beam 12 metres long and 1.6 metres wide for 0.4 seconds. It bites every 0.1 seconds: 12 damage, 9 stagger and Marked each time, 48 damage and 36 stagger on what stays in it, six rings' worth.
+**The numbers.** 4 Shards, 45 mana. A brace, then a beam 12 metres long and 1.6 metres wide for 0.4 seconds. It bites every 0.1 seconds: 12 damage, 9 stagger and Marked each time, 48 damage and 36 stagger on what stays in it, six rings' worth. Its Empower makes each ring 10 damage, not 8 (60 in all); the two shapes keep their own numbers.
 
 **Works with.** Brimming (mana kept full for it), Seen Plainly, which it grows from, Weighed, Condemned, Spoken Sentence, and the charged blade, which it charges with Light.
 
-**Not built yet.** The rings gathered on the blade by the blows you land after beginning, eight at most, 8 damage and 6 stagger each, and loosed by a second press: for now the beam is loosed at once at six rings' strength. The Empower's 10 a ring: for now it only lowers the price.
+**Not built yet.** The rings gathered on the blade by the blows you land after beginning, eight at most, 8 damage and 6 stagger each, and loosed by a second press: for now the beam is loosed at once at six rings' strength.
 
 **Example.** A line of spearmen coming up a stair: one beam down the stair marks them all and leaves them reeling.
 
@@ -327,7 +327,7 @@ the next blows on that enemy critical.
 
 **When it happens.** Only while Light is carried twice (all in), once bought. Always on then.
 
-**The numbers.** 6 Shards. Blows no longer spend a mark: every weapon blow on a Marked enemy is critical until the mark fades, in 6 seconds where it lasted 8. Once it has faded, that enemy cannot be Marked again for 4 seconds; a mark set off or spent by a spell does not wait. All in, L2 with R2 is the deep strike, The Sun on the Blade.
+**The numbers.** 6 Shards. Blows no longer spend a mark: every weapon blow on a Marked enemy is critical until the mark fades, in 6 seconds where it lasted 8. Once it has faded, that enemy cannot be Marked again for 4 seconds; a mark set off or spent by a spell does not wait. Buying this also gives you the deep strike, The Sun on the Blade. Use it with L2 and R2 while you carry this element alone or twice.
 
 **Works with.** Seen Plainly, which it grows from, the root, Just Cut and Unblemished (critical blows harder still with Weighed), quick weapons, The Scales.
 

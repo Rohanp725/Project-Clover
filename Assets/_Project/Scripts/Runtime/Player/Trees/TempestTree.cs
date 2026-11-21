@@ -7,8 +7,8 @@ namespace Clover.Player.Trees
     /// Tempest: the duo branch Lightning and Wind share, reshaped by pairs_d1_d2.md ("Lightning and Wind", task 4.15) and
     /// drawn in the chart's heart (<see cref="HeartPattern"/>). Its reaction is Thunder Gust; the Shape mark opens its two
     /// shapes, Thunderhead and Bolt from the Blue. Charged Air is cut (the Shape mark takes its place), Thunder Lift is now
-    /// Thunderhead, and Storm Overhead, offered to Lightning's tree, is cut because that roster is full; all three are in
-    /// <see cref="RetiredMarks"/>. Kept: The Sky Finds Them (it pays off Thunderhead), Slip Current, Eye of the Storm (the
+    /// Thunderhead, both in <see cref="RetiredMarks"/>, and Storm Overhead, offered to Lightning's tree, whose roster is
+    /// full, is kept hidden for the Evolutions (<see cref="SpareSpells"/>). Kept: The Sky Finds Them (it pays off Thunderhead), Slip Current, Eye of the Storm (the
     /// duo spell) and Falling Thunder, the branch's top mark. Open while both are carried.
     /// </summary>
     public static class TempestTree
@@ -90,7 +90,7 @@ namespace Clover.Player.Trees
             // BESPOKE (built): ThunderForm. The branch's top mark, begun by a finisher.
             to.Add(HeartPattern.Put(new Upgrade
             {
-                Id = FallingThunder, Name = "Falling Thunder", Element = A, Element2 = B, Kind = UpgradeKind.Signature, Icon = UpgradeIcons.Crown,
+                Id = FallingThunder, Name = "Falling Thunder", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { EyeOfTheStorm }, Icon = UpgradeIcons.Crown,
                 Description = "After your finisher lands you throw the enemy skyward, vanish, and come down on it as a bolt. Where you land, everything near is shocked and thrown back.",
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.FinisherHit, Do = UpgradeAction.Form, Form = SpellForms.Thunder, Affliction = AfflictionKind.Static, Spell = new SpellSpec { Cost = 0f, Damage = 22f, Stagger = 40f, Radius = 4.5f, Stacks = 3 } } },
             }, HeartPattern.Crown));

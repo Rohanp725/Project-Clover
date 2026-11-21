@@ -87,7 +87,23 @@ namespace Clover.Core.Save
             // Every load, not only on a new version: a mark can be cut without the schema changing, and a second pass
             // finds nothing.
             RemoveRetired(data, retired);
+            ClearHidden(data);
             return data;
+        }
+
+        /// <summary>
+        /// A spare spell kept hidden for the Evolutions (<see cref="Clover.Player.Trees.SpareSpells"/>) stays learned with no
+        /// refund, but it can sit in no slot, so it leaves the Hand carried and the kept Hands.
+        /// </summary>
+        public static void ClearHidden(SaveData data)
+        {
+            if (data == null) return;
+            foreach (string id in Clover.Player.Trees.SpareSpells.All)
+            {
+                ClearFromHand(data.Current, id);
+                if (data.SavedHands != null)
+                    foreach (var hand in data.SavedHands) ClearFromHand(hand, id);
+            }
         }
 
         /// <summary>

@@ -27,7 +27,7 @@ namespace Clover.Player.Forms
         /// <summary>Seconds without being kept before it starts to die down.</summary>
         public const float Linger = 0.2f;
         /// <summary>The flames' height and width in metres before each tongue's own share, and how far round the body they stand.</summary>
-        public float FlameHeight = 0.92f, FlameWidth = 0.42f, Girth = 0.3f, Height = 1.45f;
+        public float FlameHeight = 1.15f, FlameWidth = 0.5f, Girth = 0.3f, Height = 1.45f;
 
         /// <summary>Bodies burning now, for probes.</summary>
         public static int Burning => instance != null ? instance.burning : 0;
@@ -163,7 +163,9 @@ namespace Clover.Player.Forms
                 blackness[slot] = black ? 1f : 0f;
             }
             wanted[slot] = HeatOf(depth);
-            blackWanted[slot] = black;
+            // Black when any keeper this frame wants it black: a reaction's look keeping the curse's fire (Smoulder) is
+            // not undone by the body's own plain Burn kept after it in the same frame.
+            blackWanted[slot] = black || (keptAt[slot] == Time.time && blackWanted[slot]);
             // A reaction's own look playing on it draws its fire (Smoulder's black tongues): the body's flame is kept, and
             // remembers it was black, but is not drawn until that look is over.
             hiddenNow[slot] = ElementLooks.Hides(body, (int)AfflictionKind.Burn);

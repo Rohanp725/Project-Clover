@@ -6,10 +6,12 @@ namespace Clover.Player.Trees
     /// <summary>
     /// Halo: the duo branch Metal and Light share, reshaped by pairs_d1_d2.md ("Metal and Light", task 4.15) and drawn in the
     /// chart's heart (<see cref="HeartPattern"/>). Its reaction is Glint; a new Shape mark opens its two shapes, Mirror to
-    /// Mirror and Burning Mirror. Sun Wheels, offered to Metal's tree, is cut because that roster is full; Answering Draw
-    /// needs the Katana and moves to the Katana's infusion marks on the Way (<see cref="RetiredMarks"/>: cut and moving).
-    /// Kept: Bright Steel, Halo of Blades, Mirror Edge, Blinding Guard (the keystone) and Six Mirrors, the god's gift at the
-    /// top that is also the branch's spell. Open while both are carried.
+    /// Mirror and Burning Mirror. Sun Wheels, offered to Metal's tree, whose roster is full, is kept hidden for the
+    /// Evolutions (<see cref="SpareSpells"/>); Answering Draw needs the Katana and moves to the Katana's infusion marks on
+    /// the Way (<see cref="RetiredMarks.Moving"/>).
+    /// Kept: Bright Steel, Halo of Blades, Mirror Edge, Blinding Guard (the keystone) and Six Mirrors, the branch's duo spell,
+    /// bought with 5 Shards once both are carried (no god gives a duo crown, the owner's decision of 2026-11-20). Open while
+    /// both are carried.
     /// </summary>
     public static class HaloTree
     {
@@ -96,15 +98,15 @@ namespace Clover.Player.Trees
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Cone, Reach = 6f, Arc = 120f, Damage = 0f, Stagger = 15f, Affliction = AfflictionKind.Marked, Stacks = 1 }, new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Hold, At = EffectAt.Self, Radius = 6f, Seconds = 1.5f } },
             }, HeartPattern.Keystone));
 
-            // BESPOKE (built): MirrorsForm. The god's gift at the top, which the pair file names the branch's duo spell; kept a
-            // gift so the crown a consumed god gives is still there (phase4_questions.md, task 4.15).
+            // BESPOKE (built): MirrorsForm. The branch's duo spell, as the pair file names it, bought with 5 Shards once both
+            // are carried: gods give no duo crowns (the owner's decision of 2026-11-20). Still paid in mana, 60, when cast.
             to.Add(HeartPattern.Put(new Upgrade
             {
-                Id = SixMirrors, Name = "Six Mirrors", Element = A, Element2 = B, Kind = UpgradeKind.Signature, Icon = UpgradeIcons.Crown,
+                Id = SixMirrors, Name = "Six Mirrors", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { BrightSteel, HaloOfBlades }, Icon = UpgradeIcons.Crown,
                 Description = "Six mirrors of steel stand in a ring round the enemy you face. You pass through it from each one in turn, faster than can be followed. The cuts land when you are back where you began. 60 mana.",
                 Form = SpellForms.Mirrors,
                 Spell = new SpellSpec { Cost = 60f, Reach = 8f, Radius = 3f, Count = 6, Interval = 0.13f, Delay = 0.3f, Damage = 14f, Stagger = 12f, Stacks = 1 },
-            }, HeartPattern.Crown));
+            }, HeartPattern.Spell));
         }
     }
 }

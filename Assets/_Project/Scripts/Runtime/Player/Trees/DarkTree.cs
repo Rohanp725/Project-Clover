@@ -55,10 +55,10 @@ namespace Clover.Player.Trees
             const string E = Elements.Dark;
             const AfflictionKind C = AfflictionKind.Cursed;
 
-            // NEEDS: the Rise on the root (rise-on-root). PlayerUpgrades.Rise asks for the gift, and RiseForm's finisher that
-            // buys the Rise back is the gift's; moving it needs both told apart, not data. Until then the gift gives the Rise.
+            // BESPOKE (built): the Rise, in PlayerUpgrades.Rise and RiseForm, given by the root (the owner's decision of
+            // 2026-11-20, rise-on-root); the gift, A Life for a Life, is the finisher that buys it back.
             to.Add(BranchPattern.Put(new Upgrade { Id = Curse, Name = "Curse", Element = E, Kind = UpgradeKind.Root, Icon = UpgradeIcons.Moon,
-                Description = "Blows of the weapon curse an enemy. A Cursed enemy deals less, and killing it heals you.",
+                Description = "Blows of the weapon curse an enemy. A Cursed enemy deals less, and killing it heals you. Once, the blow that would kill you does not: you rise, Risen, your health draining away.",
                 WeaponStacks = 1 },
                 BranchPattern.Root));
 
@@ -79,8 +79,8 @@ namespace Clover.Player.Trees
                 new SpellSpec { Reach = 5f, Radius = 1.6f, Damage = 24f, Stagger = 30f, Stacks = 0, Speed = 14f },
                 "A jaw twice your height rises out of your shadow and lunges five metres along a lane: 24 damage and 30 stagger. On a Cursed enemy it spends the Curse: 20 damage more, and you heal 12.",
                 UpgradeIcons.Fang,
-                // NEEDS: the heal of 18 (empower-effects).
-                new Empower { Cooldown = 10f },
+                // The heal of 18 is the Learn's own heal, set by the Empower (empower-effects).
+                new Empower { Cooldown = 10f, Effects = new[] { new EffectChange { Index = 1, Amount = 18f } } },
                 "Devouring Maw waits 10 seconds, not 11, and a Cursed enemy bitten heals you 18.",
                 // NEEDS: only the Cursed swallowed, tested before the Learn spends the Curse (shape-before-learn), and the enemy
                 // taken out of the fight unseen and rolled out of the throat (swallowed). Until then every ordinary enemy bitten
@@ -122,8 +122,8 @@ namespace Clover.Player.Trees
                 new SpellSpec { Seconds = 1.2f, Reach = 2.5f, Arc = 90f, Damage = 0f, Stagger = 0f, Stacks = 1 },
                 "You stand with arms crossed as grey ash runs over you, for up to 1.2 seconds. The first blow to land scatters you as a cloud of ash, and you take nothing. A moment later you stand again behind the attacker. It is Cursed, and your first blow within a second is a heavy blow that heals you 10. If nothing strikes, it waits only half as long.",
                 UpgradeIcons.Shield,
-                // NEEDS: the heal of 15 (empower-effects).
-                new Empower { Cooldown = 9f, Seconds = 1.5f },
+                // The heal of 15 is the Learn's own heal, set by the Empower (empower-effects).
+                new Empower { Cooldown = 9f, Seconds = 1.5f, Effects = new[] { new EffectChange { Index = 3, Amount = 15f } } },
                 "Gone to Ash waits 9 seconds, not 10, holds for a second and a half, and its blow heals you 15.",
                 // NEEDS: standing again where you were, the step behind set aside (shape-sets-aside), the ward kept for that
                 // attacker's blow alone, and the grey stripe across its head (looks). The Curse held six seconds and one blow
@@ -207,9 +207,8 @@ namespace Clover.Player.Trees
                 new SpellSpec { Reach = 1f, Radius = 6f, Delay = 0.5f, Damage = 18f, Stagger = 35f, Stacks = 1 },
                 "Everything within six metres is dragged in to a point before you over half a second, then thrown back by a burst: 18 damage, rising to 36 at one point of your health, 35 stagger, and Cursed.",
                 UpgradeIcons.Spiral,
-                // NEEDS: eight metres, kept off the shapes' own numbers (empower-after-shape: a radius set here would be set on the
-                // buffalo's lane too).
-                new Empower { Cooldown = 9f },
+                // Eight metres on the Learn's own pull alone (LearnOnly), so the buffalo's lane keeps its width.
+                new Empower { Cooldown = 9f, Radius = 8f, LearnOnly = true },
                 "Debts Called waits 9 seconds, not 10, and calls from eight metres.",
                 // NEEDS: only the Cursed carried on the horns and thrown down at the far end (afflicted-only, carried-along), and
                 // a buffalo of smoke rather than the dragon's head (form-pieces).
@@ -240,8 +239,9 @@ namespace Clover.Player.Trees
                 new SpellSpec { Cost = 0f, HealthCost = 1f, Seconds = 10f, Damage = 60f, Count = 30, Radius = 3f, Stacks = 0 },
                 "Your health drops to one and the rest is set down behind you as a beating heart in a ring that closes over ten seconds. While it beats your weapon deals 60% more and swings cost the least stamina they can. Walk at least 2.6 metres away, then back onto it, for all that was pawned and 30% of the damage dealt meanwhile. If the ring closes first, your health stays at one and half of what was pawned comes back grey.",
                 UpgradeIcons.Heart,
-                new Empower { Cooldown = 36f, Damage = 70f, Seconds = 12f },
-                "Pawned Heart waits 36 seconds, not 40, your weapon deals 70% more while it beats, and the ring closes over twelve seconds.",
+                // The roster's numbers alone (the owner's answer of 2026-11-20: an Empower may strengthen without a shorter wait).
+                new Empower { Damage = 70f, Seconds = 12f },
+                "While the heart beats, your weapon deals 70% more, and the ring closes over twelve seconds.",
                 // NEEDS: the heart sunk under where you stand, its strength only within three metres, rising whole when the ring
                 // closes (heart-places). Until then the heart is set behind you as learned, and a ring of ash three metres
                 // round where you cast Curses what stands in it.
@@ -313,9 +313,8 @@ namespace Clover.Player.Trees
                 new SpellSpec { Seconds = 8f, Damage = 50f, Stacks = 1 },
                 "Leave your shadow where you stand: your shape in flat black with violet eyes, joined to you by a thin line on the ground. For eight seconds it repeats every blow you land a tenth of a second late on the nearest enemy within its reach, at half the damage, Cursing. Press again to change places with it, once.",
                 UpgradeIcons.Moon,
-                // NEEDS: 60%, kept off the shapes' own numbers (empower-after-shape: a damage set here would be set on Long
-                // Shadow's road too).
-                new Empower { Cooldown = 10f },
+                // 60% on the Learn's own shadow alone (LearnOnly), so Long Shadow's road keeps its own damage.
+                new Empower { Cooldown = 10f, Damage = 60f, LearnOnly = true },
                 "Second Shadow waits 10 seconds, not 12, and repeats your blows at 60%.",
                 // NEEDS: the second press that sinks you into the shadow, and every wound taken since you left it given back as
                 // grey health (second-press, wounds-returned). Until then you take a quarter less from every blow while it stands.
@@ -333,9 +332,9 @@ namespace Clover.Player.Trees
                 new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Ward, Count = 1 } },
                 "Change places within a second of being struck, and the blow passes to the shadow, and the health it took comes back to you.");
 
-            // BESPOKE (built): the Rise, in PlayerUpgrades.Rise and RiseForm. This mark gives it until the root can (rise-on-root).
+            // BESPOKE (built): the finisher that buys the Rise back, in RiseForm (the Rise itself is the root's, rise-on-root).
             to.Add(BranchPattern.Put(new Upgrade { Id = LifeForALife, Name = "A Life for a Life", Element = E, Kind = UpgradeKind.Signature, Icon = UpgradeIcons.Crown,
-                Description = "The blow that would kill you does not, once. You rise with half your health, and it drains away. A sigil marks the one that killed you: land a finisher on it and you live again, and may rise once more.",
+                Description = "When you are Risen a sigil marks the one that killed you: land a finisher on it and you live again, with half your health back, and may rise once more.",
                 Effects = System.Array.Empty<UpgradeEffect>() },
                 BranchPattern.Gift));
         }

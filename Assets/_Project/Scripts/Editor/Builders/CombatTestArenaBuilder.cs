@@ -149,7 +149,7 @@ namespace Clover.EditorTools
             Card(turn.transform, changes, 2.4f, "");
             // Two debug shrines beside the element stone, for trying the gods' gifts while only one god exists.
             stones.Add(BuildShrine(rack, plinth, new Vector3(-3f, 0f, -12.5f), false, "GOD GIFT", "Debug shrine: take the god's gift of the element you hold", new Color(1f, 0.85f, 0.35f)));
-            stones.Add(BuildShrine(rack, plinth, new Vector3(3f, 0f, -12.5f), true, "CONSUME NEXT", "Debug shrine: consume the next element round the ring (opens the mix, gives its crown)", new Color(0.85f, 0.45f, 1f)));
+            stones.Add(BuildShrine(rack, plinth, new Vector3(3f, 0f, -12.5f), true, "CONSUME NEXT", Clover.World.GiftShrine.ConsumePrompt, new Color(0.85f, 0.45f, 1f)));
             player.GetComponent<PlayerInteraction>().Configure(stones.ToArray());
         }
 

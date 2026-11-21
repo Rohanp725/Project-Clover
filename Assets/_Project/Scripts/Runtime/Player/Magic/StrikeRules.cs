@@ -16,12 +16,28 @@ namespace Clover.Player.Magic
         public float DeepMana = 20f;
 
         /// <summary>
-        /// Whether a strike is the deep strike: L2 with R2 unless two different elements are carried. All in, R2 is the
-        /// element's deep strike (Burnt Offering, Down the Channel ...), given under its Devotion; with one element carried
-        /// it is too (IMPLEMENTATION.md 8.5, question 3), so a Hand with one element has both strikes. In a mix, R2 is the
-        /// second element's infused strike.
+        /// Whether a strike is the deep strike: L2 with R2, one element carried (or the same twice), and that element's
+        /// Devotion bought (the owner's answer of 2026-11-20). All in, R2 is then the element's deep strike (Burnt
+        /// Offering, Down the Channel ...); without the Devotion it is the element's plain infused strike. In a mix, R2 is
+        /// the second element's infused strike.
         /// </summary>
-        public static bool IsDeep(bool second, bool mixed) => second && !mixed;
+        public static bool IsDeep(bool second, bool mixed, bool devoted) => second && !mixed && devoted;
+
+        /// <summary>
+        /// The id of an element's Devotion, the mark the deep strike asks for; empty when its tree has none. Looked up in
+        /// the catalogue as a strike starts, never each frame.
+        /// </summary>
+        public static string DevotionOf(string element)
+        {
+            if (string.IsNullOrEmpty(element)) return "";
+            var all = Upgrade.All;
+            for (int i = 0; i < all.Count; i++)
+            {
+                var mark = all[i];
+                if (mark.Kind == UpgradeKind.Devotion && mark.Element == element && !mark.IsMix) return mark.Id;
+            }
+            return "";
+        }
 
         /// <summary>The clock of a strike button: the first (R1) or the second (R2).</summary>
         public static int Clock(bool second) => second ? SpellCooldowns.StrikeSecond : SpellCooldowns.StrikeFirst;
