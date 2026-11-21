@@ -633,7 +633,7 @@ Group: Reactions
 
 **What sets it off.** Static landing on a chilled enemy, or Chill landing on a charged one.
 
-**Its shapes.** If you have the Shape mark of Ice and Lightning's duo branch (Sleet Charge: Thundersnow or Glass Spear, 3 Shards, in the middle of the chart) and carry both, Sleet Charge uses the shape you picked at a rest fire instead. Both charge up the same way. Thundersnow: when the charge goes off, a bolt jumps on to every chilled enemy within 6 metres, for 7 damage and a Static each. Glass Spear: when the charge goes off, the enemy is Frozen right away, no matter how much Chill it has (an elite gets 3 Chill, a god 2).
+**Its shapes.** If you have the Shape mark of Ice and Lightning's duo branch (Sleet Charge: Thundersnow or Glass Spear, 3 Shards, in the middle of the chart) and carry both, Sleet Charge uses the shape you picked at a rest fire instead. Both charge up the same way. Thundersnow: when the charge goes off, a bolt jumps on to every chilled enemy within 6 metres, for 7 damage and a Static each. Glass Spear: when the charge goes off, the enemy is Frozen right away for 1.5 seconds, no matter how much Chill it has (an elite gets 3 Chill, a god 2).
 
 **How to use it.** Wait the 3 seconds for a full charge, or set it off sooner with a heavy blow.
 
@@ -753,7 +753,7 @@ Group: Reactions
 
 **What sets it off.** A Curse landing on a burning enemy, or Burn landing on a Cursed one.
 
-**Its shapes.** If you have Banked Coals, the Shape mark of Dark and Fire's duo branch (Smoulder: Night Sun or Coal Seam, 3 Shards, in the middle of the chart), and carry both, Smoulder uses the shape you picked at a rest fire instead. Night Sun: works like the plain one, and each of your blows on the enemy heals you 3. Coal Seam: the fire goes into the floor as a patch 2.5 metres across that lasts 8 seconds and Curses whatever stands on it, so burning enemies smoulder.
+**Its shapes.** If you have Banked Coals, the Shape mark of Dark and Fire's duo branch (Smoulder: Night Sun or Coal Seam, 3 Shards, in the middle of the chart), and carry both, Smoulder uses the shape you picked at a rest fire instead. Night Sun: works like the plain one, and each of your blows on the enemy heals you 1 for each Burn on it. Coal Seam: the fire goes into the floor as a patch 2.5 metres across that lasts 8 seconds and Curses whatever stands on it, so burning enemies smoulder.
 
 **How to use it.** Set it on fire, Curse it, and leave it. The longer the Curse lasts, the bigger the flare. Killing it makes it flare right away.
 
@@ -1098,7 +1098,7 @@ Group: Reactions
 
 **What sets it off.** Poison landing on a chilled enemy, or Chill landing on a poisoned one.
 
-**Its shapes.** If you have the Shape mark of Poison and Ice's duo branch (Floor or Bone: Frost Over Frost or Cold Damage, 3 Shards, in the middle of the chart) and carry both, Venom Rime uses the shape you picked at a rest fire instead. Both keep the poison and add a Chill with each bite, like the plain one. Frost Over Frost: once the enemy freezes, frost covers 3 metres around it for 5 seconds, adding a Chill and a dose each second. Cold Damage: while frozen, each bite deals 2 more damage per dose, and a heavy blow on the frozen enemy sets off every dose, for 6 damage each.
+**Its shapes.** If you have the Shape mark of Poison and Ice's duo branch (Floor or Bone: Frost Over Frost or Cold Damage, 3 Shards, in the middle of the chart) and carry both, Venom Rime uses the shape you picked at a rest fire instead. Both keep the poison and add a Chill with each bite, like the plain one. Frost Over Frost: once the enemy freezes, frost covers 3 metres around it for 5 seconds, adding a Chill and a dose each second. Cold Damage: while frozen, each bite deals twice as much, and when the enemy is shattered, every dose goes off at once, for 6 damage each.
 
 **How to use it.** Poison the enemy and chill it once. The poison freezes it for you.
 
