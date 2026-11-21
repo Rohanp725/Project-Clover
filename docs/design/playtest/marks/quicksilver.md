@@ -9,13 +9,13 @@ are both carried.
 
 **When it happens.** Every time Quicksilver goes off while you carry both Metal and Poison. Quicksilver goes off when poison lands on a notched enemy, or when a notch lands on a poisoned one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Quicksilver.
 
-**The numbers.** Mix, 3 Shards. Both shapes: each weapon blow makes the poison bite right away, at most once every half second, and nothing is used up. Heavy Silver: the enemy moves 30% slower while it has both afflictions, and a puddle 1.5 metres across stays for 6 seconds where Quicksilver went off. It gives a dose every second and a notch every 2 seconds to whatever stands in it. Running Silver: when the enemy dies, four doses and two notches pass to the nearest enemy within 6 metres. After Quicksilver goes off on an enemy, it can't go off on that enemy again for 6 seconds.
+**The numbers.** Mix, 3 Shards. Both shapes: each weapon blow makes the poison bite right away, at most once every half second on each enemy (each enemy keeps its own wait), and nothing is used up. Heavy Silver: the enemy moves 30% slower while it has both afflictions, and a puddle 1.5 metres across stays for 6 seconds where Quicksilver went off. It gives a dose every second and a notch every 2 seconds to whatever stands in it. Running Silver: when the enemy dies, every dose and every notch it had passes to the nearest enemy within 6 metres. After Quicksilver goes off on an enemy, it can't go off on that enemy again for 6 seconds.
 
 **Works with.** Miasma and Flung Blade to set it up, Envenomed Edge, The Nail Pulled, Ichor.
 
 **Example.** A brute that runs: use Heavy Silver. A pack: Running Silver moves the poison from one enemy to the next.
 
-**Not built yet.** The puddle stays where Quicksilver went off, instead of following the enemy. Running Silver passes on a set four doses and two notches, instead of everything the enemy had.
+**Not built yet.** The puddle stays where Quicksilver went off, instead of following the enemy, and the enemy is slowed everywhere, not only while it stands in the puddle.
 
 ## quicksilver.edge
 **What it does.** Heavy blows add one notch and one dose of poison.
@@ -40,17 +40,15 @@ are both carried.
 **Example.** Eight doses and a finisher: the poison lands twice.
 
 ## quicksilver.cinnabar
-**What it does.** Notches last as long as the poison does.
+**What it does.** Notches last as long as the poison does. While an enemy is poisoned, its notches don't fade.
 
 **When it happens.** Always on once you learn it, while you carry both Metal and Poison.
 
-**The numbers.** Mix, a minor mark, 1 Shard.
+**The numbers.** Mix, a minor mark, 1 Shard. Once the poison is gone, the notches start to fade as usual.
 
 **Works with.** Envenomed Edge, which it comes after on the chart, Quicksilver.
 
 **Example.** A poisoned soldier stays notched.
-
-**Not built yet.** It does nothing yet. The game can't yet make one affliction last as long as another one does.
 
 ## quicksilver.drink
 **What it does.** Your flasks are mixed with quicksilver. Drinking one throws a ring of silver drops around you that gives three doses of poison and a notch to everything nearby. But each flask heals a fifth less.
