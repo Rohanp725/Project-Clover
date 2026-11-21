@@ -40,7 +40,7 @@ Lines whose meaning was not clear. The facts were kept and written as clearly as
 - [x] marks/burningsap.md
 - [x] marks/burntmound.md
 - [x] marks/capsize.md
-- [ ] marks/carriedembers.md
+- [x] marks/carriedembers.md
 - [ ] marks/caughtlight.md
 - [ ] marks/chokedamp.md
 - [ ] marks/coldshort.md
