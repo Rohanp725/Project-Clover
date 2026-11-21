@@ -55,6 +55,7 @@ checked against its code and committed on its own.
 - [x] marks/venomrime.md: Cold Damage (bites twice as hard while frozen; doses go off on the shatter), Six Levels Down (0.3 s more freeze a bite, wait per enemy)
 - [x] marks/smoulder.md: Night Sun (heals 1 for each Burn)
 - [x] effects.md: Night Sun, Glass Spear and Cold Damage in the reaction shapes
+- [x] marks/blight.md: Wither (unsure line resolved)
 
 ## Unsure lines
 
@@ -62,6 +63,8 @@ Lines whose meaning was not clear. The facts were kept and written as clearly as
 
 - marks/blight.md, blight.wither: "The numbers" says Phase 4 stopped heavy blows adding a Curse and poison, but the
   Example still says "the heavy blows Curse the soldier as they go". Both kept; one is probably out of date.
+  **Resolved:** the code gives Wither no blows that add afflictions (only the 25% and the kept doses), so the
+  leftover lines about heavy blows were cut and the Example now Curses with Grasp or the second strike.
 - marks/bloom.md, bloom.great: the mark goes in the surge slot, but the Example says "Light Wellspring" (another surge?).
   Kept as written.
 - marks/breathtaken.md, breathtaken.short, "Not built yet": "It keeps its own winding from each Breath Taken" was read as

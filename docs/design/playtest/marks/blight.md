@@ -22,11 +22,11 @@ carried. Its reaction is Shut in the Dark, the jar; its Shape mark lets you choo
 
 **When it happens.** Always on once you learn it, while you carry both Dark and Poison. It works whenever poison bites a Cursed enemy.
 
-**The numbers.** Mix, a minor mark, 1 Shard. Poison on a Cursed enemy bites 25% harder and keeps all its doses for as long as the Curse lasts. This mark was changed in Phase 4: your heavy blows no longer add a Curse and poison (the jar does that job now). For your first element's affliction, once you have learned that element's root mark, this mark adds only what goes past the root's own amount. With Dark first, the Curse can only be one deep, so this adds nothing. With Poison first, the poison gets one extra dose. Normally, weapon blows only add your first element's affliction, but marks on a mixed branch like this one are the exception.
+**The numbers.** Mix, a minor mark, 1 Shard. Poison on a Cursed enemy bites 25% harder and keeps all its doses for as long as the Curse lasts. This mark was changed in Phase 4: your heavy blows no longer add a Curse and poison (the jar does that job now).
 
 **Works with.** Curse or Venom, Feeding Rot, Shut in the Dark, The Reaping, Grasp and Miasma, and the infused strikes (R2 adds the second element).
 
-**Example.** Poison first: put eight doses on a soldier with blade blows and heavy blows. The heavy blows Curse it as you go. While it stays Cursed, the poison never runs out, and it bites for 20 each time.
+**Example.** Poison first: put eight doses on a soldier with your blade, then Curse it with Grasp or your second element's strike. While it stays Cursed, the poison never runs out, and it bites for 20 each time.
 
 ## blight.feedingrot
 **What it does.** Each time poison bites a Cursed enemy, you get a little of it back as health.
