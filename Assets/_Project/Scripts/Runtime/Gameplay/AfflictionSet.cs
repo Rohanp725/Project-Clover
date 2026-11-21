@@ -120,6 +120,8 @@ namespace Clover.Gameplay
         // Poison bites held back by a condition (Burning Sap), and how hard they land when it lets go.
         private float heldBite;
         private float heldScale = 1f;
+        // How much harder this freeze shatters (Hard Water's 30%), until it thaws or breaks.
+        private float shatterScale = 1f;
 
         /// <summary>The poison damage held back now, waiting to land at once (Burning Sap).</summary>
         public float HeldBite => heldBite;
@@ -242,6 +244,7 @@ namespace Clover.Gameplay
             keptForGood = 0;
             heldBite = 0f;
             heldScale = 1f;
+            shatterScale = 1f;
             Conditions.Clear();
             Tally.Clear();
             Array.Clear(reactionRest, 0, reactionRest.Length);
@@ -543,7 +546,11 @@ namespace Clover.Gameplay
             {
                 FrozenLeft -= deltaTime;
                 // Thawed: the cold that froze it is spent.
-                if (FrozenLeft <= 0f) End((int)AfflictionKind.Chill);
+                if (FrozenLeft <= 0f)
+                {
+                    End((int)AfflictionKind.Chill);
+                    shatterScale = 1f;
+                }
             }
             if (BrittleLeft > 0f) BrittleLeft = Math.Max(0f, BrittleLeft - deltaTime);
             // Held bites land at once, at their hold's strength, once no condition holds them (Burning Sap).
@@ -801,7 +808,10 @@ namespace Clover.Gameplay
         /// freeze runs its own time. What cannot be frozen is not, an elite for its share, and a god as its hold allows.
         /// False when it did not take.
         /// </summary>
-        public bool FreezeFor(float seconds)
+        public bool FreezeFor(float seconds) => FreezeFor(seconds, 1f);
+
+        /// <summary>The same, the freeze shattering <paramref name="shatter"/> times as hard (Hard Water: 1.3).</summary>
+        public bool FreezeFor(float seconds, float shatter)
         {
             if (seconds <= 0f) return false;
             var phase = GodPhase;
@@ -812,6 +822,7 @@ namespace Clover.Gameplay
             float time = GodHolds.Seconds(seconds * RuleFreezeScale, phase, FreezeScale);
             FrozenLeft = IsFrozen ? Math.Max(FrozenLeft, time) : time;
             IsFrozen = true;
+            shatterScale = Math.Max(shatterScale, Math.Max(1f, shatter));
             left[index] = Math.Max(left[index], FrozenLeft);
             return true;
         }
@@ -833,7 +844,8 @@ namespace Clover.Gameplay
         public float Shatter()
         {
             if (!IsFrozen) return 0f;
-            float damage = Afflictions.Spec(AfflictionKind.Chill).ShatterDamage * strength[(int)AfflictionKind.Chill] * Afflictions.ShatterDamage;
+            float damage = Afflictions.Spec(AfflictionKind.Chill).ShatterDamage * strength[(int)AfflictionKind.Chill] * Afflictions.ShatterDamage * shatterScale;
+            shatterScale = 1f;
             End((int)AfflictionKind.Chill);
             return damage;
         }

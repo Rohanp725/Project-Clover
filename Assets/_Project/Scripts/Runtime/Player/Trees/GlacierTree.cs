@@ -30,7 +30,7 @@ namespace Clover.Player.Trees
             const string A = Elements.Ice, B = Elements.Water;
 
             // Sea Ice's web reaches only the Soaked within 4 m (UpgradeEffect.OnlyCarrying).
-            // NEEDS: Hard Water's freeze held half again as long and its shatter 30% harder (frozen-for).
+            // Hard Water's freeze is held half again as long and shatters 30% harder (UpgradeAction.Freeze).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Supercooled: Sea Ice or Hard Water", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -54,11 +54,11 @@ namespace Clover.Player.Trees
                     new ShapeDef
                     {
                         Name = "Hard Water",
-                        Description = "Only a heavy blow freezes it, but that freeze is the harder for it: the water stays still for 6 s, and the first heavy blow freezes it outright and spends the water.",
+                        Description = "Only a heavy blow freezes it, but that freeze is the harder for it: the water stays still for 6 s, and the first heavy blow freezes it outright for half again as long and spends the water; that ice shatters 30% harder.",
                         Effects = new[]
                         {
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = HardWater, Seconds = 6f, EndsWith = ConditionBlow.Heavy } },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = HardWater, By = StruckBy.Heavy, Ranks = EnemyRank.Plain, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = ToFull },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = HardWater, By = StruckBy.Heavy, Ranks = EnemyRank.Plain, Do = UpgradeAction.Freeze, Seconds = 3.75f, Amount = 1.3f },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = HardWater, By = StruckBy.Heavy, Ranks = EnemyRank.Elite, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 3 },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = HardWater, By = StruckBy.Heavy, Ranks = EnemyRank.God, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 2 },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = HardWater, By = StruckBy.Heavy, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Soaked },

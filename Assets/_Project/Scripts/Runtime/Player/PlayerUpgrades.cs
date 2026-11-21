@@ -1854,7 +1854,7 @@ namespace Clover.Player
                     mending.Add(pending.Power * Or(effect.Share, 0.1f));
                     break;
                 case UpgradeAction.Freeze:
-                    if (subject is IAfflictable freezing && freezing.Afflictions.FreezeFor(Or(effect.Seconds, 1.5f))) FreezesKept++;
+                    if (subject is IAfflictable freezing && freezing.Afflictions.FreezeFor(Or(effect.Seconds, 1.5f), effect.Amount > 1f ? effect.Amount : 1f)) FreezesKept++;
                     break;
                 case UpgradeAction.KeepFrozen:
                     if (subject is IAfflictable frozen && frozen.Afflictions.KeepFrozen(effect.Seconds)) FreezesKept++;

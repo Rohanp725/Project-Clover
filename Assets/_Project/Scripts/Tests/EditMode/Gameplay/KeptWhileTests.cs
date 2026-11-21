@@ -460,6 +460,26 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void HardWatersFreezeLastsHalfAgainAndShattersHarder()
+        {
+            var hard = NewEnemy();
+            var plain = NewEnemy();
+            Assert.IsTrue(hard.FreezeFor(3.75f, 1.3f));
+            Assert.IsTrue(plain.FreezeFor(2.5f));
+            Assert.AreEqual(3.75f, hard.FrozenLeft, 1e-4f);
+            float hardShatter = hard.Shatter(), plainShatter = plain.Shatter();
+            Assert.Greater(plainShatter, 0f);
+            Assert.AreEqual(plainShatter * 1.3f, hardShatter, 1e-3f, "30% harder");
+            Assert.IsTrue(hard.FreezeFor(1f));
+            Assert.AreEqual(plainShatter, hard.Shatter(), 1e-3f, "the next freeze shatters as written");
+            var water = Upgrade.ById(GlacierTree.Shape).Shapes.First(shape => shape.Name == "Hard Water").Effects
+                .Single(effect => effect.Do == UpgradeAction.Freeze);
+            Assert.AreEqual(EnemyRank.Plain, water.Ranks);
+            Assert.AreEqual(3.75f, water.Seconds, 1e-5f);
+            Assert.AreEqual(1.3f, water.Amount, 1e-5f);
+        }
+
+        [Test]
         public void RustAndItsShapesLetTheNotchesRunDeeper()
         {
             var rusting = Upgrade.All.SelectMany(upgrade => upgrade.Effects.Concat(upgrade.Shapes == null ? Enumerable.Empty<UpgradeEffect>() : upgrade.Shapes.Where(shape => shape?.Effects != null).SelectMany(shape => shape.Effects)))
