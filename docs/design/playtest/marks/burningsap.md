@@ -44,13 +44,11 @@ Poison are both carried.
 
 **When it happens.** Each time Burning Sap goes off, while you carry both Light and Poison.
 
-**The numbers.** Mix, a minor mark, 1 Shard. For now: one extra dose of poison when Burning Sap goes off.
+**The numbers.** Mix, a minor mark, 1 Shard. The bites Burning Sap held back land 15% harder at its end.
 
 **Works with.** Seen Through, which it comes after on the chart, Burning Sap.
 
-**Example.** Each time the sap wakes up, it carries one more dose into its bite.
-
-**Not built yet.** The saved-up bites don't hit harder yet. One extra dose takes its place for now.
+**Example.** Each time the sap wakes up, the bites it saved up land a little harder.
 
 ## burningsap.bared
 **What it does.** You tear the shade away from a spot. A sharp beam of sunlight shines down where you aim for 5 seconds. Every enemy in it is Marked. Poisoned enemies start Burning Sap right away, even if Burning Sap would normally have to wait.

@@ -57,6 +57,7 @@ checked against its code and committed on its own.
 - [x] effects.md: Night Sun, Glass Spear and Cold Damage in the reaction shapes
 - [x] marks/blight.md: Wither (unsure line resolved)
 - [x] marks/bloom.md: Great Lotus (unsure line resolved)
+- [x] marks/burningsap.md: Bright Venom (built now: held bites 15% harder; unsure line resolved)
 
 ## Unsure lines
 
@@ -70,9 +71,11 @@ Lines whose meaning was not clear. The facts were kept and written as clearly as
   Kept as written. **Resolved:** the Hand has one surge slot (GAME.md, 2026-11-21), so Wellspring and the Great Lotus
   can't be lit together; the Example now lights the Great Lotus, and Wellspring left its "Works with".
 - marks/breathtaken.md, breathtaken.short, "Not built yet": "It keeps its own winding from each Breath Taken" was read as
-  "it keeps its own timer for how long the enemy is winded".
+  "it keeps its own timer for how long the enemy is winded". **Resolved:** the code confirms it (its own 1.5-second
+  winding, set at each Breath Taken).
 - marks/burningsap.md, burningsap.brightvenom: "the held bites" was read as "the saved-up poison bites" (the bites
-  Burning Sap holds back until its end).
+  Burning Sap holds back until its end). **Resolved:** the code confirms it (the held bites); the mark is also built
+  now (15% harder), so its "one extra dose" stand-in and "Not built yet" were replaced.
 - marks/earthed.md: "the burnt figure" and "the fern" were read as the fern-shaped burn mark Earthed leaves on the
   ground.
 - marks/light.md, light.daybreak: the beam "bites every 0.1 seconds" for 12 a bite (48 over 0.4 seconds) and is also
