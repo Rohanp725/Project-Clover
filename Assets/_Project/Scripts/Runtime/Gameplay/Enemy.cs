@@ -626,7 +626,9 @@ namespace Clover.Gameplay
             if (hit.Detonate && Burn.IsBurning)
             {
                 detonated = Burn.Detonate();
-                Vfx.Play(VfxKind.Burst, transform.position + Vector3.up * 1.2f);
+                // In the fire's own colour below white: plain, it was a pale-white disc over every Burn a blow set off (the
+                // Katana's Fire infused strike in the swing films of 2026-11-20). 0.22 is a heavy blow's star brightness.
+                Vfx.Play(VfxKind.Burst, transform.position + Vector3.up * 1.2f, Vector3.up, 1f, StruckLook.Glow(Gameplay.Afflictions.Spec(AfflictionKind.Burn).Colour, 0.22f));
                 Vfx.Play(VfxKind.Fire, transform.position + Vector3.up * 1.2f, Vector3.up, 2f);
                 Vfx.Play(VfxKind.Embers, transform.position + Vector3.up * 1.4f, Vector3.up, 2f);
             }
@@ -637,7 +639,7 @@ namespace Clover.Gameplay
             {
                 detonated += Afflictions.Shatter();
                 CombatEvents.RaiseShattered(this);
-                Vfx.Play(VfxKind.Burst, transform.position + Vector3.up * 1.2f);
+                Vfx.Play(VfxKind.Burst, transform.position + Vector3.up * 1.2f, Vector3.up, 1f, StruckLook.Glow(Gameplay.Afflictions.Spec(AfflictionKind.Chill).Colour, 0.22f));
                 Vfx.Play(VfxKind.TintSpark, transform.position + Vector3.up * 1.2f, Vector3.up, 2.5f, Gameplay.Afflictions.Spec(AfflictionKind.Chill).Colour);
                 Vfx.Play(VfxKind.TintRing, transform.position + Vector3.up * 0.3f, Vector3.up, 1f, Gameplay.Afflictions.Spec(AfflictionKind.Chill).Colour);
             }
@@ -1088,7 +1090,9 @@ namespace Clover.Gameplay
             if (body.enabled) body.Move(step);
 
             // Its guard is up only while it stands ready and knows the player is there: the band going out is the opening.
-            if (guardArc != null) guardArc.Show(Kind.Guards && Brain.State == EnemyState.Stalk && !Afflictions.Conditions.Has(ConditionFlags.CannotGuard));
+            // Nor while its guard is held open (a broken shield wall), when every blow lands: the band showed a guard that
+            // was not there, a pale crescent at the feet of every soldier in the films that hold guards open.
+            if (guardArc != null) guardArc.Show(Kind.Guards && GuardOpenFor <= 0f && Brain.State == EnemyState.Stalk && !Afflictions.Conditions.Has(ConditionFlags.CannotGuard));
             ShowAttack(attack);
             Animate(deltaTime, Kind.WalkSpeed > 0f ? walked / Kind.WalkSpeed : 0f);
             Paint(deltaTime);
