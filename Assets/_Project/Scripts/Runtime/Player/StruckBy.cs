@@ -11,5 +11,7 @@ namespace Clover.Player
         Heavy,
         /// <summary>A blow that broke the ice of a frozen enemy (the shatter ends its Chill, so Needs cannot ask for it).</summary>
         Shatter,
+        /// <summary>A weapon blow that was a critical hit (Blistered's weals).</summary>
+        Critical,
     }
 }

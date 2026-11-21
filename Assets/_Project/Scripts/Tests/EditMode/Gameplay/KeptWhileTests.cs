@@ -426,6 +426,26 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void ACriticalBlowIsToldToTheConditionsAndBlisteredAnswersOnlyThose()
+        {
+            var heard = new System.Collections.Generic.List<ConditionNews>();
+            var set = NewEnemy();
+            set.Conditions.Report = (who, news) => { if (news.Moment == ConditionMoment.Struck) heard.Add(news); };
+            set.Conditions.Set(new ConditionSpec { Id = "test.blister", Seconds = 3f }, null, 1, null, true);
+            set.Conditions.Struck(10f, false, false, false, true);
+            set.Conditions.Struck(10f, false, false, false, false);
+            Assert.AreEqual(2, heard.Count);
+            Assert.IsTrue(heard[0].Critical);
+            Assert.IsFalse(heard[1].Critical);
+            Assert.IsTrue(PlayerReactions.Answers(StruckBy.Critical, heard[0]));
+            Assert.IsFalse(PlayerReactions.Answers(StruckBy.Critical, heard[1]), "a plain blow raises no weal");
+            Assert.IsTrue(PlayerReactions.Answers(StruckBy.Weapon, heard[1]));
+            var blistered = Upgrade.ById(BurningSapDuo.Shape).Shapes.First(shape => shape.Name == "Blistered").Effects;
+            Assert.IsTrue(blistered.Any(effect => effect.On == UpgradeTrigger.ConditionStruck && effect.By == StruckBy.Critical && effect.Do == UpgradeAction.Afflict));
+            Assert.IsFalse(blistered.Any(effect => effect.On == UpgradeTrigger.ConditionStruck && effect.By == StruckBy.Weapon));
+        }
+
+        [Test]
         public void RustAndItsShapesLetTheNotchesRunDeeper()
         {
             var rusting = Upgrade.All.SelectMany(upgrade => upgrade.Effects.Concat(upgrade.Shapes == null ? Enumerable.Empty<UpgradeEffect>() : upgrade.Shapes.Where(shape => shape?.Effects != null).SelectMany(shape => shape.Effects)))

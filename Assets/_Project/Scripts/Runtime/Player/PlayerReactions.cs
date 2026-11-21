@@ -306,8 +306,9 @@ namespace Clover.Player
         }
 
         /// <summary>True when a condition's blow is one the answer asks for (<see cref="UpgradeEffect.By"/>).</summary>
-        internal static bool Answers(StruckBy by, in ConditionNews news) =>
-            by == StruckBy.Any || (by == StruckBy.Weapon && !news.Spell) || (by == StruckBy.Heavy && news.Heavy) || (by == StruckBy.Shatter && news.Shattered);
+        public static bool Answers(StruckBy by, in ConditionNews news) =>
+            by == StruckBy.Any || (by == StruckBy.Weapon && !news.Spell) || (by == StruckBy.Heavy && news.Heavy) || (by == StruckBy.Shatter && news.Shattered)
+            || (by == StruckBy.Critical && news.Critical && !news.Spell);
 
         // A host's poison bit: each enemy joined to it takes its share, as a reaction's blow (it starts nothing).
         private bool PassBite(Component host, float damage)

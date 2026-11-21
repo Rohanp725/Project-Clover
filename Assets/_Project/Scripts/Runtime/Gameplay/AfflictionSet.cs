@@ -172,7 +172,7 @@ namespace Clover.Gameplay
                 CombatEvents.Report(who, hit.Affliction, hit.AfflictionStacks, Lay(hit.Affliction, hit.AfflictionStacks, hit.AfflictionSeconds, hit.AfflictionPower, source, who), source);
             if (hit.Affliction2 != AfflictionKind.None && hit.Affliction2Stacks > 0)
                 CombatEvents.Report(who, hit.Affliction2, hit.Affliction2Stacks, Lay(hit.Affliction2, hit.Affliction2Stacks, hit.Affliction2Seconds, hit.AfflictionPower, source, who), source);
-            if (!hit.FromReaction && hit.Damage > 0f) Conditions.Struck(hit.Damage, hit.Heavy, hit.Spell, shattered);
+            if (!hit.FromReaction && hit.Damage > 0f) Conditions.Struck(hit.Damage, hit.Heavy, hit.Spell, shattered, hit.Critical);
         }
 
         /// <summary>Lights the burn a blow gives in seconds (<see cref="Hit.BurnSeconds"/>), through the laying rules, so a weapon's fire reacts like any affliction.</summary>

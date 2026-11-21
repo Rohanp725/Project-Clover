@@ -27,8 +27,8 @@ namespace Clover.Player.Trees.Duo
             const string A = Elements.Light, B = Elements.Poison;
 
             // The poison held back and landed doubled, as the plain reaction (ConditionSpec.HoldsBites).
-            // The Light Finds Them Marks only the poisoned within 8 m (OnlyCarrying).
-            // NEEDS: weals raised only by critical blows (Blistered; now by every weapon blow).
+            // The Light Finds Them Marks only the poisoned within 8 m (OnlyCarrying); Blistered's weals are raised by critical
+            // blows alone (StruckBy.Critical).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Burning Sap: The Light Finds Them or Blistered", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -49,11 +49,11 @@ namespace Clover.Player.Trees.Duo
                     new ShapeDef
                     {
                         Name = "Blistered",
-                        Description = "The weals do not wait for the end: each of your weapon blows in the 3 s raises one that bursts at once, two doses on every enemy within 2.5 m. At the end every bite the poison held back lands at once, doubled.",
+                        Description = "The weals do not wait for the end: each of your critical blows in the 3 s raises one that bursts at once, two doses on every enemy within 2.5 m. At the end every bite the poison held back lands at once, doubled.",
                         Effects = new[]
                         {
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Blistered, Seconds = 3f, HoldsBites = AfflictionKind.Poison, HeldScale = 2f } },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Blistered, By = StruckBy.Weapon, Do = UpgradeAction.Afflict, Radius = 2.5f, Affliction = AfflictionKind.Poison, Stacks = 2, Cooldown = 0.2f },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Blistered, By = StruckBy.Critical, Do = UpgradeAction.Afflict, Radius = 2.5f, Affliction = AfflictionKind.Poison, Stacks = 2, Cooldown = 0.2f },
                         },
                     },
                 },
