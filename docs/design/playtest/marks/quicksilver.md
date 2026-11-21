@@ -62,14 +62,12 @@ are both carried.
 **Example.** Drink in the middle of a pack, and the pack starts getting eaten by its own poison.
 
 ## quicksilver.ichor
-**What it does.** You raise your guard. The first blow that lands on it is blocked, and your answer pulls out the nail: the attacker's notches are filled all the way, it gets three doses of poison, and its poison bites.
+**What it does.** You raise your guard. The first blow that lands on it is blocked, and your answer pulls out the nail: the attacker's notches are filled all the way, it gets three doses of poison, and it bleeds for 4 seconds. While it bleeds, its poison bites every half second, and each of your weapon blows adds a dose. At the end, every dose goes off at once.
 
 **When it happens.** Cast it from a spell slot while you carry both Metal and Poison. Press that slot's button (hold L2 and a face button, or press 1 to 4). The first time it lands, it charges your blade with Metal.
 
-**The numbers.** Mix, duo spell, counter, 5 Shards. It costs no mana. After you cast it, you must wait 11 seconds to cast it again. Fighting with your weapon makes the wait shorter. The guard stays up for 1.2 seconds. The answer is a cone 3 metres long that deals 10 damage and 20 stagger, fills the notches all the way, adds three doses, and makes the poison bite.
+**The numbers.** Mix, duo spell, counter, 5 Shards. It costs no mana. After you cast it, you must wait 11 seconds to cast it again. Fighting with your weapon makes the wait shorter. The guard stays up for 1.2 seconds. The answer is a cone 3 metres long that deals 10 damage and 20 stagger, fills the notches all the way, and adds three doses. The bleeding lasts 4 seconds. If nothing hits you, the wait is half as long: 5.5 seconds.
 
 **Works with.** Quicksilver, The Nail Pulled, Envenomed Edge.
 
 **Example.** Block a brute's swing, and it bleeds silver.
-
-**Not built yet.** The enemy doesn't bleed yet for 4 seconds with its poison sped up. Your blows during that time don't add doses yet. If nothing hits you, you don't get half the wait back yet.
