@@ -26,8 +26,7 @@ namespace Clover.Player.Trees.Duo
             const string A = Elements.Metal, B = Elements.Poison;
 
             // NEEDS: a puddle that follows the enemy and slows only inside it (Heavy Silver; now a puddle where it reacts, and
-            // the enemy slowed while it carries both); every dose and notch passed on at death (Running Silver; now four doses
-            // and two notches).
+            // the enemy slowed while it carries both). Running Silver passes on every dose and notch at death (CarriesDepth).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Quicksilver: Heavy Silver or Running Silver", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -49,13 +48,13 @@ namespace Clover.Player.Trees.Duo
                     new ShapeDef
                     {
                         Name = "Running Silver",
-                        Description = "While it carries both, each of your weapon blows makes its poison bite at once, as before. When it dies, its mercury runs along the floor to the nearest enemy within 6 m and gives it doses and notches.",
+                        Description = "While it carries both, each of your weapon blows makes its poison bite at once, as before. When it dies, its mercury runs along the floor to the nearest enemy within 6 m and gives it every dose and notch it carried.",
                         Effects = new[]
                         {
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = RunningSilver, Seconds = 30f, While = AfflictionKind.Sundered, While2 = AfflictionKind.Poison } },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = RunningSilver, By = StruckBy.Weapon, Cooldown = 0.5f, CooldownPerEnemy = true, Do = UpgradeAction.Bite },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionDied, Condition = RunningSilver, Do = UpgradeAction.Pass, Reach = 6f, Affliction = AfflictionKind.Poison, Stacks = 4 },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionDied, Condition = RunningSilver, Do = UpgradeAction.Pass, Reach = 6f, Affliction = AfflictionKind.Sundered, Stacks = 2 },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionDied, Condition = RunningSilver, Needs = AfflictionKind.Poison, CarriesDepth = true, Do = UpgradeAction.Pass, Reach = 6f, Affliction = AfflictionKind.Poison, Stacks = 1 },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionDied, Condition = RunningSilver, Needs = AfflictionKind.Sundered, CarriesDepth = true, Do = UpgradeAction.Pass, Reach = 6f, Affliction = AfflictionKind.Sundered, Stacks = 1 },
                         },
                     },
                 },

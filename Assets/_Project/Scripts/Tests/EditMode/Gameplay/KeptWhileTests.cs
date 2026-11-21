@@ -289,6 +289,21 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void RunningSilverPassesOnEveryDoseAndNotchItCarried()
+        {
+            var shape = Upgrade.ById(QuicksilverDuo.Shape).Shapes.First(one => one.Name == "Running Silver");
+            var passes = shape.Effects.Where(effect => effect.On == UpgradeTrigger.ConditionDied && effect.Do == UpgradeAction.Pass).ToList();
+            Assert.AreEqual(2, passes.Count);
+            foreach (var kind in new[] { AfflictionKind.Poison, AfflictionKind.Sundered })
+            {
+                var pass = passes.Single(effect => effect.Affliction == kind);
+                Assert.AreEqual(kind, pass.Needs, "its depth is read from what the dead one carried");
+                Assert.IsTrue(pass.CarriesDepth, "and laid whole");
+                Assert.AreEqual(1, pass.Stacks);
+            }
+        }
+
+        [Test]
         public void RustAndItsShapesLetTheNotchesRunDeeper()
         {
             var rusting = Upgrade.All.SelectMany(upgrade => upgrade.Effects.Concat(upgrade.Shapes == null ? Enumerable.Empty<UpgradeEffect>() : upgrade.Shapes.Where(shape => shape?.Effects != null).SelectMany(shape => shape.Effects)))
