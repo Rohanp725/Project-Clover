@@ -34,11 +34,11 @@ the steel you throw and plant: Flung Blade, the blades of Grave of Swords.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). Bronze only pours into enemies that have Sundered.
 
-**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 12 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes it 15 damage for each notch.) It reaches every enemy within 8 metres, 0.4 seconds after you cast it. Each notched enemy takes 10 damage, plus 12 damage and 15 stagger for each notch it had (46 damage and 45 stagger at three). Its notches are used up, and it is held for 0.8 seconds (a god or an elite for 0.4 of that).
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 12 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes it 15 damage for each notch.) It reaches every enemy within 8 metres, 0.4 seconds after you cast it. Each notched enemy takes 10 damage, plus 12 damage and 15 stagger for each notch it had (46 damage and 45 stagger at three). Its notches are used up, and it is held for 0.4 seconds for each notch it had (1.2 seconds at three; a god or an elite for 0.4 of that).
 
 **Works with.** Sunder, Open Line and Forged Answer (they notch on a perfect guard), Every Crack Rings, the charged blade (its charged blows notch), and Grave of Swords and Returning Edge, which notch a crowd for it to pour into.
 
-**Not built yet.** How long the enemy is held should depend on the notches: 0.4 seconds per notch (a quarter of that on a god or an elite). For now, it is 0.8 seconds no matter how many. The pot of bronze tipping over each enemy and the crust cooling on it aren't shown yet.
+**Not built yet.** A god or an elite should be held for a quarter of the time. For now, it is held for 0.4 of it. The pot of bronze tipping over each enemy and the crust cooling on it aren't shown yet.
 
 **Example.** Give three soldiers three notches each with heavy blows and Grave of Swords, then pour. Each takes 46 damage and is held while you choose which to finish.
 
@@ -173,11 +173,11 @@ the steel you throw and plant: Flung Blade, the blades of Grave of Swords.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). Then it works on any blow in the next 1.2 seconds.
 
-**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower blocks two blows and makes it 16 damage.) The answer hits everything within 3 metres, all the way around, for 14 damage, 20 stagger and one notch, as a heavy blow. For now, the blocked blow doesn't count as a perfect guard for your marks: it gives no mana and doesn't set off anything that needs one.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower blocks two blows and makes it 16 damage.) The answer hits everything within 3 metres, all the way around, for 14 damage, 20 stagger and one notch, as a heavy blow. For now, the blocked blow doesn't count as a perfect guard for your marks: it gives no mana and doesn't set off anything that needs one. If nothing hits you, the wait is half as long: 5 seconds.
 
 **Works with.** Open Line, which it comes after on the chart, Edge Guard, which comes after it, Sunder, Poured Bronze on the ring of enemies it notched, and the charged blade (the answer is a spell, so it charges your weapon with Metal).
 
-**Not built yet.** A shorter wait, 5 seconds, when nothing hit you. The Empower's second blocked blow.
+**Not built yet.** The Empower's second blocked blow.
 
 **Example.** Three soldiers surround you. Cast it as the first one lunges. The cut blocks its blow and notches all three.
 
