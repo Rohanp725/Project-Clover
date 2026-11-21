@@ -71,6 +71,62 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void TheEnemyFirstDodgedFromStillCountsInACrowd()
+        {
+            // The owner's answer of 2026-11-20, as the Phase 4b probe found it: the host stands north at z 6, the player at
+            // z 3.5 facing it, and other enemies stand south at z -5. A roll south is away from the host and turns the
+            // player to face south, where the crowd is now the enemy ahead.
+            var hold = new DodgeHold<string>();
+            Vector3 host = new Vector3(0f, 0f, 6f), crowd = new Vector3(0f, 0f, -5f);
+            Vector3 from = new Vector3(0f, 0f, 3.5f);
+            string against = hold.Against(from, "host", false, Vector3.zero, DodgeRules.HoldRange);
+            Assert.AreEqual("host", against, "the first dodge takes the enemy faced");
+            Assert.AreEqual(DodgeWay.Away, DodgeRules.WayOf(Vector3.back, from, host, true));
+            hold.Took(against);
+            Assert.AreEqual("host", hold.Held);
+
+            // The second roll south: measured against the crowd ahead it would be toward; held to the host it is away again.
+            from = new Vector3(0f, 0f, -1f);
+            Assert.AreEqual(DodgeWay.Toward, DodgeRules.WayOf(Vector3.back, from, crowd, true), "the crowd ahead would make it toward");
+            against = hold.Against(from, "crowd", true, host, DodgeRules.HoldRange);
+            Assert.AreEqual("host", against, "the host is held, not the crowd ahead");
+            Assert.AreEqual(DodgeWay.Away, DodgeRules.WayOf(Vector3.back, from, host, true), "so the second roll south is away too");
+            hold.Took("crowd");
+            Assert.AreEqual("host", hold.Held, "a later dodge never takes the hold from the first one's enemy");
+
+            // A third roll, still near the host: still the host.
+            from = new Vector3(0f, 0f, -5.5f);
+            Assert.AreEqual("host", hold.Against(from, "crowd", true, host, DodgeRules.HoldRange));
+        }
+
+        [Test]
+        public void TheHeldEnemyIsLetGoWhenItDiesOrThePlayerGetsFarFromIt()
+        {
+            Assert.AreEqual(16f, DodgeRules.HoldRange, "the fight's 12 m and most of a 4.5 m roll more");
+            var hold = new DodgeHold<string>();
+            hold.Took("host");
+            Vector3 host = new Vector3(0f, 0f, 6f);
+
+            // Dead: the next dodge takes the enemy faced then, and holds it.
+            Assert.AreEqual("crowd", hold.Against(Vector3.zero, "crowd", false, host, DodgeRules.HoldRange));
+            Assert.IsNull(hold.Held);
+            hold.Took("crowd");
+            Assert.AreEqual("crowd", hold.Held);
+
+            // Far: 16 m on the ground still holds, a step more lets go. Height does not count.
+            hold.Clear();
+            hold.Took("host");
+            Assert.IsTrue(hold.Keeps(new Vector3(0f, 3f, 6f - 16f), true, host, DodgeRules.HoldRange), "16 m off, on a ledge below, still held");
+            Assert.AreEqual("other", hold.Against(new Vector3(0f, 0f, 6f - 16.5f), "other", true, host, DodgeRules.HoldRange), "16.5 m off, let go");
+            Assert.IsNull(hold.Held);
+
+            // With nothing held and no enemy faced, the dodge holds nothing.
+            Assert.IsNull(hold.Against(Vector3.zero, null, false, Vector3.zero, DodgeRules.HoldRange));
+            hold.Took(null);
+            Assert.IsNull(hold.Held);
+        }
+
+        [Test]
         public void IntoTheFireMakesADodgeSafeWholeAndThroughBodiesOrDearAndNeverPerfect()
         {
             var stamina = new StaminaPool();

@@ -354,7 +354,8 @@ namespace Clover.Player
             return false;
         }
 
-        private static bool Alive(Component who)
+        /// <summary>Whether a thing that can be struck is still there and living: a god's piece answers for its god.</summary>
+        internal static bool Alive(Component who)
         {
             if (who == null || !who.gameObject.activeInHierarchy) return false;
             if (who is Enemy enemy) return !enemy.IsDead;
