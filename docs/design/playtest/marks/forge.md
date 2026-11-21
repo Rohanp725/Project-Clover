@@ -62,7 +62,7 @@ carried. Its reaction is Anvil Stone; its Shape mark lets you choose what Anvil 
 **Example.** Soldiers are lined up in front of you. One swing shakes them all and puts each one well on its way to a stagger.
 
 ## forge.foldedsteel
-**What it does.** Every finisher you land folds your blade one more time. Each fold makes every weapon blow a little stronger, and a little heavier to swing. The count shows on the screen as Folds. The folds belong to this stretch of fighting and last until your next rest fire. They don't improve the weapon itself (the Way is what improves a weapon). For now, they last while this mark is working and are lost when it stops, and a rest fire doesn't clear them yet.
+**What it does.** Every finisher you land folds your blade one more time. Each fold makes every weapon blow a little stronger, and a little heavier to swing. The count shows on the screen as Folds. The folds belong to this stretch of fighting and last until your next rest fire. They don't improve the weapon itself (the Way is what improves a weapon). They stay with you from area to area, and every rest fire empties them.
 
 **When it happens.** Each finisher that lands (a heavy blow on a staggered enemy) adds a fold.
 

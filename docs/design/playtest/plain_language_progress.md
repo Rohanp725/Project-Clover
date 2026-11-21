@@ -66,6 +66,7 @@ checked against its code and committed on its own.
 - [x] marks/earth.md: Left in Rubble (Tremor reactions 20% harder)
 - [x] marks/metal.md: Every Crack Rings (Sundered reactions 25% harder)
 - [x] marks/drownedweight.md: The Pull of Night (pulls only the Soaked)
+- [x] marks/forge.md: Folded Steel (kept across areas, emptied at every rest fire)
 
 ## Unsure lines
 
