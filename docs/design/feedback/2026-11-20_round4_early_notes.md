@@ -18,3 +18,14 @@ The owner said, word for word: "the ice fix didnt happen yet, the crystals pokin
 ## Idea saved by the owner (2026-11-21)
 
 - **Poison + Life reaction:** green roots growing out of the enemy's body. This came from the Poison infused-strike veins, which the owner said looked "almost like green roots growing out of them, which actually could be a cool visual concept for the posion life reaction save that idea". Consider it for the Poison + Life reaction look in the weekend round.
+
+## Effects on small and large enemies (the owner, 2026-11-21)
+
+The owner said, word for word: "I have noticed some effects look misplaced on smaller enemies compared to bigger ones and vice versa, so we need to come up with a solution that will work".
+
+**The solution the owner agreed to:**
+- **Anchors on every enemy:** feet, waist, chest, head, back and hands, plus a body size (height and girth). Measure them from each enemy's real mesh and bones when the enemy is built (EnemyBuilder), not from fixed numbers. The existing BodyGirth fit and the short-enemy chest-height fix (ee4e0df) are folded into this.
+- **Every on-body effect piece is placed by an anchor,** relative to it, instead of at a fixed height. This covers afflictions, reaction pieces, strike pieces (hands, veins, daggers), flames on bodies, and ice crust.
+- **Size:** on-body pieces scale with the body, between about 0.6x and 1.8x. Floor and area effects keep their gameplay size, because their size shows reach. (Owner's pick: "Scale on-body, not areas".)
+- **The check:** a probe films a chosen set of effects side by side on a small enemy (the Knife Acolyte), a medium one (the Temple Soldier) and a large one (the Gate Captain, plus a boss form). Read the close-ups for every effect touched. This becomes the standing size check for every new effect.
+- **When:** in the weekend effects round, before its re-films, so every re-filmed look already sits right on every size.
