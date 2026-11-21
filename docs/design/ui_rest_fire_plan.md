@@ -528,7 +528,7 @@ middle of columns 1 to 8.
   |       the Shrine        | |                 | |        Quicker dodges  |  | You lose: the long held draw.    |
   +-------------------------+ +-----------------+ +------------------------+  |                                  |
                                                                               | [A] Set this keystone            |
-                     [ [LT]+[RB] Fire strike  .  [LT]+[RT] Water strike ]     | -------------------------------- |
+            [ Infused strikes  [LT]+[RB] Fire strike . [LT]+[RT] Water strike ]   | -------------------------------- |
                                                                               | A draw is a cut made straight    |
                                                                               | from the sheath.                 |
   +-----------------------+ +-(Y) North----------+ +-----------------------+  |                                  |
@@ -569,19 +569,21 @@ One character is 16 px across and one line 20 px down. Every box, in pixels (x f
 | Weapon label, Bearing label | 824 | 128, 272 | 424 x 28 | 24 bold, Text 2 |
 | Temper row, Technique row | 824 | 160, 210 | 424 x 46 each, 4 apart | "Temper II" with five pips (two filled); "Before the Thunder" with a lock and "Sealed" in Text off |
 | Bearing cells | 824 | 304, 396 | 424 x 84 each | 48 px icon; name 28 bold; a short line 24 ("Hits push you less", "Quicker dodges") |
-| Infused strikes | 368 | 496 | 576 x 40 | "[LT]+[RB] Fire strike" and "[LT]+[RT] Water strike", 28, glyphs 32, the element words in their colours |
+| Infused strikes | 216 | 496 | 880 x 40 | "Infused strikes" 24 bold, Text 2; then "[LT]+[RB] Fire strike" and "[LT]+[RT] Water strike", 26 bold, glyphs 28 tall, the element words in their colours; one line, never wrapped |
 | Element header (corner) | 64 | 552 | 396 x 106 | "Element" 24 bold; "Fire + Water", Spectral 36, each word in its element's text tint; "Carried from the hub" 24 |
 | Role strip (corner) | 852 | 552 | 396 x 106 | "Roles" 24 bold; five cells of a 36 px role icon and its count (28 bold); the missing role's line, 24, Loss |
 | North slot | 476 | 552 | 360 x 106 | see "A slot card" below |
 | West slot, East slot | 216, 736 | 694 | 360 x 106 each | |
 | Surge | 584 | 694 | 144 x 106 | a 64 px ring with the surge's icon and the LT glyph; its name 24 bold under it |
 | South slot | 476 | 836 | 360 x 106 | |
+| Hands label | 64 | 806 | 192 x 28 | "Hands", 24 bold, Text 2 |
 | Hands (two corners) | 64 and 268; 852 and 1056 | 836 | 192 x 106 each | "Starter" (the suggested Hand, a shorter word so it fits), "Hand 1"; "Hand 2", "Hand 3"; label 24 bold over a row of four 28 px spell icons in W, N, E, S order and the surge's icon |
-| The pane | 1280 | 128 | 576 x 814 | 32 px padding; the lines of 4.4; scrolls with the right stick |
+| The pane | 1280 | 128 | 576 x 814 | 28 px padding top and bottom, 32 at the sides; the lines of 4.4; scrolls with the right stick |
 | Footer | 64 to 1856 | 984 | 1792 x 40 | 32 px glyphs with 24 captions: Back on the left; the screen-wide presses on the right |
 
 **A slot card** (360 x 106): the button glyph that casts it (X, Y, B or A; the keyboard's 1 to 4) sits on the card's
-outer edge, half over the border, so the diamond reads like the pad; a 56 px spell icon at the left (the element's
+outer edge, half over the border (on North and South, toward the right end, clear of the name), so the diamond reads
+like the pad; a 56 px spell icon at the left (the element's
 icon with the role's icon in its corner, the first-pass picture of 4.3); to its right three lines: the name (28 bold),
 "Opener · 7 s" (24, Text 2, with the 24 px role icon), and "Shape: Cinder Fan" (24, Text 2). An empty slot reads
 "Empty" in Text off with a dashed rim; a shut slot reads "Opens at the Champion" in Text off with a lock, and the pane

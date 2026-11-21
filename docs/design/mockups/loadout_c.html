@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Loadout, layout C (mockup)</title>
+<!--
+  Static mockup of the rest fire's Loadout, layout C, at 1920 by 1080, for docs/design/ui_rest_fire_plan.md 3.5.
+  Every box sits at the pixel position in 3.5.2's table. Self-contained: no external requests. Fonts fall back to
+  local faces: Spectral to Georgia for titles, Atkinson Hyperlegible to Segoe UI for reading text.
+  State shown: the Katana in the Sheath, Temper II; The Cut Lands at the Click set; the focus on A Hundred Days at
+  the Shrine; the Hand of Fire and Water with Kindle as the surge; three saved Hands and the Starter.
+-->
+<style>
+  :root {
+    --panel: #0A0914;
+    --raised: #17142A;
+    --focus-fill: #2B2134;
+    --text: #EEE9E1;
+    --text2: #B8B1A5;
+    --text-off: #86808F;
+    --gold: #FFCC73;
+    --loss: #FF7A5C;
+    --memories: #E8A24A;
+    --shards: #A9C8F0;
+    --fire: #FF8F33;
+    --water: #4080FF;
+    --water-text: #7FA8FF;
+    --ink: #050409;
+    --serif: "Spectral", "Spectral SemiBold", Georgia, Cambria, serif;
+    --sans: "Atkinson Hyperlegible", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; background: #07060d; }
+  body { font-family: var(--sans); color: var(--text); position: relative; }
+
+  /* The world behind, dimmed: the rest fire's glow low on the left, stone in deep indigo. */
+  .world {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 700px 420px at 180px 1040px, rgba(255, 120, 40, 0.55), transparent 70%),
+      radial-gradient(ellipse 900px 600px at 1500px 200px, rgba(70, 60, 140, 0.45), transparent 70%),
+      linear-gradient(160deg, #1b1836 0%, #0f0d20 55%, #120c16 100%);
+  }
+  .board { position: absolute; inset: 0; background: rgba(10, 9, 20, 0.96); }
+
+  .abs { position: absolute; }
+  .title { font-family: var(--serif); font-weight: 600; font-size: 48px; line-height: 48px; color: var(--gold); }
+  .header { font-family: var(--serif); font-weight: 600; font-size: 36px; line-height: 44px; color: var(--text); }
+  .label { font-size: 24px; line-height: 28px; font-weight: 700; color: var(--text2); letter-spacing: 0.02em; }
+  .name { font-size: 28px; line-height: 33px; font-weight: 700; color: var(--text); }
+  .name32 { font-size: 32px; line-height: 38px; font-weight: 700; color: var(--text); }
+  .meta { font-size: 24px; line-height: 29px; color: var(--text2); }
+  .meta26 { font-size: 26px; line-height: 32px; color: var(--text2); }
+  .body30 { font-size: 30px; line-height: 39px; color: var(--text); }
+  .off { color: var(--text-off); }
+
+  .card {
+    position: absolute; background: var(--raised); border-radius: 8px;
+    border: 2px solid rgba(184, 177, 165, 0.16);
+  }
+  .card.fire { border-color: rgba(255, 143, 51, 0.75); }
+  .card.water { border-color: rgba(64, 128, 255, 0.85); }
+  .focus { background: var(--focus-fill); }
+  .focus::after {
+    content: ""; position: absolute; inset: -8px; border: 3px solid var(--gold); border-radius: 12px;
+  }
+  .row { display: flex; align-items: center; }
+  .col { display: flex; flex-direction: column; }
+
+  /* The set mark of a pair: a filled lamp at the left and a "Set" tag on the top border. */
+  .lamp {
+    width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--text2); flex: none;
+  }
+  .lamp.lit { background: var(--text); border-color: var(--text); box-shadow: 0 0 10px rgba(238, 233, 225, 0.55); }
+  .settag {
+    position: absolute; top: -15px; right: 16px; padding: 0 10px; height: 28px; line-height: 26px;
+    font-size: 24px; font-weight: 700; color: var(--text); background: #3A3550; border-radius: 6px;
+    border: 1px solid rgba(238, 233, 225, 0.35);
+  }
+
+  /* Button glyphs, after the look of Kenney's Input Prompts: a coloured face with a dark letter. */
+  .g {
+    display: inline-flex; align-items: center; justify-content: center; flex: none;
+    width: 32px; height: 32px; border-radius: 50%; font: 700 19px/1 var(--sans); color: #0b0a12;
+  }
+  .g.a { background: #6CC24A; } .g.b { background: #E5604F; } .g.x { background: #4F94E8; } .g.y { background: #EBC63E; }
+  .g.sh {
+    width: 46px; border-radius: 8px; background: #D9D3C9; font-size: 17px;
+  }
+  .g.st { background: #D9D3C9; font-size: 16px; }
+  .g.big { width: 36px; height: 36px; font-size: 21px; }
+
+  .pips { display: flex; gap: 8px; }
+  .pip { width: 16px; height: 16px; transform: rotate(45deg); border: 2px solid var(--text2); }
+  .pip.on { background: var(--gold); border-color: var(--gold); }
+
+  .slot { width: 360px; height: 106px; padding: 9px 18px 0 18px; display: flex; gap: 14px; }
+  .slot .name { line-height: 31px; }
+  .slot .meta { line-height: 28px; white-space: nowrap; }
+  .slot > svg { margin-top: 8px; }
+  .slot .txt { display: flex; flex-direction: column; }
+  .slotglyph { position: absolute; }
+
+  .role { display: inline-flex; align-items: center; gap: 6px; }
+  .rolecell {
+    display: flex; align-items: center; gap: 6px; height: 48px; padding: 0 8px; border-radius: 6px;
+    background: rgba(238, 233, 225, 0.04);
+  }
+  .rolecell.miss { outline: 2px dashed var(--loss); outline-offset: -2px; }
+  .count { font-size: 28px; font-weight: 700; color: var(--text); min-width: 16px; }
+
+  .hand { width: 192px; height: 106px; padding: 10px 12px; }
+  .minis { display: flex; gap: 6px; margin-top: 10px; align-items: center; }
+  .minis .sep { width: 2px; height: 22px; background: rgba(184, 177, 165, 0.35); margin: 0 2px; }
+
+  .pane {
+    position: absolute; left: 1280px; top: 128px; width: 576px; height: 814px; background: var(--raised);
+    border-radius: 10px; border: 2px solid rgba(184, 177, 165, 0.16); padding: 28px 32px;
+  }
+  .rule { height: 2px; background: rgba(184, 177, 165, 0.28); margin: 18px 0; }
+  .kw { font-weight: 700; color: var(--gold); }
+  .ink-line { position: absolute; width: 2px; background: rgba(134, 128, 143, 0.4); }
+  .footer { position: absolute; top: 984px; height: 40px; display: flex; align-items: center; gap: 12px; }
+  .footer .meta { color: var(--text2); }
+</style>
+</head>
+<body>
+<div class="world"></div>
+<div class="board"></div>
+
+<!-- Shared icon shapes, drawn flat and bold so they read at 24 px. -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <symbol id="flame" viewBox="0 0 64 64"><path d="M32 4c4 12 18 18 18 34a18 18 0 0 1-36 0c0-9 5-14 9-18 0 7 3 10 6 11-1-11 1-20 3-27z" fill="currentColor"/><path d="M32 34c3 5 8 7 8 13a8 8 0 0 1-16 0c0-5 4-8 8-13z" fill="#0A0914" opacity=".55"/></symbol>
+    <symbol id="drop" viewBox="0 0 64 64"><path d="M32 4C25 18 12 30 12 42a20 20 0 0 0 40 0C52 30 39 18 32 4z" fill="currentColor"/><path d="M22 42a10 10 0 0 0 10 10" stroke="#0A0914" stroke-width="5" fill="none" stroke-linecap="round" opacity=".55"/></symbol>
+    <symbol id="r-opener" viewBox="0 0 32 32"><path d="M4 13h14V6l11 10-11 10v-7H4z" fill="currentColor"/></symbol>
+    <symbol id="r-breaker" viewBox="0 0 32 32"><path d="M16 3l12 5v8c0 7-5 12-12 14C9 28 4 23 4 16V8z" fill="currentColor"/><path d="M17 6l-4 9h5l-4 11" stroke="#0A0914" stroke-width="3" fill="none" stroke-linejoin="round"/></symbol>
+    <symbol id="r-detonator" viewBox="0 0 32 32"><path d="M16 2l3.5 8.5L28 7l-4 8.5L31 20l-9 .5L20 30l-4-7-4 7-2-9.5L1 20l7-4.5L4 7l8.5 3.5z" fill="currentColor"/></symbol>
+    <symbol id="r-counter" viewBox="0 0 32 32"><path d="M16 3l12 5v8c0 7-5 12-12 14C9 28 4 23 4 16V8z" fill="currentColor"/><path d="M20 11l-7 5 7 5" stroke="#0A0914" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="r-move" viewBox="0 0 32 32"><path d="M3 7h7l8 9-8 9H3l8-9zM15 7h7l8 9-8 9h-7l8-9z" fill="currentColor"/></symbol>
+    <symbol id="sheath" viewBox="0 0 64 64"><path d="M14 54L46 12" stroke="currentColor" stroke-width="9" stroke-linecap="round"/><path d="M40 22l10 7" stroke="currentColor" stroke-width="5" stroke-linecap="round"/><path d="M48 14l6-8" stroke="currentColor" stroke-width="6" stroke-linecap="round"/><circle cx="14" cy="54" r="5" fill="currentColor"/></symbol>
+    <symbol id="click" viewBox="0 0 48 48"><path d="M6 30h36" stroke="currentColor" stroke-width="5" stroke-linecap="round"/><path d="M10 22l6 8-6 8M24 18v24M38 22l-6 8 6 8" stroke="currentColor" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="24" cy="10" r="4" fill="currentColor"/></symbol>
+    <symbol id="shrine" viewBox="0 0 48 48"><path d="M4 10h40l-3 6H7z" fill="currentColor"/><path d="M9 20h30" stroke="currentColor" stroke-width="4"/><path d="M13 16v28M35 16v28" stroke="currentColor" stroke-width="5" stroke-linecap="round"/></symbol>
+    <symbol id="stone" viewBox="0 0 48 48"><path d="M6 40l9-22 8 8 7-16 12 30z" fill="currentColor"/></symbol>
+    <symbol id="feather" viewBox="0 0 48 48"><path d="M40 6C22 8 10 20 10 36l-4 6 3 1 4-6c16 0 26-12 27-31z" fill="currentColor"/><path d="M13 37L32 16" stroke="#17142A" stroke-width="3" stroke-linecap="round"/></symbol>
+    <symbol id="lock" viewBox="0 0 32 32"><rect x="6" y="14" width="20" height="15" rx="3" fill="currentColor"/><path d="M10 14V10a6 6 0 0 1 12 0v4" stroke="currentColor" stroke-width="4" fill="none"/></symbol>
+    <symbol id="mote" viewBox="0 0 32 32"><path d="M16 2l5 9 9 5-9 5-5 9-5-9-9-5 9-5z" fill="currentColor"/></symbol>
+    <symbol id="shard" viewBox="0 0 32 32"><path d="M16 2l9 10-9 18-9-18z" fill="currentColor"/><path d="M7 12h18" stroke="#0A0914" stroke-width="2.5" opacity=".6"/></symbol>
+    <symbol id="kindle" viewBox="0 0 64 64"><path d="M32 6c5 10 16 16 16 30a16 16 0 0 1-32 0c0-8 4-12 8-16 0 6 2 9 5 10-1-10 1-18 3-24z" fill="currentColor"/><circle cx="32" cy="32" r="28" stroke="currentColor" stroke-width="3" fill="none" opacity=".55"/></symbol>
+  </defs>
+</svg>
+
+<!-- Header -->
+<div class="abs title" style="left:64px; top:56px;">Loadout</div>
+<div class="abs row" style="right:64px; top:64px; gap:28px; font-size:26px; line-height:32px;">
+  <span class="row" style="gap:8px; color:var(--memories);"><svg width="28" height="28"><use href="#mote"/></svg><b>12</b> Memories</span>
+  <span class="row" style="gap:8px; color:var(--shards);"><svg width="28" height="28"><use href="#shard"/></svg><b>340</b> Shards</span>
+</div>
+
+<!-- ===== Steel half ===== -->
+<!-- Left Way column: aspect and keystones (columns 1 to 3) -->
+<div class="abs label" style="left:64px; top:128px;">Aspect</div>
+<div class="card row" style="left:64px; top:160px; width:424px; height:96px; padding:0 18px; gap:16px;">
+  <svg width="64" height="64" style="color:#E9C98F; flex:none"><use href="#sheath"/></svg>
+  <div class="col">
+    <span class="name32">The Sheath</span>
+    <span class="meta">6 of 10 marks bought</span>
+  </div>
+</div>
+
+<div class="abs label" style="left:64px; top:272px;">Keystone</div>
+<div class="card row" style="left:64px; top:304px; width:424px; height:84px; padding:0 18px; gap:14px;">
+  <span class="lamp lit"></span>
+  <svg width="48" height="48" style="color:var(--text); flex:none"><use href="#click"/></svg>
+  <span class="name" style="width:300px;">The Cut Lands at the Click</span>
+  <span class="settag">Set</span>
+</div>
+<div class="card row focus" style="left:64px; top:396px; width:424px; height:84px; padding:0 18px; gap:14px;">
+  <span class="lamp"></span>
+  <svg width="48" height="48" style="color:var(--text2); flex:none"><use href="#shrine"/></svg>
+  <span class="name" style="width:300px;">A Hundred Days at the Shrine</span>
+</div>
+
+<!-- Centre: the weapon (columns 4 and 5) -->
+<div class="abs header" style="left:520px; top:128px; width:272px; text-align:center;">Katana</div>
+<svg class="abs" style="left:504px; top:176px;" width="304" height="304" viewBox="0 0 304 304">
+  <defs>
+    <radialGradient id="disc" cx="50%" cy="46%" r="55%">
+      <stop offset="0%" stop-color="#2a2340"/>
+      <stop offset="70%" stop-color="#17132a"/>
+      <stop offset="100%" stop-color="#0d0b18"/>
+    </radialGradient>
+    <pattern id="wrap" width="12" height="13" patternUnits="userSpaceOnUse">
+      <rect width="12" height="13" fill="#21407a"/>
+      <path d="M0 6.5L6 0l6 6.5L6 13z" fill="#d8cdb8"/>
+      <path d="M2.5 6.5L6 3l3.5 3.5L6 10z" fill="#21407a"/>
+    </pattern>
+  </defs>
+  <!-- the ink disc, rimmed faintly in the Sheath bough's ivory -->
+  <circle cx="152" cy="152" r="138" fill="url(#disc)"/>
+  <circle cx="152" cy="152" r="138" fill="none" stroke="#E9C98F" stroke-opacity=".35" stroke-width="3"/>
+  <circle cx="152" cy="152" r="120" fill="none" stroke="#E9C98F" stroke-opacity=".10" stroke-width="10"/>
+  <!-- a few brush flecks so the disc reads as ink, not a flat circle -->
+  <path d="M40 210c20 10 40 14 62 12" stroke="#2f2848" stroke-width="7" stroke-linecap="round" fill="none"/>
+  <path d="M206 64c18 6 32 18 40 32" stroke="#2f2848" stroke-width="6" stroke-linecap="round" fill="none"/>
+  <!-- the sheathed katana, diagonal, thick ink outline (cel look) -->
+  <g transform="translate(152 152) rotate(-42) translate(-150 0)">
+    <!-- scabbard -->
+    <path d="M6 -8 Q100 -15 196 -9 L196 9 Q100 4 6 9 Q-2 0 6 -8z" fill="#5a2f3c" stroke="#050409" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M18 -5 Q100 -11 190 -6" stroke="#8a5060" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <!-- end cap and the cord -->
+    <path d="M6 -8 Q-2 0 6 9 L16 8 L16 -8z" fill="#b8893f" stroke="#050409" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M150 -10 C140 18 168 30 176 48 C182 60 170 70 162 66" stroke="#b5532e" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <rect x="146" y="-12" width="10" height="22" rx="3" fill="#b8893f" stroke="#050409" stroke-width="3"/>
+    <!-- guard -->
+    <ellipse cx="202" cy="0" rx="7" ry="21" fill="#b8893f" stroke="#050409" stroke-width="4"/>
+    <!-- grip with its wrap -->
+    <path d="M209 -8 L282 -7 L282 7 L209 8z" fill="url(#wrap)" stroke="#050409" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M282 -8 Q292 0 282 8z" fill="#b8893f" stroke="#050409" stroke-width="4" stroke-linejoin="round"/>
+  </g>
+</svg>
+
+<!-- Right Way column: Temper, technique, bearings (columns 6 to 8) -->
+<div class="abs label" style="left:824px; top:128px;">Weapon</div>
+<div class="card row" style="left:824px; top:160px; width:424px; height:46px; padding:0 18px; justify-content:space-between;">
+  <span class="name">Temper II</span>
+  <span class="pips"><i class="pip on"></i><i class="pip on"></i><i class="pip"></i><i class="pip"></i><i class="pip"></i></span>
+</div>
+<div class="card row" style="left:824px; top:210px; width:424px; height:46px; padding:0 18px; justify-content:space-between;">
+  <span class="name">Before the Thunder</span>
+  <span class="row meta off" style="gap:6px;"><svg width="24" height="24" style="color:var(--text-off)"><use href="#lock"/></svg>Sealed</span>
+</div>
+
+<div class="abs label" style="left:824px; top:272px;">Bearing</div>
+<div class="card row" style="left:824px; top:304px; width:424px; height:84px; padding:0 18px; gap:14px;">
+  <span class="lamp"></span>
+  <svg width="48" height="48" style="color:var(--text2); flex:none"><use href="#stone"/></svg>
+  <div class="col"><span class="name">The Enduring Body</span><span class="meta">Hits push you less</span></div>
+</div>
+<div class="card row" style="left:824px; top:396px; width:424px; height:84px; padding:0 18px; gap:14px;">
+  <span class="lamp lit"></span>
+  <svg width="48" height="48" style="color:var(--text); flex:none"><use href="#feather"/></svg>
+  <div class="col"><span class="name">The Light Body</span><span class="meta">Quicker dodges</span></div>
+  <span class="settag">Set</span>
+</div>
+
+<!-- The tie between steel and element -->
+<div class="ink-line" style="left:655px; top:480px; height:16px;"></div>
+<div class="card row" style="left:216px; top:496px; width:880px; height:40px; padding:0 14px; justify-content:center; gap:10px; white-space:nowrap; border-color:rgba(184,177,165,.10);">
+  <span class="label" style="margin-right:8px;">Infused strikes</span>
+  <span class="g sh" style="height:28px;">LT</span><span class="meta">+</span><span class="g sh" style="height:28px;">RB</span>
+  <span style="font-size:26px; font-weight:700; color:var(--fire);">Fire strike</span>
+  <span class="meta" style="margin:0 10px;">·</span>
+  <span class="g sh" style="height:28px;">LT</span><span class="meta">+</span><span class="g sh" style="height:28px;">RT</span>
+  <span style="font-size:26px; font-weight:700; color:var(--water-text);">Water strike</span>
+</div>
+<div class="ink-line" style="left:655px; top:536px; height:16px;"></div>
+
+<!-- ===== Element half ===== -->
+<!-- Top-left corner: the elements carried -->
+<div class="abs col" style="left:64px; top:552px; width:396px; height:106px;">
+  <span class="label">Element</span>
+  <span class="header" style="margin-top:2px;"><span style="color:var(--fire)">Fire</span> + <span style="color:var(--water-text)">Water</span></span>
+  <span class="meta">Carried from the hub</span>
+</div>
+
+<!-- Top-right corner: the role strip -->
+<div class="abs col" style="left:852px; top:552px; width:396px; height:106px;">
+  <span class="label">Roles</span>
+  <div class="row" style="gap:6px; margin-top:4px;">
+    <span class="rolecell"><svg width="32" height="32" style="color:var(--text)"><use href="#r-opener"/></svg><span class="count">1</span></span>
+    <span class="rolecell"><svg width="32" height="32" style="color:var(--text)"><use href="#r-breaker"/></svg><span class="count">1</span></span>
+    <span class="rolecell"><svg width="32" height="32" style="color:var(--text)"><use href="#r-detonator"/></svg><span class="count">1</span></span>
+    <span class="rolecell"><svg width="32" height="32" style="color:var(--text)"><use href="#r-counter"/></svg><span class="count">1</span></span>
+    <span class="rolecell miss"><svg width="32" height="32" style="color:var(--loss)"><use href="#r-move"/></svg><span class="count" style="color:var(--loss)">0</span></span>
+  </div>
+  <span class="meta" style="color:var(--loss); margin-top:2px;">No movement spell</span>
+</div>
+
+<!-- The diamond: North, West, surge, East, South -->
+<div class="card water slot" style="left:476px; top:552px;">
+  <svg width="56" height="56" style="color:var(--water); flex:none"><use href="#drop"/></svg>
+  <div class="txt">
+    <span class="name">Deep Crack</span>
+    <span class="role meta"><svg width="24" height="24" style="color:var(--text2)"><use href="#r-detonator"/></svg>Detonator · 11 s</span>
+    <span class="meta">Shape: Ink</span>
+  </div>
+  <span class="g y slotglyph" style="left:296px; top:-17px;">Y</span>
+</div>
+
+<div class="card fire slot" style="left:216px; top:694px;">
+  <svg width="56" height="56" style="color:var(--fire); flex:none"><use href="#flame"/></svg>
+  <div class="txt">
+    <span class="name">Flame Wave</span>
+    <span class="role meta"><svg width="24" height="24" style="color:var(--text2)"><use href="#r-opener"/></svg>Opener · 7 s</span>
+    <span class="meta">Shape: Cinder Fan</span>
+  </div>
+  <span class="g x slotglyph" style="left:-18px; top:35px;">X</span>
+</div>
+
+<div class="abs col" style="left:584px; top:694px; width:144px; height:106px; align-items:center;">
+  <div style="position:relative; width:72px; height:72px; border-radius:50%; background:var(--raised); border:2px solid rgba(255,143,51,.75); display:flex; align-items:center; justify-content:center;">
+    <svg width="48" height="48" style="color:var(--fire)"><use href="#kindle"/></svg>
+    <span class="g sh" style="position:absolute; left:-30px; top:-8px; height:26px; font-size:15px; width:40px;">LT</span>
+  </div>
+  <span style="font-size:24px; font-weight:700; line-height:30px; margin-top:4px;">Kindle</span>
+</div>
+
+<div class="card water slot" style="left:736px; top:694px;">
+  <svg width="56" height="56" style="color:var(--water); flex:none"><use href="#drop"/></svg>
+  <div class="txt">
+    <span class="name">Whirlpool</span>
+    <span class="role meta"><svg width="24" height="24" style="color:var(--text2)"><use href="#r-breaker"/></svg>Breaker · 10 s</span>
+    <span class="meta">Shape: Maelstrom</span>
+  </div>
+  <span class="g b slotglyph" style="left:342px; top:35px;">B</span>
+</div>
+
+<div class="card fire slot" style="left:476px; top:836px;">
+  <svg width="56" height="56" style="color:var(--fire); flex:none"><use href="#flame"/></svg>
+  <div class="txt">
+    <span class="name">Kiln Stance</span>
+    <span class="role meta"><svg width="24" height="24" style="color:var(--text2)"><use href="#r-counter"/></svg>Counter · 9 s</span>
+    <span class="meta">Shape: The Kiln</span>
+  </div>
+  <span class="g a slotglyph" style="left:296px; top:87px;">A</span>
+</div>
+
+<!-- Bottom corners: the Starter and three saved Hands, each a row of its four spells (W, N, E, S) and its surge -->
+<div class="abs label" style="left:64px; top:806px;">Hands</div>
+<div class="card hand" style="left:64px; top:836px;">
+  <span class="name" style="font-size:24px;">Starter</span>
+  <div class="minis">
+    <svg width="28" height="28" style="color:var(--fire)"><use href="#flame"/></svg>
+    <svg width="28" height="28" style="color:var(--fire)"><use href="#flame"/></svg>
+    <svg width="28" height="28" style="color:var(--water)"><use href="#drop"/></svg>
+    <svg width="28" height="28" style="color:var(--water)"><use href="#drop"/></svg>
+    <span class="sep"></span>
+    <svg width="28" height="28" style="color:var(--fire)"><use href="#kindle"/></svg>
+  </div>
+</div>
+<div class="card hand" style="left:268px; top:836px;">
+  <div class="row" style="justify-content:space-between;"><span class="name" style="font-size:24px;">Hand 1</span><span class="meta" style="color:var(--text);">Worn</span></div>
+  <div class="minis">
+    <svg width="28" height="28" style="color:var(--fire)"><use href="#flame"/></svg>
+    <svg width="28" height="28" style="color:var(--water)"><use href="#drop"/></svg>
+    <svg width="28" height="28" style="color:var(--water)"><use href="#drop"/></svg>
+    <svg width="28" height="28" style="color:var(--fire)"><use href="#flame"/></svg>
+    <span class="sep"></span>
+    <svg width="28" height="28" style="color:var(--fire)"><use href="#kindle"/></svg>
+  </div>
+</div>
+<div class="card hand" style="left:852px; top:836px;">
+  <span class="name" style="font-size:24px;">Hand 2</span>
+  <div class="minis">
+    <svg width="28" height="28" style="color:var(--water)"><use href="#drop"/></svg>
+    <svg width="28" height="28" style="color:var(--water)"><use href="#drop"/></svg>
+    <svg width="28" height="28" style="color:var(--water)"><use href="#drop"/></svg>
+    <svg width="28" height="28" style="color:var(--fire)"><use href="#flame"/></svg>
+    <span class="sep"></span>
+    <svg width="28" height="28" style="color:var(--water)"><use href="#drop"/></svg>
+  </div>
+</div>
+<div class="card hand" style="left:1056px; top:836px;">
+  <span class="name" style="font-size:24px;">Hand 3</span>
+  <div class="meta off" style="margin-top:12px;">Empty</div>
+</div>
+
+<!-- ===== The pane: A Hundred Days at the Shrine ===== -->
+<div class="pane">
+  <div class="row" style="gap:18px; align-items:flex-start;">
+    <svg width="64" height="64" style="color:var(--text); flex:none; margin-top:4px;"><use href="#shrine"/></svg>
+    <div class="col">
+      <span class="name32">A Hundred Days at the Shrine</span>
+      <span class="meta26">Keystone of the Sheath</span>
+      <span class="meta26" style="color:var(--memories);">Bought for 4 Memories</span>
+    </div>
+  </div>
+  <p class="body30" style="margin-top:16px;">Every light attack becomes a quick <span class="kw">draw</span>. You draw and put the sword away in one stroke. If no one hits you, every fourth cut hangs in the air. Anyone who walks into it is cut again.</p>
+  <p class="meta26" style="margin-top:12px; color:var(--text);">10 stamina a draw</p>
+  <p class="meta26 row" style="gap:10px; margin-top:6px; color:var(--text);">Press <span class="g sh">RB</span> again and again</p>
+  <div class="rule"></div>
+  <p class="body30" style="font-size:28px; line-height:36px;">Set now: The Cut Lands at the Click. Setting this one turns that one off.</p>
+  <p class="body30" style="font-size:28px; line-height:36px; margin-top:10px;"><b style="color:var(--loss);">You lose:</b> the long held draw that cuts through guards.</p>
+  <p class="row" style="gap:12px; margin-top:14px; font-size:28px; font-weight:700;"><span class="g a big">A</span>Set this keystone</p>
+  <div class="rule"></div>
+  <p class="meta"><span class="kw">Draw:</span> a cut made straight from the sheath. It hits harder.</p>
+</div>
+
+<!-- Footer: Back on the left, the screen-wide presses on the right -->
+<div class="footer" style="left:64px;"><span class="g b">B</span><span class="meta">Back to the fire</span></div>
+<div class="footer" style="right:64px; gap:12px;">
+  <span class="g sh">LB</span><span class="g sh">RB</span><span class="meta" style="margin-right:22px;">Steel / Element</span>
+  <span class="g st">L3</span><span class="meta" style="margin-right:22px;">Text size 100%</span>
+  <span class="g st">RS</span><span class="meta">Scroll details</span>
+</div>
+</body>
+</html>
