@@ -93,13 +93,12 @@ namespace Clover.Player.Trees
             }, HeartPattern.RightHigh));
 
             // Re-aimed (steel/README.md, settled): the folds are a fight's growth, not the weapon's, so they last only to the
-            // next rest fire. NEEDS: a count that empties at a rest fire (now it is kept while the mark is in force and lost
-            // with it, not kept for the run).
+            // next rest fire: kept from scene to scene, emptied at every rest (TallySpec.EmptiesAtRest).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = FoldedSteel, Name = "Folded Steel", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { Buckled }, Icon = UpgradeIcons.Blade,
                 Description = "Every finisher folds your blade once more, up to ten, until your next rest fire. Each fold adds to every blow. Each fold makes it heavier in the hand.",
-                Tally = new TallySpec { Name = "Folds", Cap = 10, Stat = PlayerStat.WeaponDamage, PerPoint = 0.03f, Stat2 = PlayerStat.AttackStamina, PerPoint2 = 0.01f, Kept = false },
+                Tally = new TallySpec { Name = "Folds", Cap = 10, Stat = PlayerStat.WeaponDamage, PerPoint = 0.03f, Stat2 = PlayerStat.AttackStamina, PerPoint2 = 0.01f, Kept = true, EmptiesAtRest = true },
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.FinisherHit, Do = UpgradeAction.Bank, Count = 1 } },
             }, HeartPattern.Keystone));
 

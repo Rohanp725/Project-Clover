@@ -87,7 +87,7 @@ namespace Clover.Player.Trees.Duo
 
             // The burning tree: a helper that strikes the enemy that bloomed every 2 s for 10 s, a Burn each time.
             // NEEDS: standing-things (a tree that stands 10 s and throws a burning seed, Seeded and Burn, at the nearest
-            // enemy every 2 s; and only the first lily of each fight, rest-fire-counts); now the helper strikes the enemy that
+            // enemy every 2 s; and only the first lily of each fight, once-per-fight); now the helper strikes the enemy that
             // bloomed, Burn only, at most once in 30 s.
             to.Add(HeartPattern.Put(new Upgrade
             {

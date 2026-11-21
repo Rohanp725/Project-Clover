@@ -53,6 +53,9 @@ namespace Clover.World
             // A rest ends every spell's clock and any fight.
             var spells = who.GetComponent<Clover.Player.PlayerSpells>();
             if (spells != null) spells.Rested();
+            // A fight's growth (Folded Steel's folds) ends at the fire.
+            var marks = who.GetComponent<Clover.Player.PlayerUpgrades>();
+            if (marks != null) marks.Rested();
             // The playtest's rule: a rest gives as many Shards as the whole chart could ask for, and as many Memories as the
             // Way's charts could (the wallet's rest; the run's Shards are still RunState's until the death rule moves them).
             RunState.Points = PlaytestMode.ShardsAfterRest(RunState.Points);

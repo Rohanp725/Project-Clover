@@ -519,6 +519,13 @@ namespace Clover.Player
             return MarkRules.CanBuyInItsCurrency(upgrade, RunState.Unlocked, RunState.Points, null, Open(upgrade), PlaytestMode.On, null, 0);
         }
 
+        /// <summary>A rest fire: the counts that are a fight's growth (Folded Steel's folds) are emptied.</summary>
+        public void Rested()
+        {
+            if (tally == null) return;
+            if (TallySpec.EmptyAtRest(catalogue, tally, RunState.Tallies) > 0) tallyDirty = true;
+        }
+
         /// <summary>Buys the mark, paid in its own currency: Memories from the wallet, Shards from the run's purse.</summary>
         public bool TryBuy(Upgrade upgrade)
         {

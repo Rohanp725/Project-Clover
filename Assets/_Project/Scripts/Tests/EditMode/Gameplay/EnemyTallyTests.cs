@@ -98,6 +98,26 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void AFightsGrowthIsEmptiedAtARestFireAndNothingElseIs()
+        {
+            var folds = new Upgrade { Id = "t.folds", Tally = new TallySpec { Cap = 10, Kept = true, EmptiesAtRest = true } };
+            var plates = new Upgrade { Id = "t.plates", Tally = new TallySpec { Cap = 3, Kept = true } };
+            var plain = new Upgrade { Id = "t.plain" };
+            var catalogue = new List<Upgrade> { folds, plates, plain };
+            var counts = new[] { 7, 2, 0 };
+            var kept = new Dictionary<string, int> { { folds.Id, 7 }, { plates.Id, 2 } };
+            Assert.AreEqual(1, TallySpec.EmptyAtRest(catalogue, counts, kept));
+            CollectionAssert.AreEqual(new[] { 0, 2, 0 }, counts, "the folds are gone, the plates stay");
+            Assert.IsFalse(kept.ContainsKey(folds.Id), "nor do the folds come back with the next scene");
+            Assert.AreEqual(2, kept[plates.Id]);
+            Assert.AreEqual(0, TallySpec.EmptyAtRest(catalogue, counts, kept), "nothing left to empty");
+
+            var folded = Upgrade.ById(ForgeTree.FoldedSteel);
+            Assert.IsTrue(folded.Tally.EmptiesAtRest, "Folded Steel's folds last to the next rest fire");
+            Assert.IsTrue(folded.Tally.Kept, "and from scene to scene until then");
+        }
+
+        [Test]
         public void TheClocksTheLedgerNamedRunOnEachEnemy()
         {
             Assert.IsTrue(EffectsOnCondition(Reactions.Nerves).Where(effect => effect.Do == UpgradeAction.Flinch && effect.Cooldown > 0f).All(effect => effect.CooldownPerEnemy),
