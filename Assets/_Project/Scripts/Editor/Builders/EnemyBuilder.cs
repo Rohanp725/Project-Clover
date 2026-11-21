@@ -137,7 +137,7 @@ namespace Clover.EditorTools
                 var materials = Materials();
                 renderers = model.GetComponentsInChildren<Renderer>();
                 foreach (var renderer in renderers)
-                    renderer.sharedMaterials = renderer.sharedMaterials.Select(imported => ToonFor(imported, materials, kind.Palette)).ToArray();
+                    renderer.sharedMaterials = renderer.sharedMaterials.Select(imported => ToonFor(imported, materials, kind.Palette, renderer.name)).ToArray();
                 // The champion is cast in gold from mask to soles: his one gold is given the tones of a casting.
                 if (kind.Palette == "cast")
                     foreach (var renderer in renderers)
@@ -220,15 +220,17 @@ namespace Clover.EditorTools
         {
             var materials = Materials();
             foreach (var renderer in model.GetComponentsInChildren<Renderer>(true))
-                renderer.sharedMaterials = renderer.sharedMaterials.Select(imported => ToonFor(imported, materials, palette)).ToArray();
+                renderer.sharedMaterials = renderer.sharedMaterials.Select(imported => ToonFor(imported, materials, palette, renderer.name)).ToArray();
         }
 
-        private static Material ToonFor(Material imported, Dictionary<string, Material> materials, string palette)
+        private static Material ToonFor(Material imported, Dictionary<string, Material> materials, string palette, string mesh = "")
         {
             // The Fire land's people are painted by its own kit; a gilded soldier's palette carries his rank.
             if (imported != null && SunCityKit.Knows(imported.name) && palette == "ashen") return SunCityKit.Ashen(imported.name);
             if (imported != null && SunCityKit.Knows(imported.name))
                 return SunCityKit.For(imported.name, palette != null && palette.StartsWith("gilded") && palette.Length == 7 ? palette[6] - '0' : 3);
+            // The Water land's people are painted by theirs.
+            if (imported != null && WaterEnemyKit.Knows(imported.name)) return WaterEnemyKit.For(imported.name, mesh);
             string name = imported != null ? imported.name.Replace("m_enemy_", "").Replace("m_boss_", "boss:") : "";
             // A kind with its own colours takes them where it has them and the shared ones where it does not.
             if (!string.IsNullOrEmpty(palette) && materials.TryGetValue(palette + ":" + name, out var own)) return own;

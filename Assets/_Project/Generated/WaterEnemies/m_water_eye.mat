@@ -1,0 +1,68 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: m_water_eye
+  m_Shader: {fileID: 4800000, guid: ac7ba80b91c6898419365565e338bbe0, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords:
+  - _SMOOTHNORMALSINTANGENTS_ON
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 1
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BaseMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _Fade: 1
+    - _Ice: 0
+    - _IceDark: 0
+    - _IceEarth: 0
+    - _IceFrost: 0
+    - _IceReveal: 1
+    - _IceStone: 0
+    - _IceVenom: 0
+    - _LightBands: 2
+    - _Metal: 0
+    - _MetalLine: -1
+    - _MetalReveal: 1
+    - _MidThreshold: 0.62
+    - _MidTone: 0.78
+    - _OutlineWidth: 0.034
+    - _RevealBase: 0
+    - _RevealHeight: 0
+    - _RimWidth: 0.3
+    - _ShadeSoftness: 0.006
+    - _ShadeThreshold: 0.22
+    - _SmoothNormalsInTangents: 1
+    - _Sway: 0
+    - _VertexColour: 0
+    - _Wet: 0
+    - _WetReveal: 1
+    - _WorldMapping: 0
+    - _WorldScale: 0.25
+    m_Colors:
+    - _BaseColor: {r: 0.80784315, g: 0.84705883, b: 0.80784315, a: 1}
+    - _BounceColor: {r: 0, g: 0, b: 0, a: 1}
+    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _OutlineColor: {r: 0.035, g: 0.02, b: 0.07, a: 1}
+    - _RimColor: {r: 0.6, g: 0.75, b: 0.85, a: 1}
+    - _ShadeColor: {r: 0.3, g: 0.28, b: 0.58, a: 1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
