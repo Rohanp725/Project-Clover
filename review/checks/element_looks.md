@@ -1,6 +1,6 @@
 # Element looks (batches 1 and 2)
 
-214 looks, 4667 parts (1565 ribbons), 31112 keys, from Assets/_Project/Art/VFX/Combos/elements2_recipe.json.
+216 looks, 4802 parts (1634 ribbons), 31666 keys, from Assets/_Project/Art/VFX/Combos/elements2_recipe.json.
 
 | Look | Length | On | Parts | Ribbons | Repeats from | Shell |
 |---|---|---|---|---|---|---|
@@ -349,4 +349,8 @@
 | e3_strike_metal@b | 1.0 s | body | 15 | 0 | 0.00 s | - |
 | e3_strike_light | 1.0 s | body | 24 | 2 | 0.00 s | - |
 | e3_strike_light@b | 0.9 s | body | 6 | 0 | 0.95 s | - |
+| e3_strike_dark | 1.4 s | body | 0 | 0 | 1.40 s | - |
+| e3_strike_dark@b | 1.3 s | body | 10 | 0 | 0.19 s | - |
+| e3_strike_poison | 1.5 s | body | 0 | 0 | 1.50 s | - |
+| e3_strike_poison@b | 1.4 s | body | 125 | 69 | 0.40 s | - |
 | red_hot@+ | 1.5 s | body | 87 | 37 | 1.55 s | - |
