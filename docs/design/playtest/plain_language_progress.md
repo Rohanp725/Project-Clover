@@ -77,7 +77,7 @@ Lines whose meaning was not clear. The facts were kept and written as clearly as
   Burning Sap holds back until its end). **Resolved:** the code confirms it (the held bites); the mark is also built
   now (15% harder), so its "one extra dose" stand-in and "Not built yet" were replaced.
 - marks/earthed.md: "the burnt figure" and "the fern" were read as the fern-shaped burn mark Earthed leaves on the
-  ground.
+  ground. **Resolved:** the code calls it the figure the charge leaves in the floor, so the reading stands.
 - marks/light.md, light.daybreak: the beam "bites every 0.1 seconds" for 12 a bite (48 over 0.4 seconds) and is also
   "six rings' worth" with rings of 8 (also 48); the Empower makes "each ring 10" (60). Both ways of counting were
   kept as written. **Resolved:** the code fires four hits of 12 (48), and the Empower makes each hit 15 (60); the
@@ -89,16 +89,17 @@ Lines whose meaning was not clear. The facts were kept and written as clearly as
   numbers say the enemy slows to a stop "over 2 seconds". Both kept. **Resolved:** the climb is 1 second at 30% slower,
   then 1 second at 60% slower; Heavy Curse makes the first part half a second, so 1.5 seconds in all.
 - effects.md, two-elements: "(the owner's decision of 2026-11-19)" is a note to the team, not to players. Kept as
-  "the owner decided this on 2026-11-19"; it could probably be cut.
+  "the owner decided this on 2026-11-19"; it could probably be cut. **Resolved:** cut; the rule itself stays.
 - docs/GUIDE.md, sections 4 to 6: these look out of date next to section 1 and the guide to effects (they still
   give tap spells mana costs and say to cast with Triangle / U, and section 6's spell forms table still lists form
   ids). The facts were kept as written; the form ids in the table were kept too, since they are names, and the
   column was renamed "Form". These sections probably need a content update, not only plain words.
 - marks/fire.md, fire.sun: "it rises in 1.5 seconds if Kindle has 3 left" was read as "if Kindle has 3 seconds left".
+  **Resolved:** the code confirms it (the sun rises again only with 3 seconds of Kindle left).
 - readme.md, "NOT BUILT YET": it still lists reactions, the spell branches and "written details for every tree but
   Fire and Lightning" as coming later, though all three are in now. Kept as written; it needs a content update.
 - docs/GUIDE.md, section 8: editor menu names (Clover > Build > ...) were kept, since they are what you click; scene
-  file paths became scene names ("the Hub scene").
+  file paths became scene names ("the Hub scene"). **Resolved:** no change needed; menu names are what you click.
 
 ## Files
 
