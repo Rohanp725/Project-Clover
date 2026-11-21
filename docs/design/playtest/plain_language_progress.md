@@ -85,7 +85,7 @@ Lines whose meaning was not clear. The facts were kept and written as clearly as
 - [x] marks/quicksilver.md
 - [x] marks/redhot.md
 - [x] marks/rotroots.md
-- [ ] marks/rust.md
+- [x] marks/rust.md
 - [ ] marks/seized.md
 - [ ] marks/shiningherb.md
 - [ ] marks/sicklewind.md
