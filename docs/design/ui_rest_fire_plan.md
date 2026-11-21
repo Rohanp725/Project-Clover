@@ -11,7 +11,7 @@ This is a plan only. Nothing here is built, and no decision in it is final until
 **Progress** (sections are committed one at a time; a section not ticked is not written yet)
 
 - [x] 1. What exists now
-- [ ] 2. What the best build screens do (research)
+- [x] 2. What the best build screens do (research)
 - [ ] 3. Three layouts for the Hand and the Way together
 - [ ] 4. A style guide for every menu
 - [ ] 5. The build plan and the checks
@@ -154,3 +154,143 @@ The element trees on a night sky, with a details panel on the right (`p2_rest_ch
 
 The screens are pixel-placed `Text` with three greys and no icons; the Hand names things without saying what they do,
 its stick does not follow the diamond, and nothing is compared; the Way has no screen at all.
+
+---
+
+## 2. What the best build screens do (research)
+
+Principles taken from how other games lay out build, loadout, tree and charm screens, and from the published
+readability guidelines. Each says what it is, where it comes from, and what it means here. They are principles, not
+screens to copy: nothing in section 3 recreates another game's layout. Where a source is a player's critique rather
+than the studio's own word, it says so.
+
+### 2.1 Reading at a distance
+
+**P1. Body text at least 28 px at 1080p; nothing a player must read under 24 px.** Xbox's guideline sets 26 px at
+1080p as the console minimum (18 px for PC), measured from the lowest descender to the highest ascender, with text
+scalable to 200%. The Game Accessibility Guidelines take Amazon's 10-foot rule of 28 px at 1080p as a minimum, not a
+target; the IGDA's accessibility group asks for 32 px. A pad player on a sofa sits about 3 m (10 feet) from the
+screen, a desk player about 60 cm. *Here*: the game is played on a pad, so the rest screens are sized for the sofa:
+body 30, nothing below 24, at 1080p. Today most of the Hand is 16 to 21 px (1.3 item 6). Sources:
+[XAG 101](https://learn.microsoft.com/en-us/xbox/accessibility/xbox-accessibility-guidelines/101),
+[Game Accessibility Guidelines](https://gameaccessibilityguidelines.com/use-an-easily-readable-default-font-size/),
+[IGDA GA-SIG](https://igda-gasig.org/how/platform-level-accessibility-recommendations/text-size/).
+
+**P2. Contrast of 4.5 to 1 against whatever is behind the words.** Microsoft's "Clear Text" tag asks for 4.5:1
+against all backgrounds and a sans-serif face, or an option for a solid backing; WCAG asks the same of body text.
+*Here*: words sit on a solid ink panel, never on the dimmed world; grey "faint" text is checked against the panel,
+not guessed. Source: [Xbox accessibility feature tags](https://learn.microsoft.com/en-us/xbox/accessibility/accessibility-feature-tags).
+
+**P3. Simple, bold, symmetrical icons read at small sizes.** Ghost of Tsushima's icons were drawn from Japanese
+family crests because flat, symmetrical shapes with bold lines stay readable small; its menu art was crushed to
+strong black and white. *Here*: the chart's code-painted icons (`UpgradeIcons.cs`) already follow this; role icons
+and spell icons are made the same way. Source: [Mike Ackerman, Ghost of Tsushima UI](https://mikeackerman.art/project/ghost-of-tsushima-ui).
+
+### 2.2 Equipped and available
+
+**P4. Show what is worn and what is owned in two clearly separate places, on one screen.** Hollow Knight's charm
+screen keeps the equipped charms and their notch bar in a row at the top, the collection below, and the chosen
+charm's picture, cost and words in a pane at the side; equipped charms glow, the rest are dimmed. *Here*: the worn
+Hand and Way stay on screen while choosing; today the Hand swaps its right side for a list and the worn spell
+disappears from view (1.3 item 4). Source: [Hollow Knight wiki, Charms](https://hollowknight.wiki/w/Charms).
+
+**P5. Put a choice's cost on its face, not only behind a selection.** A player's critique of Hollow Knight faults the
+charm screen for showing a charm's notch cost only once it is selected; Hades II prints each Arcana card's cost in
+its corner and fills a gauge as cards are turned on; Hades shows an unaffordable Mirror cost in red. *Here*: mana or
+cooldown on every spell row, Memories on every mark, and a reason on every locked one. Sources:
+[critique, Medium](https://medium.com/@sam.cuevasp/hollow-knight-1578e3ebc781),
+[Hades II wiki, Arcana](https://hades2.wiki.fextralife.com/Arcana_Cards),
+[Hades patch notes](https://hades.fandom.com/wiki/Patch_004).
+
+**P6. A pair where only one can be active is drawn as a pair.** Hades's Mirror of Night was reworked so each talent
+has a flip side and only one of the two is active. *Here*: a bough's two keystones and the Body's two bearings are
+exactly this: both shown side by side, one lit, and one press flips them. Source:
+[Hades Patch 040, the Nighty Night Update](https://hades.fandom.com/wiki/Patch_040).
+
+**P7. Learning and equipping must not hide from each other.** Sekiro's players were confused that a combat art
+learned on the skill screen also had to be equipped on another; one wrote of being "beaten by the menu". Monster
+Hunter Wilds' players complain of separate places to change gear and to read about it. *Here*: the spell, its shape
+and its slot are one decision and belong on one screen; the chart's stopgap that drops a spell "in the next slot
+round" (1.5) goes. Sources: [Sekiro, Steam discussion](https://steamcommunity.com/app/814380/discussions/0/1815422173039024825),
+[Monster Hunter Wilds, Steam discussion](https://steamcommunity.com/app/2246340/discussions/0/599646660884199764/).
+
+### 2.3 Comparing before committing
+
+**P8. Compare against what is worn, value beside value, not by colour alone.** A critique of Elden Ring's equipment
+screen asks for the worn value next to the new one (as Dark Souls's upgrade screen does: old, arrow, new) rather than
+numbers that only change colour; a UX case study notes players open that screen to compare two loadouts, not to read
+one. *Here*: when choosing for a slot, the worn spell and the highlighted one are shown side by side. Sources:
+[Lexeditor issue 801](https://github.com/Lexer-Lux/Lexeditor/issues/801),
+[Elden Ring UX case study](https://medium.com/@haajmuskid/redesigning-elden-rings-ui-a-ux-case-study-a5bd8fb4ba47).
+
+**P9. Say what you lose as well as what you gain.** Diablo IV's advanced comparison lists the properties gained, the
+properties lost, and the change to equipped skills. *Here*: swapping a spell can leave a Hand with no opener, and
+switching aspect puts that bough's marks to sleep; both are said before the press. Sources:
+[Diablo IV advanced tooltips](https://www.d4itemssale.com/news/diablo-4-advanced-tooltips.html),
+[Diablo IV forum](https://us.forums.blizzard.com/en/d4/t/how-to-compare-new-item-with-a-masterworked-item/165341).
+
+**P10. Summarise the whole build at a glance.** The Steel and Element design already asks for role icons so a Hand
+"reads like a hand of cards: two openers and no detonator" (`STEEL_AND_ELEMENT.md` 5.3); Hades II's Grasp gauge
+fills as cards are chosen so the total is always in view. *Here*: a strip of the four role icons with counts, and a
+plain line when a role is missing.
+
+### 2.4 Moving with a pad
+
+**P11. The stick moves where it points.** Controller guides agree: exactly one thing is focused, focus moves to the
+neighbour in the direction pushed, never across the layout, and grids get explicit rules at their edges. *Here*:
+today every direction means "next" (1.3 item 3). Each place on the new screen names its up, down, left and right
+neighbours. Sources: [GameDev.net, menu navigation pass](https://gamedev.net/blogs/entry/2298688-a-menu-navigation-pass-for-controller-players-eight-checks-before-your-first-console-build),
+[Microsoft, gamepad interactions](https://learn.microsoft.com/en-us/windows/apps/develop/input/gamepad-and-remote-interactions).
+
+**P12. Bumpers change the page; face buttons act; the screen opens on the likely choice.** Shoulder buttons switch
+tabs or pages; confirm and back act; a screen opens with focus on what is most often wanted; anything a mouse would
+hover (a tooltip, a comparison) has a pad equivalent on the focused item. *Here*: open on the slot last changed;
+details sit on the focused item, not behind a separate page. Sources: as P11, and
+[StraySpark, game UI principles](https://www.strayspark.studio/blog/game-ui-ux-design-principles).
+
+**P13. Do not loop the cursor round the ends.** An accessibility guide asks menus to stop at their ends, with a sound,
+so players know where they are. *Here*: the Hand's ring of nine wraps today. Source:
+[Accessible Game Design, menus](https://accessiblegamedesign.com/guidelines/menus.html).
+
+**P14. Few presses to read, and every button named where it acts.** Monster Hunter Wilds is criticised for the
+presses needed to read a skill's words; World is praised for showing them on hover. Elden Ring players found a
+useful menu button after hundreds of hours because nothing named it. *Here*: the focused item's words are always
+shown; each button's glyph sits next to the thing it acts on, not in one line at the bottom. Sources:
+[Monster Hunter Wilds, Steam discussion](https://steamcommunity.com/app/2246340/discussions/0/599646477861527777/),
+[Elden Ring UX case study](https://medium.com/@haajmuskid/redesigning-elden-rings-ui-a-ux-case-study-a5bd8fb4ba47).
+
+### 2.5 Words and pictures
+
+**P15. One exact effect line first, the cost next, the long words last.** Hades's aspects are one short sentence
+("Your Special automatically seeks the foe last struck by your Attack.") and one number that grows with rank; Diablo
+IV puts ranges and fine print behind an option. A player's critique of Hades calls its vaguer boon words its worst
+habit, so the short line must still be exact. *Here*: every spell, aspect and keystone gets one "what it does"
+sentence of 15 words or fewer, then cost and timing on one line, then the long words in the details pane. Sources:
+[PSNProfiles, Hades aspects](https://psnprofiles.com/trophy/13658-hades/17-infernal-arms),
+[Scientific Gamer, Hades](https://scientificgamer.com/thoughts-hades/).
+
+**P16. Show numbers when the choice depends on them.** A design analysis of Ghost of Tsushima notes that its charms
+and armour change stats without ever showing a number. That suits a minimal game, not a build screen. *Here*: mana
+and cooldown are always shown; multipliers sit in the details. Source:
+[Game Developer, Ghost of Tsushima design analysis](https://www.gamedeveloper.com/game-platforms/ghost-of-tsushima-design-analysis).
+
+**P17. Keep a build's parts together; show synergy by placing things side by side.** Path of Exile 2 moved support
+gems off the gear into one skill window, each skill's supports in its own row, so what changes a skill sits beside
+it. *Here*: a slot shows its spell, its shape and its role together; the weapon card shows aspect, keystone,
+technique and Temper together; an element's colour ties a spell to the infused strike of that element. Source:
+[Path of Exile 2 wiki, Gems](https://pathofexile2.wiki.fextralife.com/Gems).
+
+**P18. Saved builds are one press away and read as pictures.** Monster Hunter players missed World's loadouts and
+Capcom added "View Loadouts" back to Wilds; Hades II keeps presets for its Arcana. *Here*: the three saved Hands
+become a row of four small icons each, worn with one press, kept with another. Sources:
+[HappyGamer, Wilds loadouts](https://happygamer.com/monster-hunter-wilds-is-finally-fixing-its-most-annoying-menu-problem-130777/),
+[Hades II wiki](https://hades2.wiki.fextralife.com/Arcana_Cards).
+
+**P19. Motion is short and says where focus went.** Hades's menus open in under a second, each in its own style, and
+lead the eye to what matters. *Here*: a 0.12 s slide of the cursor and a soft tick on every move; nothing waits on an
+animation. Sources: [UI Noir: Hades](https://medium.com/@donxu29/wip-9e7289c913e4),
+[WhatCulture, Hades details](https://whatculture.com/gaming/hades-14-awesome-details-you-totally-missed?page=5).
+
+**Not found**: no studio write-up of the Hades weapon rack, Death's Door's menus or Tunic's menus turned up. Tunic's
+illustrated manual (diagrams over paragraphs) is noted only as a mood for the details pane's pictures
+([Tunic wiki, Instruction Booklet](https://tunic.wiki/books/instruction-booklet)).
