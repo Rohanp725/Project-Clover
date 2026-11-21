@@ -83,7 +83,7 @@ namespace Clover.Gameplay
         /// takes (an elite's is half), and of a root's time likewise. Returns the slot, or -1 when nothing was asked.
         /// </summary>
         public int Set(ConditionSpec spec, Component who, int mark = -1, Component link = null, bool answersStruck = false, bool answersEnd = false, float slowShare = 1f,
-            bool answersDeath = false, bool answersAttack = false)
+            bool answersDeath = false, bool answersAttack = false, float pace = -1f)
         {
             if (spec == null || string.IsNullOrEmpty(spec.Id) || spec.Seconds <= 0f) return -1;
             if (who != null) Who = who;
@@ -107,7 +107,8 @@ namespace Clover.Gameplay
             run.Left = Math.Max(fresh ? 0f : run.Left, seconds);
             run.Beat = spec.OnBite ? 0f : spec.Beat;
             run.Flags = spec.Flags;
-            run.Pace = 1f - (1f - Mathf.Clamp01(spec.Pace)) * Mathf.Clamp01(slowShare);
+            // A pace given with the call (a slow by the stacks counted) stands in place of the spec's own.
+            run.Pace = 1f - (1f - Mathf.Clamp01(pace >= 0f ? pace : spec.Pace)) * Mathf.Clamp01(slowShare);
             run.Scale = spec.Scale;
             run.Sight = spec.Sight;
             run.AnswersStruck = answersStruck;

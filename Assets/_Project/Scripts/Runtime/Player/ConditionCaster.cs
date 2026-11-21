@@ -15,13 +15,14 @@ namespace Clover.Player
     public static class ConditionCaster
     {
         /// <summary>Sets it; returns on how many it was set.</summary>
-        public static int Cast(UpgradeEffect effect, Component subject, Vector3 centre, PlayerCombat combat, LaySource source, HashSet<IDamageable> scratch)
+        public static int Cast(UpgradeEffect effect, Component subject, Vector3 centre, PlayerCombat combat, LaySource source, HashSet<IDamageable> scratch, int stacks = 1)
         {
             var spec = effect != null ? effect.State : null;
             if (spec == null || string.IsNullOrEmpty(spec.Id) || combat == null) return 0;
+            float pace = PaceFor(spec, stacks);
             AnswersOf(effect, spec.Id, out bool struck, out bool ended, out bool died, out bool attacked);
             int mark = effect.Owner != null ? effect.Owner.Index : -1;
-            if (!spec.ToOthers && effect.Radius <= 0f) return Set(effect, spec, subject, null, mark, struck, ended, died, attacked, combat, source) ? 1 : 0;
+            if (!spec.ToOthers && effect.Radius <= 0f) return Set(effect, spec, subject, null, mark, struck, ended, died, attacked, combat, source, pace) ? 1 : 0;
 
             // Round the trigger's enemy: the nearest first, as many as the effect allows (all within the radius when it names none).
             scratch.Clear();
@@ -36,19 +37,26 @@ namespace Clover.Player
                 scratch.Add(one);
                 // Only those carrying what the effect seeks (Chokedamp's damp runs to the shaken alone).
                 if (effect.LeapsTo != AfflictionKind.None && !(near is IAfflictable seeker && seeker.Afflictions.Has(effect.LeapsTo))) continue;
-                if (Set(effect, spec, near, spec.ToOthers ? subject : null, mark, struck, ended, died, attacked, combat, source)) set++;
+                if (Set(effect, spec, near, spec.ToOthers ? subject : null, mark, struck, ended, died, attacked, combat, source, pace)) set++;
             }
             scratch.Clear();
             return set;
         }
 
+        /// <summary>
+        /// The pace a condition is set at for <paramref name="stacks"/> counted: by <see cref="ConditionSpec.SlowPerStack"/>
+        /// when it has one (Cairn: 15% a stone), never below 0.05; -1 (the spec's own pace) otherwise.
+        /// </summary>
+        public static float PaceFor(ConditionSpec spec, int stacks) =>
+            spec != null && spec.SlowPerStack > 0f ? Mathf.Max(0.05f, 1f - spec.SlowPerStack * Mathf.Max(1, stacks)) : -1f;
+
         private static bool Set(UpgradeEffect effect, ConditionSpec spec, Component who, Component link, int mark, bool struck, bool ended, bool died, bool attacked,
-            PlayerCombat combat, LaySource source)
+            PlayerCombat combat, LaySource source, float pace)
         {
             if (!(who is IAfflictable afflictable)) return false;
             var set = afflictable.Afflictions;
             if (!Takes(spec, set)) return false;
-            if (set.Conditions.Set(spec, who, mark, link, struck, ended, ShareOf(set), died, attacked) < 0) return false;
+            if (set.Conditions.Set(spec, who, mark, link, struck, ended, ShareOf(set), died, attacked, pace) < 0) return false;
             if (effect.Affliction != AfflictionKind.None && effect.Stacks > 0)
                 CombatEvents.Report(who, effect.Affliction, effect.Stacks, set.Lay(effect.Affliction, effect.Stacks + combat.ExtraStacks, 0f, combat.AfflictionPower, source, who), source);
             return true;

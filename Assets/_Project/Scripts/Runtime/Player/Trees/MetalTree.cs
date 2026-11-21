@@ -76,8 +76,9 @@ namespace Clover.Player.Trees
 
             // The detonator: a nova that strikes for nothing; each notched enemy it reaches has bronze poured into its cracks
             // for each notch, is held, and its notches are spent. The count comes first and the spend last, so the pour is
-            // counted before the notches go. NEEDS: the hold as 0.4 s a notch (count-from-depth); a lip of bronze tipping
-            // over each enemy and a crust cooling on it (form-pieces).
+            // counted before the notches go; the hold is 0.4 s a notch (PerStack). NEEDS: a quarter of the hold on a god or an
+            // elite (count-from-depth; now the enemy's own freeze share), a lip of bronze tipping over each enemy and a crust
+            // cooling on it (form-pieces).
             SpellBranch.Add(to, E, PouredBronze, "Poured Bronze", SpellRole.Detonator, BranchPattern.MiddleA, CounterCut, SpellForms.Nova,
                 new SpellSpec { Radius = 8f, Delay = 0.4f, Damage = 0f, Stagger = 0f, Stacks = 0 },
                 "You raise a hand. Over every notched enemy within eight metres a lip of molten bronze tips in the air, then pours into its cracks: 10 damage, and 12 damage and 15 stagger for each notch. The notches are spent. The bronze sets, and the enemy is held under a crust cooling from cherry red to black, longer for each notch it carried.",
@@ -114,7 +115,7 @@ namespace Clover.Player.Trees
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = S, Do = UpgradeAction.Spend, Affliction = S, CountOnly = true },
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = S, Do = UpgradeAction.Burst, PerStack = true, Radius = 0.6f, Damage = 12f, Stagger = 15f, Stacks = 0 },
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = S, Do = UpgradeAction.Burst, Unseen = true, Radius = 0.6f, Damage = 10f, Stagger = 0f, Stacks = 0 },
-                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = S, Do = UpgradeAction.Hold, Seconds = 0.8f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = S, Do = UpgradeAction.Hold, PerStack = true, Seconds = 0.4f },
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = S, Do = UpgradeAction.Spend, Affliction = S },
                 });
 

@@ -29,6 +29,11 @@ namespace Clover.Gameplay
         public AfflictionKind Keeps = AfflictionKind.None;
         /// <summary>While it runs, this affliction can be laid <see cref="DeepensBy"/> deeper than its usual depth (Rust's notches past three, up to five).</summary>
         public AfflictionKind Deepens = AfflictionKind.None;
+        /// <summary>
+        /// Above zero, its slow is this share for each stack counted when it is set (Cairn's 15% a stone), in place of
+        /// <see cref="Pace"/>; set by an effect marked PerStack. Never slower than 5% of its pace.
+        /// </summary>
+        public float SlowPerStack;
         public int DeepensBy;
         /// <summary>It lasts only while the enemy carries this (and <see cref="While2"/>): once one is gone it ends, and its end is told ("while both last").</summary>
         public AfflictionKind While = AfflictionKind.None;

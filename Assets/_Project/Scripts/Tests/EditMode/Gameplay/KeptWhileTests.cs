@@ -2,6 +2,7 @@ using System.Linq;
 using Clover.Gameplay;
 using Clover.Player;
 using Clover.Player.Growth;
+using Clover.Player.Trees;
 using Clover.Player.Trees.Duo;
 using NUnit.Framework;
 
@@ -154,6 +155,25 @@ namespace Clover.Tests
             // The climbs it answers are the ones the stone follows.
             Assert.IsTrue(Upgrade.All.SelectMany(upgrade => upgrade.Effects).Any(effect => effect.On == UpgradeTrigger.ConditionEnded && effect.Condition == Clover.Player.Trees.Reactions.StoneClimbed
                 && effect.Do == UpgradeAction.Condition && effect.State != null && effect.State.Id == Clover.Player.Trees.Reactions.Stone));
+        }
+
+        [Test]
+        public void ASlowSetByTheStacksCountedIsFifteenPercentAStone()
+        {
+            var spec = new ConditionSpec { Id = "test.heap", Seconds = 4f, Pace = 0.7f, SlowPerStack = 0.15f };
+            Assert.AreEqual(0.85f, ConditionCaster.PaceFor(spec, 1), 1e-5f);
+            Assert.AreEqual(0.55f, ConditionCaster.PaceFor(spec, 3), 1e-5f);
+            Assert.AreEqual(0.05f, ConditionCaster.PaceFor(spec, 99), 1e-5f, "never stopped dead");
+            Assert.AreEqual(-1f, ConditionCaster.PaceFor(new ConditionSpec { Pace = 0.7f }, 3), "a spec with no per-stack slow keeps its own pace");
+            var set = NewEnemy();
+            set.Conditions.Set(spec, null, 1, null, false, false, 1f, false, false, ConditionCaster.PaceFor(spec, 3));
+            Assert.AreEqual(0.55f, set.Conditions.Pace, 1e-4f, "three stones, 45% slower");
+            var cairn = Upgrade.All.SelectMany(upgrade => upgrade.Effects).Single(effect => effect.State != null && effect.State.Id == EarthTree.Heaped);
+            Assert.IsTrue(cairn.PerStack);
+            Assert.AreEqual(0.15f, cairn.State.SlowPerStack, 1e-5f);
+            var bronze = Upgrade.ById(MetalTree.PouredBronze).Effects.Single(effect => effect.Do == UpgradeAction.Hold);
+            Assert.IsTrue(bronze.PerStack, "Poured Bronze holds for each notch");
+            Assert.AreEqual(0.4f, bronze.Seconds, 1e-5f);
         }
 
         [Test]

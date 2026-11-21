@@ -102,7 +102,7 @@ namespace Clover.Player.Trees
 
             // The larger spell: the stamp is a nova that strikes for nothing; each shaken enemy it reaches has a stone fall on
             // it for each depth of Tremor, is heaped and slowed, and its Tremor is spent. The count comes first and the spend
-            // last, so the stones are counted before the Tremor goes. NEEDS: the slow as 15% a stone (count-from-depth).
+            // last, so the stones are counted before the Tremor goes; the slow is 15% a stone (ConditionSpec.SlowPerStack).
             SpellBranch.Add(to, E, Cairn, "Cairn", SpellRole.Detonator, BranchPattern.MiddleB, HeavyHand, SpellForms.Nova,
                 new SpellSpec { Radius = 10f, Delay = 0.3f, Damage = 0f, Stagger = 0f, Stacks = 0 },
                 "You stamp the weapon's butt, and stones fall from the Cailleach's apron onto every enemy within ten metres that carries Tremor, one stone for each depth. Each stone lands for 12 damage and 15 stagger, and the heap for 10 more. The Tremor is spent, and the stones stay heaped on it for four seconds, each slowing it 15%. 40 mana.",
@@ -138,7 +138,7 @@ namespace Clover.Player.Trees
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = T, Do = UpgradeAction.Spend, Affliction = T, CountOnly = true },
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = T, Do = UpgradeAction.Falling, PerStack = true, Radius = 0.8f, Delay = 0.4f, Damage = 12f, Stagger = 15f, Stacks = 0 },
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = T, Do = UpgradeAction.Burst, Unseen = true, Radius = 0.6f, Delay = 0.4f, Damage = 10f, Stagger = 0f, Stacks = 0 },
-                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = T, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Heaped, Seconds = 4f, Pace = 0.7f } },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = T, Do = UpgradeAction.Condition, PerStack = true, State = new ConditionSpec { Id = Heaped, Seconds = 4f, Pace = 0.7f, SlowPerStack = 0.15f } },
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = T, Do = UpgradeAction.Spend, Affliction = T },
                 });
 

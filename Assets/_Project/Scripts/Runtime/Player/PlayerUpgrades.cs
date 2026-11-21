@@ -1741,7 +1741,8 @@ namespace Clover.Player
                 }
                 case UpgradeAction.Hold:
                 {
-                    float seconds = Or(effect.Seconds, 1.5f);
+                    // PerStack: held for each stack counted (Poured Bronze's 0.4 s a notch).
+                    float seconds = Or(effect.Seconds, 1.5f) * per;
                     if (effect.Radius > 0f) Holds += combat.HoldArea(centre, effect.Radius, seconds);
                     else if (subject is IAfflictable gripped && gripped.Afflictions.Hold(seconds)) Holds++;
                     // An unseen hold is drawn by its reaction's look alone: no ring (Seized, the owner's "remove the circles").
@@ -1889,7 +1890,7 @@ namespace Clover.Player
                     if (subject is IFlinchable flinching && flinching.Flinch(Or(effect.Seconds, 0.4f))) Flinches++;
                     break;
                 case UpgradeAction.Condition:
-                    ConditionsSet += ConditionCaster.Cast(effect, subject, centre, combat, laying, conditionScratch);
+                    ConditionsSet += ConditionCaster.Cast(effect, subject, centre, combat, laying, conditionScratch, per);
                     break;
                 case UpgradeAction.CutCooldowns:
                 case UpgradeAction.ResetCooldown:
