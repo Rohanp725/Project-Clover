@@ -12,7 +12,7 @@ the gap. Numbers this doc adds where the design gave none are marked **(P)** and
 - [x] 1. What exists and what's left
 - [x] 2. The systems every Way uses
 - [x] 3. The Katana's Way, move by move
-- [ ] 4. The other nine Ways
+- [x] 4. The other nine Ways
 - [ ] 5. Build order and checks
 - [ ] 6. Owner questions
 
@@ -835,8 +835,177 @@ spent. *Text*: "Your drums do not fade after a fight. Once all seven are beaten,
 | 20 | `guard_hit_katana`, `guard_perfect_katana` | every guard; the Answer's window starts on the perfect one | No (E13 retrofit) |
 | 21 to 26 | `attack_katana_turning_cut`, `attack_katana_rising_cut`, `roll_katana_slide`, `attack_katana_riposte`, `attack_katana_through_gap`, `attack_storm_falling_cut` | the Stream's two new cuts, Ebb Step, the Answer's two moves, the Storm's third cut | No: question Q20 |
 
-Up to 27 clips, all built in code by the Forge. Of the Katana's 62 marks, 15 are whole today (the five element marks,
-the temper stats, Sharp Draw, Light Wrist, Long Blade, Turned Edge, Settled Hands once 2.0 is wired) and the rest are
-ledgered stand-ins; none is reported done until it is filmed and checked (section 5).
+Up to 27 clips, all built in code by the Forge. Of the Katana's 62 marks, 15 are whole as written: the five element
+marks and the temper ranks' stats work in play today, and Sharp Draw, Light Wrist, Long Blade, Turned Edge and Settled
+Hands will once 2.0 wires the patches in (Temper III and V's own lines also wait on 2.0, and V's held pose on Q5). The
+rest are ledgered stand-ins; none is reported done until it is filmed and checked (section 5).
+
+---
+
+## 4. The other nine Ways
+
+Each follows the Katana's checklist (section 5) one Way a session (task 5.7+), after the Katana is reviewed. The
+outlines are the decided design (`way_plan.md` sections 2 to 10, fork option 1 and god's option (a) everywhere, the
+Swath's keystone renamed The Long Stroke). "WP" is `way_plan.md` and "W" is `weapons.md`, with line numbers. The gaps
+below are the ones visible now, so their questions can be asked early (section 6, Q24 on).
+
+**Across all nine.** About 13 marks draw a ring as their effect and about 9 call for white or "pale"; a few draw on
+the weapon itself. Every weapon's second basic is the same roll-then-R2 shove (45 stagger, a guard broken 1 s), and
+most fourth basics are "its next attack comes late"; the trunk frame was decided (G4), but under the no-reskin rule
+each needs its own body and its own way of doing it. Several marks need enemy states nothing has yet: dazed,
+disarmed, held or pinned (E12), hooked, and anchors in the scenery. Of the gods' weapons only the Storm Katana and the
+Sun-Spear are built (`Runtime/Player/NotBuiltYet.cs` lists the rest); the War Fan and Kazehaya's Fan are not built at
+all.
+
+### 4.1 Massive Sword (16 new clips)
+
+The trunk gives Roll and Rise, Shoulder Into Them, the Parierhaken (the side-hooks catch a weapon; its next attack
+0.5 s late) and Brace. **The Doppelsöldner** (in place of the Wall) carves crowds: The Forlorn Hope (six chained
+sweeps into a two-turn whirl) or Durendal Cleaves the Mountain (one blow splitting the floor down a 7 m lane).
+**Half-Sword** swaps grips: Two Swords in One (the grips woven in one chain) or The Cross Comes Down (the reversed sword
+as a hammer, three blows). **The Trade** wants to be hit: Bear-Shirt (trade all the time, with the roar) or Tied to
+the Stone (the last stand below a quarter health). **Brannoch's Standing Stone** (Earth) plants stones: The Giant's
+Dance (every stone turns round you) or The Giant's Throw (a stone heaved 12 m). Technique: The Return Blow, from the
+Bargain (Earth).
+
+- Rings: Bear-Shirt's "red shout ring 4 m" (WP 475), the stones' dust rings (WP 497, 511, 522).
+- On the blade: the Trade's opening says "a red spark runs down the blade" on a trade (WP 460); Two Swords in One
+  flashes the hand sliding along the blade (WP 440).
+- No numbers for the Forlorn Hope's whirl (WP 402) or Bear-Shirt's roar (WP 475).
+- Engine: dazed (Ring the Helm), a weapon knocked aside, a grip change, stones that block shots.
+- Not built: Brannoch's Stone.
+
+### 4.2 Scythe (17)
+
+The trunk gives Mow Out of the Roll, the Snath Butt, Haft Spin and Step to the Tip. **The Swath**: Mow the Field
+(stroke after stroke through a crowd) or The Long Stroke (one stroke 6 m round, 40 at the tip). **The Hook**: Nothing
+Leaves the Curve (a crowd held at the tip) or Fell the Giant (three Hamstrings bring an elite down). **The Harvest**:
+The Last Sheaf (a straw decoy) or The Threshing Floor (eight sheaves beaten out). **Carnwyn's Golden Scythe** (Life):
+The Wild Hunt (a horn, and the herd rides down a lane) or The Grove Answers (every thorn stand bursts into gold
+flowers). Technique: Over the Shoulder, from the Wicker Man (a Proposal).
+
+- Rings: Mow the Field's ring stroke (WP 570), the Threshing Floor's ring of chaff (WP 644), Carnwyn's ring of thicket
+  (WP 660). The Long Stroke is a full turn by its mechanic; its look must be a sweep, not a drawn ring.
+- White: "the white hounds", "hounds of white bark" (WP 676, 684).
+- On the weapon: sheaves "tied on the haft" (WP 626).
+- Overlap: Haft Spin repeats the Spear's Spin the Shaft (WP 549, 714); Glean and Harvest Home heal beside Life's tree.
+- Engine: Hooked; held (E12); knocked down exists (Phase 3).
+- Not built: Carnwyn's Scythe.
+
+### 4.3 Great Spear (19)
+
+The trunk gives Rising Point, the Sauroter, Spin the Shaft and Out to the Point. **The Long Point**: Nobody Inside
+(no one stands inside the point) or The Hundred Birds (a fan of quick thrusts, then one 7 m thrust). **The Pole**:
+Never Touch the Ground (vault from back to back) or As Long as You Like (the shaft grows to 9 m for one slap).
+**The Cross**: Thrust, Cleave, Slash (three uses on one enemy) or The Moon in the Pond (the crossbar drags a crowd in).
+**Khepharu's Sun-Spear** (Fire, built as a weapon): Bare-Handed King (burning fists while the spear stands) or The
+Winged Disc (the thrown spear circles the enemy in fire). Technique: Hold the Gate, from the Champion of the Gate
+(decided, task 5.3).
+
+- Rings: Nobody Inside's "pale ring at 1.4 m" (WP 735), Plant the Noon's ring of fire (WP 831), the Winged Disc and
+  the Ring of the Disc (WP 842, 844), the Moon in the Pond's ripples (WP 807).
+- Reskin: Bare-Handed King's jab and cross "reuse the fists'" (WP 841).
+- Overlap the design itself flags: Plant the Noon beside The Obelisk and Hold the Gate.
+- No numbers for Nobody Inside's thrust or Bare-Handed King's backhand.
+- Check: the Champion already shows `champion_plant` into `champion_reap` (the task's "check").
+
+### 4.4 Great Hammer (12)
+
+The trunk gives Roll and Drop, Haft Shove, Butt Spike and Raised Early. **The Quake**: The Floor Gives Way (three drops
+on one spot break the floor) or The Earth-Shaker Walks (a quake that strides forward). **The Swing**: Never Let It
+Stop (the endless turn, with the dust devil) or It Always Comes Back (the thrown hammer finds three). **The Anvil**:
+The Anvil Does Not Move or Three Strokes on the Anvil (three rings that call the giant). **The Smith's Hammer** (Metal;
+Heat from 0 to 100): The Smith's Gift (a blade forged in the fight) or Drive the Nail (a rivet struck home).
+Technique: The Smith's Tap, from the first golden handmaiden (a Proposal).
+
+- Rings: the Earth-Shaker's ring of dust (WP 898), the Anvil's ripple of sound (WP 961), Three Strokes' rings (WP 964).
+- White and Metal: the Smith's Gift's "white-orange" blade, Drive the Nail's "white-hot" rivet (WP 1004, 1006). Heat's
+  molten drops and sparks read as fire; Metal should be only a glint or a small forged blade, and the Gift raises a
+  3.4 m sword.
+- Reskin: the Smith's Gift swings the Massive Sword's sweeps (WP 998); Drive the Nail is two beats like The Smith's Tap
+  and Quench.
+- No numbers for the Floor Gives Way's crater or Never Let It Stop's turns once stamina is free.
+- Not built: the Smith's Hammer and Heat.
+
+### 4.5 Twin Knives (14)
+
+The trunk gives Out of the Spin, Knee and Elbow, Throw a Knife and Parry Breath. **The Shadow** (Baguazhang): They
+Never See You (a crossing leaves the enemy unable to turn) or Eight Changes (cross a crowd one back at a time).
+**The Rattle** (kali): The Hundred Cuts (nicks counted to 100 and opened at once) or The Woven Storm (a walking whirl
+of cuts). **The Reverse Grip** (Wing Chun): Take Their Blade (disarm and throw it back) or Guard and Strike as One
+(every block answered). **The Alchemist's Hooks** (Poison): The Last Elixir (all five stances at once) or Heaven and
+Earth (the joined hooks whirled overhead). Technique: Fillet, from the blade brother (decided).
+
+- White: the Rattle's "white tick" nicks and the Hundred Cuts' "white lattice" (WP 1079, 1094).
+- Floating: the Woven Storm's lattice in the air round you (WP 1097); Eight Changes' figure on the floor (WP 1060).
+- Poison's look: mercury beads (WP 1167, 1174) read as Metal, not miasma.
+- Overlap the design flags: Guard and Strike as One beside the Katana's Kiri-otoshi (6.3); Five Vials beside
+  Fūrinkazan.
+- Engine: disarmed; a stance counter for five flags.
+- Not built: the Alchemist's Hooks.
+
+### 4.6 Great Bow (13)
+
+The trunk gives Roll and Loose, Stave Shove, the Hand-Thrown Arrow and Kyūdō Breath. **The Stave** (the bow-spear,
+yumi-yari): No Range (point-blank shots throw the enemy) or The Spear That Shoots (every thrust looses an arrow).
+**The Snare**: Gleipnir (lines that bind) or The Trapper's Ground (lines that shoot). **The Long Draw**: Through
+Twelve Axes (one arrow pins a line) or Yoichi's Fan (the far shot). **The Huntress's Bow** (Ice): Skaði's Circle
+(skate round the quarry loosing five) or Ski and String (skate on, loosing fans). Technique: Only the Eye, from the
+Teacher (decided; not built as an enemy).
+
+- Code against design: the Stave's opening changes a third stave light, but the bow has two (`attack_bow_1` and
+  `attack_bow_2`, `Weapons.cs:481` to 482).
+- Rings: Yoichi's Fan's ring at 10 m (WP 1290), Skaði's ring of frost (WP 1329), Only the Eye's closing ring.
+- White: "blue-white ice" (WP 1308).
+- Engine: pinned or held (E12), the skate dodge, a held aim, a quarry mark.
+- No numbers for Through Twelve Axes, Ski and String's arrows, Gleipnir's bind.
+- Not built: the Huntress's Bow.
+
+### 4.7 Chain Sickle (17)
+
+The trunk gives Roll and Snap, the Chain Bar, Wrap the Weapon and the Taut Guard. **The Weight**: Always Turning (a
+second ring of the weight) or The Shooting Star (the weight falls as a meteor). **The Bind** (hojōjutsu): Whirled and
+Flung (a bound body as a flail) or Nothing Gets Away (every weight blow binds). **The Sickle** (Isshin-ryū): Reap the
+Neck or Near and Far (every sickle light also snaps the weight). **The Fisher's Jawbone** (Water): Fish Up the Island
+(an islet hauled up on a swell) or Noose the Sun (five lines, all slowed). Technique: Hook and Hold, from the hook
+brother (decided).
+
+- Rings: the weight's turning reach is a mechanic; Always Turning's "second ring" must read as the weight's path, not
+  a drawn ring.
+- Engine: Hooked and anchors in the scenery (W 17); Round the Post needs an anchor and sits near The Line Carries You.
+- Overlap: Whirled and Flung beside the Fists' Milo's Bull.
+- No numbers for Nothing Gets Away.
+- Not built: the Jawbone.
+
+### 4.8 Fists (10)
+
+The trunk gives Roll Into the Body, the Push Kick, the Elbow and Roll With It, and two techniques (one set on the
+chord at a fire). **Wrapped Hands**: Stand In (the slip is the dodge) or No Rounds (punch without stopping, the
+haymaker at twenty). **The Hold**: Herakles and Antaeus (elites lifted and crushed) or Milo's Bull (a body lifted and
+slammed into a crowd). **The Armament** (the third bough, plain size): Golden Bell (a coat that grows) or Every Blow
+Returned (blows stored and given back). No god's bough. Techniques: Bear Them Down (the pack's alpha) and The
+Scorpion's Tail (the Undying Emperor), both teachers Proposals.
+
+- The cleanest Way against the look rules.
+- Engine: a grab and a lift (the enemy held in the air, E12); the slip dodge; a leap onto an enemy.
+- Which technique is on the chord before either is chosen (5.1 Q7: both, the chord takes the first) needs its order
+  set.
+- The Armament is its own weapon on the rack and counts as the Fists' kind (5.1 Q5).
+
+### 4.9 War Fan (11, plus about 12 for the base set)
+
+Not built at all; `docs/design/weapons.md` has no War Fan section, and the base set is a Proposal (W 1045). The trunk
+gives Open Out of the Roll, the Rib Strike, Fan the Eyes and Read the Wind. **The Iron Fan**: Ushiwaka on the Bridge
+(every turned blow strikes back) or The Thousandth Sword (ten delays, then one sword-blow). **The Commander's Fan**:
+The Field Is Mine or Fūrinkazan (four stances in turn). **Kazehaya's Fan** (Wind): The Gale Road (ride a gale 14 m)
+or Storm of Leaves (a cone of cutting leaves). Technique: Turn the Spear, from the Hermit of the Pass.
+
+- The base moveset must be designed and built first (decided, 10.4), about a dozen clips.
+- Input clash: the plain fan's Thrown Fan is R2 held 0.4 s (W 1049) and the Commander's signal is R2 held 0.3 s
+  (WP 1688).
+- Wind's look: "a pale streak" and "thin cut of wind" (WP 1741, 1742) are lines; Wind is curls.
+- Rings: Ushiwaka's ring of dust (WP 1670). On the weapon: notches cut on its ribs (WP 1673).
+- The Hermit is a placeholder in W 14 and W 1114 but decided in WP 1638 and `README.md`; one of them is stale.
+- Engine: disarmed; cannot guard.
 
 ---
