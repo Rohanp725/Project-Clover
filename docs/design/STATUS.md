@@ -47,7 +47,7 @@ One page that lists everything done, in progress, parked or not started, so noth
 
 - **The combat system has run far ahead of the world.** Combat is about 5 of 6 phases deep, with hundreds of marks and 55 reactions. The world is 1 land of 11, and that one land isn't signed off.
 - **Each new mark adds stand-ins.** Clear them faster than new ones are made.
-- **Suggested order once usage resets:**
+- **The order, agreed by the owner on 2026-11-21:**
   1. Push.
   2. Effects round 4.
   3. Finish stand-in passes 2–4.
