@@ -5,75 +5,75 @@ Turned to Stone (`docs/design/steel/pairs_d3.md`, "Earth and Dark"). Drawn in th
 are both carried.
 
 ## turnedtostone.shape
-**What it does.** Opens Turned to Stone's two shapes. At a rest fire you choose which one your Turned to Stone wears, and from then on it runs instead of the plain one. Both turn it to stone as the plain one does. **The King's Men**: when your heavy blow breaks it out, the curse moves on to the nearest enemy, so a crowd falls one at a time. **Grave Marker**: a turned enemy that dies leaves its stone standing, cursing those near.
+**What it does.** Unlocks two new shapes for Turned to Stone. At a rest fire, you pick which shape your Turned to Stone uses. From then on, it uses that shape instead of the plain one. Both shapes still turn the enemy to stone like the plain one. **The King's Men**: when your heavy blow breaks it out, the curse moves on to the nearest enemy, so a crowd falls one at a time. **Grave Marker**: an enemy that dies while turned to stone leaves its stone standing, Cursing enemies nearby.
 
-**When it happens.** Every time Turned to Stone fires (Tremor landing on a cursed enemy, or a Curse on a shaken one) while Earth and Dark are both carried. Before this mark is bought, or with only one of the two carried, the plain Turned to Stone runs.
+**When it happens.** Every time Turned to Stone goes off while you carry both Earth and Dark. Turned to Stone goes off when Tremor lands on a Cursed enemy, or when a Curse lands on a shaken one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Turned to Stone.
 
-**The numbers.** Mix, 3 Shards. Both: over 2 seconds it slows to a stop, then stands as stone for 1.5 seconds (held, double stagger from weapon blows, half damage from spells); a heavy blow breaks it out for 50 stagger. The King's Men: then a Curse and a Tremor leap to the nearest enemy within 5 metres, which on purpose may begin to turn. Grave Marker: if it dies as stone, a patch 3 metres across stands 10 seconds and Curses what stands in it every 2 seconds. Turned to Stone rests 6 seconds on each enemy.
+**The numbers.** Mix, 3 Shards. Both shapes: over 2 seconds, the enemy slows to a stop, then stands as stone for 1.5 seconds. While it is stone, it is held in place, takes double stagger from weapon blows, and takes half damage from spells. A heavy blow breaks it out for 50 stagger. The King's Men: then a Curse and a Tremor jump to the nearest enemy within 5 metres. This is on purpose: that enemy may start turning to stone. Grave Marker: if the enemy dies while it is stone, a patch 3 metres across stays for 10 seconds and Curses whatever stands in it every 2 seconds. After Turned to Stone goes off on an enemy, it can't go off on that enemy again for 6 seconds.
 
-**Works with.** Grasp and Stone Rise to bring the two, Grave Dirt, Broken Idol, Stone Underfoot.
+**Works with.** Grasp and Stone Rise to set it up, Grave Dirt, Broken Idol, Stone Underfoot.
 
-**Example.** A pack: The King's Men, and break them out one by one. A doorway: Grave Marker, and curse all who come through.
+**Example.** A pack: use The King's Men, and break them out one by one. A doorway: use Grave Marker, and Curse everyone who comes through.
 
-**Not built yet.** The grave stone does not yet stand in the way.
+**Not built yet.** The grave stone doesn't block the way yet.
 
 ## turnedtostone.gravedirt
-**What it does.** Heavy blows on a Cursed enemy shake it; the blow that ends a chain on a shaken enemy Curses it.
+**What it does.** Heavy blows on a Cursed enemy shake it. The blow that ends a chain of blows on a shaken enemy Curses it.
 
-**When it happens.** Every heavy blow on a cursed enemy, and the last blow of each chain on a shaken one.
+**When it happens.** Every heavy blow on a Cursed enemy, and the last blow of each chain on a shaken one.
 
 **The numbers.** Mix, 3 Shards. One Tremor, or one Curse.
 
 **Works with.** Turned to Stone, Heavy Curse, Broken Idol.
 
-**Example.** Curse a soldier and one heavy blow sets the stone climbing.
+**Example.** Curse a soldier, and one heavy blow starts the stone climbing up it.
 
 ## turnedtostone.brokenidol
-**What it does.** A finisher on an enemy just broken out of stone heals you and Curses every enemy near.
+**What it does.** A finisher on an enemy that was just broken out of stone heals you and Curses every enemy nearby.
 
-**When it happens.** Each finisher that lands on an enemy carrying both Tremor and a Curse.
+**When it happens.** Each finisher that lands on an enemy that has both Tremor and a Curse.
 
-**The numbers.** Mix, 3 Shards. You heal 10; everything within 5 metres is Cursed.
+**The numbers.** Mix, 3 Shards. You heal 10, and everything within 5 metres is Cursed.
 
-**Works with.** Turned to Stone (its break is often a kneel), Grave Dirt.
+**Works with.** Turned to Stone (breaking out often leaves the enemy on its knees), Grave Dirt.
 
-**Example.** Break a brute out of stone, finish it, and the pack round it is cursed.
+**Example.** Break a brute out of stone, finish it, and the pack around it is Cursed.
 
-**Not built yet.** It answers any finisher on an enemy carrying both, not only one just broken out of stone.
+**Not built yet.** For now, it works on any finisher on an enemy that has both, not only one just broken out of stone.
 
 ## turnedtostone.heavycurse
-**What it does.** Stone climbs half a second faster.
+**What it does.** The stone climbs up the enemy half a second faster.
 
-**When it happens.** Each time Turned to Stone fires.
+**When it happens.** Each time Turned to Stone goes off.
 
-**The numbers.** Mix, a minor, 1 Shard. The stone climbs in half a second, not one, so the enemy is caught sooner. The same in both shapes.
+**The numbers.** Mix, a minor mark, 1 Shard. The stone climbs in half a second instead of one, so the enemy is caught sooner. It's the same in both shapes.
 
-**Works with.** Grave Dirt, which it grows from, Turned to Stone.
+**Works with.** Grave Dirt, which it comes after on the chart, Turned to Stone.
 
-**Example.** The stone closes before the enemy can strike.
+**Example.** The stone closes over the enemy before it can attack.
 
 ## turnedtostone.forgive
-**What it does.** An enemy turned to stone once keeps its Tremor and its Curse until it dies.
+**What it does.** An enemy that has been turned to stone once keeps its Tremor and its Curse until it dies.
 
-**When it happens.** Always on once learned, while Earth and Dark are both carried.
+**When it happens.** Always on once you learn it, while you carry both Earth and Dark.
 
 **The numbers.** Mix, keystone, 5 Shards.
 
 **Works with.** Turned to Stone, Grave Dirt.
 
-**Example.** Turn a captain once and it turns again every six seconds.
+**Example.** Turn a captain to stone once, and it turns again every six seconds.
 
-**Not built yet.** It does nothing yet: afflictions kept for the rest of the fight are still to come.
+**Not built yet.** It does nothing yet. The game can't yet keep afflictions on an enemy for the rest of the fight.
 
 ## turnedtostone.underfoot
-**What it does.** You stride to the enemy you face, leaving grey dust footprints, and set your foot on its shadow: it is Cursed and shaken two deep, and stone climbs it.
+**What it does.** You stride to the enemy you face, leaving grey dusty footprints, and step on its shadow. It is Cursed and gets two stacks of Tremor, and stone starts climbing up it.
 
-**When it happens.** From a spell slot, while Earth and Dark are both carried: cast it with that slot's button (hold L2 and a face button, or 1 to 4). Its first landing charges your blade with Earth.
+**When it happens.** Cast it from a spell slot while you carry both Earth and Dark. Press that slot's button (hold L2 and a face button, or press 1 to 4). The first time it lands, it charges your blade with Earth.
 
-**The numbers.** Mix, duo spell, movement, 5 Shards. No mana: it waits 10 seconds after a cast, less with weapon play. Up to 8 metres: 6 damage, 10 stagger, two Tremor and two Curses.
+**The numbers.** Mix, duo spell, movement, 5 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. It reaches up to 8 metres. It deals 6 damage, 10 stagger, two Tremor and two Curses.
 
 **Works with.** Turned to Stone and its shapes, Broken Idol.
 
-**Example.** Step to the captain at the back and leave it turning.
+**Example.** Step to the captain at the back, and leave it turning to stone.
 
-**Not built yet.** It is not yet turned to stone at once past its climb, those you pass are not slowed, and the heavy blow that breaks it out does not yet strike for double stagger.
+**Not built yet.** The enemy isn't turned to stone right away yet, skipping the climb. Enemies you pass aren't slowed yet. The heavy blow that breaks it out doesn't deal double stagger yet.

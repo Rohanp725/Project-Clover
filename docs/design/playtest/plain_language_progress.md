@@ -98,7 +98,7 @@ Lines whose meaning was not clear. The facts were kept and written as clearly as
 - [x] marks/thegroundgives.md
 - [x] marks/thegrudge.md
 - [x] marks/thermalshock.md
-- [ ] marks/turnedtostone.md
+- [x] marks/turnedtostone.md
 - [ ] marks/venomrime.md
 - [ ] marks/water.md
 - [ ] marks/wind.md
