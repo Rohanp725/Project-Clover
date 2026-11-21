@@ -88,3 +88,24 @@ current text is the one that stands.
 
 - Thread `14603175-efef`, 14:29, Massive Sword tab, Poison row, Trail alone picture.
   - "Good but the charged effect after the swing is old poison visuals and needs to be completely reworked"
+
+## Owner's answers and the fix plan (2026-11-21)
+
+The final big swing in every film is the **infused strike** (L2 + RB), not the charged heavy; the owner has been told. The strike art is shared, so every fix reaches all 11 weapons.
+
+**The rule for infused strikes (the owner, on Earth's question):** keep an element effect, but it must grow out of the blade's cut (along the slash line and where it hits), so it reads as a sword move and never like a spell being cast. Wind, Ice, Water and Life were judged "Good" and stay as they are.
+
+| Element | Fix | Who |
+|---|---|---|
+| Fire | Keep the first Kindle-like tongues. The ground burn lays a scorch with embers for its flames to burn on, lasts about 1 s (not 3 s), and stays tight to the cut (`ElementSteel.cs:200`, `:436-450`; `Hazards.cs:297-299`) | Unity |
+| Lightning | Delete the floor scorch star (`StrikeArt.cs:74`); keep the dash and the bolts | Unity |
+| Earth | The stones rise along the arc of the cut, not as a separate Broken Ground line ahead | Blender, then Unity |
+| Metal | Scrap the disc and its dashed rings (`StrikeArt.cs:121-127`). The cut leaves a bright steel glint along its edge, and a spray of small steel shards rings off whatever it hits | Blender, then Unity |
+| Light | Scrap the sundial (`StrikeArt.cs:132-133`). A warm beam of light sweeps down along the cut's line and flares on what it hits, then fades, with no floor shapes | Blender, then Unity |
+| Dark | Rework Taken. Shadow hands rise only from enemies the cut actually hits, grip them and drag them a step; nothing is drawn on a miss; near-black | Blender, then Unity |
+| Poison | Replace the old elements 2 look (`StrikeArt.cs:153-164`; `ElementMoves` Strikes[10] is null). Rolling green miasma bursts out along the cut and from what it hits, then drifts and thins over about 2 s | Blender, then Unity |
+
+**Checks before the owner sees anything:**
+- Film only these seven elements' strikes, on every weapon, into enemies and with the trail alone.
+- Check each film against this table and against the standing rules: animated, no white, no rings, on the body, nothing drawn on blades.
+- Have an independent review agent look for faults, then swap the films into the doc in place.
