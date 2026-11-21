@@ -131,3 +131,31 @@ The final big swing in every film is the **infused strike** (L2 + RB), not the c
   - Other pure white still in the films, not from the strikes: the Great Hammer's slam (a white glow ring and shock behind the target), pale steel streaks on Metal's Massive Sword carrier blow, and the lime Armament in Poison.
 - **For the weekend round:** Earth's charged-hit cracks read as brown thorns at the enemies' feet.
 - **Still open:** Poisoned's lime clouds and Marked's sky beams and floor discs cover the struck enemies. Poison's vein web is faint on the real models; the Blender worker suggests a vein mask in the body's shader.
+
+## Strikes per weapon motion (the owner, 2026-11-21)
+
+The owner noticed that the infused strike plays the same arc look on every weapon: "the hammer is slamming down, and i still am getting a slash of earth spikes pop up". They said the effects "are now pretty good, they just need to follow the path of the weapon, and for things like a hammer smash down, it needs to be instead of a bunch of earth in a slash, it needs to be a area that is hammered down has a big spike come out, and so on for each type of weapon".
+
+**Decided:**
+- **Strike shapes by weapon group.** Every element gets a look for each shape:
+  - ARC: Katana, Massive Sword, Scythe, War Fan. These use the current approved looks, mirrored to follow the blade.
+  - THRUST, a line ahead: Great Spear, Twin Knives.
+  - SLAM, an area where it lands: Great Hammer, Fists, Armament.
+  - SHOT, at the arrow's impact: Great Bow.
+  - LASH, along the chain's curve: Chain Sickle.
+
+  Confirm each weapon's real motion from its clip before building.
+- **Slam:** a hammered-down patch of cracked ground where it lands, with ONE big hero piece bursting from the centre:
+  - Earth: a great spike.
+  - Ice: a frozen spike.
+  - Fire: a flame pillar.
+  - Water: a geyser.
+  - Lightning: a bolt down onto it.
+  - Metal: a forged blade.
+  - Life: a thorn.
+  - Dark: grasping hands.
+  - Poison: a venom burst.
+  - Light: a sunburst flare.
+  - Wind: a gust burst of curls.
+- **Order:** slam first, then thrust, then shot and lash. The owner sees each shape's strips before Unity builds it.
+- **Twin Knives grip, fix now.** The knives sit at wrong angles and the hands don't close on the handles. Re-angle them into a proper grip, close the fingers, and check close-ups through the whole moveset.
