@@ -42,6 +42,7 @@ checked against its code and committed on its own.
 - [x] marks/thermalshock.md: Neither Wins (Burn and Chill each kept while the other is on)
 - [x] marks/blackchain.md: Rust in the Curse (notches kept while Cursed)
 - [x] marks/rust.md: Brine (Soaked twice as long on a notched enemy), Rust's shapes (notches up to five)
+- [x] effects.md: plain Rust (notches up to five, plate falls at five)
 
 ## Unsure lines
 

@@ -839,7 +839,7 @@ Title: Rust (Water and Metal)
 Group: Reactions
 **What it is.** Soaked meets Sundered. The wet cuts rust, and the rust spreads.
 
-**The numbers.** While the enemy is Soaked, its notches don't fade, and the rust adds a notch every 2 seconds. Once it is rusted all the way through (three notches), a plate of armour falls off. For 6 seconds, it takes 16% more damage from your weapon, wet or dry. Then it waits 6 seconds.
+**The numbers.** While the enemy is Soaked, its notches don't fade, and the rust adds a notch every 2 seconds. While it rusts, its notches can go past three, up to five. Once it is rusted all the way through (five notches), a plate of armour falls off. For 6 seconds, it takes 16% more damage from your weapon, wet or dry. Then it waits 6 seconds.
 
 **What sets it off.** Water landing on a notched enemy, or a notch landing on a Soaked one.
 
@@ -847,7 +847,7 @@ Group: Reactions
 
 **How to use it.** Keep the enemy wet and let the rust work, then come in with your weapon.
 
-**How it looks.** Its name over the enemy. Not built yet: notches past three (up to five), and seeing the plate of armour fall off.
+**How it looks.** Its name over the enemy. Not built yet: seeing the plate of armour fall off.
 
 ## reaction-shining-herb
 Title: Shining Herb (Life and Light)
