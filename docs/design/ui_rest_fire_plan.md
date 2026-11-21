@@ -12,7 +12,7 @@ This is a plan only. Nothing here is built, and no decision in it is final until
 
 - [x] 1. What exists now
 - [x] 2. What the best build screens do (research)
-- [ ] 3. Three layouts for the Hand and the Way together
+- [x] 3. Three layouts for the Hand and the Way together
 - [ ] 4. A style guide for every menu
 - [ ] 5. The build plan and the checks
 - [ ] 6. Owner questions
@@ -294,3 +294,182 @@ animation. Sources: [UI Noir: Hades](https://medium.com/@donxu29/wip-9e7289c913e
 **Not found**: no studio write-up of the Hades weapon rack, Death's Door's menus or Tunic's menus turned up. Tunic's
 illustrated manual (diagrams over paragraphs) is noted only as a mood for the details pane's pictures
 ([Tunic wiki, Instruction Booklet](https://tunic.wiki/books/instruction-booklet)).
+
+---
+
+## 3. Three layouts for the Hand and the Way together
+
+### 3.0 What every layout must hold
+
+| Part | Chosen here? | From |
+|---|---|---|
+| The two elements carried | No, shown only (set in the hub; in the playtest at the altars) | `HandMenu.cs:397` |
+| Devotion, when both are the same element | No, shown as a line when it is on | `STEEL_AND_ELEMENT.md` 5.6 |
+| Four spell slots, each with its spell and that spell's shape | Yes | the Hand and the shapes screen today |
+| The surge | Yes | |
+| A suggested Hand and three saved Hands | Yes (wear, keep) | |
+| The two infused strikes (which element on which button) | No, shown: they tie the weapon to the elements | `STEEL_AND_ELEMENT.md` 5.1 |
+| The weapon's aspect (three plain boughs, plus the god's once taken) | Yes | `WayRules.ChooseAspect` |
+| The active bough's keystone (one of two, once bought) | Yes | `WayRules.ChooseKeystone` |
+| The Body's bearing (one of two, once bought) | Yes | `way_build_plan.md` 2.4 |
+| The technique, the Temper rank, the Memories and Shards held | No, shown | |
+
+Buying stays on the two charts (the element chart and the Way chart). The loadout screen only arranges what is
+already bought, and every locked thing says where it is bought and for how much.
+
+Two rules hold in every layout below:
+
+- **The details pane is always on screen** and always describes the focused thing, in the format of 4.4. No details
+  toggle, no separate page (P12, P14).
+- **What you are changing stays in view while you choose** (P4, P8). The list of choices never covers the slot it
+  fills, and the pane shows the worn choice beside the focused one.
+
+Sizes below are on the 1920 by 1080 board the HUD already uses.
+
+### 3.1 Layout A: one screen, Steel on the left and Element on the right (recommended)
+
+```
++--------------------------------------------------------------------------------------------------+
+|  LOADOUT                                                   Memories 12    Shards 340              |
++------------------------------+------------------------------------+------------------------------+
+|  STEEL  Katana               |  ELEMENT  Fire  +  Lightning       |  THUNDERCLAP                 |
+|                              |  (carried from the hub)            |  Lightning spell  [Breaker]  |
+|  Aspect                      |                                    |                              |
+|  [ The Sheath            > ] |              [ N ]                 |  A clap of thunder all       |
+|                              |           Thunderclap              |  round you. It fills the     |
+|  Keystone                    |           Rolling  [B]             |  stagger bar fast.           |
+|  [*Click*  ] [ Hundred Days] |  [ W ]       [Surge]      [ E ]    |                              |
+|                              |  Flame Wave   Kindle      empty    |  20 mana    Ready in 6 s     |
+|  Bearing                     |  Wide   [O]   Fire                 |  Shape: Rolling Thunder      |
+|  [ Enduring] [*Light Body*]  |              [ S ]                 |    (left / right to swap)    |
+|                              |              empty                 |  --------------------------  |
+|  Technique  Before the       |                                    |  Worn here now: Thunderclap  |
+|             Thunder (sealed) |  Roles [O]1 [B]1 [D]0 [C]0 [M]0    |                              |
+|  Temper     III              |  No detonator: nothing spends your |  (A) Choose a spell here     |
+|                              |  burns and charges yet.            |                              |
+|  Infused strikes             |                                    |                              |
+|  LT+RB Fire   LT+RT Lightning|  Hands  [Suggested] [1] [2] [3]    |                              |
++------------------------------+------------------------------------+------------------------------+
+|  (B) Back to the fire                                                       (L3) Bigger text      |
++--------------------------------------------------------------------------------------------------+
+   560 px                          760 px                              520 px
+```
+
+- **What the player sees first**: the two headers, "Steel: Katana" and "Element: Fire + Lightning", in the largest
+  words on the screen; then the glow round the focused slot; then the pane on the right. On opening, focus is on
+  the last thing changed at any fire (the first time, the West slot).
+- **How the pad moves** (P11, P13): the stick and d-pad move to the neighbour in the direction pushed and stop at the
+  edges. The Steel column is a grid of rows: Aspect; Keystone left and right; Bearing left and right; Technique and
+  Temper (focusable to read, nothing to press). The Element column is the diamond (W, N, E, S round the surge, moving
+  as the face buttons sit) and, under it, the four Hand buttons in a row. Right from any Steel row goes to the
+  diamond's West; left from West goes back to the Steel row at that height. Down from South goes to the Hands row.
+  The pane on the right never takes focus.
+- **The buttons**, each shown by its glyph next to what it acts on, never in a line of instructions (P14):
+  - A (use) on a slot: opens that slot's list. A on the aspect: opens the aspect cards. A on an unset keystone or
+    bearing: sets it.
+  - Left and right on a focused spell, in the list or in the slot: swap its shape. This is where the shapes screen's
+    job goes.
+  - X on a Hands button: keep the Hand worn now there. A on it: wear it.
+  - B: back out of a list, or out to the fire. L3: bigger text (the 125% and 150% sizes of 4.1).
+- **Choosing a spell**: the list slides in over the Steel column (Steel is not what is being changed), so the diamond
+  with the slot being filled stays in view, pulsing. The list is grouped by element under coloured headers, each row
+  with the spell's role icon, name, shape and cost. The pane compares: the focused spell's words on top, "Worn here
+  now" with the worn spell's name and cost under the rule, and what the swap does to the Hand ("You will have no
+  opener."). A wears it and the list closes.
+- **Choosing an aspect**: the aspect cards slide in over the Element column: three cards in a row (four with a god's
+  bough), each with the bough's picture, its name, one line, and "Bought 6 of 10 marks". The pane says what changes:
+  "Your combo becomes a draw, a return cut, then the sheathe. The Stream's 5 marks go to sleep. Keystone: The Cut
+  Lands at the Click." A sets it; the weapon is re-armed (`way_build_plan.md` 2.0).
+- **A keystone or bearing** is a pair of cells side by side, the set one lit and framed (P6). Focus one and the pane
+  shows its words and, under the rule, "Set now: A Hundred Days at the Shrine". A sets it. An unbought one is drawn
+  dark with its price and the line "Buy it on the Way chart. 4 Memories."
+- **How a mark's effect reads**, with The Cut Lands at the Click focused:
+
+  ```
+  THE CUT LANDS AT THE CLICK                       Keystone of the Sheath
+  Hold the draw for up to two seconds, then let go.
+  You dash and cut through any guard. The wounds open when the sword clicks home.
+  Press  Hold RB, let go             Costs  nothing
+  ----------------------------------------------------------------
+  Set now: A Hundred Days at the Shrine. Setting this one turns that one off.
+  (A) Set this keystone
+  ```
+
+- **Why this one**: it is the owner's "both on screen", and it is the only layout where the weapon and the
+  elements are seen together, which is what the infused strikes and the Way's infusion marks are about (P17). Nothing
+  needs a tab. The cost is width: three columns at sofa size leave the Steel column 560 px, so its words must stay
+  short (names, not sentences) and the sentences live in the pane.
+
+### 3.2 Layout B: one screen with two tabs, and a summary strip across the top
+
+```
++--------------------------------------------------------------------------------------------------+
+|  (LB)  [ ELEMENT ]   [ STEEL ]  (RB)                         Memories 12    Shards 340           |
+|  Katana: the Sheath, the Click  |  Fire + Lightning  |  Flame Wave  Thunderclap  -  -  |  Kindle   |
++-----------------------------------------------+--------------------------------------------------+
+|  STEEL tab                                    |  THE STREAM                     Aspect           |
+|                                               |  Long combos that flow into     |
+|  +----------+ +----------+ +----------+ +---+ |  one another. Dodge mid-combo   |
+|  | SHEATH * | |  STREAM  | |  ANSWER  | |STM| |  and keep it going.             |
+|  |  [pic]   | |  [pic]   | |  [pic]   | |   | |                                  |
+|  | 6 of 10  | | 2 of 10  | | 0 of 10  | |   | |  Changes: your combo grows to   |
+|  +----------+ +----------+ +----------+ +---+ |  five cuts. The Sheath's 6      |
+|                                               |  marks go to sleep.             |
+|  Keystone   [*Click*]   [Hundred Days]        |  ------------------------------ |
+|  Bearing    [Enduring]  [*Light Body*]        |  Set now: the Sheath            |
+|  Technique  Before the Thunder (sealed)       |  (A) Make this the active aspect|
+|  Temper III         Infused: Fire, Lightning  |                                  |
++-----------------------------------------------+--------------------------------------------------+
+|  (B) Back to the fire                                                                            |
++--------------------------------------------------------------------------------------------------+
+```
+
+The Element tab has the diamond on the left, the list in the middle (always on screen, not swapped in) and the same
+pane on the right.
+
+- **What the player sees first**: the tab they last used, and the summary strip, which always shows the whole build
+  in one line of names.
+- **How the pad moves**: LB and RB change tab (P12). Inside a tab the stick moves to neighbours and stops at edges.
+  On the Steel tab the aspect cards are one row; down goes to the keystone pair, then the bearing pair.
+- **How a mark's effect reads**: as in A; the aspect cards also show a picture, so the bough can be told by shape.
+- **For**: each tab has the whole width, so the aspect cards can be big and the Hand's list need never slide over
+  anything. **Against**: the weapon and the elements are never seen together except as a strip of names, and the
+  player has to know the other tab exists (P7). It is the Hand and the Way as two screens with a shared frame.
+
+### 3.3 Layout C: the weapon in the middle
+
+```
++--------------------------------------------------------------------------------------------------+
+|  LOADOUT                                                       Memories 12    Shards 340          |
+|                                                                                                  |
+|        ASPECT                         [ large picture of the Katana ]                              |
+|   [ The Sheath  > ]                    in the active aspect's look          ELEMENTS Fire + Lightning|
+|                                                                                                  |
+|   KEYSTONE                   LT+RB Fire  <------ infused ------>  LT+RT Lightning              |
+|   [*Click*][Hundred]                                                                [ N ]        |
+|                                                                               [ W ] [Sg] [ E ]   |
+|   BEARING                    Technique: Before the Thunder (sealed)                 [ S ]        |
+|   [Enduring][*Light*]        Temper III                                                          |
+|                                                                                                  |
++--------------------------------------------------------------------------------------------------+
+|  THE CUT LANDS AT THE CLICK   Hold the draw up to two seconds, then let go. You dash ...  (A) Set |
++--------------------------------------------------------------------------------------------------+
+```
+
+- **What the player sees first**: the weapon. The screen says "this is your weapon, and this is what you carry
+  into it".
+- **How the pad moves**: the Way's choices down the left, the diamond on the right, the weapon in the middle not
+  focusable; left and right cross between the two sides through the middle. The pane is a band along the bottom.
+- **How a mark's effect reads**: the bottom band, one or two lines; long words do not fit without paging.
+- **For**: the strongest picture and the clearest tie between steel and element. **Against**: it needs a picture of
+  every weapon in every aspect (10 weapons, about 35 pictures, from Blender), the bottom band is too short for the
+  keystones' words, and lists still have to open over something.
+
+### 3.4 The recommendation
+
+**Layout A.** It puts the Hand and the Way on one screen, as the owner asked, without tabs; it is the only layout
+that keeps the details pane and the comparison in view at all times; and the rule "the list opens over the half you
+are not changing" makes one way of choosing for both the spells and the aspects. It takes the parts of B and C that
+are worth having: B's aspect cards (they slide in over the Element column) and C's weapon picture (a small one in the
+Steel header, once the weapon renders exist). The rest menu becomes: **Loadout**, **The element chart**, **The Way
+chart**, **Leave** (and **To the hub** once built); "Set the Hand" and "Shapes" fold into Loadout (question Q4).
