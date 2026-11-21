@@ -173,5 +173,38 @@ namespace Clover.Tests
             Assert.AreEqual(0f, SpellTimings.BaseCooldownShare(null, Elements.Ice));
             Assert.AreEqual(0f, SpellTimings.BaseCooldownShare(ReadyMinor(Elements.Poison), ""));
         }
+
+        [Test]
+        public void ACounterNothingStruckKeepsOnlyItsShareOfTheWait()
+        {
+            var clocks = new SpellCooldowns();
+            clocks.Start(1, 10f);
+            clocks.Tick(1.2f);
+            clocks.KeepShare(1, 0.5f);
+            Assert.AreEqual(3.8f, clocks.Remaining(1), 1e-4f, "5 s in all, 1.2 s of it already run");
+            clocks.KeepShare(1, 1f);
+            Assert.AreEqual(3.8f, clocks.Remaining(1), 1e-4f, "a share of one changes nothing");
+            clocks.Start(2, 2f);
+            clocks.Tick(1.5f);
+            clocks.KeepShare(2, 0.5f);
+            Assert.IsTrue(clocks.Ready(2), "never below nothing");
+            clocks.KeepShare(0, 0.5f);
+            Assert.IsTrue(clocks.Ready(0), "a clock not running stays ready");
+        }
+
+        [Test]
+        public void TheCountersThatSaySoWaitHalfWhenNothingStrikes()
+        {
+            foreach (var id in new[] { MetalTree.CircleOfSteel, DarkTree.GoneToAsh, Clover.Player.Trees.Duo.GirdledDuo.DeathTurnedBack, Clover.Player.Trees.Duo.MockSunsDuo.Sunstone })
+            {
+                var mark = Upgrade.ById(id);
+                Assert.IsNotNull(mark?.Spell, id);
+                Assert.AreEqual(SpellForms.Parry, mark.Form, id + " is a counter");
+                Assert.AreEqual(0.5f, mark.Spell.MissedWait, 1e-5f, id);
+                var copy = new SpellSpec();
+                SpellChange.Copy(mark.Spell, copy);
+                Assert.AreEqual(0.5f, copy.MissedWait, 1e-5f, id + " keeps it when its numbers are copied");
+            }
+        }
     }
 }

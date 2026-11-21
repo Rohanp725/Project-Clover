@@ -156,6 +156,19 @@ namespace Clover.Player.Magic
             return done;
         }
 
+        /// <summary>
+        /// Keeps only <paramref name="share"/> of a slot's wait, as if it had been that long from the start (a counter nothing
+        /// struck waits half as long). The time already run counts; a wait owed to the breath is cut the same way.
+        /// </summary>
+        public void KeepShare(int slot, float share)
+        {
+            if (!Valid(slot) || share >= 1f) return;
+            share = Math.Max(0f, share);
+            owed[slot] *= share;
+            if (left[slot] <= 0f) return;
+            left[slot] = Math.Max(0f, left[slot] - length[slot] * (1f - share));
+        }
+
         /// <summary>Ends one clock at once (and any wait it owes the breath).</summary>
         public void Reset(int slot)
         {

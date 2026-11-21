@@ -122,6 +122,12 @@ namespace Clover.Player.Forms
             float seconds = Mathf.Max(0.2f, cast.Spec.Seconds);
             if (run.Age >= seconds)
             {
+                // Nothing struck: a counter that says so waits only part of its time (Circle of Steel, Gone to Ash).
+                if (cast.Spec.MissedWait > 0f)
+                {
+                    var spells = player.GetComponent<PlayerSpells>();
+                    if (spells != null) spells.NothingAnswered(cast.Source, cast.Spec.MissedWait);
+                }
                 ElementLook.Puff(cast.Element, body.position + Vector3.up * 1.2f + body.forward * 0.7f, Vector3.up, 0.5f);
                 return false;
             }

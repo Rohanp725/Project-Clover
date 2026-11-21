@@ -20,6 +20,11 @@ namespace Clover.Player
         public float Arc = 70f;
         /// <summary>How long it or what it leaves lasts.</summary>
         public float Seconds = 4f;
+        /// <summary>
+        /// Above zero, the share of its wait kept when it ends with nothing to answer: a counter nothing struck waits only
+        /// half as long at 0.5 (Circle of Steel, Gone to Ash). Zero changes nothing.
+        /// </summary>
+        public float MissedWait;
         /// <summary>Seconds between bites of what it leaves.</summary>
         public float Interval = 0.5f;
         /// <summary>How many: leaps of a bolt, blades, bullets.</summary>

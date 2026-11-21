@@ -102,14 +102,14 @@ namespace Clover.Player.Trees.Duo
             // (SpellTimings). The parry form spreads the roots round you for 1.2 s, cast in Life (three Seeds on what it
             // answers); the answer Curses the attacker and holds it 2 s (an elite 0.8 s), and you mend 15. Each of your blows on
             // the held enemy mends you 3.
-            // NEEDS: the mending as what the blow would have dealt, 30 at most (damage-tally); half the cooldown back when
-            // nothing came (missed-counter).
+            // Half the cooldown back when nothing came (SpellSpec.MissedWait).
+            // NEEDS: the mending as what the blow would have dealt, 30 at most (damage-tally).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = DeathTurnedBack, Name = "Death Turned Back", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Role = SpellRole.Counter, Requires = new[] { BitterSeed, HeldDown }, Icon = UpgradeIcons.Heart,
                 Description = "You go down on one knee and roots spread round you for 1.2 s. The first blow that would land is taken by the roots: they climb the attacker and hold it 2 s, Seed it three deep and Curse it, and you mend. Each of your blows on the held enemy mends you 3.",
                 Form = SpellForms.Parry,
-                Spell = new SpellSpec { Seconds = 1.2f, Reach = 3f, Arc = 120f, Damage = 8f, Stagger = 20f, Stacks = 3 },
+                Spell = new SpellSpec { Seconds = 1.2f, Reach = 3f, Arc = 120f, Damage = 8f, Stagger = 20f, Stacks = 3, MissedWait = 0.5f },
                 Effects = new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Cursed, Stacks = 1 },

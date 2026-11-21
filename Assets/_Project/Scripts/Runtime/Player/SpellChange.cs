@@ -72,6 +72,7 @@ namespace Clover.Player
             into.Height = from.Height;
             into.LingerDamage = from.LingerDamage;
             into.HealthCost = from.HealthCost;
+            into.MissedWait = from.MissedWait;
         }
     }
 

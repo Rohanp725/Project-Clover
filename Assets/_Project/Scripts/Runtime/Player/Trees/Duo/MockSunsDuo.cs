@@ -105,14 +105,15 @@ namespace Clover.Player.Trees.Duo
             // The duo spell, a counter on a 10 s cooldown (SpellTimings), bought with 5 Shards once both are carried. The parry
             // form holds up the block of spar: the first blow on it is caught and split into a fan toward the attacker, chilling
             // (the branch's first element) two deep, and each ray Marks.
-            // NEEDS: a perfect guard made through it in its last 0.3 s freezing the attacker outright (spell-windows); half the
-            // cooldown back when nothing strikes it (missed-counter); five rays, not one cone (form-pieces).
+            // Half the cooldown back when nothing strikes it (SpellSpec.MissedWait).
+            // NEEDS: a perfect guard made through it in its last 0.3 s freezing the attacker outright (spell-windows); five rays,
+            // not one cone (form-pieces).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Sunstone, Name = "Sunstone", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Role = SpellRole.Counter, Requires = new[] { BentLight, WideFan }, Icon = UpgradeIcons.Gem,
                 Description = "You hold up a block of clear ice spar for 1.2 s. The first blow that lands on it is caught for nothing and split: five rays fan 8 m toward the attacker, 12 and 20 stagger each, a Mark and two Chill.",
                 Form = SpellForms.Parry,
-                Spell = new SpellSpec { Seconds = 1.2f, Reach = 8f, Arc = 80f, Damage = 12f, Stagger = 20f, Stacks = 2 },
+                Spell = new SpellSpec { Seconds = 1.2f, Reach = 8f, Arc = 80f, Damage = 12f, Stagger = 20f, Stacks = 2, MissedWait = 0.5f },
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Marked, Stacks = 1 } },
             }, HeartPattern.Spell));
         }

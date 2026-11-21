@@ -216,10 +216,10 @@ namespace Clover.Player.Trees
                 "Catch it on a perfect guard as it comes home, and Returning Edge is ready again at once.",
                 learnEffects: new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Burst, Radius = 0.75f, Delay = 1f, Damage = 12f, Stagger = 10f, Stacks = 0 } });
 
-            // The counter: the parry form turns the first blow and answers with a cut all round. NEEDS: the 5 s wait when nothing
-            // struck (missed-counter), and two blows turned with the Empower (parry-count).
+            // The counter: the parry form turns the first blow and answers with a cut all round; nothing struck, it waits 5 s
+            // (SpellSpec.MissedWait). NEEDS: two blows turned with the Empower (parry-count).
             SpellBranch.Add(to, E, CircleOfSteel, "Circle of Steel", SpellRole.Counter, BranchPattern.LeftB, OpenLine, SpellForms.Parry,
-                new SpellSpec { Seconds = 1.2f, Reach = 3f, Arc = 360f, Damage = 14f, Stagger = 20f, Stacks = 1 },
+                new SpellSpec { Seconds = 1.2f, Reach = 3f, Arc = 360f, Damage = 14f, Stagger = 20f, Stacks = 1, MissedWait = 0.5f },
                 "You raise the blade for a breath, unable to move. The first blow from any side is turned for nothing and answered with a cut all round you, three metres: 14 damage, 20 stagger and a notch. If nothing strikes, it waits only half as long.",
                 UpgradeIcons.Ring,
                 // The roster's numbers alone (the owner's answer of 2026-11-20: an Empower may strengthen without a shorter wait).

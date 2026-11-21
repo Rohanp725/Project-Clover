@@ -115,11 +115,11 @@ namespace Clover.Player.Trees
                 });
 
             // The counter: the parry form turns the first blow and answers with a Curse; you step behind the attacker, and your
-            // first blow on it heals. NEEDS: the 5 s wait when nothing struck (missed-counter), the scattering as ash and
+            // first blow on it heals; nothing struck, it waits 5 s (SpellSpec.MissedWait). NEEDS: the scattering as ash and
             // standing again 0.4 s later (form-pieces), and the blow struck as a heavy (blow-made-heavy): for now it strikes
             // twice as hard.
             SpellBranch.Add(to, E, GoneToAsh, "Gone to Ash", SpellRole.Counter, BranchPattern.MiddleB, Dread, SpellForms.Parry,
-                new SpellSpec { Seconds = 1.2f, Reach = 2.5f, Arc = 90f, Damage = 0f, Stagger = 0f, Stacks = 1 },
+                new SpellSpec { Seconds = 1.2f, Reach = 2.5f, Arc = 90f, Damage = 0f, Stagger = 0f, Stacks = 1, MissedWait = 0.5f },
                 "You stand with arms crossed as grey ash runs over you, for up to 1.2 seconds. The first blow to land scatters you as a cloud of ash, and you take nothing. A moment later you stand again behind the attacker. It is Cursed, and your first blow within a second is a heavy blow that heals you 10. If nothing strikes, it waits only half as long.",
                 UpgradeIcons.Shield,
                 // The heal of 15 is the Learn's own heal, set by the Empower (empower-effects).

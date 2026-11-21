@@ -360,6 +360,19 @@ namespace Clover.Player
             SetSlot(empty >= 0 ? empty : 1, id);
         }
 
+        /// <summary>
+        /// A spell ended with nothing to answer (a counter nothing struck): its slot keeps only <paramref name="share"/> of
+        /// its wait. False when the spell is in no slot.
+        /// </summary>
+        public bool NothingAnswered(Upgrade source, float share)
+        {
+            if (source == null || share <= 0f || share >= 1f) return false;
+            int slot = Slots.SlotOf(source.Id);
+            if (slot < 0) return false;
+            Cooldowns.KeepShare(slot, share);
+            return true;
+        }
+
         /// <summary>A rest: every clock ends and the fight is over.</summary>
         public void Rested()
         {
