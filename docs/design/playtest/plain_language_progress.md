@@ -82,7 +82,7 @@ Lines whose meaning was not clear. The facts were kept and written as clearly as
 - [x] marks/plasma.md
 - [x] marks/poison.md
 - [x] marks/pyre.md
-- [ ] marks/quicksilver.md
+- [x] marks/quicksilver.md
 - [ ] marks/redhot.md
 - [ ] marks/rotroots.md
 - [ ] marks/rust.md
