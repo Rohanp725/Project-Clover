@@ -58,6 +58,6 @@ Quickening does.
 
 **The numbers.** 40 mana, lasts 10 seconds. 5 Shards. You can buy it once you carry both elements; no god gives it. The lotus has a 3-metre radius and lasts 10 seconds. Every second, each enemy in it gets Soaked and a stack of Seeded, and you heal 2 while you stand in it. There are five petals; each holds its enemy for 3 seconds. The burst has a radius of about 5 metres. It deals 30 damage, plus 30% more for each petal closed (75 with all five), 40 stagger, and a stack of Seeded.
 
-**Works with.** Wellspring (the flask heals 50% more), Morning Dew (the flask gives a ward), Drowned Roots.
+**Works with.** Morning Dew (the flask gives a ward), Drowned Roots.
 
-**Example.** Light Wellspring, drink a flask in the middle of a pack, then perfect-guard five blows inside the lotus. It bursts for 75 on every enemy it holds.
+**Example.** Light the Great Lotus, drink a flask in the middle of a pack, then perfect-guard five blows inside the lotus. It bursts for 75 on every enemy it holds.

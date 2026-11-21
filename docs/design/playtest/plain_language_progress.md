@@ -56,6 +56,7 @@ checked against its code and committed on its own.
 - [x] marks/smoulder.md: Night Sun (heals 1 for each Burn)
 - [x] effects.md: Night Sun, Glass Spear and Cold Damage in the reaction shapes
 - [x] marks/blight.md: Wither (unsure line resolved)
+- [x] marks/bloom.md: Great Lotus (unsure line resolved)
 
 ## Unsure lines
 
@@ -66,7 +67,8 @@ Lines whose meaning was not clear. The facts were kept and written as clearly as
   **Resolved:** the code gives Wither no blows that add afflictions (only the 25% and the kept doses), so the
   leftover lines about heavy blows were cut and the Example now Curses with Grasp or the second strike.
 - marks/bloom.md, bloom.great: the mark goes in the surge slot, but the Example says "Light Wellspring" (another surge?).
-  Kept as written.
+  Kept as written. **Resolved:** the Hand has one surge slot (GAME.md, 2026-11-21), so Wellspring and the Great Lotus
+  can't be lit together; the Example now lights the Great Lotus, and Wellspring left its "Works with".
 - marks/breathtaken.md, breathtaken.short, "Not built yet": "It keeps its own winding from each Breath Taken" was read as
   "it keeps its own timer for how long the enemy is winded".
 - marks/burningsap.md, burningsap.brightvenom: "the held bites" was read as "the saved-up poison bites" (the bites
