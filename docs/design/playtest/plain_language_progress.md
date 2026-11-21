@@ -72,6 +72,7 @@ checked against its code and committed on its own.
 - [x] marks/overgrowth.md: Taking Root (spares the reacting enemy), Root Web (Seeded only)
 - [x] marks/glacier.md: Sea Ice (Soaked only)
 - [x] marks/bloom.md: Rootlets (Soaked only)
+- [x] effects.md: Sea Ice, Rootlets, Taking Root and Root Web in the reaction shapes
 
 ## Unsure lines
 

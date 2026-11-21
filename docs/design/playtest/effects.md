@@ -498,7 +498,7 @@ Group: Reactions
 
 **What sets it off.** Chill landing on a Soaked enemy (from your Water, or from the river), or Water landing on a chilled one.
 
-**Its shapes.** If you have Glacier's Shape mark (Supercooled: Sea Ice or Hard Water, 3 Shards, in the middle of the chart) and carry both Ice and Water, Supercooled uses the shape you picked at a rest fire instead. Sea Ice: the blow that freezes the enemy also puts 2 Chill on everything within 4 metres. This is on purpose: it may start another Supercooled. Hard Water: only a heavy blow freezes it.
+**Its shapes.** If you have Glacier's Shape mark (Supercooled: Sea Ice or Hard Water, 3 Shards, in the middle of the chart) and carry both Ice and Water, Supercooled uses the shape you picked at a rest fire instead. Sea Ice: the blow that freezes the enemy also puts 2 Chill on every Soaked enemy within 4 metres. This is on purpose: it may start another Supercooled. Hard Water: only a heavy blow freezes it.
 
 **How to use it.** One touch of cold on a wet enemy, then any blow: it freezes, ready for a heavy blow to shatter it.
 
@@ -513,7 +513,7 @@ Group: Reactions
 
 **What sets it off.** Water landing on a Seeded enemy, or a seed landing on a Soaked one.
 
-**Its shapes.** If you have Bloom's Shape mark (Quickening: Floating Flower or Rootlets, 3 Shards, in the middle of the chart) and carry both Water and Life, Quickening uses the shape you picked at a rest fire instead. Floating Flower: the flower drops to the ground as a lily 2 metres across that lasts 5 seconds and soaks whatever stands on it, and you heal 8 as it opens. Rootlets: every enemy within 5 metres has its Seeded filled all the way, and a heavy blow on the flowering enemy within 4 seconds still heals you 10.
+**Its shapes.** If you have Bloom's Shape mark (Quickening: Floating Flower or Rootlets, 3 Shards, in the middle of the chart) and carry both Water and Life, Quickening uses the shape you picked at a rest fire instead. Floating Flower: the flower drops to the ground as a lily 2 metres across that lasts 5 seconds and soaks whatever stands on it, and you heal 8 as it opens. Rootlets: every Soaked enemy within 5 metres has its Seeded filled all the way, and a heavy blow on the flowering enemy within 4 seconds still heals you 10.
 
 **How to use it.** Soak a seeded enemy in a crowd, then hit it with a heavy blow. You heal, and the whole crowd is wet and Seeded.
 
@@ -528,7 +528,7 @@ Group: Reactions
 
 **What sets it off.** A seed landing on a shaken enemy, or Tremor landing on a Seeded one.
 
-**Its shapes.** If you have Overgrowth's Shape mark (Split Rock: Taking Root or Root Web, 3 Shards, in the middle of the chart) and carry both Life and Earth, Split Rock uses the shape you picked at a rest fire instead. Taking Root: the enemy is only held for 1 second, and everything within 2.5 metres gets a Tremor right away. Root Web: everything within 6 metres is held for 0.5 seconds and gets a Tremor.
+**Its shapes.** If you have Overgrowth's Shape mark (Split Rock: Taking Root or Root Web, 3 Shards, in the middle of the chart) and carry both Life and Earth, Split Rock uses the shape you picked at a rest fire instead. Taking Root: the enemy is only held for 1 second, and every other enemy within 2.5 metres gets a Tremor right away. Root Web: every Seeded enemy within 6 metres is held for 0.5 seconds and gets a Tremor.
 
 **How to use it.** The hold is your chance: land the heavy blow before it ends.
 
