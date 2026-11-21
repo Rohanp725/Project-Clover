@@ -38,6 +38,10 @@ Lines whose meaning was not clear. The facts were kept and written as clearly as
   numbers say the enemy slows to a stop "over 2 seconds". Both kept.
 - effects.md, two-elements: "(the owner's decision of 2026-11-19)" is a note to the team, not to players. Kept as
   "the owner decided this on 2026-11-19"; it could probably be cut.
+- docs/GUIDE.md, sections 4 to 6: these look out of date next to section 1 and the guide to effects (they still
+  give tap spells mana costs and say to cast with Triangle / U, and section 6's spell forms table still lists form
+  ids). The facts were kept as written; the form ids in the table were kept too, since they are names, and the
+  column was renamed "Form". These sections probably need a content update, not only plain words.
 - marks/fire.md, fire.sun: "it rises in 1.5 seconds if Kindle has 3 left" was read as "if Kindle has 3 seconds left".
 
 ## Files
@@ -127,7 +131,7 @@ Lines whose meaning was not clear. The facts were kept and written as clearly as
   taken out of the prose (they are in git history before this pass). The "Every mark" tables in section 7 are
   made by AgentScripts/DumpMarks.cs from the game's own mark data, so they are left as they are: plain words there
   need the mark data in code changed. Parts: sections 1 and 2: done. Section 3 (Weapons): done. Sections 4 to 6:
-  to do. Section 7 text before the tables: to do. Sections 8 to 10: to do.
+  done. Section 7 text before the tables: to do. Sections 8 to 10: to do.
 
 ### 5. Other player-facing files
 

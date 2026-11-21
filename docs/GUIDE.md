@@ -440,208 +440,208 @@ normal roll, and it lets go of an enemy you've tied up.
 
 ## 4. Elements
 
-One element is held at a time. Each gives a **tap spell** (Triangle / U), a **surge** (L2 / I), and an **affliction** laid on enemies. Each affliction on an enemy shows as a small diamond in its colour under the enemy's bars, larger the deeper it lies.
+You carry one element at a time. Each one gives you a **tap spell** (Triangle / U), a **surge** (L2 / I), and an **affliction** that you put on enemies. Each affliction on an enemy shows as a small diamond in its colour under the enemy's health bars, bigger with more stacks.
 
 ### The ring
 
-In ring order, clockwise. Each element shares a mixed branch with the one before it and the one after it.
+The elements in order around the ring, clockwise. Each element shares a mixed branch with the one before it and the one after it.
 
 | # | Element | Affliction | Tap spell | Surge | Mixes (with) |
 |---|---|---|---|---|---|
-| 0 | Fire | Burn | **Flame Wave**, 25 mana | **Kindle**, 40 mana, 10 s | Pyre (Poison), Plasma (Lightning) |
-| 1 | Lightning | Static | **Thunderclap**, 25 mana | **Overdrive**, 40 mana, 10 s | Plasma (Fire), Tempest (Wind) |
-| 2 | Wind | Unsteady | **Gust**, 20 mana | **Tailwind**, 35 mana, 10 s | Tempest (Lightning), Blizzard (Ice) |
-| 3 | Ice | Chill | **Hoarfrost**, 25 mana | **Glaze**, 40 mana, 12 s | Blizzard (Wind), Glacier (Water) |
-| 4 | Water | Soaked | **Riptide**, 20 mana | **Wellspring**, 30 mana, 12 s | Glacier (Ice), Bloom (Life) |
-| 5 | Life | Seeded | **Briar Patch**, 20 mana | **Regrowth**, 40 mana, 6 s | Bloom (Water), Overgrowth (Earth) |
-| 6 | Earth | Tremor | **Stone Rise**, 25 mana | **Bedrock**, 40 mana, 10 s | Overgrowth (Life), Forge (Metal) |
-| 7 | Metal | Sundered | **Flung Blade**, 25 mana | **Temper**, 40 mana, 10 s | Forge (Earth), Halo (Light) |
-| 8 | Light | Marked | **Glare**, 25 mana | **Clarity**, 40 mana, 8 s | Halo (Metal), Eclipse (Dark) |
-| 9 | Dark | Cursed | **Grasp**, 25 mana | **Hunger**, no mana, 10 s | Eclipse (Light), Blight (Poison) |
-| 10 | Poison | Poisoned | **Miasma**, 25 mana | **Fever**, 40 mana, 10 s | Blight (Dark), Pyre (Fire) |
+| 0 | Fire | Burn | **Flame Wave**, 25 mana | **Kindle**, 40 mana, 10 seconds | Pyre (Poison), Plasma (Lightning) |
+| 1 | Lightning | Static | **Thunderclap**, 25 mana | **Overdrive**, 40 mana, 10 seconds | Plasma (Fire), Tempest (Wind) |
+| 2 | Wind | Unsteady | **Gust**, 20 mana | **Tailwind**, 35 mana, 10 seconds | Tempest (Lightning), Blizzard (Ice) |
+| 3 | Ice | Chill | **Hoarfrost**, 25 mana | **Glaze**, 40 mana, 12 seconds | Blizzard (Wind), Glacier (Water) |
+| 4 | Water | Soaked | **Riptide**, 20 mana | **Wellspring**, 30 mana, 12 seconds | Glacier (Ice), Bloom (Life) |
+| 5 | Life | Seeded | **Briar Patch**, 20 mana | **Regrowth**, 40 mana, 6 seconds | Bloom (Water), Overgrowth (Earth) |
+| 6 | Earth | Tremor | **Stone Rise**, 25 mana | **Bedrock**, 40 mana, 10 seconds | Overgrowth (Life), Forge (Metal) |
+| 7 | Metal | Sundered | **Flung Blade**, 25 mana | **Temper**, 40 mana, 10 seconds | Forge (Earth), Halo (Light) |
+| 8 | Light | Marked | **Glare**, 25 mana | **Clarity**, 40 mana, 8 seconds | Halo (Metal), Eclipse (Dark) |
+| 9 | Dark | Cursed | **Grasp**, 25 mana | **Hunger**, no mana, 10 seconds | Eclipse (Light), Blight (Poison) |
+| 10 | Poison | Poisoned | **Miasma**, 25 mana | **Fever**, 40 mana, 10 seconds | Blight (Dark), Pyre (Fire) |
 
 ### What each tap spell does
 
-Each element's tap spell behaves like its substance, not like one shape in eleven colours.
+Each element's tap spell acts like the element it's made of, instead of being one shape in eleven colours.
 
 | Element | Spell | What it does |
 |---|---|---|
-| Fire | Flame Wave | Fire runs out along the ground in a cone 5.5 m ahead, 70 degrees wide: 20 damage, 24 stagger, and what it touches burns for 5 s. Three patches of ground go on burning for 3 s. |
-| Lightning | Thunderclap | A jagged bolt on the enemy faced, up to 10 m off: 16 damage, 45 stagger. It forks to two more enemies. It is there and gone; nothing is left. |
-| Wind | Gust | A rush of air 5 m ahead: 8 damage, 20 stagger, Unsteady two deep. Everything in it is thrown 3 m straight down the wind. |
-| Ice | Hoarfrost | Crystals grow out along the ground in a wide fan (110 degrees) 4.5 m ahead: 10 damage, 15 stagger, Chill two deep. They stand 4 s. Land a weapon blow among them and they shatter: 5 damage and one more Chill to everything in the fan. |
-| Water | Riptide | A wave rises 5 m ahead of you and rolls back toward you. Everything in its path takes 8 damage and 18 stagger, is Soaked, and is carried to your feet, within sword reach. |
-| Life | Briar Patch | A bed of thorned vines grows 3 m ahead and flowers. It stands 6 s, lashes twice a second and seeds what stands in it. It counts as something grown. |
-| Earth | Stone Rise | After a quarter second the ground breaks under the enemy faced (within 5 m): 14 damage, 30 stagger, Tremor, and it is thrown up for a moment. A wall of rock is left standing behind it for 4.5 s; nothing walks through it. |
-| Metal | Flung Blade | A blade is thrown into the enemy faced (within 9 m) for 3 damage and stands in it for 6 s. Your next weapon blow on that enemy drives it in for 12 and a notch of Sundered, and the blade flies back to your hand, cutting what is in its way for 4. |
-| Light | Glare | A narrow ray 5.5 m ahead: 8 damage, 22 stagger, Marked. It strikes only what you are facing; what it marks wears brackets of light. |
-| Dark | Grasp | A black ball crawls to the enemy faced within 6 m, drawing in everything it passes. Where it arrives: 10 damage, 12 stagger, Cursed, and what it has hold of is dragged to your feet. |
-| Poison | Miasma | A cloud 4 m ahead that hangs 4 s, creeps after the nearest enemy and gives what stands in it one dose of poison a second. |
+| Fire | Flame Wave | Fire runs along the ground in a cone 5.5 metres ahead and 70 degrees wide. It deals 20 damage and 24 stagger, and sets whatever it touches on fire for 5 seconds. Three patches of ground keep burning for 3 seconds. |
+| Lightning | Thunderclap | A jagged bolt hits the enemy you face, up to 10 metres away, for 16 damage and 45 stagger. It splits off to two more enemies. It's there and gone; nothing is left behind. |
+| Wind | Gust | A rush of air 5 metres ahead. It deals 8 damage, 20 stagger and two stacks of Unsteady. Everything in it is thrown 3 metres straight back with the wind. |
+| Ice | Hoarfrost | Ice crystals grow along the ground in a wide fan (110 degrees), 4.5 metres ahead. They deal 10 damage, 15 stagger and two stacks of Chill, and stay for 4 seconds. Land a weapon blow among them, and they shatter: 5 damage and one more Chill to everything in the fan. |
+| Water | Riptide | A wave rises 5 metres in front of you and rolls back toward you. Everything in its path takes 8 damage and 18 stagger, is Soaked, and is carried to your feet, within reach of your sword. |
+| Life | Briar Patch | A bed of thorny vines grows 3 metres ahead and flowers. It stays for 6 seconds, lashes twice a second, and Seeds whatever stands in it. It counts as something you grew. |
+| Earth | Stone Rise | After a quarter second, the ground breaks under the enemy you face (within 5 metres). It deals 14 damage, 30 stagger and a Tremor, and throws the enemy up for a moment. A wall of rock is left standing behind it for 4.5 seconds; nothing can walk through it. |
+| Metal | Flung Blade | A blade is thrown into the enemy you face (within 9 metres) for 3 damage and stays stuck in it for 6 seconds. Your next weapon blow on that enemy drives it in for 12 damage and a notch of Sundered, and the blade flies back to your hand, cutting anything in its way for 4. |
+| Light | Glare | A narrow ray 5.5 metres ahead. It deals 8 damage, 22 stagger and a Mark. It only hits what you're facing, and whatever it Marks shows brackets of light. |
+| Dark | Grasp | A black ball crawls to the enemy you face within 6 metres, pulling in everything it passes. Where it arrives, it deals 10 damage, 12 stagger and a Curse, and whatever it has hold of is dragged to your feet. |
+| Poison | Miasma | A cloud 4 metres ahead that stays for 4 seconds, creeps after the nearest enemy, and gives one dose of poison a second to whatever stands in it. |
 
 **Not yet**
 
-- Gust no longer lifts; it throws.
-- Riptide's wave is not translucent, and its spray is still drawn as shards.
-- Marks that widen the base spell's arc do not affect Riptide or Glare.
+- Gust no longer lifts enemies; it throws them.
+- Riptide's wave isn't see-through, and its spray still looks like shards.
+- Marks that widen the basic spell's arc don't affect Riptide or Glare.
 
 ### What each surge does
 
-For every element but Fire and Lightning, every weapon blow during the surge also lays one stack of the element's affliction.
+For every element except Fire and Lightning, every weapon blow during the surge also adds one stack of the element's affliction.
 
 | Element | Surge | What it does while it lasts | How it looks on you |
 |---|---|---|---|
-| Fire | Kindle | Weapon damage +30%. Every blow sets its target burning for 3 s. | Flames lick up your body. |
-| Lightning | Overdrive | Every swing 30% faster, +8 stagger a blow, weapon damage +10%. | Lightning crawls over you. |
-| Wind | Tailwind | The dodge costs half, goes 30% further and is safe 25% longer. You are 15% quicker. | Streaks of wind circle you; leaves spiral up. |
-| Ice | Glaze | One ward: it takes the next blow that would have landed. | A shell of ice crystals turns round you. |
-| Water | Wellspring | Flasks heal half again as much. | A ring of water circles your waist. |
-| Life | Regrowth | Grey health is made real at once, then 4 health a second. | Leaves climb round you; flowers open at your feet. |
-| Earth | Bedrock | 20% less damage taken. +6 stagger a blow. | Stones circle your feet. |
+| Fire | Kindle | Weapon damage +30%. Every blow sets its target on fire for 3 seconds. | Flames lick up your body. |
+| Lightning | Overdrive | Every swing is 30% faster, +8 stagger per blow, weapon damage +10%. | Lightning crawls over you. |
+| Wind | Tailwind | The dodge costs half, goes 30% farther, and keeps you safe 25% longer. You move 15% faster. | Streaks of wind circle you; leaves spiral up. |
+| Ice | Glaze | One ward: it takes the next blow that would have landed. | A shell of ice crystals spins around you. |
+| Water | Wellspring | Flasks heal 50% more. | A ring of water circles your waist. |
+| Life | Regrowth | Grey health turns into real health right away, then you heal 4 a second. | Leaves climb around you; flowers open at your feet. |
+| Earth | Bedrock | 20% less damage taken. +6 stagger per blow. | Stones circle your feet. |
 | Metal | Temper | 30% less damage taken. | Four blades hang at your shoulders. |
-| Light | Clarity | Grey health is made real at once. Perfect guard and dodge windows are half again as long. | A crown of rays stands over your head. |
-| Dark | Hunger | Costs health, not mana: 3 health a second drain away (never the last of it). Weapon damage +30%, and 30% of each blow's damage comes back as health. | Dark smoke pours down you. |
-| Poison | Fever | 1 health a second, and 6% of each blow's damage comes back as health. | Bubbles rise off you. |
+| Light | Clarity | Grey health turns into real health right away. Perfect guard and dodge timing windows are 50% longer. | A crown of rays shines over your head. |
+| Dark | Hunger | Costs health, not mana: 3 health a second drains away (never your last point). Weapon damage +30%, and you get 30% of each blow's damage back as health. | Dark smoke pours down over you. |
+| Poison | Fever | 1 health a second, and you get 6% of each blow's damage back as health. | Bubbles rise off you. |
 
 ### What each affliction does
 
-| Affliction | Depth and length | What it does to the enemy |
+| Affliction | Stacks and how long | What it does to the enemy |
 |---|---|---|
-| Burn | Up to 5 stacks, 4 s, topped up | 5 damage a second; each stack adds 30%. Some marks set it off: 10 damage a stack. |
-| Static | Up to 5, 6 s | Waits to be set off: 7 damage and 5 stagger a stack to everyone within 4 m. A heavy blow or a finisher discharges it (unverified whether this needs Lightning's Static mark learned). |
-| Unsteady | Up to 5, 6 s | Each stack: 6% more stagger taken, shoved 15% further, turns 8% slower. |
-| Chill | Up to 5, 6 s | Each stack slows it 7%. At five it is **Frozen**: held still for 2.5 s (elites and gods thaw sooner). A heavy blow shatters a frozen enemy for 45. |
-| Soaked | On or off, 8 s | Takes 25% more from spells. Static and Chill laid on it pass to everyone within 4 m. |
-| Seeded | Up to 3, 8 s | Each of your blows on it heals you 1 a stack. When it dies it bursts into thorns: 12 a stack within 3 m. |
-| Tremor | Up to 3, 6 s | Each stack slows it 10%. Its balance (stagger meter) does not recover. |
-| Sundered | Up to 3 notches, 8 s | Takes 8% more weapon damage a notch. |
-| Marked | One deep, 8 s or three blows | Every weapon blow on it is critical (one and a half times damage) and gives 2 more mana. Spent after three blows. |
-| Cursed | One deep, 8 s | Deals 15% less. Killing it heals you 6. |
-| Poisoned | Up to 8 doses, 6 s | 2 damage a dose, landing in a burst every 2 s. Some marks set it off: 6 a dose. |
+| Burn | Up to 5 stacks, 4 seconds, topped up | 5 damage a second; each stack adds 30%. Some marks set it off: 10 damage per stack. |
+| Static | Up to 5, 6 seconds | Waits to be set off: 7 damage and 5 stagger per stack to everyone within 4 metres. A heavy blow or a finisher sets it off (not yet checked whether this needs Lightning's Static mark learned). |
+| Unsteady | Up to 5, 6 seconds | Each stack: 6% more stagger taken, shoved 15% farther, turns 8% slower. |
+| Chill | Up to 5, 6 seconds | Each stack slows it by 7%. At five, it is **Frozen**: held still for 2.5 seconds (elites and gods thaw sooner). A heavy blow shatters a frozen enemy for 45. |
+| Soaked | On or off, 8 seconds | Takes 25% more damage from spells. Static and Chill put on it spread to everyone within 4 metres. |
+| Seeded | Up to 3, 8 seconds | Each of your blows on it heals you 1 per stack. When it dies, it bursts into thorns: 12 per stack within 3 metres. |
+| Tremor | Up to 3, 6 seconds | Each stack slows it by 10%. Its balance (stagger meter) doesn't recover. |
+| Sundered | Up to 3 notches, 8 seconds | Takes 8% more weapon damage per notch. |
+| Marked | Only one stack, 8 seconds or three blows | Every weapon blow on it is a critical hit (one and a half times the damage) and gives 2 more mana. Used up after three blows. |
+| Cursed | Only one stack, 8 seconds | Deals 15% less damage. Killing it heals you 6. |
+| Poisoned | Up to 8 doses, 6 seconds | 2 damage per dose, landing all at once every 2 seconds. Some marks set it off: 6 per dose. |
 
-Critical blows: none by chance to begin with; marks add a chance. A critical blow shows a gold star where it lands.
+Critical hits: you have no random chance of one to start with; marks add a chance. A critical hit shows a gold star where it lands.
 
 ### Taking and consuming
 
-When a god falls it leaves two things on the floor; walk up and use one. **Take**: your element and tree switch to the god's, the old tree is forgotten and the Shards spent on it are given back, you receive the god's own weapon and the **god's gift** at the crown of the new tree. **Consume**: you keep your element and gain 4 Shards, which only strengthen the element you already own, and a plain version of the god's weapon. No god gives a duo branch's spells: they are bought with Shards once both elements are carried. Either choice restores you. A gift that is a spell is worn at once.
+When a god falls, it leaves two things on the floor; walk up and use one. **Take**: your element and tree switch to the god's. The old tree is forgotten, and you get back the Shards you spent on it. You get the god's own weapon and the **god's gift** at the top of the new tree. **Consume**: you keep your element and gain 4 Shards, which only make the element you already have stronger, plus a plain version of the god's weapon. No god gives a duo branch's spells: you buy those with Shards once you carry both elements. Either choice heals you. A gift that is a spell is put on right away.
 
-A **mixed branch** opens when you hold one of its two elements and have held or consumed the other in this run. Sealed, it is still drawn on the chart, and the words panel says which element opens it.
+A **mixed branch** opens when you carry one of its two elements and have carried or consumed the other one during this run. While it's closed, it is still drawn on the chart, and the text panel says which element opens it.
 
 **Not yet**
 
-- Only one god exists: Narukami, of Lightning. In play the choice is therefore Take (Lightning, the Storm Katana, Storm Step) or Consume (stay as you are, 4 Shards, a plain Katana; for a Fire holder also a stronger Flame Wave and Kindle).
-- The other nine elements have no gods. Their braziers in the hub are lit from the start as a stopgap. Lightning's stays cold until it has been taken once.
-- Gust and Riptide move everything within reach, not only what the cone touched. Stone Rise's pillar does not stand to be broken. Flung Blade deals nothing as it lands. Grasp does not drag you to what cannot be dragged.
-- Glaze, Wellspring, Bedrock, Temper, Clarity and Fever have only the plain halves listed above.
-- Dark's "one revive as a zombie" is not the surge; it is the Rise, given by Dark's root, Curse, and bought back by the god's gift A Life for a Life (section 5).
+- Only one god exists: Narukami, the god of Lightning. So in play, the choice is Take (Lightning, the Storm Katana, Storm Step) or Consume (stay as you are, get 4 Shards and a plain Katana; if you carry Fire, you also get a stronger Flame Wave and Kindle).
+- The other nine elements don't have gods. Their braziers in the hub are lit from the start for now. Lightning's stays cold until you've taken it once.
+- Gust and Riptide move everything within reach, not only what the cone touched. Stone Rise's pillar doesn't stay standing to be broken. Flung Blade does no damage as it lands. Grasp doesn't drag you to things that can't be dragged.
+- Glaze, Wellspring, Bedrock, Temper, Clarity and Fever only have the basic effects listed above.
+- Dark's "one revive as a zombie" isn't the surge. It is the Rise, which comes from Dark's root mark, Curse, and which the god's gift A Life for a Life gives back (section 5).
 
 ---
 
 ## 5. Gods' gifts and duo branch tops
 
-A god's gift is never bought. It sits at the crown of its element's tree, drawn as a crowned sun. Most cost nothing to use and are begun by something you already do. In the practice yard a debug shrine hands them out (section 8). Gods give only single-element gifts: a duo branch's top marks are bought, not given.
+A god's gift is never bought. It sits at the top of its element's tree, drawn as a crowned sun. Most cost nothing to use and are started by something you already do. In the practice yard, a test shrine hands them out (section 8). Gods only give single-element gifts: a duo branch's top marks are bought, not given.
 
 ### Gods' gifts: one per element
 
-Given by **taking** the element from its god.
+You get these by **taking** the element from its god.
 
-| Element | Gift | How you trigger it | What it does |
+| Element | Gift | How you set it off | What it does |
 |---|---|---|---|
-| Fire | **Falling Sun** | Light Kindle (L2). Press L2 again to set it early. | The sun takes its road. **Dawn**: it is rolled along the ground to the enemy you face (14 damage, two burns) and the ground it crosses burns. **Noon**: it is carried up, and every burn within 6 m of you deepens once a second. **Dusk**: when Kindle ends or you press again it sets on the enemy below: 60 damage and 80 stagger in 4 m, heavier for every burn it finds, up to double. A blow taken sends it under; it rises again if Kindle has time left. |
-| Lightning | **Storm Step** | Light Overdrive (L2), then dodge. | While Overdrive lasts every dodge costs no stamina, shocks what it passes through, and leaves a shape of light where you stood. |
-| Wind | **The Wind Remembers** | Light Tailwind (L2), then land weapon blows. | Each blow leaves a pale cut hanging where it fell, up to sixteen. When Tailwind ends time slows and they all fall, each for half the blow it remembers. |
-| Ice | **The World Holds Still** | Light Glaze (L2). Press L2 again to break it. | A shell of six fangs of ice stands round you. The second press breaks it outward: a ring to 9 m that strikes each enemy once (10 damage) and freezes it, with enemies slowed to a fifth for 1.5 s. Also, always: shattering a frozen enemy sends a line of breaking ice to the nearest frozen one within 7 m and shatters it too, and on. |
-| Water | **The Sea Rises** | Light Wellspring (L2). Press L2 again. Costs one flask. | Floods a disc of 9 m for 6 s. Everything in it is Soaked, and each weapon blow runs out from the one struck as a wave carrying 40% of the blow. Then everything is dragged 4 m to you and a cone (9 m, 120 degrees) breaks where you face for 55 damage and 90 stagger. |
-| Life | **First Spring** | Light Regrowth (L2). Press L2 again. | You give half your present health (left as grey). Trunks and thorns come up through every Seeded enemy within 12 m (eight at most), hold it for 4 s and strike it for 30. Blows on the held return half their damage as health, up to what was given. With no one Seeded, nothing is taken. |
-| Earth | **Hand of the Mountain** | Light Bedrock (L2), then land heavy blows. | A hand of stone hangs over your sword shoulder. Each heavy blow that lands, it goes over that enemy and half a second later comes down: 70% of the blow in 3 m, heavy, with Tremor. |
-| Metal | **Hanging Swords** | Light Temper (L2), then hold guard (L1). | While Temper lasts every blow held on your guard is a perfect guard, and a sword is forged above the attacker, eight at most. When Temper ends they fall in turn. |
-| Light | **The Scales** | Light Clarity (L2), then deal more than you take. | Two pans of light hang over you: gold for damage your weapon deals, red for health you lose. When Clarity ends: if you dealt more, a sword of light falls on every Marked enemy within 12 m for 60% of the difference (120 at most). If not, your mana is emptied. |
-| Dark | **A Life for a Life** | Be Risen (Dark's root stands you up once from a blow that would kill you, at half health, draining 4 a second down to a sliver). | Brackets and a sign mark the one that killed you. Land a finisher on it (on anyone, if it is gone) to stop the drain, return to half health, and earn the right to rise once more. |
-| Poison | **Clean Blade** | Light Fever (L2), then land weapon blows. | While Fever lasts poison on every enemy neither bites nor fades, and every blow doses twice. When Fever ends time slows, you flick the blade, and each poisoned enemy within 14 m takes every bite it was owed at once. |
+| Fire | **Falling Sun** | Light Kindle (L2). Press L2 again to set the sun early. | The sun travels across the sky. **Dawn**: it rolls along the ground to the enemy you face (14 damage, two Burns), and the ground it crosses burns. **Noon**: it rises up, and every burn within 6 metres of you gains a stack once a second. **Dusk**: when Kindle ends or you press again, it sets on the enemy below it: 60 damage and 80 stagger within 4 metres, more for every burn it finds, up to double. Getting hit sends it down; it rises again if Kindle has time left. |
+| Lightning | **Storm Step** | Light Overdrive (L2), then dodge. | While Overdrive lasts, every dodge costs no stamina, shocks whatever it passes through, and leaves a shape of light where you stood. |
+| Wind | **The Wind Remembers** | Light Tailwind (L2), then land weapon blows. | Each blow leaves a pale cut hanging where it landed, up to sixteen. When Tailwind ends, time slows down and they all fall, each one for half the blow it remembers. |
+| Ice | **The World Holds Still** | Light Glaze (L2). Press L2 again to break it. | A shell of six ice fangs stands around you. The second press breaks it outward: a ring out to 9 metres that hits each enemy once (10 damage) and freezes it, and enemies are slowed to a fifth of their speed for 1.5 seconds. It also always works this way: shattering a frozen enemy sends a line of breaking ice to the nearest frozen enemy within 7 metres and shatters it too, and so on. |
+| Water | **The Sea Rises** | Light Wellspring (L2). Press L2 again. Costs one flask. | Floods a circle 9 metres across for 6 seconds. Everything in it is Soaked, and each weapon blow sends a wave out from the enemy you hit, carrying 40% of the blow. Then everything is dragged 4 metres toward you, and a cone (9 metres, 120 degrees) breaks in the direction you face for 55 damage and 90 stagger. |
+| Life | **First Spring** | Light Regrowth (L2). Press L2 again. | You give up half your current health (it turns grey). Tree trunks and thorns grow up through every Seeded enemy within 12 metres (up to eight), hold it for 4 seconds, and hit it for 30. Blows on the held enemies give back half their damage as health, up to what you gave. If no one is Seeded, nothing is taken. |
+| Earth | **Hand of the Mountain** | Light Bedrock (L2), then land heavy blows. | A hand of stone hangs over your sword shoulder. Each time a heavy blow lands, the hand moves over that enemy and comes down half a second later: 70% of the blow's damage within 3 metres, as a heavy blow, with Tremor. |
+| Metal | **Hanging Swords** | Light Temper (L2), then hold guard (L1). | While Temper lasts, every blow you block is a perfect guard, and a sword is made above the attacker, up to eight. When Temper ends, they fall one after another. |
+| Light | **The Scales** | Light Clarity (L2), then deal more damage than you take. | Two scale pans of light hang over you: gold for the damage your weapon deals, red for the health you lose. When Clarity ends: if you dealt more, a sword of light falls on every Marked enemy within 12 metres for 60% of the difference (up to 120). If not, your mana is emptied. |
+| Dark | **A Life for a Life** | Be Risen (Dark's root mark stands you up once from a blow that would kill you, at half health, draining 4 a second down to a sliver). | Brackets and a symbol mark the enemy that killed you. Land a finisher on it (or on anyone, if it's gone) to stop the drain, get back to half health, and earn the right to rise once more. |
+| Poison | **Clean Blade** | Light Fever (L2), then land weapon blows. | While Fever lasts, poison on every enemy doesn't bite or fade, and every blow adds two doses. When Fever ends, time slows down, you flick your blade, and each poisoned enemy within 14 metres takes every bite it was saving up, all at once. |
 
 ### Duo branch tops: bought with Shards
 
-Each of the eleven reshaped branches keeps the mark that was once its crown. Since 2026-11-20 none is given by a god: each is bought for **5 Shards** on the chart's heart once both elements are carried, growing from the branch's duo spell (Six Mirrors and Light the Pyres are their branches' duo spells, growing from the branch's first two marks). Every other duo branch's duo spell is bought for 5 Shards the same way.
+Each of the eleven reshaped branches keeps the mark that used to be its top. Since 2026-11-20, no god gives these. Each one is bought for **5 Shards** in the middle of the chart once you carry both elements, coming after the branch's duo spell (Six Mirrors and Light the Pyres are their branches' duo spells, and come after the branch's first two marks). Every other duo branch's duo spell is bought for 5 Shards the same way.
 
-| Branch | Top | How you trigger it | What it does |
+| Branch | Top | How you set it off | What it does |
 |---|---|---|---|
-| Plasma (Fire + Lightning) | **Plasma** | Land a heavy blow or a finisher on a burning enemy. | It bursts for 18 damage and 16 stagger in 3.2 m and sets alight everyone it reaches. |
-| Tempest (Lightning + Wind) | **Falling Thunder** | Land any finisher. | The enemy is thrown up, you vanish in a line of light, and 0.34 s later you land on it as a bolt: 22 damage in 4.5 m with Static and Unsteady three deep, everything pushed 3 m. You are untouchable throughout. |
-| Blizzard (Wind + Ice) | **Diamond Dust** | Shatter a frozen enemy, then dodge. | Four shards from each shatter join a ring turning round you, twelve at most. Your next dodge throws them down its path: a lane 9 m long, 6 damage a shard, in volleys of four. |
-| Glacier (Ice + Water) | **Weight of Ice** | Guard blows (L1), then swing a heavy. | Each blow guarded lays a plate of ice on you; a perfect guard lays two; five at most. Each plate turns 6% of every wound. Your next heavy swing spends them all as a lane of ice fangs, longer and harder for each plate. |
-| Bloom (Water + Life) | **Great Lotus** | Drink a flask while your surge is running. | Five petals open on a disc of 3 m for 10 s. Enemies inside are Soaked and Seeded each second; you mend 2 health a second inside. Each perfect guard made inside closes a petal over the attacker and holds it 3 s. At the last petal, or when time is up, it bursts: 30 damage, +30% for each petal closed. |
-| Overgrowth (Life + Earth) | **The Ground Wakes** | Light your surge (L2). | Sixteen stones and roots rise in a ring of 7 m. Everything inside is held for 2 s, given Tremor three deep, and seeded. Then it flowers: 15 damage inside, and you heal 5 for each enemy held. |
-| Forge (Earth + Metal) | **World Anvil** | Land any finisher, then swing a heavy. | An anvil rises under the finished enemy. Its ring strikes every other enemy within 6 m (15 damage), shakes it and breaks its armour. A blade is forged for each one reached, six at most, and carried at your shoulders. They fly at nearby enemies with your next heavy swing: 10 damage and a notch each. |
-| Halo (Metal + Light) | **Six Mirrors** | Hold Triangle / U (worn spell, 60 mana) facing an enemy within 8 m. | Six mirrors stand in a ring round the enemy. You vanish; a line crosses from each mirror in turn; you are back where you began, and a moment later all cuts land: 14 each on the enemy, half on anything else a line crossed, and a Mark and a notch for each cut. Untouchable throughout. |
-| Eclipse (Light + Dark) | **Totality** | Light your surge (L2), then fight. | A black sun hangs over you and the ground goes dark. Each second every enemy within 14 m is Marked and Cursed. Every blow you land is critical and heals you 1. When the surge ends a column of light strikes each enemy for half of what your weapon took from it in the dark, 80 at most. |
-| Blight (Dark + Poison) | **The Reaping** | Land a finisher on an enemy that is both Cursed and poisoned. | Time slows and a great scythe sweeps once round the enemy. All the poison in every enemy within 9 m goes off at once (plus 3 a dose), and half the total heals you. |
-| Pyre (Poison + Fire) | **Light the Pyres** | Hold Triangle / U (worn spell, 60 mana) and stand still. | You kneel. A line of fire runs to each burning or poisoned enemy within 9 m (six at most) and follows it. Three rings mark three breaths over 2.2 s. Then a pillar rises under each: 40 damage in 2 m, its burn detonated and its poison set off. A dodge or a blow taken breaks it. With no one alight the mana comes back. |
+| Plasma (Fire + Lightning) | **Plasma** | Land a heavy blow or a finisher on a burning enemy. | It bursts for 18 damage and 16 stagger within 3.2 metres, and sets everyone it reaches on fire. |
+| Tempest (Lightning + Wind) | **Falling Thunder** | Land any finisher. | The enemy is thrown up, you vanish in a streak of light, and 0.34 seconds later you land on it as a bolt: 22 damage within 4.5 metres, plus three stacks each of Static and Unsteady, and everything is pushed 3 metres. You're untouchable the whole time. |
+| Blizzard (Wind + Ice) | **Diamond Dust** | Shatter a frozen enemy, then dodge. | Four shards from each shatter join a ring spinning around you, up to twelve. Your next dodge throws them along its path: a path 9 metres long, 6 damage per shard, four at a time. |
+| Glacier (Ice + Water) | **Weight of Ice** | Block blows (L1), then swing a heavy blow. | Each blow you block puts a plate of ice on you; a perfect guard puts two; up to five. Each plate blocks 6% of every wound. Your next heavy swing uses them all up as a path of ice fangs, longer and harder for each plate. |
+| Bloom (Water + Life) | **Great Lotus** | Drink a flask while your surge is running. | Five petals open on a circle 3 metres across for 10 seconds. Enemies inside are Soaked and Seeded each second, and you heal 2 health a second inside. Each perfect guard you make inside closes a petal over the attacker and holds it for 3 seconds. At the last petal, or when time is up, it bursts: 30 damage, plus 30% for each petal closed. |
+| Overgrowth (Life + Earth) | **The Ground Wakes** | Light your surge (L2). | Sixteen stones and roots rise in a ring 7 metres across. Everything inside is held for 2 seconds, gets three stacks of Tremor, and is Seeded. Then it flowers: 15 damage inside, and you heal 5 for each enemy held. |
+| Forge (Earth + Metal) | **World Anvil** | Land any finisher, then swing a heavy blow. | An anvil rises under the finished enemy. Its ring hits every other enemy within 6 metres (15 damage), shakes it, and breaks its armour. A blade is made for each one it reaches, up to six, and carried at your shoulders. They fly at nearby enemies with your next heavy swing: 10 damage and a notch each. |
+| Halo (Metal + Light) | **Six Mirrors** | Hold Triangle / U (the spell you have on, 60 mana) while facing an enemy within 8 metres. | Six mirrors stand in a ring around the enemy. You vanish; a line crosses from each mirror in turn; you're back where you started, and a moment later all the cuts land: 14 each on the enemy, half on anything else a line crossed, and a Mark and a notch for each cut. You're untouchable the whole time. |
+| Eclipse (Light + Dark) | **Totality** | Light your surge (L2), then fight. | A black sun hangs over you, and the ground goes dark. Each second, every enemy within 14 metres is Marked and Cursed. Every blow you land is a critical hit and heals you 1. When the surge ends, a column of light hits each enemy for half the damage your weapon did to it in the dark, up to 80. |
+| Blight (Dark + Poison) | **The Reaping** | Land a finisher on an enemy that is both Cursed and poisoned. | Time slows down, and a huge scythe sweeps once around the enemy. All the poison in every enemy within 9 metres goes off at once (plus 3 per dose), and you heal half the total. |
+| Pyre (Poison + Fire) | **Light the Pyres** | Hold Triangle / U (the spell you have on, 60 mana) and stand still. | You kneel. A line of fire runs to each burning or poisoned enemy within 9 metres (up to six) and follows it. Three rings mark three breaths over 2.2 seconds. Then a pillar rises under each one: 40 damage within 2 metres, with its burn and its poison set off. A dodge or getting hit breaks it. If no one is burning or poisoned, you get the mana back. |
 
 ### Five other spells with moves of their own
 
-These are bought on the chart like any spell, then worn and cast with hold Triangle / U.
+You buy these on the chart like any spell, then put them on and cast them by holding Triangle / U.
 
 | Spell | Where | Cost | What you do and what it does |
 |---|---|---|---|
-| **Seven Flashes** | Lightning tree (grows from Afterimage) | 4 Shards, 45 mana | You vanish. Seven lines are drawn on the ground from enemy to enemy within 8 m (one enemy: through it from seven sides). You stand again on the starting spot, back to the fight, still for half a second. Then the cuts land together (9 each), and any enemy at full Static discharges. Untouchable while gone, open while still: struck then, the cuts land at half and nothing discharges. |
-| **The Wave Stands Still** | Glacier branch | 5 Shards, 50 mana | **Keep the button held**: a wave 6 m wide rolls out, up to 9 m, soaking what it meets and carrying it along. **Let go**: it turns to a wall of ice for 4 s. Nothing walks through it, and everything within 3 m behind its face is Frozen. A heavy swing beside the wall shatters it and all it holds (45 damage, 60 stagger each). |
-| **Ball Lightning** | Plasma branch | 4 Shards, 40 mana | A ball of white fire appears 1.5 m ahead and drifts slowly after the nearest enemy for 8 s. **Hit it with a weapon swing** to send it along the swing and grow it a step, three at most. It bursts on the first enemy it meets, bigger and harder for each strike, laying Burn and Static. Left alone it bursts small when its time is up. |
-| **Pawned Heart** | Dark tree | 4 Shards, no mana | Your health drops to 1. The rest is set down behind you as a beating heart in a ring that closes over 10 s. While it beats your weapon deals 60% more and swings cost the least stamina they can. **Walk at least 2.6 m away, then back onto it** to get back all that was pawned plus 30% of the damage dealt meanwhile. If the ring closes first: health stays at 1 and half of what was pawned comes back grey. |
-| **Sky Dance** | Wind tree | 4 Shards, 45 mana | The enemy you face is thrown into the air and you go up beside it, untouchable. Five rings close on it: **press light attack as each ring closes** for a harder cut (15 in place of 10). Then the stick chooses where it is thrown down, and it bursts where it lands: 20 plus 6 for each cut in time, in 3 m. The cast is refused, and the mana kept, if there is no enemy it can lift. |
+| **Seven Flashes** | Lightning tree (comes after Afterimage) | 4 Shards, 45 mana | You vanish. Seven lines are drawn on the ground from enemy to enemy within 8 metres (against one enemy, through it from seven sides). You stand again where you started, with your back to the fight, still for half a second. Then the cuts all land together (9 each), and any enemy with full Static has it set off. You're untouchable while gone, but open while standing still: if you're hit then, the cuts land at half strength and no Static goes off. |
+| **The Wave Stands Still** | Glacier branch | 5 Shards, 50 mana | **Keep the button held**: a wave 6 metres wide rolls out, up to 9 metres, soaking whatever it meets and carrying it along. **Let go**: it turns into a wall of ice for 4 seconds. Nothing can walk through it, and everything within 3 metres behind its front is Frozen. A heavy swing next to the wall shatters it and everything it holds (45 damage, 60 stagger each). |
+| **Ball Lightning** | Plasma branch | 4 Shards, 40 mana | A ball of white fire appears 1.5 metres in front of you and slowly floats after the nearest enemy for 8 seconds. **Hit it with a weapon swing** to send it flying in the direction of the swing and make it one step bigger, up to three. It bursts on the first enemy it meets, bigger and harder for each hit, adding Burn and Static. If you leave it alone, it bursts small when its time is up. |
+| **Pawned Heart** | Dark tree | 4 Shards, no mana | Your health drops to 1. The rest is set down behind you as a beating heart inside a ring that closes over 10 seconds. While it beats, your weapon deals 60% more damage, and swings cost as little stamina as they can. **Walk at least 2.6 metres away, then back onto it** to get back all the health you gave up, plus 30% of the damage you dealt in the meantime. If the ring closes first, your health stays at 1, and half of what you gave up comes back as grey health. |
+| **Sky Dance** | Wind tree | 4 Shards, 45 mana | The enemy you face is thrown into the air and you leap up next to it, untouchable. Five rings close in on it: **press light attack as each ring closes** for a harder cut (15 instead of 10). Then the stick chooses where it's thrown down, and it bursts where it lands: 20 damage plus 6 for each perfectly timed cut, within 3 metres. The spell won't cast, and you keep your mana, if there's no enemy it can lift. |
 
 **Not yet**
 
-- The design asked for "hold the surge button" on four gifts; as built it is "press the surge button again".
-- The Scales: the design's "no mana for five seconds" is "mana is emptied".
-- The Rise comes from Dark's root, Curse; A Life for a Life is the finisher that buys it back. Dark's keystone Dead Already makes you Risen for good in its place.
-- The Wave Stands Still soaks and freezes training dummies but does not carry them along.
-- Hanging Swords works by making the perfect-guard window very long during Temper.
-- None of the gifts has been played or tuned.
+- The plan asked for "hold the surge button" on four gifts; for now, it is "press the surge button again".
+- The Scales: the planned "no mana for five seconds" is "mana is emptied" for now.
+- The Rise comes from Dark's root mark, Curse; A Life for a Life is the finisher that gives it back. Dark's keystone, Dead Already, makes you Risen all the time instead.
+- The Wave Stands Still soaks and freezes training dummies but doesn't carry them along.
+- Hanging Swords works by making the perfect guard window very long during Temper.
+- None of the gifts has been played or tuned yet.
 
 ---
 
 ## 6. Spell forms
 
-A form is the shape a spell takes. Any element can wear any form in its own colour with its own affliction; the marks of kind Spell on the chart each name one.
+A form is the shape a spell takes. Any element can use any form, in its own colour and with its own affliction. The Spell marks on the chart each name one.
 
-**Wearing and casting**: the first spell you learn is worn at once. To wear another, choose a spell you already own on the chart and press learn (Cross / E). The HUD names the worn spell beside the weapon. **Hold Triangle / U for 0.3 s** to cast the worn spell; a tap still casts the element's own.
+**Putting on and casting**: the first spell you learn is put on right away. To put on another, choose a spell you already have on the chart and press learn (Cross / E). The screen shows the name of the spell you have on next to the weapon. **Hold Triangle / U for 0.3 seconds** to cast the spell you have on; a tap still casts the element's own spell.
 
-| id | What the player sees and does |
+| Form | What you see and do |
 |---|---|
-| `wave` | A cone thrown ahead that strikes everything in it. |
-| `bolt` | A bolt on the enemy faced that leaps on to others near it. |
-| `leap` | A leap out of the fight, untouchable in the air, down beside the enemy faced, leaving a crater. |
-| `rod` | A rod planted a little ahead; the element strikes round it for a while. |
-| `blades` | Blades appear high over the enemy faced (or the aim point), hang, then fall one after another, each striking a small circle. |
-| `sword` | One sword as tall as the screen falls on the aim point after a wait: a wide circle, a held frame on impact, and a crack left on the ground that bites for a while. |
-| `beam` | A braced stance, then a thick beam held for some seconds, biting at intervals. You can turn slowly while it lasts. You are rooted; the dodge lets you go. |
-| `phalanx` | Blades form in a fan behind your shoulders and hover. Each fires on its own at the nearest enemy in reach, or all at once when you land a heavy blow. |
-| `dragon` | A great head of the element forms at your shoulder and lunges forward along a line, jaws closing at the end for a burst. Everything on the line is carried along a little. |
-| `nova` | A burst round you after a short wait, with a ring that sweeps outward. |
-| `orb` | A slow orb leaves the hand and follows the nearest enemy, then detonates. Strike it with a weapon blow and it detonates at once, larger. |
-| `bomb` | You raise a growing sphere overhead (rooted), then throw it forward: a great burst and a burning patch after. |
-| `spikes` | Spikes run out along the ground in a line from you, one after another, each erupting a moment after its mark shows. Some have several rows side by side. |
-| `field` | A patch of ground at the aim point grows spikes, flame or frost for a while, biting at intervals. |
-| `drill` | You become a spinning point of the element and bore forward through everything on the line, striking each enemy several times, and come out the far side facing back. Untouchable while it lasts. |
-| `minions` | Small helpers of the element rise beside you. Each runs at the nearest enemy, strikes it a few times, then goes. |
-| `bullets` | Bullets appear in a ring round the enemy faced, hang, then all fly inward together. |
-| `reverse` | A point ahead pulls every enemy near it inward for a moment, then bursts. |
-| `parry` | A guard stance held for a while. The first blow that lands on it is turned for nothing and answered with a cone of the element. If nothing strikes it, the mana is lost. |
-| `wall` | A wall rises ahead after a wait and blocks movement and shots for a while. It bursts when it ends, or when you strike it with a heavy blow. |
-| `discs` | Discs orbit you for a while, striking what they pass. |
-| `brand` | A sign is set on the enemy faced. Each of your next few weapon blows on it sets off a burst. Needs an enemy faced, or the mana is lost. |
-| `rain` | For a while, strikes fall at random inside a circle round the aim point, each with its own small mark on the ground first. |
-| `clone` | A copy of you in the element's light stands beside you and repeats every weapon blow a beat late for a share of its damage. |
-| `flash` | You vanish and lines of light cross the enemy faced, one after another. You reappear behind it, still, back turned. After a wait all the cuts land at once. Untouchable while it lasts. |
-| `ring` | A ring closes round you and the enemy faced for a while. Nothing crosses it; enemies that touch it are bitten. |
-| `pillars` | Pillars burst from the ground under the nearest enemies in reach, each lifting what it strikes for a moment. |
-| `step` | You step through the enemy faced in a line of the element and cut it in passing. If it lands, your next heavy blow within a short time is critical. |
+| `wave` | A cone thrown ahead that hits everything in it. |
+| `bolt` | A bolt on the enemy you face that jumps to others near it. |
+| `leap` | A leap out of the fight, untouchable in the air, landing next to the enemy you face and leaving a crater. |
+| `rod` | A rod planted a little in front of you; the element strikes around it for a while. |
+| `blades` | Blades appear high over the enemy you face (or where you aim), hang there, then fall one after another, each hitting a small circle. |
+| `sword` | One sword as tall as the screen falls where you aim after a wait: a wide circle, a frozen moment when it hits, and a crack left in the ground that hurts enemies for a while. |
+| `beam` | You brace, then fire a thick beam for a few seconds that hits again and again. You can turn slowly while it lasts. You can't move; dodging lets you go. |
+| `phalanx` | Blades form in a fan behind your shoulders and hover. Each one fires on its own at the nearest enemy in reach, or all at once when you land a heavy blow. |
+| `dragon` | A huge head made of the element forms at your shoulder and lunges forward along a line, with its jaws closing at the end in a burst. Everything on the line is carried along a little. |
+| `nova` | A burst around you after a short wait, with a ring that sweeps outward. |
+| `orb` | A slow ball leaves your hand and follows the nearest enemy, then explodes. Hit it with a weapon blow, and it explodes right away, bigger. |
+| `bomb` | You raise a growing ball over your head (and can't move), then throw it forward: a huge burst, then a burning patch. |
+| `spikes` | Spikes shoot out along the ground in a line from you, one after another, each bursting up a moment after its mark shows. Some have several rows side by side. |
+| `field` | A patch of ground where you aim grows spikes, flame or frost for a while, hurting enemies again and again. |
+| `drill` | You become a spinning point of the element and bore forward through everything on the line, hitting each enemy several times, and come out the far side facing back. You're untouchable while it lasts. |
+| `minions` | Small helpers made of the element rise up next to you. Each runs at the nearest enemy, hits it a few times, then disappears. |
+| `bullets` | Bullets appear in a ring around the enemy you face, hang there, then all fly inward together. |
+| `reverse` | A spot in front of you pulls every nearby enemy inward for a moment, then bursts. |
+| `parry` | A guard stance you hold for a while. The first blow that lands on it does nothing and is answered with a cone of the element. If nothing hits it, the mana is lost. |
+| `wall` | A wall rises in front of you after a wait and blocks movement and shots for a while. It bursts when it ends, or when you hit it with a heavy blow. |
+| `discs` | Discs circle around you for a while, hitting whatever they pass. |
+| `brand` | A symbol is put on the enemy you face. Each of your next few weapon blows on it sets off a burst. Needs an enemy you're facing, or the mana is lost. |
+| `rain` | For a while, hits fall at random inside a circle around where you aim, each with its own small mark on the ground first. |
+| `clone` | A copy of you made of the element's light stands next to you and repeats every weapon blow a moment later, for part of its damage. |
+| `flash` | You vanish, and lines of light cross the enemy you face, one after another. You appear again behind it, standing still, with your back turned. After a wait, all the cuts land at once. You're untouchable while it lasts. |
+| `ring` | A ring closes around you and the enemy you face for a while. Nothing can cross it, and enemies that touch it get hurt. |
+| `pillars` | Pillars burst out of the ground under the nearest enemies in reach, each lifting whatever it hits for a moment. |
+| `step` | You step through the enemy you face along a line of the element and cut it as you pass. If it lands, your next heavy blow soon after is a critical hit. |
 
-Every form shows itself coming on the ground before it lands (never less than 0.22 s), lands with a white star and a ring, and leaves a mark behind.
+Every form shows a warning on the ground before it lands (never less than 0.22 seconds), lands with a white star and a ring, and leaves a mark behind.
 
 **Not yet**
 
-- Enemies press against a wall or a ring and do not walk round it. The ring holds you in as well.
-- The gods' gifts and crowns have forms of their own (section 5) and are not worn by other elements.
+- Enemies push against a wall or a ring and don't walk around it. The ring holds you in too.
+- The gods' gifts and crowns have their own forms (section 5), and other elements can't use them.
 
 ---
 
