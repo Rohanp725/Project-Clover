@@ -194,10 +194,11 @@ namespace Clover.Player
                 case Elements.Fire:
                     // Checked against elements_a.md when Fire was reshaped (task 4.2): the third blow's patch above, Burning
                     // Edge and Burnt Offering here are the design's numbers.
-                    // Burning Edge: a sheet of flame along the arc and 3 m beyond, 2 Burn on all it reaches, the arc's ground burning 3 s.
+                    // Burning Edge: a sheet of flame along the arc and 3 m beyond, 2 Burn on all it reaches, and the ground along
+                    // the cut burning for about a second (the owner's review, 2026-11-21: three seconds read as flame out of nothing).
                     Cover(combat, print, Blow(element, blowDamage * 0.25f, 8f, 2), 3f);
                     if (!art) Show(combat, element, print, 3f);
-                    Burn(print, 3f);
+                    Burn(print);
                     if (deep)
                     {
                         // Burnt Offering: a pillar of flame on the enemy struck, 30 damage, and its burn goes off.
@@ -432,21 +433,47 @@ namespace Clover.Player
                 ElementLook.Puff(element, Ground(centre + print.Forward * (reach * (i + 0.5f) / 6f)) + Vector3.up * 0.4f, Vector3.up, 0.9f);
         }
 
-        // Fire left on the ground the strike covered, for 3 s.
-        private static void Burn(in Footprint print, float further)
+        /// <summary>How long the infused strike's ground fire burns before the player's numbers: about a second (the owner's review, 2026-11-21).</summary>
+        public const float StrikeBurnSeconds = 1f;
+
+        private static readonly Color EmberRed = new Color(0.85f, 0.16f, 0.04f);
+        private static readonly Color EmberOrange = new Color(1f, 0.34f, 0.04f);
+
+        // Fire left on the ground along the cut itself, not out past it, so it reads as the blade's own burn. Only the
+        // infused strike lays this, so the trail, the crater, the flask and the spells keep their own burning times.
+        private static void Burn(in Footprint print)
         {
             if (print.Shape == FootprintShape.Arc || print.Shape == FootprintShape.Ring)
             {
                 float arc = print.Shape == FootprintShape.Ring ? 300f : Mathf.Max(60f, print.ArcDegrees);
-                for (int i = 0; i < 3; i++)
+                for (int i = 0; i < 4; i++)
                 {
-                    Vector3 outward = Quaternion.Euler(0f, (i - 1) * arc / 3f, 0f) * print.Forward;
-                    Hazards.Lay(HazardKind.Fire, Ground(print.Origin + outward * ((print.Reach + further) * 0.6f)), 1.4f, 3f, 3f, 0f, 4f, 0.5f, struck: Swings.SwingLooks.Fire.Tint);
+                    Vector3 outward = Quaternion.Euler(0f, (i / 3f - 0.5f) * arc * 0.8f, 0f) * print.Forward;
+                    BurnPatch(Ground(print.Origin + outward * (print.Reach * 0.85f)), 0.85f);
                 }
                 return;
             }
+            if (print.Shape == FootprintShape.Disc)
+            {
+                for (int i = 0; i < 3; i++)
+                    BurnPatch(Ground(print.Centre + Quaternion.Euler(0f, i * 120f, 0f) * print.Forward * (print.Radius * 0.5f)), 0.85f);
+                return;
+            }
             for (int i = 0; i < 3; i++)
-                Hazards.Lay(HazardKind.Fire, Ground(print.Origin + print.Forward * ((print.Reach + further) * (i + 0.5f) / 3f)), 1.3f, 3f, 3f, 0f, 4f, 0.5f, struck: Swings.SwingLooks.Fire.Tint);
+                BurnPatch(Ground(print.Origin + print.Forward * (print.Reach * (i + 0.5f) / 3f)), 0.8f);
+        }
+
+        // One patch of the strike's ground fire: the flames (the hazard's own real fire) stand on a dark scorch with a
+        // dull ember glow in it, so they burn on something and not on bare stone. Bites three times in its second.
+        private static void BurnPatch(Vector3 at, float radius)
+        {
+            Hazards.Lay(HazardKind.Fire, at, radius, StrikeBurnSeconds, 5f, 0f, 4f, 0.35f, struck: Swings.SwingLooks.Fire.Tint);
+            // The flames last as long as the player's numbers make fire on the ground last; the char outlives them a little.
+            float seconds = StrikeBurnSeconds * Hazards.FireSecondsScale;
+            float yaw = Random.value * 360f;
+            FormFx.Lay(FormMark.Scorch, at, radius * 2.6f, FormKit.Stain(EmberOrange, 0.85f), seconds + 0.6f, -1f, 0f, yaw);
+            FormFx.Lay(FormMark.Scorch, at + Vector3.up * 0.02f, radius * 1.8f, FormKit.Lit(EmberRed, 2.4f, 0.65f), seconds + 0.15f, radius * 1.3f, 0f, yaw + 50f);
+            Vfx.Play(VfxKind.Embers, at + Vector3.up * 0.2f, Vector3.up, 0.6f);
         }
 
         // Pushes every enemy the last strike reached along the strike (negative: toward the player).
