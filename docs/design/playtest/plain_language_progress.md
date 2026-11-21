@@ -1,5 +1,12 @@
 # Plain-language pass: progress
 
+**Summary (pass finished 2026-11-21).** All 70 files in scope are done: the 66 mark detail files, effects.md, the older
+sections of whats_new.md (0.1 to 0.4; the 0.5 section was left as it was), docs/GUIDE.md, and the playtest readme.md.
+Ids, "Title:" and "Group:" lines, headings and bold labels are unchanged (checked against the files before the pass).
+Fifteen lines were unclear or looked out of date; they are listed under "Unsure lines" below, with the facts kept as
+written. **Playtest Texts still needs a rebuild in the editor (Clover > Build > Playtest Texts)**; this pass did not
+run it. GUIDE.md's generated "Every mark" tables were left alone (see the note on GUIDE.md below).
+
 The owner's rule (2026-11-20): "there needs to be a pass on all language so it's readable for people, a lot of the notes
 and whatnot explaining what each thing does is not readable for a normal human, it needs to be readable as if they were a
 8th grader".
@@ -43,6 +50,10 @@ Lines whose meaning was not clear. The facts were kept and written as clearly as
   ids). The facts were kept as written; the form ids in the table were kept too, since they are names, and the
   column was renamed "Form". These sections probably need a content update, not only plain words.
 - marks/fire.md, fire.sun: "it rises in 1.5 seconds if Kindle has 3 left" was read as "if Kindle has 3 seconds left".
+- readme.md, "NOT BUILT YET": it still lists reactions, the spell branches and "written details for every tree but
+  Fire and Lightning" as coming later, though all three are in now. Kept as written; it needs a content update.
+- docs/GUIDE.md, section 8: editor menu names (Clover > Build > ...) were kept, since they are what you click; scene
+  file paths became scene names ("the Hub scene").
 
 ## Files
 
