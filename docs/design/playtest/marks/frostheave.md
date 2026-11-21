@@ -46,26 +46,22 @@ both carried.
 
 **When it happens.** Always on once you learn it, while you carry both Ice and Earth.
 
-**The numbers.** Mix, a minor mark, 1 Shard.
+**The numbers.** Mix, a minor mark, 1 Shard. Once the Chill is gone, the Tremor starts to fade as usual.
 
 **Works with.** Hard Frost, which it comes after on the chart, Frost Heave.
 
 **Example.** A chilled soldier stays shaken.
 
-**Not built yet.** It does nothing yet. The game can't yet make one affliction last as long as another one does.
-
 ## frostheave.bones
 **What it does.** A shaken enemy that is Frozen stays frozen twice as long. Shattering it heaves the ground under every enemy within 4 metres.
 
-**When it happens.** Each time a shaken enemy is shattered, while you carry both Ice and Earth.
+**When it happens.** Each time a shaken enemy is Frozen or shattered, while you carry both Ice and Earth.
 
-**The numbers.** Mix, keystone, 5 Shards. Everything within 4 metres is thrown into the air for 1 second and takes 12 damage, 25 stagger and a Tremor, at most three times a second.
+**The numbers.** Mix, keystone, 5 Shards. A shaken enemy's freeze lasts twice as long as usual. When it is shattered, everything within 4 metres is thrown into the air for 1 second and takes 12 damage, 25 stagger and a Tremor, at most three times a second.
 
 **Works with.** Hard Frost, Hoarfrost, Frost Heave.
 
 **Example.** Shatter a frozen, shaken soldier in a pack, and the whole pack goes flying up.
-
-**Not built yet.** The freeze doesn't last twice as long yet.
 
 ## frostheave.hagsstaff
 **What it does.** You strike the ground and hammer frost into it. A circle around you turns hard and white. Each second, every enemy on it is chilled and shaken, so it heaves when the two afflictions meet.
