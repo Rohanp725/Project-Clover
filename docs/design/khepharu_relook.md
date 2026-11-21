@@ -691,8 +691,7 @@ after. For moving moves also a sequence of frames every 0.1 s (for a GIF), as th
 
 ## Audit results (2026-11-20)
 
-**Status: the game-camera audit is complete and written up below; the close-camera run is IN PROGRESS** (see the running
-notes at the end). Measured on the fight as it stands at `cabb87d`, before any change, by `AgentScripts/KhepharuAudit.cs`
+**Status: complete** (game camera and close camera; the running notes at the end say how it went). Measured on the fight as it stands at `cabb87d`, before any change, by `AgentScripts/KhepharuAudit.cs`
 (with `KhepharuMeshDump.cs` run once in edit mode, since the model's meshes cannot be read in Play Mode). Game view
 1920 x 1080. Everything lives under `review/khepharu/audit/` (not committed, about 1.5 GB): `game/summary.txt` (every
 worst number, per move, case, form state and sun state), `game/frames.csv` (one row a frame, 49 922 frames),
@@ -788,6 +787,17 @@ garbage (9-20 KB a frame) is against the project's zero-allocation rule and is w
 - 5.6 items 44-45 are the biggest single gain in readability: the falcon is off the screen in 83% of its frames.
 - Section 1.5's camera and every pixel figure in section 3.1 are to be read at 47 degrees, not 63.
 
+### 6. The close camera (12 m, 35 degrees down, side-on to the sun and the body)
+
+`review/khepharu/audit/close/` (83 500 frames, 3203 pictures). **The cut shows:** close to, the corona's flame ring has
+no flames on its lower side where the floor slices the quad (`close/worst/floor_Flares_Flares_Left_1p63.png`, in
+`worst.png`). Seen flatter the corona goes deeper: 1.64 m with the Flares' sun, 1.33 m in the Spent pose, 1.31 m held
+at idle; the Burrow's drawn sun 4.95 m. With the camera brought to them the boss is off the screen in 7.9% of frames and
+the falcon in 0.1%, which shows the 82.6% at the game camera is the framing, not the flight path. The form fight ran at
+3.5 ms median, p95 5.4, 3 of 78 763 frames over 16.6 ms, 11.6 KB of garbage a frame.
+
+The contact sheet of the worst frames is `review/khepharu/audit/worst.png` (eight frames, two owner faults first).
+
 ### Running notes
 
 - 2026-11-21: extra (a) done: Drawn Back to Break's throw sized by `Enemy.ShoveTravel`; `DrawnBackThrowProbe` slid the
@@ -798,6 +808,8 @@ garbage (9-20 KB a frame) is against the project's zero-allocation rule and is w
   `review/khepharu/audit/close/`, its report in `close/summary.txt`. The probe now leaves Play Mode by itself when done
   (and clears the sandbox flag once in edit mode). If cut off: check `unity command editor status`; if still playing,
   `editor.playmode stop`, then delete the PlayerPrefs key `clover.progress.sandbox`.
+- 2026-11-21: the close-camera run finished and left Play Mode by itself; section 6 and `worst.png` written. The audit
+  is done; GIFs exist for the game camera only (the close camera's frames are in `close/<move>/seq/`).
 
 ### To resume (in this order)
 
