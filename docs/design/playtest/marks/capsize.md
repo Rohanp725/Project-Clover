@@ -5,73 +5,73 @@ Capsize (`docs/design/steel/pairs_d1_d2.md`, "Wind and Water"). Drawn in the hea
 both carried.
 
 ## capsize.shape
-**What it does.** Opens Capsize's two shapes. At a rest fire you choose which one your Capsize wears, and from then on it runs instead of the plain one. **Waterspout**: it is lifted in a column of spray instead of going down, in the air where your blows hold it up. **Breakers**: it goes down as before, and as it falls it throws a sheet of spray behind it, so a line of wet, unsteady enemies goes over like dominoes.
+**What it does.** Unlocks two new shapes for Capsize. At a rest fire, you pick which shape your Capsize uses. From then on, it uses that shape instead of the plain one. **Waterspout**: instead of falling down, the enemy is lifted up in a column of spray. It stays in the air while your blows keep it up. **Breakers**: the enemy falls down like before. As it falls, it throws a sheet of spray behind it, so a line of wet, Unsteady enemies falls over like dominoes.
 
-**When it happens.** Every time Capsize fires (Unsteady landing on a soaked enemy, or Soaked on an unsteady one) while Wind and Water are both carried. Before this mark is bought, or with only one of the two carried, the plain Capsize runs (down for 1.2 seconds; the great only stagger).
+**When it happens.** Every time Capsize goes off while you carry both Wind and Water. Capsize goes off when Unsteady lands on a soaked enemy, or when Soaked lands on an Unsteady one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Capsize. The plain one knocks the enemy down for 1.2 seconds. Big enemies are only staggered.
 
-**The numbers.** Mix, 3 Shards. Waterspout: lifted for 1.2 seconds; what is too heavy to lift reels instead. Breakers: down for 1.2 seconds (an elite takes 25 stagger, a god 15), and two bursts of spray beyond it on your line, 0.9 to 4 metres past it, Soak and give 2 Unsteady to what stands there; on purpose, this can capsize them in turn. Capsize rests 4 seconds on each enemy.
+**The numbers.** Mix, 3 Shards. Waterspout: the enemy is lifted for 1.2 seconds. An enemy too heavy to lift staggers back instead. Breakers: the enemy is knocked down for 1.2 seconds (an elite takes 25 stagger instead, a god 15). Two bursts of spray land in a line behind it, from 0.9 to 4 metres past it. They Soak whatever stands there and give it 2 Unsteady. This is on purpose: it can make those enemies capsize too. After Capsize goes off on an enemy, it can't go off on that enemy again for 4 seconds.
 
-**Works with.** Riptide and Gust to bring the two, Rolled In, Swamped, Ride the Squall, Updraft's juggles (Waterspout).
+**Works with.** Riptide and Gust to set it up, Rolled In, Swamped, Ride the Squall, and Updraft's juggles (with Waterspout).
 
-**Example.** A queue of soldiers in a corridor, all soaked: Breakers on the first and they go over one after another.
+**Example.** A line of soaked soldiers stands in a hallway. Use Breakers on the first, and they fall over one after another.
 
 ## capsize.wake
-**What it does.** A perfect dodge leaves a line of spray behind it for 3 seconds that Soaks and unsteadies whatever crosses it.
+**What it does.** A perfect dodge leaves a line of spray behind you for 3 seconds. Anything that crosses it is Soaked and made Unsteady.
 
-**When it happens.** Each perfect dodge (roll just as a blow would land).
+**When it happens.** Each perfect dodge (roll right as a blow would land).
 
-**The numbers.** Mix, 3 Shards. Four patches 0.8 metres across in a line 3 metres long, for 3 seconds: a Soaked every half second and an Unsteady every second to what stands in them.
+**The numbers.** Mix, 3 Shards. Four patches, each 0.8 metres across, in a line 3 metres long, for 3 seconds. An enemy standing in them gets Soaked every half second and Unsteady every second.
 
-**Works with.** Capsize (crossing it twice is enough), Rolled In, Ride the Squall.
+**Works with.** Capsize (crossing it twice is enough to set it off), Rolled In, Ride the Squall.
 
-**Example.** Dodge a charge and the charger runs through your wake and goes down.
+**Example.** Dodge a charge. The charging enemy runs through your spray and falls down.
 
-**Not built yet.** The line lies ahead of where the dodge ends, not along the dodge's own path.
+**Not built yet.** The line lands in front of where your dodge ends, not along the path of the dodge.
 
 ## capsize.rolledin
-**What it does.** An enemy that capsizes is dragged 2 metres toward you as it falls, into reach.
+**What it does.** An enemy that capsizes is dragged 2 metres toward you as it falls, so it's in reach.
 
-**When it happens.** Each time Capsize fires on an enemy, plain or shaped.
+**When it happens.** Each time Capsize goes off on an enemy, plain or with a shape.
 
-**The numbers.** Mix, 3 Shards. Drawn 2 metres toward you.
+**The numbers.** Mix, 3 Shards. Pulled 2 metres toward you.
 
-**Works with.** Swamped (it falls where you can strike it), Capsize's Breakers.
+**Works with.** Swamped (the enemy falls where you can hit it), Capsize's Breakers shape.
 
-**Example.** An archer capsizes at the edge of the fight and slides to your feet.
+**Example.** An archer capsizes at the edge of the fight and slides right to your feet.
 
 ## capsize.swamped
 **What it does.** Blows on a capsized enemy fill its stagger meter twice as fast.
 
-**When it happens.** Always on once learned, while Wind and Water are both carried.
+**When it happens.** Always on once you learn it, while you carry both Wind and Water.
 
-**The numbers.** Mix, keystone, 5 Shards. As built: each blow that lands on an enemy both Soaked and Unsteady adds 10 stagger, at most five times a second.
+**The numbers.** Mix, keystone, 5 Shards. For now: each blow that lands on an enemy that is both Soaked and Unsteady adds 10 stagger, at most five times a second.
 
 **Works with.** Capsize, Rolled In, the finisher.
 
-**Example.** Put a brute down and two blows open it for a finisher.
+**Example.** Knock a brute down, and two blows leave it open for a finisher.
 
-**Not built yet.** It answers blows on any soaked, unsteady enemy with a flat 10 stagger rather than doubling the stagger of blows on one that is down.
+**Not built yet.** For now, it adds a flat 10 stagger to blows on any Soaked, Unsteady enemy, instead of doubling the stagger of blows on an enemy that is down.
 
 ## capsize.squall
-**What it does.** You are carried 7 metres along the stick on a low racing sheet of spray. Every enemy near the line takes 6, is Soaked and made 2 deeper Unsteady, and so capsizes if it was already unsteady.
+**What it does.** You ride 7 metres in the direction of the stick on a low, fast sheet of spray. Every enemy near your path takes 6 damage, is Soaked, and gets 2 more stacks of Unsteady. So if it was already Unsteady, it capsizes.
 
-**When it happens.** From a spell slot, while Wind and Water are both carried: cast it with that slot's button (hold L2 and a face button, or 1 to 4). Its first landing charges your blade with Wind.
+**When it happens.** Cast it from a spell slot while you carry both Wind and Water. Press that slot's button (hold L2 and a face button, or press 1 to 4). The first time it lands, it charges your blade with Wind.
 
-**The numbers.** Mix, duo spell, movement, 5 Shards. No mana: it waits 9 seconds after a cast, less with weapon play. 7 metres; everything within 1.5 metres of the line takes 6 damage, 6 stagger, 2 Unsteady and a Soaked.
+**The numbers.** Mix, duo spell, movement, 5 Shards. It costs no mana. After you cast it, you must wait 9 seconds to cast it again. Fighting with your weapon makes the wait shorter. You travel 7 metres. Every enemy within 1.5 metres of your path takes 6 damage, 6 stagger, 2 Unsteady and a Soaked.
 
 **Works with.** Capsize, Wake, Open the Gourd.
 
-**Example.** Ride through a soaked pack and leave it on its back behind you.
+**Example.** Ride through a soaked pack, and leave them on their backs behind you.
 
-**Not built yet.** You are not yet untouchable on the ride, and casting it out of a perfect dodge does not yet skip its cooldown or make the next blow critical.
+**Not built yet.** You can still be hit during the ride. Casting it right after a perfect dodge doesn't yet skip its wait or make your next blow a critical hit.
 
 ## capsize.gourd
-**What it does.** A duo surge. While it burns a gourd of winds hangs at your hip: each dodge lets one out, a gust down the dodge's line that Soaks, unsteadies twice and shoves everything near, and each capsize gives you mana.
+**What it does.** A duo surge. While it is lit, a gourd full of wind hangs at your hip. Each dodge lets out one gust along the path of the dodge. The gust Soaks enemies, gives them two stacks of Unsteady, and shoves everything nearby. Each time an enemy capsizes, you get mana.
 
-**When it happens.** Choose it for your surge slot in the Hand at a rest fire, while Wind and Water are both carried, and light it with the surge button. Each dodge while it burns lets out a wind.
+**When it happens.** At a rest fire, pick it for your surge slot in the Hand while you carry both Wind and Water. Light it with the surge button. Each dodge while it is lit lets out a gust.
 
-**The numbers.** Mix, duo surge, 5 Shards. 40 mana, 10 seconds; each capsize while it burns adds 1 second, up to 15. A lane 6 metres long and 2 metres wide: 2 Unsteady and a Soaked. Everything within 3 metres of you is shoved 2 metres. 6 mana for each capsize.
+**The numbers.** Mix, duo surge, 5 Shards. 40 mana, lasts 10 seconds. Each capsize while it is lit adds 1 second, up to 15 seconds. The gust covers a path 6 metres long and 2 metres wide and gives 2 Unsteady and a Soaked. Every enemy within 3 metres of you is shoved 2 metres. You get 6 mana for each capsize.
 
 **Works with.** Capsize, Ride the Squall, Wake.
 
-**Example.** Light your surge and roll through the fight: every roll knocks a line of them over.
+**Example.** Light your surge and roll through the fight. Every roll knocks over a line of enemies.

@@ -17,7 +17,16 @@ This file is not read by the game: the builder reads only effects.md, whats_new.
 
 ## Unsure lines
 
-(None yet.)
+Lines whose meaning was not clear. The facts were kept and written as clearly as possible; please check them.
+
+- marks/blight.md, blight.wither: "The numbers" says Phase 4 stopped heavy blows adding a Curse and poison, but the
+  Example still says "the heavy blows Curse the soldier as they go". Both kept; one is probably out of date.
+- marks/bloom.md, bloom.great: the mark goes in the surge slot, but the Example says "Light Wellspring" (another surge?).
+  Kept as written.
+- marks/breathtaken.md, breathtaken.short, "Not built yet": "It keeps its own winding from each Breath Taken" was read as
+  "it keeps its own timer for how long the enemy is winded".
+- marks/burningsap.md, burningsap.brightvenom: "the held bites" was read as "the saved-up poison bites" (the bites
+  Burning Sap holds back until its end).
 
 ## Files
 
@@ -30,7 +39,7 @@ This file is not read by the game: the builder reads only effects.md, whats_new.
 - [x] marks/breathtaken.md
 - [x] marks/burningsap.md
 - [x] marks/burntmound.md
-- [ ] marks/capsize.md
+- [x] marks/capsize.md
 - [ ] marks/carriedembers.md
 - [ ] marks/caughtlight.md
 - [ ] marks/chokedamp.md
