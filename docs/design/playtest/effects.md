@@ -1049,15 +1049,15 @@ Title: Red Hot (Metal and Fire)
 Group: Reactions
 **What it is.** Sundered meets Burn. The notched armour heats up until it glows red.
 
-**The numbers.** For 5 seconds, each heavy blow on the enemy throws sparks out of its far side, away from you, in a cone about 3 metres long. Each enemy in it takes 6 damage and a Burn. Then it waits 5 seconds.
+**The numbers.** For 5 seconds, each heavy blow on the enemy throws sparks out of its far side, away from you, in a cone about 3 metres long. Each enemy in it takes 6 damage and a Burn. While it glows, its own Burn bites twice as hard. Then it waits 5 seconds.
 
 **What sets it off.** A notch landing on a burning enemy, or Burn landing on a notched one.
 
-**Its shapes.** If you have the Shape mark of Metal and Fire's duo branch (Slag or Shirt: Slag or The Burning Shirt, 3 Shards, in the middle of the chart) and carry both, Red Hot uses the shape you picked at a rest fire instead. Slag: for 5 seconds, the enemy drips a pool of melted metal each second. Each pool is 0.8 metres across and burns for 3 seconds, dealing 3 damage and a Burn each second to everything in it except the enemy dripping it. The Burning Shirt: no sparks. Instead, for 5 seconds, the enemy can't guard, and it gets a Burn every 1.5 seconds.
+**Its shapes.** If you have the Shape mark of Metal and Fire's duo branch (Slag or Shirt: Slag or The Burning Shirt, 3 Shards, in the middle of the chart) and carry both, Red Hot uses the shape you picked at a rest fire instead. Slag: for 5 seconds, the enemy drips a pool of melted metal each second. Each pool is 0.8 metres across and burns for 3 seconds, dealing 3 damage and a Burn each second to everything in it except the enemy dripping it. The Burning Shirt: no sparks. Instead, for 5 seconds, the enemy can't guard, and it gets a Burn every 1.5 seconds. In both shapes, its Burn bites twice as hard for those 5 seconds.
 
 **How to use it.** Get it between you and the others and hit it with heavy blows. Each heavy blow sets them on fire.
 
-**How it looks.** Its name over the enemy, then sparks past it with each heavy blow. Not built yet: its burns biting twice as hard while it glows.
+**How it looks.** Its name over the enemy, then sparks past it with each heavy blow.
 
 ## reaction-the-bolt-runs-true
 Title: The Bolt Runs True (Light and Lightning)

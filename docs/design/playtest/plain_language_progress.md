@@ -51,6 +51,7 @@ checked against its code and committed on its own.
 - [x] marks/earth.md: Cairn (15% slower for each stone)
 - [x] marks/light.md: Reckoning (8 for each blow, the owner's decided number), Daybreak (unsure line resolved)
 - [x] marks/redhot.md: Red Hot's shapes (Burn bites twice as hard while it glows)
+- [x] effects.md: plain Red Hot (Burn bites twice as hard while it glows)
 
 ## Unsure lines
 
