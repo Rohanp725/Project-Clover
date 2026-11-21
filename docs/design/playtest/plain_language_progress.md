@@ -64,7 +64,7 @@ Lines whose meaning was not clear. The facts were kept and written as clearly as
 - [x] marks/halo.md
 - [x] marks/ice.md
 - [x] marks/illwind.md
-- [ ] marks/ironthorns.md
+- [x] marks/ironthorns.md
 - [ ] marks/kindlingpoint.md
 - [ ] marks/life.md
 - [ ] marks/light.md
