@@ -3,7 +3,7 @@
 **Summary (pass finished 2026-11-21).** All 70 files in scope are done: the 66 mark detail files, effects.md, the older
 sections of whats_new.md (0.1 to 0.4; the 0.5 section was left as it was), docs/GUIDE.md, and the playtest readme.md.
 Ids, "Title:" and "Group:" lines, headings and bold labels are unchanged (checked against the files before the pass).
-Fifteen lines were unclear or looked out of date; they are listed under "Unsure lines" below, with the facts kept as
+Thirteen lines were unclear or looked out of date; they are listed under "Unsure lines" below, with the facts kept as
 written. **Playtest Texts still needs a rebuild in the editor (Clover > Build > Playtest Texts)**; this pass did not
 run it. GUIDE.md's generated "Every mark" tables were left alone (see the note on GUIDE.md below).
 
