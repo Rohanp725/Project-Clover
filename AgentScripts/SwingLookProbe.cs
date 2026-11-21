@@ -257,7 +257,7 @@ public class SwingLookProbeRunner : MonoBehaviour
 
     private bool Busy() =>
         combat.IsAttacking || combat.Blade.Charged || trails.RibbonsShown > 0 || FormFx.SolidsShown > idleSolids || FormFx.MarksShown > idleMarks
-        || Hazards.Alive > idleHazards || soldiers.Any(soldier => soldier != null && soldier.Afflictions.Any);
+        || Hazards.Alive > idleHazards || StrikeScorch.Showing > 0 || soldiers.Any(soldier => soldier != null && soldier.Afflictions.Any);
 
     private string Why() =>
         $"attacking {combat.IsAttacking}, charged {combat.Blade.Charged}, trails {trails.RibbonsShown}, solids {FormFx.SolidsShown}/{idleSolids}, marks {FormFx.MarksShown}/{idleMarks}, hazards {Hazards.Alive}/{idleHazards}, afflicted {soldiers.Count(soldier => soldier != null && soldier.Afflictions.Any)}";

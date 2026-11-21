@@ -436,8 +436,8 @@ namespace Clover.Player
         /// <summary>How long the infused strike's ground fire burns before the player's numbers: about a second (the owner's review, 2026-11-21).</summary>
         public const float StrikeBurnSeconds = 1f;
 
-        private static readonly Color EmberRed = new Color(0.85f, 0.16f, 0.04f);
-        private static readonly Color EmberOrange = new Color(1f, 0.34f, 0.04f);
+        // How long the last flames a patch of ground fire threw stay up after it is out (the Fire puff's life, about).
+        private const float FlameLinger = 0.3f;
 
         // Fire left on the ground along the cut itself, not out past it, so it reads as the blade's own burn. Only the
         // infused strike lays this, so the trail, the crater, the flask and the spells keep their own burning times.
@@ -463,25 +463,14 @@ namespace Clover.Player
                 BurnPatch(Ground(print.Origin + print.Forward * (print.Reach * (i + 0.5f) / 3f)), 0.8f);
         }
 
-        // One patch of the strike's ground fire: the flames (the hazard's own real fire) stand on a patch of char with
-        // embers glowing in it, so they burn on something and not on bare stone. The char is two dark stains laid
-        // across each other (one alone barely shows on the dark floors); the embers are small spots of hot orange and
-        // red that shrink as the fire dies. Bites three times in its second.
+        // One patch of the strike's ground fire: the flames (the hazard's own real fire) stand on char with ember cracks
+        // glowing in it (StrikeScorch, the burning floors' own look), a little wider than the flames, so they burn on
+        // something and not on bare stone. Bites three times in its second.
         private static void BurnPatch(Vector3 at, float radius)
         {
             Hazards.Lay(HazardKind.Fire, at, radius, StrikeBurnSeconds, 5f, 0f, 4f, 0.35f, struck: Swings.SwingLooks.Fire.Tint);
-            // The flames last as long as the player's numbers make fire on the ground last; the char outlives them a little.
-            float seconds = StrikeBurnSeconds * Hazards.FireSecondsScale;
-            float yaw = Random.value * 360f;
-            FormFx.Lay(FormMark.Scorch, at, radius * 2.6f, FormKit.Stain(EmberOrange, 1f), seconds + 0.6f, -1f, 0f, yaw);
-            FormFx.Lay(FormMark.Scorch, at + new Vector3(0.15f, 0.01f, -0.1f), radius * 2.2f, FormKit.Stain(EmberOrange, 1f), seconds + 0.5f, -1f, 0f, yaw + 60f);
-            for (int i = 0; i < 6; i++)
-            {
-                Vector2 spot = Random.insideUnitCircle * (radius * 0.85f);
-                float size = Random.Range(0.3f, 0.6f);
-                FormFx.Lay(FormMark.Scorch, at + new Vector3(spot.x, 0.02f, spot.y), size, FormKit.Lit(i % 2 == 0 ? EmberOrange : EmberRed, 2.8f, 0.9f),
-                    seconds + 0.2f, size * 0.5f, 0f, Random.value * 360f);
-            }
+            // The embers glow as long as the player's numbers make fire on the ground last; the char outlives them a little.
+            StrikeScorch.Lay(at, radius * 1.35f, StrikeBurnSeconds * Hazards.FireSecondsScale + FlameLinger, 0.5f);
             Vfx.Play(VfxKind.Embers, at + Vector3.up * 0.2f, Vector3.up, 0.6f);
         }
 
