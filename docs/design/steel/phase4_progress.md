@@ -536,8 +536,43 @@ DuoProbe, MarksProbe, and the end-of-job regression of ReactionProbe2, DuoProbeA
 1. **Three Weasels' first weasel steps through the enemy.** It is the plain step form, so the "rush to the enemy that throws
    it" ends 1 m beyond the enemy. The second weasel's "pass straight through" then runs back the way you came. To make the
    first press stop in front of the enemy, it would need a rush of its own.
+   **Answered 2026-11-20 (evening): give it a rush of its own that stops in front; the second press goes through.** Built
+   on `phase4c` (below).
 2. **"The enemy you face" after a roll away.** A roll turns you the way it goes. A second dodge away is measured against
    whatever is ahead of you then, and only against the first enemy if nothing is ahead within 12 m. In a crowd, two dodges
    back from one enemy can count as one away and one toward another. Drawn Back to Break and Into the Fire both read it.
+   **Answered 2026-11-20 (evening): remember the target until it dies or you get far from it.** Built on `phase4c`, with
+   16 m as "far" (below).
 3. **Drawn Back to Break's throw** was not seen in the probe: the still dummy cannot be shoved, so "moved 0.0 m". The cone
    did soak it and spend the waves.
+
+## 2026-11-20 (evening): `phase4c`, the owner's two answers
+
+Built offline in the worktree `Clover-phase4c` (branch `phase4c`), while the editor was busy with other work. Not yet run
+in the editor.
+
+**Three Weasels' first press stops in front.** A new bespoke form, `rush` (`RushForm`, a `StepForm` that stops short and
+keeps facing the enemy). It stops `FormRules.RushShort` (1.2 m) in front of the enemy faced, within the spell's 5 m reach,
+and cuts on into it. It still throws the enemy 2 m and lays two Unsteady. The second press is unchanged: straight through
+to 3 m beyond (`FormRules.MarkStep`, which `UpgradeAction.Step` now uses). In the probe's layout (you at z 2, the enemy at
+z 6) the first press now ends at z 4.8, and the second at z 9. The rush still promises a critical heavy blow when it lands,
+as the step did. Its look is the step's streak and cut, stopped short: a stand-in, in the ledger's `looks` row.
+
+**A run of dodges remembers its enemy.** `DodgeHold<T>` and `DodgeRules.StillHeld` (in `DodgeWay.cs`). The first dodge
+holds the enemy it was measured against (the one ahead, else the nearest, within 12 m). Every later dodge is measured
+against that enemy while it lives and stands within `PlayerUpgrades.DodgeHoldRange`, 16 m (`DodgeRules.HoldRange`: the
+fight's 12 m and most of a 4.5 m roll). When it dies or the player gets farther, the next dodge takes the enemy faced then.
+The one helper (`PlayerUpgrades.WayOf`) feeds both readers of a dodge's way: `OnDodge` (Drawn Back to Break's waves, Into
+the Fire's lunge and its perfect-dodge Heat) and `DodgeTermsFor` (Into the Fire's cost and safety). No other mark reads it.
+The hold has no clock: a held enemy stays held for as long as it lives and is near, however long since the last dodge.
+
+**Tests.** `KeystoneRuleTests` gains `TheEnemyFirstDodgedFromStillCountsInACrowd` and
+`TheHeldEnemyIsLetGoWhenItDiesOrThePlayerGetsFarFromIt`; `DuoBranchTests` gains
+`ThreeWeaselsFirstPressStopsInFrontAndTheSecondPassesThrough`; `SpellFormTests` knows the new form.
+
+**Probe.** `Phase4bProbe` drops the teleport back to the host before Drawn Back to Break's second dodge, and judges that
+the host is held and the second roll south counts as away. Three Weasels now judges that the first press stops just in
+front (0.6 to 2 m short, on the near side) and the second comes out beyond.
+
+**Still to do in the editor:** compile, the three fixtures, `Phase4bProbe`, and commit the `.meta` Unity writes for
+`RushForm.cs`.
