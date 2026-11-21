@@ -98,6 +98,9 @@ Lines whose meaning was not clear. The facts were kept and written as clearly as
   **Resolved:** the code confirms it (the sun rises again only with 3 seconds of Kindle left).
 - readme.md, "NOT BUILT YET": it still lists reactions, the spell branches and "written details for every tree but
   Fire and Lightning" as coming later, though all three are in now. Kept as written; it needs a content update.
+  **Resolved:** those three lines are gone; the list now names the Way and the Body branch (the Katana's Way and
+  Memories are in the code, with no Way screen at the fire yet), Bond, Heresies, Evolutions and the War Fan, and the
+  rest menu names the Shapes entry.
 - docs/GUIDE.md, section 8: editor menu names (Clover > Build > ...) were kept, since they are what you click; scene
   file paths became scene names ("the Hub scene"). **Resolved:** no change needed; menu names are what you click.
 

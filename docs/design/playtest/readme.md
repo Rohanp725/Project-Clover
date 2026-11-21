@@ -36,12 +36,14 @@ CONTROLS          Keys and mouse       PlayStation   Xbox
   action: pause, then Controls.
 
 AT A REST FIRE
-  Resting opens the rest menu: Set the Hand, The chart, Leave the fire.
+  Resting opens the rest menu: Set the Hand, Shapes, The chart, Leave the fire.
   The Hand is your four spells in a diamond laid out like the buttons, with the
   surge in the middle. Choose a slot (E / Cross / A) to see what can go there,
   Q / Triangle / Y for the numbers, and Space / Circle / B to go back. Below are
   the Suggested Hand and three saved Hands: E / Cross / A puts one on, and the
   heavy blow saves the Hand you have on there.
+  Shapes lists each spell and reaction you have a Shape mark for. Pick the
+  shape each one takes. Shapes change only at a fire.
 
 ON THE UPGRADE CHART (rest at a fire, then choose The chart)
   Move from mark to mark. E / Cross / A learns a mark (or, on a spell you
@@ -107,10 +109,10 @@ NOT BUILT YET
   - The Alchemist's Hooks, the hook swords, a form of the Twin Knives (the alchemist)
   - The Champion's Arms, his own version of every weapon (the last champion)
   Also coming in later updates:
-  - Reactions when two elements' afflictions meet on one enemy.
-  - The trees reshaped into spell branches.
-  - The Way (the weapon tree), its gods' boughs (slots on the chart), Memories
-    and the Body branch.
+  - The Way (the weapon tree), its gods' boughs (slots on the chart) and the
+    Body branch. The Katana's Way and Memories are written, but there is no
+    Way screen at the rest fire yet.
   - Bond, Heresies and Evolutions.
   - The War Fan as a weapon of its own.
-  - Written details for the marks of every tree except Fire and Lightning.
+  - Some marks still say "Not built yet" in their details for a part that
+    isn't working yet. The rest of the mark works.
