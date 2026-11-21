@@ -759,6 +759,12 @@ keys were dropped), which holds the player for the rest of the fight, and its su
 | The man's moves | 5.8 / 10.1 / 26.1 | 12 of 5275 | 9.0 KB |
 | The change | 6.1 / 10.8 / 15.5 | 0 of 659 | 11.3 KB |
 
+### Running notes
+
+- 2026-11-21: extra (a) done: Drawn Back to Break's throw sized by `Enemy.ShoveTravel`; `DrawnBackThrowProbe` slid the
+  soldier 2.53-2.58 m (2.1-2.2 m beyond a plain blow's 0.35-0.45 m) in three runs, 1.26 m in one where the soldier was
+  mid-attack; `KeystoneRuleTests` 18 passed. Next: extra (b), then the close-camera run.
+
 ### To resume (in this order)
 
 1. In edit mode: `unity command script run -- --file AgentScripts/KhepharuMeshDump.cs --entry KhepharuMeshDump.Run`

@@ -143,7 +143,10 @@ public class DrawnBackThrowProbeRunner : MonoBehaviour
         Vector3 from = Flat(soldier.transform.position);
         Vector3 away = (from - Flat(player.transform.position)).normalized;
         float healthWas = soldier.Health.Current;
+        string before = soldier.Brain.State.ToString();
         yield return Press(pad.rightShoulder);
+        // What it was doing when struck: a soldier mid-lunge drives against the throw and falls short, as the owner allows.
+        Say($"{shot}: the soldier was {before} as the blow went in, {soldier.Brain.State} after");
         float most = 0f, end = Time.unscaledTime + 1.5f, gameStart = Time.time;
         bool shotTaken = false;
         while (Time.unscaledTime < end)

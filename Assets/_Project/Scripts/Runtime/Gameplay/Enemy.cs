@@ -39,6 +39,9 @@ namespace Clover.Gameplay
         public float FinisherDamageMultiplier = 3f;
         /// <summary>Metres a blow shoves the enemy back.</summary>
         public float Shove = 0.7f;
+        // A shove moves the body at ShoveRate times its size and dies away at ShoveDecay a second, so a shove of one
+        // carries it ShoveTravel metres in all: a throw that promises metres divides by it to get there.
+        public const float ShoveRate = 6f, ShoveDecay = 9f, ShoveTravel = ShoveRate / ShoveDecay;
         public float Gravity = 25f;
         /// <summary>Seconds after dying before the body is cleared away.</summary>
         public float CorpseSeconds = 2.2f;
@@ -1071,8 +1074,8 @@ namespace Clover.Gameplay
             bool rooted = Afflictions.Conditions.Has(ConditionFlags.Rooted);
             if (rooted) step = Vector3.zero;
             // Ice holds it where it stands, whatever shoves.
-            if (!Afflictions.IsFrozen && !rooted) step += shove * (deltaTime * 6f);
-            shove = Vector3.Lerp(shove, Vector3.zero, 1f - Mathf.Exp(-9f * deltaTime));
+            if (!Afflictions.IsFrozen && !rooted) step += shove * (deltaTime * ShoveRate);
+            shove = Vector3.Lerp(shove, Vector3.zero, 1f - Mathf.Exp(-ShoveDecay * deltaTime));
             if (Afflictions.IsLifted)
             {
                 // Thrown into the air: it goes nowhere of its own will, rises, hangs and comes down over where it left the ground.

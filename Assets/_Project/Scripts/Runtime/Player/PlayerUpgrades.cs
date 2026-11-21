@@ -1479,14 +1479,16 @@ namespace Clover.Player
                     transform.rotation = Quaternion.LookRotation(aim, Vector3.up);
                     float reach = Or(effect.Reach, 4.5f);
                     combat.StrikeCone(reach, Or(effect.Arc, 90f), Blow(look, kind, eDamage, eStagger, eStacks));
-                    // Amount: each enemy the cone struck is thrown straight away from the player (Drawn Back to Break's breaker).
+                    // Amount: each enemy the cone struck is thrown straight away from the player (Drawn Back to Break's breaker),
+                    // that many metres beyond the blow's own shove. A shove dies away as it goes, so it is sized by how far
+                    // one carries (Enemy.ShoveTravel); an enemy mid-lunge still drives against it and falls short.
                     if (effect.Amount > 0f)
                         foreach (var struck in combat.LastStruck)
                             if (struck is IShovable thrown && struck is Component body)
                             {
                                 Vector3 away = body.transform.position - self;
                                 away.y = 0f;
-                                if (away.sqrMagnitude > 0.0001f) thrown.Push(away.normalized * effect.Amount * combat.StatPush);
+                                if (away.sqrMagnitude > 0.0001f) thrown.Push(away.normalized * (effect.Amount * combat.StatPush / Enemy.ShoveTravel));
                             }
                     Vector3 hand = self + Vector3.up * 1.1f;
                     for (int i = 1; i <= 3; i++) ElementLook.Puff(look, hand + aim * (reach * i / 3.5f), aim, 0.7f);
