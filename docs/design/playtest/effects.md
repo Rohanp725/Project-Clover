@@ -734,15 +734,15 @@ Title: Burning Sap (Light and Poison)
 Group: Reactions
 **What it is.** Marked meets Poisoned. The sun wakes up the poisoned sap inside the enemy, and your critical hits raise blisters that burst.
 
-**The numbers.** For 3 seconds, each of your weapon blows on the enemy (each one a critical hit, since it is Marked) raises a blister. At the end, its poison bites right away, and each blister bursts, putting two doses on everyone within 2.5 metres. Then it waits 6 seconds.
+**The numbers.** For 3 seconds, each of your weapon blows on the enemy (each one a critical hit, since it is Marked) raises a blister. Its poison doesn't bite during those 3 seconds; it saves up its bites. At the end, they all land at once, doubled, and each blister bursts, putting two doses on everyone within 2.5 metres. Then it waits 6 seconds.
 
 **What sets it off.** A Mark landing on a poisoned enemy, or poison landing on a Marked one.
 
-**Its shapes.** If you have Lit Veins, the Shape mark of Light and Poison's duo branch (Burning Sap: The Light Finds Them or Blistered, 3 Shards, in the middle of the chart), and carry both, Burning Sap uses the shape you picked at a rest fire instead. The Light Finds Them: works like the plain one, and every enemy within 8 metres is Marked too. Blistered: for 3 seconds, each weapon blow on the enemy splashes two doses on everything within 2.5 metres right away. At the end, the poison bites.
+**Its shapes.** If you have Lit Veins, the Shape mark of Light and Poison's duo branch (Burning Sap: The Light Finds Them or Blistered, 3 Shards, in the middle of the chart), and carry both, Burning Sap uses the shape you picked at a rest fire instead. The Light Finds Them: works like the plain one, and every enemy within 8 metres is Marked too. Blistered: for 3 seconds, each weapon blow on the enemy splashes two doses on everything within 2.5 metres right away. At the end, the saved-up bites land at once, doubled.
 
 **How to use it.** Land the Mark's three blows within the 3 seconds for three blisters.
 
-**How it looks.** Its name over the enemy, then a burst of poison at the end. Not built yet: the poison holding back for the 3 seconds and landing doubled.
+**How it looks.** Its name over the enemy, then a burst of poison at the end.
 
 ## reaction-smoulder
 Title: Smoulder (Dark and Fire)
