@@ -529,6 +529,13 @@ namespace Clover.Player
             return pair < 0 ? 1f : Stats.ReactionMultiplier(PlayerStat.ReactionDamage, AfflictionPairs.First(pair), AfflictionPairs.Second(pair));
         }
 
+        /// <summary>True when What the Yew Keeps is in force and the dead carried both its seed and its curse: no thorns burst.</summary>
+        private bool YewWithholds(AfflictionSet dead) => YewWithholds(Has(Trees.Duo.GirdledDuo.WhatTheYewKeeps), dead);
+
+        /// <summary>The Yew's rule alone: in force, and the dead Seeded and Cursed.</summary>
+        public static bool YewWithholds(bool inForce, AfflictionSet dead) =>
+            inForce && dead != null && dead.Has(AfflictionKind.Seeded) && dead.Has(AfflictionKind.Cursed);
+
         /// <summary>How deep the kind lies on the one named, for an effect done by that depth (Night Sun); 0 for none or no one.</summary>
         public static int DepthOn(AfflictionKind kind, IAfflictable on) => on != null && kind != AfflictionKind.None ? on.Afflictions.Stacks(kind) : 0;
 
@@ -1982,13 +1989,15 @@ namespace Clover.Player
             Vector3 at = who.transform.position;
             // Hollow Strength: a kill stills the draining of the Risen for a few breaths.
             if (hollowStrength && Risen) riseStilledUntil = Time.time + StilledSeconds;
-            // Seeded, it bursts into thorns; cursed, its death feeds the one who killed it.
-            float burst = afflictions.DeathBurst(out float radius);
+            // Seeded, it bursts into thorns; cursed, its death feeds the one who killed it. What the Yew Keeps withholds the
+            // thorns of a Seeded, Cursed death: its seed passes on whole instead.
+            var withheld = YewWithholds(afflictions) ? AfflictionKind.Seeded : AfflictionKind.None;
+            float burst = afflictions.DeathBurst(out float radius, withheld);
             if (burst > 0f) Enqueue(new Pending { Special = Special.DeathBurst, Source = laying, At = at, HasAt = true, Power = burst * Stats.Multiplier(PlayerStat.BurstDamage), Radius = radius * Stats.Multiplier(PlayerStat.BurstReach) });
             float fed = afflictions.HealOnKill;
             if (fed > 0f && defence != null) defence.Heal(fed);
             // A ripe seed in the dead bursts ripe (In Its Season): the burst above was made stronger by the set itself.
-            if (afflictions.IsRipe(AfflictionKind.Seeded)) RipeBurstAt(who, at, afflictions.Stacks(AfflictionKind.Seeded));
+            if (withheld != AfflictionKind.Seeded && afflictions.IsRipe(AfflictionKind.Seeded)) RipeBurstAt(who, at, afflictions.Stacks(AfflictionKind.Seeded));
             Trigger(UpgradeTrigger.Kill, null, at, true, 0, afflictions);
         }
 

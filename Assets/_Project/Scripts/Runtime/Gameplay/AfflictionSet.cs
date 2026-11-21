@@ -874,13 +874,16 @@ namespace Clover.Gameplay
         }
 
         /// <summary>When it dies: the damage its afflictions throw at everyone near, and how far.</summary>
-        public float DeathBurst(out float radius)
+        public float DeathBurst(out float radius) => DeathBurst(out radius, AfflictionKind.None);
+
+        /// <summary>The same, with one kind kept from bursting (What the Yew Keeps passes the seed on whole instead).</summary>
+        public float DeathBurst(out float radius, AfflictionKind withheld)
         {
             radius = 0f;
             float damage = 0f;
             for (int i = 2; i < stacks.Length; i++)
             {
-                if (stacks[i] <= 0) continue;
+                if (stacks[i] <= 0 || i == (int)withheld) continue;
                 var spec = Afflictions.Spec((AfflictionKind)i);
                 if (spec.DeathBurstPerStack <= 0f) continue;
                 // A kind that ripens bursts harder ripe, softer unripe (In Its Season).

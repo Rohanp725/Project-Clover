@@ -85,8 +85,8 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.RightLow));
 
-            // NEEDS: every stack passed on as it dies, the thorns withheld (depth-passed); now its seed and curse pass whole to
-            // the nearest enemy within 6 m, which may set the fig going there at one coil, and the thorns still burst.
+            // Its seed and curse pass whole to the nearest enemy within 6 m, and the thorns are withheld
+            // (PlayerUpgrades.YewWithholds). The fig may start there at one coil.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = WhatTheYewKeeps, Name = "What the Yew Keeps", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { BitterSeed, HeldDown }, Icon = UpgradeIcons.Tower,

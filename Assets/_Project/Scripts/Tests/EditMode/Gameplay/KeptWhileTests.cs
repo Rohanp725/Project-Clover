@@ -446,6 +446,20 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void WhatTheYewKeepsWithholdsTheThornsOfASeededCursedDeath()
+        {
+            var dead = NewEnemy();
+            dead.Lay(AfflictionKind.Seeded, 3, 0f, 1f, LaySource.Spell);
+            Assert.Greater(dead.DeathBurst(out float radius), 0f, "a seeded death bursts into thorns");
+            Assert.Greater(radius, 0f);
+            Assert.AreEqual(0f, dead.DeathBurst(out _, AfflictionKind.Seeded), 1e-5f, "withheld, no thorns");
+            Assert.IsFalse(PlayerUpgrades.YewWithholds(true, dead), "Seeded alone: the thorns still burst");
+            dead.Lay(AfflictionKind.Cursed, 1, 0f, 1f, LaySource.Spell);
+            Assert.IsTrue(PlayerUpgrades.YewWithholds(true, dead));
+            Assert.IsFalse(PlayerUpgrades.YewWithholds(false, dead), "only with the mark in force");
+        }
+
+        [Test]
         public void RustAndItsShapesLetTheNotchesRunDeeper()
         {
             var rusting = Upgrade.All.SelectMany(upgrade => upgrade.Effects.Concat(upgrade.Shapes == null ? Enumerable.Empty<UpgradeEffect>() : upgrade.Shapes.Where(shape => shape?.Effects != null).SelectMany(shape => shape.Effects)))
