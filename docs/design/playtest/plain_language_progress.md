@@ -70,6 +70,7 @@ checked against its code and committed on its own.
 - [x] effects.md: The Pull of Night in Drowned Weight's shapes (Soaked only)
 - [x] marks/burningsap.md: The Light Finds Them (Marks only the poisoned)
 - [x] marks/overgrowth.md: Taking Root (spares the reacting enemy), Root Web (Seeded only)
+- [x] marks/glacier.md: Sea Ice (Soaked only)
 
 ## Unsure lines
 
