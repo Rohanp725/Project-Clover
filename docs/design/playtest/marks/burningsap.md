@@ -9,7 +9,7 @@ Poison are both carried.
 
 **When it happens.** Every time Burning Sap goes off while you carry both Light and Poison. Burning Sap goes off when poison lands on a Marked enemy, or when a Mark lands on a poisoned one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Burning Sap.
 
-**The numbers.** Mix, 3 Shards. The Light Finds Them: the sap wakes up for 3 seconds, like the plain one. Every enemy within 8 metres is Marked. At the end, the poison bites, and each blister bursts, putting two doses on everything within 2.5 metres. Blistered: for 3 seconds, each weapon blow you land on the enemy splashes two doses on everything within 2.5 metres. At the end, the poison bites. After Burning Sap goes off on an enemy, it can't go off on that enemy again for 6 seconds.
+**The numbers.** Mix, 3 Shards. Both shapes, like the plain one: for 3 seconds, the enemy's poison doesn't bite. It saves up its bites, and at the end they all land at once, doubled. The Light Finds Them: every enemy within 8 metres is Marked. At the end, each blister also bursts, putting two doses on everything within 2.5 metres. Blistered: for 3 seconds, each weapon blow you land on the enemy splashes two doses on everything within 2.5 metres. After Burning Sap goes off on an enemy, it can't go off on that enemy again for 6 seconds.
 
 **Works with.** Glare and Miasma to set it up, Seen Through, Nectar After Poison, Bared to the Sun.
 

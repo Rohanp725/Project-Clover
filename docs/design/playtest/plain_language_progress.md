@@ -58,6 +58,7 @@ checked against its code and committed on its own.
 - [x] marks/blight.md: Wither (unsure line resolved)
 - [x] marks/bloom.md: Great Lotus (unsure line resolved)
 - [x] marks/burningsap.md: Bright Venom (built now: held bites 15% harder; unsure line resolved)
+- [x] marks/burningsap.md: Burning Sap's shapes (bites saved up and landed doubled)
 
 ## Unsure lines
 
