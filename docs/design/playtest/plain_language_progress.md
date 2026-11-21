@@ -93,7 +93,7 @@ Lines whose meaning was not clear. The facts were kept and written as clearly as
 - [x] marks/smoulder.md
 - [x] marks/steam.md
 - [x] marks/stolenwarmth.md
-- [ ] marks/tempest.md
+- [x] marks/tempest.md
 - [ ] marks/theboltrunstrue.md
 - [ ] marks/thegroundgives.md
 - [ ] marks/thegrudge.md
