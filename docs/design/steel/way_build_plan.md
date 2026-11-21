@@ -13,7 +13,7 @@ the gap. Numbers this doc adds where the design gave none are marked **(P)** and
 - [x] 2. The systems every Way uses
 - [x] 3. The Katana's Way, move by move
 - [x] 4. The other nine Ways
-- [ ] 5. Build order and checks
+- [x] 5. Build order and checks
 - [ ] 6. Owner questions
 
 **The owner's standing rules, baked into every line below.** Effects are animated timelines (the cause arriving,
@@ -1007,5 +1007,66 @@ or Storm of Leaves (a cone of cutting leaves). Technique: Turn the Spear, from t
 - Rings: Ushiwaka's ring of dust (WP 1670). On the weapon: notches cut on its ribs (WP 1673).
 - The Hermit is a placeholder in W 14 and W 1114 but decided in WP 1638 and `README.md`; one of them is stale.
 - Engine: disarmed; cannot guard.
+
+---
+
+## 5. Build order and checks
+
+### 5.1 The order of work
+
+Each step follows the `feature-loop` skill: the test first, the code in `Clover.Runtime`, compiled and checked in
+the editor, reviewed, then handed over. Probes run sandboxed (`AgentScripts/runprobe.sh`), so saved progress is never
+touched; play is stopped before any recompile. A step that needs an owner answer waits for it; the questions are
+named.
+
+| # | Step | Kind | Waits on |
+|---|---|---|---|
+| 1 | **Wire the Way into play** (2.0): `Rearm`, every equip point, `AspectRun` ticked | Editor (probe) | nothing |
+| 2 | **Memories paid in play** (2.6): the hooks, the mote, the status line | Editor; one effect | Q10, Q11 |
+| 3 | **The Way chart** (2.5): `WayLayout`, the rest entry, choosing at the fire | Editor; screenshots | Q9 |
+| 4 | **The Body** (2.4): `BodyWay.cs`, `StaminaMost`, `Poise`, bearings, the found-piece pickup | Editor; a pickup model each (Blender or Forge) | Q8 |
+| 5 | **Engine pieces** (2.7), in the order of marks each finishes: chain rules (11), the answer window (7), aspect counters (6), the sheathe beat (5), the held light (3), the red attack as a trigger (3), the roll break, the thrown shot, turn to face, stand still on a lane, the finisher's held pose | Editor | Q5, Q13 |
+| 6 | **Task 5.3**: `Way/Infusion.cs`; the technique on the chord with Before the Thunder; Hold the Gate, after checking the Champion shows it | Editor | Q6, Q7 |
+| 7 | **The Katana's clips** (3.6), by bough: the trunk and the guard reactions; the Sheath; the Stream; the Answer; the Storm Katana. Each clip is checked as a Forge sheet (`ForgeSheet`) before it is wired | Forge (code, editor) | Q20, Q21 |
+| 8 | **The Katana's looks**, move by move, under the rules | Editor; Blender for the kozuka knife and any new mesh | Q1, Q2, Q12, Q14 to Q19, Q22, Q23 |
+| 9 | **The words**: `docs/marks/way/katana.md`, the guide's Memories entry, `effects.md`, `whats_new.md`; `Clover > Build > Playtest Texts`; each finished mark's ledger line deleted | Docs, then the texts build | |
+| 10 | **The detail check** (5.2), then the owner's review of the Katana | Editor; an independent agent | |
+| 11 | **Task 5.7**: the next Way on the same checklist, with its section 6 questions answered first | As above | that Way's questions |
+
+Steps 1 to 4 do not need the clips and can be built while the clips are made. `SwingLookProbe` is unreliable
+(`STATUS.md`); fix it before step 8's first film.
+
+### 5.2 The detail check, before the owner sees anything
+
+For every mark of section 3, in this order:
+
+1. **Numbers by probe.** A probe in the Proving Ground plays the move and logs its wind-up, swing, recovery, damage,
+   stagger, stamina and mana, and what it struck. Each is checked against the block in section 3: times within one
+   frame, numbers exact. A mismatch is a bug, not a tuning.
+2. **Film at the game camera.** 1280x720, the game's own camera (55 degrees, 12 m), on real enemies from the Fire
+   land: one soldier for a single-target move; a pen of 3 to 5 for any move that reaches several (Running Draw,
+   Saya-biki, The Cut Lands at the Click, No Last Cut's finale, The Water Has No Shape, Kiri-otoshi's run-on cut, The
+   Red Draw, Thunder Follows, Raikiri, The Drum Ring, the five element marks); the Champion of the Gate for the red
+   attack (Catch the Red, Read the Red, The First Sword) and for Before the Thunder; a god (Khepharu) for "gods
+   included". Frames as a GIF and a contact sheet picked at the wind-up, the travel, the impact and the aftermath.
+3. **Film up close.** The same moves with the camera's lean, to check that pieces sit on the body and nothing is drawn
+   on the blade.
+4. **Check against this spec, rule by rule**, one line each in a check file (`review/checks/way_katana.md`):
+   - the four beats show in order, and nothing pops in or out;
+   - no pure white (a script reads each frame for pixels whose three channels are all near full);
+   - no drawn ring;
+   - every piece on a body or the floor under it, none floating;
+   - nothing on the blade but the trail and the element highlight;
+   - each element reads as itself;
+   - the move is not another move with new numbers;
+   - the text in the game matches section 3 and reads at an 8th-grade level;
+   - the ledger line says what is still a stand-in.
+5. **An independent review.** A fresh `shot-reviewer` agent gets the films and section 3's blocks, not this check's
+   findings, and lists every difference it sees. Each is fixed or answered in the check file; then the films are
+   made again and the review repeated until it finds nothing new.
+6. **Performance.** The busiest moves (The Drum Ring and Thunder Follows on a pen of five) are profiled: frame under
+   16.6 ms, no steady allocation (`diagnostics profiler_record`, `profiler_summary`).
+7. **Then the owner.** A short page of the films, move by move, with the check file and the Katana's ledger lines
+   that are still open, said plainly. Nothing that is still a stand-in is called done.
 
 ---
