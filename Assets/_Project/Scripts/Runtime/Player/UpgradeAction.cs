@@ -110,5 +110,10 @@ namespace Clover.Player
         KeepForGood,
         /// <summary>Freezes the target at once for Seconds, whatever its Chill (Glass Spear). Reads: Seconds (1.5).</summary>
         Freeze,
+        /// <summary>
+        /// Banks a share of what the trigger carried (the damage a poison bite or set-off really dealt) as health given back
+        /// over about two seconds (Venom). Reads: Share (0.1).
+        /// </summary>
+        Mend,
     }
 }

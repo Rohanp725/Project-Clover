@@ -47,6 +47,7 @@ checked against its code and committed on its own.
 - [x] marks/dark.md: Gone to Ash (half the wait when nothing hits)
 - [x] marks/girdled.md: Death Turned Back (half the wait when no blow comes)
 - [x] marks/mocksuns.md: Sunstone (half the wait when nothing hits), Wide Fan (unsure line resolved)
+- [x] marks/turnedtostone.md: Stone Does Not Forgive (Tremor and Curse kept for good), Heavy Curse (unsure line resolved)
 
 ## Unsure lines
 
@@ -69,7 +70,8 @@ Lines whose meaning was not clear. The facts were kept and written as clearly as
   beyond the enemy. Both kept. **Resolved:** the code puts five hits in a line from 1 to 7 metres past the enemy;
   the 8-metre fan of rays is written as not built yet.
 - marks/turnedtostone.md, turnedtostone.heavycurse: says the stone climbs "in half a second, not one", but the shape's
-  numbers say the enemy slows to a stop "over 2 seconds". Both kept.
+  numbers say the enemy slows to a stop "over 2 seconds". Both kept. **Resolved:** the climb is 1 second at 30% slower,
+  then 1 second at 60% slower; Heavy Curse makes the first part half a second, so 1.5 seconds in all.
 - effects.md, two-elements: "(the owner's decision of 2026-11-19)" is a note to the team, not to players. Kept as
   "the owner decided this on 2026-11-19"; it could probably be cut.
 - docs/GUIDE.md, sections 4 to 6: these look out of date next to section 1 and the guide to effects (they still

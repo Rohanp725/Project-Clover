@@ -59,8 +59,8 @@ namespace Clover.Player.Trees
 
             // A light blow lays one dose, a heavy blow two, a finisher four (a finisher is also a heavy blow). The self-heal,
             // once Fever's alone, is the root's now (steel/README.md, "Moved"): a bite deals 2 a dose and a burst 6, so a tenth
-            // comes back as 0.2 and 0.6 a dose. NEEDS: the heal as a tenth of what the poison really dealt, its strength and
-            // ripening counted, given over time rather than at each bite (poison-heal).
+            // came back as 0.2 and 0.6 a dose; now it is a tenth of what the poison really dealt, its strength and ripening
+            // counted, given back over time (UpgradeAction.Mend).
             to.Add(BranchPattern.Put(new Upgrade { Id = Venom, Name = "Venom", Element = E, Kind = UpgradeKind.Root, Icon = UpgradeIcons.Fang,
                 Description = "Blows of the weapon poison, up to eight deep. On a slow, steady beat the poison bites for all its depth at once, and a tenth of all the damage your poison deals comes back to you as health.",
                 WeaponStacks = 1,
@@ -68,8 +68,8 @@ namespace Clover.Player.Trees
                 {
                     new UpgradeEffect { On = UpgradeTrigger.HeavyHit, Do = UpgradeAction.Afflict, Affliction = P, Stacks = 1 },
                     new UpgradeEffect { On = UpgradeTrigger.FinisherHit, Do = UpgradeAction.Afflict, Affliction = P, Stacks = 2 },
-                    new UpgradeEffect { On = UpgradeTrigger.PoisonBite, Do = UpgradeAction.Heal, PerStack = true, Amount = 0.2f },
-                    new UpgradeEffect { On = UpgradeTrigger.SetOff, Spent = P, Do = UpgradeAction.Heal, PerStack = true, Amount = 0.6f },
+                    new UpgradeEffect { On = UpgradeTrigger.PoisonBite, Do = UpgradeAction.Mend, Share = 0.1f },
+                    new UpgradeEffect { On = UpgradeTrigger.SetOff, Spent = P, Do = UpgradeAction.Mend, Share = 0.1f },
                 } },
                 BranchPattern.Root));
 

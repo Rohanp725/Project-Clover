@@ -226,8 +226,9 @@ namespace Clover.Tests
         {
             Assert.IsTrue(Upgrade.ById(PoisonTree.Catching).Effects.Any(e => e.On == UpgradeTrigger.PoisonBite && e.Do == UpgradeAction.Pass));
             Assert.IsTrue(Upgrade.ById(PoisonTree.InTime).Effects.All(e => e.OnBeat > 0f));
-            // Poison's self-heal is its root's now (Phase 4): each bite gives back a share of its depth.
-            Assert.IsTrue(Upgrade.ById(PoisonTree.Venom).Effects.Any(e => e.On == UpgradeTrigger.PoisonBite && e.Do == UpgradeAction.Heal && e.PerStack));
+            // Poison's self-heal is its root's now (Phase 4): a tenth of what each bite and set-off really dealt, given back over time.
+            Assert.IsTrue(Upgrade.ById(PoisonTree.Venom).Effects.Any(e => e.On == UpgradeTrigger.PoisonBite && e.Do == UpgradeAction.Mend && System.Math.Abs(e.Share - 0.1f) < 1e-5f));
+            Assert.IsTrue(Upgrade.ById(PoisonTree.Venom).Effects.Any(e => e.On == UpgradeTrigger.SetOff && e.Spent == AfflictionKind.Poison && e.Do == UpgradeAction.Mend));
             // Lance the Wound was cut with Poison's reshaping (Phase 4), and Left to Ripen and One Sickness with it (their
             // beats are tested above through the switches alone). A bite called out of turn is Five Needles' Spread now.
             foreach (string gone in new[] { PoisonTree.LanceTheWound, PoisonTree.LeftToRipen, PoisonTree.OneSickness })
@@ -266,6 +267,28 @@ namespace Clover.Tests
             stats.AddLearned(new StatMod(PlayerStat.LeapReach, 0.5f));
             Assert.AreEqual(1.5f, stats.Multiplier(PlayerStat.LeapReach), 0.001f);
             Assert.IsFalse(PlayerStats.IsFlat(PlayerStat.GuardGrey));
+        }
+
+        [Test]
+        public void MendingGivesWhatIsOwedOverAboutTwoSeconds()
+        {
+            var mending = new Mending();
+            mending.Add(10f);
+            mending.Add(-3f);
+            Assert.AreEqual(10f, mending.Owed, 1e-5f, "nothing banked for less than nothing");
+            float first = mending.Take(0.1f);
+            Assert.Greater(first, 0f);
+            Assert.Less(first, 1f, "not all at once");
+            float given = first;
+            for (int i = 0; i < 200 && mending.Owed > 0f; i++) given += mending.Take(0.1f);
+            Assert.AreEqual(10f, given, 1e-3f, "every bit of it in the end");
+            Assert.AreEqual(0f, mending.Owed);
+            mending.Add(4f);
+            float inTwo = 0f;
+            for (int i = 0; i < 20; i++) inTwo += mending.Take(0.1f);
+            Assert.Greater(inTwo, 2f, "most of it within about two seconds");
+            mending.Clear();
+            Assert.AreEqual(0f, mending.Take(0.1f));
         }
     }
 }

@@ -9,7 +9,7 @@ are both carried.
 
 **When it happens.** Every time Turned to Stone goes off while you carry both Earth and Dark. Turned to Stone goes off when Tremor lands on a Cursed enemy, or when a Curse lands on a shaken one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Turned to Stone.
 
-**The numbers.** Mix, 3 Shards. Both shapes: over 2 seconds, the enemy slows to a stop, then stands as stone for 1.5 seconds. While it is stone, it is held in place, takes double stagger from weapon blows, and takes half damage from spells. A heavy blow breaks it out for 50 stagger. The King's Men: then a Curse and a Tremor jump to the nearest enemy within 5 metres. This is on purpose: that enemy may start turning to stone. Grave Marker: if the enemy dies while it is stone, a patch 3 metres across stays for 10 seconds and Curses whatever stands in it every 2 seconds. After Turned to Stone goes off on an enemy, it can't go off on that enemy again for 6 seconds.
+**The numbers.** Mix, 3 Shards. Both shapes: over 2 seconds, the enemy slows to a stop (for 1 second it moves 30% slower, then for 1 second 60% slower), then stands as stone for 1.5 seconds. While it is stone, it is held in place, takes double stagger from weapon blows, and takes half damage from spells. A heavy blow breaks it out for 50 stagger. The King's Men: then a Curse and a Tremor jump to the nearest enemy within 5 metres. This is on purpose: that enemy may start turning to stone. Grave Marker: if the enemy dies while it is stone, a patch 3 metres across stays for 10 seconds and Curses whatever stands in it every 2 seconds. After Turned to Stone goes off on an enemy, it can't go off on that enemy again for 6 seconds.
 
 **Works with.** Grasp and Stone Rise to set it up, Grave Dirt, Broken Idol, Stone Underfoot.
 
@@ -46,7 +46,7 @@ are both carried.
 
 **When it happens.** Each time Turned to Stone goes off.
 
-**The numbers.** Mix, a minor mark, 1 Shard. The stone climbs in half a second instead of one, so the enemy is caught sooner. It's the same in both shapes.
+**The numbers.** Mix, a minor mark, 1 Shard. The climb has two parts. The first part, when the enemy moves 30% slower, takes half a second instead of one. So the stone closes over it after 1.5 seconds instead of 2. It's the same in both shapes.
 
 **Works with.** Grave Dirt, which it comes after on the chart, Turned to Stone.
 
@@ -55,15 +55,13 @@ are both carried.
 ## turnedtostone.forgive
 **What it does.** An enemy that has been turned to stone once keeps its Tremor and its Curse until it dies.
 
-**When it happens.** Always on once you learn it, while you carry both Earth and Dark.
+**When it happens.** Each time the stone closes over an enemy (in the plain Turned to Stone or either shape), while you carry both Earth and Dark.
 
-**The numbers.** Mix, keystone, 5 Shards.
+**The numbers.** Mix, keystone, 5 Shards. From then on, its Tremor and its Curse never fade. They can still be used up or set off.
 
 **Works with.** Turned to Stone, Grave Dirt.
 
-**Example.** Turn a captain to stone once, and it turns again every six seconds.
-
-**Not built yet.** It does nothing yet. The game can't yet keep afflictions on an enemy for the rest of the fight.
+**Example.** Turn a captain to stone once. It stays shaken and Cursed, so the next Tremor or Curse turns it again once the 6-second wait is over.
 
 ## turnedtostone.underfoot
 **What it does.** You stride to the enemy you face, leaving grey dusty footprints, and step on its shadow. It is Cursed and gets two stacks of Tremor, and stone starts climbing up it.

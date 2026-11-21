@@ -262,6 +262,8 @@ namespace Clover.Player
         private bool hasWell;
         private int wellIndex = -1;
         private float well;
+        // Health owed by Venom's share of what the poison dealt, given back over time.
+        private readonly Mending mending = new Mending();
         private float sinceBlowLanded = 999f;
         public float WellPerFlask = 70f;
         public float WellMost = 140f;
@@ -945,6 +947,7 @@ namespace Clover.Player
         private void Update()
         {
             if (toFinish.Count > 0) FinishBroken();
+            if (mending.Owed > 0f && defence != null && !defence.IsDead) defence.Heal(mending.Take(Time.deltaTime), false);
             sinceBlowLanded += Time.deltaTime;
             if (hasWell && well > 0f && sinceBlowLanded < WellBlowSeconds && defence != null && !defence.IsDead && defence.Health.Fraction < 0.999f)
             {
@@ -1128,7 +1131,7 @@ namespace Clover.Player
         // ---- The runner: effects wait in a line and are done on this component's own step, never in the middle of the blow that caused them.
 
         private void Trigger(UpgradeTrigger trigger, Component target, Vector3 at, bool hasAt = true, int spent = 0, AfflictionSet dead = null, AfflictionKind what = AfflictionKind.None,
-            string reaction = "", LaySource source = LaySource.Effect)
+            string reaction = "", LaySource source = LaySource.Effect, float power = 0f)
         {
             // Raised while a reaction's effect is being done (a kill, a full affliction, a shatter it caused): what answers
             // is the reaction's too, and starts nothing.
@@ -1145,7 +1148,7 @@ namespace Clover.Player
                 if (effect.SpentAtLeast > 0 && spent < effect.SpentAtLeast) continue;
                 // A mark that deepens one reaction answers that one only.
                 if (trigger == UpgradeTrigger.Reacted && !string.IsNullOrEmpty(effect.Reaction) && effect.Reaction != reaction) continue;
-                Consider(effect, target, at, hasAt, spent, dead, source != LaySource.Reaction || !effect.Cascades ? source : LaySource.Effect);
+                Consider(effect, target, at, hasAt, spent, dead, source != LaySource.Reaction || !effect.Cascades ? source : LaySource.Effect, power);
             }
         }
 
@@ -1745,7 +1748,7 @@ namespace Clover.Player
                     combat.StrikeArea(centre, Or(effect.Radius, 3f) * Stats.Multiplier(PlayerStat.BurstReach), Blow(look, kind, damage, eStagger * depth * Stats.Multiplier(PlayerStat.BurstStagger), 0));
                     ElementLook.Strike(look, centre, 0.3f);
                     // Whatever waits on an affliction being spent is told, with how deep it was.
-                    Trigger(UpgradeTrigger.SetOff, subject, centre, true, depth, null, kind, "", laying);
+                    Trigger(UpgradeTrigger.SetOff, subject, centre, true, depth, null, kind, "", laying, damage);
                     break;
                 }
                 case UpgradeAction.Hold:
@@ -1825,6 +1828,9 @@ namespace Clover.Player
                 }
                 case UpgradeAction.LengthenSurge:
                     if (element.SurgeActive) element.SurgeKit.Lengthen(effect.Amount, effect.Seconds);
+                    break;
+                case UpgradeAction.Mend:
+                    mending.Add(pending.Power * Or(effect.Share, 0.1f));
                     break;
                 case UpgradeAction.Freeze:
                     if (subject is IAfflictable freezing && freezing.Afflictions.FreezeFor(Or(effect.Seconds, 1.5f))) FreezesKept++;
@@ -1975,7 +1981,8 @@ namespace Clover.Player
         private void OnPoisonBit(Component who, int depth, float damage)
         {
             PoisonBites++;
-            if (who != null) Trigger(UpgradeTrigger.PoisonBite, who, who.transform.position, true, depth);
+            // The bite's real damage goes with it, for what is given back by it (Venom's mending).
+            if (who != null) Trigger(UpgradeTrigger.PoisonBite, who, who.transform.position, true, depth, null, AfflictionKind.None, "", LaySource.Effect, damage);
         }
 
         /// <summary>Bites of poison heard since the play began, counted for probes.</summary>
