@@ -175,8 +175,9 @@ namespace Clover.Player.Swings
             // The struck tint: the crystal arc's.
             Tint = new Color(0.72f, 0.92f, 1.05f), Shed = SwingShed.FrostBreath, ShedEvery = 0.08f, ReplacesHitArt = true,
             Line = "the swing leaves a crystal arc that freezes in the air, hangs, then shatters into shards that fall; frost and crystals where a blow lands, no crack-web",
-            // The elements 3 trail (staging/blender/2026-11-20_elements3): flat toon steps, never lit to white.
-            Layers = Bands(0.04f, 0.2f, 0.58f, 0.09f, 0.46f, 0.9f, 0.36f, 0.74f, 0.97f, 0.09f, 0.46f, 0.9f),
+            // Glacier ice, paler than Water's blue (the owner, 2026-11-20: Ice and Water swung the same blue): a steel-blue
+            // edge, a pale sky middle and a frost tip still tinted blue, so it is never pure white and never Metal's grey.
+            Layers = Bands(0.30f, 0.52f, 0.68f, 0.62f, 0.86f, 0.95f, 0.86f, 0.97f, 1.0f, 0.62f, 0.86f, 0.95f),
         };
 
         public static readonly SwingLook Water = new SwingLook
