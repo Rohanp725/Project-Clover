@@ -528,7 +528,8 @@ namespace Clover.Player
                 if (!Progress.Data.Wallet.Pay(upgrade)) return false;
             }
             else RunState.Points -= upgrade.Cost;
-            RunState.Unlocked.Add(upgrade.Id);
+            // Learned; a first aspect or keystone switches on in the live loadout at once.
+            MarkRules.Learn(upgrade, RunState.Unlocked, ReadLoadout());
             Bought++;
             // A spell learned goes into an empty slot, if there is one, when the slots next look (PlayerSpells).
             Refresh(true);

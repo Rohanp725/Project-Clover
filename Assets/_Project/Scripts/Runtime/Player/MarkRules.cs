@@ -73,6 +73,18 @@ namespace Clover.Player
                 ? CanBuy(upgrade, unlocked, wallet, open, playtest, has, godsFelled)
                 : CanBuy(upgrade, unlocked, shards, open, playtest);
 
+        /// <summary>
+        /// What a paid-for mark changes: it is learned, and the first aspect of a weapon or keystone of a bough bought
+        /// switches on at once (the owner's answer to Phase 5 question 3; <see cref="Way.WayRules.SettleBought"/>). A
+        /// later one waits to be chosen at a rest fire. True when the loadout changed.
+        /// </summary>
+        public static bool Learn(Upgrade bought, ICollection<string> unlocked, Build.Loadout loadout)
+        {
+            if (bought == null || unlocked == null) return false;
+            if (!unlocked.Contains(bought.Id)) unlocked.Add(bought.Id);
+            return Way.WayRules.SettleBought(bought, loadout);
+        }
+
         // The one rule both purses share; funds are what is held of the mark's own currency.
         private static bool Buyable(Upgrade upgrade, ICollection<string> unlocked, int funds, bool open, bool playtest, Func<string, bool> has, int godsFelled)
         {

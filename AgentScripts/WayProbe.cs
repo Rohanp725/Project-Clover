@@ -15,7 +15,8 @@ using UnityEngine.InputSystem.LowLevel;
 // Play Mode probe of the Katana's Way in the Proving Ground: the title guide is closed with the back key and time is
 // shown to run (an open guide holds time at zero); the Katana is taken from the rack; the first trunk mark is bought
 // through the chart's own buy (PlayerUpgrades.TryBuy, which the Learn button calls), which pays a Memories mark from the
-// wallet; the probe checks the mark is in force, the wallet paid and the run's Shards untouched, then stops play.
+// wallet; the probe checks the mark is in force, the wallet paid and the run's Shards untouched, then buys the Sheath and
+// checks it is the Katana's active aspect at once (the first aspect bought switches on), then stops play.
 // Saved progress is kept out of it (runprobe.sh sandboxes the play; the probe refuses to pay if it is not).
 //   bash AgentScripts/runprobe.sh ProvingGround WayProbe 40
 public static class WayProbe
@@ -126,6 +127,19 @@ public class WayProbeRunner : MonoBehaviour
         Judge("it is learned", RunState.Unlocked.Contains(mark.Id));
         Judge("it cannot be bought twice", !upgrades.CanBuy(mark));
         Judge("the mark is in force with the Katana held", upgrades.Has(mark.Id));
+
+        // 4. The first aspect bought switches on at once (the owner, Phase 5 question 3).
+        var aspect = Upgrade.ById(KatanaWay.Sheath);
+        var build = upgrades.GetComponent<PlayerBuild>();
+        Judge("the Sheath is an aspect of the Katana's Way", aspect != null && aspect.Kind == UpgradeKind.Aspect, aspect != null ? aspect.Name : "no mark");
+        if (aspect == null || build == null) { Finish(); yield break; }
+        Judge("no aspect is active before it is bought", build.Read().AspectOf(Weapons.KatanaName) == "", build.Read().AspectOf(Weapons.KatanaName));
+        if (wallet.Memories < aspect.Cost) wallet.Earn(Currency.Memories, aspect.Cost - wallet.Memories);
+        Judge("the chart's buy bought the Sheath", upgrades.TryBuy(aspect));
+        upgrades.RefreshNow();
+        yield return null;
+        Judge("the Sheath is the Katana's active aspect", build.Read().AspectOf(Weapons.KatanaName) == KatanaWay.Sheath, build.Read().AspectOf(Weapons.KatanaName));
+        Judge("the Sheath is in force", upgrades.Has(aspect.Id));
 
         Finish();
     }

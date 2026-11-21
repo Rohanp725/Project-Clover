@@ -206,6 +206,26 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void LearningTheFirstAspectOrKeystoneSwitchesItOnAndALaterOneWaits()
+        {
+            var learned = new HashSet<string>();
+            var loadout = Carrying(Katana);
+            Assert.IsTrue(MarkRules.Learn(SheathAspect, learned, loadout), "the first aspect bought is active at once");
+            Assert.IsTrue(learned.Contains(Sheath));
+            Assert.AreEqual(Sheath, loadout.AspectOf(Katana));
+            Assert.IsFalse(MarkRules.Learn(StreamAspect, learned, loadout), "a second aspect waits for a fire");
+            Assert.IsTrue(learned.Contains(Stream), "but is learned");
+            Assert.AreEqual(Sheath, loadout.AspectOf(Katana));
+            Assert.IsTrue(MarkRules.Learn(SheathKeyA, learned, loadout), "the first keystone of the bough is the one set");
+            Assert.IsFalse(MarkRules.Learn(SheathKeyB, learned, loadout));
+            Assert.AreEqual(SheathKeyA.Id, loadout.KeystoneOf(WayRules.BoughOf(SheathKeyA)));
+            Assert.IsFalse(MarkRules.Learn(Temper, learned, loadout), "a trunk mark sets nothing");
+            Assert.IsTrue(learned.Contains(Temper.Id));
+            Assert.IsFalse(MarkRules.Learn(Temper, learned, loadout), "learned once");
+            Assert.AreEqual(1, System.Linq.Enumerable.Count(learned, id => id == Temper.Id));
+        }
+
+        [Test]
         public void AGodsBoughIsGivenByTakeAndIsOnlyAPlaytestUnlock()
         {
             var learned = new HashSet<string>();
