@@ -72,6 +72,13 @@ namespace Clover.EditorTools
             /// (<see cref="KnifeGripAngle"/>), with the fist round the grip and the pommel showing under it.
             /// </summary>
             public Vector3 InHandEuler, InHandPosition;
+            /// <summary>
+            /// How the fist closes on it (the hands with fingers, 2026-11-22): the finger pose, and the point of the weapon, in
+            /// its own axes, held at the handle's centre. The clips still aim it by <see cref="InHandEuler"/>; it is moved into
+            /// the fist and the hand turned back about it in play (<see cref="HandGrips"/>, <see cref="HandGrip"/>).
+            /// </summary>
+            public HandGrip.Pose Grip = HandGrip.Pose.Closed;
+            public Vector3 HeldAt;
             /// <summary>True for a weapon held in the left hand (the bow): its one copy hangs on the left hand's socket.</summary>
             public bool LeftHanded;
             /// <summary>The carry name of something else held in the right hand with it (the bow's arrow), and where in that hand.</summary>
@@ -176,10 +183,13 @@ namespace Clover.EditorTools
                 InHandEuler = new Vector3(-KnifeGripAngle, 0f, 0f),
                 InHandPosition = Quaternion.Euler(-KnifeGripAngle, 0f, 0f) * new Vector3(0f, 0f, -KnifeSeat),
                 OffHandEuler = new Vector3(-KnifeGripAngle, 0f, 0f),
+                // In the fingers, held as before: the grip's centre a little toward the pommel, so the guard clears the knuckles.
+                HeldAt = new Vector3(0f, 0f, KnifeSeat),
             },
             new Spec
             {
                 Carry = "bow", ModelFile = "bow.fbx", StandIn = BowStandIn, Finish = BowFinish, LeftHanded = true, BladeSlots = new[] { "wood" }, BladeKind = BladeKind.Stave,
+                Grip = HandGrip.Pose.Bow,
                 AlsoInRightHand = "arrow", AlsoPosition = new Vector3(0f, 0f, -0.2f),
                 Notes = "Great Bow: 360 triangles and a 12 triangle string, slots wood wrap grip accent inlay string; origin at the middle of the grip, upper limb along +Z, the back toward -Y (the target) and the string on +Y",
                 OwnColours = { { "wood", new Color(0.21f, 0.21f, 0.25f) } },
@@ -433,12 +443,14 @@ namespace Clover.EditorTools
             // name, so PlayerAnimator and the Forge find it as before. The stick stays in the file, hidden, under another name.
             var katana = Prefab(Weapon.KatanaCarry);
             var stick = BuildKit.FindDeep(model.transform, KatanaDrawn);
+            var holds = new List<HandGrip.Hold>();
             if (katana != null && handR != null && stick != null)
             {
                 var sword = Place(katana, handR, KatanaDrawn, Vector3.zero, Quaternion.identity);
                 sword.SetActive(stick.gameObject.activeSelf);
                 stick.name = KatanaDrawn + "_stick";
                 stick.gameObject.SetActive(false);
+                holds.Add(SeatHold(sword, 0, SpecFor(Weapon.KatanaCarry), Vector3.zero, Vector3.zero));
             }
 
             var sets = new List<WeaponRack.Set>();
@@ -461,15 +473,25 @@ namespace Clover.EditorTools
                 {
                     var prefab = Prefab(spec.Carry);
                     if (prefab == null || handR == null || (spec.LeftHanded && handL == null)) continue;
-                    inHand.Add(Place(prefab, spec.LeftHanded ? handL : handR, spec.Carry + "_hand", spec.InHandPosition, Quaternion.Euler(spec.InHandEuler)));
+                    var held = Place(prefab, spec.LeftHanded ? handL : handR, spec.Carry + "_hand", spec.InHandPosition, Quaternion.Euler(spec.InHandEuler));
+                    inHand.Add(held);
+                    holds.Add(SeatHold(held, spec.LeftHanded ? 1 : 0, spec, spec.InHandEuler, spec.InHandPosition));
                     var also = spec.AlsoInRightHand != null ? Prefab(spec.AlsoInRightHand) : null;
-                    if (also != null) inHand.Add(Place(also, handR, spec.AlsoInRightHand + "_hand", spec.AlsoPosition, Quaternion.identity));
+                    if (also != null)
+                    {
+                        // The arrow stays where the clips draw it; the right hand only closes on its nock.
+                        var arrow = Place(also, handR, spec.AlsoInRightHand + "_hand", spec.AlsoPosition, Quaternion.identity);
+                        inHand.Add(arrow);
+                        holds.Add(new HandGrip.Hold { Part = arrow, Hand = 0, Pose = HandGrip.Pose.Closed });
+                    }
                     var rest = spec.RestSocket == WeaponRack.Hip ? hip : back;
                     if (rest != null) atRest.Add(Place(prefab, rest, spec.Carry + "_rest", spec.RestPosition, Quaternion.LookRotation(spec.RestAlong.normalized, spec.RestUp.normalized)));
                     if (spec.OffHandEuler.HasValue && handL != null)
                     {
                         // The same model a second time: in the left hand, and at rest mirrored across the body.
-                        inHand.Add(Place(prefab, handL, spec.Carry + "_hand_L", spec.InHandPosition, Quaternion.Euler(spec.OffHandEuler.Value)));
+                        var second = Place(prefab, handL, spec.Carry + "_hand_L", spec.InHandPosition, Quaternion.Euler(spec.OffHandEuler.Value));
+                        inHand.Add(second);
+                        holds.Add(SeatHold(second, 1, spec, spec.OffHandEuler.Value, spec.InHandPosition));
                         Vector3 along = spec.RestAlong.normalized, up = spec.RestUp.normalized;
                         if (rest != null) atRest.Add(Place(prefab, rest, spec.Carry + "_rest_L", new Vector3(-spec.RestPosition.x, spec.RestPosition.y, spec.RestPosition.z),
                             Quaternion.LookRotation(new Vector3(-along.x, along.y, along.z), new Vector3(-up.x, up.y, up.z))));
@@ -506,7 +528,17 @@ namespace Clover.EditorTools
             var rack = model.GetComponent<WeaponRack>();
             if (rack == null) rack = model.AddComponent<WeaponRack>();
             rack.Configure(sets.ToArray());
+            HandGrips.Configure(model, modelAsset, holds.ToArray());
             return rack;
+        }
+
+        // Moves a part just hung where the clips aim it into the fist of its hand, and says how that hand is turned to keep it aimed.
+        private static HandGrip.Hold SeatHold(GameObject part, int hand, Spec spec, Vector3 aimedEuler, Vector3 aimedPosition)
+        {
+            var pose = spec != null ? spec.Grip : HandGrip.Pose.Closed;
+            Quaternion turn = HandGrips.SeatInHand(part.transform.parent, part.transform, Quaternion.Euler(aimedEuler), aimedPosition,
+                HandGrips.Of(pose, hand), spec != null ? spec.HeldAt : Vector3.zero);
+            return new HandGrip.Hold { Part = part, Hand = hand, Pose = pose, Turn = turn };
         }
 
         /// <summary>
@@ -516,21 +548,29 @@ namespace Clover.EditorTools
         public static int Reseat(GameObject model)
         {
             int moved = 0;
+            var holds = new List<HandGrip.Hold>();
+            void Seat(Transform part, int hand, Spec spec, Vector3 euler, Vector3 position)
+            {
+                if (part == null || part.parent == null) return;
+                Vector3 wasAt = part.localPosition;
+                Quaternion wasTurned = part.localRotation;
+                Undo.RecordObject(part, "Reseat hand weapons");
+                holds.Add(SeatHold(part.gameObject, hand, spec, euler, position));
+                if ((part.localPosition - wasAt).sqrMagnitude > 1e-10f || Quaternion.Angle(part.localRotation, wasTurned) > 0.01f) moved++;
+            }
+            var handR = WeaponRack.FindSocket(model.transform, WeaponRack.HandRight);
+            if (handR != null) Seat(handR.Find(KatanaDrawn), 0, SpecFor(Weapon.KatanaCarry), Vector3.zero, Vector3.zero);
             foreach (var spec in Specs)
             {
                 if (spec.PropOnly || spec.ShownByAnimator || spec.Worn != null) continue;
-                foreach (var (name, euler) in new[] { (spec.Carry + "_hand", spec.InHandEuler), (spec.Carry + "_hand_L", spec.OffHandEuler ?? Vector3.zero) })
-                {
-                    var part = WeaponRack.FindSocket(model.transform, name);
-                    if (part == null) continue;
-                    var rotation = Quaternion.Euler(euler);
-                    if (part.localPosition == spec.InHandPosition && part.localRotation == rotation) continue;
-                    Undo.RecordObject(part, "Reseat hand weapons");
-                    part.localPosition = spec.InHandPosition;
-                    part.localRotation = rotation;
-                    moved++;
-                }
+                Seat(WeaponRack.FindSocket(model.transform, spec.Carry + "_hand"), spec.LeftHanded ? 1 : 0, spec, spec.InHandEuler, spec.InHandPosition);
+                if (spec.OffHandEuler.HasValue) Seat(WeaponRack.FindSocket(model.transform, spec.Carry + "_hand_L"), 1, spec, spec.OffHandEuler.Value, spec.InHandPosition);
+                var arrow = spec.AlsoInRightHand != null ? WeaponRack.FindSocket(model.transform, spec.AlsoInRightHand + "_hand") : null;
+                if (arrow != null) holds.Add(new HandGrip.Hold { Part = arrow.gameObject, Hand = 0, Pose = HandGrip.Pose.Closed });
             }
+            var grip = model.GetComponent<HandGrip>();
+            if (grip != null) Undo.RecordObject(grip, "Reseat hand weapons");
+            if (HandGrips.Configure(model, AssetDatabase.LoadAssetAtPath<GameObject>(PlayerBuilder.PlayerModelPath), holds.ToArray()) != null && grip == null) moved++;
             return moved;
         }
 

@@ -26,9 +26,32 @@ public class PerfProbeRunner : MonoBehaviour
         if (defence != null) defence.Health.Heal(100f);
     }
 
+    private static long Triangles(Mesh mesh)
+    {
+        long indices = 0;
+        for (int i = 0; i < mesh.subMeshCount; i++) indices += mesh.GetIndexCount(i);
+        return indices / 3;
+    }
+
     private IEnumerator Start()
     {
+        // The guide closed with Escape and time shown to run before anything is measured.
+        float waited = Time.unscaledTime + 5f;
+        while (!Clover.UI.GuidePage.Showing && Time.unscaledTime < waited) yield return null;
+        for (int presses = 0; Clover.UI.GuidePage.Showing && presses < 20; presses++)
+        {
+            UnityEngine.InputSystem.InputSystem.QueueStateEvent(UnityEngine.InputSystem.Keyboard.current, new UnityEngine.InputSystem.LowLevel.KeyboardState(UnityEngine.InputSystem.Key.Escape));
+            yield return null;
+            yield return null;
+            UnityEngine.InputSystem.InputSystem.QueueStateEvent(UnityEngine.InputSystem.Keyboard.current, new UnityEngine.InputSystem.LowLevel.KeyboardState());
+            yield return null;
+        }
+        float timeWas = Time.time;
+        yield return new WaitForSecondsRealtime(0.4f);
+        Debug.Log($"[Probe] guide {(Clover.UI.GuidePage.Showing ? "STILL OPEN" : "closed")}; time runs: {Time.time > timeWas}");
         var player = FindAnyObjectByType<PlayerController>();
+        var outfit = player.GetComponentInChildren<PlayerOutfit>();
+        if (outfit != null) Debug.Log($"[Probe] outfit {outfit.Worn}: {Triangles(outfit.Body.sharedMesh)} triangles, {outfit.Body.bones.Length} bones, hand grip {(player.GetComponentInChildren<HandGrip>() != null)}");
         defence = player.GetComponent<PlayerDefence>();
         string scene = SceneManager.GetActiveScene().name;
         if (scene == "Castle") player.Teleport(new Vector3(0f, 0.1f, 44f), Quaternion.identity);

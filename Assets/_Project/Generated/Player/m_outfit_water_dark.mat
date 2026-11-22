@@ -30,7 +30,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _Charge: 0
     - _Fade: 1
+    - _Fever: 0
+    - _FeverReveal: 1
     - _Ice: 0
     - _IceDark: 0
     - _IceEarth: 0

@@ -38,6 +38,7 @@ namespace Clover.EditorTools.Forge
                 // The other weapons hang on the same sockets as in the game, so each sheet is drawn with the right one in hand.
                 var rack = WeaponBuilder.Hang(rig.Model, asset);
                 rack.Tint(true, Clover.Player.Elements.Colour(Clover.Player.Elements.Fire), 1f);
+                var grip = rig.Model.GetComponent<HandGrip>();
                 var tails = new ForgeTails()
                     .Add(rig, 0.1f, "scarf_a1", "scarf_a2", "scarf_a3")
                     .Add(rig, 0.1f, "scarf_b1", "scarf_b2")
@@ -69,6 +70,8 @@ namespace Clover.EditorTools.Forge
                             local.Pose(rig, at);
                             tails.Step(rig, 1f / 60f, local.Wind != null ? local.Wind(at) : Vector3.zero);
                         }
+                        // The sheet shows the hands as the game does: closed on the weapon and turned about it (never baked into the clip).
+                        if (grip != null) grip.Apply(1f);
                         last = t;
                     }, 8, 0.95f, clip.SheetMoments, distance);
                     baked++;

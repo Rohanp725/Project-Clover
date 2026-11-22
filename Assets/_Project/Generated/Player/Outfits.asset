@@ -43,11 +43,41 @@ MonoBehaviour:
     - upperarm.L
     - forearm.L
     - hand.L
+    - index1.L
+    - index2.L
+    - index3.L
+    - middle1.L
+    - middle2.L
+    - middle3.L
+    - ring1.L
+    - ring2.L
+    - ring3.L
+    - pinky1.L
+    - pinky2.L
+    - pinky3.L
+    - thumb1.L
+    - thumb2.L
+    - thumb3.L
     - shoulder.R
     - upperarm.R
     - forearm.R
     - hand.R
     - weapon.R
+    - index1.R
+    - index2.R
+    - index3.R
+    - middle1.R
+    - middle2.R
+    - middle3.R
+    - ring1.R
+    - ring2.R
+    - ring3.R
+    - pinky1.R
+    - pinky2.R
+    - pinky3.R
+    - thumb1.R
+    - thumb2.R
+    - thumb3.R
     - scarf_a1
     - scarf_a2
     - scarf_a3
@@ -60,8 +90,8 @@ MonoBehaviour:
     - shin.R
     - foot.R
     Bounds:
-      m_Center: {x: -0.0024771094, y: 0.98192674, z: -0.1383096}
-      m_Extent: {x: 0.6948475, y: 1.0680728, z: 0.38563448}
+      m_Center: {x: 0, y: 0.98192674, z: -0.1383096}
+      m_Extent: {x: 0.6811098, y: 1.0680728, z: 0.38563448}
   - Id: fire
     Mesh: {fileID: -805204558882287317, guid: f94293610fc7d3545a573f66caaea056, type: 3}
     Materials:
@@ -89,11 +119,41 @@ MonoBehaviour:
     - upperarm.L
     - forearm.L
     - hand.L
+    - index1.L
+    - index2.L
+    - index3.L
+    - middle1.L
+    - middle2.L
+    - middle3.L
+    - ring1.L
+    - ring2.L
+    - ring3.L
+    - pinky1.L
+    - pinky2.L
+    - pinky3.L
+    - thumb1.L
+    - thumb2.L
+    - thumb3.L
     - shoulder.R
     - upperarm.R
     - forearm.R
     - hand.R
     - weapon.R
+    - index1.R
+    - index2.R
+    - index3.R
+    - middle1.R
+    - middle2.R
+    - middle3.R
+    - ring1.R
+    - ring2.R
+    - ring3.R
+    - pinky1.R
+    - pinky2.R
+    - pinky3.R
+    - thumb1.R
+    - thumb2.R
+    - thumb3.R
     - scarf_a1
     - scarf_a2
     - scarf_a3
@@ -107,7 +167,7 @@ MonoBehaviour:
     - foot.R
     Bounds:
       m_Center: {x: 0, y: 0.9796295, z: -0.115756094}
-      m_Extent: {x: 0.72154224, y: 1.07037, z: 0.39899892}
+      m_Extent: {x: 0.6886418, y: 1.07037, z: 0.39899892}
   - Id: ice
     Mesh: {fileID: 3203626921163184243, guid: db86cfdca0b3232438ba702b410eb8ed, type: 3}
     Materials:
@@ -115,8 +175,8 @@ MonoBehaviour:
     - {fileID: 2100000, guid: 61c2c820dbcad09438ccf2076d7d79e6, type: 2}
     - {fileID: 2100000, guid: 86f2ae3af050dce4693794756b1a8a85, type: 2}
     - {fileID: 2100000, guid: 84b35adcc67410244bcc9ccaa5bae9b6, type: 2}
-    - {fileID: 2100000, guid: c8cf8b31b51610c4498cad7712f14bfa, type: 2}
     - {fileID: 2100000, guid: 5246d009c05894b489c3cb65ae8492a5, type: 2}
+    - {fileID: 2100000, guid: c8cf8b31b51610c4498cad7712f14bfa, type: 2}
     BoneNames:
     - root
     - hips
@@ -135,11 +195,41 @@ MonoBehaviour:
     - upperarm.L
     - forearm.L
     - hand.L
+    - index1.L
+    - index2.L
+    - index3.L
+    - middle1.L
+    - middle2.L
+    - middle3.L
+    - ring1.L
+    - ring2.L
+    - ring3.L
+    - pinky1.L
+    - pinky2.L
+    - pinky3.L
+    - thumb1.L
+    - thumb2.L
+    - thumb3.L
     - shoulder.R
     - upperarm.R
     - forearm.R
     - hand.R
     - weapon.R
+    - index1.R
+    - index2.R
+    - index3.R
+    - middle1.R
+    - middle2.R
+    - middle3.R
+    - ring1.R
+    - ring2.R
+    - ring3.R
+    - pinky1.R
+    - pinky2.R
+    - pinky3.R
+    - thumb1.R
+    - thumb2.R
+    - thumb3.R
     - scarf_a1
     - scarf_a2
     - scarf_a3
@@ -153,7 +243,7 @@ MonoBehaviour:
     - foot.R
     Bounds:
       m_Center: {x: 0, y: 0.9848801, z: -0.13265893}
-      m_Extent: {x: 0.74616706, y: 1.0651194, z: 0.38976726}
+      m_Extent: {x: 0.7109417, y: 1.0651194, z: 0.38976726}
   - Id: water
     Mesh: {fileID: -5093186796896059732, guid: f0e5bf2172c71744796527dfa214d6b6, type: 3}
     Materials:
@@ -181,11 +271,41 @@ MonoBehaviour:
     - upperarm.L
     - forearm.L
     - hand.L
+    - index1.L
+    - index2.L
+    - index3.L
+    - middle1.L
+    - middle2.L
+    - middle3.L
+    - ring1.L
+    - ring2.L
+    - ring3.L
+    - pinky1.L
+    - pinky2.L
+    - pinky3.L
+    - thumb1.L
+    - thumb2.L
+    - thumb3.L
     - shoulder.R
     - upperarm.R
     - forearm.R
     - hand.R
     - weapon.R
+    - index1.R
+    - index2.R
+    - index3.R
+    - middle1.R
+    - middle2.R
+    - middle3.R
+    - ring1.R
+    - ring2.R
+    - ring3.R
+    - pinky1.R
+    - pinky2.R
+    - pinky3.R
+    - thumb1.R
+    - thumb2.R
+    - thumb3.R
     - scarf_a1
     - scarf_a2
     - scarf_a3
@@ -199,7 +319,7 @@ MonoBehaviour:
     - foot.R
     Bounds:
       m_Center: {x: 0, y: 0.9900139, z: -0.11892837}
-      m_Extent: {x: 0.72154224, y: 1.0599855, z: 0.38960707}
+      m_Extent: {x: 0.6886418, y: 1.0599855, z: 0.38960707}
   - Id: metal
     Mesh: {fileID: 1227819635731695901, guid: 371f5a18aa49c5147a78a037756d63df, type: 3}
     Materials:
@@ -227,11 +347,41 @@ MonoBehaviour:
     - upperarm.L
     - forearm.L
     - hand.L
+    - index1.L
+    - index2.L
+    - index3.L
+    - middle1.L
+    - middle2.L
+    - middle3.L
+    - ring1.L
+    - ring2.L
+    - ring3.L
+    - pinky1.L
+    - pinky2.L
+    - pinky3.L
+    - thumb1.L
+    - thumb2.L
+    - thumb3.L
     - shoulder.R
     - upperarm.R
     - forearm.R
     - hand.R
     - weapon.R
+    - index1.R
+    - index2.R
+    - index3.R
+    - middle1.R
+    - middle2.R
+    - middle3.R
+    - ring1.R
+    - ring2.R
+    - ring3.R
+    - pinky1.R
+    - pinky2.R
+    - pinky3.R
+    - thumb1.R
+    - thumb2.R
+    - thumb3.R
     - scarf_a1
     - scarf_a2
     - scarf_a3
@@ -245,7 +395,7 @@ MonoBehaviour:
     - foot.R
     Bounds:
       m_Center: {x: 0, y: 0.9796295, z: -0.11213884}
-      m_Extent: {x: 0.72154224, y: 1.07037, z: 0.39538166}
+      m_Extent: {x: 0.6886418, y: 1.07037, z: 0.39538166}
   - Id: poison
     Mesh: {fileID: 2385149805361951604, guid: d5f7e7c7f9513254083da3b95f2ba707, type: 3}
     Materials:
@@ -274,11 +424,41 @@ MonoBehaviour:
     - upperarm.L
     - forearm.L
     - hand.L
+    - index1.L
+    - index2.L
+    - index3.L
+    - middle1.L
+    - middle2.L
+    - middle3.L
+    - ring1.L
+    - ring2.L
+    - ring3.L
+    - pinky1.L
+    - pinky2.L
+    - pinky3.L
+    - thumb1.L
+    - thumb2.L
+    - thumb3.L
     - shoulder.R
     - upperarm.R
     - forearm.R
     - hand.R
     - weapon.R
+    - index1.R
+    - index2.R
+    - index3.R
+    - middle1.R
+    - middle2.R
+    - middle3.R
+    - ring1.R
+    - ring2.R
+    - ring3.R
+    - pinky1.R
+    - pinky2.R
+    - pinky3.R
+    - thumb1.R
+    - thumb2.R
+    - thumb3.R
     - scarf_a1
     - scarf_a2
     - scarf_a3
@@ -292,7 +472,7 @@ MonoBehaviour:
     - foot.R
     Bounds:
       m_Center: {x: 0, y: 0.9848801, z: -0.12819928}
-      m_Extent: {x: 0.72154224, y: 1.0651194, z: 0.37891293}
+      m_Extent: {x: 0.6886418, y: 1.0651194, z: 0.37891293}
   - Id: celtic
     Mesh: {fileID: 1911452056262466152, guid: de835de71f3ddaf4d876a462238043a0, type: 3}
     Materials:
@@ -320,11 +500,41 @@ MonoBehaviour:
     - upperarm.L
     - forearm.L
     - hand.L
+    - index1.L
+    - index2.L
+    - index3.L
+    - middle1.L
+    - middle2.L
+    - middle3.L
+    - ring1.L
+    - ring2.L
+    - ring3.L
+    - pinky1.L
+    - pinky2.L
+    - pinky3.L
+    - thumb1.L
+    - thumb2.L
+    - thumb3.L
     - shoulder.R
     - upperarm.R
     - forearm.R
     - hand.R
     - weapon.R
+    - index1.R
+    - index2.R
+    - index3.R
+    - middle1.R
+    - middle2.R
+    - middle3.R
+    - ring1.R
+    - ring2.R
+    - ring3.R
+    - pinky1.R
+    - pinky2.R
+    - pinky3.R
+    - thumb1.R
+    - thumb2.R
+    - thumb3.R
     - scarf_a1
     - scarf_a2
     - scarf_a3
@@ -338,7 +548,7 @@ MonoBehaviour:
     - foot.R
     Bounds:
       m_Center: {x: 0, y: 0.9848801, z: -0.10621202}
-      m_Extent: {x: 0.72357154, y: 1.0651194, z: 0.41059095}
+      m_Extent: {x: 0.69067115, y: 1.0651194, z: 0.41059095}
   - Id: champion
     Mesh: {fileID: 582618900587568934, guid: 4b4dc7ca2da3cd045b0f87f7934179ec, type: 3}
     Materials:
@@ -366,11 +576,41 @@ MonoBehaviour:
     - upperarm.L
     - forearm.L
     - hand.L
+    - index1.L
+    - index2.L
+    - index3.L
+    - middle1.L
+    - middle2.L
+    - middle3.L
+    - ring1.L
+    - ring2.L
+    - ring3.L
+    - pinky1.L
+    - pinky2.L
+    - pinky3.L
+    - thumb1.L
+    - thumb2.L
+    - thumb3.L
     - shoulder.R
     - upperarm.R
     - forearm.R
     - hand.R
     - weapon.R
+    - index1.R
+    - index2.R
+    - index3.R
+    - middle1.R
+    - middle2.R
+    - middle3.R
+    - ring1.R
+    - ring2.R
+    - ring3.R
+    - pinky1.R
+    - pinky2.R
+    - pinky3.R
+    - thumb1.R
+    - thumb2.R
+    - thumb3.R
     - scarf_a1
     - scarf_a2
     - scarf_a3
@@ -384,15 +624,15 @@ MonoBehaviour:
     - foot.R
     Bounds:
       m_Center: {x: 0, y: 0.9900139, z: -0.11905375}
-      m_Extent: {x: 0.72154224, y: 1.0599855, z: 0.38973245}
+      m_Extent: {x: 0.6886418, y: 1.0599855, z: 0.38973245}
   - Id: ronin_gen
     Mesh: {fileID: -5070108961991136264, guid: c7b541545694d75459fefd8e6c61238d, type: 3}
     Materials:
-    - {fileID: 2100000, guid: f0a4a611b559fd947ba40e539ecfc00e, type: 2}
     - {fileID: 2100000, guid: 2fb43368102c4234d81d919f2b85ec3a, type: 2}
     - {fileID: 2100000, guid: 83086fef5cd71c5479070041f1c0b8c5, type: 2}
     - {fileID: 2100000, guid: e638cc5fa9d975442881a1e09b63f7d1, type: 2}
     - {fileID: 2100000, guid: ee1113fd56795234bbf454213fa6a294, type: 2}
+    - {fileID: 2100000, guid: f0a4a611b559fd947ba40e539ecfc00e, type: 2}
     - {fileID: 2100000, guid: 5472ffd834190364dac34b4c16d97b1f, type: 2}
     - {fileID: 2100000, guid: 8f0d2713eb1f57f4b80d6043535c334d, type: 2}
     - {fileID: 2100000, guid: de32c65559c6a7a47b3ba001377f7102, type: 2}
@@ -415,11 +655,41 @@ MonoBehaviour:
     - upperarm.L
     - forearm.L
     - hand.L
+    - index1.L
+    - index2.L
+    - index3.L
+    - middle1.L
+    - middle2.L
+    - middle3.L
+    - ring1.L
+    - ring2.L
+    - ring3.L
+    - pinky1.L
+    - pinky2.L
+    - pinky3.L
+    - thumb1.L
+    - thumb2.L
+    - thumb3.L
     - shoulder.R
     - upperarm.R
     - forearm.R
     - hand.R
     - weapon.R
+    - index1.R
+    - index2.R
+    - index3.R
+    - middle1.R
+    - middle2.R
+    - middle3.R
+    - ring1.R
+    - ring2.R
+    - ring3.R
+    - pinky1.R
+    - pinky2.R
+    - pinky3.R
+    - thumb1.R
+    - thumb2.R
+    - thumb3.R
     - scarf_a1
     - scarf_a2
     - scarf_a3
@@ -432,5 +702,5 @@ MonoBehaviour:
     - shin.R
     - foot.R
     Bounds:
-      m_Center: {x: 0.0014206767, y: 0.97324497, z: -0.099632174}
-      m_Extent: {x: 0.7518596, y: 1.0767545, z: 0.42431155}
+      m_Center: {x: -0.0145531, y: 0.973245, z: -0.09963164}
+      m_Extent: {x: 0.7303206, y: 1.0767545, z: 0.42431167}
