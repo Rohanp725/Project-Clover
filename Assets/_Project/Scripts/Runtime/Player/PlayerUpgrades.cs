@@ -1473,6 +1473,14 @@ namespace Clover.Player
             if (effect.WithinOwnCast > 0f && !InCastWindow(LastCastOf(effect.Owner), Time.time, effect.WithinOwnCast)) return;
             // Only for a cast begun in the window after its moment (the ledger's spell-windows).
             if (effect.CastAfter != CastMoment.None && !Moments.Within(effect.CastAfter, effect.CastWindow, castBeganAt, effect.CastAfterCarrying)) return;
+            // Only beside something grown (of its own kin, when it names one).
+            if (effect.NearGrown > 0f && !Hazards.GrownNear(transform.position, effect.NearGrown, effect.Kin > 0 ? FamilyOf(effect) : 0)) return;
+            if (effect.AtGrown && Hazards.NearestGrown(transform.position, Or(effect.NearGrown, 4f), out Vector3 grownAt))
+            {
+                at = grownAt;
+                hasAt = true;
+                target = null;
+            }
             // Only while its own branch's spell gathers (Bag of Winds open), and with its rings come quickly enough.
             if (effect.WhileGathering && !(rings.Active && effect.Owner != null && rings.Mark.Branch == effect.Owner.Branch)) return;
             if (effect.RingsWithin > 0f && !rings.LastWithin(Mathf.Max(1, effect.SpentAtLeast), effect.RingsWithin, Time.time)) return;
@@ -2072,6 +2080,9 @@ namespace Clover.Player
                     StepsToStanding++;
                     break;
                 }
+                case UpgradeAction.Regain:
+                    if (defence != null) defence.Health.Regain(Or(effect.Amount, 3f));
+                    break;
                 case UpgradeAction.UndoWound:
                     if (defence != null && !defence.IsDead && Time.time - defence.LastWoundAt <= Or(effect.CastWindow, 1f) && defence.LastWound > 0f)
                     {

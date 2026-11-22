@@ -280,13 +280,11 @@ ground: Briar Patch's bed, a thornbush, a sapling, a thicket, a tuft of briar.
 ## life.base.master
 **What it does.** Cast it on something you grew, within a metre of it, and the bed grows into a thicket around it, bigger and longer-lasting. Whatever stands in it as it grows is rooted in place.
 
-**When it happens.** For now, when you cast it within 4 metres of something you grew. Briar Patch must be in a spell slot.
+**When it happens.** When you cast Briar Patch within 1 metre of something you grew. Briar Patch must be in a spell slot.
 
-**The numbers.** 3 Shards. A thicket 4 metres across grows where the bed lands and lasts 10 seconds. Every half second, it deals 4 damage and Seeded. It counts as something you grew, up to two. Every enemy within 2 metres of it as it grows is rooted for 1 second: it can't walk, but it can still hit whatever comes within reach.
+**The numbers.** 3 Shards. A thicket 4 metres across grows around the thing you grew and lasts 10 seconds. Every half second, it deals 4 damage and Seeded. It counts as something you grew, up to two. Every enemy within 2 metres of it as it grows is rooted for 1 second: it can't walk, but it can still hit whatever comes within reach.
 
 **Works with.** Fallen Seeds, Sapling and the bed itself, for something to cast it on; Ripening on what the thicket roots; Wildwood.
-
-**Not built yet.** The thicket should grow around the thing you cast it on; for now, it grows where the bed lands, as long as you stand near something you grew.
 
 **Example.** Two beds in a row: the second one grows into a thicket and roots the soldiers in it.
 

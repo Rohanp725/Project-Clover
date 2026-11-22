@@ -298,12 +298,12 @@ namespace Clover.Player.Trees
                     Spell = new SpellSpec { Count = 3, Reach = 6f, Radius = 1.5f, Delay = 1f, Damage = 12f, Stagger = 10f, Stacks = 2 },
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Grown = true, Limit = 3, Radius = 1f, Seconds = 6f, Interval = 0.5f, Damage = 4f, Affliction = AfflictionKind.Seeded, Stacks = 1 } } },
                 "Opens two shapes of Briar Patch, chosen at any rest fire: Burrs, seeds the enemy carries for you, or Seed Pods, three pods that burst and leave bushes.",
-                // NEEDS: cast within 1 m of something you grew, the thicket grown round that thing (at-grown). Until then, cast
-                // within four metres of something you grew, a thicket grows where the bed lands and roots what stands in it.
+                // Cast within 1 m of something you grew (NearGrown), the thicket grows round that thing (AtGrown): four metres across
+                // for ten seconds, rooting what stands in it as it grows.
                 new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, While = StatWhen.NearGrown, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Grown = true, Limit = 2, Radius = 2f, Seconds = 10f, Interval = 0.5f, Damage = 4f, Affliction = AfflictionKind.Seeded, Stacks = 1 },
-                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, While = StatWhen.NearGrown, Do = UpgradeAction.Condition, Radius = 2f, State = new ConditionSpec { Id = Thicket, Seconds = 1f, Flags = ConditionFlags.Rooted } },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, NearGrown = 1f, AtGrown = true, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Grown = true, Limit = 2, Radius = 2f, Seconds = 10f, Interval = 0.5f, Damage = 4f, Affliction = AfflictionKind.Seeded, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, NearGrown = 1f, AtGrown = true, Do = UpgradeAction.Condition, Radius = 2f, State = new ConditionSpec { Id = Thicket, Seconds = 1f, Flags = ConditionFlags.Rooted } },
                 },
                 "Cast it on something you grew, within a metre of it, and the bed grows into a thicket round it: four metres across, standing ten seconds, and whatever stands in it as it grows is rooted for a second.");
 

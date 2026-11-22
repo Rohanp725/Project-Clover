@@ -310,6 +310,13 @@ namespace Clover.Player
         public float AfterWindow;
         /// <summary>Only while its own branch's spell is begun and gathering (Bag of Winds open: each attacker's wind thrown back).</summary>
         public bool WhileGathering;
+        /// <summary>
+        /// Above zero: only while the player stands within this many metres of something they grew; with <see cref="Kin"/> set,
+        /// only of what this mark's effects of the same Kin grew (Corpse Flowers: a blow within 3 m of a flower).
+        /// </summary>
+        public float NearGrown;
+        /// <summary>With NearGrown: done at the grown thing nearest the player within it, not where the trigger was (Briar Patch's Master: the thicket round it).</summary>
+        public bool AtGrown;
         /// <summary>For RingAdded: the last SpentAtLeast rings all came within this many seconds (Bag of Winds' Master: three within three).</summary>
         public float RingsWithin;
         public AfflictionKind CastAfterCarrying = AfflictionKind.None;

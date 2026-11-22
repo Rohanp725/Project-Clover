@@ -111,6 +111,35 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void CorpseFlowersWinBackGreyForBlowsBesideTheirOwnFlowers()
+        {
+            var shape = Upgrade.ById(Clover.Player.Trees.Duo.GirdledDuo.Shape).Shapes.Single(each => each.Name == "Corpse Flowers");
+            var flowers = shape.Effects.Single(each => each.Do == UpgradeAction.Hazard && each.Grown);
+            var regain = shape.Effects.Single(each => each.Do == UpgradeAction.Regain);
+            Assert.AreEqual(UpgradeTrigger.AnyHit, regain.On, "each weapon blow landed");
+            Assert.AreEqual(3f, regain.NearGrown, 1e-5f, "within three metres");
+            Assert.AreEqual(3f, regain.Amount, 1e-5f, "three grey made real");
+            Assert.AreEqual(PlayerUpgrades.FamilyOf(flowers), PlayerUpgrades.FamilyOf(regain), "beside its own flowers, not any grown thing");
+            Assert.AreNotEqual(0, PlayerUpgrades.FamilyOf(regain));
+            var health = new RegainHealth { Maximum = 100f };
+            health.Fill();
+            health.Chip(10f);
+            Assert.AreEqual(3f, health.Regain(3f), 1e-5f);
+            Assert.AreEqual(93f, health.Current, 1e-5f);
+        }
+
+        [Test]
+        public void BriarPatchsMasterGrowsTheThicketRoundTheThingYouGrew()
+        {
+            var master = Upgrade.ById(SpellBranch.MasterId(LifeTree.BriarPatch)).Effects;
+            Assert.AreEqual(2, master.Length);
+            Assert.IsTrue(master.All(each => each.NearGrown == 1f && each.AtGrown && each.While == StatWhen.Always), "cast within a metre of it, round it");
+            Assert.IsTrue(master.Any(each => each.Do == UpgradeAction.Hazard && each.Radius == 2f && each.Seconds == 10f), "four metres across, ten seconds");
+            Assert.IsTrue(master.Any(each => each.Do == UpgradeAction.Condition && (each.State.Flags & ConditionFlags.Rooted) != 0), "rooted as it grows");
+            Assert.IsFalse(Hazards.NearestGrown(Vector3.zero, 1f, out _), "nothing grown in an empty world");
+        }
+
+        [Test]
         public void PawnedHeartsShapesSetTheHeartUnderYouOrOverTheEnemy()
         {
             var shapes = Upgrade.ById(SpellBranch.ShapeId(DarkTree.PawnedHeart)).Shapes;

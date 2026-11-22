@@ -226,12 +226,36 @@ namespace Clover.World
         }
 
         /// <summary>True when something the player has grown stands within this many metres of a place.</summary>
-        public static bool GrownNear(Vector3 at, float metres)
+        public static bool GrownNear(Vector3 at, float metres) => GrownNear(at, metres, 0);
+
+        /// <summary>The place of the thing the player grew nearest <paramref name="at"/> within <paramref name="metres"/>; false when none stands that near.</summary>
+        public static bool NearestGrown(Vector3 at, float metres, out Vector3 where)
+        {
+            where = at;
+            if (instance == null) return false;
+            float best = metres * metres;
+            bool found = false;
+            for (int i = 0; i < instance.zones.Length; i++)
+            {
+                if (!instance.zones[i].Active || !instance.zones[i].Spec.Grown) continue;
+                Vector3 offset = instance.zones[i].Position - at;
+                offset.y = 0f;
+                if (offset.sqrMagnitude > best) continue;
+                best = offset.sqrMagnitude;
+                where = instance.zones[i].Position;
+                found = true;
+            }
+            return found;
+        }
+
+        /// <summary>As above, only things grown in <paramref name="family"/> (0: any; Corpse Flowers' own flowers).</summary>
+        public static bool GrownNear(Vector3 at, float metres, int family)
         {
             if (instance == null) return false;
             for (int i = 0; i < instance.zones.Length; i++)
             {
                 if (!instance.zones[i].Active || !instance.zones[i].Spec.Grown) continue;
+                if (family != 0 && instance.zones[i].Spec.Family != family) continue;
                 Vector3 offset = instance.zones[i].Position - at;
                 offset.y = 0f;
                 if (offset.sqrMagnitude <= metres * metres) return true;

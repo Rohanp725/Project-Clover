@@ -251,5 +251,7 @@ namespace Clover.Player
         StepToStanding,
         /// <summary>A mark of a branch whose StepToStanding leaves its thing standing (Lightning Rod's Master). Nothing is done when its moment comes.</summary>
         KeepStanding,
+        /// <summary>Wins back Amount grey health at once, as blows do (Corpse Flowers: 3 for each weapon blow beside a flower).</summary>
+        Regain,
     }
 }
