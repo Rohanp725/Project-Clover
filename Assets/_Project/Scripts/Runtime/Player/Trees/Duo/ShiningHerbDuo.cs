@@ -17,6 +17,8 @@ namespace Clover.Player.Trees.Duo
         public const string LongDay = "shiningherb.longday";
         public const string TheWholeMountain = "shiningherb.wholemountain";
         public const string TurnedToTheSun = "shiningherb.turnedtosun";
+        /// <summary>Turned to the Sun's turning: the enemy faces the herb, its back to you.</summary>
+        public const string Turned = "shiningherb.turnedtosun.turned";
         /// <summary>The conditions the two shapes set: the herb on the enemy, and the seed of light waiting for a blow.</summary>
         public const string BitterLeaf = "shiningherb.bitter";
         public const string SeedOfLight = "shiningherb.seedoflight";
@@ -101,14 +103,20 @@ namespace Clover.Player.Trees.Duo
 
             // The duo spell, bought with Shards once both are carried (no god gives it): an opener on an 11 s cooldown (SpellTimings). The field form lays a lit patch at the aim
             // point that flares every 2 s, seeding (the branch's first element) and Marking what stands in it.
-            // NEEDS: enemies turned to face a point (now none turn), and blows on their backs made critical.
+            // Each flare turns every enemy it strikes to face the herb for 1.5 s (ConditionFlags.FacesPoint toward the field's middle),
+            // and your weapon blows on their backs are critical (BackCritical).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = TurnedToTheSun, Name = "Turned to the Sun", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Role = SpellRole.Opener, Requires = new[] { SixthMoon, OpenToTheSun }, Icon = UpgradeIcons.Leaf,
                 Description = "You plant a lit herb at the aim point for 6 s. Every 2 s it flares, and every Seeded or Marked enemy near turns to face it, so their backs are yours.",
                 Form = SpellForms.Field,
                 Spell = new SpellSpec { Reach = 7f, Radius = 3f, Seconds = 6f, Interval = 2f, LingerDamage = 2f, Stacks = 1 },
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Marked, Stacks = 1 } },
+                Effects = new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Marked, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Condition,
+                        State = new ConditionSpec { Id = Turned, Seconds = 1.5f, Flags = ConditionFlags.FacesPoint | ConditionFlags.BackCritical } },
+                },
             }, HeartPattern.Spell));
         }
     }

@@ -1080,6 +1080,7 @@ namespace Clover.Player
 
         public int StrikeCone(float reach, float arcDegrees, in SpellBlow blow)
         {
+            if (upgrades != null) upgrades.SpellFrom = transform.position;
             var struck = spellStruck;
             struck.Clear();
             Vector3 origin = transform.position + Vector3.up;
@@ -1118,6 +1119,7 @@ namespace Clover.Player
         public int StrikeArea(Vector3 centre, float radius, in SpellBlow blow, HashSet<IDamageable> once, float innerRadius,
             AfflictionKind onlyCarrying = AfflictionKind.None)
         {
+            if (upgrades != null) upgrades.SpellFrom = centre;
             spellStruck.Clear();
             int count = Overlap(centre + Vector3.up, radius + 0.5f);
             for (int i = 0; i < count; i++)
@@ -1150,6 +1152,7 @@ namespace Clover.Player
         /// </summary>
         public int StrikeLane(Vector3 from, Vector3 direction, float length, float halfWidth, in SpellBlow blow, HashSet<IDamageable> once = null)
         {
+            if (upgrades != null) upgrades.SpellFrom = from;
             spellStruck.Clear();
             direction.y = 0f;
             if (direction.sqrMagnitude < 0.0001f || length <= 0f) return 0;
@@ -1183,6 +1186,7 @@ namespace Clover.Player
         /// <summary>Strikes one thing and nothing else, from a place: a bullet, a helper's jab, a cut that was owed. True when it landed.</summary>
         public bool StrikeOne(Component victim, in SpellBlow blow, Vector3 from)
         {
+            if (upgrades != null) upgrades.SpellFrom = from;
             if (victim == null || !victim.gameObject.activeInHierarchy || !(victim is IDamageable target)) return false;
             Vector3 direction = victim.transform.position - from;
             direction.y = 0f;
@@ -1478,6 +1482,7 @@ namespace Clover.Player
         /// </summary>
         public int StrikeChain(float reach, in SpellBlow blow, int leaps, float leapRange, ElementInfo look, Transform first = null)
         {
+            if (upgrades != null) upgrades.SpellFrom = transform.position;
             var struck = spellStruck;
             struck.Clear();
             Transform at = first != null ? first : FindEnemy(transform.forward, 150f, reach, false);
@@ -2043,6 +2048,14 @@ namespace Clover.Player
         /// <summary>How far round the target the player must be for a blow to count as on its back: the dot of its facing with the way to the player, under this.</summary>
         public float BackDot = -0.3f;
 
+        /// <summary>True when a blow from <paramref name="striker"/> lands on the back of a body at <paramref name="body"/> facing <paramref name="facing"/>: the striker stands behind it.</summary>
+        public static bool OnItsBack(Vector3 body, Vector3 facing, Vector3 striker, float backDot)
+        {
+            Vector3 toStriker = striker - body;
+            toStriker.y = 0f;
+            return toStriker.sqrMagnitude > 0.01f && Vector3.Dot(facing, toStriker.normalized) < backDot;
+        }
+
         private void Strike(AttackStep step, bool fresh = true, float scale = 1f)
         {
             if (fresh) struck.Clear();
@@ -2149,7 +2162,9 @@ namespace Clover.Player
                 // Counter Cut: a blow that lands on an enemy showing its own attack (winding up or striking) is critical.
                 bool countered = CounterCut && target is Enemy showing && showing.IsStriking;
                 if (countered) CounterCuts++;
-                bool critical = promised || countered || (afflictable != null && afflictable.Afflictions.MakesBlowsCritical) || (chance > 0f && Random.value < chance);
+                // Turned away (Turned to the Sun, Turned About): a blow on its back is critical.
+                bool onBack = afflictable != null && afflictable.Afflictions.Conditions.Has(ConditionFlags.BackCritical) && target is Component turned && OnItsBack(turned.transform.position, turned.transform.forward, transform.position, BackDot);
+                bool critical = promised || countered || onBack || (afflictable != null && afflictable.Afflictions.MakesBlowsCritical) || (chance > 0f && Random.value < chance);
                 bool counter = step == Combo.Skill && Combo.SkillIsCounter;
                 float damage = (step.Damage + (counter ? counterDamage : 0f)) * scale * step.BandDamage(distance) * DamageMultiplier * UpgradeDamage * NextBlowDamage * StatDamage;
                 float staggerShare = 1f;

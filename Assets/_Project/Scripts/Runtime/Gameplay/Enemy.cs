@@ -454,6 +454,8 @@ namespace Clover.Gameplay
 
         // Metres a second a sunk body goes down and comes back up, and how far down it is now.
         private const float SinkRate = 1.6f;
+        // Degrees a second it is swung round to face a point: a spin, not a walk's turn.
+        private const float TurnedDegreesPerSecond = 720f;
         private float sunk;
 
         private void Awake()
@@ -998,7 +1000,15 @@ namespace Clover.Gameplay
                 if (bars.gameObject.activeSelf != show) bars.gameObject.SetActive(show);
             }
 
-            if (Brain.Tracks && distance > 0.05f && !searching && !(steered && Brain.State == EnemyState.Stalk))
+            // Turned to face a point (Turned to the Sun's herb, Turned About's spin), it swings round to it whatever it tracked.
+            if (Afflictions.Conditions.TurnedToward(out Vector3 facePoint) && Afflictions.TurnMultiplier > 0f)
+            {
+                Vector3 toPoint = facePoint - transform.position;
+                toPoint.y = 0f;
+                if (toPoint.sqrMagnitude > 0.01f)
+                    transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(toPoint, Vector3.up), TurnedDegreesPerSecond * deltaTime);
+            }
+            else if (Brain.Tracks && distance > 0.05f && !searching && !(steered && Brain.State == EnemyState.Stalk))
             {
                 var facing = Quaternion.LookRotation(toTarget, Vector3.up);
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, facing, Kind.TurnDegreesPerSecond * pace * Afflictions.TurnMultiplier * deltaTime);

@@ -209,6 +209,28 @@ namespace Clover.Gameplay
         /// takes (an elite's is half), and of a root's time likewise. Returns the slot, or -1 when nothing was asked.
         /// </summary>
         /// <summary>Keeps a number on a run in place of its spec's <see cref="ConditionSpec.Scale"/>: what the trigger that set it carried (Collected Twice's damage).</summary>
+        /// <summary>Sets the point a run that turns its carrier (<see cref="ConditionFlags.FacesPoint"/>) turns it to face.</summary>
+        public void FaceToward(int slot, Vector3 point)
+        {
+            if (slot < 0 || slot >= Slots || !runs[slot].Active) return;
+            runs[slot].FacePoint = point;
+        }
+
+        /// <summary>The point it is turned to face: the newest running condition's that turns it; false when none does.</summary>
+        public bool TurnedToward(out Vector3 point)
+        {
+            point = Vector3.zero;
+            if (!Has(ConditionFlags.FacesPoint)) return false;
+            float most = -1f;
+            for (int i = 0; i < Slots; i++)
+            {
+                if (!runs[i].Active || (runs[i].Flags & ConditionFlags.FacesPoint) == 0 || runs[i].Left <= most) continue;
+                most = runs[i].Left;
+                point = runs[i].FacePoint;
+            }
+            return most >= 0f;
+        }
+
         public void Keep(int slot, float scale)
         {
             if (slot < 0 || slot >= Slots || !runs[slot].Active) return;
@@ -237,6 +259,8 @@ namespace Clover.Gameplay
             ref var run = ref runs[slot];
             // What resists a slowing resists a root, and being knocked flat, the same way: an elite is held for half the time.
             float seconds = (spec.Flags & (ConditionFlags.Rooted | ConditionFlags.Down)) != 0 ? spec.Seconds * Mathf.Clamp01(slowShare) : spec.Seconds;
+            // A time of its own on what resists (an elite: slowShare below 1).
+            if (spec.EliteSeconds > 0f && slowShare < 1f) seconds = Math.Min(spec.Seconds, spec.EliteSeconds);
             run.Left = Math.Max(fresh ? 0f : run.Left, seconds);
             run.Beat = spec.OnBite ? 0f : spec.Beat;
             run.Flags = spec.Flags;

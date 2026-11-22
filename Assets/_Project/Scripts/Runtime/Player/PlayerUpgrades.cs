@@ -167,6 +167,9 @@ namespace Clover.Player
             public bool Again;
             // The number of the cast whose moment this answers (SpellCast.Cast; 0 none), for boons held by one cast.
             public int CastTag;
+            // Where the spell's blow that set it going came from (its middle: a field's herb, a burst's centre), for a
+            // condition that turns its carrier to face it.
+            public Vector3 From;
         }
 
         // ---- Depth moved between enemies (the ledger's depth-moved).
@@ -1505,7 +1508,7 @@ namespace Clover.Player
                 return;
             }
             Enqueue(new Pending { Effect = effect, Target = target, At = at, HasAt = hasAt, Spent = spent, Less = less, Source = source, Power = power, Ripe = ripeScale,
-                ReactionOf = reactionPair + 1, ReactionCast = reactionPair >= 0 ? reactionCast : 0, Link = link, Pair = triggerPair, Again = strikingAgain, CastTag = answeringCast });
+                ReactionOf = reactionPair + 1, ReactionCast = reactionPair >= 0 ? reactionCast : 0, Link = link, Pair = triggerPair, Again = strikingAgain, CastTag = answeringCast, From = SpellFrom });
         }
 
         /// <summary>
@@ -2383,7 +2386,7 @@ namespace Clover.Player
                 case UpgradeAction.Condition:
                     // It keeps the trigger's number (ByPower), or the depth counted as the moment came (CountsNeeds).
                     ConditionsSet += ConditionCaster.Cast(effect, subject, centre, combat, laying, conditionScratch, per,
-                        effect.ByPower ? pending.Power : effect.CountsNeeds ? per : -1f, spread);
+                        effect.ByPower ? pending.Power : effect.CountsNeeds ? per : -1f, spread, pending.From);
                     break;
                 case UpgradeAction.Shatter:
                 {
@@ -2719,6 +2722,12 @@ namespace Clover.Player
 
         /// <summary>A spell struck something; once for each thing it struck.</summary>
         public void OnSpellStruck(IDamageable target, bool wasAfflicted) => OnSpellStruck(target, wasAfflicted, null);
+
+        /// <summary>
+        /// Where the spell's blow now landing came from (a field's or burst's middle, a lane's start, the player for a cone), set
+        /// by <see cref="PlayerCombat"/> as each strike begins and carried by the moments it sets going (Turned to the Sun).
+        /// </summary>
+        public Vector3 SpellFrom { get; set; }
 
         /// <summary>As above, with the element of the spell that struck: a base spell's Master answers only its own element's.</summary>
         public void OnSpellStruck(IDamageable target, bool wasAfflicted, string element) => OnSpellStruck(target, wasAfflicted, element, 0);

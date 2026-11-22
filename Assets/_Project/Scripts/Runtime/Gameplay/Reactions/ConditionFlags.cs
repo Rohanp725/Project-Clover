@@ -65,5 +65,12 @@ namespace Clover.Gameplay
         Mired = 1 << 20,
         /// <summary>Heavy blows pass its guard while this lasts (Driven Down, on a sunk enemy); light ones are still turned.</summary>
         HeavyPassesGuard = 1 << 21,
+        /// <summary>
+        /// It is turned to face a point for a moment (the run's face point: a spell's middle, or away from the player): it
+        /// swings round to it whatever it was tracking and walks nowhere while it lasts (the ledger's turn-to-face).
+        /// </summary>
+        FacesPoint = 1 << 22,
+        /// <summary>A weapon blow that lands on its back is critical (Turned to the Sun, Turned About).</summary>
+        BackCritical = 1 << 23,
     }
 }

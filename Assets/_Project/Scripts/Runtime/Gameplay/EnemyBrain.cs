@@ -162,6 +162,8 @@ namespace Clover.Gameplay
             if (rooted || unseen) MoveWish = 0;
             // Its feet caught, it does not step back: it holds where it is and lets the target come.
             if (mired && MoveWish < 0) MoveWish = 0;
+            // Turned to face a point, it stands where it is while it faces it.
+            if ((held & ConditionFlags.FacesPoint) != 0) MoveWish = 0;
             return struck;
         }
 

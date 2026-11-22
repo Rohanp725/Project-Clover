@@ -97,5 +97,12 @@ namespace Clover.Gameplay
         public float DeathsWithin;
         /// <summary>Metres its body is drawn down into the floor while it runs, for the look (The Ground Gives' sand: to the knees).</summary>
         public float Sink;
+        /// <summary>
+        /// With <see cref="ConditionFlags.FacesPoint"/>: it is turned to face away from the player (Turned About), not toward
+        /// the middle of the spell that set it (Turned to the Sun's herb).
+        /// </summary>
+        public bool FaceAway;
+        /// <summary>Above zero: the seconds it lasts on an elite or boss, in place of the usual share (Turned About: 0.5 of 1.2).</summary>
+        public float EliteSeconds;
     }
 }

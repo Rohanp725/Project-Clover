@@ -44,11 +44,11 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Whenever you cast Lifting Wind, using the shape you picked.
 
-**The numbers.** 3 Shards. Dust Devil: two columns rise under the two nearest enemies, 0.6 seconds after you cast it. Turned About: for 1.2 seconds, the enemy can't start an attack, and the first weapon blow on it is a critical hit, which ends the effect.
+**The numbers.** 3 Shards. Dust Devil: two columns rise under the two nearest enemies, 0.6 seconds after you cast it. Turned About: the column deals 8 damage and 40 stagger but lifts nothing. It spins the enemy around to face away from you for 1.2 seconds (half a second for an elite). In that time it can't start an attack or walk, and your first weapon blow on it ends the spin. If that blow lands on its back, it is a critical hit.
 
 **Works with.** Rising Cut and Nothing Beneath (Dust Devil in a pack); the heavy weapons and the colossus fights (Turned About).
 
-**Not built yet.** Dust Devil should be one column wandering for 3 seconds (for now, two rise at once). Turned About shouldn't lift the enemy, should spin it around in the column, and should give half the time against an elite and make a god's next attack swing wide (for now, it lifts the enemy too).
+**Not built yet.** Dust Devil should be one column wandering for 3 seconds (for now, two rise at once). A god isn't spun around; its next attack should swing wide instead, and it doesn't yet.
 
 **Example.** A brute too heavy to lift: use Turned About, and your next cut lands as a critical hit on its back.
 

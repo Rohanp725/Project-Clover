@@ -64,5 +64,7 @@ namespace Clover.Gameplay
         public float DeathsWithin;
         /// <summary>Metres the body is drawn down while it runs (<see cref="ConditionSpec.Sink"/>).</summary>
         public float Sink;
+        /// <summary>The point it is turned to face (<see cref="ConditionFlags.FacesPoint"/>).</summary>
+        public Vector3 FacePoint;
     }
 }

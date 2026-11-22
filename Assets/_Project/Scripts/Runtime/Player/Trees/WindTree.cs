@@ -74,11 +74,15 @@ namespace Clover.Player.Trees
                 new ShapeDef { Name = "Dust Devil",
                     Description = "The column wanders after enemies for three seconds, lifting the first it reaches and then the next.",
                     Change = new SpellChange { Count = 2, Delay = 0.6f } },
-                // NEEDS: the column not lifting, the enemy swung round to face away (0.5 s for an elite; a god's next attack
-                // swings wide). Until then it is lifted as well, and for 1.2 s it begins nothing and the first blow on it is critical.
+                // The column lifts nothing (SpellSpec.Quiet: the pillars' own lift set aside); the enemy is swung round to face
+                // away from you (ConditionFlags.FacesPoint, FaceAway) for 1.2 s (an elite 0.5 s: EliteSeconds), beginning nothing, and
+                // the first blow on it is critical if it lands on its back (BackCritical).
+                // NEEDS: a god's next attack swinging wide (gods take no enemy conditions of this kind).
                 new ShapeDef { Name = "Turned About",
+                    Spell = new SpellSpec { Count = 1, Reach = 5f, Radius = 2f, Damage = 8f, Stagger = 40f, Stacks = 1, Delay = 0.35f, Lasts = 1f, Quiet = true },
                     Description = "The column does not lift; it spins. The enemy is swung round to face away from you for a moment and loses its balance, and your first blow on its back is critical. For what cannot be lifted.",
-                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = TurnedAbout, Seconds = 1.2f, Flags = ConditionFlags.BeginsNoAttack | ConditionFlags.TakesCritical, EndsWith = ConditionBlow.Weapon } } } },
+                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = TurnedAbout, Seconds = 1.2f, Flags = ConditionFlags.BeginsNoAttack | ConditionFlags.FacesPoint | ConditionFlags.BackCritical,
+                        FaceAway = true, EliteSeconds = 0.5f, EndsWith = ConditionBlow.Weapon } } } },
                 "Opens two shapes of Lifting Wind, chosen at any rest fire: Dust Devil, a column that wanders, or Turned About, a column that spins its enemy round.",
                 // NEEDS: only on the enemy a perfect dodge has just taken you past. Until then a perfect dodge's next column
                 // starts no wait, and what it takes hangs twice as long.

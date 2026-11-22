@@ -66,10 +66,8 @@ are both carried.
 
 **When it happens.** Cast it from a spell slot while you carry both Life and Light. Press that slot's button (hold L2 and a face button, or press 1 to 4). The first time it lands, it charges your blade with Life.
 
-**The numbers.** Mix, duo spell, opener, 5 Shards. It costs no mana. After you cast it, you must wait 11 seconds to cast it again. Fighting with your weapon makes the wait shorter. It lands up to 7 metres ahead of you, covers a circle with a 3-metre radius, and lasts 6 seconds. Every 2 seconds, it deals 2 damage, a Seeded and a Mark to everything in it.
+**The numbers.** Mix, duo spell, opener, 5 Shards. It costs no mana. After you cast it, you must wait 11 seconds to cast it again. Fighting with your weapon makes the wait shorter. It lands up to 7 metres ahead of you, covers a circle with a 3-metre radius, and lasts 6 seconds. Every 2 seconds, it deals 2 damage, a Seeded and a Mark to everything in it, and turns each of them to face the herb for 1.5 seconds. While it faces the herb, it stands still, and your weapon blows on its back are critical hits. Gods don't turn.
 
 **Works with.** Shining Herb, Sixth Moon, The Whole Mountain.
 
-**Example.** Plant it in a pack, and every enemy in it gets both afflictions.
-
-**Not built yet.** Enemies don't turn to face it yet, so blows on their backs aren't critical hits yet.
+**Example.** Plant it in a pack, step around behind them, and cut their backs while they stare at the herb.

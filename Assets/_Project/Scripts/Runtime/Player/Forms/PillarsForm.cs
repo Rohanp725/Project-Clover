@@ -113,8 +113,9 @@ namespace Clover.Player.Forms
                 // carried may already have been drawn out of it (All Into One).
                 if (cast.Spec.OnlyCarrying != Clover.Gameplay.AfflictionKind.None) cast.Combat.StrikeOne(things[i], blow, cast.Origin);
                 else cast.Combat.StrikeArea(points[i], radius, blow);
-                // What the column comes up under leaves the ground with it for a moment.
-                cast.Combat.LiftArea(points[i], radius, FormRules.Own(cast.Spec.Lasts, LiftSeconds));
+                // What the column comes up under leaves the ground with it for a moment, unless the shape worn sets the lift aside
+                // (Quiet: Turned About's column spins its enemy round instead).
+                if (!cast.Spec.Quiet) cast.Combat.LiftArea(points[i], radius, FormRules.Own(cast.Spec.Lasts, LiftSeconds));
                 FormKit.Impact(cast, points[i], radius, i == run.Count - 1 ? 1.2f : 0.8f);
             }
             return run.Done < run.Count;

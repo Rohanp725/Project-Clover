@@ -132,6 +132,55 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void TurnedToFaceAPointItStandsAndShowsItsBack()
+        {
+            var enemy = NewEnemy();
+            var brain = new EnemyBrain { PreferredRange = 2f, Conditions = enemy.Conditions };
+            brain.Reset();
+            Assert.IsFalse(enemy.Conditions.TurnedToward(out _));
+            var herb = new Vector3(4f, 0f, 0f);
+            int slot = enemy.Conditions.Set(new ConditionSpec { Id = "test.turned", Seconds = 1.5f, Flags = ConditionFlags.FacesPoint | ConditionFlags.BackCritical }, null, 1);
+            enemy.Conditions.FaceToward(slot, herb);
+            Assert.IsTrue(enemy.Conditions.TurnedToward(out Vector3 point));
+            Assert.AreEqual(herb, point, "it faces the herb");
+            brain.Tick(0.1f, 6f, 0f);
+            brain.Tick(0.1f, 6f, 0f);
+            Assert.AreEqual(0, brain.MoveWish, "and walks nowhere while it does");
+            enemy.Conditions.Tick(2f);
+            Assert.IsFalse(enemy.Conditions.TurnedToward(out _), "its moment over");
+
+            // The player behind it: a blow on its back. In front of it: not.
+            Assert.IsTrue(PlayerCombat.OnItsBack(Vector3.zero, Vector3.right, new Vector3(-2f, 0f, 0f), -0.3f));
+            Assert.IsFalse(PlayerCombat.OnItsBack(Vector3.zero, Vector3.right, new Vector3(2f, 0f, 0f), -0.3f));
+            // Turned About faces it straight away from the player.
+            var away = ConditionCaster.FacePoint(new ConditionSpec { FaceAway = true }, Vector3.zero, new Vector3(0f, 0f, -3f), herb);
+            Assert.That(away.z, Is.GreaterThan(5f), "away from the player");
+            Assert.AreEqual(herb, ConditionCaster.FacePoint(new ConditionSpec(), Vector3.zero, new Vector3(0f, 0f, -3f), herb), "toward the spell's middle otherwise");
+        }
+
+        [Test]
+        public void TurnedAboutSpinsWithoutLiftingAndTurnedToTheSunTurnsToTheHerb()
+        {
+            var about = Upgrade.ById(SpellBranch.ShapeId(WindTree.LiftingWind)).Shapes.Single(each => each.Name == "Turned About");
+            Assert.IsTrue(about.Spell != null && about.Spell.Quiet, "the column lifts nothing");
+            Assert.AreEqual(40f, about.Spell.Stagger, 1e-5f, "and still takes 40 stagger");
+            var spin = about.Effects.Single(each => each.Do == UpgradeAction.Condition).State;
+            Assert.IsTrue(spin.FaceAway && (spin.Flags & ConditionFlags.FacesPoint) != 0 && (spin.Flags & ConditionFlags.BackCritical) != 0);
+            Assert.AreEqual(1.2f, spin.Seconds, 1e-5f);
+            var elite = NewEnemy();
+            elite.FreezeScale = 0.4f;
+            elite.Conditions.Set(spin, null, 1, null, false, false, ConditionCaster.ShareOf(elite));
+            elite.Conditions.Tick(0.6f);
+            Assert.IsFalse(elite.Conditions.Holds(WindTree.TurnedAbout), "an elite is turned only half a second");
+            var god = NewEnemy();
+            god.IsGod = true;
+            Assert.IsFalse(ConditionCaster.Takes(spin, god), "a god is not swung round");
+            var sun = Upgrade.ById(Clover.Player.Trees.Duo.ShiningHerbDuo.TurnedToTheSun).Effects.Single(each => each.Do == UpgradeAction.Condition).State;
+            Assert.IsFalse(sun.FaceAway, "toward the herb");
+            Assert.IsTrue((sun.Flags & ConditionFlags.FacesPoint) != 0 && (sun.Flags & ConditionFlags.BackCritical) != 0);
+        }
+
+        [Test]
         public void WhirlpoolAndAshFallHoldTheBalance()
         {
             var churn = Upgrade.ById(WaterTree.Whirlpool).Effects.Single(each => each.Do == UpgradeAction.Condition);
