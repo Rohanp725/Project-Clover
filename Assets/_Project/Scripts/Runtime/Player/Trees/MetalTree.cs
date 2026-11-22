@@ -191,39 +191,27 @@ namespace Clover.Player.Trees
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Hold, Seconds = 1.2f }, new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Boon, Stat = PlayerStat.WeaponDamage, Amount = 0.15f, Seconds = 1.5f } } },
                 BranchPattern.LeftFoot));
 
-            // Rebuilt to its trees_b design (the built one, a lunging head of steel, was Devouring Maw again): the spikes form
-            // runs the blade's lane out along the ground, and what it struck going is struck again as it comes home. NEEDS: a
-            // turning blade drawn flying out and back to the hand (returning-blade).
-            SpellBranch.Add(to, E, ReturningEdge, "Returning Edge", SpellRole.Breaker, BranchPattern.LeftA, OpenLine, SpellForms.Spikes,
+            // Rebuilt to its trees_b design (the built one, a lunging head of steel, was Devouring Maw again): a turning blade
+            // flies out along your facing and back to the hand, cutting what it passes each way (TurningBladeForm).
+            SpellBranch.Add(to, E, ReturningEdge, "Returning Edge", SpellRole.Breaker, BranchPattern.LeftA, OpenLine, SpellForms.TurningBlade,
                 new SpellSpec { Reach = 8f, Speed = 16f, Count = 1, Radius = 0.75f, Damage = 12f, Stagger = 10f, Stacks = 1 },
                 "A turning blade a metre and a half across flies eight metres along your facing and back to your hand, drawing its lane on the ground: 12 damage and 10 stagger to each enemy it passes each way, and a notch on the first pass.",
                 UpgradeIcons.Spiral,
-                // The roster's numbers alone (the owner's answer of 2026-11-20): 16 and 14 going out, and on the cut home (the
-                // Learn's own second cut).
-                new Empower { Damage = 16f, Stagger = 14f, Effects = new[] { new EffectChange { Index = 0, Damage = 16f, Stagger = 14f } } },
+                // The roster's numbers alone (the owner's answer of 2026-11-20): 16 and 14 each way.
+                new Empower { Damage = 16f, Stagger = 14f },
                 "It strikes for 16 damage and 14 stagger each way.",
-                // NEEDS: the blade's arrival as the moment the guard meets, three times at most (returning-blade). Until then a
-                // perfect guard throws a blade out and back, faster and harder, once in two seconds.
+                // The blade's arrival at the hand met by a perfect guard sends it out again, three times at most (SpellSpec.BatsBack).
                 new ShapeDef { Name = "Bat It Home",
                     Description = "Guard inside the perfect window as it arrives, and it goes out again faster and harder, at 1.4 times the speed and one and a half times the damage. Three times at most.",
-                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Projectile, Flight = Flight.Returning, Count = 1, Radius = 0.75f, Speed = 22f, Seconds = 0.7f, Damage = 18f, Stagger = 15f, Stacks = 0, Cooldown = 2f } } },
-                // NEEDS: the blade stopped 8 m out and called home by your next dodge, cutting everything between
-                // (returning-blade), and not coming back by itself (shape-sets-aside). Until then it spins where it stops, and
-                // comes home through what it struck going when its three seconds are up.
+                    Spell = new SpellSpec { Reach = 8f, Speed = 16f, Count = 1, Radius = 0.75f, Damage = 12f, Stagger = 10f, Stacks = 1, BatsBack = 3 } },
+                // It stops eight metres out and spins there, and only your next dodge calls it home (SpellSpec.WaitsOut).
                 new ShapeDef { Name = "Through the Line",
                     Description = "It does not come back by itself. It stops eight metres out and spins in place for three seconds, 8 damage to what touches it every 0.3 seconds. Your next dodge calls it home along the line, cutting everything between: 20 damage, 30 stagger and a notch. Put them between you and the blade.",
-                    Effects = new[]
-                    {
-                        // A line of one patch lies at the middle of its length: sixteen metres puts it eight out.
-                        new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Hazard, At = EffectAt.Self, Shape = HazardShape.Line, Reach = 16f, Count = 1, Radius = 0.9f, Seconds = 3f, Interval = 0.3f, Damage = 8f, Stagger = 0f, Stacks = 0 },
-                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = OnTheLine, Seconds = 3f } },
-                        new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = OnTheLine, Do = UpgradeAction.Burst, Radius = 0.9f, Damage = 20f, Stagger = 30f, Affliction = S, Stacks = 1 },
-                    } },
+                    Spell = new SpellSpec { Reach = 8f, Speed = 16f, Count = 1, Radius = 0.9f, Damage = 12f, Stagger = 10f, Stacks = 1, WaitsOut = true, Seconds = 3f, Interval = 0.3f, LingerDamage = 8f, HomeDamage = 20f, HomeStagger = 30f } },
                 "Opens two shapes of Returning Edge, chosen at any rest fire: Bat It Home, a blade your perfect guard sends out again, or Through the Line, a blade that waits out there for your dodge to call it home.",
-                // NEEDS: the catch as the moment (returning-blade). Until then a perfect guard ends its wait, once in nine seconds.
-                new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.ResetCooldown, Cooldown = 9f } },
-                "Catch it on a perfect guard as it comes home, and Returning Edge is ready again at once.",
-                learnEffects: new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Burst, Radius = 0.75f, Delay = 1f, Damage = 12f, Stagger = 10f, Stacks = 0 } });
+                // The catch itself (UpgradeTrigger.BladeCaught: a perfect guard as it arrives at the hand).
+                new[] { new UpgradeEffect { On = UpgradeTrigger.BladeCaught, Do = UpgradeAction.ResetCooldown } },
+                "Catch it on a perfect guard as it comes home, and Returning Edge is ready again at once.");
 
             // The counter: the parry form turns the first blow and answers with a cut all round; nothing struck, it waits 5 s
             // (SpellSpec.MissedWait). NEEDS: two blows turned with the Empower (parry-count).

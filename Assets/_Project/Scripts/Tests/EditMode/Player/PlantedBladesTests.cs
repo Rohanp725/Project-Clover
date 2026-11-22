@@ -1,5 +1,6 @@
 using System.Linq;
 using Clover.Player;
+using Clover.Player.Forms;
 using Clover.Player.Trees;
 using NUnit.Framework;
 using UnityEngine;
@@ -143,6 +144,38 @@ namespace Clover.Tests
             Assert.IsTrue(master.Any(each => each.On == UpgradeTrigger.PerfectGuard && each.Do == UpgradeAction.DriveBlades), "only the blades in the attacker");
             Assert.IsFalse(master.Any(each => each.Do == UpgradeAction.Burst), "no stand-in blade's worth");
             Assert.AreNotEqual("its moment comes", TriggerWords.Of(UpgradeTrigger.BladeDriven));
+        }
+
+        [Test]
+        public void ReturningEdgeIsATurningBladeMetAtTheHand()
+        {
+            var learn = Upgrade.ById(MetalTree.ReturningEdge);
+            Assert.AreEqual(SpellForms.TurningBlade, learn.Form, "a blade out and back, not a lane on the ground");
+            Assert.IsEmpty(learn.Effects, "no stand-in second cut a second later: the blade cuts on its way home");
+            var shapes = Upgrade.ById(SpellBranch.ShapeId(MetalTree.ReturningEdge)).Shapes;
+            var bat = shapes.Single(each => each.Name == "Bat It Home");
+            Assert.AreEqual(3, bat.Spell.BatsBack, "three times at most");
+            Assert.IsEmpty(bat.Effects, "no blade thrown by any perfect guard");
+            Assert.IsTrue(TurningBladeRules.Bats(true, 2, 3));
+            Assert.IsFalse(TurningBladeRules.Bats(true, 3, 3), "the fourth arrival is only caught");
+            Assert.IsFalse(TurningBladeRules.Bats(false, 0, 3), "no perfect guard, no bat");
+            Assert.AreEqual(1.4f, TurningBladeRules.SpeedAfter(1), 1e-5f);
+            Assert.AreEqual(1.5f, TurningBladeRules.DamageAfter(2), 1e-5f, "harder than its first flight, not ever harder");
+            Assert.AreEqual(1f, TurningBladeRules.DamageAfter(0), 1e-5f);
+            var line = shapes.Single(each => each.Name == "Through the Line");
+            Assert.IsTrue(line.Spell.WaitsOut);
+            Assert.AreEqual(8f, line.Spell.Reach, 1e-5f, "eight metres out");
+            Assert.AreEqual(3f, line.Spell.Seconds, 1e-5f);
+            Assert.AreEqual(8f, line.Spell.LingerDamage, 1e-5f);
+            Assert.AreEqual(0.3f, line.Spell.Interval, 1e-5f);
+            Assert.AreEqual(20f, line.Spell.HomeDamage, 1e-5f);
+            Assert.AreEqual(30f, line.Spell.HomeStagger, 1e-5f);
+            Assert.IsTrue(TurningBladeRules.CalledByDodge(true, false), "a dodge begun calls it");
+            Assert.IsFalse(TurningBladeRules.CalledByDodge(true, true), "not the dodge already rolling as it stopped");
+            var master = Upgrade.ById(SpellBranch.MasterId(MetalTree.ReturningEdge)).Effects.Single();
+            Assert.AreEqual(UpgradeTrigger.BladeCaught, master.On, "the catch itself, not any perfect guard");
+            Assert.AreEqual(UpgradeAction.ResetCooldown, master.Do);
+            Assert.AreEqual(0f, master.Cooldown, 1e-5f);
         }
     }
 }

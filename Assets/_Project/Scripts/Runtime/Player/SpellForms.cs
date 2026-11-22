@@ -135,6 +135,8 @@ namespace Clover.Player
         public const string Waiting = "waiting";
         /// <summary>Three Weasels' first weasel: a rush that stops just in front of the enemy faced and cuts it. Reads what the step reads.</summary>
         public const string Rush = "rush";
+        /// <summary>Metal's Returning Edge: a turning blade out and back to the hand, met by a perfect guard as it arrives.</summary>
+        public const string TurningBlade = "turningblade";
 
         private static readonly ISpellForm[] all =
         {
@@ -199,6 +201,7 @@ namespace Clover.Player
             new LodestoneForm(),
             new WaitingThunderForm(),
             new RushForm(),
+            new TurningBladeForm(),
         };
 
         private static readonly Dictionary<string, ISpellForm> byId = Index();

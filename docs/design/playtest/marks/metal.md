@@ -124,15 +124,15 @@ the steel you throw and plant: Flung Blade, the blades of Grave of Swords.
 **Example.** Perfect-guard a brute's swing, and it stands frozen with its arm thrown wide. A heavy blow lands before it can move.
 
 ## metal.returningedge
-**What it does.** Returning Edge, a breaker. A spinning blade a metre and a half across flies out in the direction you face and back to your hand, marking its path on the ground, and cuts every enemy it passes, both ways.
+**What it does.** Returning Edge, a breaker. A spinning blade a metre and a half across flies out in the direction you face and comes back to your hand, wherever you are by then, cutting every enemy it passes, both ways.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4).
 
-**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 9 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes it 16 damage and 14 stagger, going out and coming back.) It travels 8 metres at 16 metres a second, reaching 0.75 metres to each side of its line. Going out, it deals 12 damage, 10 stagger and a notch to each enemy it passes. A second later, coming back, it deals 12 damage and 10 stagger again to each one it hit going out.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 9 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes it 16 damage and 14 stagger, going out and coming back.) It travels 8 metres at 16 metres a second, reaching 0.75 metres to each side of its line. Going out, it deals 12 damage, 10 stagger and a notch to each enemy it passes. Coming back, it deals 12 damage and 10 stagger to each enemy it passes on the way home.
 
 **Works with.** Open Line, which it comes after on the chart, Sunder, Poured Bronze on the line it notched, and the charged blade (it charges your weapon with Metal).
 
-**Not built yet.** The spinning blade itself, flying out and back to your hand. For now, the path breaks open along the ground as it goes, and whatever it hit is cut again a second later where it stands.
+**Not built yet.** Its own look: for now, the turning blade is two plain blades crossed and spinning flat.
 
 **Example.** Four soldiers come down a hallway. The blade runs through them and back, and all four are notched, ready for the pour.
 
@@ -141,24 +141,20 @@ the steel you throw and plant: Flung Blade, the blades of Grave of Swords.
 
 **When it happens.** Whenever you cast Returning Edge, using the shape you picked. If you have not bought this, you cast the plain blade.
 
-**The numbers.** 3 Shards. Bat It Home: for now, a perfect guard throws a blade out and back at 22 metres a second, dealing 18 damage and 15 stagger to each enemy it passes, both ways, at most once every 2 seconds. Through the Line: the blade spins 8 metres out for 3 seconds, reaching 0.9 metres around it, and deals 8 damage every 0.3 seconds. For now, when the 3 seconds are up, each enemy it hit going out is cut again for 20 damage, 30 stagger and a notch.
+**The numbers.** 3 Shards. Bat It Home: when the blade reaches your hand, a guard inside the perfect timing window sends it out again the way you now face, at 1.4 times the speed (22.4 metres a second) and 1.5 times the damage (18 damage, 15 stagger), up to three times. Through the Line: the blade stops 8 metres out and spins for 3 seconds, dealing 8 damage every 0.3 seconds to anything within 0.9 metres of it. Your next dodge calls it home, cutting every enemy on the line between it and you for 20 damage, 30 stagger and a notch. If you don't dodge in those 3 seconds, it falls and is gone.
 
 **Works with.** Bat It Home: Edge Guard and Open Line (the perfect guard), Forged Answer. Through the Line: a fight with lots of dodging, Poured Bronze on the line, Counter Cut.
-
-**Not built yet.** Bat It Home should work when your guard meets the returning blade, up to three times (for now, any perfect guard throws one, once every 2 seconds). Through the Line's blade should be called home by your dodge through everything in between, and shouldn't come back on its own (for now, the normal return still happens, and the final cut lands on the enemies it hit going out when its time is up).
 
 **Example.** Use Through the Line down a hallway. Let the soldiers walk into the spinning blade, then the blade comes home through them.
 
 ## metal.returningedge.master
 **What it does.** Catch it with a perfect guard as it comes home, and Returning Edge is ready again right away.
 
-**When it happens.** For now, any perfect guard while its wait is counting down, once every 9 seconds. Returning Edge must be in a spell slot.
+**When it happens.** When the blade reaches your hand and your guard is inside its perfect timing window. Returning Edge must be in a spell slot.
 
 **The numbers.** 3 Shards. The wait ends right away.
 
 **Works with.** Edge Guard and Open Line, Bat It Home, Forged Answer (the same guard makes a blade).
-
-**Not built yet.** It should need you to actually catch the blade. For now, any perfect guard works, once every 9 seconds.
 
 **Example.** Throw it, perfect-guard the brute's swing, and throw it again right away.
 

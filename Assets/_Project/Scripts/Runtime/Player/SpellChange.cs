@@ -178,6 +178,10 @@ namespace Clover.Player
             into.StaysPut = from.StaysPut;
             into.HeartAt = from.HeartAt;
             into.BladeReach = from.BladeReach;
+            into.BatsBack = from.BatsBack;
+            into.WaitsOut = from.WaitsOut;
+            into.HomeDamage = from.HomeDamage;
+            into.HomeStagger = from.HomeStagger;
             into.Bank = from.Bank;
             into.BankDamage = from.BankDamage;
             into.BankStagger = from.BankStagger;

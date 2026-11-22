@@ -2836,6 +2836,15 @@ namespace Clover.Player
             if (host != null) Trigger(UpgradeTrigger.BladeDriven, host, host.transform.position, true, drives);
         }
 
+        /// <summary>A turning blade of yours was met by a perfect guard as it came home to the hand.</summary>
+        public void OnBladeCaught(Vector3 at)
+        {
+            BladesCaught++;
+            Trigger(UpgradeTrigger.BladeCaught, null, at);
+        }
+
+        public int BladesCaught { get; private set; }
+
         /// <summary>Counts for probes: blades of yours driven, thrown by a mark, and called home.</summary>
         public int BladesDriven { get; private set; }
         public int BladesPlanted { get; private set; }

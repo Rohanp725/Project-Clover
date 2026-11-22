@@ -163,6 +163,16 @@ namespace Clover.Player
         /// its Empower 14). With none standing it goes its own Reach straight ahead.
         /// </summary>
         public float BladeReach;
+        /// <summary>For the turning blade: how many times a perfect guard as it comes home sends it out again (Bat It Home: 3).</summary>
+        public int BatsBack;
+        /// <summary>
+        /// For the turning blade: it stops at the end of its flight and spins there for Seconds, biting what touches it for
+        /// LingerDamage every Interval, until the caster's next dodge calls it home through everything between for
+        /// <see cref="HomeDamage"/> and <see cref="HomeStagger"/> (Through the Line). Uncalled, it falls.
+        /// </summary>
+        public bool WaitsOut;
+        public float HomeDamage;
+        public float HomeStagger;
         public int Bank;
         public float BankDamage;
         public float BankStagger;
