@@ -941,6 +941,23 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void TheFeastAnswersOnlyAKillByKindlingPointsOwnBurst()
+        {
+            string kindling = Clover.Player.Trees.Duo.KindlingPointDuo.KindlingReaction;
+            Assert.AreEqual("Kindling Point", AfflictionPairs.Name(AfflictionPairs.Index(AfflictionKind.Marked, AfflictionKind.Burn)));
+            Assert.IsTrue(PlayerUpgrades.KillAnswers("", ""), "a plain kill answer hears every death");
+            Assert.IsTrue(PlayerUpgrades.KillAnswers("", kindling));
+            Assert.IsTrue(PlayerUpgrades.KillAnswers(kindling, kindling), "the burst's own kill");
+            Assert.IsFalse(PlayerUpgrades.KillAnswers(kindling, ""), "a burning enemy cut down by your blade");
+            Assert.IsFalse(PlayerUpgrades.KillAnswers(kindling, "react.smoulder"), "another reaction's kill");
+            foreach (var feast in Upgrade.ById(Clover.Player.Trees.Duo.KindlingPointDuo.TheFeast).Effects)
+            {
+                Assert.AreEqual(UpgradeTrigger.Kill, feast.On);
+                Assert.AreEqual(kindling, feast.KilledBy);
+            }
+        }
+
+        [Test]
         public void DeathTurnedBackMendsWhatTheBlowWouldHaveDealt()
         {
             Assert.AreEqual(22f, PlayerDefence.TurnedMend(22f, 30f), 1e-5f);

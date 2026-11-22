@@ -1457,6 +1457,8 @@ namespace Clover.Player
                 if ((trigger == UpgradeTrigger.PickedUp || trigger == UpgradeTrigger.PickupLeft) && !(effect.AnyDrops && effect.Drops == pickupKind)) continue;
                 // Ground told of one standing in it is answered only by the effects that name that ground.
                 if (trigger == UpgradeTrigger.InGround && !AnswersGround(effect, groundTold)) continue;
+                // A death dealt by one reaction's own blow (The Feast), told with that reaction's id.
+                if (trigger == UpgradeTrigger.Kill && !KillAnswers(effect.KilledBy, reaction)) continue;
                 // A mark that deepens one reaction answers that one only.
                 bool reactionMoment = trigger == UpgradeTrigger.Reacted || trigger == UpgradeTrigger.ReactionStruck;
                 if (reactionMoment && !string.IsNullOrEmpty(effect.Reaction) && effect.Reaction != reaction) continue;
@@ -3519,6 +3521,9 @@ namespace Clover.Player
             standingTaken.Clear();
         }
 
+        /// <summary>True when a Kill effect answers a death told with <paramref name="reaction"/>'s id: any death, or only one dealt by the reaction it names.</summary>
+        public static bool KillAnswers(string killedBy, string reaction) => string.IsNullOrEmpty(killedBy) || killedBy == reaction;
+
         /// <summary>True when an effect answers ground of the given name told of one standing in it (UpgradeTrigger.InGround).</summary>
         public static bool AnswersGround(UpgradeEffect effect, string ground) =>
             effect != null && !string.IsNullOrEmpty(ground) && effect.Condition == ground;
@@ -3755,7 +3760,9 @@ namespace Clover.Player
             if (fed > 0f && defence != null) defence.Heal(fed);
             // A ripe seed in the dead bursts ripe (In Its Season): the burst above was made stronger by the set itself.
             if (withheld != AfflictionKind.Seeded && afflictions.IsRipe(AfflictionKind.Seeded)) RipeBurstAt(who, at, afflictions.Stacks(AfflictionKind.Seeded));
-            Trigger(UpgradeTrigger.Kill, null, at, true, 0, afflictions);
+            // Dealt by a reaction's own blow, the death is told with that reaction's id (The Feast).
+            int killer = combat != null ? combat.StrikingReaction - 1 : -1;
+            Trigger(UpgradeTrigger.Kill, null, at, true, 0, afflictions, AfflictionKind.None, killer >= 0 ? AfflictionPairs.Id(killer) : "");
             // Zanshin: the turn to the next enemy (its wider perfect window is the mark's boon).
             if (combat != null && Has(Trees.Ways.KatanaWay.Zanshin)) combat.Zanshin(who);
         }

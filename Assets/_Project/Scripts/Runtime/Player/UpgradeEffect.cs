@@ -85,6 +85,8 @@ namespace Clover.Player
         public bool AsLaid;
         /// <summary>For Heal: the mending is what the blow a counter just turned would have dealt you, Amount at most (Death Turned Back: 30).</summary>
         public bool ByTurnedWound;
+        /// <summary>For Kill: only a death dealt by this reaction's own blow, by its id (The Feast: a Kindling Point burst that kills).</summary>
+        public string KilledBy = "";
         /// <summary>
         /// For ForceReaction, or a Pass that sets <see cref="Reaction"/> off on the enemy it reaches: the counts of blows the
         /// reaction's conditions keep there start this many blows along (Held Down, What the Yew Keeps: the fig at two coils).

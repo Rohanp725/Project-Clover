@@ -1064,8 +1064,15 @@ namespace Clover.Player
         /// </summary>
         public static bool PaysBack(IDamageable target) => !(target is Clover.Gameplay.IPaysNothing nothing && nothing.PaysNothing);
 
+        /// <summary>
+        /// The reaction whose own blow is landing now (its pair plus one; 0: none): read as an enemy dies of it, so a kill can
+        /// be known as that reaction's (The Feast). Set as the blow is made, cleared once it has landed.
+        /// </summary>
+        public int StrikingReaction { get; private set; }
+
         private Hit Make(in SpellBlow blow, IDamageable target, Vector3 direction, Vector3 origin)
         {
+            StrikingReaction = blow.ReactionOf;
             float damage = blow.Damage;
             // Critical by its own word, or because its cast was made critical (Daybreak's Master: loosed as a blow would land).
             bool critical = blow.Critical || (upgrades != null && upgrades.CastCritical(blow.Cast));
@@ -1148,6 +1155,7 @@ namespace Clover.Player
         // A reaction's own blow tells the upgrades whom that reaction struck (the ledger's reaction-struck).
         private void ReactionStruck(in SpellBlow blow, IDamageable target)
         {
+            StrikingReaction = 0;
             if (blow.ReactionOf > 0 && upgrades != null && target is Component body) upgrades.OnReactionStruck(body, blow.ReactionOf - 1, blow.ReactionCast, blow.Damage);
         }
 
