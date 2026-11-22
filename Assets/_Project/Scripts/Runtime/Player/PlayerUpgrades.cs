@@ -2081,7 +2081,15 @@ namespace Clover.Player
                     break;
                 }
                 case UpgradeAction.Regain:
-                    if (defence != null) defence.Health.Regain(Or(effect.Amount, 3f));
+                    if (effect.Seconds > 0f)
+                    {
+                        // Armed for a while: each weapon blow landed beside what its kin grew wins it back (OnBlow).
+                        regainUntil = Time.time + effect.Seconds;
+                        regainAmount = Or(effect.Amount, 3f);
+                        regainNear = Or(effect.Reach, 3f);
+                        regainFamily = effect.Kin > 0 ? FamilyOf(effect) : 0;
+                    }
+                    else if (defence != null) defence.Health.Regain(Or(effect.Amount, 3f));
                     break;
                 case UpgradeAction.UndoWound:
                     if (defence != null && !defence.IsDead && Time.time - defence.LastWoundAt <= Or(effect.CastWindow, 1f) && defence.LastWound > 0f)
@@ -2682,6 +2690,12 @@ namespace Clover.Player
             return true;
         }
 
+        // Grey won back by each weapon blow beside what a mark grew, until when (Corpse Flowers).
+        private float regainUntil = -100f, regainAmount, regainNear;
+        private int regainFamily;
+        /// <summary>Grey health won back by blows beside what was grown (Corpse Flowers), for probes.</summary>
+        public float GreyWonBeside { get; private set; }
+
         // The thing a spell left standing (Lightning Rod's rod): whose, where, its ground's group, and until when.
         private Upgrade standingMark;
         private Vector3 standingAt;
@@ -2918,6 +2932,8 @@ namespace Clover.Player
             var struck = target as Component;
             Vector3 at = struck != null ? struck.transform.position : transform.position;
             bool finisher = outcome == HitOutcome.Finisher;
+            // Corpse Flowers: a blow landed beside one of the flowers wins back grey health.
+            if (Time.time < regainUntil && defence != null && Hazards.GrownNear(transform.position, regainNear, regainFamily)) GreyWonBeside += defence.Health.Regain(regainAmount);
             // Each blow landed adds a ring of light up the blade to a gathered spell (Daybreak).
             if (rings.By == RingSource.Blows) AddRing();
             if (hasHeat && Heat.Landed())

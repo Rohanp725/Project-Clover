@@ -116,8 +116,10 @@ namespace Clover.Tests
             var shape = Upgrade.ById(Clover.Player.Trees.Duo.GirdledDuo.Shape).Shapes.Single(each => each.Name == "Corpse Flowers");
             var flowers = shape.Effects.Single(each => each.Do == UpgradeAction.Hazard && each.Grown);
             var regain = shape.Effects.Single(each => each.Do == UpgradeAction.Regain);
-            Assert.AreEqual(UpgradeTrigger.AnyHit, regain.On, "each weapon blow landed");
-            Assert.AreEqual(3f, regain.NearGrown, 1e-5f, "within three metres");
+            Assert.AreEqual(flowers.On, regain.On, "armed as the flowers stand");
+            Assert.AreEqual(flowers.Condition, regain.Condition);
+            Assert.AreEqual(8f, regain.Seconds, 1e-5f, "for the flowers' eight seconds");
+            Assert.AreEqual(3f, regain.Reach, 1e-5f, "within three metres");
             Assert.AreEqual(3f, regain.Amount, 1e-5f, "three grey made real");
             Assert.AreEqual(PlayerUpgrades.FamilyOf(flowers), PlayerUpgrades.FamilyOf(regain), "beside its own flowers, not any grown thing");
             Assert.AreNotEqual(0, PlayerUpgrades.FamilyOf(regain));
