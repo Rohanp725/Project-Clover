@@ -64,6 +64,31 @@ namespace Clover.Gameplay
         /// <summary>True when a running condition keeps this affliction from fading.</summary>
         public bool KeepsKind(AfflictionKind kind) => (Keeps & (1 << (int)kind)) != 0;
 
+        /// <summary>True when a side in degrees lies outside a run's flank (<see cref="ConditionSpec.FlankLeast"/>); an unknown side (-1) or no flank never does.</summary>
+        public static bool OffFlank(float least, float most, float side) => (least > 0f || most > 0f) && side >= 0f && (side < least || side > most);
+
+        /// <summary>
+        /// True when a running condition keeps this affliction from being spent by a weapon blow from <paramref name="side"/>
+        /// (degrees from its face; -1 unknown): one with a flank keeps it only for blows from that flank (Mock Suns).
+        /// </summary>
+        public bool KeepsFrom(AfflictionKind kind, float side)
+        {
+            if (!KeepsKind(kind)) return false;
+            int bit = 1 << (int)kind;
+            for (int i = 0; i < Slots; i++)
+                if (runs[i].Active && (runs[i].KeepsMask & bit) != 0 && !OffFlank(runs[i].FlankLeast, runs[i].FlankMost, side)) return true;
+            return false;
+        }
+
+        /// <summary>True when a running condition with a flank bars the afflictions' critical blows from <paramref name="side"/> (Mock Suns: only from its flanks).</summary>
+        public bool BarsCritical(float side)
+        {
+            if (Count == 0) return false;
+            for (int i = 0; i < Slots; i++)
+                if (runs[i].Active && OffFlank(runs[i].FlankLeast, runs[i].FlankMost, side)) return true;
+            return false;
+        }
+
         /// <summary>How hard the kind bites under the conditions running: the product of each one's scale (1 as written).</summary>
         public float BiteScale(AfflictionKind kind, bool frozen)
         {
@@ -396,6 +421,8 @@ namespace Clover.Gameplay
             run.Leash = Math.Max(0f, spec.Leash);
             run.LeashToPlayer = spec.LeashToPlayer;
             run.SharesSpells = spec.SharesSpells;
+            run.FlankLeast = Math.Max(0f, spec.FlankLeast);
+            run.FlankMost = Math.Max(0f, spec.FlankMost);
             run.TheirBlowPoints = Math.Max(0, spec.TheirBlowPoints);
             run.TurnedPoints = Math.Max(0, spec.TurnedPoints);
             if (fresh) run.Anchor = who != null ? who.transform.position : Vector3.zero;

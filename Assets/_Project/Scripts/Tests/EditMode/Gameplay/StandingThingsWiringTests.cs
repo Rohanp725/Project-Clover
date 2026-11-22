@@ -941,6 +941,30 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void MockSunsCriticalAndSparingOnlyFromTheFlanks()
+        {
+            Assert.IsFalse(EnemyConditions.OffFlank(0f, 0f, 10f), "no flank: every side");
+            Assert.IsFalse(EnemyConditions.OffFlank(45f, 135f, 90f), "a flank");
+            Assert.IsTrue(EnemyConditions.OffFlank(45f, 135f, 10f), "its face");
+            Assert.IsTrue(EnemyConditions.OffFlank(45f, 135f, 170f), "its back");
+            Assert.IsFalse(EnemyConditions.OffFlank(45f, 135f, -1f), "a side not known");
+            var suns = ReactionTable.MarkFor(AfflictionPairs.Index(AfflictionKind.Chill, AfflictionKind.Marked)).Effects[0].State;
+            Assert.AreEqual(45f, suns.FlankLeast, 1e-5f);
+            Assert.AreEqual(135f, suns.FlankMost, 1e-5f);
+
+            var enemy = new AfflictionSet { Reactions = new ReactionEngine((who, pair, laid) => { }, () => 0) };
+            enemy.Lay(AfflictionKind.Marked, 1, 0f, 1f, LaySource.Weapon);
+            enemy.Conditions.Set(suns, null, 1);
+            Assert.IsTrue(enemy.MakesBlowsCriticalFrom(90f), "a blow on its flank is critical");
+            Assert.IsFalse(enemy.MakesBlowsCriticalFrom(0f), "a blow at its face is not, by the Mark");
+            int left = enemy.BlowsLeft(AfflictionKind.Marked);
+            enemy.BlowLanded(90f);
+            Assert.AreEqual(left, enemy.BlowsLeft(AfflictionKind.Marked), "the flank blow spares the Mark");
+            enemy.BlowLanded(0f);
+            Assert.AreEqual(left - 1, enemy.BlowsLeft(AfflictionKind.Marked), "the face blow spends it");
+        }
+
+        [Test]
         public void TheYawningGapsBlowsTakeTurnsAndThermalShockRestsTwoSeconds()
         {
             Assert.IsTrue(MarkRules.OnTurn(5, 0, 0), "no turns: every swing");

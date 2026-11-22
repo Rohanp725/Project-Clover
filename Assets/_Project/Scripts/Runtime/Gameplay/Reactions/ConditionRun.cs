@@ -16,6 +16,9 @@ namespace Clover.Gameplay
         public int Blows;
         public int TheirBlowPoints;
         public int TurnedPoints;
+        /// <summary>The side its keeping and the afflictions' critical blows hold for (<see cref="ConditionSpec.FlankLeast"/>); both 0 for every side.</summary>
+        public float FlankLeast;
+        public float FlankMost;
         /// <summary>The place in the catalogue of the mark that set it, or -1.</summary>
         public int Mark;
         public ConditionFlags Flags;

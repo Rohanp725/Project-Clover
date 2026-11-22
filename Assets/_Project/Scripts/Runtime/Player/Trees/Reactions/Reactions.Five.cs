@@ -70,12 +70,11 @@ namespace Clover.Player.Trees
                     Affliction = AfflictionKind.Sundered }));
 
             // Ice and Light (48). Two mock suns hang by it for 4 s: a weapon blow on it from its left or right (45 to 135
-            // degrees from its face) lays two Chill; the Mark is not spent (its blows are critical, as the Mark makes them).
-            // NEEDS: only a blow from the flank critical and sparing the Mark (now every blow, as the Mark makes it); and the
-            // suns themselves, turning with it.
+            // degrees from its face) lays two Chill; only such a blow is made critical by the Mark and spares it (ConditionSpec.FlankLeast),
+            // a blow at its face or back neither critical by it nor sparing it. NEEDS: the suns themselves, turning with it (looks).
             to.Add(Reaction(AfflictionKind.Chill, AfflictionKind.Marked,
                 "Chill meets Marked: two mock suns hang beside it for 4 s. Your weapon blows on its flanks lay two Chill, and no blow spends its Mark.",
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Suns, Seconds = 4f, Keeps = AfflictionKind.Marked } },
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Suns, Seconds = 4f, Keeps = AfflictionKind.Marked, FlankLeast = 45f, FlankMost = 135f } },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Suns, By = StruckBy.Weapon, SideLeast = 45f, SideMost = 135f, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 2 }));
 
             // Water and Dark (49). Swollen 5 s: 20% slower (a god is not slowed) and 15% more from weapon blows. When it

@@ -130,5 +130,12 @@ namespace Clover.Gameplay
         /// the doses pass to the next on the line, not the nearest).
         /// </summary>
         public bool Numbered;
+        /// <summary>
+        /// Above zero (<see cref="FlankMost"/> too): what it keeps (<see cref="Keeps"/>) is kept, and the afflictions' own critical
+        /// blows come, only for weapon blows from this side, in degrees from its face (see EnemyConditions.SideDegrees): a blow
+        /// from elsewhere is not made critical by them and spends as usual (Mock Suns: 45 to 135, the flanks).
+        /// </summary>
+        public float FlankLeast;
+        public float FlankMost;
     }
 }

@@ -534,13 +534,16 @@ namespace Clover.Gameplay
         public int BlowsLeft(AfflictionKind kind) => kind == AfflictionKind.None || stacks[(int)kind] <= 0 ? 0 : blowsLeft[(int)kind];
 
         /// <summary>A blow of the weapon has landed: what is spent by blows (a mark of light) loses one, and ends with its last.</summary>
-        public void BlowLanded()
+        public void BlowLanded() => BlowLanded(-1f);
+
+        /// <summary>The same for a blow from <paramref name="side"/>, in degrees from its face (-1 unknown): a keeping held to a flank holds only for blows from it (Mock Suns).</summary>
+        public void BlowLanded(float side)
         {
             for (int i = 2; i < stacks.Length; i++)
             {
                 if (stacks[i] <= 0 || blowsLeft[i] <= 0) continue;
                 // A condition that keeps it (Diamond Ring's mark) keeps it from being spent too, and so does a rule (Full Daylight).
-                if (Conditions.KeepsKind((AfflictionKind)i) || Afflictions.Rules.Unspent((AfflictionKind)i)) continue;
+                if (Conditions.KeepsFrom((AfflictionKind)i, side) || Afflictions.Rules.Unspent((AfflictionKind)i)) continue;
                 if (--blowsLeft[i] > 0) continue;
                 // On a burning enemy it lasts a blow longer, once a laying (Clear Sky), whichever came first.
                 if (AfflictionRules.BurningBlowMore(Afflictions.MoreBlowsBurning, stacks[(int)AfflictionKind.Burn], i == (int)AfflictionKind.Burn, burningBlowGiven[i]))
@@ -909,6 +912,16 @@ namespace Clover.Gameplay
                     if (stacks[i] > 0 && Afflictions.Spec((AfflictionKind)i).StopsBalanceRecovery) return false;
                 return true;
             }
+        }
+
+        /// <summary>
+        /// The same for a weapon blow from <paramref name="side"/>, in degrees from its face (-1 unknown): a condition held to a
+        /// flank bars the afflictions' own critical from elsewhere (Mock Suns), though a condition that makes blows critical still does.
+        /// </summary>
+        public bool MakesBlowsCriticalFrom(float side)
+        {
+            if (Conditions.Has(ConditionFlags.TakesCritical)) return true;
+            return !Conditions.BarsCritical(side) && MakesBlowsCritical;
         }
 
         public bool MakesBlowsCritical

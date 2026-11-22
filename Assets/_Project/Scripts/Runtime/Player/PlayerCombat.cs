@@ -2358,7 +2358,9 @@ namespace Clover.Player
                 bool onBack = afflictable != null && afflictable.Afflictions.Conditions.Has(ConditionFlags.BackCritical) && target is Component turned && OnItsBack(turned.transform.position, turned.transform.forward, transform.position, BackDot);
                 // Struck across a line of your spears (The Drawn Line): critical.
                 bool acrossLine = target is Component across && Clover.World.OwnGrounds.Across(Clover.World.OwnGrounds.SpearLine, transform.position, across.transform.position, Time.time);
-                bool critical = promised || countered || onBack || acrossLine || (afflictable != null && afflictable.Afflictions.MakesBlowsCritical) || (chance > 0f && Random.value < chance);
+                // The side the blow comes from, for a condition held to a flank (Mock Suns: only blows on its flanks are made critical by its Mark).
+                float side = target is Component sided ? EnemyConditions.SideDegrees(sided.transform.forward, sided.transform.position - transform.position) : -1f;
+                bool critical = promised || countered || onBack || acrossLine || (afflictable != null && afflictable.Afflictions.MakesBlowsCriticalFrom(side)) || (chance > 0f && Random.value < chance);
                 bool counter = step == Combo.Skill && Combo.SkillIsCounter;
                 float damage = (step.Damage + (counter ? counterDamage : 0f)) * scale * step.BandDamage(distance) * DamageMultiplier * UpgradeDamage * NextBlowDamage * StatDamage;
                 float staggerShare = 1f;
@@ -2537,7 +2539,7 @@ namespace Clover.Player
                         if (fed > 0f && defence != null) defence.Heal(fed, false);
                         earned += afflictable.Afflictions.ManaOnBlow;
                         // A mark of light carries a few critical blows and is spent by them.
-                        afflictable.Afflictions.BlowLanded();
+                        afflictable.Afflictions.BlowLanded(side);
                         // A blow that reaches an enemy in the air holds it up a little longer: three times, or more for one who has learned to keep it there.
                         int more = Stats != null ? Mathf.Max(0, Stats.Whole(PlayerStat.AirBlows)) : 0;
                         afflictable.Afflictions.AirBlow(AirBlowSeconds, AirBlowsMost + more, more > 0 ? 0.85f : 1f);

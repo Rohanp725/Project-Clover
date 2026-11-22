@@ -1154,15 +1154,15 @@ Title: Mock Suns (Ice and Light)
 Group: Reactions
 **What it is.** Chill meets Marked. Two fake suns appear in the sky next to the enemy, the way they sometimes do on icy days.
 
-**The numbers.** For 4 seconds, your weapon blows on the enemy's left or right side add two Chill. No blow uses up its Mark, so they stay critical hits. Then it waits 4 seconds.
+**The numbers.** For 4 seconds, your weapon blows on the enemy's left or right side add two Chill, are critical hits, and don't use up its Mark. A blow on its face or its back uses up the Mark as usual, and the Mark doesn't make it critical. Then it waits 4 seconds.
 
 **What sets it off.** Chill landing on a Marked enemy, or a Mark landing on a chilled one.
 
 **Its shapes.** If you have the Shape mark of Ice and Light's duo branch (Mock Suns: Prism or Lens of Ice, 3 Shards, in the middle of the chart) and carry both, Mock Suns uses the shape you picked at a rest fire instead. Prism: no suns. Instead, for 4 seconds, its Mark isn't used up, and your next weapon blow on it sends three hits in a line past it, each dealing 8 damage, a Mark and a Chill. Lens of Ice: while the enemy is chilled and Marked, its Mark isn't used up, and a heavy blow on it at full Chill deals 18 more damage and Marks every enemy within 4 metres.
 
-**How to use it.** Get to its side and hit it as often as you can within the 4 seconds. Each blow is a critical hit, and each one on its flank chills it.
+**How to use it.** Get to its side and hit it as often as you can within the 4 seconds. Each blow on its flank is a critical hit that chills it and keeps the Mark.
 
-**How it looks.** Its name over the enemy. Not built yet: the suns turning with the enemy. Blows on its face should not be critical or spare the Mark; for now every blow is critical and none uses the Mark.
+**How it looks.** Its name over the enemy. Not built yet: the suns turning with the enemy.
 
 ## reaction-drowned-weight
 Title: Drowned Weight (Water and Dark)
