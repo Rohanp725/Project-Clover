@@ -66,3 +66,4 @@ Thumbs.db
 # Profiler captures are hundreds of megabytes; keep them local
 /review/checks/**/*.data
 /review/shots/before_*/
+Assets/_Project/Generated/Vfx/Element/element_looks.asset
