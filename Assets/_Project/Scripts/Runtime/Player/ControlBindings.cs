@@ -159,6 +159,8 @@ namespace Clover.Player
         /// The clash of a new binding across the whole controls (IMPLEMENTATION.md 3.5): within its own map always; with
         /// the other map on the keys always (a key does one thing), but on the pad only where the spell layer's own
         /// button is concerned, since the four slots share the face buttons with the Player map on purpose (L2 decides).
+        /// The menus' map never clashes with the play maps: a menu and play are never live together, so E can mean use in
+        /// play and choose in a menu.
         /// </summary>
         public static bool FindClash(InputActionAsset controls, InputAction action, int bindingIndex, out InputAction other, out int otherIndex)
         {
@@ -168,9 +170,10 @@ namespace Clover.Player
             if (FindClash(action.actionMap, action, bindingIndex, out other, out otherIndex)) return true;
             if (controls == null) return false;
             bool pad = InGroup(action.bindings[bindingIndex], PadGroup);
+            bool menus = IsMenus(action.actionMap);
             foreach (var map in controls.actionMaps)
             {
-                if (map == action.actionMap) continue;
+                if (map == action.actionMap || IsMenus(map) != menus) continue;
                 if (!FindClash(map, action, bindingIndex, out var found, out int foundIndex)) continue;
                 if (pad && action.name != LayerAction && found.name != LayerAction) continue;
                 other = found;
@@ -182,6 +185,12 @@ namespace Clover.Player
 
         /// <summary>The spell layer's action: held, it turns the pad's face buttons into the four spells.</summary>
         public const string LayerAction = "SpellLayer";
+
+        /// <summary>The menus' action map (ui_rest_fire_plan.md 5.0): read only while a UI Toolkit menu is open.</summary>
+        public const string MenusMap = "UI";
+
+        /// <summary>True for the menus' map.</summary>
+        public static bool IsMenus(InputActionMap map) => map != null && map.name == MenusMap;
 
         /// <summary>Settles a new binding against the whole controls, as <see cref="FindClash(InputActionAsset, InputAction, int, out InputAction, out int)"/> finds clashes.</summary>
         public static Settled Settle(InputActionAsset controls, InputAction action, int bindingIndex, string oldPath, out InputAction other, out int otherIndex)

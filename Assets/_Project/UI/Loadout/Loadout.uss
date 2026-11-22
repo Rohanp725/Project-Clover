@@ -1,0 +1,625 @@
+/*
+ * The Loadout's own layout (docs/design/ui_rest_fire_plan.md 3.5.2): the 12-column grid on the 1920 by 1080 board,
+ * 64 px side margins, columns 1 to 8 the build (x 64 to 1248) and 9 to 12 the pane (x 1280 to 1856). The board's large
+ * blocks sit where 3.5.2's table puts them; inside them, flex rows and columns, so 125% and 150% text reflow. Card
+ * heights are minimums, so words that grow push the card, not over its edge.
+ */
+
+/* ---- The board's blocks. */
+
+#title {
+    position: absolute;
+    left: 64px;
+    top: 50px;
+}
+
+#wallet {
+    position: absolute;
+    right: 64px;
+    top: 64px;
+    height: 32px;
+}
+
+.wallet-gap {
+    margin-left: 28px;
+}
+
+.half {
+    position: absolute;
+    left: 64px;
+    width: 1184px;
+}
+
+#steel-half {
+    top: 128px;
+    height: 408px;
+}
+
+#element-half {
+    top: 552px;
+    height: 390px;
+}
+
+#pane {
+    position: absolute;
+    left: 1280px;
+    top: 128px;
+    width: 576px;
+    height: 814px;
+}
+
+.footer {
+    position: absolute;
+    top: 984px;
+    height: 40px;
+}
+
+.footer-left {
+    left: 64px;
+}
+
+.footer-right {
+    right: 64px;
+}
+
+.footer-gap {
+    margin-left: 22px;
+}
+
+/* ---- The Steel half: the Way's left column, the weapon, the Way's right column (3.5.2). */
+
+.steel-row {
+    align-items: flex-start;
+}
+
+.way-column {
+    width: 424px;
+}
+
+.way-column > .t-label {
+    height: 28px;
+    margin-bottom: 4px;
+}
+
+.way-label {
+    margin-top: 16px;
+}
+
+.aspect-card {
+    min-height: 96px;
+    padding-left: 18px;
+    padding-right: 18px;
+}
+
+.card-icon {
+    margin-right: 16px;
+}
+
+.card-words {
+    flex-shrink: 1;
+    flex-grow: 1;
+}
+
+.pair-cell {
+    min-height: 84px;
+    padding-left: 18px;
+    padding-right: 18px;
+}
+
+.pair-cell > .lamp {
+    margin-right: 14px;
+}
+
+.pair-second {
+    margin-top: 8px;
+}
+
+.line-card {
+    min-height: 46px;
+    padding-left: 18px;
+    padding-right: 18px;
+    justify-content: space-between;
+}
+
+.technique {
+    margin-top: 4px;
+}
+
+.pips {
+    align-items: center;
+}
+
+.pip {
+    width: 16px;
+    height: 16px;
+    margin-left: 8px;
+    rotate: 45deg;
+    border-width: 2px;
+    border-color: var(--color-text-2);
+}
+
+.pip.on {
+    background-color: var(--color-gold);
+    border-color: var(--color-gold);
+}
+
+/* The weapon: its name over the live picture on an ink disc (N1). Not focusable. */
+.weapon-column {
+    width: 304px;
+    margin-left: 16px;
+    margin-right: 16px;
+    align-items: center;
+}
+
+.weapon-name {
+    height: 44px;
+    -unity-text-align: middle-center;
+}
+
+.weapon-picture {
+    width: 304px;
+    height: 304px;
+    margin-top: 4px;
+    border-radius: 152px;
+    border-width: 3px;
+    border-color: var(--color-rim);
+    background-color: var(--color-raised);
+}
+
+.ink-line {
+    position: absolute;
+    left: 591px;
+    width: 2px;
+    height: 16px;
+    background-color: var(--color-ink-line);
+}
+
+.ink-line-top {
+    top: 352px;
+}
+
+.ink-line-bottom {
+    top: 408px;
+}
+
+.infused {
+    position: absolute;
+    left: 152px;
+    top: 368px;
+    width: 880px;
+    min-height: 40px;
+    justify-content: center;
+    border-color: var(--color-chip);
+    padding-left: 14px;
+    padding-right: 14px;
+}
+
+.infused-label {
+    margin-right: 16px;
+}
+
+/* ---- The Element half (3.5.2): the corners and North on top, West, the surge and East, then South, then the Hands. */
+
+.element-top {
+    align-items: flex-start;
+}
+
+.element-header {
+    width: 396px;
+    min-height: 73px;
+}
+
+.element-words {
+    align-items: flex-end;
+}
+
+.element-name {
+    margin-left: 14px;
+}
+
+.role-strip {
+    width: 396px;
+    min-height: 80px;
+    margin-left: 16px;
+}
+
+.role-cells {
+    margin-top: 4px;
+}
+
+.role-cell {
+    flex-direction: row;
+    align-items: center;
+    height: 48px;
+    padding-left: 8px;
+    padding-right: 8px;
+    margin-right: 6px;
+    border-radius: 6px;
+    background-color: var(--color-chip);
+}
+
+.role-cell.missing {
+    border-width: 2px;
+    border-color: var(--color-loss);
+}
+
+.role-count {
+    font-size: var(--size-count);
+    -unity-font-style: bold;
+    color: var(--color-text);
+    margin-left: 6px;
+}
+
+.role-cell.missing > .role-count,
+.role-cell.missing > .icon {
+    color: var(--color-loss);
+}
+
+.role-cell.changed {
+    border-width: 2px;
+    border-color: var(--color-text);
+}
+
+.role-was {
+    font-size: var(--size-small);
+    color: var(--color-text-2);
+    margin-left: 4px;
+}
+
+/* A slot card: 360 by 106, its button glyph half over its outer edge (3.5.2). */
+.slot {
+    width: 360px;
+    min-height: 106px;
+    padding-top: 9px;
+    padding-left: 18px;
+    padding-right: 18px;
+    align-items: flex-start;
+}
+
+#slot-north {
+    margin-left: 16px;
+}
+
+.slot-icon {
+    margin-top: 8px;
+    margin-right: 14px;
+}
+
+.slot-words {
+    flex-shrink: 1;
+}
+
+.slot-glyph {
+    position: absolute;
+}
+
+#slot-north > .slot-glyph,
+#slot-south > .slot-glyph {
+    left: 296px;
+}
+
+#slot-north > .slot-glyph {
+    top: -17px;
+}
+
+#slot-south > .slot-glyph {
+    top: 87px;
+}
+
+#slot-west > .slot-glyph {
+    left: -18px;
+    top: 35px;
+}
+
+#slot-east > .slot-glyph {
+    left: 342px;
+    top: 35px;
+}
+
+.slot.empty .slot-name,
+.slot.shut .slot-name {
+    color: var(--color-text-off);
+}
+
+.slot.empty {
+    border-color: var(--color-text-off);
+}
+
+.element-middle {
+    margin-top: -11px;
+    padding-left: 36px;
+    align-items: flex-start;
+}
+
+.surge-room {
+    width: 360px;
+    height: 106px;
+    margin-left: 16px;
+    margin-right: 16px;
+    align-items: center;
+    justify-content: center;
+}
+
+/* The surge: its ring on the centre line, the LT glyph to its left, its name to its right. */
+.surge {
+    width: 64px;
+    height: 64px;
+    border-radius: 32px;
+}
+
+.surge-ring {
+    width: 64px;
+    height: 64px;
+    border-radius: 32px;
+    border-width: 2px;
+    border-color: var(--color-rim);
+    background-color: var(--color-raised);
+    align-items: center;
+    justify-content: center;
+}
+
+.surge-glyph {
+    position: absolute;
+    right: 72px;
+    top: 18px;
+}
+
+.surge-name {
+    position: absolute;
+    left: 74px;
+    top: 16px;
+}
+
+.surge > .focus-frame {
+    border-radius: 40px;
+}
+
+.element-bottom {
+    margin-top: -11px;
+    padding-left: 412px;
+}
+
+#hands-label {
+    position: absolute;
+    left: 0;
+    top: 290px;
+}
+
+#hands {
+    position: absolute;
+    left: 0;
+    top: 324px;
+}
+
+.hand {
+    width: 287px;
+    min-height: 66px;
+    padding-left: 12px;
+    padding-right: 12px;
+    justify-content: space-between;
+}
+
+#hand-1,
+#hand-2,
+#hand-3 {
+    margin-left: 12px;
+}
+
+.hand-minis {
+    align-items: center;
+}
+
+.hand-minis > .icon {
+    margin-left: 4px;
+}
+
+.hand-sep {
+    width: 2px;
+    height: 22px;
+    margin-left: 4px;
+    margin-right: 2px;
+    background-color: var(--color-rule);
+}
+
+.hand-keep {
+    position: absolute;
+    right: -12px;
+    bottom: -12px;
+}
+
+/* ---- Folded halves (3.5.8): one line of 72 px. */
+
+.folded {
+    position: absolute;
+    left: 64px;
+    width: 1184px;
+    min-height: 72px;
+    padding-left: 24px;
+    padding-right: 24px;
+}
+
+#steel-folded {
+    top: 128px;
+}
+
+#element-folded {
+    top: 870px;
+}
+
+.fold-steel #steel-half,
+.fold-element #element-half {
+    display: none;
+}
+
+.fold-steel #steel-folded,
+.fold-element #element-folded {
+    display: flex;
+}
+
+/* With Steel folded the Element half takes its room, unless a spell list is open over it. */
+.fold-steel #element-half {
+    top: 216px;
+    height: 726px;
+}
+
+.fold-steel.mode-list #element-half {
+    top: 552px;
+    height: 390px;
+}
+
+.fold-element #steel-half {
+    height: 726px;
+}
+
+/* At 125% and 150% the slot cards drop their shape line, which the pane shows anyway (3.5.8). */
+.size-125 .slot-shape,
+.size-150 .slot-shape {
+    display: none;
+}
+
+/* ---- The spell list over the Steel half (3.5.5). */
+
+.overlay {
+    position: absolute;
+    left: 64px;
+    width: 1184px;
+}
+
+.spell-list {
+    top: 128px;
+    height: 408px;
+    padding-top: 16px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 8px;
+}
+
+.list-title {
+    min-height: 40px;
+    margin-bottom: 8px;
+}
+
+.list-columns {
+    flex-grow: 1;
+    align-items: stretch;
+}
+
+.list-column {
+    flex-grow: 1;
+    flex-basis: 0;
+    margin-right: 16px;
+}
+
+.list-column-header {
+    margin-bottom: 6px;
+}
+
+.list-scroll {
+    flex-grow: 1;
+}
+
+.list-row {
+    flex-direction: row;
+    align-items: center;
+    min-height: 72px;
+    padding-left: 12px;
+    padding-right: 12px;
+    margin-bottom: 4px;
+    border-radius: 8px;
+}
+
+.list-row > .icon {
+    margin-right: 12px;
+}
+
+.list-row-words {
+    flex-grow: 1;
+    flex-shrink: 1;
+}
+
+.list-tag {
+    position: relative;
+    top: 0;
+    right: 0;
+    margin-left: 8px;
+}
+
+/* ---- The aspect cards over the Element half (3.5.5). */
+
+.aspect-cards {
+    top: 552px;
+    height: 390px;
+    padding: 0;
+    justify-content: space-between;
+    background-color: rgba(0, 0, 0, 0);
+    border-width: 0;
+}
+
+.aspect-choice {
+    width: 376px;
+    height: 390px;
+    padding: 24px;
+    align-items: center;
+}
+
+.aspect-cards.four .aspect-choice {
+    width: 278px;
+}
+
+.aspect-choice > .t-name,
+.aspect-choice > .t-meta,
+.aspect-choice > .t-small {
+    -unity-text-align: upper-center;
+    margin-top: 12px;
+}
+
+.aspect-choice.locked .card-icon {
+    color: var(--color-text-off);
+}
+
+.mode-cards #element-half,
+.mode-list #steel-half {
+    opacity: 0;
+}
+
+/* ---- The pane (4.4). */
+
+.pane-scroll {
+    flex-grow: 1;
+}
+
+.pane-head {
+    align-items: flex-start;
+}
+
+.pane-icon {
+    margin-top: 4px;
+    margin-right: 18px;
+}
+
+.pane-head-words {
+    flex-shrink: 1;
+    flex-grow: 1;
+}
+
+.pane-section {
+    margin-top: 16px;
+}
+
+.pane-action {
+    margin-top: 14px;
+}
+
+.pane-action > Label {
+    font-size: var(--size-row);
+    -unity-font-style: bold;
+    color: var(--color-text);
+}
+
+.pane-more {
+    position: absolute;
+    left: 32px;
+    right: 32px;
+    bottom: 8px;
+    justify-content: flex-end;
+}

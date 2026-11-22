@@ -1,0 +1,130 @@
+/*
+ * The menus' tokens (docs/design/ui_rest_fire_plan.md 4.1 and 4.2): every colour and every size, in one place. Sizes are
+ * pixels on the 1920 by 1080 board; the panel scales them. The text-size setting puts .size-125 or .size-150 on a
+ * panel's root, which redefines the sizes below; variables inherit, so everything that uses them grows at once.
+ * Every text-on-background pair is checked at 4.5 to 1 or more by LoadoutTreeTests, from the values written here.
+ */
+
+:root {
+    /* Colours (4.2). */
+    --color-dim: rgba(5, 4, 9, 0.7);
+    --color-panel: rgba(10, 9, 20, 0.96);
+    --color-raised: #17142A;
+    --color-focus-fill: #2B2134;
+    --color-text: #EEE9E1;
+    --color-text-2: #B8B1A5;
+    --color-text-off: #86808F;
+    --color-text-off-focus: #9A94A3;
+    --color-gold: #FFCC73;
+    --color-loss: #FF7A5C;
+    --color-memories: #E8A24A;
+    --color-shards: #A9C8F0;
+    --color-rule: rgba(184, 177, 165, 0.28);
+    --color-rim: rgba(184, 177, 165, 0.16);
+    --color-ink-line: rgba(134, 128, 143, 0.4);
+    --color-tag: #3A3550;
+    --color-tag-rim: rgba(238, 233, 225, 0.35);
+    --color-lamp-off: #B8B1A5;
+    --color-chip: rgba(238, 233, 225, 0.04);
+    --color-cut: rgba(10, 9, 20, 0.55);
+
+    /* Glyph faces, after Kenney's Input Prompts, until the pack's pictures come in (5.2). */
+    --color-glyph-ink: #0B0A12;
+    --color-glyph-a: #6CC24A;
+    --color-glyph-b: #E5604F;
+    --color-glyph-x: #4F94E8;
+    --color-glyph-y: #EBC63E;
+    --color-glyph-plain: #D9D3C9;
+
+    /* The elements: the rim and icon colour (Elements.Colour), and a text tint of the same hue at 4.5 to 1 or more. */
+    --el-fire: #FF8F33;
+    --el-fire-text: #FF8F33;
+    --el-lightning: #73C7FF;
+    --el-lightning-text: #73C7FF;
+    --el-wind: #9EF2CC;
+    --el-wind-text: #9EF2CC;
+    --el-ice: #B2EBFF;
+    --el-ice-text: #B2EBFF;
+    --el-water: #4080FF;
+    --el-water-text: #7FA8FF;
+    --el-life: #73E659;
+    --el-life-text: #73E659;
+    --el-earth: #B8854C;
+    --el-earth-text: #C99863;
+    --el-metal: #C7CCE0;
+    --el-metal-text: #C7CCE0;
+    --el-light: #FFED99;
+    --el-light-text: #FFED99;
+    --el-dark: #9E4CD9;
+    --el-dark-text: #B170E1;
+    --el-poison: #99D926;
+    --el-poison-text: #99D926;
+    --el-both: #D9D3C9;
+    --el-both-text: #EEE9E1;
+
+    /* Type sizes (4.1). Nothing a player must read is under 24. */
+    --size-title: 48px;
+    --size-header: 36px;
+    --size-name: 32px;
+    --size-name-small: 28px;
+    --size-body: 30px;
+    --size-row: 28px;
+    --size-meta: 26px;
+    --size-small: 24px;
+    --size-count: 28px;
+
+    /* Pictures that sit in a line of text grow with it; the 64 px slot icons do not (3.5.8). */
+    --size-icon-inline: 28px;
+    --size-icon-role: 24px;
+    --size-icon-list: 40px;
+    --size-glyph: 32px;
+    --size-glyph-small: 28px;
+    --size-glyph-text: 19px;
+    --glyph-radius: 16px;
+    --glyph-ring-radius: 20px;
+
+    /* The frame and the motion (4.2, 4.5). */
+    --focus-frame: 3px;
+    --focus-gap: 6px;
+    --move-time: 0.12s;
+}
+
+.size-125 {
+    --size-title: 60px;
+    --size-header: 45px;
+    --size-name: 40px;
+    --size-name-small: 35px;
+    --size-body: 38px;
+    --size-row: 35px;
+    --size-meta: 33px;
+    --size-small: 30px;
+    --size-count: 35px;
+    --size-icon-inline: 35px;
+    --size-icon-role: 30px;
+    --size-icon-list: 50px;
+    --size-glyph: 40px;
+    --size-glyph-small: 35px;
+    --size-glyph-text: 24px;
+    --glyph-radius: 20px;
+    --glyph-ring-radius: 24px;
+}
+
+.size-150 {
+    --size-title: 72px;
+    --size-header: 54px;
+    --size-name: 48px;
+    --size-name-small: 42px;
+    --size-body: 45px;
+    --size-row: 42px;
+    --size-meta: 39px;
+    --size-small: 36px;
+    --size-count: 42px;
+    --size-icon-inline: 42px;
+    --size-icon-role: 36px;
+    --size-icon-list: 60px;
+    --size-glyph: 48px;
+    --size-glyph-small: 42px;
+    --size-glyph-text: 29px;
+    --glyph-radius: 24px;
+    --glyph-ring-radius: 28px;
+}

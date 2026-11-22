@@ -1185,3 +1185,66 @@ The recommended option is first in each.
 **N3. Swapping a spell's shape** (left and right now always move, so A's "left or right swaps the shape" cannot stay).
 - (a, recommended) Y on the slot, or on a row in the spell list.
 - (b) Only in the spell list (Y on a row); a slot in the diamond has no shape button.
+
+---
+
+## 7. The offline build (2026-11-21, branch `ui`) and what the editor step does
+
+Built without the editor, on top of the Way (`way`, 6f0dd7ea), so the Steel half can show the aspects, keystones,
+Temper and Memories. Nothing is opened from the rest menu yet. Everything below compiles offline, and its EditMode tests
+pass offline.
+
+**Built** (all under `Assets/_Project/`):
+
+- `Settings/Controls.inputactions`: the `UI` map of 5.0 (Navigate, Submit, Cancel, Keep, Shape, HalfLeft, HalfRight,
+  ScrollPane, TextSize, Point, Click, RightClick, ScrollWheel), bound as 3.5.4's table says. Shift+Tab is LB through
+  HalfRight plus Shift, because a Tab under two actions would clash. `ControlBindings.FindClash` no longer counts the UI
+  map against the play maps, since the two are never live together.
+- `UI/Theme/Tokens.uss`, `Base.uss`, `Fonts.uss` and `Clover.tss`; `UI/Loadout/Loadout.uxml` and `Loadout.uss` (the grid
+  of 3.5.2).
+- `Scripts/Runtime/UI/Toolkit/`, the logic in plain C#: `FocusGrid` and `LoadoutPlaces` (the map of 3.5.4), `NavRepeat`,
+  `LoadoutController` (lists, preview then commit, Y, the held X, halves, text size, folding, the pane's words),
+  `LoadoutWords`, `TextSizes`, `IconShapes`. The Unity side: `LoadoutScreen` (the UIDocument view), `GameLoadoutSource`
+  (the binding to `PlayerBuild`, `RunState.WayChoices`, `WayRules`, the wallet), `MenuInput`, `Glyphs`, `PaintedIcon`,
+  `WeaponStage` (N1, the live model).
+- Tests in `Scripts/Tests/EditMode/UI/`: every direction from every place, the bindings, folding, shapes, the tree, the
+  contrast and the sizes.
+
+**One change to 3.5.4's table.** Right from the aspect and down from the infused strikes are "back where it came from"
+(Temper, and North, the first time). The rule under the table asks for this, so a push and its opposite always come back:
+Technique, left, then right now returns to the Technique, and the Element header, up, then down returns to the header.
+
+**Stand-ins, ledgered** in `docs/design/steel/content_open.tsv`: `ui-icons` (the icons painted by code, Q6) and
+`ui-words` (the card words exist for the Katana and the Body only).
+
+**From outside, through `staging/` and the asset intake, with `ASSETS.csv` rows** (nothing is downloaded into Assets):
+
+| What | Files | Where from | Licence |
+|---|---|---|---|
+| Atkinson Hyperlegible | `AtkinsonHyperlegible-Regular.ttf`, `AtkinsonHyperlegible-Bold.ttf`, and the licence `OFL.txt` | The Braille Institute's release on Google Fonts or its GitHub (`googlefonts/atkinson-hyperlegible`), pinned to one release | SIL Open Font Licence 1.1 |
+| Spectral SemiBold | Already at `Art/Fonts/spectral_semibold.ttf`. Check its `ASSETS.csv` row carries the OFL, and add `OFL.txt` if it does not | Production Type, on Google Fonts | SIL Open Font Licence 1.1 |
+| Kenney Input Prompts | Pack 1.5a from kenney.nl/assets/input-prompts (about 1500 files). Bring in only the Xbox Series, PlayStation 5 and keyboard-and-mouse sets. For the menus: the four face buttons (Xbox A B X Y; PlayStation cross, circle, square, triangle), LB, RB, LT, RT, L3/LS, RS/R3, the left stick and the d-pad; the keys E, Enter, Space, Escape, Backspace, R, Q, T, Tab, Shift, Page Up, Page Down, W A S D, the four arrows, 1 to 4, F, J, K, L and Left Ctrl; the left and right mouse buttons and the wheel. The page lists no file names, so map them at intake to the ids `Glyphs.Id` gives (`xbox:a`, `ps:cross`, `key:e`, `mouse:left`) | kenney.nl | CC0 |
+
+**The editor step, in order:**
+
+1. Import the fonts, then let `UiToolkitBuilder` make the TextCore assets under the names `Fonts.uss` uses:
+   `Generated/UI/Fonts/AtkinsonHyperlegible_SDF.asset`, with the Bold asset as its bold weight, and
+   `Generated/UI/Fonts/SpectralSemiBold_SDF.asset`. The USS warns about the two missing assets until then.
+2. Build `Generated/UI/MenuPanel.asset`: Scale With Screen Size, 1920 by 1080, Expand, theme `Clover.tss`, sorted above
+   the HUD canvas. Check Expand exists in 6000.6 (5.0).
+3. Add a `Menus` object in `PlayerBuilder`, with a UIDocument (`Loadout.uxml`, MenuPanel) and `LoadoutScreen`, in the
+   seven player scenes.
+4. Make `Controls` the project-wide actions asset (5.0). Check that `simulate_key` reaches `MenuInput`.
+5. **The hook:** `RestMenu.Act`'s `RestEntry.Hand` case, marked `LOADOUT HOOK` in `Runtime/UI/RestMenu.cs`. Open
+   `LoadoutScreen.Ensure().Open()`, and read `LoadoutScreen.Showing` and `BusyThisFrame` in RestMenu's wait. Then delete
+   `HandMenu`, `ShapeMenu`'s spell part, and the Shapes entry. Connect `LoadoutScreen.Sounded` to the UI ticks, and
+   `ReactionsAsked` to the Reactions page (U5).
+6. Swap the glyph labels for Kenney's pictures, keyed by `Glyphs.Id`.
+7. Check the weapon stage: the copied rack part shows, lit and framed. Check `capture game_view` includes a UI Toolkit
+   panel.
+8. Compile, then run the EditMode suite in the editor.
+9. Take screenshots at 1920x1080 and 1280x720, and at 125% and 150%: the screen opened (compare by eye with
+   `mockups/loadout_c.png`), a spell list, the aspect cards, a keystone not set, a locked keystone, a saved Hand, and
+   each half folded.
+10. Walk the screen with a pad, as 5.3 item 5 says: every place, every list, Y, a held X, LB and RB, L3, and B from
+    every depth. Then walk it with the mouse.
