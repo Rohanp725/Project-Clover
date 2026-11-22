@@ -9,13 +9,13 @@ are both carried.
 
 **When it happens.** Every time Rot Roots goes off while you carry both Life and Poison. Rot Roots goes off when poison lands on a Seeded enemy, or when a seed lands on a poisoned one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Rot Roots.
 
-**The numbers.** Mix, 3 Shards. Gathered In: roots reach three enemies within 5 metres for 6 seconds, and each one is Seeded once. Each time poison bites one of them, one of its doses is taken and passed to the nearest other enemy within 5 metres. Summer Grass: lasts 20 seconds. If the enemy dies, 1.5 seconds later a puff of spores 4 metres across gives three doses and a Seed to everything in it, and you heal 6. After Rot Roots goes off on an enemy, it can't go off on that enemy again for 4 seconds.
+**The numbers.** Mix, 3 Shards. Gathered In: roots reach three enemies within 5 metres for 6 seconds, and each one is Seeded once. Each time poison bites one of them, one of its doses is drawn along the roots into the enemy they grow from, up to eight. If that enemy is already full, the dose stays where it is. Summer Grass: lasts 20 seconds. If the enemy dies, 1.5 seconds later a puff of spores 4 metres across gives three doses and a Seed to everything in it, and you heal 6. After Rot Roots goes off on an enemy, it can't go off on that enemy again for 4 seconds.
 
 **Works with.** Tasting, Deep Threads, The Host, The Stalks Rise (use up what Gathered In pulled together).
 
 **Example.** A crowd: use Gathered In on the toughest one, then set it off. A pack you will cut down one at a time: use Summer Grass, so each death Seeds the rest.
 
-**Not built yet.** For now, Gathered In's doses go to the nearest other enemy (usually the one the roots grow from) instead of straight to it, and they aren't capped at eight. Summer Grass heals you wherever you stand, not only inside the spores (at most once every 2 seconds).
+**Not built yet.** Summer Grass heals you wherever you stand, not only inside the spores (at most once every 2 seconds).
 
 ## rotroots.tasting
 **What it does.** While you stand on a root, each poison bite on an enemy joined by the roots heals you 1.
@@ -35,7 +35,7 @@ are both carried.
 
 **When it happens.** Each time Rot Roots goes off.
 
-**The numbers.** Mix, a minor mark, 1 Shard. The roots reach 7 metres instead of 5, and join four enemies instead of three. With Gathered In, the dose is passed up to 7 metres too.
+**The numbers.** Mix, a minor mark, 1 Shard. The roots reach 7 metres instead of 5, and join four enemies instead of three. With Gathered In, the doses still go along the roots to the enemy they grow from, however far.
 
 **Works with.** Rot Roots and its shapes, Tasting.
 
@@ -46,13 +46,11 @@ are both carried.
 
 **When it happens.** Each poisoned enemy that dies, while you carry both Life and Poison.
 
-**The numbers.** Mix, keystone, 5 Shards. For now: while something you grew stands within 4 metres of you, a poisoned enemy that dies gives a dose to everything within 3 metres of where it fell, at most once a second.
+**The numbers.** Mix, keystone, 5 Shards. The thing you grew nearest the body, within 3 metres, stays 3 seconds longer, and from then on each of its hits also gives one dose of poison to everything it hits.
 
 **Works with.** Rot Roots, the things Life grows (Briar Patch and the rest), The Stalks Rise.
 
 **Example.** Fight next to your briars, and each poisoned death spreads its rot.
-
-**Not built yet.** The grown thing near the death doesn't stay longer or start poisoning with its hits yet. For now, the dose goes to the enemies near where it fell, and only while something you grew stands near you.
 
 ## rotroots.stalks
 **What it does.** Every enemy within 9 metres that is both Seeded and Poisoned grows a dark stalk from its head. After 1.2 seconds, each stalk bursts, using up both: it deals 5 damage per dose and 8 per seed within 2.5 metres, and the spores give two doses to everything nearby.

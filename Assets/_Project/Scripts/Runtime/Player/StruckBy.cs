@@ -13,5 +13,15 @@ namespace Clover.Player
         Shatter,
         /// <summary>A weapon blow that was a critical hit (Blistered's weals).</summary>
         Critical,
+        /// <summary>The finisher's own blow, apart from any other heavy blow (the ledger's finisher-only).</summary>
+        Finisher,
+        /// <summary>For ConditionAttacked: its carrier's blow turned by a perfect guard, not one that landed or was plainly blocked (Snapped Blade).</summary>
+        Turned,
+        /// <summary>For ConditionEnded: only an end the enemy's freezing brought (<see cref="Clover.Gameplay.ConditionSpec.EndsOnFreeze"/>).</summary>
+        Frozen,
+        /// <summary>A shove or a throw (a Gust, a ram, Riptide, a lift), or a heavy weapon blow, which shoves (the ledger's shove-moment).</summary>
+        Shove,
+        /// <summary>Another enemy's death within the condition's reach of its carrier (Shut in the Dark: a death inside the jar's ring).</summary>
+        DeathNear,
     }
 }

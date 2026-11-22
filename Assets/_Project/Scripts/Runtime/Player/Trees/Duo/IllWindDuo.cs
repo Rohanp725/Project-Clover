@@ -29,10 +29,9 @@ namespace Clover.Player.Trees.Duo
         {
             const string A = Elements.Poison, B = Elements.Wind;
 
-            // NEEDS: every shove and throw shedding (shove-moment; now a heavy blow, as the plain reaction); Dust on the Blade's
-            // coat on your own edge for your next three light blows on any enemy (depth-moved; now the next three weapon blows on the one
-            // shed); Dust Bank's trail drifting on 2 m a second (plume-along-path; now a longer line of Unsteady ground laid
-            // at once downwind).
+            // Dust on the Blade's grit coats your own edge (UpgradeAction.CoatBlade) for your next three light blows on any enemy.
+            // Every shove and throw sheds it (StruckBy.Shove), as the plain reaction. NEEDS: Dust Bank's trail drifting on 2 m a second
+            // (plume-along-path; now a longer line of Unsteady ground laid at once downwind).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Ill Wind: Dust on the Blade or Dust Bank", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -42,14 +41,13 @@ namespace Clover.Player.Trees.Duo
                     new ShapeDef
                     {
                         Name = "Dust on the Blade",
-                        Description = "Its poison goes loose as before, but your heavy blow sheds it with no trail: the grit coats your edge, and your next three weapon blows on it each lay a dose and an Unsteady.",
+                        Description = "Its poison goes loose as before, but your heavy blow sheds it with no trail: the grit coats your edge, and your next three light blows on any enemy each lay a dose and an Unsteady.",
                         Effects = new[]
                         {
                             Loose(BladeDust),
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = BladeDust, By = StruckBy.Heavy, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Poison },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = BladeDust, By = StruckBy.Heavy, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Coat, Seconds = 6f, Blows = 3 } },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Coat, By = StruckBy.Weapon, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Poison, Stacks = 1 },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Coat, By = StruckBy.Weapon, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Unsteady, Stacks = 1 },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = BladeDust, By = StruckBy.Shove, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Poison },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = BladeDust, By = StruckBy.Shove, Do = UpgradeAction.CoatBlade, Affliction = AfflictionKind.Poison, Stacks = 1, Count = 3, LightOnly = true },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = BladeDust, By = StruckBy.Shove, Do = UpgradeAction.CoatBlade, Affliction = AfflictionKind.Unsteady, Stacks = 1, Count = 3, LightOnly = true },
                         },
                     },
                     new ShapeDef
@@ -59,9 +57,9 @@ namespace Clover.Player.Trees.Duo
                         Effects = new[]
                         {
                             Loose(BankDust),
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = BankDust, By = StruckBy.Heavy, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Poison },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = BankDust, By = StruckBy.Shove, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Poison },
                             Plume(UpgradeTrigger.ConditionStruck, BankDust, 3f),
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = BankDust, By = StruckBy.Heavy, Do = UpgradeAction.Hazard, Shape = HazardShape.Downwind, Count = 5,
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = BankDust, By = StruckBy.Shove, Do = UpgradeAction.Hazard, Shape = HazardShape.Downwind, Count = 5,
                                 Reach = 8f, Amount = 1.2f, Radius = 0.6f, Seconds = 4f, Interval = 1f, Affliction = AfflictionKind.Unsteady, Stacks = 1, SparesTarget = true },
                         },
                     },
@@ -79,12 +77,12 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.LeftLow));
 
-            // NEEDS: the attacker of the dodged blow alone (attacker-of-turned-blow); now everything within 2.5 m of you is thrown.
+            // The attacker of the dodged blow alone is thrown (UpgradeEffect.NeedsAttacker), straight away from you.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = GustAtTheHeel, Name = "Gust at the Heel", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Boot,
                 Description = "A perfect dodge leaves a gust behind you that throws the attacker 3 m, so a poisoned attacker trails at once.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, At = EffectAt.Self, Do = UpgradeAction.Push, Radius = 2.5f, Amount = 3f, Cooldown = 0.5f } },
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, NeedsAttacker = true, Do = UpgradeAction.Push, Shape = HazardShape.Downwind, Amount = 3f, Cooldown = 0.5f } },
             }, HeartPattern.RightLow));
 
             // Changes its reaction's own numbers while it is in force (reaction-numbers, ReactionNumbers):
@@ -101,8 +99,8 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.LeftHigh));
 
-            // The restless wind: while an enemy carries both after Ill Wind fires, every 2 s it is shoved 1 m away from you and
-            // sheds its poison in a short plume. NEEDS: the shove itself setting off the shed (shove-moment).
+            // The restless wind: while an enemy carries both after Ill Wind fires, every 2 s it is shoved 1 m away from you, and the
+            // shove itself sheds its poison (StruckBy.Shove on Ill Wind's own loose dust).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = NoStillAir, Name = "No Still Air", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { SpringDust, GustAtTheHeel }, Icon = UpgradeIcons.Gust,
@@ -112,16 +110,15 @@ namespace Clover.Player.Trees.Duo
                     new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = Reaction, Do = UpgradeAction.Condition,
                         State = new ConditionSpec { Id = Restless, Seconds = 30f, Beat = 2f, While = AfflictionKind.Poison, While2 = AfflictionKind.Unsteady } },
                     new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = Restless, Do = UpgradeAction.Push, Shape = HazardShape.Downwind, Amount = 1f },
-                    new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = Restless, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Poison },
-                    Plume(UpgradeTrigger.ConditionBeat, Restless, 2f),
                 },
             }, HeartPattern.Keystone));
 
             // The duo spell, bought with Shards once both are carried (no god gives it): a detonator on a 12 s cooldown (SpellTimings). The wave form throws the gale, a cone 9 m
-            // long and 60 degrees wide; it doses (the branch's first element), throws 4 m, unsteadies three deep and bites.
-            // NEEDS: the held press drinking for 1.5 s (held-press), every cloud, trail and half of each poisoned enemy's doses
-            // within 6 m drunk into a store and shared among those the gale strikes (depth-moved), and two more doses for each
-            // weapon blow in the 4 s before the cast.
+            // long and 60 degrees wide; it doses (the branch's first element), throws 4 m, unsteadies three deep and bites. As it
+            // goes, every cloud and trail and half of each poisoned enemy's doses within 6 m are drunk into a store, split evenly
+            // among those the gale struck, rounded up (UpgradeAction.ShareStore; the owner's answer of 2026-11-22).
+            // NEEDS: the held press drinking for 1.5 s (held-press), and two more doses for each weapon blow in the 4 s before
+            // the cast.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = TheYellowGale, Name = "The Yellow Gale", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Role = SpellRole.Detonator, Requires = new[] { SpringDust, GustAtTheHeel }, Icon = UpgradeIcons.Wave,
@@ -133,6 +130,7 @@ namespace Clover.Player.Trees.Duo
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Unsteady, Stacks = 3 },
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Push, Shape = HazardShape.Downwind, Amount = 4f },
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Bite, Delay = 0.2f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnSpell = true, Do = UpgradeAction.ShareStore, Affliction = AfflictionKind.Poison, Radius = 6f },
                 },
             }, HeartPattern.Spell));
         }
@@ -148,7 +146,7 @@ namespace Clover.Player.Trees.Duo
         // answering a blow, or on the condition's beat; so many seconds long.
         private static UpgradeEffect Plume(UpgradeTrigger on, string id, float seconds) => new UpgradeEffect
         {
-            On = on, Condition = id, By = on == UpgradeTrigger.ConditionStruck ? StruckBy.Heavy : StruckBy.Any, Do = UpgradeAction.Hazard, Shape = HazardShape.Downwind, Count = 3,
+            On = on, Condition = id, By = on == UpgradeTrigger.ConditionStruck ? StruckBy.Shove : StruckBy.Any, Do = UpgradeAction.Hazard, Shape = HazardShape.Downwind, Count = 3,
             Reach = 2.2f, Amount = 1.2f, Radius = 0.6f, Seconds = seconds, Interval = 1f, Affliction = AfflictionKind.Poison, Stacks = 1, SparesTarget = true,
         };
     }

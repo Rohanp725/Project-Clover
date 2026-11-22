@@ -90,18 +90,18 @@ namespace Clover.Player.Trees
             // The duo spell, re-aimed at the jar (pairs_d1_d2.md): the stream seals a jar on what it bites, past the rest.
             // BESPOKE: the grip that holds an enemy, drinks its poison and throws it. Until then a short held stream bites what
             // stands before the player, and spells that strike the poisoned feed.
-            // NEEDS: a jar sealed on an enemy carrying only one of the two (forced-alone; now only on one Cursed and poisoned);
-            // each second of the stream adding a dose to whatever is inside the ring.
+            // The jar is sealed on an enemy carrying either of the two (UpgradeEffect.Alone).
+            // NEEDS: each second of the stream adding a dose to whatever is inside the ring.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = WastingGrip, Name = "Wasting Grip", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Role = SpellRole.Opener, Requires = new[] { Wither, FeedingRot }, Icon = UpgradeIcons.Claw,
-                Description = "You brace and pour a short stream of rot at what stands before you. It bites again and again, and striking a poisoned enemy with it feeds you. On one Cursed and poisoned it seals the jar at once, whatever its rest. A blow that lands on you breaks it. 40 mana.",
+                Description = "You brace and pour a short stream of rot at what stands before you. It bites again and again, and striking a poisoned enemy with it feeds you. On one Cursed or poisoned it seals the jar at once, whatever its rest. A blow that lands on you breaks it. 40 mana.",
                 Form = FormBeam,
                 Spell = new SpellSpec { Cost = 40f, Reach = 2.5f, Radius = 0.6f, Seconds = 2.5f, Interval = 0.5f, Damage = 8f, Stagger = 6f, Stacks = 1 },
                 Effects = new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, Do = UpgradeAction.Heal, Needs = Poisoned, Amount = 5f, Cooldown = 1f },
-                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Needs = Poisoned, Needs2 = Cursed, Do = UpgradeAction.ForceReaction, Reaction = "react.shutinthedark", Cooldown = 2.5f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.ForceReaction, Reaction = "react.shutinthedark", Alone = true, Cooldown = 2.5f },
                 },
             }, HeartPattern.Spell));
 

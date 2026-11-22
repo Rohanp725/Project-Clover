@@ -21,6 +21,12 @@ namespace Clover.Player.Forms
         /// <summary>What walking back onto the heart returns: all that was pawned and a share of the damage dealt meanwhile.</summary>
         public static float Redeemed(float pawned, float dealt, float percent) => Mathf.Max(0f, pawned) + Mathf.Max(0f, dealt) * percent / 100f;
 
+        /// <summary>Seconds after a perfect dodge in which touching the heart counts as touching it during the dodge.</summary>
+        public const float TouchWindow = 0.6f;
+
+        /// <summary>The share of the damage dealt the heart returns, in percent: its own, and more when touched during a perfect dodge (the ledger's heart-touch).</summary>
+        public static float TouchPercent(float percent, bool inPerfectDodge, float more) => percent + (inPerfectDodge ? Mathf.Max(0f, more) : 0f);
+
         public override int Cast(in SpellCast cast)
         {
             ref var run = ref SpellWorks.Begin(this, cast, out bool begun);
@@ -78,8 +84,10 @@ namespace Clover.Player.Forms
             if (gap.magnitude > Left) run.Flag = true;
             if (run.Flag && gap.magnitude < Touch)
             {
-                // Redeemed.
-                float back = Redeemed(run.T0, run.T1, cast.Spec.Count);
+                // Redeemed: for more, when the heart is touched in a perfect dodge and a mark says so (Pawned Heart's Master).
+                bool inDodge = cast.Defence != null && Time.time - cast.Defence.LastPerfectDodgeAt <= TouchWindow;
+                float more = cast.Upgrades != null ? cast.Upgrades.Stats.Sum(PlayerStat.HeartTouchMore) : 0f;
+                float back = Redeemed(run.T0, run.T1, TouchPercent(cast.Spec.Count, inDodge, more));
                 cast.Defence.Health.Heal(back);
                 LastReturned = back;
                 cast.Defence.Callout("Redeemed");

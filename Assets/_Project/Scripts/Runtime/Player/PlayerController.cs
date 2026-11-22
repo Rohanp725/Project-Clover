@@ -61,6 +61,8 @@ namespace Clover.Player
         public bool Hidden;
         /// <summary>A parry form is waiting for a blow; set when one came, with where it came from.</summary>
         public bool FormParrying;
+        /// <summary>The share of the run's pace the player walks at while the form holds the body (a stance one walks in); zero roots them.</summary>
+        public float FormWalk;
         public bool FormParried;
         public Vector3 FormParriedFrom;
         /// <summary>Where the stick points on the ground, as last read; zero with no stick.</summary>
@@ -512,6 +514,7 @@ namespace Clover.Player
             FormUntouchable = untouchable;
             FormCancellable = cancellable;
             FormStep = Vector3.zero;
+            FormWalk = 0f;
             return true;
         }
 
@@ -527,6 +530,7 @@ namespace Clover.Player
             FormGuardPose = false;
             FormSwordOut = false;
             FormParrying = false;
+            FormWalk = 0f;
             Hidden = false;
             fallSpeed = 1f;
         }
@@ -543,9 +547,11 @@ namespace Clover.Player
                 BreakFormHold();
                 return;
             }
-            Vector3 step = FormStep;
+            // A stance one walks in moves with the stick at its share of the pace (Firewalker).
+            Vector3 walked = Forms.FormRules.StanceStep(Wish, MoveSpeed, FormWalk, deltaTime);
+            Vector3 step = FormStep + walked;
             FormStep = Vector3.zero;
-            PlanarSpeed = 0f;
+            PlanarSpeed = deltaTime > 0f ? new Vector2(walked.x, walked.z).magnitude / deltaTime : 0f;
             if (body.enabled)
             {
                 fallSpeed = body.isGrounded ? 1f : fallSpeed + Gravity * deltaTime;

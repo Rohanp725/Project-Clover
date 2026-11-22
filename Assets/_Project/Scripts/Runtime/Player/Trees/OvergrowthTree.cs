@@ -87,12 +87,13 @@ namespace Clover.Player.Trees
                 Spell = new SpellSpec { Cost = 45f, Reach = 2f, Radius = 5f, Seconds = 20f, Interval = 2f, Damage = 10f, Stagger = 15f, Delay = 0.5f, Stacks = 1 },
             }, HeartPattern.Spell));
 
-            // BESPOKE (built): GroundWakesForm. The branch's duo surge, begun by the surge, and its top mark.
-            // NEEDS (duo-surge-slot): a duo surge chosen in the Hand's surge slot (now it answers any surge while both are carried).
+            // BESPOKE (built): GroundWakesForm. The branch's duo surge, worn in the Hand's surge slot with its own 40 mana and 10 s
+            // (DuoSurge), and its top mark: in force only while it is the surge worn.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = TheGroundWakes, Name = "The Ground Wakes", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { StoneOak }, Icon = UpgradeIcons.Crown,
-                Description = "When your surge begins, the ground rises round you in a ring of root and stone and holds every enemy inside it. Then it flowers, and you are healed for each one held.",
+                Description = "A duo surge for your surge slot: 40 mana, 10 seconds. When it begins, the ground rises round you in a ring of root and stone and holds every enemy inside it. Then it flowers, and you are healed for each one held.",
+                Surge = new DuoSurge { Mana = 40f, Seconds = 10f },
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.Form, Form = SpellForms.GroundWakes, Affliction = AfflictionKind.Tremor, Spell = new SpellSpec { Cost = 0f, Radius = 7f, Seconds = 2f, Damage = 15f, Stagger = 20f, Stacks = 3, LingerDamage = 5f } } },
             }, HeartPattern.Crown));
         }

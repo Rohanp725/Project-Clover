@@ -119,6 +119,54 @@ namespace Clover.World
             GrownSecondsScale = 1f;
             GrownDamageScale = 1f;
             FireSecondsScale = 1f;
+            GrowsBackAfter = 0f;
+            Regrowing.Clear();
+            GrownBitesMask = 0;
+        }
+
+        /// <summary>
+        /// Above zero: seconds after a grown thing is spent (burst, or its bites used up) that it grows back where it stood
+        /// (Wood Grows Back: 6; the ledger's grows-back). Set from the player's marks.
+        /// </summary>
+        public static float GrowsBackAfter;
+        /// <summary>
+        /// What every grown thing lays besides its own blow, one a bite, as bits at <c>1 &lt;&lt; (int)kind</c> (Ore in the Root:
+        /// a notch; Hidden in the Tree: a Chill; the ledger's grown-sources). Set from the player's marks.
+        /// </summary>
+        public static int GrownBitesMask;
+
+        /// <summary>
+        /// Writes where the player's grown things within <paramref name="metres"/> of <paramref name="at"/> stand, as many as
+        /// <paramref name="into"/> holds (Lightning Flower: each throws a bolt). Returns how many.
+        /// </summary>
+        public static int GrownWithin(Vector3 at, float metres, Vector3[] into)
+        {
+            if (instance == null || into == null) return 0;
+            int count = 0;
+            for (int i = 0; i < instance.zones.Length && count < into.Length; i++)
+            {
+                if (!instance.zones[i].Active || !instance.zones[i].Spec.Grown) continue;
+                if (!GrownRules.Within(instance.zones[i].Position, at, metres)) continue;
+                into[count++] = instance.zones[i].Position;
+            }
+            return count;
+        }
+
+        /// <summary>The grown things waiting to grow back, each with its time.</summary>
+        public static readonly RegrowQueue Regrowing = new RegrowQueue();
+        /// <summary>Grown things grown back, counted for probes.</summary>
+        public static int GrownBack { get; private set; }
+
+        // A grown thing is spent: with Wood Grows Back it is put in line to grow back where it stood, as it was laid.
+        private static void Spent(in Zone zone)
+        {
+            if (GrowsBackAfter <= 0f || !zone.Spec.Grown) return;
+            var spec = zone.Spec;
+            spec.Position = zone.Position;
+            spec.Delay = 0f;
+            // Laid again, its damage is scaled once more by the player's numbers: take the scaling off it first.
+            if (GrownDamageScale > 0f) spec.Blow.Damage /= GrownDamageScale;
+            Regrowing.Add(spec, Time.time + GrowsBackAfter);
         }
 
         /// <summary>Whose blows these are: the damage is dealt through the player's own weapon code, so it earns what a blow earns.</summary>
@@ -175,17 +223,79 @@ namespace Clover.World
             return false;
         }
 
+        /// <summary>
+        /// Tends the grown thing of the player's nearest <paramref name="at"/> within <paramref name="metres"/> (the ledger's
+        /// at-grown): it stands <paramref name="longer"/> seconds more, lays <paramref name="alsoLays"/> with every bite from
+        /// now on when that names one, and where it stands is given back. False when nothing grown stands that near.
+        /// </summary>
+        public static bool Tend(Vector3 at, float metres, float longer, AfflictionKind alsoLays, out Vector3 where)
+        {
+            where = Vector3.zero;
+            if (instance == null) return false;
+            int best = -1;
+            float bestDistance = float.MaxValue;
+            for (int i = 0; i < instance.zones.Length; i++)
+            {
+                if (!instance.zones[i].Active || !instance.zones[i].Spec.Grown) continue;
+                Vector3 offset = instance.zones[i].Position - at;
+                offset.y = 0f;
+                float distance = offset.sqrMagnitude;
+                if (distance > metres * metres || distance >= bestDistance) continue;
+                best = i;
+                bestDistance = distance;
+            }
+            if (best < 0) return false;
+            ref var zone = ref instance.zones[best];
+            zone.Left += Mathf.Max(0f, longer);
+            if (alsoLays != AfflictionKind.None) zone.Spec.AlsoLays = alsoLays;
+            where = zone.Position;
+            return true;
+        }
+
+        /// <summary>
+        /// Drinks up every patch that lays <paramref name="kind"/> within <paramref name="radius"/> of a place (a cloud, a trail),
+        /// and it is gone. Returns the doses it held: each patch's own, at least one.
+        /// </summary>
+        public static int Drink(AfflictionKind kind, Vector3 at, float radius)
+        {
+            if (instance == null || kind == AfflictionKind.None) return 0;
+            int doses = 0;
+            for (int i = 0; i < instance.zones.Length; i++)
+            {
+                ref var zone = ref instance.zones[i];
+                if (!zone.Active || zone.Spec.Blow.Affliction != kind) continue;
+                Vector3 offset = zone.Position - at;
+                offset.y = 0f;
+                float reach = radius + zone.Spec.Radius;
+                if (offset.sqrMagnitude > reach * reach) continue;
+                zone.Active = false;
+                doses += Mathf.Max(1, zone.Spec.Blow.Stacks);
+                Puff(zone.Spec, zone.Position, 2f);
+            }
+            return doses;
+        }
+
         /// <summary>Bursts everything the player has grown, each where it stands, and it is gone. Returns how many burst.</summary>
-        public static int BurstGrown(in SpellBlow blow, float radius)
+        public static int BurstGrown(in SpellBlow blow, float radius) => BurstGrown(blow, radius, Vector3.zero, 0f, null);
+
+        /// <summary>
+        /// Bursts what the player has grown within <paramref name="reach"/> of <paramref name="from"/> (everything when the reach
+        /// is 0), each where it stands, and it is gone; where each burst is written into <paramref name="burstAt"/> as far as
+        /// it holds (the ledger's grown-bursts: the moment each burst is). Returns how many burst.
+        /// </summary>
+        public static int BurstGrown(in SpellBlow blow, float radius, Vector3 from, float reach, Vector3[] burstAt)
         {
             if (instance == null || owner == null) return 0;
             int count = 0;
             for (int i = 0; i < instance.zones.Length; i++)
             {
                 if (!instance.zones[i].Active || !instance.zones[i].Spec.Grown) continue;
+                if (!GrownRules.Within(instance.zones[i].Position, from, reach)) continue;
                 instance.zones[i].Active = false;
+                Spent(instance.zones[i]);
                 owner.StrikeArea(instance.zones[i].Position, radius, blow);
                 Puff(instance.zones[i].Spec, instance.zones[i].Position, 3f);
+                if (burstAt != null && count < burstAt.Length) burstAt[count] = instance.zones[i].Position;
                 count++;
             }
             return count;
@@ -241,13 +351,13 @@ namespace Clover.World
         {
             if (instance == null) return;
             bool grown = spec.Grown || Growing;
-            if (grown && spec.Limit > 0)
+            if (spec.Limit > 0)
             {
-                // Things of one kind share a limit: one more takes the place of the one nearest its end.
+                // Things of one kind share a limit (grown things, a mark's helpers): one more takes the place of the one nearest its end.
                 int standing = 0, oldest = -1;
                 for (int slot = 0; slot < instance.zones.Length; slot++)
                 {
-                    if (!instance.zones[slot].Active || !instance.zones[slot].Spec.Grown || instance.zones[slot].Spec.Family != spec.Family) continue;
+                    if (!instance.zones[slot].Active || instance.zones[slot].Spec.Grown != grown || instance.zones[slot].Spec.Family != spec.Family) continue;
                     standing++;
                     if (oldest < 0 || instance.zones[slot].Left < instance.zones[oldest].Left) oldest = slot;
                 }
@@ -310,6 +420,12 @@ namespace Clover.World
         private void Update()
         {
             float deltaTime = Time.deltaTime;
+            // What grows back comes up where it stood (Wood Grows Back).
+            while (Regrowing.TakeDue(Time.time, out HazardSpec again))
+            {
+                Lay(again);
+                GrownBack++;
+            }
             for (int i = 0; i < zones.Length; i++)
             {
                 if (!zones[i].Active) continue;
@@ -369,6 +485,11 @@ namespace Clover.World
                 {
                     zone.UntilBite = zone.Spec.BiteEvery;
                     int hits = owner.StrikeArea(zone.Position, zone.Spec.Radius, zone.Spec.Blow, LeftAlone(i, zone));
+                    if (zone.Spec.AlsoLays != AfflictionKind.None) owner.AfflictArea(zone.Position, zone.Spec.Radius, zone.Spec.AlsoLays, 1);
+                    // What the player's marks make every grown thing lay with its bites (Ore in the Root, Hidden in the Tree).
+                    if (zone.Spec.Grown && GrownBitesMask != 0 && hits > 0)
+                        for (int k = 1; k < 32; k++)
+                            if ((GrownBitesMask & (1 << k)) != 0) owner.AfflictArea(zone.Position, zone.Spec.Radius, (AfflictionKind)k, 1);
                     zone.Bitten++;
                     // A standing storm drops a bolt somewhere in itself each time it bites, whether or not anyone is under it.
                     if (zone.Spec.Quiet) { }
@@ -381,7 +502,11 @@ namespace Clover.World
                     {
                         Vfx.Play(VfxKind.TintSpark, zone.Position + Vector3.up * 0.6f, Vector3.up, 0.8f, zone.Spec.Tint);
                     }
-                    if (zone.Spec.Bites > 0 && zone.Bitten >= zone.Spec.Bites) zone.Active = false;
+                    if (zone.Spec.Bites > 0 && zone.Bitten >= zone.Spec.Bites)
+                    {
+                        zone.Active = false;
+                        Spent(zone);
+                    }
                 }
                 if (zone.Left <= 0f) zone.Active = false;
             }

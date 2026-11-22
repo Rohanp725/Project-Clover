@@ -9,7 +9,7 @@ Group: Afflictions
 
 **The numbers.** 5 damage a second. Each stack adds 30%, up to 5 stacks (12.5 damage a second at full). Adding it again keeps whichever time is longer, but never more than 8 seconds. When it goes out, all its stacks go too. When something sets it off, it deals 10 damage plus 10 for each stack, all at once.
 
-**What sets it off.** Flame Wave sets whatever it touches on fire for 5 seconds, and its burning ground does too. Each blow during Kindle sets the enemy on fire for 3 seconds. Once you learn Fire's root mark, every weapon blow sets the enemy on fire for 4 seconds and adds a stack. Some marks set off a burn.
+**What sets it off.** Flame Wave sets whatever it touches on fire for 5 seconds, and its burning ground does too. Kindle no longer sets enemies on fire by itself. Instead, each blow you land on a burning enemy while Kindle lasts adds 0.4 seconds to it, up to twice its length, and each blow you take puts out 2 seconds of it. Once you learn Fire's root mark, every weapon blow sets the enemy on fire for 4 seconds and adds a stack. Some marks set off a burn.
 
 **How to use it.** Burn keeps working while you guard and dodge. Set the enemy on fire, then fight safely. Build up stacks before a mark sets it off, so the burst hits harder.
 
@@ -61,7 +61,7 @@ Group: Afflictions
 
 **The numbers.** It is either on or off, and lasts 8 seconds. Spells deal 25% more damage to it. Static or Chill put on it is also put on everyone within 4 metres.
 
-**What sets it off.** Riptide soaks everything its wave carries. Once you learn Water's root mark, every weapon blow soaks. During Wellspring, every weapon blow soaks too.
+**What sets it off.** Riptide soaks everything its wave carries. Once you learn Water's root mark, every weapon blow soaks. During Wellspring, every weapon blow soaks too, and each flask you drink bursts out of you as a ring of water 4 metres across: 20 damage, 30 stagger and Soaked. It throws enemies 2.5 metres and takes 4 seconds off every spell's wait.
 
 **How to use it.** Soak a group, then charge or chill one of them, and it reaches all of them. Cast your spells on Soaked enemies.
 
@@ -358,13 +358,13 @@ Title: The charged blade
 Group: Spells and cooldowns
 **What it is.** Magic powers up your weapon. When one of your four spells lands on an enemy, it charges your weapon with its element. Your weapon's next three moves that land carry the element: each one hits 20% harder and adds the element's affliction, and the third one does one extra thing, special to its element.
 
-**The numbers.** Three moves, each dealing 1.2 times the damage. Each one adds one stack of the element's affliction (two for Poison), on top of what the blow already adds, or alongside it if that's a different affliction. A move counts once, no matter how many enemies it hits, and carries the charge to all of them. A blow that hits an enemy's guard uses nothing up. A new spell that lands replaces the charge with a fresh three. Resting ends it. What each element adds: Fire's third blow leaves the ground under the enemy burning for 3 seconds. Lightning's blows each jump to one more enemy within 4 metres for half the damage, with Static. Wind's blows each shove the enemy 1.5 metres in the direction of the swing, and the third one 4 metres. Ice's blows each shatter an enemy that is already Frozen, light blow or heavy. Water's blows each splash everything within 1.5 metres for a fifth of the blow's damage, and soak it. Life's third blow throws thorns around the enemy (2 metres, Seeded). Earth's blows each throw a 2-metre spray of gravel. Metal's blows go through any guard. Light's third blow shoots a ray 5 metres in the direction of the swing that Marks. Dark's third blow adds two more Curses. Poison's third blow makes the poison bite right away.
+**The numbers.** Three moves, each dealing 1.2 times the damage. Each one adds one stack of the element's affliction (two for Poison), on top of what the blow already adds, or alongside it if that's a different affliction. A move counts once, no matter how many enemies it hits, and carries the charge to all of them. A blow that hits an enemy's guard uses nothing up. A new spell that lands replaces the charge with a fresh three. Resting ends it. What each element adds: Fire's third blow leaves the ground under the enemy burning for 3 seconds. Lightning's blows each jump to one more enemy within 4 metres for half the damage, with Static. Wind's blows each shove the enemy 1.5 metres in the direction of the swing, and the third one 4 metres. Ice's blows each shatter an enemy that is already Frozen, light blow or heavy. Water's blows each splash everything within 1.5 metres for a fifth of the blow's damage, and soak it. Life's third blow throws thorns around the enemy (2 metres, Seeded). Earth's blows each throw a 2-metre spray of gravel, and once wound up, nothing you take can stop them. Metal's blows go through any guard. Light's third blow shoots a ray 5 metres in the direction of the swing that Marks. Dark's third blow cuts the enemy's shadow loose for 4 seconds: the shadow lies on the floor 2 metres away from it, on the far side from you. The enemy takes 25% more damage, and a swing that reaches the loose shadow hits the enemy too, even if the body itself is out of reach. Poison's third blow makes the poison bite right away.
 
 **What sets it off.** A spell from one of your four slots that lands on an enemy within 8 seconds of being cast (the first thing that cast hits). It charges your weapon with that spell's own element. With Fire and Lightning carried, Flame Wave charges it with Fire, and Thunderclap with Lightning. A duo spell charges it with the first element of its pair. Ground left burning by an earlier cast, the surge, an infused strike and marks' effects never charge it.
 
 **How to use it.** Switch back and forth: cast, then hit three times, then cast again while your weapon brings the spell back. A spell's wait and a charged blade are two sides of the same fight.
 
-**How it looks.** The element runs along the weapon's edge: flames shedding embers for Fire, bolts that jump along it for Lightning, frost feathers and cold mist for Ice, and each other element's own look and colour for the rest. There is less of it as the blows are used up. Three dots next to the spell diamond, lit in the element's colour, go out one at a time with each charged blow.
+**How it looks.** The element runs along the weapon's edge: flames shedding embers for Fire, bolts that jump along it for Lightning, frost feathers and cold mist for Ice, and each other element's own look and colour for the rest. Not built yet: the loose shadow lying on the floor apart from the enemy (for now, only smoke sinks at its feet). There is less of it as the blows are used up. Three dots next to the spell diamond, lit in the element's colour, go out one at a time with each charged blow.
 
 ## infused-strikes
 Title: Infused strikes
@@ -479,15 +479,15 @@ Title: Rime (Wind and Ice)
 Group: Reactions
 **What it is.** Chill meets Unsteady. A crust of ice grows on the enemy, and your heavy blow blows the ice out of its far side.
 
-**The numbers.** The crust lasts 5 seconds. Your next heavy blow on the enemy breaks it: a fan of ice about 4 metres long past the enemy, away from you, deals 10 damage, 2 Chill and 1 Unsteady to everything in it. A light blow doesn't break it. Then it waits 4 seconds.
+**The numbers.** The crust lasts 5 seconds. It grows on the side of the enemy that faced you when Rime went off. Your next heavy blow on that side breaks it: a fan of ice about 4 metres long past the enemy, away from you, deals 10 damage, 2 Chill and 1 Unsteady to everything in it. A heavy blow from behind it breaks the crust for nothing. A light blow doesn't break it. Then it waits 4 seconds.
 
 **What sets it off.** Chill landing on an Unsteady enemy, or Unsteady landing on a chilled one.
 
-**Its shapes.** If you have Blizzard's Shape mark (Rime: Rime Tree or Spindrift, 3 Shards, in the middle of the chart) and carry both Wind and Ice, Rime uses the shape you picked at a rest fire instead. Rime Tree: the crust never breaks, and for 5 seconds every blow on the enemy adds a Chill. Spindrift: the ice blows out of the enemy's far side the moment Rime goes off, at half damage (5 damage, 2 Chill and 1 Unsteady), with no heavy blow needed.
+**Its shapes.** If you have Blizzard's Shape mark (Rime: Rime Tree or Spindrift, 3 Shards, in the middle of the chart) and carry both Wind and Ice, Rime uses the shape you picked at a rest fire instead. Rime Tree: the crust never breaks, and for 5 seconds every blow on the side it showed you adds a Chill. While it lasts, a freeze holds 1 second longer and its shatter hits a quarter harder. Spindrift: the ice blows out of the enemy's far side the moment Rime goes off, at half damage (5 damage, 2 Chill and 1 Unsteady), with no heavy blow needed.
 
 **How to use it.** Get the enemy between you and the others, then land a heavy blow. The ice lands on them.
 
-**How it looks.** Its name over the enemy, then a burst of ice past it. Not built yet: the crust growing only on the side facing you, so a heavy blow from behind wastes it.
+**How it looks.** Its name over the enemy, then a burst of ice past it.
 
 ## reaction-supercooled
 Title: Supercooled (Ice and Water)
@@ -584,7 +584,7 @@ Title: Shut in the Dark (Dark and Poison)
 Group: Reactions
 **What it is.** Cursed meets Poisoned. A black ring seals the enemy inside like a jar.
 
-**The numbers.** For 8 seconds, its doses stop fading. When the 8 seconds end, or when it dies, the jar breaks. It deals 5 damage for each dose to everyone within 3 metres, and half its doses (rounded up) spill onto everything it reaches. Then it waits 8 seconds.
+**The numbers.** For 8 seconds, its doses stop fading, and it can hold up to 12 doses instead of 8. When another enemy dies within 2 metres of it (inside a ring 4 metres across), all that enemy's doses go into the jar, and you heal 4. When the 8 seconds end, or when it dies, the jar breaks. It deals 5 damage for each dose to everyone within 3 metres, and half its doses (rounded up) spill onto everything it reaches. Then it waits 8 seconds.
 
 **What sets it off.** A Curse landing on a poisoned enemy, or poison landing on a Cursed one.
 
@@ -592,7 +592,7 @@ Group: Reactions
 
 **How to use it.** Give the enemy lots of doses before you Curse it. The more doses, the bigger the break. Killing it breaks the jar right away.
 
-**How it looks.** Its name over the enemy, then a burst when the jar breaks. Not built yet: the black ring on the floor, and poisoned enemies that die inside crawling to it to feed it.
+**How it looks.** Its name over the enemy, then a burst when the jar breaks. Not built yet: the black ring drawn on the floor, and the doses seen crawling to it.
 
 ## reaction-fire-medicine
 Title: Fire Medicine (Poison and Fire)
@@ -633,11 +633,11 @@ Group: Reactions
 
 **What sets it off.** Static landing on a chilled enemy, or Chill landing on a charged one.
 
-**Its shapes.** If you have the Shape mark of Ice and Lightning's duo branch (Sleet Charge: Thundersnow or Glass Spear, 3 Shards, in the middle of the chart) and carry both, Sleet Charge uses the shape you picked at a rest fire instead. Both charge up the same way. Thundersnow: when the charge goes off, a bolt jumps on to every chilled enemy within 6 metres, for 7 damage and a Static each. Glass Spear: when the charge goes off, the enemy is Frozen right away for 1.5 seconds, no matter how much Chill it has (an elite gets 3 Chill, a god 2).
+**Its shapes.** If you have the Shape mark of Ice and Lightning's duo branch (Sleet Charge: Thundersnow or Glass Spear, 3 Shards, in the middle of the chart) and carry both, Sleet Charge uses the shape you picked at a rest fire instead. Both charge up the same way. Thundersnow: when the charge goes off, a bolt falls on every chilled enemy within 6 metres, for 7 damage and a Static each, and each one's Static goes off. Glass Spear: when the charge goes off, the enemy is Frozen right away for 1.5 seconds, no matter how much Chill it has (an elite gets 3 Chill, a god 2).
 
 **How to use it.** Wait the 3 seconds for a full charge, or set it off sooner with a heavy blow.
 
-**How it looks.** Its name over the enemy, then the burst of lightning. Not built yet: the bolt falling right away if the enemy freezes.
+**How it looks.** Its name over the enemy, then the burst of lightning. If the enemy freezes before the 3 seconds are up, the bolt falls right away.
 
 ## reaction-capsize
 Title: Capsize (Wind and Water)
@@ -680,9 +680,9 @@ Group: Reactions
 
 **Its shapes.** If you have the Shape mark of Water and Earth's duo branch (The Ground Gives: Quicksand or Sand Boil, 3 Shards, in the middle of the chart) and carry both, The Ground Gives uses the shape you picked at a rest fire instead. Quicksand: the enemy sinks for 4 seconds, and once a second everything within 1.5 metres is pulled 1 metre toward it. Sand Boil: the enemy sinks for 1.2 seconds, then is lifted for 1 second, and everything within 3 metres takes 12 damage, a Soaked and a Tremor.
 
-**How to use it.** Sink it, then come in with heavy blows. Each one pins it for a moment. Not built yet: a sunken enemy should be unable to dodge, leap or step back, and other enemies wading in should be slowed too.
+**How to use it.** Sink it, then come in with heavy blows. Each one pins it for a moment. While it is sunk, it can't leap, lunge or step back, so it can't get away from you. Not built yet: other enemies wading into the sand should be slowed too.
 
-**How it looks.** Its name over the enemy, and for a moment the floor sinks into a pit around it, wet at the edge. Not built yet: the ring of sand staying around its feet.
+**How it looks.** Its name over the enemy, and for a moment the floor sinks into a pit around it, wet at the edge. The enemy sinks into the floor up to its knees and rises back up when it's free. Not built yet: the ring of sand staying around its feet.
 
 ## reaction-iron-thorns
 Title: Iron Thorns (Life and Metal)
@@ -725,9 +725,9 @@ Group: Reactions
 
 **Its shapes.** If you have Hidden Chain, the Shape mark of Metal and Dark's duo branch (Black Chain: Drawn Tight or Shared Wound, 3 Shards, in the middle of the chart), and carry both, Black Chain uses the shape you picked at a rest fire instead. Drawn Tight: the chain pulls tight right away, dealing 12 damage and 25 stagger to the enemy and to the nearest other enemy within 6 metres, then falls off. Shared Wound: no leash, but the chain lasts 8 seconds, and half of every blow is shared.
 
-**How to use it.** Not built yet: what the chain does. It will pass 30% of your weapon damage on either enemy to the other, and keep the two within 4 metres of each other.
+**How to use it.** Hit either one of the pair. 30% of your weapon damage on one is dealt to the other too (gods included). The two can't get more than 4 metres apart; if they start farther, they are drawn together. If no other enemy is near, the enemy is chained to the floor instead and can't go more than 2 metres from that spot. Gods are never held by the chain.
 
-**How it looks.** Its name over the enemy. Not built yet: the chain between them.
+**How it looks.** Its name over the enemy. Not built yet: the chain between them, and the chain to the floor when it is alone.
 
 ## reaction-burning-sap
 Title: Burning Sap (Light and Poison)
@@ -809,7 +809,7 @@ Title: Windthrow (Wind and Life)
 Group: Reactions
 **What it is.** Unsteady meets Seeded. The seed roots the enemy to the ground, and your next heavy blow tears it out.
 
-**The numbers.** The enemy is rooted for 2 seconds (an elite for 1 second; a god not at all). It can't walk or be shoved, but it can still turn and swing. Your heavy blow while it is rooted tears it out: 14 damage and 35 stagger, it is thrown 6 metres away from you, and a torn-up pit 1.5 metres across stays for 5 seconds where it stood, Seeding anything that walks in. The pit counts as something you grew. Then it waits 6 seconds.
+**The numbers.** The enemy is rooted for 2 seconds (an elite for 1 second; a god not at all). It can't walk or be shoved, but it can still turn and swing. Any shove or throw while it is rooted (your heavy blow, a Gust, a charge, a lift) tears it out: 14 damage and 35 stagger, it is thrown 6 metres away from you, and a torn-up pit 1.5 metres across stays for 5 seconds where it stood, Seeding anything that walks in. The pit counts as something you grew. Then it waits 6 seconds.
 
 **What sets it off.** Unsteady landing on a Seeded enemy, or a seed landing on an Unsteady one.
 
@@ -817,7 +817,7 @@ Group: Reactions
 
 **How to use it.** Root it, step around so it gets thrown where you want, then land a heavy blow.
 
-**How it looks.** Its name over the enemy, then a burst of earth as it is torn out. Not built yet: any shove (a Gust, a charge) tearing it out, not only a heavy blow.
+**How it looks.** Its name over the enemy, then a burst of earth as it is torn out.
 
 ## reaction-frost-heave
 Title: Frost Heave (Ice and Earth)
@@ -920,7 +920,7 @@ Group: Reactions
 
 **Its shapes.** If you have the Shape mark of Dark and Lightning's duo branch (The Grudge: First Strike or Ash Plume, 3 Shards, in the middle of the chart) and carry both, The Grudge uses the shape you picked at a rest fire instead. First Strike: your first heavy blow on the enemy calls the cloud down, setting off its Static at double strength and holding it for 0.6 seconds. Ash Plume: when the enemy next attacks you, or its 6 seconds run out, one bolt falls around it for each weapon blow you landed, for 10 damage and a Static each, and its Static goes off within 4 metres.
 
-**How to use it.** Charge a Cursed enemy, then let it swing. Guard the blow, or take it, and the cloud strikes back. Not built yet: the cloud drifting to the next enemy if the enemy under it dies first.
+**How to use it.** Charge a Cursed enemy, then let it swing. Guard the blow, or take it, and the cloud strikes back. If the enemy under it dies first, the cloud moves, with the time it has left, to the nearest enemy within 6 metres.
 
 **How it looks.** Its name over the enemy. Not built yet: the cloud itself.
 
@@ -929,7 +929,7 @@ Title: Ill Wind (Poison and Wind)
 Group: Reactions
 **What it is.** Poisoned meets Unsteady. The enemy's poison comes loose like dust.
 
-**The numbers.** While the enemy has both, your heavy blow on it shoves it, and all its poison comes off at once in a cloud behind it, away from you. The cloud is poisoned grit 1.2 metres wide that stays for 3 seconds and gives a dose once a second to everyone in it. Then it waits 6 seconds.
+**The numbers.** While the enemy has both, any shove or throw (your heavy blow, a Gust, a lift) knocks all its poison off at once in a cloud behind it, away from you. The cloud is poisoned grit 1.2 metres wide that stays for 3 seconds and gives a dose once a second to everyone in it. Then it waits 6 seconds.
 
 **What sets it off.** Poison landing on an Unsteady enemy, or Unsteady landing on a poisoned one.
 
@@ -937,7 +937,7 @@ Group: Reactions
 
 **How to use it.** Stand so the cloud lands on the other enemies, then land a heavy blow.
 
-**How it looks.** Its name over the enemy, then the cloud on the floor. Not built yet: every shove and throw knocking the poison loose, the cloud spreading along the enemy's path, and the doses shared among the enemies it settles on.
+**How it looks.** Its name over the enemy, then the cloud on the floor. Not built yet: the cloud spreading along the enemy's path, and the doses shared among the enemies it settles on.
 
 ## reaction-steam
 Title: Steam (Fire and Water)
@@ -959,7 +959,7 @@ Title: Lightning Flower (Lightning and Life)
 Group: Reactions
 **What it is.** Static meets Seeded. A red, fern-shaped pattern of lightning blooms on the enemy's skin.
 
-**The numbers.** The fern throws a bolt to the nearest other Seeded enemy within 8 metres, for 8 damage, 10 stagger and a Static. The enemy keeps both afflictions. Then it waits 4 seconds.
+**The numbers.** The fern throws a bolt to the nearest other Seeded enemy within 8 metres, for 8 damage, 10 stagger and a Static. Each thing you grew (briars, saplings, lilies) within 8 metres of the enemy also throws a bolt into it, up to four, with the same numbers. The enemy keeps both afflictions. Then it waits 4 seconds.
 
 **What sets it off.** Static landing on a Seeded enemy, or a seed landing on a charged one.
 
@@ -967,7 +967,7 @@ Group: Reactions
 
 **How to use it.** Seed two enemies, then charge one of them.
 
-**How it looks.** Its name over the enemy, and a hit where the bolt lands. Not built yet: the things you grew (briars, saplings, lilies) throwing bolts into it.
+**How it looks.** Its name over the enemy, and a hit where the bolt lands. Sparks fly from each thing you grew that throws a bolt.
 
 ## reaction-logan-stone
 Title: Logan Stone (Wind and Earth)
@@ -1025,9 +1025,9 @@ Group: Reactions
 
 **Its shapes.** If you have the Shape mark of Life and Dark's duo branch (Flowers or Fig: Corpse Flowers or Fig in the Crown, 3 Shards, in the middle of the chart) and carry both, Girdled uses the shape you picked at a rest fire instead. Both wrap and crush like the plain one. Corpse Flowers: when the roots let go, three pale flowers grow where the enemy stood for 8 seconds, and count as things you grew. Fig in the Crown: an enemy that dies in the roots Seeds and Curses the nearest enemy within 5 metres, which may start getting wrapped up too.
 
-**How to use it.** Three blows: each one weakens it more and heals you, and the third one crushes it.
+**How to use it.** Three blows: each one weakens it more and heals you, and the third one crushes it. While the roots hold it, it can't leap, lunge or step back.
 
-**How it looks.** Its name over the enemy, then the crush. Not built yet: the enemy being unable to dodge or leap while it's wrapped up, and the hollow tree trunk left where it dies.
+**How it looks.** Its name over the enemy, then the crush. Not built yet: the hollow tree trunk left where it dies.
 
 ## reaction-chokedamp
 Title: Chokedamp (Earth and Poison)
@@ -1154,30 +1154,30 @@ Title: Mock Suns (Ice and Light)
 Group: Reactions
 **What it is.** Chill meets Marked. Two fake suns appear in the sky next to the enemy, the way they sometimes do on icy days.
 
-**The numbers.** For 4 seconds, your weapon blows on the enemy add two Chill and don't use up its Mark, so they stay critical hits. Then it waits 4 seconds.
+**The numbers.** For 4 seconds, your weapon blows on the enemy's left or right side add two Chill. No blow uses up its Mark, so they stay critical hits. Then it waits 4 seconds.
 
 **What sets it off.** Chill landing on a Marked enemy, or a Mark landing on a chilled one.
 
 **Its shapes.** If you have the Shape mark of Ice and Light's duo branch (Mock Suns: Prism or Lens of Ice, 3 Shards, in the middle of the chart) and carry both, Mock Suns uses the shape you picked at a rest fire instead. Prism: no suns. Instead, for 4 seconds, its Mark isn't used up, and your next weapon blow on it sends three hits in a line past it, each dealing 8 damage, a Mark and a Chill. Lens of Ice: while the enemy is chilled and Marked, its Mark isn't used up, and a heavy blow on it at full Chill deals 18 more damage and Marks every enemy within 4 metres.
 
-**How to use it.** Hit it as often as you can within the 4 seconds. Each blow is a critical hit and chills it.
+**How to use it.** Get to its side and hit it as often as you can within the 4 seconds. Each blow is a critical hit, and each one on its flank chills it.
 
-**How it looks.** Its name over the enemy. Not built yet: the suns turning with the enemy, and only blows from its sides counting.
+**How it looks.** Its name over the enemy. Not built yet: the suns turning with the enemy. Blows on its face should not be critical or spare the Mark; for now every blow is critical and none uses the Mark.
 
 ## reaction-drowned-weight
 Title: Drowned Weight (Water and Dark)
 Group: Reactions
 **What it is.** Soaked meets Cursed. The Curse turns the water black and heavy, and the enemy swells up.
 
-**The numbers.** It is swollen for 5 seconds. It moves 20% slower (gods aren't slowed) and takes 15% more damage from your weapon. When it dies, or when a heavy blow lands while it is swollen, it bursts in black water, dealing 14 damage, 20 stagger, Soaked and Cursed to everyone within 4 metres. Then it waits 4 seconds.
+**The numbers.** It is swollen for 5 seconds. It moves 20% slower (gods aren't slowed) and takes 15% more damage from your weapon. When it dies, or when your finisher lands while it is swollen, it bursts in black water, dealing 14 damage, 20 stagger, Soaked and Cursed to everyone within 4 metres. Other heavy blows don't burst it. Then it waits 4 seconds.
 
 **What sets it off.** Water landing on a Cursed enemy, or a Curse landing on a Soaked one.
 
 **Its shapes.** If you have the Shape mark of Water and Dark's duo branch (Drowned Weight: Drawn Under or The Pull of Night, 3 Shards, in the middle of the chart) and carry both, Drowned Weight uses the shape you picked at a rest fire instead. Both swell the enemy for 5 seconds, like the plain one. Drawn Under: the enemy is held for 1.5 seconds, everything within 3 metres is pulled 2 metres toward it, and it bursts like the plain one. The Pull of Night: no burst. Instead, each of your weapon blows on it pulls every other Soaked enemy within 5 metres 1 metre toward it.
 
-**How to use it.** Kill it in a crowd, or hit it with a heavy blow there. The black water spreads both afflictions to the rest.
+**How to use it.** Kill it in a crowd, or finish it there. The black water spreads both afflictions to the rest.
 
-**How it looks.** Its name over the enemy, then the burst. Not built yet: only a finisher should burst it (for now, any heavy blow does).
+**How it looks.** Its name over the enemy, then the burst.
 
 ## reaction-rot-roots
 Title: Rot Roots (Life and Poison)
@@ -1248,11 +1248,11 @@ Group: Reactions
 
 **What sets it off.** A Curse landing on a chilled enemy, or Chill landing on a Cursed one.
 
-**Its shapes.** If you have the Shape mark of Dark and Ice's duo branch (Stolen Warmth: Cold Shade or The Long Night, 3 Shards, in the middle of the chart) and carry both, Stolen Warmth uses the shape you picked at a rest fire instead. Cold Shade: the warmth is drawn like the plain one, and when the enemy dies, a patch stays for 4 seconds where it fell, chilling everything within 2.5 metres once a second. The Long Night: you don't draw any health. Its Chill stays and your blows chill it, and while it is frozen, everything within 3 metres gets a Chill each second.
+**Its shapes.** If you have the Shape mark of Dark and Ice's duo branch (Stolen Warmth: Cold Shade or The Long Night, 3 Shards, in the middle of the chart) and carry both, Stolen Warmth uses the shape you picked at a rest fire instead. Cold Shade: the warmth is drawn like the plain one, and when your heavy blow shatters the frozen enemy, a patch stays for 4 seconds where it stood, chilling everything within 2.5 metres once a second. The Long Night: you don't draw any health. Its Chill stays and your blows chill it, and while it is frozen, everything within 3 metres gets a Chill each second.
 
 **How to use it.** Keep hitting. Every blow heals you and chills the enemy closer to freezing.
 
-**How it looks.** Its name over the enemy. Not built yet: the last of its warmth being torn out when it freezes.
+**How it looks.** Its name over the enemy. When it freezes, the last of its warmth is torn out: you heal 2 for every Chill it had (1 against a god), it stays frozen 1 second longer, and the drawing ends.
 
 ## reaction-fish-poison
 Title: Fish Poison (Poison and Water)

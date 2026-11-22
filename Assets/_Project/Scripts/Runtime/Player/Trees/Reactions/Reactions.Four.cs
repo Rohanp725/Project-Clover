@@ -39,11 +39,13 @@ namespace Clover.Player.Trees
 
             // Lightning and Life (35). The fern itself throws one bolt to the nearest other Seeded enemy within 8 m: 8
             // damage, 10 stagger and one Static. The enemy keeps both afflictions.
-            // NEEDS: grown things as sources: every grown thing of the player's within 8 m throws a bolt into it (four at
-            // most, the same numbers); the fern's own bolt is what happens with nothing grown near, built for every case.
+            // Every grown thing of the player's within 8 m throws a bolt into it too (UpgradeAction.GrownBolts: four at most, the
+            // same numbers).
             to.Add(Reaction(AfflictionKind.Static, AfflictionKind.Seeded,
                 "Static meets Seeded: a red fern of lightning flowers on its skin and throws a bolt to the nearest Seeded enemy within 8 m, 8 and a Static.",
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Arc, LeapsTo = AfflictionKind.Seeded, Count = 1, Reach = 8f, Damage = 8f, Stagger = 10f,
+                    Affliction = AfflictionKind.Static, Stacks = 1 },
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.GrownBolts, Count = 4, Reach = 8f, Damage = 8f, Stagger = 10f,
                     Affliction = AfflictionKind.Static, Stacks = 1 }));
 
             // Wind and Earth (36), rest 6 s. It rocks for 3 s: the first blow breaks its balance at 1.25 times, the next at
@@ -91,13 +93,14 @@ namespace Clover.Player.Trees
             // Each weapon blow draws one coil tighter and mends the player 1; at four coils (the third blow) it is
             // girdled: held 1.5 s while the roots crush, 20 damage and 40 stagger, and a fifth of that (4) heals the
             // player. The roots hold 8 s for the blows to come.
-            // NEEDS: no dodge or leap while coiled; standing things that block: the hollow trunk left for 8 s where it
-            // dies girdled, blocking and Seeding and Cursing what touches it.
+            // Coiled, it neither leaps nor steps back (ConditionFlags.Mired on the binding roots).
+            // NEEDS: standing things that block: the hollow trunk left for 8 s where it dies girdled, blocking and Seeding and
+            // Cursing what touches it.
             to.Add(Reaction(AfflictionKind.Seeded, AfflictionKind.Cursed,
                 "Seeded meets Cursed: black fig roots coil round it, slowing it. Each weapon blow draws them tighter, mends you 1 and opens it to your weapon; at four coils they crush it, 20, held 1.5 s.",
                 6f,
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Coils, Seconds = 8f, Blows = 3 } },
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Bound, Seconds = 8f, Pace = 0.75f } },
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Bound, Seconds = 8f, Pace = 0.75f, Flags = ConditionFlags.Mired } },
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Tight, Seconds = 8f, Flags = ConditionFlags.WeaponTakenShare, Scale = 1.06f } },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Coils, By = StruckBy.Weapon, Do = UpgradeAction.Heal, Amount = 1f },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Coils, By = StruckBy.Weapon, AtCount = 1, Do = UpgradeAction.Condition,

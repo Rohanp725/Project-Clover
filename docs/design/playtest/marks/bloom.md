@@ -41,7 +41,7 @@ Quickening does.
 **Example.** Drink right before the brute's red overhead swing. The ward takes the hit, and your cuts back soak the brute.
 
 ## bloom.vine
-**What it does.** A huge vine bursts out of the ground under the enemy nearest to you. It hits hard and throws that enemy, and anything next to it, into the air for a moment. If the enemy it lifts is soaked and seeded, the vine drinks up the water (the Soaked is used up) and the seed blooms right away. That sets off Quickening, even if Quickening would normally have to wait. For now, the vine comes up under the nearest enemy, not the nearest soaked one. The double heal from a heavy blow on a lifted enemy is not built yet.
+**What it does.** A huge vine bursts out of the ground under the enemy nearest to you. It hits hard and throws that enemy, and anything next to it, into the air for a moment. If the enemy it lifts is soaked and seeded, the vine drinks up the water (the Soaked is used up) and the seed blooms right away. That sets off Quickening, even if Quickening would normally have to wait. The vine comes up under the nearest soaked enemy in reach, or under the enemy you face if none is soaked. The double heal from a heavy blow on a lifted enemy is not built yet.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). It marks the spot under the enemy and follows the enemy until the vine comes up.
 

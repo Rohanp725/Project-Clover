@@ -10,13 +10,11 @@ Supercooled does.
 
 **When it happens.** Every time Supercooled goes off while you carry both Ice and Water. Supercooled goes off when Chill lands on a soaked enemy, or when Soaked lands on a chilled one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Supercooled.
 
-**The numbers.** Mix, 3 Shards. Both shapes: the water on the enemy stays still for 6 seconds. The blow that ends it freezes a normal enemy solid (Chill filled all the way), gives an elite 3 Chill and a god 2, and uses up the Soaked. Sea Ice: that blow also puts 2 Chill on every Soaked enemy within 4 metres. This is on purpose: it may start another Supercooled. Hard Water: only a heavy blow ends it. After Supercooled goes off on an enemy, it can't go off on that enemy again for 4 seconds.
+**The numbers.** Mix, 3 Shards. Both shapes: the water on the enemy stays still for 6 seconds. The blow that ends it freezes a normal enemy solid (Chill filled all the way), gives an elite 3 Chill and a god 2, and uses up the Soaked. Sea Ice: that blow also puts 2 Chill on every Soaked enemy within 4 metres. This is on purpose: it may start another Supercooled. Hard Water: only a heavy blow ends it, and its freeze lasts half again as long (3.75 seconds) and shatters 30% harder. After Supercooled goes off on an enemy, it can't go off on that enemy again for 4 seconds.
 
 **Works with.** Icebreaker (mana and a sip of a flask for each shatter), Riptide and Hoarfrost to add the water and the cold, The Wave Stands Still.
 
 **Example.** Riptide soaks a pack, and Hoarfrost touches one of them. With Sea Ice, one blow freezes it, and the frost spreads through the wet enemies next to it.
-
-**Not built yet.** Hard Water's freeze doesn't last longer yet, and it isn't harder to shatter yet.
 
 ## glacier.breaker
 **What it does.** Shattering an enemy gives you mana and refills part of a flask you have used.

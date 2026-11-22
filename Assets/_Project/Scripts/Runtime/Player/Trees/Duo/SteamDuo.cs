@@ -88,17 +88,15 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.RightLow));
 
-            // NEEDS: a reaction set off on an enemy as it dies, in the shape worn, past its rest (death-reaction); now a Soaked
-            // enemy that dies burning bursts as the plain Steam does at full, 8 and 4 for each Burn it carried, 15 stagger in
-            // 2.5 m, whatever shape is worn.
+            // A Soaked enemy that dies burning goes up as Steam where it fell, in the shape worn, past its rest, at full strength
+            // (UpgradeAction.EchoReaction with the reaction named: its striking effects, counting all the Burn it carried).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Kettle, Name = "Kettle", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { HissingBlade, StrikeThroughSteam }, Icon = UpgradeIcons.Flask,
                 Description = "A Soaked enemy that dies burning goes up as steam at full strength, with no rest.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Soaked, Needs2 = AfflictionKind.Burn, Do = UpgradeAction.Burst, Affliction = AfflictionKind.Soaked, Radius = 2.5f, Damage = 8f, Stagger = 15f },
-                    new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Burn, Needs2 = AfflictionKind.Soaked, Do = UpgradeAction.Burst, Affliction = AfflictionKind.Burn, Radius = 2.5f, Damage = 4f, PerStack = true, Unseen = true },
+                    new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Burn, Needs2 = AfflictionKind.Soaked, Do = UpgradeAction.EchoReaction, Reaction = Reaction, Amount = 1f },
                 },
             }, HeartPattern.Keystone));
 

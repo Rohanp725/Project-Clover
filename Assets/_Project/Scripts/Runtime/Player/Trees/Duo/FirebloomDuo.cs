@@ -59,15 +59,14 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.Foot));
 
-            // NEEDS: a guard tested against the player's grown things (at-grown): the lily itself flaring and standing 3 s
-            // longer; now a flare round you, while something you grew stands within 4 m, once a second.
+            // The lily (whatever you grew) nearest you within 3 m flares where it stands and stands 3 s longer (UpgradeAction.Tend).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = KindledGuard, Name = "Kindled Guard", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Shield,
                 Description = "A perfect guard made within 3 m of a lily makes it flare: 12 damage and two Burn in 2 m, and it stands 3 s longer.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, While = StatWhen.NearGrown, At = EffectAt.Self, Do = UpgradeAction.Burst, Radius = 2f, Damage = 12f, Stagger = 10f,
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, At = EffectAt.Self, Do = UpgradeAction.Tend, Radius = 3f, Seconds = 3f, Reach = 2f, Damage = 12f, Stagger = 10f,
                         Affliction = AfflictionKind.Burn, Stacks = 2, Cooldown = 1f },
                 },
             }, HeartPattern.LeftLow));

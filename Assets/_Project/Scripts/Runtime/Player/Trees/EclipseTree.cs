@@ -94,23 +94,25 @@ namespace Clover.Player.Trees
             // The duo spell, re-aimed at the pair (pairs_d1_d2.md): you step into the enemy's shadow and come out of its far rim
             // as the bead of light, cutting; the cut sets off Diamond Ring at once, whatever the rest, and the heavy blow after
             // it is critical. The step form gives the cut through and the critical heavy blow that answers it.
-            // NEEDS: the 0.4 s gone in the shadow; Diamond Ring set off by the cut on an enemy carrying only one of the pair
-            // (forced-alone; now only on one Marked and Cursed already).
+            // The cut sets Diamond Ring off on an enemy carrying either of the pair (UpgradeEffect.Alone).
+            // NEEDS: the 0.4 s gone in the shadow.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = DuskAndDawn, Name = "Dusk and Dawn", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Role = SpellRole.Movement, Requires = new[] { DayAndNight, LowSun }, Icon = UpgradeIcons.Blade,
-                Description = "You step into the shadow of the enemy you face and come out of its far side as the light, cutting. On one Marked and Cursed the cut sets off Diamond Ring at once, whatever its rest, and your next heavy blow in the moment after is critical. 45 mana.",
+                Description = "You step into the shadow of the enemy you face and come out of its far side as the light, cutting. On one Marked or Cursed the cut sets off Diamond Ring at once, whatever its rest, and your next heavy blow in the moment after is critical. 45 mana.",
                 Form = FormStep,
                 Spell = new SpellSpec { Cost = 45f, Reach = 5f, Damage = 10f, Stagger = 10f, Stacks = 1, Seconds = 3f },
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.ForceReaction, Reaction = "react.diamondring" } },
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.ForceReaction, Reaction = "react.diamondring", Alone = true } },
             }, HeartPattern.Spell));
 
             // BESPOKE (built): TotalityForm. The returning light gives back half of what each enemy lost in the dark, 80 at most.
-            // The branch's duo surge, begun by the surge, and its top mark. NEEDS: a duo surge chosen in the Hand's surge slot (duo-surge-slot).
+            // The branch's duo surge, worn in the Hand's surge slot with its own 40 mana and 10 s (DuoSurge), and its top mark: in force
+            // only while it is the surge worn, so it answers its own surge alone.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Totality, Name = "Totality", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { DuskAndDawn }, Icon = UpgradeIcons.Crown,
-                Description = "When your surge begins, the sun is covered. While the dark lasts every enemy is Marked and Cursed and every blow you land is critical and feeds you. When the light returns, it strikes all you wounded.",
+                Description = "A duo surge for your surge slot: 40 mana, 10 seconds. When it begins, the sun is covered. While the dark lasts every enemy is Marked and Cursed and every blow you land is critical and feeds you. When the light returns, it strikes all you wounded.",
+                Surge = new DuoSurge { Mana = 40f, Seconds = 10f },
                 Stats = new[] { new StatMod(PlayerStat.CritChance, 1f, StatWhen.Surge) },
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.AnyHit, Do = UpgradeAction.Heal, WhileSurge = true, Amount = 1f, Cooldown = 0.2f }, new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.Form, Form = SpellForms.Totality, Affliction = AfflictionKind.Marked, Spell = new SpellSpec { Cost = 0f, Reach = 14f, Stacks = 3, Damage = 50f, Count = 80, Stagger = 30f } } },
             }, HeartPattern.Crown));

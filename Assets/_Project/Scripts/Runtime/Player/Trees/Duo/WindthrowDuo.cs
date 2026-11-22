@@ -26,8 +26,8 @@ namespace Clover.Player.Trees.Duo
         {
             const string A = Elements.Wind, B = Elements.Life;
 
-            // NEEDS: a shove moment (any shove, not only a heavy blow, as the plain reaction); blows on it healing twice the
-            // seed's usual (Deep Roots; now 2 a blow).
+            // Any shove tears it out or blows the seeds off (StruckBy.Shove), as the plain reaction. NEEDS: blows on it healing twice
+            // the seed's usual (Deep Roots; now 2 a blow).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Windthrow: Blown Seed or Deep Roots", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -40,8 +40,8 @@ namespace Clover.Player.Trees.Duo
                         Description = "Rooted for 2 s. The heavy blow that would tear it out blows its seeds off downwind instead: everything up to 6 m beyond it, away from you, is Seeded two deep, and on purpose may root in turn.",
                         Effects = new[]
                         {
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = BlownSeed, Seconds = 2f, Flags = ConditionFlags.Rooted, EndsWith = ConditionBlow.Heavy } },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = BlownSeed, By = StruckBy.Heavy, Do = UpgradeAction.Burst, Shape = HazardShape.Downwind, Count = 3, Reach = 3.5f, Amount = 1.6f, Radius = 1.5f,
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = BlownSeed, Seconds = 2f, Flags = ConditionFlags.Rooted, EndsWith = ConditionBlow.Shove } },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = BlownSeed, By = StruckBy.Shove, Do = UpgradeAction.Burst, Shape = HazardShape.Downwind, Count = 3, Reach = 3.5f, Amount = 1.6f, Radius = 1.5f,
                                 Affliction = AfflictionKind.Seeded, Stacks = 2, Cascades = true },
                         },
                     },
@@ -51,11 +51,11 @@ namespace Clover.Player.Trees.Duo
                         Description = "Rooted for 4 s, and each of your blows on it heals you 2. The heavy blow that tears it out deals 14 and 60 stagger, throws it far and leaves a torn pit that seeds what walks in.",
                         Effects = new[]
                         {
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = DeepRoots, Seconds = 4f, Flags = ConditionFlags.Rooted, EndsWith = ConditionBlow.Heavy } },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = DeepRoots, Seconds = 4f, Flags = ConditionFlags.Rooted, EndsWith = ConditionBlow.Shove } },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = DeepRoots, By = StruckBy.Weapon, Do = UpgradeAction.Heal, Amount = 2f, Cooldown = 0.2f },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = DeepRoots, By = StruckBy.Heavy, Do = UpgradeAction.Burst, Radius = 0.5f, Damage = 14f, Stagger = 60f, Affliction = AfflictionKind.Seeded },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = DeepRoots, By = StruckBy.Heavy, Do = UpgradeAction.Hazard, Radius = 0.75f, Seconds = 5f, Interval = 0.5f, Grown = true, Affliction = AfflictionKind.Seeded, Stacks = 1 },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = DeepRoots, By = StruckBy.Heavy, Do = UpgradeAction.Push, Shape = HazardShape.Downwind, Amount = 6f },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = DeepRoots, By = StruckBy.Shove, Do = UpgradeAction.Burst, Radius = 0.5f, Damage = 14f, Stagger = 60f, Affliction = AfflictionKind.Seeded },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = DeepRoots, By = StruckBy.Shove, Do = UpgradeAction.Hazard, Radius = 0.75f, Seconds = 5f, Interval = 0.5f, Grown = true, Affliction = AfflictionKind.Seeded, Stacks = 1 },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = DeepRoots, By = StruckBy.Shove, Do = UpgradeAction.Push, Shape = HazardShape.Downwind, Amount = 6f },
                         },
                     },
                 },

@@ -13,5 +13,10 @@ namespace Clover.Player.Growth
         AllRound,
         /// <summary>The guard never breaks: what the stamina cannot pay comes through as grey health (The Guard Holds).</summary>
         Unbreakable,
+        /// <summary>
+        /// A held guard blocks nothing: only the perfect guard turns a blow, and it may be pressed again sooner (Edge Guard; the
+        /// ledger's guard-edge).
+        /// </summary>
+        Edge,
     }
 }

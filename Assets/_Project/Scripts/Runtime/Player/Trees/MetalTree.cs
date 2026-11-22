@@ -86,29 +86,34 @@ namespace Clover.Player.Trees
                 // The roster's numbers alone (the owner's answer of 2026-11-20): 15 a notch, set on the Learn's own pour.
                 new Empower { Effects = new[] { new EffectChange { Index = 1, Damage = 15f } } },
                 "It pours 15 damage for each notch, not 12.",
-                // NEEDS: only the enemies poured into crusted (shape-before-learn: the shape answers after the Learn has
-                // spent the notches it would test). Until then every enemy the pour's reach takes is crusted.
+                // Only the enemies poured into are crusted (Needs: every effect of the moment is asked before the Learn spends
+                // the notches it tests).
                 new ShapeDef { Name = "Set",
                     Description = "The crust stays four seconds. A heavy blow on a crusted enemy shatters it for 20 more and throws bronze splinters three metres out behind it, notching what they hit. Pour, then break.",
                     Effects = new[]
                     {
-                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Crusted, Seconds = 4f, EndsWith = ConditionBlow.Heavy } },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = S, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Crusted, Seconds = 4f, EndsWith = ConditionBlow.Heavy } },
                         new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Crusted, By = StruckBy.Heavy, Do = UpgradeAction.Burst, Radius = 1f, Damage = 20f, Stagger = 15f, Stacks = 0 },
                         new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Crusted, By = StruckBy.Heavy, Do = UpgradeAction.Lane, Reach = 3f, Radius = 0.8f, Damage = 8f, Stagger = 8f, Affliction = S, Stacks = 1 },
                     } },
-                // NEEDS: no hold while it is worn (shape-sets-aside), 6 more a notch spent (count-from-depth), and only the
-                // enemies poured into (shape-before-learn). Until then the hold still comes, and each blow spits two notches' worth.
-                new ShapeDef { Name = "Red-Hot",
+                // No hold while it is worn (ShapeDef.SetsAside: the Learn's hold). Only the enemies poured into are molten, and
+                // each keeps the notches the pour spent (CountsNeeds): every weapon blow spits 6 for each (ByPower).
+                new ShapeDef { Name = "Red-Hot", SetsAside = new[] { 3 },
                     Description = "The bronze stays molten in the cracks for four seconds. There is no hold, but every weapon blow on that enemy spits sparks and deals 6 more for each notch that was spent. Pour, then press.",
                     Effects = new[]
                     {
-                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Molten, Seconds = 4f } },
-                        new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Molten, By = StruckBy.Weapon, Do = UpgradeAction.Burst, Radius = 0.5f, Damage = 12f, Stagger = 0f, Stacks = 0 },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = S, CountsNeeds = true, PerStack = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Molten, Seconds = 4f } },
+                        new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Molten, By = StruckBy.Weapon, Do = UpgradeAction.Burst, ByPower = true, Share = 6f, Radius = 0.5f, Stagger = 0f, Stacks = 0 },
                     } },
                 "Opens two shapes of Poured Bronze, chosen at any rest fire: Set, a crust your heavy blow shatters, or Red-Hot, bronze that burns under every blow.",
-                // NEEDS: the attacker's pour doubled (spell-windows). The reset is data: a pour cast within a second of a
-                // perfect guard starts no wait.
-                new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.InstantNext, Seconds = 1f } },
+                // Cast within a second of a perfect guard: the pour starts no wait, and the attacker's pour is doubled, counted by its
+                // notches before the pour spends them (UpgradeEffect.CastAfter, NeedsAttacker, CountsNeeds).
+                new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.InstantNext, Seconds = 1f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, CastAfter = CastMoment.PerfectGuard, CastWindow = 1f, NeedsAttacker = true, Needs = S, CountsNeeds = true, PerStack = true,
+                        Do = UpgradeAction.Burst, Radius = 0.6f, Damage = 12f, Stagger = 15f, Stacks = 0 },
+                },
                 "Cast it within a second after a perfect guard, and the attacker's pour is doubled and Poured Bronze is ready again.",
                 learnEffects: new[]
                 {
@@ -145,12 +150,12 @@ namespace Clover.Player.Trees
                     Description = "Three bronze tripods roll out, four blades on each, and go to notched enemies first, cutting twice a second: 9 damage, and a notch every third cut. A heavy blow you land calls each one back to you, and it throws its remaining blades through whatever it passes on the way.",
                     Spell = new SpellSpec { Count = 3, Seconds = 6f, Interval = 0.5f, Damage = 9f, Stagger = 6f, Stacks = 1 } },
                 "Opens two shapes of Grave of Swords, chosen at any rest fire: Clashing Bronze, blades that ring under every blow, or The Tripods, bronze helpers that cut for you.",
-                // NEEDS: a finisher as the moment (finisher-only), only while the blades stand (while-spell-stands). Until
-                // then a heavy blow on an enemy that was within eight metres as it was cast gives the mana, once a cast.
+                // A finisher (StruckBy.Finisher) on an enemy that was within eight metres as it was cast gives the mana, once a
+                // cast, only while the blades stand (WhileOwnStands). NEEDS: every blade left loosed by it (form-pieces).
                 new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Condition, Radius = 8f, State = new ConditionSpec { Id = InTheGrave, Seconds = 12f } },
-                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = InTheGrave, By = StruckBy.Heavy, Do = UpgradeAction.Mana, Amount = 20f, Cooldown = 12f },
+                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = InTheGrave, By = StruckBy.Finisher, WhileOwnStands = true, Do = UpgradeAction.Mana, Amount = 20f, Cooldown = 12f },
                 },
                 "A finisher looses every blade left, and 20 mana comes back to you.");
 
@@ -226,16 +231,16 @@ namespace Clover.Player.Trees
                 // The roster's numbers alone (the owner's answer of 2026-11-20: an Empower may strengthen without a shorter wait).
                 new Empower { Damage = 16f },
                 "It turns two blows, and its answer strikes for 16.",
-                // NEEDS: the cut all round kept and only the attacker bound (attacker-of-turned-blow). Until then the answer is a
-                // cone at the one who struck, and what it strikes is bound; "passes any guard" is that it cannot raise one.
+                // The cut all round kept, and only the attacker bound (UpgradeEffect.NeedsAttacker: the one whose blow was turned);
+                // "passes any guard" is that it cannot raise one.
                 new ShapeDef { Name = "The Golden Chair", Form = SpellForms.Parry,
                     Description = "A blow turned closes bands of gold round the attacker, a faint shimmer that turns bright as they lock. It is held two seconds, less for a god or an elite, notched twice, and your blows on it pass any guard.",
-                    Spell = new SpellSpec { Seconds = 1.2f, Reach = 3f, Arc = 90f, Damage = 14f, Stagger = 20f, Stacks = 1 },
+                    Spell = new SpellSpec { Seconds = 1.2f, Reach = 3f, Arc = 360f, Damage = 14f, Stagger = 20f, Stacks = 1 },
                     Effects = new[]
                     {
-                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Hold, Seconds = 2f },
-                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Afflict, Affliction = S, Stacks = 1 },
-                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = GoldenChair, Seconds = 2f, Flags = ConditionFlags.CannotGuard } },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, NeedsAttacker = true, Do = UpgradeAction.Hold, Seconds = 2f },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, NeedsAttacker = true, Do = UpgradeAction.Afflict, Affliction = S, Stacks = 1 },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, NeedsAttacker = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = GoldenChair, Seconds = 2f, Flags = ConditionFlags.CannotGuard } },
                     } },
                 // NEEDS: every blow turned in 1.5 s ringing, four at most, each ring wider than the last (parry-count). Until then
                 // the first blow turned rings once.
@@ -243,25 +248,22 @@ namespace Clover.Player.Trees
                     Description = "You stand as a struck plate. Every blow turned in a second and a half, four at most, rings: a sharp ripple to four metres, 8 damage, 20 stagger and a notch on all, each ring wider than the last. The more of them strike you, the better.",
                     Spell = new SpellSpec { Seconds = 1.5f, Reach = 4f, Arc = 360f, Damage = 8f, Stagger = 20f, Stacks = 1 } },
                 "Opens two shapes of Circle of Steel, chosen at any rest fire: The Golden Chair, bands that bind the one who struck, or Ringing Plate, a ring for every blow turned.",
-                // NEEDS: a red attack as the blow turned (red-attack). Until then any blow turned gives the mana and ends its
-                // wait, once in twenty seconds.
+                // Only a red attack turned (UpgradeEffect.RedOnly): the mana, and its wait ended.
                 new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.ResetCooldown, Cooldown = 20f },
-                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Mana, Amount = 15f, Cooldown = 20f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, RedOnly = true, Do = UpgradeAction.ResetCooldown, Cooldown = 0.5f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, RedOnly = true, Do = UpgradeAction.Mana, Amount = 15f, Cooldown = 0.5f },
                 },
                 "Turn a red attack, and 15 mana comes back to you and Circle of Steel is ready again at once.");
 
-            // BESPOKE: a held guard blocks nothing; the perfect window is 0.28 s and may be pressed again after 0.2 s; each perfect guard deals a light blow to the attacker
-            // and counts as a blow landed. Until then: the longer window, a dearer plain guard, and a cut on the attacker with each perfect guard. It grows from
-            // Circle of Steel's Learn, whose line passes clear, as the old tree had it.
+            // The RuleBook's edge guard (GuardMode.Edge, read by PlayerDefence and Guard): a held guard blocks nothing; the perfect
+            // window is 0.28 s (0.18 half again) and may be pressed again after 0.2 s; each perfect guard cuts the attacker. NEEDS: the
+            // cut counted as a blow landed (its mana and its cut to the waits). It grows from Circle of Steel's Learn, whose line passes
+            // clear, as the old tree had it.
             to.Add(BranchPattern.Put(new Upgrade { Id = EdgeGuard, Name = "Edge Guard", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { CircleOfSteel }, Icon = UpgradeIcons.Shield,
-                Description = "The perfect guard's moment is half again as long, and each one cuts the attacker and notches its armour. The dodge and a blow held on a plain guard cost half again as much stamina.",
-                Stats = new[]
-                {
-                    new StatMod(PlayerStat.PerfectGuardWindow, 0.55f),
-                    new StatMod(PlayerStat.StaminaCost, 0.5f),
-                },
+                Description = "Your guard is all edge. Held, it blocks nothing: only the perfect guard turns a blow. Its moment is half again as long and may be pressed again after a fifth of a second, and each one cuts the attacker and notches its armour.",
+                Stats = new[] { new StatMod(PlayerStat.PerfectGuardWindow, 0.55f) },
+                Rules = book => book.Guard = Growth.GuardMode.Edge,
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Burst, Radius = 1.2f, Damage = 12f, Stagger = 10f, Affliction = S, Stacks = 1 } } },
                 BranchPattern.LeftCrown));
 
@@ -277,9 +279,9 @@ namespace Clover.Player.Trees
                 "Metal's own spell, given with the element. A blade flies into the enemy faced within nine metres, 4 damage, and stands in it six seconds. Your next weapon blow on that enemy drives it in: 12 damage, 15 stagger, a notch and a burst of sparks, and it flies back to your hand, cutting the lane for a third as much.",
                 UpgradeIcons.Blade,
                 // Buried Blades, once a major, folded in here. NEEDS: 16 when driven, up to three blades standing in one enemy
-                // and a heavy blow driving them all (base-spell-marks, planted-blades). The base spell is cast by its kit,
-                // which takes only the Empower's wait.
-                new Empower { Damage = 16f },
+                // and a heavy blow driving them all (planted-blades). The Empower's 16 is the drive's, not the throw's, so the
+                // kit's own cast takes none of it (Empower.NotForKit).
+                new Empower { Damage = 16f, NotForKit = true },
                 "It drives in for 16. Up to three blades may stand in one enemy, and a heavy blow drives them all.",
                 // NEEDS: three blades each standing in a different enemy, glowing as they cool (planted-blades). Until then two
                 // more blades fly in a fan beside the kit's and cut what they pass, and the kit's blade driven within 2 s
@@ -314,13 +316,12 @@ namespace Clover.Player.Trees
                 },
                 "A perfect guard drives every blade standing in the attacker at once, and Flung Blade is ready again.");
 
-            // Every reaction with Sundered in it strikes 25% harder (PlayerStat.ReactionDamage). NEEDS: the 25% asked of the
-            // notched it strikes alone, and the notch laid on what the reaction struck rather than three metres round it
-            // (reaction-struck).
+            // Every reaction's own blow on a notched enemy strikes 25% harder (PlayerStat.ReactionDamageOn), and every reaction with
+            // Sundered in it notches what it struck (UpgradeTrigger.ReactionStruck).
             to.Add(BranchPattern.Put(new Upgrade { Id = EveryCrackRings, Name = "Every Crack Rings", Element = E, Kind = UpgradeKind.Major, Lifts = E, Requires = new[] { ForgedAnswer }, Icon = UpgradeIcons.Burst,
                 Description = "Every reaction Sundered takes part in rings out like struck plate. It notches everything it reaches, and strikes 25% harder on the notched.",
-                Stats = new[] { new StatMod(PlayerStat.ReactionDamage, 0.25f, S) },
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Reacted, Needs = S, Do = UpgradeAction.Afflict, Affliction = S, Stacks = 1, Radius = 3f } } },
+                Stats = new[] { new StatMod(PlayerStat.ReactionDamageOn, 0.25f, S) },
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.ReactionStruck, ReactionWith = S, Do = UpgradeAction.Afflict, Affliction = S, Stacks = 1 } } },
                 BranchPattern.RightMiddle));
 
             // The movement spell: the drill form carries you through what lies on the line and strikes it. NEEDS: flying to a
@@ -339,15 +340,20 @@ namespace Clover.Player.Trees
                 new ShapeDef { Name = "Chain",
                     Description = "A bronze chain stays stretched along the line you flew for three seconds. An enemy that crosses it is notched and tripped, 20 stagger. Your path becomes a tripwire.",
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Hazard, At = EffectAt.Self, Shape = HazardShape.Line, Reach = 6f, Count = 5, Radius = 0.6f, Seconds = 3f, Interval = 1f, Damage = 0f, Stagger = 20f, Affliction = S, Stacks = 1 } } },
-                // NEEDS: the flight back as a second press within 2 s of arriving (second-press). Until then what the flight cut
-                // is cut again a second later.
-                new ShapeDef { Name = "There and Back",
+                // The flight back as a second press within 2 s of arriving (ShapeDef.Presses, UpgradeAction.ReturnToCast), cutting the
+                // line a second time as the flight did: 10 damage, 15 stagger and a notch.
+                new ShapeDef { Name = "There and Back", PressWindow = 2f,
                     Description = "Within two seconds of arriving, press again to fly back along the same line, cutting it a second time. In and out.",
-                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Burst, Radius = 0.8f, Delay = 1f, Damage = 10f, Stagger = 15f, Affliction = S, Stacks = 1 } } },
+                    Presses = new[] { new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, Do = UpgradeAction.ReturnToCast, Radius = 1f, Damage = 10f, Stagger = 15f, Affliction = S, Stacks = 1 } } } },
                 "Opens two shapes of To the Blade, chosen at any rest fire: Chain, a tripwire left along your flight, or There and Back, a flight out and home again.",
-                // NEEDS: the shared movement rule's timing, cast as a blow would land and untouchable from the press
-                // (blow-about-to-land). Until then a cast within a second after a perfect dodge starts no wait.
-                new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, Do = UpgradeAction.InstantNext, Seconds = 1f } },
+                // Cast as a blow would land (UpgradeEffect.BlowLanding): a perfect dodge (UpgradeAction.PerfectDodgeNow), untouchable from the
+                // press to the blade, and its wait ended.
+                new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, BlowLanding = 0.3f, Do = UpgradeAction.PerfectDodgeNow },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, BlowLanding = 0.3f, Do = UpgradeAction.Untouchable, Seconds = 0.6f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, BlowLanding = 0.3f, Do = UpgradeAction.ResetCooldown },
+                },
                 "Cast it in the perfect dodge's moment, and you are untouchable from the press and To the Blade is ready again.");
 
             // The RuleBook's guard (task 4.4), read by PlayerDefence: the guard never breaks, and what the stamina cannot pay

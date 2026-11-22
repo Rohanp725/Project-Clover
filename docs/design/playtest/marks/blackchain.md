@@ -15,20 +15,18 @@ both carried.
 
 **Example.** Two shield bearers stand side by side. Drawn Tight smashes them together. A big brute stands next to a small enemy. Use Shared Wound, then cut down the small one, and half of each blow goes to the brute.
 
-**Not built yet.** Drawn Tight hits both enemies where they stand instead of dragging them together. Shared Wound's chain does not yet pass a Curse from one enemy to the other.
+**Not built yet.** Drawn Tight hits both enemies where they stand instead of dragging them together. Shared Wound's chain shares half of every blow, your weapon's and your spells', but it does not yet pass a Curse from one enemy to the other.
 
 ## blackchain.deadweight
 **What it does.** When one of two chained enemies dies, the chain drags the other one to where it fell. Then it holds that enemy in place and Curses it again.
 
-**When it happens.** Each time an enemy dies while it has both a Curse and Sundered on it, while you carry both Metal and Dark.
+**When it happens.** Each time one of two chained enemies dies (chained by Black Chain or Shared Wound), while you carry both Metal and Dark.
 
-**The numbers.** Mix, 3 Shards. For now: every enemy within 6 metres of where it fell is pulled 3 metres toward that spot. Any enemy within 2 metres of the spot is held for 1 second and Cursed. This can happen at most twice a second.
+**The numbers.** Mix, 3 Shards. The partner is dragged all the way to where the other fell, held for 1 second, and gets a Curse. Nothing happens if the one that died was not chained.
 
 **Works with.** Black Chain, One Noose for Two, Never Sated.
 
 **Example.** Kill a chained soldier. Its partner is dragged to the body, held, and Cursed, ready for your next blow.
-
-**Not built yet.** For now it goes off on any death of an enemy that is both Cursed and notched, and it pulls every enemy nearby, not only the chained partner.
 
 ## blackchain.rust
 **What it does.** Notches on a Cursed enemy do not fade for as long as the Curse lasts.
@@ -44,15 +42,15 @@ both carried.
 ## blackchain.noose
 **What it does.** When you land a finisher on a chained enemy, it also hits the enemy it is chained to. That second hit does half the damage and half the stagger.
 
-**When it happens.** Every time a finisher lands on an enemy that has both a Curse and Sundered on it.
+**When it happens.** Every time a finisher lands on an enemy that is chained to another (by Black Chain or Shared Wound).
 
-**The numbers.** Mix, keystone, 5 Shards. For now: half the finisher's damage, plus 30 stagger, jumps to the nearest other enemy within 4 metres.
+**The numbers.** Mix, keystone, 5 Shards. The chained partner takes half the finisher's damage and 30 stagger.
 
 **Works with.** Black Chain, Dead Weight, The Smith's Net, Sunder.
 
 **Example.** Finish off a chained captain, and its guard staggers from the same blow.
 
-**Not built yet.** It jumps to the nearest other enemy, not to the chained partner. Its stagger is always 30, not half of the finisher's.
+**Not built yet.** Its stagger is always 30, not half of the finisher's.
 
 ## blackchain.net
 **What it does.** You throw a net of thin black chain. A moment later it opens and falls. You only see a shimmer and its shadow growing on the floor. Every enemy under it is Cursed, notched, and held in place, so Black Chain binds them.

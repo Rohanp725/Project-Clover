@@ -33,7 +33,8 @@ namespace Clover.Player.Forms
             {
                 float t = run.Age / run.T0;
                 // Everything that can be moved is drawn most of the way to the middle by the time it goes.
-                cast.Combat.Displace(run.A, radius, radius * 0.85f / run.T0 * deltaTime, true);
+                // Only those carrying what it seeks, when it seeks any (Collected: the Cursed alone).
+                cast.Combat.Displace(run.A, radius, radius * 0.85f / run.T0 * deltaTime, true, cast.Spec.OnlyCarrying);
                 float across = radius * 2f;
                 FormFx.PlaceMark(marks[0], run.A, Quaternion.identity, new Vector3(across, 1f, across));
                 bool beat = Mathf.Repeat(run.Age * Mathf.Lerp(4f, 12f, t), 1f) < 0.25f;
@@ -57,7 +58,7 @@ namespace Clover.Player.Forms
             solids[0] = -1;
             var blow = cast.Blow(cast.Damage, cast.Stagger);
             blow.Heavy = true;
-            cast.Combat.StrikeArea(run.A, radius, blow);
+            cast.Combat.StrikeArea(run.A, radius, blow, null, 0f, cast.Spec.OnlyCarrying);
             FormKit.Impact(cast, run.A, radius * 0.7f, 1.5f);
             for (int i = 0; i < 12; i++)
             {

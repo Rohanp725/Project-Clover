@@ -9,26 +9,24 @@ are both carried.
 
 **When it happens.** Every time Stolen Warmth goes off while you carry both Dark and Ice. Stolen Warmth goes off when a Curse lands on a chilled enemy, or when Chill lands on a Cursed one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Stolen Warmth.
 
-**The numbers.** Mix, 3 Shards. Both shapes: while the enemy has both afflictions, its Chill doesn't fade, and each of your weapon blows on it adds a Chill. Cold Shade: each blow also heals you 2 (1 against a god), at most four times a second. When the enemy dies, a patch 5 metres across stays for 4 seconds where it fell, chilling whatever stands in it once a second. The Long Night: no healing. While the enemy is frozen, everything within 3 metres gets a Chill once a second. After Stolen Warmth goes off on an enemy, it can't go off on that enemy again for 6 seconds.
+**The numbers.** Mix, 3 Shards. Both shapes: while the enemy has both afflictions, its Chill doesn't fade, and each of your weapon blows on it adds a Chill. Cold Shade: each blow also heals you 2 (1 against a god), at most four times a second. When your heavy blow shatters the frozen enemy, a patch 5 metres across stays for 4 seconds where it stood, chilling whatever stands in it once a second. The Long Night: no healing. While the enemy is frozen, everything within 3 metres gets a Chill once a second. After Stolen Warmth goes off on an enemy, it can't go off on that enemy again for 6 seconds.
 
 **Works with.** Hel's Half, Deep Veins, No Summer, Ice in the Blood, Three Winters.
 
 **Example.** Fighting alone and hurt: use Cold Shade, and heal as you hit. A pack around a big enemy: use The Long Night, freeze the big one, and let the cold take the rest.
 
-**Not built yet.** For now, Cold Shade's shadow is left when the enemy dies instead of when it is shattered, and it is just a chilling patch. You can't hit it with a heavy blow to shatter it a second time yet.
+**Not built yet.** Cold Shade's shadow is just a chilling patch for now. You can't hit it with a heavy blow to shatter it a second time yet.
 
 ## stolenwarmth.helshalf
 **What it does.** Killing an enemy whose warmth is being stolen Curses every enemy within 4 metres and gives each one two Chill.
 
-**When it happens.** Each kill, while you carry both Dark and Ice.
+**When it happens.** Each kill of an enemy whose warmth is being stolen by Stolen Warmth, in any shape, while you carry both Dark and Ice.
 
-**The numbers.** Mix, 3 Shards. For now: any enemy that dies while both Cursed and chilled puts a Curse and two Chill on everything within 4 metres, at most once every half second. Since this mark adds both at once, it starts Stolen Warmth on each of them.
+**The numbers.** Mix, 3 Shards. A Curse and two Chill on every enemy within 4 metres. Since this mark adds both at once, it can start Stolen Warmth on each of them.
 
 **Works with.** Stolen Warmth (it spreads from body to body), Three Winters, No Summer.
 
 **Example.** Kill one enemy in the pack, and the cold spreads into the rest.
-
-**Not built yet.** For now, it works on any enemy that dies Cursed and chilled, whether its warmth was being stolen or not.
 
 ## stolenwarmth.deepveins
 **What it does.** Each blow on an enemy whose warmth is being stolen draws 3 health instead of 2, up to 12 a second.

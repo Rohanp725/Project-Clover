@@ -76,7 +76,7 @@ reaction is Flashover; its Shape mark lets you choose what Flashover does.
 **Not built yet.** The ball still has its first colours. The violet middle and the flame on its surface will come with its new look.
 
 ## fire.plasma
-**What it does.** This branch's top mark. A heavy blow or a finisher on a burning enemy makes it burst. The burst sets off the burn on everyone it reaches, then sets each of them on fire again. If the enemy has Static as well, Flashover goes off on it right away, even if Flashover would normally have to wait, in the shape you picked.
+**What it does.** This branch's top mark. A heavy blow or a finisher on a burning enemy makes it burst. The burst sets off the burn on everyone it reaches, then sets each of them on fire again. It also puts one Static on the enemy, and Flashover goes off on it right away, even if Flashover would normally have to wait, in the shape you picked.
 
 **When it happens.** Every heavy blow or finisher that lands on a burning enemy, while you carry both Fire and Lightning.
 
@@ -84,6 +84,4 @@ reaction is Flashover; its Shape mark lets you choose what Flashover does.
 
 **Works with.** Cinder, Heat, Catching Fire, Flashover's shapes, Ionised Air.
 
-**Example.** Three soldiers each have five Burn. A heavy blow on one bursts over all three for 78 each, and leaves them burning. If that one was charged too, Flashover goes off on it right away.
-
-**Not built yet.** On an enemy with no Static, the burst is still its own thing. The plan is to make it a Flashover that doesn't use anything up.
+**Example.** Three soldiers each have five Burn. A heavy blow on one bursts over all three for 78 each, and leaves them burning. Flashover goes off on that one right away too.

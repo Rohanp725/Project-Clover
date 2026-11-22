@@ -33,13 +33,11 @@ are both carried.
 
 **When it happens.** After Logan Stone knocks an enemy down, while you carry both Wind and Earth: your first weapon blow on it while it is on the ground.
 
-**The numbers.** Mix, 3 Shards. The blow is a critical hit and gives you 6 mana back, if it lands within 1.8 seconds of the fall. Elites, which only stagger, give nothing.
+**The numbers.** Mix, 3 Shards. The blow is a critical hit and gives you 6 mana back, if it lands while the enemy is still down: 1.8 seconds, or 2.8 with Drifted Over. Elites, which only stagger, give nothing.
 
 **Works with.** Logan Stone and its shapes, Grit in the Wind.
 
 **Example.** The third blow knocks it down. Hit it on the ground for a critical hit and the mana for your next spell.
-
-**Not built yet.** For now, it counts the blows itself from each Logan Stone instead of checking for the fall. So it stays open for 1.8 seconds after the third blow, even when Drifted Over keeps the enemy buried longer.
 
 ## loganstone.prophecy
 **What it does.** Elites and gods can be knocked down. After three Logan Stones have only made one stagger in a fight, the fourth knocks it flat for 1 second.

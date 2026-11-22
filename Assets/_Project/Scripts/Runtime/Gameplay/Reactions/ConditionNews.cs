@@ -27,5 +27,19 @@ namespace Clover.Gameplay
         public bool Shattered;
         /// <summary>For a blow: it was a critical hit.</summary>
         public bool Critical;
+        /// <summary>What it is beyond its own name (<see cref="ConditionSpec.Is"/>): the plain reaction's name for a shape's same state, or empty.</summary>
+        public string Is;
+        /// <summary>For a blow: it was the finisher's own blow (a finisher is heavy too).</summary>
+        public bool Finisher;
+        /// <summary>For a blow: the side it came from, in degrees from the face (0) to the back (180); -1 when not known (<see cref="EnemyConditions.SideDegrees"/>).</summary>
+        public float Side;
+        /// <summary>For its carrier's blow on the player: the blow was turned by a perfect guard.</summary>
+        public bool Turned;
+        /// <summary>For an end: the enemy froze, and that ended it (<see cref="ConditionSpec.EndsOnFreeze"/>).</summary>
+        public bool Frozen;
+        /// <summary>For a blow: it was a shove or a throw, not a blow (a Gust, a ram, Riptide, a lift; the ledger's shove-moment).</summary>
+        public bool Shoved;
+        /// <summary>For a blow: it was no blow but another enemy's death near its carrier (<see cref="ConditionSpec.DeathsWithin"/>).</summary>
+        public bool DiedNear;
     }
 }

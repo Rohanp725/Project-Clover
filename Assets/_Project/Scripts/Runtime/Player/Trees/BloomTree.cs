@@ -84,14 +84,14 @@ namespace Clover.Player.Trees
 
             // The duo spell, re-aimed at the flower (pairs_d1_d2.md): the vine drinks the water and Quickening opens on it at
             // once, past the rest; then the water is spent. The pillars form lifts what it strikes for a moment.
-            // NEEDS: a form aimed at the nearest Soaked enemy (now the nearest enemy), and the flower burst on a lifted enemy
-            // for twice the heal.
+            // The column rises under the nearest Soaked enemy (SpellSpec.AimAt). NEEDS: the flower burst on a lifted enemy for
+            // twice the heal.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = StranglingVine, Name = "Strangling Vine", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Role = SpellRole.Breaker, Requires = new[] { DrownedRoots, MorningDew }, Icon = UpgradeIcons.Tower,
                 Description = "A great vine bursts up under the nearest enemy and throws it into the air for a moment. If it was soaked and seeded the vine drinks the water and the seed flowers at once, whatever its rest. 45 mana.",
                 Form = "pillars",
-                Spell = new SpellSpec { Cost = 45f, Count = 1, Reach = 5f, Radius = 3f, Damage = 20f, Stagger = 50f, Stacks = 1, Delay = 0.5f },
+                Spell = new SpellSpec { Cost = 45f, Count = 1, Reach = 5f, Radius = 3f, Damage = 20f, Stagger = 50f, Stacks = 1, Delay = 0.5f, AimAt = AfflictionKind.Soaked },
                 Effects = new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Needs = AfflictionKind.Soaked, Do = UpgradeAction.ForceReaction, Reaction = "react.quickening" },

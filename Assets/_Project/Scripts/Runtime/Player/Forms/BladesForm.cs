@@ -78,7 +78,7 @@ namespace Clover.Player.Forms
                 points[i] = ground;
                 times[i] = run.Age + FallSeconds;
                 run.Done++;
-                run.T1 += Between;
+                run.T1 += FormRules.Own(cast.Spec.Between, Between);
             }
 
             bool owed = run.Done < run.Count;

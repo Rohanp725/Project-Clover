@@ -30,7 +30,7 @@ namespace Clover.Player.Trees
             const AfflictionKind Notch = AfflictionKind.Sundered, Mark = AfflictionKind.Marked;
 
             // Mirror to Mirror leaps on only from each struck that carries Sundered (UpgradeEffect.LeapsOnFrom).
-            // NEEDS: a blow made critical by a condition (Burning Mirror; now the blow is answered by a burst of 10 on it).
+            // Burning Mirror's white-hot point makes the next weapon blow on it critical (ConditionFlags.TakesCritical).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Glint: Mirror to Mirror or Burning Mirror", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -50,12 +50,11 @@ namespace Clover.Player.Trees
                     new ShapeDef
                     {
                         Name = "Burning Mirror",
-                        Description = "No ray: the light gathers into the cracks to one white-hot point for 5 s, and the next weapon blow on it strikes hard and lays two notches.",
+                        Description = "No ray: the light gathers into the cracks to one white-hot point for 5 s, and the next weapon blow on it is critical and lays two notches.",
                         Effects = new[]
                         {
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = WhitePoint, Seconds = 5f, EndsWith = ConditionBlow.Weapon } },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = WhitePoint, Seconds = 5f, Flags = ConditionFlags.TakesCritical, EndsWith = ConditionBlow.Weapon } },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = WhitePoint, By = StruckBy.Weapon, Do = UpgradeAction.Afflict, Affliction = Notch, Stacks = 2 },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = WhitePoint, By = StruckBy.Weapon, Do = UpgradeAction.Burst, Radius = 0.6f, Damage = 10f, Affliction = Mark, Stacks = 0 },
                         },
                     },
                 },

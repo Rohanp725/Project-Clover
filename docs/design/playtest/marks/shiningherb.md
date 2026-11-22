@@ -9,13 +9,11 @@ are both carried.
 
 **When it happens.** Every time Shining Herb goes off while you carry both Life and Light. Shining Herb goes off when a Mark lands on a seeded enemy, or when Seeded lands on a Marked one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Shining Herb.
 
-**The numbers.** Mix, 3 Shards. Bitter Leaf: for 6 seconds, your next weapon blow on the enemy heals you 8. Seed of Light: for 6 seconds, your next weapon blow on the enemy Marks and Seeds everything within 4 metres. After Shining Herb goes off on an enemy, it can't go off on that enemy again for 6 seconds.
+**The numbers.** Mix, 3 Shards. Bitter Leaf: for 6 seconds, your next critical hit on the enemy picks the herb. It heals you 8, and your next blow on that enemy within 4 seconds is a critical hit too. Seed of Light: for 6 seconds, your next critical hit on the enemy Marks and Seeds everything within 4 metres. Blows that aren't critical leave the herb and the seed alone. After Shining Herb goes off on an enemy, it can't go off on that enemy again for 6 seconds.
 
 **Works with.** Briar Patch and Glare to set it up, Sixth Moon, Open to the Sun, Turned to the Sun.
 
 **Example.** A long one-on-one fight: Bitter Leaf heals you as you fight. A pack: Seed of Light spreads both afflictions through it.
-
-**Not built yet.** For now, any weapon blow picks or bursts it, not only a critical hit. The next blow after picking the herb isn't a critical hit yet.
 
 ## shiningherb.sixthmoon
 **What it does.** The blow that ends a chain of blows on a Seeded enemy Marks it.
@@ -68,10 +66,8 @@ are both carried.
 
 **When it happens.** Cast it from a spell slot while you carry both Life and Light. Press that slot's button (hold L2 and a face button, or press 1 to 4). The first time it lands, it charges your blade with Life.
 
-**The numbers.** Mix, duo spell, opener, 5 Shards. It costs no mana. After you cast it, you must wait 11 seconds to cast it again. Fighting with your weapon makes the wait shorter. It lands up to 7 metres ahead of you, covers a circle with a 3-metre radius, and lasts 6 seconds. Every 2 seconds, it deals 2 damage, a Seeded and a Mark to everything in it.
+**The numbers.** Mix, duo spell, opener, 5 Shards. It costs no mana. After you cast it, you must wait 11 seconds to cast it again. Fighting with your weapon makes the wait shorter. It lands up to 7 metres ahead of you, covers a circle with a 3-metre radius, and lasts 6 seconds. Every 2 seconds, it deals 2 damage, a Seeded and a Mark to everything in it, and turns each of them to face the herb for 1.5 seconds. While it faces the herb, it stands still, and your weapon blows on its back are critical hits. Gods don't turn.
 
 **Works with.** Shining Herb, Sixth Moon, The Whole Mountain.
 
-**Example.** Plant it in a pack, and every enemy in it gets both afflictions.
-
-**Not built yet.** Enemies don't turn to face it yet, so blows on their backs aren't critical hits yet.
+**Example.** Plant it in a pack, step around behind them, and cut their backs while they stare at the herb.

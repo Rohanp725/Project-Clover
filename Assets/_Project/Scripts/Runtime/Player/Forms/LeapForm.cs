@@ -36,7 +36,7 @@ namespace Clover.Player.Forms
             var blow = cast.Blow(cast.Damage, cast.Stagger);
             blow.Heavy = true;
             cast.Combat.StrikeArea(at, radius, blow);
-            var crater = cast.Ground(at, radius * 0.8f, 4f, 0.5f, cast.Linger(cast.Spec.LingerDamage));
+            var crater = cast.Ground(at, radius * 0.8f, FormRules.Own(cast.Spec.Lasts, 4f), 0.5f, cast.Linger(cast.Spec.LingerDamage));
             crater.Delay = 0.2f;
             Hazards.Lay(crater);
             Vfx.Play(VfxKind.Impact, at + Vector3.up * 0.5f);

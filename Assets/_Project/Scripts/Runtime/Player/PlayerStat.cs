@@ -184,5 +184,35 @@ namespace Clover.Player
         KnockbackTaken,
         /// <summary>Flat, seconds. Added to the wait before grey health starts to fade.</summary>
         GreyDelay,
+        /// <summary>Share. How long afflictions laid on the player last (Tremor, Earth's root: -0.5, half as long).</summary>
+        AfflictionsOnYou,
+        /// <summary>
+        /// Share: how far every reaction's own blows, ground and pulls reach. Tied to an affliction, only the reactions with
+        /// that affliction in them (Carried Far: Unsteady, half again as far; the ledger's reaction-stats).
+        /// </summary>
+        ReactionReach,
+        /// <summary>Above zero for a reaction: its own blows are critical. Tied to an affliction, only the reactions with it in them (Seen Plainly: Marked).</summary>
+        ReactionCritical,
+        /// <summary>
+        /// Share: a reaction's own blow on an enemy carrying the affliction it is tied to strikes this much harder, and on
+        /// no other (Every Crack Rings: 25% on the notched alone).
+        /// </summary>
+        ReactionDamageOn,
+        /// <summary>Flat, above zero: a blow turned by a ward counts as a perfect guard for every mark that answers one (Splinter Ward; the ledger's ward-as-guard).</summary>
+        WardTurnsPerfect,
+        /// <summary>Flat, percent: what Pawned Heart's heart returns of the damage dealt rises by this when it is touched during a perfect dodge (its Master: 30, so 60 in all; the ledger's heart-touch).</summary>
+        HeartTouchMore,
+        /// <summary>
+        /// Flat, above zero: the player cannot be thrown or knocked down and plain blows do not make them flinch; the blow is
+        /// taken whole (The Garden Holds You, near something grown; the ledger's unshaken). Read with its StatWhen.
+        /// </summary>
+        Unshaken,
+        /// <summary>
+        /// Flat, health a second: a spell still waiting may be cast anyway, each second left on its wait paid in this much
+        /// health, left grey and owed, never the last point (Blood Price: 1; the ledger's cast-on-cooldown).
+        /// </summary>
+        CooldownPrice,
+        /// <summary>Share. The reach of the weapon's blows (Poured on the Edge: 40% longer while it lasts).</summary>
+        WeaponReach,
     }
 }

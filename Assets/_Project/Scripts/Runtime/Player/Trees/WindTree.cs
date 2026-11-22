@@ -63,29 +63,32 @@ namespace Clover.Player.Trees
                 } },
                 BranchPattern.MiddleFoot));
 
-            // NEEDS: the column hanging its enemy 1.0 s (1.3 s with the Empower); the pillars' lift is the form's own 0.8 s.
+            // The column hangs its enemy 1.0 s, 1.3 s with the Empower (SpellSpec.Lasts, read by the pillars' lift).
             SpellBranch.Add(to, E, LiftingWind, "Lifting Wind", SpellRole.Breaker, BranchPattern.MiddleA, RisingCut, SpellForms.Pillars,
-                new SpellSpec { Count = 1, Reach = 5f, Radius = 2f, Damage = 8f, Stagger = 40f, Stacks = 1, Delay = 0.35f },
+                new SpellSpec { Count = 1, Reach = 5f, Radius = 2f, Damage = 8f, Stagger = 40f, Stacks = 1, Delay = 0.35f, Lasts = 1f },
                 "A circle is drawn under the enemy faced, up to five metres away, and a column of wind rises from it: 8 damage and 40 stagger, and it goes into the air whatever its footing.",
                 UpgradeIcons.Tower,
-                new Empower { Cooldown = 7f, Seconds = 1.3f },
+                new Empower { Cooldown = 7f, Lasts = 1.3f },
                 "Lifting Wind waits 7 seconds, not 9, and its enemy hangs longer.",
                 // NEEDS: one column that wanders after enemies for 3 s. Until then two columns rise, under the two nearest.
                 new ShapeDef { Name = "Dust Devil",
                     Description = "The column wanders after enemies for three seconds, lifting the first it reaches and then the next.",
                     Change = new SpellChange { Count = 2, Delay = 0.6f } },
-                // NEEDS: the column not lifting, the enemy swung round to face away (0.5 s for an elite; a god's next attack
-                // swings wide). Until then it is lifted as well, and for 1.2 s it begins nothing and the first blow on it is critical.
+                // The column lifts nothing (SpellSpec.Quiet: the pillars' own lift set aside); the enemy is swung round to face
+                // away from you (ConditionFlags.FacesPoint, FaceAway) for 1.2 s (an elite 0.5 s: EliteSeconds), beginning nothing, and
+                // the first blow on it is critical if it lands on its back (BackCritical).
+                // NEEDS: a god's next attack swinging wide (gods take no enemy conditions of this kind).
                 new ShapeDef { Name = "Turned About",
+                    Spell = new SpellSpec { Count = 1, Reach = 5f, Radius = 2f, Damage = 8f, Stagger = 40f, Stacks = 1, Delay = 0.35f, Lasts = 1f, Quiet = true },
                     Description = "The column does not lift; it spins. The enemy is swung round to face away from you for a moment and loses its balance, and your first blow on its back is critical. For what cannot be lifted.",
-                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = TurnedAbout, Seconds = 1.2f, Flags = ConditionFlags.BeginsNoAttack | ConditionFlags.TakesCritical, EndsWith = ConditionBlow.Weapon } } } },
+                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = TurnedAbout, Seconds = 1.2f, Flags = ConditionFlags.BeginsNoAttack | ConditionFlags.FacesPoint | ConditionFlags.BackCritical,
+                        FaceAway = true, EliteSeconds = 0.5f, EndsWith = ConditionBlow.Weapon } } } },
                 "Opens two shapes of Lifting Wind, chosen at any rest fire: Dust Devil, a column that wanders, or Turned About, a column that spins its enemy round.",
-                // NEEDS: only on the enemy a perfect dodge has just taken you past. Until then a perfect dodge's next column
-                // starts no wait, and what it takes hangs twice as long.
+                // Cast within 2 s of a perfect dodge (CastAfter) on the very enemy it dodged (NeedsAttacker), it hangs twice as long.
                 new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, Do = UpgradeAction.InstantNext, Seconds = 1f },
-                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Lift, Seconds = 1.6f, Cooldown = 1f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, CastAfter = CastMoment.PerfectDodge, CastWindow = PlayerUpgrades.AttackerWindow, NeedsAttacker = true,
+                        Do = UpgradeAction.Lift, Seconds = 2f, Cooldown = 1f },
                 },
                 "Cast it on the enemy a perfect dodge has just taken you past, and it hangs twice as long.");
 
@@ -107,19 +110,15 @@ namespace Clover.Player.Trees
                     Description = "The enemy faced and the nearest other both go up, and the rings take turns between them.",
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Lift, Radius = 3f, Seconds = 1.5f, Cooldown = 3f } } },
                 "Opens two shapes of Sky Dance, chosen at any rest fire: Carried Off, an enemy dropped on another, or Two Rise, two dancing at once.",
-                // NEEDS: only when all five cuts were in time, and Tailwind itself lit for 4 s. Until then the dance gives
-                // Tailwind's longer, safer dodge and quicker feet for 4 s.
-                new[]
-                {
-                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Boon, Stat = PlayerStat.DodgeDistance, Amount = 0.3f, Seconds = 4f, Cooldown = 4f },
-                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Boon, Stat = PlayerStat.DodgeSafeTime, Amount = 0.25f, Seconds = 4f, Cooldown = 4f },
-                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Boon, Stat = PlayerStat.MoveSpeed, Amount = 0.15f, Seconds = 4f, Cooldown = 4f },
-                },
+                // Only when every cut was in time (UpgradeTrigger.DanceInTime), Tailwind itself lit for 4 s at no cost
+                // (UpgradeAction.FreeSurge), when it is the worn surge. NEEDS: what it gives with another surge worn (owner question).
+                new[] { new UpgradeEffect { On = UpgradeTrigger.DanceInTime, OwnBranch = true, Do = UpgradeAction.FreeSurge, SurgeOf = Elements.Wind, Seconds = 4f } },
                 "Land all five cuts in time, and you come down with Tailwind lit for four seconds at no cost.");
 
-            // NEEDS: every reaction with Unsteady in it reaching half again as far (a reaction-reach stat). The throw is data.
+            // Every reaction with Unsteady in it reaches half again as far (PlayerStat.ReactionReach). The throw is data.
             to.Add(BranchPattern.Put(new Upgrade { Id = CarriedFar, Name = "Carried Far", Element = E, Kind = UpgradeKind.Major, Lifts = E, Requires = new[] { RisingCut }, Icon = UpgradeIcons.Gust,
                 Description = "Every reaction with Unsteady in it reaches half again as far and throws what it strikes a metre and a half out from where it happened.",
+                Stats = new[] { new StatMod(PlayerStat.ReactionReach, 0.5f, AfflictionKind.Unsteady) },
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Reacted, Needs = AfflictionKind.Unsteady, Do = UpgradeAction.Push, Radius = 2.5f, Amount = 1.5f } } },
                 BranchPattern.MiddleCrown));
             to.Add(BranchPattern.Put(new Upgrade { Id = NothingBeneath, Name = "Nothing Beneath", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { CarriedFar }, Icon = UpgradeIcons.Spiral,
@@ -156,17 +155,16 @@ namespace Clover.Player.Trees
                     Description = "You run only half the ring and end on its far side, behind it. Nothing is lifted, and your first blow on its back is critical.",
                     Spell = new SpellSpec { Reach = 5f, Damage = 6f, Stagger = 10f, Stacks = 1, Seconds = 1.5f },
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Boon, Stat = PlayerStat.CritChance, Amount = 1f, Seconds = 1.5f, UntilBlow = true } } },
-                // NEEDS: the Empower's longer hang reaching this shape too (an Empower sets its numbers after the shape's).
-                new ShapeDef { Name = "Wide Circle",
+                // The Empower's longer hang reaches this shape too, added to its own short one (EmpowerOverShape.Adds).
+                new ShapeDef { Name = "Wide Circle", Empowered = EmpowerOverShape.Adds,
                     Description = "You run round a group up to six metres across. The column takes everyone inside, but lifts each for only a moment.",
                     Change = new SpellChange { Reach = 7f, Radius = 4f, Seconds = 0.6f } },
                 "Opens two shapes of Closing Circle, chosen at any rest fire: Half Circle, ending behind it, or Wide Circle, a ring round a group.",
-                // NEEDS: the shared movement rule's timing (started as a blow would land, blow-about-to-land), and the ring run
-                // round the attacker wherever it stands within 8 m. Until then the cast gives what a perfect dodge gives.
+                // Started as a blow would land (UpgradeEffect.BlowLanding), it is a perfect dodge (UpgradeAction.PerfectDodgeNow). NEEDS: the
+                // ring run round the attacker wherever it stands within 8 m (form-pieces).
                 new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Mana, Amount = 12f },
-                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.CutCooldowns, Amount = 1.5f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, BlowLanding = 0.3f, Do = UpgradeAction.PerfectDodgeNow },
                 },
                 "Started in the instant a blow would land on you, it counts as a perfect dodge, and the ring is run round the attacker wherever it stands within eight metres.");
 
@@ -236,7 +234,7 @@ namespace Clover.Player.Trees
             SpellBranch.Add(to, E, Gust, "Gust", SpellRole.Opener, BranchPattern.RightA, Unsteady, "", null,
                 "Wind's own spell, given with the element. A rush of air five metres ahead: 8 damage, 20 stagger and Unsteady two deep, and everything in it is thrown three metres straight down the wind.",
                 UpgradeIcons.Gust,
-                // NEEDS: Unsteady three deep. The base spell is cast by its kit, which takes only the Empower's wait.
+                // Unsteady three deep. The Empower's numbers reach the kit's own cast too (PlayerUpgrades.BaseEmpower, read by PlayerElement).
                 new Empower { Cooldown = 4.5f, Stacks = 3 },
                 "Gust waits 4.5 seconds, not 6, and leaves its enemies three deep in Unsteady.",
                 // NEEDS: the wind coming down on a point up to 6 m away. Until then it comes down on you, and throws everything

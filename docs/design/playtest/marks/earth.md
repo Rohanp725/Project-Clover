@@ -8,11 +8,11 @@ design yet, its **Not built yet** line says what is missing. "Your stones" means
 Rise's rocks, a pillar, a heap of rubble.
 
 ## earth.tremor
-**What it does.** Your heavy blows shake the ground under an enemy and add Tremor. A finisher fills it all the way at once. A shaken enemy is slowed, and its balance doesn't come back while the shaking lasts.
+**What it does.** Your heavy blows shake the ground under an enemy and add Tremor. A finisher fills it all the way at once. A shaken enemy is slowed, and its balance doesn't come back while the shaking lasts. Also, afflictions that elites and gods put on you last half as long.
 
 **When it happens.** Every heavy blow that lands adds a stack. Every finisher fills it. Like every root mark, your weapon only adds it while Earth is your first element. If Earth is your second element, Tremor comes from your spells, the charged blade and the R2 strike.
 
-**The numbers.** 2 Shards. One stack for each heavy blow, three on a finisher, up to three stacks. Tremor lasts 6 seconds. Each stack slows the enemy by 10%, and while it lasts, the enemy's stagger meter doesn't go down.
+**The numbers.** 2 Shards. One stack for each heavy blow, three on a finisher, up to three stacks. Tremor lasts 6 seconds. Each stack slows the enemy by 10%, and while it lasts, the enemy's stagger meter doesn't go down. An affliction put on you (an elite or a god lays its land's when its blow lands) lasts half its usual time.
 
 **Works with.** Heavy Hand and The Slow Hand (more heavy blows, or every blow shaking), Cairn (it uses up Tremor to drop stones), Left in Rubble, Bedrock (one more stack with every blow), Buckled on the Forge branch, and The Ground Gives when Soaked meets Tremor.
 
@@ -62,11 +62,11 @@ Rise's rocks, a pillar, a heap of rubble.
 
 **When it happens.** For now, every time you cast Under the Mound. It must be in a spell slot.
 
-**The numbers.** 3 Shards. Each cast gives you what a perfect dodge gives: 12 mana, and 1.5 seconds off the wait on every spell and strike that is waiting. For 3 seconds, or until your next blow lands, your blows break 50% more balance and each adds one more stack.
+**The numbers.** 3 Shards. It only counts if you start it in the last 0.3 seconds before an enemy's blow (one within 6 metres) lands on you. Then it is a perfect dodge: you get 12 mana, the game slows for a moment, the blow misses, and every mark that answers a perfect dodge answers this one. For 3 seconds after that, or until your next blow lands, your blows break 50% more balance and each adds one more stack.
 
 **Works with.** Tremor (the extra stack on the next blow), Heavy Hand and The Slow Hand, Cairn (the mana it gives back).
 
-**Not built yet.** It should only work when you go under right as a blow would land, like the other movement spells, and bring you up behind the attacker, with the next blow counting as a heavy blow. For now, every cast gives the dodge's reward and the stronger next blow.
+**Not built yet.** It doesn't yet bring you up behind the attacker, and the next blow doesn't yet count as a heavy blow.
 
 **Example.** A brute's overhead swing is coming down. Go under it, come up behind it, and your next blow nearly breaks its balance.
 
@@ -86,24 +86,22 @@ Rise's rocks, a pillar, a heap of rubble.
 
 **When it happens.** Whenever you cast Cairn, using the shape you picked. If you have not bought this, the plain stones fall.
 
-**The numbers.** 3 Shards. Unbroken Cairn: a heavy blow on an enemy under a pile within 4 seconds bursts in a 2.5-metre circle around it, for 36 damage and 20 stagger. Thrown Stones: a stone flies from each enemy under a pile to the nearest other enemy within 5 metres, for 24 damage, 10 stagger and two Tremor.
+**The numbers.** 3 Shards. Unbroken Cairn: nothing falls when you cast. A heavy blow on a shaken enemy within 4 seconds bursts its pile in a 2.5-metre circle around it, for 18 damage for each stone (each stack of Tremor it had) and 20 stagger. Thrown Stones: nothing falls or stays. The pile flies from each shaken enemy to the nearest other enemy within 5 metres, for 12 damage, 5 stagger and one Tremor for each stone.
 
 **Works with.** Unbroken Cairn: Heavy Hand and The Slow Hand. Thrown Stones: cast Cairn again on the enemies the stones shook.
-
-**Not built yet.** Unbroken Cairn's stones should land softly (for now they still fall when you cast), and its burst should be 18 for each stone (for now it is 36 no matter how many stacks). Thrown Stones' piles should be thrown instead of staying (for now they still fall and pile up), with a stone for each stack (for now it is two stones' worth).
 
 **Example.** Use Unbroken Cairn on a pack around a brute. One heavy blow on the brute breaks its pile through all of them.
 
 ## earth.cairn.master
 **What it does.** Cast it after standing still for a second, and every stone hits twice and you get half the mana back.
 
-**When it happens.** For now, when you cast it while Rooted (you haven't started a dodge for 3 seconds). Cairn must be in a spell slot.
+**When it happens.** When you cast it after standing still for one second (not walking, dodging or stepping). Cairn must be in a spell slot.
 
 **The numbers.** 3 Shards. You get 20 mana back. A second fall hits each shaken enemy 0.8 seconds after you cast it, for 24 damage and 30 stagger.
 
 **Works with.** Rooted, Immovable, Heavy Hand, and Mountain Stance, which keeps you standing still.
 
-**Not built yet.** It should work after standing still for one second (for now it needs Rooted, which is three seconds without a dodge), and every stone should hit twice (for now there is a second fall worth two stones).
+**Not built yet.** Every stone should hit twice (for now there is a second fall worth two stones).
 
 **Example.** Hold your ground through a soldier's string of blows, then stamp. You get twice the stones, and half the cost back for the next one.
 
@@ -138,11 +136,9 @@ Rise's rocks, a pillar, a heap of rubble.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4).
 
-**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 9 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 8 seconds and the reach 6 metres.) It lands 0.45 seconds after you cast it and reaches 5 metres around you. Each enemy takes 16 damage, 30 stagger and two stacks of Tremor, and flinches for 0.4 seconds.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 9 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 8 seconds and the reach 6 metres.) It lands 0.45 seconds after you cast it and reaches 5 metres around you. Each enemy takes 16 damage, 30 stagger and two stacks of Tremor. An enemy that is starting an attack (its wind-up is showing) takes 30 more stagger, double in all, and its attack is broken off (a 0.4-second flinch; a god or an elite only takes the stagger).
 
 **Works with.** Tremor and Cairn (two stacks on everything around you), Rooted, Standing Stones (a pillar on what it hits), Buckled on the Forge branch. When it lands, it charges your blade with Earth.
-
-**Not built yet.** Double stagger on an enemy that is starting an attack, and breaking only that enemy's attack. For now, every enemy it hits flinches, and the stagger is the same for all.
 
 **Example.** Four soldiers close in around you. Stamp, and all four have two stacks of Tremor, with their balance bars stuck.
 
@@ -164,11 +160,9 @@ Rise's rocks, a pillar, a heap of rubble.
 
 **When it happens.** For now, whenever Quake Step hits an enemy, at most once every 18 seconds. Quake Step must be in a spell slot.
 
-**The numbers.** 3 Shards. Its wait ends.
+**The numbers.** 3 Shards. When the stamp breaks an ordinary enemy out of its wind-up, Quake Step's wait ends.
 
 **Works with.** The Second Wave (two stamps in a row), Cairn after two stamps.
-
-**Not built yet.** It should only work when you break an enemy out of its wind-up. The game can't tell yet when an enemy starts an attack, so any stamp that lands counts, once every 18 seconds.
 
 **Example.** Stamp a soldier out of its swing, then stamp again as its friend comes in.
 
@@ -190,11 +184,11 @@ Rise's rocks, a pillar, a heap of rubble.
 
 **When it happens.** Whenever you cast Mountain Stance, using the shape you picked. If you have not bought this, you cast Grey Stone.
 
-**The numbers.** 3 Shards. Stone Skin: when the stance blocks a blow, you get two wards, up to three. Each one blocks one blow and breaks in a burst 3 metres around you, for 14 damage, 24 stagger and one Tremor. Fist of Rock: you stand for up to 1.5 seconds. The answer is a cone 4 metres long and 90 degrees wide, for 30 damage, 60 stagger and two Tremor.
+**The numbers.** 3 Shards. Stone Skin: when the stance blocks a blow, it does not hit back. You get two wards instead, up to three. Each one blocks one blow and breaks in a burst 3 metres around you, for 14 damage, 24 stagger and one Tremor. Fist of Rock: you stand for up to 1.5 seconds. The answer is a cone 4 metres long and 90 degrees wide, for 30 damage, 60 stagger and two Tremor.
 
 **Works with.** Stone Skin: Glaze's ward if you carry Ice, Heavy Hand, Immovable. Fist of Rock: Tremor and Cairn, and Unbroken Cairn's heavy blow after it.
 
-**Not built yet.** Stone Skin's plates should take 60% of one blow (for now, a ward takes all of it), and the stance's jolt should be turned off while you use this shape. Fist of Rock's answer should rise under the enemy that hit you; for now, it is a cone thrown at it.
+**Not built yet.** Stone Skin's plates should take 60% of one blow (for now, a ward takes all of it). Fist of Rock's answer should rise under the enemy that hit you; for now, it is a cone thrown at it.
 
 **Example.** Use Stone Skin before a pack closes in. The first two blows that reach you each throw stone back at the whole ring.
 
@@ -203,11 +197,9 @@ Rise's rocks, a pillar, a heap of rubble.
 
 **When it happens.** For now, whenever the stance blocks any blow. Mountain Stance must be in a spell slot.
 
-**The numbers.** 3 Shards. The attacker is held for 1.5 seconds (0.6 for a god or an elite; the colossus not at all). The stance's wait ends, at most once every 20 seconds.
+**The numbers.** 3 Shards. Only a red attack counts. The attacker is held for 1.5 seconds (0.6 for a god or an elite; the colossus not at all), and the stance's wait ends.
 
 **Works with.** Fist of Rock (a full answer on a held enemy), Cairn, and your heavy blows on the held enemy.
-
-**Not built yet.** It should only work on red attacks. The game can't tell yet whether the blocked blow was red, so any blow counts, and the stance comes back at most once every 20 seconds.
 
 **Example.** A brute's red overhead swing lands on the stone. It stands stunned while you break its balance.
 
@@ -242,11 +234,9 @@ Rise's rocks, a pillar, a heap of rubble.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). While you carry Earth, you can always put it in a slot.
 
-**The numbers.** Comes with Earth. It costs no mana. After you cast it, you must wait 7 seconds to cast it again. Fighting with your weapon makes the wait shorter. Its Empower makes the wait 6 seconds. It hits an enemy within 5 metres, in a 1.3-metre circle around it, for 14 damage, 30 stagger and one Tremor.
+**The numbers.** Comes with Earth. It costs no mana. After you cast it, you must wait 7 seconds to cast it again. Fighting with your weapon makes the wait shorter. Its Empower makes the wait 6 seconds, the damage 18 and the stagger 36. It hits an enemy within 5 metres, in a 1.3-metre circle around it, for 14 damage, 30 stagger and one Tremor.
 
 **Works with.** Its Empower, its two shapes and its Master mark; Tremor and Cairn; Standing Stones (a pillar on what it hits); the charged blade, which it charges with Earth when it lands.
-
-**Not built yet.** The Empower's 18 damage and 36 stagger. For now, the spell only gets the Empower's shorter wait.
 
 **Example.** Raise the stone under the archer at the back. It is knocked into the air and shaken.
 
@@ -266,13 +256,13 @@ Rise's rocks, a pillar, a heap of rubble.
 ## earth.base.master
 **What it does.** Cast it while you hold your ground, Rooted or standing still for a second, and the stone rises under the enemy's own feet. It throws the enemy three metres away from you with two stacks of Tremor, before the enemy can stand.
 
-**When it happens.** For now, when you cast it while Rooted (you haven't started a dodge for 3 seconds). Stone Rise must be in a spell slot.
+**When it happens.** When you cast it while Rooted (you haven't started a dodge for 3 seconds) and after standing still for one second. Stone Rise must be in a spell slot.
 
 **The numbers.** 3 Shards. The enemy it hits is thrown 3 metres straight away from you and takes one more stack of Tremor (two, with the stone's own).
 
 **Works with.** Rooted, Immovable, Mountain Stance, and Cairn on the two stacks it leaves.
 
-**Not built yet.** It should also work after standing still for one second (for now, only Rooted counts), and the throw should happen before the stones sink back.
+**Not built yet.** The throw should happen before the stones sink back.
 
 **Example.** Hold your ground, and raise the stone under a brute that got too close. It is thrown off you with two stacks.
 
@@ -294,11 +284,9 @@ Rise's rocks, a pillar, a heap of rubble.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4).
 
-**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 9 seconds and the damage 26.) The crack runs 8 metres at 20 metres a second. There is a spike every 1.5 metres, starting 1.3 metres out, each with a 1-metre radius. Each enemy is hit once, for 20 damage, 35 stagger and one Tremor, and is held for 1.2 seconds (0.5 for a god or an elite).
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 9 seconds and the damage 26.) The crack runs 8 metres at 20 metres a second, then glows for 0.9 seconds before it breaks open. There is a spike every 1.5 metres, starting 1.3 metres out, each with a 1-metre radius. Each enemy is hit once, for 20 damage, 35 stagger and one Tremor, and is held for 1.2 seconds (0.5 for a god or an elite).
 
 **Works with.** Left in Rubble, which it comes after on the chart, Standing Stones, Tremor and Cairn, and your heavy blows on the enemies it holds. When it lands, it charges your blade with Earth.
-
-**Not built yet.** The crack should glow for 0.9 seconds before it breaks open; for now, it breaks open as it runs.
 
 **Example.** Three spearmen stand in a line down a staircase. One crack catches all three and holds them for your blade.
 
@@ -324,7 +312,7 @@ Rise's rocks, a pillar, a heap of rubble.
 
 **Works with.** Heavy Hand (nothing can stop the heavy blow as it lands), The Slow Hand, Tremor.
 
-**Not built yet.** The crack's glow before it breaks open, and landing the heavy blow on its line during that glow. For now, the timing window opens when the spikes hit, and it adds a second eruption on that enemy.
+**Not built yet.** Landing the heavy blow on the crack's line during its glow. For now, the timing window opens when the spikes hit, and it adds a second eruption on that enemy.
 
 **Example.** Cast the crack at a brute, and step in with a heavy blow as it breaks open. It erupts again under the brute.
 

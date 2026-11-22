@@ -776,8 +776,8 @@ namespace Clover.Gameplay
             // The head stuck after a bite or spent after a beam is only a head: it is the broken one that takes more, and can be finished.
             float share = isHead ? (IsStaggered ? HeadDamage : OpenHeadDamage) : part == tailPart ? TailDamage : ClawDamage;
             Afflictions.IgniteFrom(hit, part);
-            float takes = Afflictions.DamageTakenMultiplier(hit.Spell);
-            float unsteadies = Afflictions.StaggerTakenMultiplier;
+            float takes = Afflictions.DamageTakenMultiplier(hit.Spell, hit.Heavy);
+            float unsteadies = Afflictions.StaggerTakenFor(hit.Spell);
             Afflictions.TakeFrom(hit, part);
             float damage = finisher ? Mathf.Max(hit.Damage * 3f * takes, MaximumHealth * FinisherShare) : hit.Damage * share * takes;
             Health.Damage(damage);
@@ -3175,6 +3175,8 @@ namespace Clover.Gameplay
             if (victimBody != null && victimBody.IsLeaping) return;
             BlowsStruck++;
             var outcome = victim.TakeHit(hit);
+            // A god lays its land's affliction on the player its blow lands on (the stand-in plan's question 1).
+            if (outcome == HitOutcome.Landed && victim is Clover.Player.PlayerDefence struckPlayer) struckPlayer.StruckInLand(EnemyRank.God, gameObject.scene.name);
             if (outcome != HitOutcome.PerfectGuard || IsStaggered || IsDead || balanceIfTurned <= 0f) return;
             flashLeft = 0.09f;
             flashTint = default;

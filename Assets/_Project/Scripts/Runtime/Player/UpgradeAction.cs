@@ -115,5 +115,120 @@ namespace Clover.Player
         /// over about two seconds (Venom). Reads: Share (0.1).
         /// </summary>
         Mend,
+        /// <summary>
+        /// The condition named in Condition on the target (by its name or by what it is) takes a heavy weapon blow now, as
+        /// if one landed on it: its answers to a heavy blow are done, and one a heavy blow spends ends (Hot Stone, Cold
+        /// Water: a perfect guard splits the crack, in whichever shape cracked it). The enemy itself takes nothing. Reads:
+        /// Condition.
+        /// </summary>
+        StrikeCondition,
+        /// <summary>
+        /// Shatters the target if it is frozen, as a heavy blow would: the breaking's damage, plus Damage and Stagger, and the
+        /// shatter told to whatever answers one (Brittle to the Core). Nothing on one that is not frozen. Reads: Damage, Stagger.
+        /// </summary>
+        Shatter,
+        /// <summary>Clears every affliction laid on the player (High Noon). Reads nothing.</summary>
+        Cleanse,
+        /// <summary>
+        /// Raises the target, and every enemy the same cast struck before it, to the depth of Affliction the sickest of them
+        /// carries, Stacks at least (Share Alike: every one passed raised to the sickest one's depth). Reads: Affliction, Stacks.
+        /// </summary>
+        EvenDepth,
+        /// <summary>
+        /// Loads the player's edge for its next Count weapon blows on any enemy (light ones only with LightOnly): each lays
+        /// Stacks of Affliction on what it strikes, or with SetsDepth raises it to the depth the target carries now
+        /// (Carried on the Blade, Dust on the Blade). Reads: Affliction, Stacks, Count (3), Seconds (0: until spent), SetsDepth, LightOnly.
+        /// </summary>
+        CoatBlade,
+        /// <summary>
+        /// Every enemy within Radius (10) of the player that carries Affliction gives all of it up, gathered for the next
+        /// set-off of this cast that carries doses on (<see cref="UpgradeEffect.PassesOn"/>), with no limit (All Into One).
+        /// Reads: Affliction, Radius.
+        /// </summary>
+        Gather,
+        /// <summary>
+        /// The reaction whose moment this answers strikes again on the target: its own striking effects re-run at Amount
+        /// (0.5) of their damage after Delay, laying and setting nothing (Strikes Twice: half, 0.5 s later where it happened;
+        /// Spreading Water: on each other Soaked enemy near, with EachWithin). With Reaction named, that reaction, in the shape
+        /// worn and past its rest, where the trigger's enemy is or fell (Kettle: steam at full where a Soaked enemy died
+        /// burning). Reads: Amount, Delay, Reaction.
+        /// </summary>
+        EchoReaction,
+        /// <summary>
+        /// Done as the reaction named in Reaction fires, not after: on an enemy that meets Needs (NeedsFull, NeedsAtLeast)
+        /// then, the reaction's own damage is multiplied by Amount, and with SparesSpend it spends nothing (Goes Up; the
+        /// ledger's reaction-numbers-when). Nothing is done at its own moment. Reads: Reaction, Needs, Amount, SparesSpend.
+        /// </summary>
+        BoostReaction,
+        /// <summary>
+        /// Ends the condition named in Condition (by its name or what it is) on the target now, and its end is answered at
+        /// once as when its time runs out (Cold Snap: the running Sleet Charge strikes; the ledger's condition-ends-now).
+        /// Reads: Condition.
+        /// </summary>
+        EndCondition,
+        /// <summary>
+        /// Counts as a perfect dodge of the enemy blow about to land on the player within Seconds (0.3): what a perfect dodge
+        /// gives, its marks answered, and the blow missed (the shared movement rule). Nothing when none is about to land.
+        /// Reads: Seconds.
+        /// </summary>
+        PerfectDodgeNow,
+        /// <summary>
+        /// Drinks every cloud and trail of Affliction within Radius (6) of the player and half of each enemy's doses there into
+        /// a store, then lays the store on the enemies this cast struck, split evenly among them and rounded up (The Yellow
+        /// Gale, the owner's answer of 2026-11-22). Reads: Affliction, Radius.
+        /// </summary>
+        ShareStore,
+        /// <summary>
+        /// The player's next light weapon blow within Seconds (1) lands as a heavy blow: the weapon's heavy stagger, and every
+        /// mark that answers a heavy blow answers it (Gone to Ash: the first blow behind the attacker; the ledger's
+        /// blow-made-heavy). Reads: Seconds.
+        /// </summary>
+        NextHeavy,
+        /// <summary>
+        /// Lights the worn surge for Seconds at no cost, when it is the surge of the element named in SurgeOf (Sky Dance's
+        /// Master: Tailwind for 4 s; the ledger's surge-from-mark). A surge already lit is kept at least that long. Reads:
+        /// SurgeOf, Seconds.
+        /// </summary>
+        FreeSurge,
+        /// <summary>
+        /// Keeps only Amount (0.5) of its own spell's running wait, as if it had been that long from the start (Whirlpool's
+        /// Master: its cooldown halved; Blown Through: half its own wait back; the ledger's own-clock-share). Reads: Amount.
+        /// </summary>
+        KeepWaitShare,
+        /// <summary>
+        /// Steps the player back in a straight line to where they stood as the spell was cast, cutting what stands on the way for
+        /// Damage and Stagger in a lane Radius (0.6) wide either side, laying Affliction (Aruna's Road: back along the road; There
+        /// and Back: the flight back, cutting the line again). Reads: Damage, Stagger, Radius, Affliction, Stacks.
+        /// </summary>
+        ReturnToCast,
+        /// <summary>
+        /// Tends the grown thing of the player's nearest the effect's place within its Radius (the ledger's at-grown): it stands
+        /// Seconds longer, lays <see cref="UpgradeEffect.BitesLay"/> with every bite when that names one, and flares where it
+        /// stands when the effect has Damage, Stagger or Stacks (Reach: the flare's size). Nothing when nothing grown is that near.
+        /// </summary>
+        Tend,
+        /// <summary>
+        /// Every grown thing of the player's within Reach of the target, Count at most, throws a bolt into it (Damage,
+        /// Stagger, Affliction and Stacks); each bolt is a moment of its own (<see cref="UpgradeTrigger.GrownBolt"/>; the ledger's grown-sources).
+        /// </summary>
+        GrownBolts,
+        /// <summary>
+        /// Asked as its own branch's spell is cast, before the form runs, with the effect's CastAfter window: when it holds, the
+        /// spell lands with no stillness after it (its Delay set to nothing: Seven Flashes' Master, cast in a perfect dodge's
+        /// moment, does not stand still and its cuts land at once). Nothing is done when its moment comes.
+        /// </summary>
+        Quicken,
+        /// <summary>Looses the spell its own branch began and gathered (SpellSpec.Rings) now, with the rings it holds: Daybreak's second press.</summary>
+        Loose,
+        /// <summary>
+        /// Each enemy the last wave brought in (Riptide: PlayerUpgrades.NoteBrought) is carried on past the player along the
+        /// wave's way, to Reach metres beyond them (4), and given the effect's State (backs turned): Riptide's Master, pressed again.
+        /// </summary>
+        CarryOn,
+        /// <summary>
+        /// Looses the flood of its own branch's ebb (SpellSpec.Ebb) now: the spell's form cast from where the player stands back
+        /// toward where they began the ebb, reaching on past it by the spell's Reach less the ebb (The Tide Turns' second press).
+        /// </summary>
+        Flood,
     }
 }

@@ -23,9 +23,9 @@ namespace Clover.Player.Trees.Duo
         {
             const string A = Elements.Metal, B = Elements.Dark;
 
-            // NEEDS: links that pass blows and the leash (as the plain reaction); the two dragged together and colliding
-            // (Drawn Tight; now the snap strikes both where they stand); a curse laid on one running along the chain (Shared
-            // Wound).
+            // Shared Wound's chain passes half of every blow, weapon or spell (ConditionFlags.Chained, SharesSpells), with no leash.
+            // NEEDS: the two dragged together and colliding (Drawn Tight; now the snap strikes both where they stand); a curse
+            // laid on one running along the chain (Shared Wound).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Black Chain: Drawn Tight or Shared Wound", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -49,23 +49,22 @@ namespace Clover.Player.Trees.Duo
                         Effects = new[]
                         {
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, Radius = 6f, Count = 1,
-                                State = new ConditionSpec { Id = SharedWound, Seconds = 8f, Scale = 0.5f, ToOthers = true } },
+                                State = new ConditionSpec { Id = SharedWound, Seconds = 8f, Scale = 0.5f, ToOthers = true, Flags = ConditionFlags.Chained, SharesSpells = true } },
                         },
                     },
                 },
             }, HeartPattern.Foot));
 
-            // NEEDS: the chained pair known as a pair (linked enemies); now an enemy that dies cursed and notched draws in what
-            // stood within 6 m, holds what stands within 2 m of where it fell for 1 s, and Curses it.
+            // Its chain-mate (ToChainMate: EnemyChains.MateOf, found as it dies) is dragged to where it fell, held 1 s and Cursed.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = DeadWeight, Name = "Dead Weight", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Chain,
                 Description = "When one of a chained pair dies, the chain drags the other to where it fell, holds it 1 s and Curses it again.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Cursed, Needs2 = AfflictionKind.Sundered, Do = UpgradeAction.Pull, Radius = 6f, Amount = 3f, Cooldown = 0.5f },
-                    new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Cursed, Needs2 = AfflictionKind.Sundered, Do = UpgradeAction.Hold, Radius = 2f, Seconds = 1f, Cooldown = 0.5f },
-                    new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Cursed, Needs2 = AfflictionKind.Sundered, Do = UpgradeAction.Afflict, Radius = 2f, Affliction = AfflictionKind.Cursed, Stacks = 1, Cooldown = 0.5f },
+                    new UpgradeEffect { On = UpgradeTrigger.Kill, ToChainMate = true, Do = UpgradeAction.Pull, Cooldown = 0.2f },
+                    new UpgradeEffect { On = UpgradeTrigger.Kill, ToChainMate = true, Do = UpgradeAction.Hold, Seconds = 1f, Cooldown = 0.2f },
+                    new UpgradeEffect { On = UpgradeTrigger.Kill, ToChainMate = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Cursed, Stacks = 1, Cooldown = 0.2f },
                 },
             }, HeartPattern.LeftLow));
 
@@ -77,12 +76,13 @@ namespace Clover.Player.Trees.Duo
                 Rules = book => book.Afflictions.KeepWhile(AfflictionKind.Sundered, AfflictionKind.Cursed),
             }, HeartPattern.RightLow));
 
-            // NEEDS: the chain-mate (linked enemies); now the finisher's half leaps to the nearest other enemy within 4 m.
+            // The finisher lands on its chain-mate (ToChainMate) at half the blow's damage (ByPower, Share 0.5) and 30 stagger.
+            // NEEDS: the mate's stagger as half the finisher's own (damage-tally); now 30.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = OneNooseForTwo, Name = "One Noose for Two", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { DeadWeight, RustInTheCurse }, Icon = UpgradeIcons.Ring,
                 Description = "A finisher on a chained enemy lands on its chain-mate too, at half its damage and stagger.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.FinisherHit, Needs = AfflictionKind.Cursed, Needs2 = AfflictionKind.Sundered, Do = UpgradeAction.Arc, FromTarget = true, Count = 1, Reach = 4f, Amount = 0.5f, Stagger = 30f } },
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.FinisherHit, ToChainMate = true, Do = UpgradeAction.Burst, Radius = 0.5f, ByPower = true, Share = 0.5f, Stagger = 30f } },
             }, HeartPattern.Keystone));
 
             // The duo spell, bought with Shards once both are carried (no god gives it): an opener on a 16 s cooldown (SpellTimings). The bomb form drops a weight on the aim

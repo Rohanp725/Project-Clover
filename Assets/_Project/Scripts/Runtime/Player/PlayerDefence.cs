@@ -145,7 +145,27 @@ namespace Clover.Player
         }
 
         // Tips are said last in the frame, when it is known whether the fight has already used the status line.
-        private void LateUpdate() => Tips.EndFrame(this, Time.deltaTime);
+        private void LateUpdate()
+        {
+            Tips.EndFrame(this, Time.deltaTime);
+            // What the elites and gods laid bites on its own clock.
+            float bite = Afflictions.Tick(Time.deltaTime);
+            if (bite > 0f && !IsDead) Health.Damage(bite);
+        }
+
+        /// <summary>The afflictions laid on the player (question 1 of the stand-in plan: elites and gods lay their land's).</summary>
+        public readonly PlayerAfflictions Afflictions = new PlayerAfflictions();
+
+        /// <summary>
+        /// A blow of an enemy of <paramref name="rank"/> landed on the player in the land a scene belongs to: an elite or a
+        /// god lays that land's affliction, one stack. True when it took.
+        /// </summary>
+        public bool StruckInLand(Clover.Gameplay.EnemyRank rank, string sceneName)
+        {
+            if (!PlayerAfflictions.Lays(rank)) return false;
+            var kind = PlayerAfflictions.OfLand(Outfits.LandOf(sceneName));
+            return kind != Clover.Gameplay.AfflictionKind.None && Afflictions.Lay(kind, 1);
+        }
 
         /// <summary>Forgets a button being held, as when a menu or a leap takes the buttons away part-way through a hold.</summary>
         public void DropHolds()
@@ -192,6 +212,29 @@ namespace Clover.Player
         }
 
         /// <summary>Gives wards, up to the most that can be held.</summary>
+        /// <summary>True when the attacker is in a condition that turns a plain guard against it into a perfect one (ConditionFlags.GuardMadePerfect).</summary>
+        public static bool GuardMadePerfect(Component attacker) =>
+            attacker is Clover.Gameplay.IAfflictable carrier && carrier.Afflictions.Conditions.Has(Clover.Gameplay.ConditionFlags.GuardMadePerfect);
+
+        /// <summary>
+        /// A spell started as a blow would land counts as a perfect dodge of it (the shared movement rule): what a perfect
+        /// dodge gives, the marks that answer one told, and no blow lands for the moment it had left.
+        /// </summary>
+        public void CountAsPerfectDodge(Vector3 attacker, float strikeIn)
+        {
+            PerfectDodges++;
+            LastPerfectDodgeAt = Time.time;
+            if (combat != null) combat.Mana.Gain(PerfectDodgeMana);
+            if (hitStop != null) hitStop.Slow(PerfectDodgeSlowSeconds, PerfectDodgeSlowScale);
+            Callout("Perfect dodge");
+            UntouchableUntil = Mathf.Max(UntouchableUntil, Time.time + Mathf.Clamp(strikeIn, 0f, 1f) + 0.15f);
+            if (upgrades != null) upgrades.OnPerfectDodge(attacker);
+            PerfectDodged?.Invoke();
+        }
+
+        /// <summary>When the last perfect dodge was made (Time.time); far in the past when none was.</summary>
+        public float LastPerfectDodgeAt { get; private set; } = -100f;
+
         public void GiveWards(int count)
         {
             if (count > 0) Wards = Mathf.Min(MaximumWards, Wards + count);
@@ -234,6 +277,7 @@ namespace Clover.Player
             guardHeld = guardAction.IsPressed();
             if (guardAction.WasPressedThisFrame())
             {
+                Guard.Edge = upgrades != null && upgrades.Rules.Guard == Growth.GuardMode.Edge;
                 Guard.Press(!IsHelpless && !IsDrinking);
                 guardPressBuffered = PressBufferTime;
             }
@@ -383,7 +427,11 @@ namespace Clover.Player
                 // The spell's own guard: the blow is turned for nothing and the form answers it.
                 player.FormParrying = false;
                 player.FormParried = true;
+                // A red attack turned: the counters' Masters answer only that (the ledger's red-attack).
+                if (hit.Unblockable && upgrades != null) upgrades.RedTurned();
                 player.FormParriedFrom = hit.HasOrigin ? hit.Origin : transform.position - hit.Direction;
+                // Whose blow it was, for an answer meant only for the attacker (The Golden Chair).
+                if (upgrades != null && combat != null) upgrades.NoteTurned(combat.EnemyAt(player.FormParriedFrom, 2.5f));
                 PerfectGuards++;
                 Vfx.Play(VfxKind.PerfectGuard, GuardPoint(), transform.forward);
                 Vfx.Play(VfxKind.Impact, GuardPoint());
@@ -400,6 +448,7 @@ namespace Clover.Player
                 if (player.Dodge.Elapsed <= PerfectDodgeWindow && !player.Dodge.NoPerfect)
                 {
                     PerfectDodges++;
+                    LastPerfectDodgeAt = Time.time;
                     if (combat != null) combat.Mana.Gain(PerfectDodgeMana);
                     if (hitStop != null) hitStop.Slow(PerfectDodgeSlowSeconds, PerfectDodgeSlowScale);
                     Callout("Perfect dodge");
@@ -432,11 +481,18 @@ namespace Clover.Player
             float chip = 0f;
             // The RuleBook may hold the guard whatever the stamina (The Guard Holds).
             bool unbreakable = upgrades != null && upgrades.Rules.Guard == Growth.GuardMode.Unbreakable;
-            switch (covered ? Guard.Resolve(hit.Damage, hit.Unblockable, player.Stamina, out chip, unbreakable) : GuardResult.NotGuarded)
+            // A plain guard against an attacker whose condition makes it perfect (Snapped Blade).
+            bool madePerfect = covered && combat != null && GuardMadePerfect(combat.EnemyAt(hit.HasOrigin ? hit.Origin : transform.position - hit.Direction, 2.5f));
+            bool edge = upgrades != null && upgrades.Rules.Guard == Growth.GuardMode.Edge;
+            switch (covered ? Guard.Resolve(hit.Damage, hit.Unblockable, player.Stamina, out chip, unbreakable, madePerfect, edge) : GuardResult.NotGuarded)
             {
                 case GuardResult.Perfect:
                     PerfectGuards++;
-                    if (hit.Unblockable) RedTurns++;
+                    if (hit.Unblockable)
+                    {
+                        RedTurns++;
+                        if (upgrades != null) upgrades.RedTurned();
+                    }
                     Vfx.Play(VfxKind.PerfectGuard, GuardPoint(), transform.forward);
                     if (guardArc != null) guardArc.Pulse(new Color(4.5f, 3.2f, 0.7f, 1f), 0.35f, 0.5f);
                     Vfx.Play(VfxKind.Ring, GuardPoint(), transform.forward);

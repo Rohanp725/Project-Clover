@@ -51,10 +51,10 @@
             "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a2001",
             "actions": [
                 { "name": "SpellLayer", "type": "Button", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a2002", "expectedControlType": "Button", "processors": "", "interactions": "", "initialStateCheck": false },
-                { "name": "SpellWest", "type": "Button", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a2003", "expectedControlType": "Button", "processors": "", "interactions": "", "initialStateCheck": false },
-                { "name": "SpellNorth", "type": "Button", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a2004", "expectedControlType": "Button", "processors": "", "interactions": "", "initialStateCheck": false },
-                { "name": "SpellEast", "type": "Button", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a2005", "expectedControlType": "Button", "processors": "", "interactions": "", "initialStateCheck": false },
-                { "name": "SpellSouth", "type": "Button", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a2006", "expectedControlType": "Button", "processors": "", "interactions": "", "initialStateCheck": false }
+                { "name": "SpellWest", "type": "Button", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a2003", "expectedControlType": "Button", "processors": "", "interactions": "Hold(duration=0.2)", "initialStateCheck": false },
+                { "name": "SpellNorth", "type": "Button", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a2004", "expectedControlType": "Button", "processors": "", "interactions": "Hold(duration=0.2)", "initialStateCheck": false },
+                { "name": "SpellEast", "type": "Button", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a2005", "expectedControlType": "Button", "processors": "", "interactions": "Hold(duration=0.2)", "initialStateCheck": false },
+                { "name": "SpellSouth", "type": "Button", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a2006", "expectedControlType": "Button", "processors": "", "interactions": "Hold(duration=0.2)", "initialStateCheck": false }
             ],
             "bindings": [
                 { "name": "", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a2010", "path": "<Gamepad>/leftTrigger", "interactions": "", "processors": "", "groups": "Gamepad", "action": "SpellLayer", "isComposite": false, "isPartOfComposite": false },

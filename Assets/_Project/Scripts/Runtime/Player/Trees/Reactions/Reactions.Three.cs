@@ -50,15 +50,15 @@ namespace Clover.Player.Trees
             // Wind and Life (25). Rooted 2 s (it can turn and swing). The next heavy blow while rooted tears it out:
             // thrown 6 m (twice Thunder Gust's 3) away from the player, 14 damage, 35 stagger, and a torn pit 1.5 m
             // across stands 5 s where it stood, seeding what walks into it; the pit counts as grown.
-            // NEEDS: a shove moment: any shove (a Gust, a ram, Riptide) tears it out, not only a heavy blow.
+            // Any shove or throw tears it out (StruckBy.Shove: a Gust, a ram, Riptide, a lift), a heavy blow among them.
             to.Add(Reaction(AfflictionKind.Unsteady, AfflictionKind.Seeded,
                 "Unsteady meets Seeded: the seed roots it for 2 s. A heavy blow while it is rooted tears it out and throws it far, 14 and 35 stagger, leaving a pit that seeds what walks in.",
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = WindRooted, Seconds = 2f, Flags = ConditionFlags.Rooted, EndsWith = ConditionBlow.Heavy } },
-                new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = WindRooted, By = StruckBy.Heavy, Do = UpgradeAction.Burst, Radius = 0.5f, Damage = 14f, Stagger = 35f,
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = WindRooted, Seconds = 2f, Flags = ConditionFlags.Rooted, EndsWith = ConditionBlow.Shove } },
+                new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = WindRooted, By = StruckBy.Shove, Do = UpgradeAction.Burst, Radius = 0.5f, Damage = 14f, Stagger = 35f,
                     Affliction = AfflictionKind.Seeded },
-                new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = WindRooted, By = StruckBy.Heavy, Do = UpgradeAction.Hazard, Radius = 0.75f, Seconds = 5f, Interval = 0.5f,
+                new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = WindRooted, By = StruckBy.Shove, Do = UpgradeAction.Hazard, Radius = 0.75f, Seconds = 5f, Interval = 0.5f,
                     Grown = true, Affliction = AfflictionKind.Seeded, Stacks = 1 },
-                new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = WindRooted, By = StruckBy.Heavy, Do = UpgradeAction.Push, Shape = HazardShape.Downwind, Amount = 6f }));
+                new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = WindRooted, By = StruckBy.Shove, Do = UpgradeAction.Push, Shape = HazardShape.Downwind, Amount = 6f }));
 
             // Ice and Earth (26). After 0.4 s the floor heaves up under it: thrown up 1 s, 12 damage, 25 stagger. What
             // cannot be lifted only reels and takes the stagger.
@@ -131,25 +131,25 @@ namespace Clover.Player.Trees
             // Dark and Lightning (32), rest 8 s, only once a Cursed enemy carries two Static or more (in either order).
             // A black cloud gathers over it for 8 s, and the enemy's next blow at you, landing or turned (the their-blow
             // moment), calls it down: a black bolt that discharges all its Static at double (14 a stack in 4 m) and stops
-            // it for 0.6 s. NEEDS: the cloud drifting to the nearest enemy within 6 m if it dies first (drift-on-death).
+            // it for 0.6 s. If it dies first the cloud drifts whole to the nearest enemy within 6 m (ConditionSpec.DriftsTo).
             to.Add(Reaction(AfflictionKind.Cursed, AfflictionKind.Static,
                 "Cursed and two Static or more: a black cloud gathers over its head and waits for the next blow it aims at you. Landed or guarded, the cloud strikes it: its Static discharges at double, and it is stopped for a moment.",
                 new ReactionDef { Rest = 8f, DepthOf = AfflictionKind.Static, Depth = 2 },
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Cloud, Seconds = 8f, EndsWith = ConditionBlow.TheirBlow } },
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Cloud, Seconds = 8f, EndsWith = ConditionBlow.TheirBlow, DriftsTo = 6f } },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionAttacked, Condition = Cloud, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Static, Radius = 4f, Damage = 7f, Stagger = 5f },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionAttacked, Condition = Cloud, Do = UpgradeAction.Hold, Seconds = 0.6f }));
 
             // Poison and Wind (33). Its poison goes loose while it carries both. A heavy blow (which shoves) sheds all of
             // it at once in a plume along its path, away from the player: three patches 1.2 m wide that lie 3 s and dose
             // each enemy in them once a second.
-            // NEEDS: a shove moment (a Gust, a lift and every shove shed it, not only a heavy); ground laid behind a moving
-            // enemy (the plume along the path it travels); the doses shed shared among the enemies the plume settles on.
+            // Every shove sheds it (StruckBy.Shove: a Gust, a lift, a heavy blow). NEEDS: ground laid behind a moving enemy (the plume
+            // along the path it travels, plume-along-path); the doses shed shared among the enemies the plume settles on.
             to.Add(Reaction(AfflictionKind.Poison, AfflictionKind.Unsteady,
                 "Poisoned meets Unsteady: its poison goes loose. When your heavy blow shoves it, it sheds all its poison in a plume behind it that doses all who stand in it.",
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition,
                     State = new ConditionSpec { Id = LooseDust, Seconds = 30f, While = AfflictionKind.Poison, While2 = AfflictionKind.Unsteady } },
-                new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = LooseDust, By = StruckBy.Heavy, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Poison },
-                new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = LooseDust, By = StruckBy.Heavy, Do = UpgradeAction.Hazard, Shape = HazardShape.Downwind, Count = 3,
+                new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = LooseDust, By = StruckBy.Shove, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Poison },
+                new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = LooseDust, By = StruckBy.Shove, Do = UpgradeAction.Hazard, Shape = HazardShape.Downwind, Count = 3,
                     Reach = 2.2f, Amount = 1.2f, Radius = 0.6f, Seconds = 3f, Interval = 1f, Affliction = AfflictionKind.Poison, Stacks = 1, SparesTarget = true }));
         }
     }

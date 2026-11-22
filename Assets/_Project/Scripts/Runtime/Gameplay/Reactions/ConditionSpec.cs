@@ -58,5 +58,65 @@ namespace Clover.Gameplay
         public ConditionBlow EndsWith;
         /// <summary>It ends once it has taken this many weapon blows, after answering the last (Logan Stone's third); 0 for no limit.</summary>
         public int Blows;
+        /// <summary>
+        /// What it is, when a shape sets it under a name of its own: the plain reaction's name for the same state (Hot
+        /// Shards' crack is a <c>thermalshock.cracked</c>). A mark that asks for an enemy in a condition another mark set
+        /// (<c>UpgradeEffect.InState</c>, the ledger's condition-needs) finds it by either name.
+        /// </summary>
+        public string Is = "";
+        /// <summary>It lasts only while the enemy is in this condition (by name or by what it is): once that ends, so does this, and its end is told.</summary>
+        public string WhileIn = "";
+        /// <summary>
+        /// Only critical weapon blows count toward it, are answered, and spend it; any other blow passes as if it were not
+        /// there (Kindling Point's shapes count only critical blows; Shining Herb's leaf is picked only by one).
+        /// </summary>
+        public bool CriticalOnly;
+        /// <summary>
+        /// The side of a blow on it is read against the way the enemy faced as it was set, not as it faces now (Rime's crust
+        /// grows on the side that faced you when it reacted).
+        /// </summary>
+        public bool KeepsFacing;
+        /// <summary>While it runs, a freeze on the enemy lasts this many seconds longer (Rime Tree: 1).</summary>
+        public float FreezeLonger;
+        /// <summary>While it runs, a shatter of the enemy strikes this many times as hard (Rime Tree: 1.25); 0 or 1 as written.</summary>
+        public float ShatterHarder;
+        /// <summary>
+        /// It ends at once when the enemy freezes, and its end is told then as an end the freeze brought (the ledger's
+        /// freeze-moment: Sleet Charge's bolt "at once if it freezes"; Stolen Warmth's last warmth torn out).
+        /// </summary>
+        public bool EndsOnFreeze;
+        /// <summary>
+        /// Above zero: when its carrier dies, it drifts whole (its time, beats and blows) to the nearest other enemy within
+        /// this many metres (the ledger's drift-on-death: The Grudge's black cloud, Ash Plume's storm).
+        /// </summary>
+        public float DriftsTo;
+        /// <summary>
+        /// Above zero: a death of another enemy within this many metres of its carrier is told to it, as a blow of its own kind
+        /// carrying the dead one's doses (StruckBy.DeathNear; the ledger's jar-deaths: Shut in the Dark's ring, 4 m across).
+        /// </summary>
+        public float DeathsWithin;
+        /// <summary>Metres its body is drawn down into the floor while it runs, for the look (The Ground Gives' sand: to the knees).</summary>
+        public float Sink;
+        /// <summary>
+        /// With <see cref="ConditionFlags.FacesPoint"/>: it is turned to face away from the player (Turned About), not toward
+        /// the middle of the spell that set it (Turned to the Sun's herb).
+        /// </summary>
+        public bool FaceAway;
+        /// <summary>Above zero: the seconds it lasts on an elite or boss, in place of the usual share (Turned About: 0.5 of 1.2).</summary>
+        public float EliteSeconds;
+        /// <summary>
+        /// Above zero: metres it may go from what holds it (the far end of its chain, the player, or the spot it was set on)
+        /// while this runs; never on a god (Black Chain: 4; Tethered: 5 from the player).
+        /// </summary>
+        public float Leash;
+        /// <summary>With <see cref="Leash"/>: the player holds the leash (Grasp's Tethered).</summary>
+        public bool LeashToPlayer;
+        /// <summary>
+        /// Above zero, for a chain set on others (<see cref="ToOthers"/>): with no one near to chain it to, the enemy is
+        /// chained to the floor within this many metres of where it stands instead (Black Chain: 2).
+        /// </summary>
+        public float AloneLeash;
+        /// <summary>With <see cref="ConditionFlags.Chained"/>: spell blows pass along the chain too, not only weapon blows (Shared Wound).</summary>
+        public bool SharesSpells;
     }
 }

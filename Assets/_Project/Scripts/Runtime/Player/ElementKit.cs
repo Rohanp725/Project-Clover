@@ -85,6 +85,17 @@ namespace Clover.Player
         public float SurgeBurstRadius = 7f;
         /// <summary>Lit, the surge turns all grey health back into health.</summary>
         public bool SurgeMendsGrey;
+        /// <summary>
+        /// Seconds each weapon blow that lands on a burning enemy adds to the surge while it lasts, up to twice its length
+        /// (Kindle's Fed Flame, steel/elements_a.md); zero for none.
+        /// </summary>
+        public float SurgeFeeds;
+        /// <summary>Seconds each blow the player takes smothers off the surge while it lasts (Fed Flame: 2); zero for none.</summary>
+        public float SurgeSmothers;
+        /// <summary>While the surge lasts, the last blow of every chain is critical (Overdrive's chain-ender).</summary>
+        public bool SurgeCritsChainEnd;
+        /// <summary>While the surge lasts, each flask drunk bursts out as a ring of water (Wellspring's The Flask Breaks).</summary>
+        public bool SurgeFlaskBreaks;
 
         /// <summary>The element's affliction.</summary>
         public AfflictionKind Affliction => Elements.ByNameOrFire(Name).Affliction;
@@ -122,6 +133,10 @@ namespace Clover.Player
             SpellReach = consumed ? 6.5f : 5.5f,
             SurgeDamage = consumed ? 1.45f : 1.3f,
             SurgeSeconds = consumed ? 13f : 10f,
+            // Fed Flame in place of its burn on every blow (steel/elements_a.md): the blade is the fuel.
+            SurgeBurnSeconds = 0f,
+            SurgeFeeds = 0.4f,
+            SurgeSmothers = 2f,
         };
 
         /// <summary>
@@ -149,6 +164,8 @@ namespace Clover.Player
             SurgeSpeed = 1.3f,
             SurgeStagger = 8f,
             SurgeSeconds = 10f,
+            // The last blow of every chain is critical (steel/elements_a.md).
+            SurgeCritsChainEnd = true,
         };
 
         // The nine below carry the names and numbers of docs/design/trees_a.md and trees_b.md as far as the forms that
@@ -179,6 +196,8 @@ namespace Clover.Player
             SpellForm = SpellForms.Tap, SurgeCost = 30f, SurgeSeconds = 12f,
             SurgeDamage = 1f, SurgeStacks = 1,
             SurgeMods = new[] { new StatMod(PlayerStat.FlaskHeal, 0.5f) },
+            // The Flask Breaks (steel/elements_a.md): each flask drunk while it lasts bursts out as a ring of water.
+            SurgeFlaskBreaks = true,
         });
 
         /// <summary>Life: a lash of thorn that seeds one enemy and the one beside it. The surge heals.</summary>
@@ -281,11 +300,17 @@ namespace Clover.Player
         public void KeepWait(float seconds) => SurgeWaitLeft = Math.Max(SurgeWaitLeft, Math.Min(seconds, SurgeCooldown));
 
         /// <summary>Begins the cast if the mana is there. <paramref name="costScale"/> is what the player's upgrades make of the cost.</summary>
-        public bool TryCast(ManaPool mana, float costScale = 1f)
+        public bool TryCast(ManaPool mana, float costScale = 1f) => TryCast(mana, costScale, false);
+
+        /// <summary>
+        /// As above; <paramref name="instant"/> skips the wind-up, so the next tick of the cast (even of no time) looses it
+        /// (Thunderclap's Master: the next cast after a perfect guard is instant). The recovery after it is kept.
+        /// </summary>
+        public bool TryCast(ManaPool mana, float costScale, bool instant)
         {
             if (IsCasting || !mana.TrySpend(SpellCost * costScale)) return false;
             IsCasting = true;
-            elapsed = 0f;
+            elapsed = instant ? SpellWindup : 0f;
             released = false;
             return true;
         }
@@ -295,8 +320,43 @@ namespace Clover.Player
         {
             if (SurgeWaitLeft > 0f || !mana.TrySpend(SurgeCost * costScale)) return false;
             surgeLength = SurgeSeconds * secondsScale;
+            litLength = surgeLength;
             SurgeLeft = surgeLength;
             return true;
+        }
+
+        // The surge's length as it was lit, before anything fed it.
+        private float litLength;
+
+        /// <summary>
+        /// Lights the surge for <paramref name="seconds"/> at no cost (a mark's gift), or keeps one already lit at least that
+        /// long. True when it was not lit before, so it begins now.
+        /// </summary>
+        public bool LightFree(float seconds)
+        {
+            if (seconds <= 0f) return false;
+            if (SurgeActive)
+            {
+                if (SurgeLeft < seconds) Lengthen(seconds - SurgeLeft);
+                return false;
+            }
+            surgeLength = seconds;
+            litLength = seconds;
+            SurgeLeft = seconds;
+            return true;
+        }
+
+        /// <summary>Feeds a burning surge (Fed Flame): <paramref name="seconds"/> more, never past twice the length it was lit for.</summary>
+        public void Feed(float seconds) => Lengthen(seconds, FedMost(litLength));
+
+        /// <summary>The longest a fed surge may burn: twice the length it was lit for.</summary>
+        public static float FedMost(float lit) => Math.Max(0f, lit) * 2f;
+
+        /// <summary>Smothers a burning surge (Fed Flame struck): <paramref name="seconds"/> fewer; it goes out on its next tick if that was all.</summary>
+        public void Smother(float seconds)
+        {
+            if (!SurgeActive || seconds <= 0f) return;
+            SurgeLeft = Math.Max(0.0001f, SurgeLeft - seconds);
         }
 
         /// <summary>

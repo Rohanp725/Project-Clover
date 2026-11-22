@@ -29,15 +29,13 @@ both carried.
 ## thermalshock.hotstone
 **What it does.** A perfect guard against a cracked enemy splits it right away.
 
-**When it happens.** Each perfect guard (press the guard button just before a blow lands) against an enemy that has both Burn and Chill.
+**When it happens.** Each perfect guard (press the guard button just before a blow lands) against a Cracked enemy, in any shape of Thermal Shock.
 
-**The numbers.** Mix, 3 Shards. 30 damage and 40 stagger.
+**The numbers.** Mix, 3 Shards. The crack splits just as a heavy blow would split it: 30 damage and 40 stagger, and with Hot Shards the shards fly too. The crack is used up. With Crazing, the crack splits once more right away: 10 damage and 12 stagger.
 
 **Works with.** Thermal Shock, Kiln Stance, Spark and Rime.
 
 **Example.** A cracked brute swings. Guard it perfectly, and it splits without your heavy blow.
-
-**Not built yet.** For now, it works on any attacker that has both afflictions, not only a cracked one.
 
 ## thermalshock.neitherwins
 **What it does.** On an enemy that has both, neither the Burn nor the Chill fades.
@@ -55,13 +53,11 @@ both carried.
 
 **When it happens.** Each time a burning enemy shatters, while you carry both Fire and Ice.
 
-**The numbers.** Mix, keystone, 5 Shards. Two Burns on everything within 3 metres, at most five times a second.
+**The numbers.** Mix, keystone, 5 Shards. Any weapon blow or spell that hits a Frozen, burning enemy shatters it. Two Burns on everything within 3 metres, at most five times a second.
 
 **Works with.** Hoarfrost and Winter Wall (to freeze enemies), Spark and Rime, Thermal Shock.
 
 **Example.** Freeze a burning soldier in a pack and shatter it. The pack catches fire.
-
-**Not built yet.** The shatter still needs a heavy blow for now. The spreading fire is built.
 
 ## thermalshock.firesetting
 **What it does.** A fire is lit against the enemy you face. When it is put out with a splash of frost, the heated body splits: a hard hit and three Chill, and the enemies next to it take half.

@@ -12,6 +12,28 @@ namespace Clover.Player.Forms
         public static float Warning(float delay) => Mathf.Max(LeastWarning, delay);
 
         /// <summary>
+        /// The step a stance lets the player walk this frame: the stick's way at <paramref name="share"/> of the run's pace
+        /// (Firewalker: half); nothing when the stance roots them.
+        /// </summary>
+        public static Vector3 StanceStep(Vector3 wish, float runSpeed, float share, float deltaTime)
+        {
+            if (share <= 0f || deltaTime <= 0f) return Vector3.zero;
+            wish.y = 0f;
+            if (wish.sqrMagnitude > 1f) wish.Normalize();
+            return wish * (runSpeed * Mathf.Min(1f, share) * deltaTime);
+        }
+
+        /// <summary>A spell's own time where it sets one (above zero), else the form's (the ledger's form-times).</summary>
+        public static float Own(float spec, float form) => spec > 0f ? spec : form;
+
+        /// <summary>
+        /// Seconds from a running mark's passing to the break under it: just behind the mark (<paramref name="lead"/>), or,
+        /// with a glow, once the whole line of <paramref name="reach"/> is marked at <paramref name="speed"/> and has glowed.
+        /// </summary>
+        public static float BreakLead(float reach, float speed, float glow, float lead) =>
+            glow > 0f ? Mathf.Max(0f, reach) / Mathf.Max(2f, speed) + glow : lead;
+
+        /// <summary>
         /// Where the n-th of <paramref name="count"/> things stands in a ring of a radius: evenly round, starting
         /// straight ahead (+Z) and going clockwise seen from above, turned by <paramref name="turnDegrees"/>.
         /// </summary>

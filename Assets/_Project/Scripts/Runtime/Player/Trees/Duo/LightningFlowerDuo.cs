@@ -72,29 +72,30 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.LeftLow));
 
-            // NEEDS: something hung on the blade for the next blow of a kind on any enemy (blade-carries): the leaf rides your
-            // blade to your next heavy blow wherever it lands; now it hangs on the attacker guarded, and your next heavy blow on
-            // that one spends all its Static in a discharge of twice the strength, 14 a stack in 4 m.
+            // The leaf rides your blade (a count of one the mark keeps, for 8 s) to your next heavy blow's discharge wherever it
+            // lands: that discharge strikes again at its own strength, twice in all (the ledger's blade-carries).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = TheFavouredOak, Name = "The Favoured Oak", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Shield,
                 Description = "A perfect guard against a Seeded enemy hangs a scorched oak leaf on your blade. Your next heavy blow discharges at twice the strength.",
+                Tally = new TallySpec { Name = "Leaf", Cap = 1 },
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Needs = AfflictionKind.Seeded, Cooldown = 1f, Do = UpgradeAction.Condition,
-                        State = new ConditionSpec { Id = Leaf, Seconds = 8f, EndsWith = ConditionBlow.Heavy } },
-                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Leaf, By = StruckBy.Heavy, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Static },
-                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Leaf, By = StruckBy.Heavy, Do = UpgradeAction.Burst, Affliction = AfflictionKind.Static, Radius = 4f, Damage = 14f, Stagger = 10f, PerStack = true },
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Needs = AfflictionKind.Seeded, Cooldown = 1f, Do = UpgradeAction.Bank, Count = 1, Seconds = 8f },
+                    new UpgradeEffect { On = UpgradeTrigger.SetOff, Spent = AfflictionKind.Static, Spends = 1, Do = UpgradeAction.Burst, ByPower = true, Affliction = AfflictionKind.Static, Stacks = 0, Radius = 4f, Stagger = 10f },
                 },
             }, HeartPattern.RightLow));
 
-            // NEEDS: grown things as sources (grown-sources): 3 health for every bolt a grown thing throws into the flower, and
-            // each that throws one standing 3 s longer; now the fern's own bolt is the one bolt, so each Lightning Flower heals 3.
+            // 3 health for every bolt a grown thing throws into the flower, and each that throws one stands 3 s longer (GrownBolt).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = RainOnTheField, Name = "Rain on the Field", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { StormSeason, TheFavouredOak }, Icon = UpgradeIcons.Drop,
                 Description = "Each Lightning Flower mends you 3 for every bolt thrown into it, and every grown thing that throws one stands 3 s longer.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = Reaction, Do = UpgradeAction.Heal, Amount = 3f } },
+                Effects = new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.GrownBolt, Do = UpgradeAction.Heal, Amount = 3f },
+                    new UpgradeEffect { On = UpgradeTrigger.GrownBolt, Do = UpgradeAction.Tend, Radius = 0.5f, Seconds = 3f },
+                },
             }, HeartPattern.Keystone));
 
             // The duo spell, bought with 5 Shards once both are carried (no god gives it): a detonator on a 10 s cooldown
@@ -102,12 +103,12 @@ namespace Clover.Player.Trees.Duo
             // flowers, and holds the seed for 6 s: your next heavy blow on it calls lightning down on it, 12 and 20 stagger in
             // 1.5 m.
             // NEEDS: seven seeds flung in a fan, the ones that miss lying in the floor, and one heavy blow or discharge anywhere
-            // calling lightning onto every seed at once (form-pieces; now each seeded enemy answers your heavy blow on it); a
-            // finisher striking every bolt twice (finisher-only).
+            // calling lightning onto every seed at once (form-pieces; now each seeded enemy answers your heavy blow on it). A
+            // finisher strikes the bolt twice (StruckBy.Finisher).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = SowingThunder, Name = "Sowing Thunder", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Role = SpellRole.Detonator, Requires = new[] { StormSeason, TheFavouredOak }, Icon = UpgradeIcons.Bolt,
-                Description = "You fling seven seeds in a fan 6 m ahead, like a farmer sowing; each that strikes an enemy Seeds it. For 6 s your heavy blow on a seeded one calls lightning down onto its seed, 12 and 20 stagger round it.",
+                Description = "You fling seven seeds in a fan 6 m ahead, like a farmer sowing; each that strikes an enemy Seeds it. For 6 s your heavy blow on a seeded one calls lightning down onto its seed, 12 and 20 stagger round it; a finisher calls it twice.",
                 Form = SpellForms.Wave,
                 Spell = new SpellSpec { Reach = 6f, Arc = 70f, Damage = 4f, Stagger = 6f, Stacks = 1 },
                 Effects = new[]
@@ -115,6 +116,8 @@ namespace Clover.Player.Trees.Duo
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Seeded, Stacks = 1 },
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Sown, Seconds = 6f, EndsWith = ConditionBlow.Heavy } },
                     new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Sown, By = StruckBy.Heavy, Do = UpgradeAction.Falling, Delay = 0.1f, Radius = 1.5f, Damage = 12f, Stagger = 20f,
+                        Affliction = AfflictionKind.Static, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Sown, By = StruckBy.Finisher, Do = UpgradeAction.Falling, Delay = 0.45f, Radius = 1.5f, Damage = 12f, Stagger = 20f,
                         Affliction = AfflictionKind.Static, Stacks = 1 },
                 },
             }, HeartPattern.Spell));

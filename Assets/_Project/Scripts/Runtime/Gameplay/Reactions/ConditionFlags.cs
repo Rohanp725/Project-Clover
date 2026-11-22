@@ -46,5 +46,43 @@ namespace Clover.Gameplay
         /// drawn on the body as plain flame while this holds (the owner's word of 2026-11-20). The Burn still bites.
         /// </summary>
         FlameLive = 1 << 13,
+        /// <summary>The damage it takes from heavy weapon blows only is multiplied by the run's Scale (Short of Breath).</summary>
+        HeavyTakenShare = 1 << 14,
+        /// <summary>The stagger it takes from weapon blows only is multiplied by the run's Scale (The Lamp Goes Out).</summary>
+        WeaponStaggerShare = 1 << 15,
+        /// <summary>A plain guard against its blows counts as a perfect guard (Snapped Blade's brittle weapon; the ledger's guard-made-perfect).</summary>
+        GuardMadePerfect = 1 << 16,
+        /// <summary>Its balance does not recover while this lasts (Whirlpool's water, Ash Fall's ash; the ledger's enemy-balance-held).</summary>
+        BalanceHeld = 1 << 17,
+        /// <summary>It cannot turn: an attack it begins goes where it already faced (the ledger's cannot-turn).</summary>
+        CannotTurn = 1 << 18,
+        /// <summary>It turns at the run's Scale of its usual pace (The Sea Takes It's seized joints: 0.6, turning 40% slower).</summary>
+        TurnSlowed = 1 << 19,
+        /// <summary>
+        /// Its feet are caught (sunk in sand, coiled in roots): it begins no leap or blink, its lunges drive it nowhere, and it
+        /// never steps back; it still walks on, turns and strikes where it stands (the ledger's no-dodge-or-leap).
+        /// </summary>
+        Mired = 1 << 20,
+        /// <summary>Heavy blows pass its guard while this lasts (Driven Down, on a sunk enemy); light ones are still turned.</summary>
+        HeavyPassesGuard = 1 << 21,
+        /// <summary>
+        /// It is turned to face a point for a moment (the run's face point: a spell's middle, or away from the player): it
+        /// swings round to it whatever it was tracking and walks nowhere while it lasts (the ledger's turn-to-face).
+        /// </summary>
+        FacesPoint = 1 << 22,
+        /// <summary>A weapon blow that lands on its back is critical (Turned to the Sun, Turned About).</summary>
+        BackCritical = 1 << 23,
+        /// <summary>
+        /// It is chained to another enemy (the run's Link): the run's Scale of every weapon blow on either is dealt to the
+        /// other too, and of spell blows as well when the spec says so (Black Chain, Shared Wound; <see cref="EnemyChains"/>).
+        /// </summary>
+        Chained = 1 << 24,
+        /// <summary>Its shadow is cut loose and lies apart from it at the run's point; a weapon blow on the shadow strikes the body (<see cref="LooseShadows"/>).</summary>
+        ShadowLoose = 1 << 25,
+        /// <summary>
+        /// It is swallowed: out of the fight and unseen while this lasts (no body to strike or bump, nothing drawn), and put
+        /// down at the player's feet when it ends (Devouring Maw's Rahu; the ledger's swallowed).
+        /// </summary>
+        Swallowed = 1 << 26,
     }
 }

@@ -24,11 +24,69 @@ namespace Clover.Player
         public float Speed;
         public float LingerDamage;
         public float AfflictionSeconds;
+        /// <summary>The blows a charge of the blade from the spell lasts (<see cref="SpellSpec.ChargeBlows"/>).</summary>
+        public int ChargeBlows;
+        /// <summary>Seconds a form's lasting thing stands (<see cref="SpellSpec.Lasts"/>).</summary>
+        public float Lasts;
+        /// <summary>The share of the run's pace walked at while its stance holds (<see cref="SpellSpec.Walk"/>).</summary>
+        public float Walk;
+        /// <summary>The form carries what it strikes before it (<see cref="SpellSpec.Carries"/>).</summary>
+        public bool Carries;
 
         /// <summary>True when it changes nothing.</summary>
         public bool IsEmpty =>
             Cooldown == 0f && Mana == 0f && Damage == 0f && Stagger == 0f && Reach == 0f && Radius == 0f && Arc == 0f && Seconds == 0f
-            && Interval == 0f && Count == 0 && Stacks == 0 && Delay == 0f && Speed == 0f && LingerDamage == 0f && AfflictionSeconds == 0f;
+            && Interval == 0f && Count == 0 && Stacks == 0 && Delay == 0f && Speed == 0f && LingerDamage == 0f && AfflictionSeconds == 0f && ChargeBlows == 0 && Lasts == 0f && Walk == 0f && !Carries;
+
+        /// <summary>
+        /// Writes what it adds to <paramref name="learn"/>'s numbers onto <paramref name="spec"/>'s (an Empower over a shape that
+        /// takes its rise: <see cref="EmpowerOverShape.Adds"/>). Its wait and price are set as written.
+        /// </summary>
+        public void AddOver(SpellSpec spec, SpellSpec learn)
+        {
+            if (spec == null) return;
+            if (learn == null)
+            {
+                ApplyTo(spec);
+                return;
+            }
+            if (Cooldown > 0f) spec.Cooldown = Cooldown;
+            if (Mana > 0f) spec.Cost = Mana;
+            if (Damage > 0f) spec.Damage = System.Math.Max(0f, spec.Damage + Damage - learn.Damage);
+            if (Stagger > 0f) spec.Stagger = System.Math.Max(0f, spec.Stagger + Stagger - learn.Stagger);
+            if (Reach > 0f) spec.Reach = System.Math.Max(0.1f, spec.Reach + Reach - learn.Reach);
+            if (Radius > 0f) spec.Radius = System.Math.Max(0.1f, spec.Radius + Radius - learn.Radius);
+            if (Arc > 0f) spec.Arc = System.Math.Max(1f, spec.Arc + Arc - learn.Arc);
+            if (Seconds > 0f) spec.Seconds = System.Math.Max(0.05f, spec.Seconds + Seconds - learn.Seconds);
+            if (Interval > 0f) spec.Interval = System.Math.Max(0.05f, spec.Interval + Interval - learn.Interval);
+            if (Count > 0) spec.Count = System.Math.Max(1, spec.Count + Count - learn.Count);
+            if (Stacks > 0) spec.Stacks = System.Math.Max(0, spec.Stacks + Stacks - learn.Stacks);
+            if (Delay > 0f) spec.Delay = System.Math.Max(0f, spec.Delay + Delay - learn.Delay);
+            if (Speed > 0f) spec.Speed = System.Math.Max(0.1f, spec.Speed + Speed - learn.Speed);
+            if (LingerDamage > 0f) spec.LingerDamage = System.Math.Max(0f, spec.LingerDamage + LingerDamage - learn.LingerDamage);
+            if (AfflictionSeconds > 0f) spec.AfflictionSeconds = System.Math.Max(0f, spec.AfflictionSeconds + AfflictionSeconds - learn.AfflictionSeconds);
+            if (Lasts > 0f) spec.Lasts = System.Math.Max(0.05f, spec.Lasts + Lasts - learn.Lasts);
+        }
+
+        /// <summary>Puts back from <paramref name="before"/> every number this change sets (a shape keeping its own under an Empower).</summary>
+        public void KeepOwn(SpellSpec spec, SpellSpec before)
+        {
+            if (spec == null || before == null) return;
+            if (Damage > 0f) spec.Damage = before.Damage;
+            if (Stagger > 0f) spec.Stagger = before.Stagger;
+            if (Reach > 0f) spec.Reach = before.Reach;
+            if (Radius > 0f) spec.Radius = before.Radius;
+            if (Arc > 0f) spec.Arc = before.Arc;
+            if (Seconds > 0f) spec.Seconds = before.Seconds;
+            if (Interval > 0f) spec.Interval = before.Interval;
+            if (Count > 0) spec.Count = before.Count;
+            if (Stacks > 0) spec.Stacks = before.Stacks;
+            if (Delay > 0f) spec.Delay = before.Delay;
+            if (Speed > 0f) spec.Speed = before.Speed;
+            if (LingerDamage > 0f) spec.LingerDamage = before.LingerDamage;
+            if (AfflictionSeconds > 0f) spec.AfflictionSeconds = before.AfflictionSeconds;
+            if (Lasts > 0f) spec.Lasts = before.Lasts;
+        }
 
         /// <summary>Writes every number it sets over <paramref name="spec"/>'s.</summary>
         public void ApplyTo(SpellSpec spec)
@@ -49,6 +107,10 @@ namespace Clover.Player
             if (Speed > 0f) spec.Speed = Speed;
             if (LingerDamage > 0f) spec.LingerDamage = LingerDamage;
             if (AfflictionSeconds > 0f) spec.AfflictionSeconds = AfflictionSeconds;
+            if (ChargeBlows > 0) spec.ChargeBlows = ChargeBlows;
+            if (Lasts > 0f) spec.Lasts = Lasts;
+            if (Walk > 0f) spec.Walk = Walk;
+            if (Carries) spec.Carries = true;
         }
 
         /// <summary>Copies every number of one spec into another (no allocation): how a spell's own numbers are taken before changes are laid over them.</summary>
@@ -73,6 +135,33 @@ namespace Clover.Player
             into.LingerDamage = from.LingerDamage;
             into.HealthCost = from.HealthCost;
             into.MissedWait = from.MissedWait;
+            // What it seeks and how it ends go with the numbers: a branch's spell cast through its Learn keeps its aim.
+            into.AimAt = from.AimAt;
+            into.AimAt2 = from.AimAt2;
+            into.AimFarthest = from.AimFarthest;
+            into.AimMissShare = from.AimMissShare;
+            into.OnlyCarrying = from.OnlyCarrying;
+            into.OnlyCarrying2 = from.OnlyCarrying2;
+            into.Seal = from.Seal;
+            into.PerDose = from.PerDose;
+            into.PassReach = from.PassReach;
+            into.StepReach = from.StepReach;
+            into.ChargeBlows = from.ChargeBlows;
+            into.HealthScaled = from.HealthScaled;
+            into.HealthShare = from.HealthShare;
+            into.Lasts = from.Lasts;
+            into.Between = from.Between;
+            into.Glow = from.Glow;
+            into.Walk = from.Walk;
+            into.Quiet = from.Quiet;
+            into.Carries = from.Carries;
+            into.FlaskCost = from.FlaskCost;
+            into.HoldUpTo = from.HoldUpTo;
+            into.HeldDamage = from.HeldDamage;
+            into.HeldStagger = from.HeldStagger;
+            into.Rings = from.Rings;
+            into.RingsFor = from.RingsFor;
+            into.Ebb = from.Ebb;
         }
     }
 
@@ -91,6 +180,8 @@ namespace Clover.Player
         /// spell of its own (Daybreak's 10 a ring is the beam's, not Red Before the Sun's wall or High Noon's column).
         /// </summary>
         public bool LearnOnly;
+        /// <summary>For a base spell's Empower: its numbers are not the kit's cast's own (Flung Blade's 16 is the drive's, not the throw's), so the kit takes only its wait.</summary>
+        public bool NotForKit;
 
         /// <summary>True when it changes nothing at all: no spell number, no wait or price, and no effect of its Learn.</summary>
         public bool DoesNothing => IsEmpty && (Effects == null || Effects.Length == 0);

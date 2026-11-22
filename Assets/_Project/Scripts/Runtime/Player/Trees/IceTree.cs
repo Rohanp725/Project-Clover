@@ -111,13 +111,14 @@ namespace Clover.Player.Trees
                 new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = AfflictionKind.Chill, NeedsFull = true, Do = UpgradeAction.ResetCooldown } },
                 "Let it land in the moment its enemy freezes, and it shatters it four times over and its cooldown comes back.");
 
-            // NEEDS: every reaction with Chill in it slowing all it struck (a reaction's struck set); until then the enemy it happened on.
+            // Every reaction with Chill in it slows all it struck: the enemy it went off on and each its blows reached
+            // (UpgradeTrigger.ReactionStruck, UpgradeEffect.ReactionWith).
             to.Add(BranchPattern.Put(new Upgrade { Id = ColdSettles, Name = "Cold Settles", Element = E, Kind = UpgradeKind.Major, Lifts = E, Requires = new[] { FlyingShards }, Icon = UpgradeIcons.Snowflake,
                 Description = "Every reaction with Chill in it leaves frozen ground where it happened for four seconds, and what it struck is slower for two.",
                 Effects = new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.Reacted, Needs = AfflictionKind.Chill, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Radius = 1.5f, Seconds = 4f, Interval = 1f, Damage = 1f, Affliction = AfflictionKind.Chill, Stacks = 1 },
-                    new UpgradeEffect { On = UpgradeTrigger.Reacted, Needs = AfflictionKind.Chill, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Settled, Seconds = 2f, Pace = 0.6f } },
+                    new UpgradeEffect { On = UpgradeTrigger.ReactionStruck, ReactionWith = AfflictionKind.Chill, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Settled, Seconds = 2f, Pace = 0.6f } },
                 } },
                 BranchPattern.MiddleCrown));
             // Built: the shatter itself is tripled (ShatterDamage) and Chill slows no one (Afflictions.ChillSlowOff); it still freezes at five.
@@ -148,8 +149,8 @@ namespace Clover.Player.Trees
                 UpgradeIcons.Shield,
                 new Empower { Cooldown = 7f, Radius = 4f },
                 "Rime Guard waits 7 seconds, not 9, and its fog reaches four metres.",
-                // NEEDS: the Empower's wider fog not reaching past this shape's own (an Empower sets its numbers after the shape's).
-                new ShapeDef { Name = "Freezing Fog",
+                // The Empower's wider fog does not reach past this shape's own (EmpowerOverShape.KeepsOwn); its shorter wait does.
+                new ShapeDef { Name = "Freezing Fog", Empowered = EmpowerOverShape.KeepsOwn,
                     Description = "The fog stays where it was breathed, five metres wide, and everything in it gains a Chill a second. Hold a door.",
                     Change = new SpellChange { Radius = 2.5f, Stacks = 1 } },
                 // NEEDS: the rime on the guard for 6 s after the cast. Until then, while this shape is worn, every guard chills and
@@ -177,9 +178,11 @@ namespace Clover.Player.Trees
                     new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Spends = 1, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 5 },
                 });
 
-            // A perfect guard's mana and its cut to every cooldown; the turned blow does not yet count as a perfect guard for other marks.
+            // A perfect guard's mana and its cut to every cooldown, and the turned blow counts as a perfect guard for every mark that
+            // answers one (PlayerStat.WardTurnsPerfect).
             to.Add(BranchPattern.Put(new Upgrade { Id = SplinterWard, Name = "Splinter Ward", Element = E, Kind = UpgradeKind.Major, Requires = new[] { ColdRead }, Icon = UpgradeIcons.Shield,
                 Description = "When Glaze breaks, it bursts round you and gives what a perfect guard gives: its mana, and two seconds off every cooldown.",
+                Stats = new[] { new StatMod(PlayerStat.WardTurnsPerfect, 1f) },
                 Effects = new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.WardSpent, Do = UpgradeAction.Burst, At = EffectAt.Self, Damage = 12f, Stagger = 30f, Radius = 3.5f, Affliction = AfflictionKind.Chill, Stacks = 3 },
@@ -230,7 +233,7 @@ namespace Clover.Player.Trees
             SpellBranch.Add(to, E, Hoarfrost, "Hoarfrost", SpellRole.Opener, BranchPattern.RightA, Root, "", null,
                 "Ice's own spell, given with the element. Thirteen crystals grow out over a fan four and a half metres ahead: 10 damage, 15 stagger and Chill two deep. They stand four seconds, and a weapon blow among them shatters them all for 5 damage and one more Chill.",
                 UpgradeIcons.Snowflake,
-                // NEEDS: Chill three deep. The base spell is cast by its kit, which takes only the Empower's wait.
+                // Chill three deep. The Empower's numbers reach the kit's own cast too (PlayerUpgrades.BaseEmpower, read by PlayerElement).
                 new Empower { Cooldown = 5.5f, Stacks = 3 },
                 "Hoarfrost waits 5.5 seconds, not 7, and chills three deep.",
                 // Black Ice, once a major, folded in. NEEDS: enemies on the sheet thrown half again as far, and a dodge on it
@@ -242,14 +245,9 @@ namespace Clover.Player.Trees
                     Description = "One branching line of frost creeps ten metres along the floor in a moment, laying two Chill on all it crosses. It reaches the archer behind the shield.",
                     Spell = new SpellSpec { Reach = 10f, Speed = 16f, Count = 1, Radius = 0.7f, Damage = 8f, Stagger = 10f, Stacks = 2 } },
                 "Opens two shapes of Hoarfrost, chosen at any rest fire: Black Ice, a sheet of ice on the ground, or Frost Line, one long creeping line.",
-                // NEEDS: only Hoarfrost cast within 0.5 s after a shatter, its crystals grown from the shattered spot
-                // (spell-windows). Until then, for a moment after a shatter, the next blow or spell on each enemy near it lays
-                // two more Chill.
-                new[]
-                {
-                    new UpgradeEffect { On = UpgradeTrigger.Shatter, Do = UpgradeAction.Condition, Radius = 6f, State = new ConditionSpec { Id = FreshBreak, Seconds = 0.8f, EndsWith = ConditionBlow.Any } },
-                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = FreshBreak, By = StruckBy.Any, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 2 },
-                },
+                // Only Hoarfrost cast within 0.5 s after a shatter (UpgradeEffect.CastAfter): its Chill four deep. NEEDS: the crystals
+                // grown out from the shattered spot (form-pieces).
+                new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, CastAfter = CastMoment.Shatter, CastWindow = 0.5f, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 2 } },
                 "Cast it within half a second after a shatter, and the crystals grow out from the shattered spot, Chill four deep.");
 
             // The drill carries the slide and leaves the lane; nothing can touch you for the whole slide, where the design asks
@@ -285,13 +283,11 @@ namespace Clover.Player.Trees
                     Description = "While you slide you loose three shards of ice at the nearest enemy, 8 damage and a Chill each, as she shoots from her skis.",
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Projectile, Flight = Flight.Homing, Count = 3, Damage = 8f, Stagger = 6f, Radius = 0.5f, Speed = 18f, Seconds = 0.8f, Affliction = AfflictionKind.Chill, Stacks = 1 } } },
                 "Opens two shapes of Ski Run, chosen at any rest fire: Thin Ice, a lane that gives under those who follow, or Shooting Run, shards loosed as you slide.",
-                // NEEDS: the shared movement rule's timing (started as a blow would land, blow-about-to-land), and the moment of a
-                // shatter. Until then the cast gives what a perfect dodge gives, and sliding through a Frozen enemy freezes
-                // everything on the lane on from it.
+                // Started as a blow would land (UpgradeEffect.BlowLanding), it is a perfect dodge (UpgradeAction.PerfectDodgeNow). NEEDS: the
+                // moment of a shatter; until then sliding through a Frozen enemy freezes everything on the lane on from it.
                 new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Mana, Amount = 12f },
-                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.CutCooldowns, Amount = 1.5f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, BlowLanding = 0.3f, Do = UpgradeAction.PerfectDodgeNow },
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = AfflictionKind.Chill, NeedsFull = true, Do = UpgradeAction.Lane, Reach = 9f, Radius = 1f, Damage = 0f, Stagger = 0f, Affliction = AfflictionKind.Chill, Stacks = 5, Cooldown = 1f },
                 },
                 "Started in the instant a blow would land on you, it counts as a perfect dodge. Slide through an enemy in the moment it shatters, and the lane freezes everything standing on it.");

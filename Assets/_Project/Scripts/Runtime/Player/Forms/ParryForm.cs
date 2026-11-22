@@ -28,6 +28,8 @@ namespace Clover.Player.Forms
             player.FormParrying = true;
             player.FormGuardPose = true;
             player.FormSwordOut = true;
+            // A stance one walks in (Firewalker: half the pace); the plain stance roots.
+            player.FormWalk = cast.Spec.Walk;
             SpellWorks.Marks(run)[0] = FormFx.HoldMark(FormMark.Sigil, FormKit.Lit(cast.Colour, 2.6f));
             SpellWorks.Marks(run)[1] = FormFx.HoldMark(FormMark.Ring, FormKit.Lit(cast.Colour, 2f));
             ElementLook.Sparks(cast.Element, cast.Origin + Vector3.up * 1.2f + cast.Forward * 0.7f, cast.Forward, 0.6f);
@@ -88,6 +90,21 @@ namespace Clover.Player.Forms
                 if (toward.sqrMagnitude > 0.01f) body.rotation = Quaternion.LookRotation(toward, Vector3.up);
                 var blow = cast.Blow(cast.Damage, cast.Stagger);
                 blow.Heavy = true;
+                if (cast.Spec.Quiet)
+                {
+                    // Turned but not answered (Stone Skin): the blow reaches the one who struck for nothing and unseen, so
+                    // the shape's own effects hear whom it turned.
+                    var told = cast.Blow(0f, 0f, 0);
+                    told.Unseen = true;
+                    cast.Combat.StrikeCone(cast.Reach, cast.Spec.Arc, told);
+                    ElementLook.Puff(cast.Element, body.position + Vector3.up * 1.2f + body.forward * 0.6f, Vector3.up, 0.6f);
+                    FormFx.ReleaseMark(marks[0]);
+                    FormFx.ReleaseMark(marks[1], 0.1f);
+                    marks[0] = marks[1] = -1;
+                    run.Phase = 1;
+                    run.T0 = run.Age;
+                    return true;
+                }
                 if (cast.Affliction == Clover.Gameplay.AfflictionKind.Burn)
                 {
                     Kiln(ref run, blow);

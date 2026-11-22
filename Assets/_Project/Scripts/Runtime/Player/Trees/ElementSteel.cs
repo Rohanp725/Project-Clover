@@ -44,6 +44,9 @@ namespace Clover.Player
         /// <summary>True when a charged blow of this element passes any guard (Metal's: "a shield or a raised guard takes them in full").</summary>
         public static bool PassesGuard(string element) => element == Elements.Metal;
 
+        /// <summary>True when a blow charged with this element cannot be stopped once wound up: Earth's (the ledger's unshaken).</summary>
+        public static bool Unstoppable(string element) => element == Elements.Earth;
+
         /// <summary>How many stacks a charged blow lays: one, or two for Poison ("each charged blow doses twice").</summary>
         public static int Stacks(string element) => element == Elements.Poison ? 2 : 1;
 
@@ -118,7 +121,7 @@ namespace Clover.Player
                     }
                     break;
                 case Elements.Earth:
-                    // Each throws a short spray of gravel: a 2 m cone, 4 damage. NEEDS: the wound-up blow that cannot be stopped (unshaken).
+                    // Each throws a short spray of gravel: a 2 m cone, 4 damage. The wound-up blow cannot be stopped (Unstoppable).
                     combat.StrikeCone(2.6f, 60f, Blow(element, 4f, 4f, 0));
                     if (!own) Vfx.Play(VfxKind.Dust, Ground(at), forward, 1.2f);
                     break;
@@ -132,10 +135,13 @@ namespace Clover.Player
                     }
                     break;
                 case Elements.Dark:
-                    // NEEDS: the shadow cut loose (an enemy state, shadow-cut-loose). For now the third sinks smoke at its feet and Curses twice more.
+                    // The third cuts its shadow loose (ConditionFlags.ShadowLoose): for 4 s the shadow lies 2 m off on the side away
+                    // from you, the enemy takes 25% more, and a weapon blow on the shadow strikes the body too (LooseShadows).
                     if (blow.Third && target is IAfflictable cursed)
                     {
-                        cursed.Afflictions.Lay(AfflictionKind.Cursed, 2, 0f, 1f, LaySource.Weapon, target);
+                        int slot = cursed.Afflictions.Conditions.Set(ShadowCutLoose, target);
+                        cursed.Afflictions.Conditions.FaceToward(slot, LooseShadows.SpotFor(target.transform.position, combat.transform.position));
+                        LooseShadows.Note(target);
                         if (!ElementArt.Ready) Vfx.Play(VfxKind.TintPuff, Ground(at) + Vector3.up * 0.3f, Vector3.down, 1.4f, ElementSubstance.Shade(element.Colour));
                     }
                     break;
@@ -390,6 +396,12 @@ namespace Clover.Player
         // ---- Pieces.
 
         private static Vector3 Ground(Vector3 at) => new Vector3(at.x, at.y + 0.05f, at.z);
+
+        /// <summary>Dark's third charged blow: the shadow cut loose for 4 s, the body taking 25% more.</summary>
+        public static readonly ConditionSpec ShadowCutLoose = new ConditionSpec
+        {
+            Id = "dark.charged.shadowloose", Seconds = 4f, Flags = ConditionFlags.ShadowLoose | ConditionFlags.DamageTakenShare, Scale = 1.25f,
+        };
 
         private static SpellBlow Blow(ElementInfo element, float damage, float stagger, int stacks, bool heavy = false) => new SpellBlow
         {

@@ -25,9 +25,8 @@ namespace Clover.Player.Trees.Duo
         {
             const string A = Elements.Life, B = Elements.Poison;
 
-            // NEEDS: depth-moved (Gathered In's doses drawn out of each joined enemy into the host itself, to eight; now each
-            // bite on a joined enemy passes one of its doses to the nearest other enemy within 5 m, most often the host);
-            // in-own-ground (Summer Grass's 6 health only while you stand inside the spores; now wherever you stand).
+            // Gathered In draws each joined enemy's bitten dose along the roots into the host itself, to eight (UpgradeEffect.ToLink).
+            // NEEDS: in-own-ground (Summer Grass's 6 health only while you stand inside the spores; now wherever you stand).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Rot Roots: Gathered In or Summer Grass", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -42,8 +41,7 @@ namespace Clover.Player.Trees.Duo
                         {
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, Radius = 5f, Count = 3, Affliction = AfflictionKind.Seeded, Stacks = 1,
                                 State = new ConditionSpec { Id = Gathered, Seconds = 6f, OnBite = true, ToOthers = true } },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = Gathered, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Poison, Count = 1 },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = Gathered, Do = UpgradeAction.Pass, Affliction = AfflictionKind.Poison, Stacks = 1, Reach = 5f },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = Gathered, Do = UpgradeAction.Pass, Affliction = AfflictionKind.Poison, Stacks = 1, ToLink = true },
                         },
                     },
                     new ShapeDef
@@ -79,21 +77,19 @@ namespace Clover.Player.Trees.Duo
                 ReactionChanges = new[]
                 {
                     new ReactionChange { Shape = -1, Index = 0, Radius = 7f, Count = 4 },
+                    // Gathered In's doses go along the roots to the host, however far: only the roots' own reach is longer.
                     new ReactionChange { Shape = 0, Index = 0, Radius = 7f, Count = 4 },
-                    new ReactionChange { Shape = 0, Index = 2, Reach = 7f },
                 },
             }, HeartPattern.RightLow));
 
-            // NEEDS: a death answered by the player's grown things near where it fell (at-grown): the grown thing within 3 m
-            // standing 3 s longer and dosing with every bite; now a poisoned enemy that dies while something you grew stands
-            // within 4 m of you doses everything within 3 m of where it fell, once a second.
+            // The grown thing nearest where a poisoned enemy fell, within 3 m, stands 3 s longer and doses with every bite (Tend, BitesLay).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = TheHost, Name = "The Host", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { Tasting, DeepThreads }, Icon = UpgradeIcons.Leaf,
                 Description = "Whatever you grow feeds on the poisoned: a poisoned enemy that dies within 3 m of something grown makes it stand 3 s longer and lay a dose of poison with every bite.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Poison, While = StatWhen.NearGrown, Do = UpgradeAction.Afflict, Radius = 3f, Affliction = AfflictionKind.Poison, Stacks = 1, Cooldown = 1f },
+                    new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Poison, Do = UpgradeAction.Tend, Radius = 3f, Seconds = 3f, BitesLay = AfflictionKind.Poison, Cooldown = 0.2f },
                 },
             }, HeartPattern.Keystone));
 

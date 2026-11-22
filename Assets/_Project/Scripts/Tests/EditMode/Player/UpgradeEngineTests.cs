@@ -341,7 +341,8 @@ namespace Clover.Tests
 
             Assert.IsTrue(Upgrade.ById(FireTree.FuelToIt).Stats.Any(mod => mod.Stat == PlayerStat.ReactionDamage && mod.Against == AfflictionKind.Burn && System.Math.Abs(mod.Amount - 0.25f) < 1e-5f));
             Assert.IsTrue(Upgrade.ById(EarthTree.LeftInRubble).Stats.Any(mod => mod.Stat == PlayerStat.ReactionDamage && mod.Against == AfflictionKind.Tremor && System.Math.Abs(mod.Amount - 0.2f) < 1e-5f));
-            Assert.IsTrue(Upgrade.ById(MetalTree.EveryCrackRings).Stats.Any(mod => mod.Stat == PlayerStat.ReactionDamage && mod.Against == AfflictionKind.Sundered && System.Math.Abs(mod.Amount - 0.25f) < 1e-5f));
+            // Every Crack Rings' 25% is asked of the notched it strikes alone (reaction-stats, 2026-11-22).
+            Assert.IsTrue(Upgrade.ById(MetalTree.EveryCrackRings).Stats.Any(mod => mod.Stat == PlayerStat.ReactionDamageOn && mod.Against == AfflictionKind.Sundered && System.Math.Abs(mod.Amount - 0.25f) < 1e-5f));
         }
     }
 }

@@ -11,6 +11,16 @@ namespace Clover.Player.Trees.Duo
     /// </summary>
     public static class DrownedWeightDuo
     {
+        /// <summary>The plain reaction's id, forced on the next to swell (The Debt Passes).</summary>
+        public const string DrownedWeight = "react.drownedweight";
+
+        // The Debt Passes' swelling of the nearest one a swollen enemy's burst reaches: a Curse on it, then Drowned Weight forced
+        // on it alone, once on the one nearest within the burst's 4 m.
+        private static UpgradeEffect Swell(UpgradeTrigger on, UpgradeAction what) => new UpgradeEffect
+        {
+            On = on, InState = Reactions.Swollen, Do = what, EachWithin = 4f, EachOther = true, Count = 1,
+            Affliction = AfflictionKind.Cursed, Stacks = 1, Reaction = DrownedWeight, Alone = true,
+        };
         public const string Shape = "drownedweight.shape";
         public const string HeldUnder = "drownedweight.heldunder";
         public const string DeepSwell = "drownedweight.deepswell";
@@ -45,7 +55,7 @@ namespace Clover.Player.Trees.Duo
                     new ShapeDef
                     {
                         Name = "Drawn Under",
-                        Description = "It swells as before, and the black water pulls down: it sinks knee-deep into a pool 3 m across, held 1.5 s, and every other enemy in the pool is drawn toward it. It bursts as before when it dies or a heavy blow lands.",
+                        Description = "It swells as before, and the black water pulls down: it sinks knee-deep into a pool 3 m across, held 1.5 s, and every other enemy in the pool is drawn toward it. It bursts as before when it dies or your finisher lands.",
                         Effects = under.ToArray(),
                     },
                     new ShapeDef
@@ -57,16 +67,15 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.Foot));
 
-            // NEEDS: a mark's answer to an enemy in a condition (condition-needs: swollen); now a perfect guard against one
-            // both Soaked and Cursed, once a second.
+            // A perfect guard against an enemy swollen from Drowned Weight, in whichever shape (UpgradeEffect.InState).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = HeldUnder, Name = "Held Under", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Shield,
                 Description = "A perfect guard against a swollen enemy pushes it down knee-deep: held 1 s, and the attack it was making is lost.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Needs = AfflictionKind.Soaked, Needs2 = AfflictionKind.Cursed, Do = UpgradeAction.Flinch, Seconds = 0.4f, Cooldown = 1f },
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Needs = AfflictionKind.Soaked, Needs2 = AfflictionKind.Cursed, Do = UpgradeAction.Hold, Seconds = 1f, Cooldown = 1f },
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, InState = Reactions.Swollen, Do = UpgradeAction.Flinch, Seconds = 0.4f },
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, InState = Reactions.Swollen, Do = UpgradeAction.Hold, Seconds = 1f },
                 },
             }, HeartPattern.LeftLow));
 
@@ -97,16 +106,20 @@ namespace Clover.Player.Trees.Duo
 
             // The debt passes on: a Curse laid by the mark (not the reaction, so on purpose it reacts) on every enemy near a
             // soaked, cursed enemy that dies, and 6 more health for the kill.
-            // NEEDS: an answer to an enemy that dies swollen (death-in-condition), the nearest one the burst reaches swelling
-            // alone; now every enemy within 4 m of a soaked, cursed enemy that dies is Cursed, once a second.
+            // A swollen enemy's burst (its death, or the finisher that bursts it; UpgradeEffect.InState) swells the nearest enemy the
+            // burst reaches, 4 m, at once: a Curse laid and Drowned Weight forced on it (UpgradeAction.ForceReaction, Alone). Killing
+            // a swollen enemy heals 6 more.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = TheDebtPasses, Name = "The Debt Passes", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { HeldUnder, DeepSwell }, Icon = UpgradeIcons.Chain,
                 Description = "When a swollen enemy bursts, the nearest enemy the burst reaches swells at once, and killing a swollen enemy heals you 6 more.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Soaked, Needs2 = AfflictionKind.Cursed, Do = UpgradeAction.Afflict, Radius = 4f, Affliction = AfflictionKind.Cursed, Stacks = 1, Cooldown = 1f },
-                    new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Soaked, Needs2 = AfflictionKind.Cursed, Do = UpgradeAction.Heal, Amount = 6f },
+                    new UpgradeEffect { On = UpgradeTrigger.Kill, InState = Reactions.Swollen, Do = UpgradeAction.Heal, Amount = 6f },
+                    Swell(UpgradeTrigger.Kill, UpgradeAction.Afflict),
+                    Swell(UpgradeTrigger.Kill, UpgradeAction.ForceReaction),
+                    Swell(UpgradeTrigger.FinisherHit, UpgradeAction.Afflict),
+                    Swell(UpgradeTrigger.FinisherHit, UpgradeAction.ForceReaction),
                 },
             }, HeartPattern.Keystone));
 
@@ -137,20 +150,21 @@ namespace Clover.Player.Trees.Duo
 
         // The swelling as the plain Drowned Weight's, under the shape's own names (prefix, prefix.heavy): 5 s, 15% more from
         // weapon blows and 20% slower; with the burst, it bursts in black water to 4 m (14, 20 stagger, Soaked and Cursed)
-        // when it dies or a heavy blow lands on it.
+        // when it dies or a finisher lands on it.
         private static UpgradeEffect[] Swell(string prefix, bool bursts)
         {
             var effects = new List<UpgradeEffect>
             {
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition,
-                    State = new ConditionSpec { Id = prefix, Seconds = 5f, Flags = ConditionFlags.WeaponTakenShare, Scale = 1.15f, EndsWith = bursts ? ConditionBlow.Heavy : ConditionBlow.None } },
+                    State = new ConditionSpec { Id = prefix, Seconds = 5f, Flags = ConditionFlags.WeaponTakenShare, Scale = 1.15f, EndsWith = bursts ? ConditionBlow.Finisher : ConditionBlow.None,
+                        Is = Reactions.Swollen } },
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = prefix + ".heavy", Seconds = 5f, Pace = 0.8f } },
             };
             if (bursts)
                 foreach (var on in new[] { UpgradeTrigger.ConditionStruck, UpgradeTrigger.ConditionDied })
                 {
-                    effects.Add(new UpgradeEffect { On = on, Condition = prefix, By = StruckBy.Heavy, Do = UpgradeAction.Burst, Radius = 4f, Damage = 14f, Stagger = 20f, Affliction = AfflictionKind.Soaked, Stacks = 1 });
-                    effects.Add(new UpgradeEffect { On = on, Condition = prefix, By = StruckBy.Heavy, Do = UpgradeAction.Burst, Radius = 4f, Affliction = AfflictionKind.Cursed, Stacks = 1 });
+                    effects.Add(new UpgradeEffect { On = on, Condition = prefix, By = StruckBy.Finisher, Do = UpgradeAction.Burst, Radius = 4f, Damage = 14f, Stagger = 20f, Affliction = AfflictionKind.Soaked, Stacks = 1 });
+                    effects.Add(new UpgradeEffect { On = on, Condition = prefix, By = StruckBy.Finisher, Do = UpgradeAction.Burst, Radius = 4f, Affliction = AfflictionKind.Cursed, Stacks = 1 });
                 }
             return effects.ToArray();
         }

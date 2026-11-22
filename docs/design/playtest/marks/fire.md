@@ -33,11 +33,9 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). While you carry Fire, you can always put it in a slot.
 
-**The numbers.** Comes with Fire. It costs no mana. After you cast it, you must wait 7 seconds to cast it again. Fighting with your weapon makes the wait shorter. Its Empower makes the wait 5.5 seconds. The cone is 5.5 metres long and 70 degrees wide. It deals 20 damage, 24 stagger and a stack of Burn. Three patches keep burning for 3 seconds.
+**The numbers.** Comes with Fire. It costs no mana. After you cast it, you must wait 7 seconds to cast it again. Fighting with your weapon makes the wait shorter. Its Empower makes the wait 5.5 seconds and the patches burn for 5 seconds. The cone is 5.5 metres long and 70 degrees wide. It deals 20 damage, 24 stagger and a stack of Burn. Three patches keep burning for 3 seconds.
 
 **Works with.** Its Empower, its two shapes and its Master mark; Cinder, to add more Burn to what it set on fire; and the charged blade, which it charges with Fire when it lands.
-
-**Not built yet.** The Empower's longer-lasting patches (5 seconds). For now, the spell only gets the Empower's shorter wait.
 
 **Example.** Start a fight by casting it across a line of soldiers. Every one of them is burning before your first blow.
 
@@ -109,11 +107,9 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4).
 
-**The numbers.** 4 Shards, 45 mana (its Empower makes it 35). It finds the enemy you face within 9 metres and lands you 1 metre in front of it. If there is none, you land 5 metres ahead. The leap takes 0.62 seconds. The landing hits everything within 3.2 metres for 46 damage and 55 stagger. The crater burns for 4 seconds and deals 5 damage every half second.
+**The numbers.** 4 Shards, 45 mana (its Empower makes it 35). It finds the enemy you face within 9 metres and lands you 1 metre in front of it. If there is none, you land 5 metres ahead. The leap takes 0.62 seconds. The landing hits everything within 3.2 metres for 46 damage and 55 stagger. The crater burns for 4 seconds (6 with its Empower) and deals 5 damage every half second.
 
 **Works with.** Heat, which it comes after on the chart; Catching Fire; and its Master mark on an enemy with five Burn.
-
-**Not built yet.** The Empower's longer-lasting crater (6 seconds).
 
 **Example.** An archer stands behind two shield bearers. Leap over them and land on it.
 
@@ -122,11 +118,11 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Whenever you cast Meteor Leap, using the shape you picked.
 
-**The numbers.** 3 Shards. Falling Star: it falls 0.8 seconds after you cast it, within 9 metres. It deals 46 damage, 60 stagger and a stack of Burn within 3.2 metres, and leaves a burning patch for 4 seconds. Ash Fall: ash covers 3 metres around where you land for 5 seconds. Every second, it deals a Burn and 2 damage to everything in it.
+**The numbers.** 3 Shards. Falling Star: it falls 0.8 seconds after you cast it, within 9 metres. It deals 46 damage, 60 stagger and a stack of Burn within 3.2 metres, and leaves a burning patch for 4 seconds. Ash Fall: ash covers 3 metres around where you land for 5 seconds. Every second, it deals a Burn and 2 damage to everything in it. Enemies the landing hits can't get their balance back for those 5 seconds.
 
 **Works with.** Cinder and Catching Fire (Ash Fall in a crowd). Kiln Stance and Breath of the Lioness (Falling Star while you hold your ground).
 
-**Not built yet.** Falling Star's own stone and growing shadow (for now, it uses the thrown ball). Enemies' balance not coming back while they stand in Ash Fall.
+**Not built yet.** Falling Star's own stone and growing shadow (for now, it uses the thrown ball). An enemy that walks into Ash Fall's ash later doesn't yet lose its balance recovery.
 
 **Example.** Hold the line with your guard, and call the stone down on the brute behind it.
 
@@ -203,11 +199,9 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Whenever you cast Kiln Stance, using the shape you picked.
 
-**The numbers.** 3 Shards. The Kiln: ready for 1.2 seconds. The pillar deals 30 damage, 50 stagger and three Burn. Firewalker: ready for 0.6 seconds.
+**The numbers.** 3 Shards. The Kiln: ready for 1.2 seconds. The pillar deals 30 damage, 50 stagger and three Burn. Firewalker: ready for 0.6 seconds, and you can walk at half speed while it lasts.
 
 **Works with.** Breath of the Lioness; Uraeus's Coiled shape.
-
-**Not built yet.** Walking at half speed in Firewalker (for now, it is the stance held for a shorter time).
 
 **Example.** Against a quick double cut, The Kiln answers the first one. Against a slow brute, Firewalker meets the swing.
 
@@ -249,11 +243,11 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Whenever you cast Wildfire Rush, using the shape you picked.
 
-**The numbers.** 3 Shards. Fire Front: it goes 5 metres, is 4 metres wide, and moves at a third of the speed. Each enemy it hits is knocked down for 0.6 seconds. Smoke Road: it goes 6 metres, and the cut as you pass is weaker (4 damage).
+**The numbers.** 3 Shards. Fire Front: it goes 5 metres, is 4 metres wide, and moves at a third of the speed. Every enemy it hits is pushed along in front of you, a step ahead, and thrown down at the end for 0.8 seconds (an elite for less; gods and bosses are too big to carry). Smoke Road: it goes 6 metres, and the cut as you pass is weaker (4 damage).
 
 **Works with.** Catching Fire and Black Pitch (Fire Front into a crowd); Flame Trail (Smoke Road out of one).
 
-**Not built yet.** Fire Front should carry the enemies in front of you, and Smoke Road should take you back out of the fight. For now, both charge forward.
+**Not built yet.** Smoke Road should take you back out of the fight. For now, it charges forward.
 
 **Example.** Use Fire Front through a doorway packed with soldiers. They fall down burning in a pile on the far side.
 
@@ -262,11 +256,9 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** When you cast Wildfire Rush. Wildfire Rush must be in a spell slot.
 
-**The numbers.** 3 Shards. For now, every cast gives you what a perfect dodge gives: 12 mana, and 1.5 seconds off the wait on every spell that is waiting.
+**The numbers.** 3 Shards. It only counts if you start it in the last 0.3 seconds before an enemy's blow (one within 6 metres) lands on you. Then it is a perfect dodge: you get 12 mana, the game slows for a moment, the blow misses, and every mark that answers a perfect dodge answers this one. Your Heat also rises five levels, to five if it was empty.
 
 **Works with.** Heat and White Heat.
-
-**Not built yet.** The timing (starting it right as a blow would land) and Heat going to five. Both need the game to know the moment an enemy's blow lands.
 
 **Example.** Charge out of a brute's swing and through its friends, and every other spell is that much closer to ready.
 

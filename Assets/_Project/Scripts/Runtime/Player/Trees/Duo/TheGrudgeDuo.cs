@@ -29,7 +29,7 @@ namespace Clover.Player.Trees.Duo
 
             // Ash Plume's storm is called down by the enemy's own blow at you (the their-blow moment, ConditionAttacked), or
             // falls when its 6 s run out, one bolt for each weapon blow it took, five at most (the owner's answer of
-            // 2026-11-20). NEEDS: the cloud drifting to the nearest enemy if its host dies (drift-on-death).
+            // 2026-11-20). The cloud drifts whole to the nearest enemy within 6 m if its host dies (ConditionSpec.DriftsTo).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "The Grudge: First Strike or Ash Plume", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -53,7 +53,7 @@ namespace Clover.Player.Trees.Duo
                         Description = "The black cloud gathers over it for 6 s, and each of your weapon blows on it adds a flash inside, five at most. When it next strikes at you, or its 6 s run out, it falls as a storm: one bolt for each flash round it, 10 each and a Static, and its Static discharged in 4 m.",
                         Effects = new[]
                         {
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = AshPlume, Seconds = 6f, EndsWith = ConditionBlow.TheirBlow } },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = AshPlume, Seconds = 6f, EndsWith = ConditionBlow.TheirBlow, DriftsTo = 6f } },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionAttacked, Condition = AshPlume, Do = UpgradeAction.Falling, PerStack = true, PerMost = AshPlumeMost, Count = 1, Radius = 1.5f, Delay = 0.3f, Damage = 10f, Stagger = 8f, Affliction = AfflictionKind.Static, Stacks = 1 },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionAttacked, Condition = AshPlume, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Static, Radius = 4f, Stagger = 5f },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = AshPlume, Do = UpgradeAction.Falling, PerStack = true, PerMost = AshPlumeMost, Count = 1, Radius = 1.5f, Delay = 0.3f, Damage = 10f, Stagger = 8f, Affliction = AfflictionKind.Static, Stacks = 1 },

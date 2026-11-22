@@ -48,11 +48,11 @@ a blow or a cast "on the beat" comes within a fifth of a second of it.
 
 **When it happens.** Whenever you cast Blister, using the shape you picked. If you have not bought this, you cast the plain blister.
 
-**The numbers.** 3 Shards. Weeping Sore: for 12 seconds, each bite of the enemy's poison leaves a puddle 1.5 metres across for 3 seconds that gives a dose each second to whatever stands in it. A heavy blow on the sore bursts 2 metres around it for 12 damage and two doses, at most twice a second. The Vessel: for 12 seconds, the first bite while its poison is full puts three doses on everything within 2 metres, and leaves a cloud 4 metres across for 3 seconds that gives a dose each second. Once per cast.
+**The numbers.** 3 Shards. Weeping Sore: for 12 seconds, each bite of the enemy's poison leaves a puddle 1.5 metres across for 3 seconds that gives a dose each second to whatever stands in it. A heavy blow on the sore bursts 2 metres around it for 12 damage and two doses, at most twice a second. The Vessel: for 12 seconds, the first bite while its poison is full puts three doses on everything within 2 metres, and leaves a cloud 4 metres across for 3 seconds that gives a dose each second. Once per cast. With either shape, no blister is raised, so no blow can pop one.
 
 **Works with.** Weeping Sore: an enemy that walks around, Catching, Low Mist. The Vessel: Venom's blows to fill it up, Catching, Slow Death (full is twenty, so it waits longer). Volatile stops the beat, and neither shape leaks or bursts without bites.
 
-**Not built yet.** Both shapes still raise the plain blister alongside them, which any weapon blow pops, because a shape can't turn off its spell's own effect yet. Weeping Sore's heavy blow bursts around the sore, not at each puddle where it lies.
+**Not built yet.** Weeping Sore's heavy blow bursts around the sore, not at each puddle where it lies.
 
 **Example.** Use Weeping Sore on a charging brute. It leaves a trail of puddles as it comes, and the soldiers following it walk through them.
 
@@ -74,11 +74,9 @@ a blow or a cast "on the beat" comes within a fifth of a second of it.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4).
 
-**The numbers.** 4 Shards, 50 mana (its Empower makes it 7 damage per dose instead of 6). It reaches up to six enemies within 10 metres of you. After half a second's warning, a column rises under each one in turn, every 0.07 seconds, 1 metre across. The column itself does no damage. Each poisoned enemy it hits has its poison set off: 6 damage and 4 stagger per dose to everything within 1 metre (48 damage and 32 stagger at eight). Whatever a column hits is thrown into the air for 0.8 seconds.
+**The numbers.** 4 Shards, 50 mana (its Empower makes it 7 damage per dose instead of 6). It reaches up to six poisoned enemies within 10 metres of you. The line starts at the poisoned enemy you face (or the nearest one) and runs to the poisoned enemy nearest that one, and so on. Enemies with no poison are skipped and never hit. After half a second's warning, a column rises under each one in turn, every 0.07 seconds, 1 metre across. The column itself does no damage. Each enemy's poison is set off: 6 damage and 4 stagger per dose to everything within 1 metre (48 damage and 32 stagger at eight). Each burst also carries every dose of the bursts before it, so three enemies with 2, 3 and 4 doses burst with 2, 5 and 9. Whatever a column hits is thrown into the air for 0.8 seconds.
 
 **Works with.** Rupture, which it comes after on the chart, Venom, Blister, Catching and Miasma to add the poison first, the root mark's healing (every burst heals you), and the charged blade.
-
-**Not built yet.** The line should only run between poisoned enemies; for now, the columns come up under the six nearest enemies, poisoned or not. Each enemy should pass its doses to the next, with the last burst the biggest; for now, each bursts with what it has.
 
 **Example.** Poison a pack with Miasma and a rush of Share Alike, then snap your fingers. Six bursts go off in a moment, and each one heals you.
 
@@ -87,24 +85,22 @@ a blow or a cast "on the beat" comes within a fifth of a second of it.
 
 **When it happens.** Whenever you cast One by One, using the shape you picked. If you have not bought this, you cast the plain line.
 
-**The numbers.** 3 Shards. Eaten in Turn: for 8 seconds, each enemy the spell hit that dies poisoned passes twice its doses to the nearest other enemy within 10 metres. All Into One: only one column, under the nearest enemy.
+**The numbers.** 3 Shards. Eaten in Turn: the line is drawn, but the snap bursts nothing. For 8 seconds, each enemy on the line that dies poisoned passes twice its doses to the nearest other enemy still on the line (or, if none is left, the nearest enemy within 10 metres). If that pushes it past eight doses, it bursts at once, 6 damage a dose, and the extra doses pass on to the next one. This can happen up to four times in a row. All Into One: when you cast it, every poisoned enemy within 10 metres gives up all its doses. One column rises under the poisoned enemy you face (or the nearest one), and its burst carries every dose gathered, with no limit: four enemies with eight doses each make one burst of 32 doses.
 
 **Works with.** Eaten in Turn: a pack of weak enemies to kill in order, Slow Death (twenty doses to pass on), Rupture and Volatile on the enemy that gets fed. All Into One: a god or an elite, Catching and Miasma to poison the crowd first.
 
-**Not built yet.** Eaten in Turn still bursts like the plain spell, so the enemies that die must be poisoned again first. The doses go to the nearest enemy, not the next one on the line, and an enemy pushed past eight doesn't burst. All Into One doesn't gather anything yet: the one enemy bursts with what it has.
+**Not built yet.** In Eaten in Turn, the doses go to the nearest enemy still on the line, not the next one in the line's own order. All Into One's beads of mercury rolling across the floor aren't drawn yet.
 
 **Example.** Use Eaten in Turn on five soldiers. Poison them again as you cut, kill the front one with six doses, and the next one has twelve.
 
 ## poison.onebyone.master
 **What it does.** Snap your fingers within a fifth of a second of the poison's beat, and every burst is one and a half times as strong.
 
-**When it happens.** Each poisoned enemy a column hits, while One by One is in a spell slot.
+**When it happens.** When you snap your fingers within a fifth of a second of a poison bite on any enemy within 8 metres, while One by One is in a spell slot.
 
-**The numbers.** 3 Shards. For now, each poisoned enemy hit within a fifth of a second of its own bite takes a second burst: 24 damage and 16 stagger within 1 metre, which is half of an eight-dose burst.
+**The numbers.** 3 Shards. For the next 1.5 seconds, while the columns rise, One by One's own bursts deal 50% more damage. Other bursts at the same time, like a reaction's or Volatile's, don't get stronger.
 
 **Works with.** In Time (the same beat), Catching (the beat spreads across the pack), Venom.
-
-**Not built yet.** The snap itself should be timed against the beat; for now, each enemy is checked as its column comes up. The bursts should be raised by half; for now, the extra is the same no matter how many doses.
 
 **Example.** Watch the pack's poison bite and raise your hand right then. The columns that land on the bite hit 50% harder.
 
@@ -148,11 +144,11 @@ a blow or a cast "on the beat" comes within a fifth of a second of it.
 
 **When it happens.** Whenever you cast Five Needles, using the shape you picked. If you have not bought this, you cast the plain fan.
 
-**The numbers.** 3 Shards. Spread: a fan 60 degrees wide. It deals 3 damage, 10 stagger and two doses to each enemy in it, and each one's poison bites right away. Red Paper: the first enemy hit can't raise its guard for 6 seconds.
+**The numbers.** 3 Shards. Spread: a fan 60 degrees wide. It deals 3 damage, 10 stagger and two doses to each enemy in it, and each one's poison bites right away. Nothing is pinned. Red Paper: for 6 seconds the first enemy hit can't guard at all. Every blow on it lands, light or heavy, from the front or not. A soldier in a shield wall can't use its shield either.
 
 **Works with.** Spread: a crowd, Catching (every bite throws a dose onward), In Time. Red Paper: enemies that guard and captains, a heavy weapon, Blister.
 
-**Not built yet.** Spread is one fan, not five needles, and it still pins the first enemy it hits. Red Paper should stop the enemy from blocking blows and let your blows go through shields.
+**Not built yet.** Spread is one fan, not five needles.
 
 **Example.** Use Red Paper on a captain who guards everything. For six seconds, your whole chain of blows lands.
 
@@ -248,24 +244,24 @@ a blow or a cast "on the beat" comes within a fifth of a second of it.
 
 **When it happens.** Whenever you cast Miasma, using the shape you picked. If you have not bought this, you cast the plain cloud.
 
-**The numbers.** 3 Shards. Low Mist: a strip of mist 8 metres long and 2.5 metres wide from your feet, lasting 5 seconds, giving a dose each second to whatever stands in it. Censer: one censer swings around you 3 metres away for 8 seconds, going around once every 1.2 seconds. It hits whatever is within 1 metre of it for 4 damage, 4 stagger and a dose.
+**The numbers.** 3 Shards. Low Mist: a strip of mist 8 metres long and 2.5 metres wide from your feet, lasting 5 seconds, giving a dose each second to whatever stands in it. The plain cloud is not cast. Censer: one censer swings around you 3 metres away for 8 seconds, going around once every 1.2 seconds. It hits whatever is within 1 metre of it for 4 damage, 4 stagger and a dose.
 
 **Works with.** Low Mist: a hallway, Weeping Sore, Tasted Every Herb. Censer: a pack that crowds you, Catching, holding your guard while it swings.
 
-**Not built yet.** Low Mist still casts the plain cloud alongside the strip, and it doesn't stop at walls or take a dose when an enemy dodges. Censer's smoke should hang in the air for 2 seconds after each pass.
+**Not built yet.** Low Mist doesn't stop at walls or take a dose when an enemy dodges. Censer's smoke should hang in the air for 2 seconds after each pass.
 
 **Example.** Use Censer and hold your ground in a doorway. Anything that crowds you gets poisoned with every swing while you guard.
 
 ## poison.base.master
 **What it does.** Cast it on the poison's beat, within a fifth of a second of a bite on any nearby enemy, and the cloud gives two doses a second.
 
-**When it happens.** Each enemy the cloud poisons, while Miasma is in a spell slot.
+**When it happens.** When you cast Miasma within a fifth of a second of a poison bite on any enemy within 8 metres, while Miasma is in a spell slot.
 
-**The numbers.** 3 Shards. For now, an enemy the cloud poisons within a fifth of a second of its own bite gets one more dose each second for 4 seconds.
+**The numbers.** 3 Shards. Every enemy that cast's cloud poisons gets one more dose each second for 4 seconds.
 
 **Works with.** In Time (the same beat), Catching, every other beat Master mark.
 
-**Not built yet.** The cast itself should be timed against a bite on any enemy within 8 metres. For now, each enemy is checked as the cloud poisons it.
+**Not built yet.** The cloud itself doesn't dose twice a second yet; for now, each enemy it poisons carries the second dose with it.
 
 **Example.** Cast it as a poisoned soldier's poison bites, and the cloud gives it two doses a second while it stands there.
 
@@ -291,8 +287,6 @@ a blow or a cast "on the beat" comes within a fifth of a second of it.
 
 **Works with.** The Delayed Touch, which it comes after on the chart, Catching, One by One (a line of poisoned enemies), Rupture, and the charged blade: if it lands, it charges your weapon with Poison.
 
-**Not built yet.** Raising every enemy you pass to the sickest one's number of doses. For now, each one gets its two doses.
-
 **Example.** Rush through a line of three archers. Each one is poisoned, and you end up behind them.
 
 ## poison.sharealike.shape
@@ -300,24 +294,22 @@ a blow or a cast "on the beat" comes within a fifth of a second of it.
 
 **When it happens.** Whenever you cast Share Alike, using the shape you picked. If you have not bought this, you cast the plain rush.
 
-**The numbers.** 3 Shards. Carried on the Blade: for 5 seconds after the rush, every blow adds two more doses. Shed Tail: where you stood, for 2 seconds, everything within 2 metres gets three doses every half second.
+**The numbers.** 3 Shards. Carried on the Blade: your blade takes the sickest number of doses among the enemies you rushed through. Your next five weapon blows, on any enemy, each raise what they hit to that number. A blow on an enemy that already has that many still counts as one of the five. Shed Tail: where you stood, for 2 seconds, everything within 2 metres gets three doses every half second.
 
 **Works with.** Carried on the Blade: a fast weapon, Rupture, In Time. Shed Tail: enemies that chase you, Catching, Low Mist.
 
-**Not built yet.** Carried on the Blade should carry the sickest enemy's number of doses for five blows; for now, it adds two more doses per blow for 5 seconds. Shed Tail should rush you backward; for now, you rush forward like the plain spell, and the tail is left where you started.
+**Not built yet.** Shed Tail should rush you backward; for now, you rush forward like the plain spell, and the tail is left where you started. The heavy venom dripping from the edge isn't drawn yet.
 
-**Example.** Use Carried on the Blade through a pack, then turn on the captain. Every blow of your chain adds three doses.
+**Example.** Use Carried on the Blade through a pack where one soldier has seven doses, then turn on the captain. Each of your next five blows brings what it hits up to seven.
 
 ## poison.sharealike.master
 **What it does.** Rush on the poison's beat, within a fifth of a second of a bite on any enemy you pass, and the doses double.
 
-**When it happens.** Each enemy the rush passes, while Share Alike is in a spell slot.
+**When it happens.** When you rush within a fifth of a second of a poison bite on any enemy within 8 metres, while Share Alike is in a spell slot.
 
-**The numbers.** 3 Shards. For now, each enemy you pass within a fifth of a second of its own bite gets two more doses.
+**The numbers.** 3 Shards. Each enemy that rush passes gets two more doses.
 
 **Works with.** In Time and every beat Master mark, Catching (the beat spreads across the pack), One by One afterward.
-
-**Not built yet.** It should work on a bite from any enemy you pass. For now, each enemy is checked as you pass it.
 
 **Example.** Rush through a poisoned pack as their poison bites, and each one comes out with four more doses.
 

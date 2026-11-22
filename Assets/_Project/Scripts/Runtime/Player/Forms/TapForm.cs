@@ -533,6 +533,14 @@ namespace Clover.Player.Forms
                 // It breaks: a wall of spray thrown up and forward over the caster's feet, and rings running out.
                 run.Phase = 1;
                 run.T3 = run.Age;
+                // What it brought in, and the moment it came in, for its Master's second press (carried on past the caster).
+                if (cast.Upgrades != null)
+                {
+                    cast.Upgrades.BeginBrought(-run.B);
+                    for (int i = 0; i < run.Done; i++)
+                        if (FormKit.Alive(things[i]) && things[i] is IDamageable taken && touched.Contains(taken)) cast.Upgrades.NoteBrought(things[i]);
+                    cast.Upgrades.NoteMoment(CastMoment.WaveIn);
+                }
                 Vector3 lip = at - run.B * 1.1f;
                 for (int i = 0; i < 18 && !run.Flag2; i++)
                 {

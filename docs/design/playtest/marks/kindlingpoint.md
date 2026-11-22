@@ -9,13 +9,11 @@ are both carried.
 
 **When it happens.** Every time Kindling Point goes off while you carry both Light and Fire. Kindling Point goes off when Burn lands on a Marked enemy, or when a Mark lands on a burning one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Kindling Point.
 
-**The numbers.** Mix, 3 Shards. Both shapes: for up to 8 seconds, each of your weapon blows on the enemy adds a Burn, and the third blow uses up all its Burn. Burning Glass: the third blow bursts for 10 damage per Burn and leaves the enemy with two stacks of Burn. Then, for 4 seconds, it gains one more Burn every second. The Fire Is Hungry: the third blow jumps to the nearest other enemy within 6 metres for 10 damage per Burn, Marking it and giving it two stacks of Burn. This is on purpose: it may start a new point there. After Kindling Point goes off on an enemy, it can't go off on that enemy again for 6 seconds.
+**The numbers.** Mix, 3 Shards. Both shapes: for up to 8 seconds, each of your critical hits on the enemy adds a Burn, and the third critical hit uses up all its Burn. Blows that aren't critical don't count. Burning Glass: the third blow bursts for 10 damage per Burn and leaves the enemy with two stacks of Burn. Then, for 4 seconds, it gains one more Burn every second. The Fire Is Hungry: the third blow jumps to the nearest other enemy within 6 metres for 10 damage per Burn, Marking it and giving it two stacks of Burn. This is on purpose: it may start a new point there. After Kindling Point goes off on an enemy, it can't go off on that enemy again for 6 seconds.
 
 **Works with.** Glare and Flame Wave to set it up, The Sun Points, Noon Guard, Hands of the Sun.
 
 **Example.** One brute: use Burning Glass, and keep it burning. A crowd: use The Fire Is Hungry, and move the point through it.
-
-**Not built yet.** For now, every weapon blow counts toward the three, not only critical hits.
 
 ## kindlingpoint.sunpoints
 **What it does.** The blow that ends a chain of blows on a burning enemy Marks it.
@@ -70,10 +68,10 @@ are both carried.
 
 **When it happens.** Cast it from a spell slot while you carry both Light and Fire. Press that slot's button (hold L2 and a face button, or press 1 to 4). The first time it lands, it charges your blade with Light.
 
-**The numbers.** Mix, duo spell, opener, 5 Shards. It costs no mana. After you cast it, you must wait 12 seconds to cast it again. Fighting with your weapon makes the wait shorter. It reaches up to four enemies within 9 metres. Each takes 6 damage, 10 stagger, a Mark and two Burn, and is held for 1 second.
+**The numbers.** Mix, duo spell, opener, 5 Shards. It costs no mana. After you cast it, you must wait 12 seconds to cast it again. Fighting with your weapon makes the wait shorter. It reaches up to four enemies within 9 metres. Each takes 6 damage, 10 stagger, a Mark and two Burn, and is held for 1 second. The hand lets go at your first weapon blow on that enemy, within 4 seconds: that blow is a critical hit and adds two more Burn.
 
 **Works with.** Kindling Point and its shapes, The Feast, The Sun Points.
 
 **Example.** Start a fight with it on a pack: four points start gathering at once.
 
-**Not built yet.** For now, the rays jump from one enemy to the next instead of coming down from one sun. The hand doesn't yet let go at your first blow and make that blow a critical hit.
+**Not built yet.** For now, the rays jump from one enemy to the next instead of coming down from one sun.

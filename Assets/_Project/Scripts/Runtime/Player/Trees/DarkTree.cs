@@ -82,15 +82,14 @@ namespace Clover.Player.Trees
                 // The heal of 18 is the Learn's own heal, set by the Empower (empower-effects).
                 new Empower { Cooldown = 10f, Effects = new[] { new EffectChange { Index = 1, Amount = 18f } } },
                 "Devouring Maw waits 10 seconds, not 11, and a Cursed enemy bitten heals you 18.",
-                // NEEDS: only the Cursed swallowed, tested before the Learn spends the Curse (shape-before-learn), and the enemy
-                // taken out of the fight unseen and rolled out of the throat (swallowed). Until then every ordinary enemy bitten
-                // is held still a second and a half, then dragged to your feet and staggered.
+                // Only an ordinary Cursed enemy is swallowed (Needs, asked before the Learn spends the Curse): out of the fight and
+                // unseen for a second and a half (ConditionFlags.Swallowed: no body, nothing drawn), then rolled out at your feet
+                // (Enemy.PutDownAt) and staggered.
                 new ShapeDef { Name = "Rahu",
                     Description = "An ordinary Cursed enemy is swallowed whole, and a second and a half later rolls out of the open throat at your feet, staggered, because there is nothing to hold it. A god or an elite is only bitten.",
                     Effects = new[]
                     {
-                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Ranks = EnemyRank.Plain, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Swallowed, Seconds = 1.5f, Flags = ConditionFlags.Rooted | ConditionFlags.BeginsNoAttack | ConditionFlags.CannotGuard } },
-                        new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Swallowed, Do = UpgradeAction.Pull, Shape = HazardShape.Downwind, Amount = 5f },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Ranks = EnemyRank.Plain, Needs = C, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Swallowed, Seconds = 1.5f, Flags = ConditionFlags.Swallowed | ConditionFlags.Rooted | ConditionFlags.BeginsNoAttack | ConditionFlags.CannotGuard } },
                         new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Swallowed, Do = UpgradeAction.Burst, Radius = 1f, Damage = 0f, Stagger = 60f, Stacks = 0 },
                     } },
                 // NEEDS: the jaw drawn rising out of the enemy's own shadow, on the enemy faced rather than the nearest
@@ -99,12 +98,11 @@ namespace Clover.Player.Trees
                     Description = "The jaw rises out of the enemy's own shadow instead, up to nine metres away, and closes on it from below. No lane: it reaches the one far off.",
                     Spell = new SpellSpec { Count = 1, Reach = 9f, Radius = 1.6f, Delay = 0.4f, Damage = 24f, Stagger = 30f, Stacks = 0 } },
                 "Opens two shapes of Devouring Maw, chosen at any rest fire: Rahu, a jaw that swallows an enemy and lets it fall out of the throat, or From Its Own Shadow, a jaw that rises under one far off.",
-                // NEEDS: an enemy's wind-up as the moment (enemy-begins-attack). Until then every bite breaks what its enemy had
-                // begun, and a bite ends Devouring Maw's own wait once in sixteen seconds.
+                // Only a bite on an enemy in its wind-up (UpgradeEffect.NeedsWindup): its attack swallowed and broken, and the wait ended.
                 new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Flinch, Seconds = 0.4f },
-                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.ResetCooldown, Cooldown = 16f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, NeedsWindup = 99f, Do = UpgradeAction.Flinch, Seconds = 0.4f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, NeedsWindup = 99f, Do = UpgradeAction.ResetCooldown, Cooldown = 0.5f },
                 },
                 "Bite an enemy in its wind-up, and its attack is swallowed and broken, and Devouring Maw is ready again.",
                 learnEffects: new[]
@@ -115,9 +113,8 @@ namespace Clover.Player.Trees
                 });
 
             // The counter: the parry form turns the first blow and answers with a Curse; you step behind the attacker, and your
-            // first blow on it heals; nothing struck, it waits 5 s (SpellSpec.MissedWait). NEEDS: the scattering as ash and
-            // standing again 0.4 s later (form-pieces), and the blow struck as a heavy (blow-made-heavy): for now it strikes
-            // twice as hard.
+            // first blow on it within a second is struck as a heavy (UpgradeAction.NextHeavy) and heals; nothing struck, it waits
+            // 5 s (SpellSpec.MissedWait). NEEDS: the scattering as ash and standing again 0.4 s later (form-pieces).
             SpellBranch.Add(to, E, GoneToAsh, "Gone to Ash", SpellRole.Counter, BranchPattern.MiddleB, Dread, SpellForms.Parry,
                 new SpellSpec { Seconds = 1.2f, Reach = 2.5f, Arc = 90f, Damage = 0f, Stagger = 0f, Stacks = 1, MissedWait = 0.5f },
                 "You stand with arms crossed as grey ash runs over you, for up to 1.2 seconds. The first blow to land scatters you as a cloud of ash, and you take nothing. A moment later you stand again behind the attacker. It is Cursed, and your first blow within a second is a heavy blow that heals you 10. If nothing strikes, it waits only half as long.",
@@ -125,46 +122,45 @@ namespace Clover.Player.Trees
                 // The heal of 15 is the Learn's own heal, set by the Empower (empower-effects).
                 new Empower { Cooldown = 9f, Seconds = 1.5f, Effects = new[] { new EffectChange { Index = 3, Amount = 15f } } },
                 "Gone to Ash waits 9 seconds, not 10, holds for a second and a half, and its blow heals you 15.",
-                // NEEDS: standing again where you were, the step behind set aside (shape-sets-aside), the ward kept for that
-                // attacker's blow alone, and the grey stripe across its head (looks). The Curse held six seconds and one blow
+                // Standing again where you were: the Learn's step behind set aside (ShapeDef.SetsAside). NEEDS: the ward kept for
+                // that attacker's blow alone, and the grey stripe across its head (looks). The Curse held six seconds and one blow
                 // turned are data.
-                new ShapeDef { Name = "Ash on the Brow",
+                new ShapeDef { Name = "Ash on the Brow", SetsAside = new[] { 0 },
                     Description = "You stand again where you were. The ash settles on the attacker's brow as a grey smear: for six seconds it is Cursed, the next blow it lands on you scatters you for nothing once more, and your first blow on it is a heavy. The ash marks the one who struck.",
                     Effects = new[]
                     {
                         new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = AshOnTheBrow, Seconds = 6f, Keeps = C } },
                         new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Ward, Count = 1, Cooldown = 1f },
                     } },
-                // NEEDS: standing again where you were (shape-sets-aside), and an attack begun inside going where it already
-                // faced (cannot-turn). The cloud that Curses is data, laid on the attacker.
-                new ShapeDef { Name = "Ash Hangs",
+                // Standing again where you were: the Learn's step behind set aside (ShapeDef.SetsAside). NEEDS: an attack begun
+                // inside going where it already faced (cannot-turn). The cloud that Curses is data, laid on the attacker.
+                new ShapeDef { Name = "Ash Hangs", SetsAside = new[] { 0 },
                     Description = "You stand again where you were. The ash stays as a sinking cloud three metres across for three seconds. Enemies inside it are Cursed, and an attack they begin inside goes where they already faced.",
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Radius = 1.5f, Seconds = 3f, Interval = 1f, Damage = 0f, Stagger = 0f, Affliction = C, Stacks = 1, Cooldown = 1f } } },
                 "Opens two shapes of Gone to Ash, chosen at any rest fire: Ash on the Brow, a smear that marks the one who struck, or Ash Hangs, a cloud that Curses all inside.",
-                // NEEDS: a red attack as the blow scattered (red-attack). Until then any blow scattered staggers the attacker and
-                // ends the wait, once in twenty seconds.
+                // Only a red attack scattered (UpgradeEffect.RedOnly): the attacker staggered and the wait ended.
                 new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Burst, Radius = 1f, Damage = 0f, Stagger = 60f, Stacks = 0, Cooldown = 20f },
-                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.ResetCooldown, Cooldown = 20f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, RedOnly = true, Do = UpgradeAction.Burst, Radius = 1f, Damage = 0f, Stagger = 60f, Stacks = 0, Cooldown = 0.5f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, RedOnly = true, Do = UpgradeAction.ResetCooldown, Cooldown = 0.5f },
                 },
                 "Scatter a red attack, and the attacker is staggered and Gone to Ash is ready again.",
                 learnEffects: new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Step, Reach = 4f, Amount = 1.5f, Cooldown = 0.5f },
-                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Boon, Stat = PlayerStat.WeaponDamage, Amount = 1f, Seconds = 1f, UntilBlow = true, Cooldown = 0.5f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.NextHeavy, Seconds = 1f, Cooldown = 0.5f },
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Ashen, Seconds = 1f, EndsWith = ConditionBlow.Weapon } },
                     new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Ashen, By = StruckBy.Weapon, Do = UpgradeAction.Heal, Amount = 10f },
                 });
 
-            // NEEDS: the reaction's own damage repeated (reaction-stats), and the print laid on everything the reaction struck
-            // (reaction-struck). Until then the print is laid on the enemy the reaction happened on, and the blow strikes 15 more.
+            // The print is laid on everything the reaction struck (UpgradeTrigger.ReactionStruck), keeping the damage its blow dealt
+            // there (UpgradeEffect.ByPower); the next weapon blow on it repeats that damage.
             to.Add(BranchPattern.Put(new Upgrade { Id = CollectedTwice, Name = "Collected Twice", Element = E, Kind = UpgradeKind.Major, Lifts = E, Requires = new[] { Dread }, Icon = UpgradeIcons.Target,
                 Description = "Every reaction the Curse takes part in leaves a black thumbprint on the brow of what it struck for four seconds. The next weapon blow on it repeats the reaction's damage. The debt is collected by the blade.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.Reacted, Needs = C, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Thumbprint, Seconds = 4f, EndsWith = ConditionBlow.Weapon } },
-                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Thumbprint, By = StruckBy.Weapon, Do = UpgradeAction.Burst, Radius = 0.6f, Damage = 15f, Stagger = 0f, Stacks = 0 },
+                    new UpgradeEffect { On = UpgradeTrigger.ReactionStruck, ReactionWith = C, Do = UpgradeAction.Condition, ByPower = true, State = new ConditionSpec { Id = Thumbprint, Seconds = 4f, EndsWith = ConditionBlow.Weapon } },
+                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Thumbprint, By = StruckBy.Weapon, Do = UpgradeAction.Burst, ByPower = true, Radius = 0.6f, Stagger = 0f, Stacks = 0 },
                 } },
                 BranchPattern.MiddleCrown));
 
@@ -179,53 +175,51 @@ namespace Clover.Player.Trees
                 } },
                 BranchPattern.TrunkLeft));
 
-            // The Dead Stand, once a spell, folded in here. NEEDS: three shades at most (helpers-most), each walking to its
-            // own enemy (form-pieces), and the Risen's dead raised only when they were not Cursed (a Cursed
-            // death while Risen raises two for now). The shade is a helper that stands where the dead fell and strikes what
-            // is near it, a blow every 0.8 s for six seconds.
+            // The Dead Stand, once a spell, folded in here. Three shades at most (Limit, shared by both rules: Kin), and one death
+            // raises one shade, Cursed and Risen alike (PlayerUpgrades' Helper). The shade is a helper that stands where the
+            // dead fell and strikes what is near it, a blow every 0.8 s for six seconds.
+            // NEEDS: each shade walking to its own enemy (form-pieces).
             to.Add(BranchPattern.Put(new Upgrade { Id = NothingStaysBuried, Name = "Nothing Stays Buried", Element = E, Kind = UpgradeKind.Devotion, Requires = new[] { CollectedTwice }, Icon = UpgradeIcons.Tower,
                 Description = "All in on Dark only. Every enemy that dies Cursed stands up again as your shade, ash-grey with violet eyes, and fights for you for six seconds, three at most. While you are Risen, every enemy that dies stands up, Cursed or not.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = C, Do = UpgradeAction.Helper, Count = 7, Interval = 0.8f, Radius = 2.5f, Damage = 12f, Stagger = 12f, Affliction = C, Stacks = 1 },
-                    new UpgradeEffect { On = UpgradeTrigger.Kill, While = StatWhen.Risen, Do = UpgradeAction.Helper, Count = 7, Interval = 0.8f, Radius = 2.5f, Damage = 12f, Stagger = 12f, Affliction = C, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = C, Do = UpgradeAction.Helper, Count = 7, Interval = 0.8f, Radius = 2.5f, Damage = 12f, Stagger = 12f, Affliction = C, Stacks = 1, Limit = 3, Kin = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.Kill, While = StatWhen.Risen, Do = UpgradeAction.Helper, Count = 7, Interval = 0.8f, Radius = 2.5f, Damage = 12f, Stagger = 12f, Affliction = C, Stacks = 1, Limit = 3, Kin = 1 },
                 } },
                 BranchPattern.TrunkRight));
 
             // ---- The left bough: Debt. Power bought with health.
-            // NEEDS: re-aimed at cooldowns, a spell still waiting cast anyway for 1 health a second left, grey and owed, never the
-            // last point (cast-on-cooldown). Until then it pays in health the mana a spell lacks, as built.
+            // Re-aimed at cooldowns (elements_b.md): a spell still waiting is cast anyway for 1 health a second left, grey and
+            // owed, never the last point (PlayerStat.CooldownPrice, read by the slots).
             to.Add(BranchPattern.Put(new Upgrade { Id = BloodPrice, Name = "Blood Price", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Curse }, Icon = UpgradeIcons.Drop,
-                Description = "With too little mana for a spell, the rest is paid in health. Health paid this way is only owed: blows win it back.",
-                Stats = new[] { new StatMod(PlayerStat.BloodPrice, 0.5f) } },
+                Description = "A spell still waiting can be cast anyway: each second left on its wait costs 1 health. Health paid this way is only owed: blows win it back. It never takes your last point.",
+                Stats = new[] { new StatMod(PlayerStat.CooldownPrice, 1f) } },
                 BranchPattern.LeftFoot));
 
-            // The breaker: the reverse form drags all within six metres to a point before you and bursts. NEEDS: the damage
-            // rising as your health falls, 18 at full and 36 at one point (health-scaled); until then a cast below half your
-            // health strikes half again as hard. The burst throwing back what it struck (form-pieces).
+            // The breaker: the reverse form drags all within six metres to a point before you and bursts, its damage rising as your
+            // health falls, 18 at full and 36 at one point (SpellSpec.HealthScaled). NEEDS: the burst throwing back what it struck
+            // (form-pieces).
             SpellBranch.Add(to, E, DebtsCalled, "Debts Called", SpellRole.Breaker, BranchPattern.LeftA, BloodPrice, SpellForms.Reverse,
-                new SpellSpec { Reach = 1f, Radius = 6f, Delay = 0.5f, Damage = 18f, Stagger = 35f, Stacks = 1 },
+                new SpellSpec { Reach = 1f, Radius = 6f, Delay = 0.5f, Damage = 18f, Stagger = 35f, Stacks = 1, HealthScaled = 2f },
                 "Everything within six metres is dragged in to a point before you over half a second, then thrown back by a burst: 18 damage, rising to 36 at one point of your health, 35 stagger, and Cursed.",
                 UpgradeIcons.Spiral,
                 // Eight metres on the Learn's own pull alone (LearnOnly), so the buffalo's lane keeps its width.
                 new Empower { Cooldown = 9f, Radius = 8f, LearnOnly = true },
                 "Debts Called waits 9 seconds, not 10, and calls from eight metres.",
-                // NEEDS: only the Cursed carried on the horns and thrown down at the far end (afflicted-only, carried-along), and
-                // a buffalo of smoke rather than the dragon's head (form-pieces).
+                // Only the Cursed are carried on the horns and thrown down at the far end (SpellSpec.Carries with OnlyCarrying).
+                // NEEDS: a buffalo of smoke rather than the dragon's head (form-pieces).
                 new ShapeDef { Name = "The Black Buffalo", Form = SpellForms.Dragon,
                     Description = "No pull. A buffalo of sinking black smoke charges eight metres through the point before you, carrying everything Cursed on its horns to the far end and throwing it down: 18 damage, rising to 36 at one point of your health, and 35 stagger. Follow the lane and cut what it threw. Dark's one push.",
-                    Spell = new SpellSpec { Reach = 8f, Radius = 1.2f, Damage = 18f, Stagger = 35f, Stacks = 1, Speed = 16f } },
-                // NEEDS: only the Cursed called (afflicted-only). The call from ten metres without a burst is a whole spec; each
-                // Cursed one it reaches heals 4.
+                    Spell = new SpellSpec { Reach = 8f, Radius = 1.2f, Damage = 18f, Stagger = 35f, Stacks = 1, Speed = 16f, HealthScaled = 2f, Carries = true, OnlyCarrying = AfflictionKind.Cursed } },
+                // Only the Cursed called (SpellSpec.OnlyCarrying), from ten metres, with no burst; each Cursed one it reaches heals 4.
                 new ShapeDef { Name = "Collected",
                     Description = "Only the Cursed are called, from up to ten metres, and each one that reaches you gives back 4 health. There is no burst; the pull does 20 stagger.",
-                    Spell = new SpellSpec { Reach = 1f, Radius = 10f, Delay = 0.5f, Damage = 0f, Stagger = 20f, Stacks = 0 },
+                    Spell = new SpellSpec { Reach = 1f, Radius = 10f, Delay = 0.5f, Damage = 0f, Stagger = 20f, Stacks = 0, OnlyCarrying = C },
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = C, Do = UpgradeAction.Heal, Amount = 4f } } },
                 "Opens two shapes of Debts Called, chosen at any rest fire: The Black Buffalo, a charge of smoke down a lane, or Collected, a call that brings only the Cursed and feeds you.",
                 // Spells strike twice as hard for the second the burst or the charge takes, cast below a third of your health.
                 new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, HealthBelow = 0.34f, Do = UpgradeAction.Boon, Stat = PlayerStat.SpellDamage, Amount = 1f, Seconds = 1f } },
-                "Cast it below a third of your health, and the burst, or the buffalo, strikes twice as hard.",
-                learnEffects: new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, HealthBelow = 0.5f, Do = UpgradeAction.Boon, Stat = PlayerStat.SpellDamage, Amount = 0.5f, Seconds = 1f } });
+                "Cast it below a third of your health, and the burst, or the buffalo, strikes twice as hard.");
 
             // The strength is a boon given when health falls low, not held for as long as it stays low; the shade comes then too, not with each kill.
             to.Add(BranchPattern.Put(new Upgrade { Id = NearTheGrave, Name = "Near the Grave", Element = E, Kind = UpgradeKind.Major, Requires = new[] { BloodPrice }, Icon = UpgradeIcons.Skull,
@@ -254,10 +248,10 @@ namespace Clover.Player.Trees
                     Description = "The heart hangs in the air over the enemy you face instead, and follows it, as the vetala hangs from its tree. You must fight your way in under it to touch it. You go in, not out.",
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = HungHeart, Seconds = 10f, Keeps = C } } } },
                 "Opens two shapes of Pawned Heart, chosen at any rest fire: Buried Heart, a heart under your feet to stand over, or Hung From the Tree, a heart over the enemy to fight your way to.",
-                // NEEDS: the heart touched during a perfect dodge as the moment, returning 60% of the damage dealt (heart-touch).
-                // Until then a perfect dodge heals 10, once in three seconds.
-                new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, Do = UpgradeAction.Heal, Amount = 10f, Cooldown = 3f } },
-                "Touch the heart during a perfect dodge, and it returns 60% of the damage dealt, not 30%.");
+                // The heart touched within a moment of a perfect dodge returns 30 more of each hundred dealt (PlayerStat.HeartTouchMore, read by HeartForm).
+                System.Array.Empty<UpgradeEffect>(),
+                "Touch the heart during a perfect dodge, and it returns 60% of the damage dealt, not 30%.",
+                masterStats: new[] { new StatMod(PlayerStat.HeartTouchMore, 30f) });
 
             // Built in PlayerUpgrades: Risen for good (StatWhen.Risen always holds), two points of health a second while an enemy is within twelve metres, never the last point, and Rise() refuses.
             to.Add(BranchPattern.Put(new Upgrade { Id = DeadAlready, Name = "Dead Already", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { NearTheGrave }, Icon = UpgradeIcons.Skull,
@@ -278,17 +272,18 @@ namespace Clover.Player.Trees
             SpellBranch.Add(to, E, Grasp, "Grasp", SpellRole.Opener, BranchPattern.RightA, Curse, "", null,
                 "Dark's own spell, given with the element. A black ball crawls along the ground to the enemy you face within six metres, drawing in what it passes. Where it arrives: 10 damage, 12 stagger and Cursed, and up to five bodies are dragged to your feet. What cannot be dragged drags you to it.",
                 UpgradeIcons.Claw,
-                // NEEDS: 14 damage and eight metres (base-spell-marks). The base spell is cast by its kit, which takes only the
-                // Empower's wait; The Pit, cast through the mark, does take them (empower-after-shape).
+                // 14 damage and eight metres. The Empower's numbers reach the kit's own cast too (PlayerUpgrades.BaseEmpower, read by PlayerElement), and The Pit, cast through the mark,
+                // takes them as its Learn's.
                 new Empower { Cooldown = 6f, Damage = 14f, Reach = 8f },
                 "Grasp waits 6 seconds, not 7, reaches eight metres and strikes for 14.",
-                // NEEDS: a rope thrown in place of the ball (form-pieces), and the enemy kept within five metres of you (links-pass-blows).
+                // Kept within five metres of you for its four seconds (ConditionSpec.Leash, LeashToPlayer).
+                // NEEDS: a rope thrown in place of the ball (form-pieces).
                 // The yank of the first heavy blow is data.
                 new ShapeDef { Name = "Tethered",
                     Description = "A rope of black is thrown instead and binds the enemy you face to you for four seconds. It cannot go more than five metres from you, and your first heavy blow on it yanks it to your feet with 20 stagger. You keep it close.",
                     Effects = new[]
                     {
-                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Tethered, Seconds = 4f, EndsWith = ConditionBlow.Heavy } },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Tethered, Seconds = 4f, EndsWith = ConditionBlow.Heavy, Leash = 5f, LeashToPlayer = true } },
                         new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Tethered, By = StruckBy.Heavy, Do = UpgradeAction.Pull, Shape = HazardShape.Downwind, Amount = 4f },
                         new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Tethered, By = StruckBy.Heavy, Do = UpgradeAction.Burst, Radius = 0.5f, Damage = 0f, Stagger = 20f, Stacks = 0 },
                     } },
@@ -297,13 +292,12 @@ namespace Clover.Player.Trees
                     Description = "The ball stops at the point you aim and spreads into a pool of ink three metres across for four seconds, dragging everything in it slowly to the middle and Cursing it. You gather them at a spot.",
                     Spell = new SpellSpec { Reach = 6f, Radius = 1.5f, Seconds = 4f, Interval = 1f, LingerDamage = 2f, Stacks = 1 } },
                 "Opens two shapes of Grasp, chosen at any rest fire: Tethered, a rope that keeps one enemy close, or The Pit, a pool of ink that gathers them at a spot.",
-                // NEEDS: Grasp's own cast as the answer (spell-windows). Until then any blow of yours on the one that struck you,
-                // within a second, drags it to your feet and Curses it twice.
+                // Grasp cast within a second of being struck (CastAfter Struck): the one that struck you (ToStruckBy) is dragged to
+                // your feet and Cursed twice.
                 new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.Struck, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Answered, Seconds = 1f, EndsWith = ConditionBlow.Any } },
-                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Answered, By = StruckBy.Any, Do = UpgradeAction.Pull, Shape = HazardShape.Downwind, Amount = 4f },
-                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Answered, By = StruckBy.Any, Do = UpgradeAction.Afflict, Affliction = C, Stacks = 2 },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, CastAfter = CastMoment.Struck, CastWindow = 1f, ToStruckBy = true, Do = UpgradeAction.Pull, Shape = HazardShape.Downwind, Amount = 4f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, CastAfter = CastMoment.Struck, CastWindow = 1f, ToStruckBy = true, Do = UpgradeAction.Afflict, Affliction = C, Stacks = 2 },
                 },
                 "Cast it within a second of being struck, and the one that struck you is dragged to your feet and Cursed twice. Dark answers when it is hurt.");
 

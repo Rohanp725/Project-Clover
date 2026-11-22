@@ -35,6 +35,30 @@ namespace Clover.Gameplay
 
         public BurnStatus Burn { get; } = new BurnStatus();
         public bool IsFrozen { get; private set; }
+        /// <summary>
+        /// Seconds since it began showing the attack it shows now (its wind-up), or float.MaxValue when it shows none (the
+        /// ledger's enemy-begins-attack). Its body says so each step (<see cref="NoteWindup"/>).
+        /// </summary>
+        public float WindupFor => windingUp ? windupFor : float.MaxValue;
+        public bool WindingUp => windingUp;
+        private bool windingUp;
+        private float windupFor;
+
+        /// <summary>Its body tells it each step whether it is showing an attack: the time it has shown it is counted from its start.</summary>
+        public void NoteWindup(bool showing, float deltaTime, float strikeIn = float.MaxValue)
+        {
+            if (showing && !windingUp) windupFor = 0f;
+            else if (showing) windupFor += deltaTime;
+            windingUp = showing;
+            StrikeIn = showing ? strikeIn : float.MaxValue;
+        }
+
+        /// <summary>Seconds until the blow it shows lands (the ledger's blow-about-to-land); float.MaxValue when it shows none.</summary>
+        public float StrikeIn { get; private set; } = float.MaxValue;
+
+        /// <summary>Seconds since it last froze, while it is frozen (a cast landing within a moment of the freeze).</summary>
+        public float FrozenFor => IsFrozen ? frozenFor : float.MaxValue;
+        private float frozenFor;
         public float FrozenLeft { get; private set; }
         /// <summary>Seconds it stays brittle after a freeze ended (see <see cref="Afflictions.BrittleSeconds"/>).</summary>
         public float BrittleLeft { get; private set; }
@@ -174,7 +198,8 @@ namespace Clover.Gameplay
                 CombatEvents.Report(who, hit.Affliction, hit.AfflictionStacks, Lay(hit.Affliction, hit.AfflictionStacks, hit.AfflictionSeconds, hit.AfflictionPower, source, who), source);
             if (hit.Affliction2 != AfflictionKind.None && hit.Affliction2Stacks > 0)
                 CombatEvents.Report(who, hit.Affliction2, hit.Affliction2Stacks, Lay(hit.Affliction2, hit.Affliction2Stacks, hit.Affliction2Seconds, hit.AfflictionPower, source, who), source);
-            if (!hit.FromReaction && hit.Damage > 0f) Conditions.Struck(hit.Damage, hit.Heavy, hit.Spell, shattered, hit.Critical);
+            if (!hit.FromReaction && hit.Damage > 0f) Conditions.Struck(hit.Damage, hit.Heavy, hit.Spell, shattered, hit.Critical, hit.Finisher,
+                    hit.Direction, who != null ? who.transform.forward : UnityEngine.Vector3.zero);
         }
 
         /// <summary>Lights the burn a blow gives in seconds (<see cref="Hit.BurnSeconds"/>), through the laying rules, so a weapon's fire reacts like any affliction.</summary>
@@ -199,11 +224,19 @@ namespace Clover.Gameplay
         /// Sets a pair's reaction off now, through its rest (Lit Fuse, Plasma Lance and the like: the action
         /// ForceReaction), when it carries both of the pair. It rests again from now. False when a partner is missing.
         /// </summary>
-        public bool ForceReaction(int pair, UnityEngine.Component who)
+        public bool ForceReaction(int pair, UnityEngine.Component who) => ForceReaction(pair, who, false);
+
+        /// <summary>
+        /// As above; with <paramref name="alone"/>, one of the pair is enough (the ledger's forced-alone: Dusk and Dawn's cut
+        /// sets Diamond Ring off on an enemy only Marked): the reaction itself goes off, at whatever depth it lies, and
+        /// nothing is spent by the forcing. False when it carries neither.
+        /// </summary>
+        public bool ForceReaction(int pair, UnityEngine.Component who, bool alone)
         {
             if (pair < 0 || pair >= AfflictionPairs.Count) return false;
-            if (!Has(AfflictionPairs.First(pair)) || !Has(AfflictionPairs.Second(pair))) return false;
-            return (Reactions ?? ReactionEngine.Shared).Force(this, who, pair, AfflictionPairs.Second(pair));
+            bool first = Has(AfflictionPairs.First(pair)), second = Has(AfflictionPairs.Second(pair));
+            if (alone ? !first && !second : !first || !second) return false;
+            return (Reactions ?? ReactionEngine.Shared).Force(this, who, pair, second ? AfflictionPairs.Second(pair) : AfflictionPairs.First(pair), alone);
         }
 
         /// <summary>Takes up to this many stacks of an affliction away, with no burst, and says how many went. A burn with no depth counts as one.</summary>
@@ -242,6 +275,10 @@ namespace Clover.Gameplay
         public void Clear()
         {
             owedSeconds = 0f;
+            windingUp = false;
+            windupFor = 0f;
+            StrikeIn = float.MaxValue;
+            frozenFor = 0f;
             present = 0;
             keptForGood = 0;
             heldBite = 0f;
@@ -382,7 +419,11 @@ namespace Clover.Gameplay
             if (freezes && spec.FreezesAtFull)
             {
                 IsFrozen = true;
-                FrozenLeft = GodHolds.Seconds(spec.FrozenSeconds * Afflictions.FreezeSeconds * RuleFreezeScale, phase, FreezeScale);
+                frozenFor = 0f;
+                // What ends on a freeze ends now, its end told as the freeze's (Sleet Charge strikes at once).
+                Conditions.Froze();
+                // A condition may hold the freeze longer (Rime Tree: a second more).
+                FrozenLeft = GodHolds.Seconds((spec.FrozenSeconds * Afflictions.FreezeSeconds + Conditions.FreezeLonger) * RuleFreezeScale, phase, FreezeScale);
                 left[index] = Math.Max(left[index], FrozenLeft);
                 if (flash)
                 {
@@ -460,6 +501,8 @@ namespace Clover.Gameplay
             }
             reeling = false;
             AirLeft = Math.Max(AirLeft, seconds * (FreezeScale < 1f ? SturdyAirShare : 1f));
+            // A throw into the air is a shove too: what answers a shove is told (Ill Wind sheds).
+            Conditions.Shoved();
             return true;
         }
 
@@ -546,6 +589,7 @@ namespace Clover.Gameplay
             }
             if (IsFrozen)
             {
+                frozenFor += deltaTime;
                 FrozenLeft -= deltaTime;
                 // Thawed: the cold that froze it is spent.
                 if (FrozenLeft <= 0f)
@@ -747,8 +791,14 @@ namespace Clover.Gameplay
             }
         }
 
-        /// <summary>What a blow's damage is multiplied by: one number for spells, another for weapons.</summary>
-        public float DamageTakenMultiplier(bool spell)
+        /// <summary>What a blow's damage is multiplied by: one number for spells, another for weapons, and more for a heavy weapon blow while a condition asks it.</summary>
+        public float DamageTakenMultiplier(bool spell, bool heavy = false)
+        {
+            float heavyShare = heavy && !spell ? Conditions.HeavyTakenScale : 1f;
+            return Taken(spell) * heavyShare;
+        }
+
+        private float Taken(bool spell)
         {
             float more = 0f;
             for (int i = 2; i < stacks.Length; i++)
@@ -761,12 +811,15 @@ namespace Clover.Gameplay
                 * (spell ? Conditions.SpellTakenScale : Conditions.WeaponTakenScale);
         }
 
+        /// <summary>What a blow's stagger is multiplied by: <see cref="StaggerTakenMultiplier"/>, and for a weapon blow the share a condition asks of weapon blows alone (The Lamp Goes Out).</summary>
+        public float StaggerTakenFor(bool spell) => StaggerTakenMultiplier * (spell ? 1f : Conditions.WeaponStaggerScale);
+
         public float StaggerTakenMultiplier => (1f + Sum(spec => spec.StaggerTakenPerStack))
             * (BrittleLeft > 0f ? 1f + Afflictions.BrittleShare : 1f)
             * (Afflictions.BuckledShare > 0f && stacks[(int)AfflictionKind.Tremor] > 0 && stacks[(int)AfflictionKind.Sundered] > 0 ? 1f + Afflictions.BuckledShare : 1f)
             * Conditions.StaggerScale;
         public float ShoveMultiplier => 1f + Sum(spec => spec.ShovePerStack);
-        public float TurnMultiplier => HeldLeft > 0f || IsLifted ? 0f : Math.Max(0.3f, 1f - Sum(spec => spec.TurnSlowPerStack));
+        public float TurnMultiplier => HeldLeft > 0f || IsLifted ? 0f : Math.Max(0.3f, 1f - Sum(spec => spec.TurnSlowPerStack)) * Conditions.TurnScale;
         public float DamageDealtMultiplier => Math.Max(0.3f, 1f - Sum(spec => spec.DealsLessPerStack)) * Conditions.DealtScale;
         public float HealOnBlow => Sum(spec => spec.HealOnBlowPerStack);
         public float ManaOnBlow => Sum(spec => spec.ManaPerStack);
@@ -776,6 +829,8 @@ namespace Clover.Gameplay
         {
             get
             {
+                // A condition may hold its balance where it is (ConditionFlags.BalanceHeld).
+                if (Conditions.Has(ConditionFlags.BalanceHeld)) return false;
                 for (int i = 2; i < stacks.Length; i++)
                     if (stacks[i] > 0 && Afflictions.Spec((AfflictionKind)i).StopsBalanceRecovery) return false;
                 return true;
@@ -821,9 +876,15 @@ namespace Clover.Gameplay
             int index = (int)AfflictionKind.Chill;
             stacks[index] = Math.Max(stacks[index], Afflictions.Depth(AfflictionKind.Chill));
             present |= 1 << index;
-            float time = GodHolds.Seconds(seconds * RuleFreezeScale, phase, FreezeScale);
+            float time = GodHolds.Seconds((seconds + Conditions.FreezeLonger) * RuleFreezeScale, phase, FreezeScale);
             FrozenLeft = IsFrozen ? Math.Max(FrozenLeft, time) : time;
+            bool froze = !IsFrozen;
             IsFrozen = true;
+            if (froze)
+            {
+                frozenFor = 0f;
+                Conditions.Froze();
+            }
             shatterScale = Math.Max(shatterScale, Math.Max(1f, shatter));
             left[index] = Math.Max(left[index], FrozenLeft);
             return true;
@@ -846,7 +907,9 @@ namespace Clover.Gameplay
         public float Shatter()
         {
             if (!IsFrozen) return 0f;
-            float damage = Afflictions.Spec(AfflictionKind.Chill).ShatterDamage * strength[(int)AfflictionKind.Chill] * Afflictions.ShatterDamage * shatterScale;
+            // The harder of the freeze's own and what a condition asks (Rime Tree: a quarter harder).
+            float damage = Afflictions.Spec(AfflictionKind.Chill).ShatterDamage * strength[(int)AfflictionKind.Chill] * Afflictions.ShatterDamage
+                * Math.Max(shatterScale, Conditions.ShatterScale);
             shatterScale = 1f;
             End((int)AfflictionKind.Chill);
             return damage;

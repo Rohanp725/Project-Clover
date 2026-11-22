@@ -21,8 +21,10 @@ namespace Clover.Player.Forms
             run.B = cast.Forward;
             run.Count = Mathf.Clamp(cast.Spec.Count, 1, 5);
             run.T2 = Mathf.Max(0.6f, cast.Spec.Radius * 1.5f);
+            // How long each mark waits for its break: just behind it, or the whole crack glowing first (Fissure).
+            run.T0 = FormRules.BreakLead(cast.Reach, cast.Spec.Speed, cast.Spec.Glow, MarkLead);
             float width = cast.Spec.Radius * 1.7f * (run.Count - 1) + cast.Spec.Radius * 2f;
-            FormFx.Run(FormMark.Lane, run.A + run.B * 0.8f, run.B, cast.Reach - 0.6f, width, FormKit.Lit(cast.Colour, 1.5f), cast.Reach / Mathf.Max(2f, cast.Spec.Speed) + MarkLead);
+            FormFx.Run(FormMark.Lane, run.A + run.B * 0.8f, run.B, cast.Reach - 0.6f, width, FormKit.Lit(cast.Colour, 1.5f), cast.Reach / Mathf.Max(2f, cast.Spec.Speed) + run.T0);
             SpellWorks.Gesture(cast, FormKit.Chop, 0.36f, 0.25f, 0.95f, true);
             return 0;
         }
@@ -41,13 +43,13 @@ namespace Clover.Player.Forms
             float speed = Mathf.Max(2f, cast.Spec.Speed);
             float radius = cast.Spec.Radius;
             float reach = cast.Reach;
-            float marked = speed * run.Age, erupted = speed * (run.Age - MarkLead);
+            float marked = speed * run.Age, erupted = speed * (run.Age - run.T0);
             while (First + run.Phase * run.T2 <= Mathf.Min(marked, reach))
             {
                 for (int row = 0; row < run.Count; row++)
                 {
                     Vector3 spot = Spot(run, run.Phase, row, out float along);
-                    if (along <= reach + 0.3f) FormFx.Lay(FormMark.Ring, spot, radius * 3f, FormKit.Lit(cast.Colour, 2.6f), MarkLead + 0.03f, radius * 1.5f);
+                    if (along <= reach + 0.3f) FormFx.Lay(FormMark.Ring, spot, radius * 3f, FormKit.Lit(cast.Colour, 2.6f), run.T0 + 0.03f, radius * 1.5f);
                 }
                 run.Phase++;
             }

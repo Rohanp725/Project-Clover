@@ -20,15 +20,13 @@ both carried.
 ## firebloom.kindledguard
 **What it does.** A perfect guard made within 3 metres of a lily makes it flare up. It deals 12 damage and two Burn within 2 metres, and the lily stays 3 seconds longer.
 
-**When it happens.** Each perfect guard while something you grew is standing nearby, while you carry both Fire and Life.
+**When it happens.** Each perfect guard you make within 3 metres of something you grew, while you carry both Fire and Life.
 
-**The numbers.** Mix, 3 Shards. 12 damage, 10 stagger and two Burn to everything within 2 metres, at most once a second.
+**The numbers.** Mix, 3 Shards. The thing you grew nearest you flares where it stands: 12 damage, 10 stagger and two Burn to everything within 2 metres of it. It stays 3 seconds longer. At most once a second.
 
 **Works with.** Firebloom (its lilies count as things you grew), Need-Fire, The Burning Tree.
 
-**Example.** Stand next to a lily and block the brute's swing perfectly. Everything around you catches fire.
-
-**Not built yet.** For now, the flare bursts around you, not around the lily, whenever anything you grew stands within 4 metres. The lily doesn't stay longer yet.
+**Example.** Stand next to a lily and block the brute's swing perfectly. The lily flares, and everything around it catches fire.
 
 ## firebloom.drypods
 **What it does.** One more seed is thrown, up to four, and the lilies stay 2 seconds longer.

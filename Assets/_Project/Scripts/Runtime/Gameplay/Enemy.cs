@@ -11,7 +11,7 @@ namespace Clover.Gameplay
     /// the storm charges it for a while, making it faster and harder-hitting.
     /// </summary>
     [RequireComponent(typeof(CharacterController))]
-    public class Enemy : MonoBehaviour, IDamageable, IStaggerable, IBurnable, IAfflictable, IShovable, IBoss, IWeighted, IFlinchable
+    public class Enemy : MonoBehaviour, IDamageable, IStaggerable, IBurnable, IAfflictable, IShovable, IBoss, IWeighted, IFlinchable, ICarriable
     {
         [SerializeField] private string kindName = EnemyKind.SoldierName;
         [SerializeField] private Transform target;
@@ -107,6 +107,21 @@ namespace Clover.Gameplay
             float peak = Mathf.Max(0.001f, Mathf.Max(hue.r, Mathf.Max(hue.g, hue.b)));
             return new Color(hue.r / peak * 0.95f, hue.g / peak * 0.95f, hue.b / peak * 0.95f, 1f);
         }
+        /// <summary>
+        /// Whether its guard turns this blow (the ledger's shield-pass): only one that guards, with its guard not held open
+        /// and not taken away by a condition (Red Paper's <see cref="ConditionFlags.CannotGuard"/>), standing ready, struck
+        /// from the front by a blow that may be guarded. A levy's shield in a shield wall is this same guard, so a blow on
+        /// one that cannot guard passes its shield too.
+        /// </summary>
+        public static bool TurnsAside(bool guards, float guardOpenFor, EnemyConditions conditions, in Hit hit, float heavyGuardedDamage, bool staggered, EnemyState state, float angleFromFront)
+        {
+            if (!guards || guardOpenFor > 0f || hit.Unblockable || staggered) return false;
+            if (conditions != null && conditions.Has(ConditionFlags.CannotGuard)) return false;
+            if (hit.Heavy && (heavyGuardedDamage >= 1f || (conditions != null && conditions.Has(ConditionFlags.HeavyPassesGuard)))) return false;
+            if (state != EnemyState.Stalk && state != EnemyState.Idle) return false;
+            return angleFromFront < 75f;
+        }
+
         public bool IsStaggered => Brain.State == EnemyState.Staggered;
         public bool IsDead => Brain.State == EnemyState.Dead;
         public bool IsCharged => chargedLeft > 0f;
@@ -416,10 +431,13 @@ namespace Clover.Gameplay
         {
             if (animator == null || animator.transform == transform) return;
             int tremor = IsDead ? 0 : Afflictions.Stacks(AfflictionKind.Tremor);
+            // Sunk (The Ground Gives' sand), the model is drawn down into the floor and eased back up as it comes free.
+            float sinkTo = IsDead ? 0f : Afflictions.Conditions.SinkDepth;
+            sunk = Mathf.MoveTowards(sunk, sinkTo, SinkRate * Time.deltaTime);
             // Turned to stone, it stands still as stone: no shaking (round 4, Turned to Stone).
             if (tremor > 0 && Clover.Player.Forms.ElementLooks.ShellOn(transform, Clover.Player.Forms.ElementLookSet.Stone, out _, out _, out _)) tremor = 0;
-            float raise = IsDead ? 0f : Clover.Player.Forms.ElementLooks.RaiseOf(transform);
-            if (tremor <= 0 && raise <= 0f)
+            float raise = (IsDead ? 0f : Clover.Player.Forms.ElementLooks.RaiseOf(transform)) - sunk;
+            if (tremor <= 0 && Mathf.Abs(raise) <= 0.0001f)
             {
                 if (shaking) animator.transform.localPosition = modelRest;
                 shaking = false;
@@ -435,6 +453,12 @@ namespace Clover.Gameplay
             }
             animator.transform.localPosition = modelRest + offset;
         }
+
+        // Metres a second a sunk body goes down and comes back up, and how far down it is now.
+        private const float SinkRate = 1.6f;
+        // Degrees a second it is swung round to face a point: a spin, not a walk's turn.
+        private const float TurnedDegreesPerSecond = 720f;
+        private float sunk;
 
         private void Awake()
         {
@@ -653,16 +677,15 @@ namespace Clover.Gameplay
                 Vfx.Play(VfxKind.TintRing, transform.position + Vector3.up * 0.3f, Vector3.up, 1f, Gameplay.Afflictions.Spec(AfflictionKind.Chill).Colour);
             }
             // Read before this blow lays anything of its own: the blow is judged against what was already there.
-            float takes = Afflictions.DamageTakenMultiplier(hit.Spell) * harder;
-            float unsteadies = Afflictions.StaggerTakenMultiplier * harder;
+            float takes = Afflictions.DamageTakenMultiplier(hit.Spell, hit.Heavy) * harder;
+            float unsteadies = Afflictions.StaggerTakenFor(hit.Spell) * harder;
             float shoved = Afflictions.ShoveMultiplier;
             Afflictions.TakeFrom(hit, this, shattered);
             // Ground that only lays an affliction is not a blow: it does not shove, flinch, wear poise or meet the guard.
             if (hit.OnlyLays && detonated <= 0f) return HitOutcome.Landed;
 
             // Its guard: a light blow from the front, while it stands ready, is turned on its weapon.
-            if (Kind.Guards && GuardOpenFor <= 0f && !Afflictions.Conditions.Has(ConditionFlags.CannotGuard) && (!hit.Heavy || Kind.HeavyGuardedDamage < 1f) && !hit.Unblockable && !IsStaggered && (Brain.State == EnemyState.Stalk || Brain.State == EnemyState.Idle)
-                && Vector3.Angle(transform.forward, -hit.Direction) < 75f)
+            if (TurnsAside(Kind.Guards, GuardOpenFor, Afflictions.Conditions, hit, Kind.HeavyGuardedDamage, IsStaggered, Brain.State, Vector3.Angle(transform.forward, -hit.Direction)))
             {
                 BlowsGuarded++;
                 if (guardArc != null) guardArc.Pulse(GuardFlash(hit), 0.18f, 0.25f);
@@ -767,6 +790,71 @@ namespace Clover.Gameplay
             if (IsDead) return;
             impulse.y = 0f;
             shove += impulse * (Kind.IsBoss ? 0.3f : Kind.IsElite ? 0.6f : 1f);
+            // A real shove, not a pull's steady drag, is a moment its conditions answer (Windthrow tears out, Ill Wind sheds).
+            if (ShoveRules.IsMoment(impulse.magnitude, Time.time, lastShoveMoment))
+            {
+                lastShoveMoment = Time.time;
+                Afflictions.Conditions.Shoved();
+            }
+        }
+
+        private float lastShoveMoment = -100f;
+
+        // Swallowed (Rahu): gone from the fight, unseen and with no body, until the condition ends; then rolled out at the
+        // player's feet. The renderers are gathered once, the first time it is swallowed.
+        private bool swallowedNow;
+        private Renderer[] swallowedHides;
+
+        /// <summary>Metres in front of the player a swallowed enemy is put down.</summary>
+        public const float RolledOutAt = 1.2f;
+
+        /// <summary>Where a swallowed enemy is put down: at the player's feet, a little in front of them, at their height.</summary>
+        public static Vector3 PutDownAt(Vector3 player, Vector3 facing)
+        {
+            facing.y = 0f;
+            return player + (facing.sqrMagnitude > 0.0001f ? facing.normalized : Vector3.forward) * RolledOutAt;
+        }
+
+        private void KeepSwallowed()
+        {
+            bool swallowed = !IsDead && Afflictions.Conditions.Has(ConditionFlags.Swallowed);
+            if (swallowed == swallowedNow) return;
+            swallowedNow = swallowed;
+            if (swallowedHides == null) swallowedHides = GetComponentsInChildren<Renderer>(true);
+            for (int i = 0; i < swallowedHides.Length; i++)
+                if (swallowedHides[i] != null) swallowedHides[i].enabled = !swallowed;
+            if (bars != null && swallowed) bars.gameObject.SetActive(false);
+            if (!swallowed && target != null)
+            {
+                // Rolled out of the throat at the player's feet.
+                Vector3 at = PutDownAt(target.position, target.forward);
+                transform.position = new Vector3(at.x, target.position.y, at.z);
+                shove = Vector3.zero;
+            }
+            body.enabled = !swallowed;
+        }
+
+        // Thrown down at the end of a carry: knocked flat a moment (the knocked-down clip's fall, lie and getting up).
+        private static readonly ConditionSpec CarriedDown = new ConditionSpec { Id = "carried.down", Seconds = 0.8f, Flags = ConditionFlags.Down };
+
+        /// <summary>Carried before a moving spell: moved along the ground to the point, walls stopping it. A god or a boss is too great to carry.</summary>
+        public bool CarryTo(Vector3 point)
+        {
+            if (IsDead || Kind.IsGod || Kind.IsBoss || !body.enabled) return false;
+            Vector3 to = point - transform.position;
+            to.y = 0f;
+            body.Move(to);
+            shove = Vector3.zero;
+            return true;
+        }
+
+        /// <summary>Thrown down where the carry ended: knocked flat for the time given (an elite half of it), a god never.</summary>
+        public bool ThrowDown(float seconds)
+        {
+            if (IsDead || Afflictions.Rank == EnemyRank.God) return false;
+            var spec = CarriedDown;
+            float share = Afflictions.FreezeScale < 1f ? 0.5f : 1f;
+            return Afflictions.Conditions.Set(spec, this, -1, null, false, false, share * Mathf.Max(0.05f, seconds) / spec.Seconds) >= 0;
         }
 
         /// <summary>Times an effect (a reaction) has made it flinch, for probes.</summary>
@@ -888,6 +976,7 @@ namespace Clover.Gameplay
                 }
             }
 
+            KeepSwallowed();
             Stagger.Tick(deltaTime, Afflictions.BalanceRecovers);
             if (IsStaggered && !Stagger.IsStaggered) Brain.EndStagger();
 
@@ -932,6 +1021,8 @@ namespace Clover.Gameplay
             if (sinceLightHit > 1.6f) lightHits = 0;
             bool mayAttack = turns == null || turns.MayAttack(this);
             bool struck = Brain.Tick(deltaTime * pace, brainDistance, Random.value, mayAttack, TargetOnGround);
+            // Whether it shows an attack now, for what answers an enemy in its wind-up (Quake Step, Devouring Maw).
+            Afflictions.NoteWindup(Brain.State == EnemyState.Telegraph, deltaTime, Brain.StrikeIn / Mathf.Max(0.05f, pace));
             // Knocked flat, the back meets the floor near the end of the fall: dust there, once each fall.
             if (Brain.IsDown && !Brain.IsGettingUp)
             {
@@ -965,11 +1056,19 @@ namespace Clover.Gameplay
                 if (sinceHurt < BarsLingerSeconds) sinceHurt += deltaTime;
                 bool fighting = IsAware || sinceHurt < BarsLingerSeconds;
                 if (!fighting) barsCalled = false;
-                bool show = fighting && (Kind.IsElite || barsCalled) && distance <= BarsDistance;
+                bool show = fighting && (Kind.IsElite || barsCalled) && distance <= BarsDistance && !swallowedNow;
                 if (bars.gameObject.activeSelf != show) bars.gameObject.SetActive(show);
             }
 
-            if (Brain.Tracks && distance > 0.05f && !searching && !(steered && Brain.State == EnemyState.Stalk))
+            // Turned to face a point (Turned to the Sun's herb, Turned About's spin), it swings round to it whatever it tracked.
+            if (Afflictions.Conditions.TurnedToward(out Vector3 facePoint) && Afflictions.TurnMultiplier > 0f)
+            {
+                Vector3 toPoint = facePoint - transform.position;
+                toPoint.y = 0f;
+                if (toPoint.sqrMagnitude > 0.01f)
+                    transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(toPoint, Vector3.up), TurnedDegreesPerSecond * deltaTime);
+            }
+            else if (Brain.Tracks && distance > 0.05f && !searching && !(steered && Brain.State == EnemyState.Stalk))
             {
                 var facing = Quaternion.LookRotation(toTarget, Vector3.up);
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, facing, Kind.TurnDegreesPerSecond * pace * Afflictions.TurnMultiplier * deltaTime);
@@ -1070,7 +1169,8 @@ namespace Clover.Gameplay
                     lungeForward = transform.forward;
                 }
                 lunging = driving;
-                if (driving) step += transform.forward * (attack.Lunge * deltaTime * pace / (until - from));
+                // Its feet caught (Mired), the lunge is struck where it stands.
+                if (driving && !Afflictions.Conditions.Has(ConditionFlags.Mired)) step += transform.forward * (attack.Lunge * deltaTime * pace / (until - from));
             }
             // Rooted, its feet go nowhere, by its own will, a lunge or a shove; it still turns and strikes.
             bool rooted = Afflictions.Conditions.Has(ConditionFlags.Rooted);
@@ -1096,6 +1196,10 @@ namespace Clover.Gameplay
                 fallSpeed = body.isGrounded ? 1f : fallSpeed + Gravity * deltaTime;
                 step.y = -fallSpeed * deltaTime;
             }
+            // On a leash (Black Chain, Tethered): never farther from what holds it than the leash, and drawn back to it if
+            // beyond. A god is never leashed.
+            if (!Afflictions.IsGod && EnemyChains.LeashOf(this, target != null ? target.position : transform.position, out Vector3 leashAnchor, out float leash))
+                step = EnemyChains.Leash(transform.position, step, leashAnchor, leash, deltaTime);
             if (body.enabled) body.Move(step);
 
             // Its guard is up only while it stands ready and knows the player is there: the band going out is the opening.
@@ -1238,6 +1342,8 @@ namespace Clover.Gameplay
             var struck = target.GetComponentInParent<IDamageable>();
             if (struck == null) return;
             var outcome = struck.TakeHit(new Hit(damage, 0f, direction, false, attack.Unblockable, from));
+            // An elite or a god lays its land's affliction on the player its blow lands on (the stand-in plan's question 1).
+            if (outcome == HitOutcome.Landed && struck is Clover.Player.PlayerDefence struckPlayer) struckPlayer.StruckInLand(Afflictions.Rank, gameObject.scene.name);
             // A blow that lands near him is a fight he can feel; a ray that lands far off tells him nothing new.
             if (Kind.HuntsByLight && outcome != HitOutcome.Missed) Sense.Fight(Vector3.Distance(transform.position, target.position));
             if (outcome == HitOutcome.Landed) Took(attack);

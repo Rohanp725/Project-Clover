@@ -79,13 +79,17 @@ namespace Clover.Player.Forms
             else if (!FliesByItself)
             {
                 // One for each light blow that landed since the last step, on the one it struck.
+                bool sent = false;
                 for (int i = 0; i < run.Count && run.Done > 0; i++)
                     if (times[i] == Hovering)
                     {
                         Loose(ref run, i, run.Victim, 0f);
                         run.Done--;
+                        sent = true;
                     }
                 run.Done = 0;
+                // The last one sent by a light blow is a moment its Master answers (a heavy blow within a second of it).
+                if (sent && LastSent(times, run.Count) && cast.Upgrades != null) cast.Upgrades.NoteMoment(CastMoment.LastBolt);
             }
             else if (!over && run.Age >= run.T1)
             {
@@ -151,6 +155,14 @@ namespace Clover.Player.Forms
                 times[i] = Spent;
             }
             return any;
+        }
+
+        /// <summary>True when none of the first <paramref name="count"/> still hovers: the last has been sent.</summary>
+        public static bool LastSent(float[] times, int count)
+        {
+            for (int i = 0; i < count && i < times.Length; i++)
+                if (times[i] == Hovering) return false;
+            return true;
         }
 
         // A time below zero but above the marks is a blade waiting its turn in a volley: it counts up to zero and goes.

@@ -70,6 +70,8 @@ namespace Clover.UI
         public ReactionWords Reactions { get; private set; }
         /// <summary>"+4 Memories" under the Shards count, and the light that flies in with them (task 5.6).</summary>
         public MemoryGain Memories { get; private set; }
+        /// <summary>The marks by the health bar for what is laid on the player.</summary>
+        public AfflictionBadges Marks { get; private set; }
         private int shownTallies = -1;
         private int shownFlasks;
 
@@ -120,6 +122,8 @@ namespace Clover.UI
             if (player != null && status != null) Reactions = ReactionWords.Make(status.transform.parent, status, player);
             // The line under the Shards count that says Memories were paid, and the amber light that brings them (task 5.6).
             if (embers != null) Memories = MemoryGain.Make(embers);
+            // The marks for what elites and gods laid on the player, beside the health bar.
+            if (healthFill != null && defence != null) Marks = AfflictionBadges.Make(healthFill.parent as RectTransform, status != null ? status.font : null, defence);
         }
 
         private void LateUpdate()

@@ -73,15 +73,15 @@ namespace Clover.Player.Trees
 
             // Wind and Ice (3). A crust of rime for 5 s; the next heavy blow breaks it and the ice blows out of its far
             // side: a cone 4 m long (two bursts on the player's line beyond it, reaching 0.7 to 4.5 m past it), 10 damage,
-            // 2 Chill and 1 Unsteady to everything in it.
-            // NEEDS: the side of a blow: only a heavy from the side facing the player when it reacted (within 90 degrees)
-            // breaks the crust; one from behind wastes it.
+            // 2 Chill and 1 Unsteady to everything in it. The crust grows on the side that faced the player as it reacted
+            // (ConditionSpec.KeepsFacing): only a heavy blow from within 90 degrees of that side breaks it out; one from behind
+            // spends the crust for nothing.
             to.Add(Reaction(AfflictionKind.Unsteady, AfflictionKind.Chill,
-                "Chill meets Unsteady: rime grows on it for 5 s. Your next heavy blow breaks it and the ice blows out of its far side, 10, 2 Chill and 1 Unsteady to all behind it.",
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Crust, Seconds = 5f, EndsWith = ConditionBlow.Heavy } },
-                new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Crust, By = StruckBy.Heavy, Do = UpgradeAction.Burst, Shape = HazardShape.Downwind, Count = 2,
+                "Chill meets Unsteady: rime grows on it for 5 s. Your next heavy blow from the side it showed you breaks it and the ice blows out of its far side, 10, 2 Chill and 1 Unsteady to all behind it; one from its back wastes it.",
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Crust, Seconds = 5f, EndsWith = ConditionBlow.Heavy, KeepsFacing = true } },
+                new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Crust, By = StruckBy.Heavy, SideMost = 90f, Do = UpgradeAction.Burst, Shape = HazardShape.Downwind, Count = 2,
                     Reach = 2.6f, Amount = 1.6f, Radius = 1.1f, Damage = 10f, Affliction = AfflictionKind.Chill, Stacks = 2 },
-                new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Crust, By = StruckBy.Heavy, Do = UpgradeAction.Burst, Shape = HazardShape.Downwind, Count = 2,
+                new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Crust, By = StruckBy.Heavy, SideMost = 90f, Do = UpgradeAction.Burst, Shape = HazardShape.Downwind, Count = 2,
                     Reach = 2.6f, Amount = 1.6f, Radius = 1.1f, Affliction = AfflictionKind.Unsteady, Stacks = 1 }));
 
             // Ice and Water (4). Still below freezing for 6 s: the next weapon blow freezes it outright whatever its Chill
@@ -142,12 +142,16 @@ namespace Clover.Player.Trees
 
             // Dark and Poison (10), rest 8 s. Sealed as a jar for 8 s: its doses stop fading. When the 8 s end, or it
             // dies, the jar breaks: 5 a dose in 3 m, and half its doses (rounded up) laid on all it reaches.
-            // NEEDS: the jar's ring on the floor (4 m across); other poisoned enemies that die inside it crawling to it
-            // and giving it every dose (to twelve, past the usual eight); each kill inside feeding the player 4.
+            // Another poisoned enemy that dies inside its ring (4 m across: ConditionSpec.DeathsWithin, StruckBy.DeathNear) gives it every
+            // dose, to twelve past the usual eight (ConditionSpec.Deepens), and each kill inside feeds the player 4. NEEDS: the jar's
+            // ring drawn on the floor and the doses crawling to it (looks).
             to.Add(Reaction(AfflictionKind.Cursed, AfflictionKind.Poison,
                 "Cursed meets Poisoned: it is sealed as a jar for 8 s and its doses stop fading. When the time ends or it dies the jar breaks, 5 a dose in 3 m, and half its doses spill on all it reaches.",
                 new ReactionDef { Rest = 8f },
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Jar, Seconds = 8f, Keeps = AfflictionKind.Poison } },
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Jar, Seconds = 8f, Keeps = AfflictionKind.Poison,
+                    DeathsWithin = 2f, Deepens = AfflictionKind.Poison, DeepensBy = 4 } },
+                new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Jar, By = StruckBy.DeathNear, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Poison, Stacks = 1, PerStack = true },
+                new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Jar, By = StruckBy.DeathNear, Do = UpgradeAction.Heal, Amount = 4f },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Jar, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Poison, CountOnly = true },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Jar, Do = UpgradeAction.Burst, Radius = 3f, DamagePerSpent = 5f, Affliction = AfflictionKind.Poison },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Jar, Do = UpgradeAction.Afflict, Radius = 3f, Affliction = AfflictionKind.Poison, Stacks = 1, PerStack = true, Share = 0.5f },
@@ -185,10 +189,10 @@ namespace Clover.Player.Trees
             // Lightning and Ice (13). For 3 s it gains one Static every 0.5 s (to full); at the end a bolt discharges all
             // of it (7 damage and 5 stagger a stack in 4 m) and everything the discharge reaches takes 1 Chill. A heavy
             // blow discharges it early as Lightning always does.
-            // NEEDS: a freeze moment: "at once if it freezes".
+            // If it freezes first, the bolt falls at once (ConditionSpec.EndsOnFreeze).
             to.Add(Reaction(AfflictionKind.Static, AfflictionKind.Chill,
                 "Static meets Chill: the frost charges itself, a Static every half second for 3 s. Then a bolt falls and discharges it all, 7 a stack in 4 m, chilling all it reaches.",
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Charging, Seconds = 3f, Beat = 0.5f } },
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Charging, Seconds = 3f, Beat = 0.5f, EndsOnFreeze = true } },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = Charging, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Static, Stacks = 1 },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Charging, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Static, Radius = 4f, Stagger = 5f },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Charging, Do = UpgradeAction.Afflict, Radius = 4f, Affliction = AfflictionKind.Chill, Stacks = 1 }));
@@ -216,11 +220,11 @@ namespace Clover.Player.Trees
 
             // Water and Earth (16). Shaken wet ground turns to sand: it sinks to the knees for 4 s, slowed by half (an
             // elite by a quarter; a god takes only the Tremor), and a heavy blow on it while sunk holds it 0.5 s.
-            // NEEDS: sinking (no dodge, leap or step back, the body drawn lower) and the pool itself (2 m across, slowing
-            // other enemies that wade in by 30%).
+            // Sunk (ConditionFlags.Mired: no leap, blink, lunge or step back; Sink: the body drawn 0.35 m down into the sand).
+            // NEEDS: the pool itself (2 m across, slowing other enemies that wade in by 30%) (ground-states).
             to.Add(Reaction(AfflictionKind.Soaked, AfflictionKind.Tremor,
                 "Tremor meets Soaked: the wet floor under it turns to sand and it sinks to the knees for 4 s, slowed by half. A heavy blow holds it fast.",
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = SunkInSand, Seconds = 4f, Pace = 0.5f } },
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = SunkInSand, Seconds = 4f, Pace = 0.5f, Flags = ConditionFlags.Mired, Sink = 0.35f } },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = SunkInSand, By = StruckBy.Heavy, Do = UpgradeAction.Hold, Seconds = 0.5f }));
 
             // Life and Metal (17). Iron thorns grow out of it for 6 s; each weapon blow snaps one off and it flies at the
@@ -243,13 +247,13 @@ namespace Clover.Player.Trees
 
             // Metal and Dark (19). A chain to the nearest other enemy within 6 m for 5 s, set as a condition on that one,
             // joined to this.
-            // NEEDS: links that pass blows: 30% of weapon damage dealt to either is dealt to the other (gods too); and the
-            // leash: the two cannot move more than 4 m apart (gods never leashed); with no one near, chained to the floor
-            // within 2 m of the spot. The link is not the poison-passing kind, so Rot Roots' bites do not run along it.
+            // 30% of each weapon blow on either is dealt to the other, gods too (ConditionFlags.Chained, EnemyChains); the two
+            // cannot move more than 4 m apart (Leash: gods are never leashed); with no one near, it is chained to the floor
+            // within 2 m of the spot (AloneLeash). The link is not the poison-passing kind, so Rot Roots' bites do not run along it.
             to.Add(Reaction(AfflictionKind.Sundered, AfflictionKind.Cursed,
                 "Cursed meets Sundered: a black chain binds it to the nearest enemy within 6 m for 5 s.",
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, Radius = 6f, Count = 1,
-                    State = new ConditionSpec { Id = Chain, Seconds = 5f, Scale = 0.3f, ToOthers = true } }));
+                    State = new ConditionSpec { Id = Chain, Seconds = 5f, Scale = 0.3f, ToOthers = true, Flags = ConditionFlags.Chained, Leash = 4f, AloneLeash = 2f } }));
 
             // Light and Poison (20), rest 6 s. The sun wakes the sap for 3 s; each weapon blow in that time (each is
             // critical while the Mark lasts) raises a weal. At the end the poison bites at once, and each weal bursts,

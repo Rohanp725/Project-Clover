@@ -33,7 +33,7 @@ are both carried. Its reaction is Diamond Ring; its Shape mark lets you choose w
 
 **The numbers.** Mix, duo spell, 5 Shards, 45 mana. It goes up to 5 metres: to 1.8 metres past the enemy you face, or about 4 metres ahead if there is none. The cut deals 10 damage, 10 stagger and a Mark to everything on the line. The heavy blow after it is a critical hit if it lands within 3 seconds.
 
-**Works with.** Diamond Ring (on a Marked and Cursed enemy, its cut sets off Diamond Ring right away, even if it would normally have to wait), Light's root mark, Reckoning's Spoken Sentence shape, Weighed, and the charged blade, which it charges with Light.
+**Works with.** Diamond Ring (on an enemy that is Marked or Cursed, even with only one of the two, its cut sets off Diamond Ring right away, even if it would normally have to wait), Light's root mark, Reckoning's Spoken Sentence shape, Weighed, and the charged blade, which it charges with Light.
 
 **Example.** Step through a captain's guard, turn around, and land a critical heavy blow on its back.
 
@@ -62,9 +62,9 @@ are both carried. Its reaction is Diamond Ring; its Shape mark lets you choose w
 ## eclipse.totality
 **What it does.** When your surge starts, the sun is covered. While it is dark, every enemy near you stays Marked and Cursed, and every weapon blow you land is a critical hit and heals you. The game remembers how much damage your weapon did to each enemy in the dark. When the surge ends, the light comes back, and a column of light hits every enemy you hurt for a share of that damage.
 
-**When it happens.** Light your surge with the surge button (whichever element's surge you have). The light comes back when it ends.
+**When it happens.** It is a duo surge: pick it for your surge slot at a rest fire, in place of an element's surge, while you carry both Light and Dark. Light it with the surge button; the light comes back when it ends.
 
-**The numbers.** 5 Shards. You can buy it once you carry both elements; no god gives it. Every second, every enemy within 14 metres is Marked and Cursed. Every weapon blow is a critical hit and heals you 1, at most five times a second. The column of light deals half the damage your weapon did to that enemy, up to 80, plus 30 stagger.
+**The numbers.** 5 Shards. You can buy it once you carry both elements; no god gives it. It costs 40 mana and lasts 10 seconds. Every second, every enemy within 14 metres is Marked and Cursed. Every weapon blow is a critical hit and heals you 1, at most five times a second. The column of light deals half the damage your weapon did to that enemy, up to 80, plus 30 stagger.
 
 **Works with.** Clarity (eight seconds of dark, and every blow also Marks) or Hunger (it heals you while it drains), Diamond Ring's shapes, Weighed, Reckoning's Spoken Sentence shape, The Dividing Line.
 

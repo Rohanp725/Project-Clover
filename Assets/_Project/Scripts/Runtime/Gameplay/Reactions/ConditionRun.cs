@@ -46,5 +46,31 @@ namespace Clover.Gameplay
         public bool OnBite;
         public ConditionBlow EndsWith;
         public int BlowLimit;
+        /// <summary>What it is beyond its own name (<see cref="ConditionSpec.Is"/>), and the condition it lasts only while (<see cref="ConditionSpec.WhileIn"/>).</summary>
+        public string Is;
+        public string WhileIn;
+        /// <summary>Only critical weapon blows are counted, told and spend it (<see cref="ConditionSpec.CriticalOnly"/>).</summary>
+        public bool CriticalOnly;
+        /// <summary>The way the enemy faced as it was set, when the spec keeps it (<see cref="ConditionSpec.KeepsFacing"/>); zero otherwise.</summary>
+        public Vector3 Facing;
+        /// <summary>Seconds a freeze lasts longer, and how much harder a shatter strikes, while it runs.</summary>
+        public float FreezeLonger;
+        public float ShatterHarder;
+        /// <summary>It ends when the enemy freezes (<see cref="ConditionSpec.EndsOnFreeze"/>).</summary>
+        public bool EndsOnFreeze;
+        /// <summary>Metres it drifts to the nearest other enemy when its carrier dies (<see cref="ConditionSpec.DriftsTo"/>); zero: it dies with it.</summary>
+        public float DriftsTo;
+        /// <summary>Metres round its carrier within which another's death is told to it (<see cref="ConditionSpec.DeathsWithin"/>).</summary>
+        public float DeathsWithin;
+        /// <summary>Metres the body is drawn down while it runs (<see cref="ConditionSpec.Sink"/>).</summary>
+        public float Sink;
+        /// <summary>The point it is turned to face (<see cref="ConditionFlags.FacesPoint"/>).</summary>
+        public Vector3 FacePoint;
+        /// <summary>The leash's length, whether the player holds it, and the spot it was set on (<see cref="ConditionSpec.Leash"/>).</summary>
+        public float Leash;
+        public bool LeashToPlayer;
+        public Vector3 Anchor;
+        /// <summary>Spell blows pass along its chain too (<see cref="ConditionSpec.SharesSpells"/>).</summary>
+        public bool SharesSpells;
     }
 }

@@ -20,7 +20,7 @@ Earth are both carried.
 ## thegroundgives.bog
 **What it does.** An enemy that dies while sunk is swallowed up, and the bog gives something back: a quarter of a flask.
 
-**When it happens.** Each time an enemy dies with both Soaked and Tremor on it, while you carry both Water and Earth.
+**When it happens.** Each time an enemy dies while it is sunk (by The Ground Gives or either of its shapes), while you carry both Water and Earth.
 
 **The numbers.** Mix, 3 Shards. A quarter of a flask, at most twice a second.
 
@@ -28,20 +28,16 @@ Earth are both carried.
 
 **Example.** Kill three sunken soldiers, and a flask is almost full again.
 
-**Not built yet.** For now, it works on any enemy that dies soaked and shaken, not only one that was sunk.
-
 ## thegroundgives.drivendown
-**What it does.** Heavy blows on a sunken enemy drive it deeper and hold it in place.
+**What it does.** Heavy blows on a sunken enemy go through its guard and hold it in place.
 
-**When it happens.** Every heavy blow or finisher that lands on an enemy that has both Soaked and Tremor.
+**When it happens.** Every heavy blow or finisher that lands on an enemy while it is sunk (by The Ground Gives or either of its shapes).
 
-**The numbers.** Mix, 3 Shards. Held still for 0.5 seconds.
+**The numbers.** Mix, 3 Shards. Held still for 0.5 seconds more. Its guard lets heavy blows through for as long as it is sunk; light blows are still blocked.
 
 **Works with.** The Ground Gives, Quicksand, Mountain Stance.
 
 **Example.** A sunken brute can't fight back. Each heavy blow pins it again.
-
-**Not built yet.** The heavy blow doesn't go through the enemy's guard yet, and for now it works on any soaked, shaken enemy, not only a sunken one.
 
 ## thegroundgives.landwassea
 **What it does.** Your dodges become slides. Each one leaves a line of wet sand behind it and gives back its stamina.

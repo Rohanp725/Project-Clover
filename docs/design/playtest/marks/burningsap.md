@@ -9,13 +9,11 @@ Poison are both carried.
 
 **When it happens.** Every time Burning Sap goes off while you carry both Light and Poison. Burning Sap goes off when poison lands on a Marked enemy, or when a Mark lands on a poisoned one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Burning Sap.
 
-**The numbers.** Mix, 3 Shards. Both shapes, like the plain one: for 3 seconds, the enemy's poison doesn't bite. It saves up its bites, and at the end they all land at once, doubled. The Light Finds Them: every poisoned enemy within 8 metres is Marked. At the end, each blister also bursts, putting two doses on everything within 2.5 metres. Blistered: for 3 seconds, each weapon blow you land on the enemy splashes two doses on everything within 2.5 metres. After Burning Sap goes off on an enemy, it can't go off on that enemy again for 6 seconds.
+**The numbers.** Mix, 3 Shards. Both shapes, like the plain one: for 3 seconds, the enemy's poison doesn't bite. It saves up its bites, and at the end they all land at once, doubled. The Light Finds Them: every poisoned enemy within 8 metres is Marked. At the end, each blister also bursts, putting two doses on everything within 2.5 metres. Blistered: for 3 seconds, each critical hit you land on the enemy splashes two doses on everything within 2.5 metres. Blows that aren't critical don't. After Burning Sap goes off on an enemy, it can't go off on that enemy again for 6 seconds.
 
 **Works with.** Glare and Miasma to set it up, Seen Through, Nectar After Poison, Bared to the Sun.
 
 **Example.** A poisoned pack: The Light Finds Them Marks them all at once, ready for your critical hits. A one-on-one fight: use Blistered, and three quick blows splash poison onto any enemy that comes to help.
-
-**Not built yet.** Blistered's blisters come with every weapon blow, not only critical hits.
 
 ## burningsap.nectar
 **What it does.** An enemy that dies with both a Mark and poison on it gives you health and mana.

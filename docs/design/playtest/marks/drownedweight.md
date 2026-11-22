@@ -9,11 +9,11 @@ Dark are both carried.
 
 **When it happens.** Every time Drowned Weight goes off while you carry both Water and Dark. Drowned Weight goes off when a Curse lands on a Soaked enemy, or when water lands on a Cursed one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Drowned Weight.
 
-**The numbers.** Mix, 3 Shards. Both shapes: the enemy swells for 5 seconds. It moves a fifth slower and takes 15% more damage from weapon blows. Drawn Under: the enemy is held for 1.5 seconds, and everything within 3 metres is pulled 2 metres toward it. It bursts like the plain one when it dies or when a heavy blow lands: 14 damage, 20 stagger, Soaked and Cursed to everything within 4 metres. The Pull of Night: there is no burst. Each weapon blow on the enemy pulls every other Soaked enemy within 5 metres 1 metre toward it, at most once every 0.3 seconds. Enemies that aren't Soaked stay where they are. After Drowned Weight goes off on an enemy, it can't go off on that enemy again for 4 seconds.
+**The numbers.** Mix, 3 Shards. Both shapes: the enemy swells for 5 seconds. It moves a fifth slower and takes 15% more damage from weapon blows. Drawn Under: the enemy is held for 1.5 seconds, and everything within 3 metres is pulled 2 metres toward it. It bursts like the plain one when it dies or when your finisher lands: 14 damage, 20 stagger, Soaked and Cursed to everything within 4 metres. The Pull of Night: there is no burst. Each weapon blow on the enemy pulls every other Soaked enemy within 5 metres 1 metre toward it, at most once every 0.3 seconds. Enemies that aren't Soaked stay where they are. After Drowned Weight goes off on an enemy, it can't go off on that enemy again for 4 seconds.
 
 **Works with.** Held Under, Deep Swell, The Debt Passes, Under the Black Water.
 
-**Example.** Archers hanging back: use The Pull of Night, and every blow on the swollen enemy drags them in. A tight pack: use Drawn Under, then a heavy blow for the burst.
+**Example.** Archers hanging back: use The Pull of Night, and every blow on the swollen enemy drags them in. A tight pack: use Drawn Under, then a finisher for the burst.
 
 **Not built yet.** Drawn Under's pool isn't drawn yet, and it pulls the others 2 metres all at once instead of 1.5 metres a second.
 
@@ -22,13 +22,11 @@ Dark are both carried.
 
 **When it happens.** Each perfect guard against a swollen enemy, while you carry both Water and Dark.
 
-**The numbers.** Mix, 3 Shards. The enemy flinches (whatever it had started is lost) and is held for 1 second (0.4 for elites), at most once a second.
+**The numbers.** Mix, 3 Shards. The enemy flinches (whatever it had started is lost) and is held for 1 second (0.4 for elites).
 
 **Works with.** Drowned Weight, The Debt Passes, Under the Black Water.
 
 **Example.** Block the swollen brute's swing perfectly, and it stands sunk in place for your heavy blow.
-
-**Not built yet.** For now, it works on any enemy that is both Soaked and Cursed, whether it is swollen or not.
 
 ## drownedweight.deepswell
 **What it does.** Drowned Weight keeps the enemy swollen 2 seconds longer, and its burst reaches 5 metres.
@@ -44,15 +42,13 @@ Dark are both carried.
 ## drownedweight.debtpasses
 **What it does.** When a swollen enemy bursts, the nearest enemy the burst reaches swells right away. Killing a swollen enemy heals you 6 more.
 
-**When it happens.** Each time a swollen enemy dies, while you carry both Water and Dark.
+**When it happens.** Each time a swollen enemy bursts: when it dies, or when your finisher lands on it, while you carry both Water and Dark.
 
-**The numbers.** Mix, keystone, 5 Shards. For now: when an enemy that is both Soaked and Cursed dies, every enemy within 4 metres is Cursed, at most once a second, and you heal 6. This is on purpose: it may make those enemies swell too.
+**The numbers.** Mix, keystone, 5 Shards. The one enemy nearest the burst, within its 4 metres, gets a Curse and swells at once, as if Drowned Weight went off on it. Killing a swollen enemy also heals you 6.
 
 **Works with.** Drowned Weight (its burst soaks them all first), Held Under, Under the Black Water.
 
 **Example.** Kill the first swollen soldier, and the debt passes down the line.
-
-**Not built yet.** For now, it works when any Soaked, Cursed enemy dies, and the Curse passes to every enemy within 4 metres, not only the nearest.
 
 ## drownedweight.blackwater
 **What it does.** Black water opens under you and under the enemy you face. You both sink, and each of you comes up out of the other's water: you where it stood, and it where you stood. It comes up Soaked, Cursed, and held knee-deep for 1 second. The water you came up from stays for 3 seconds as a pool that soaks.

@@ -22,11 +22,9 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Whenever Static reacts on an enemy with another affliction it has (Flashover with Burn, and the rest).
 
-**The numbers.** 3 Shards. Half a second after the reaction, a bolt hits within 2 metres of the enemy, for 10 damage, 10 stagger and a stack of Static.
+**The numbers.** 3 Shards. Half a second after the reaction, it hits the same enemy again at half strength: every blow it deals comes again for half the damage. What it adds or uses up isn't done a second time.
 
 **Works with.** Carrying a second element: every one of Lightning's ten reactions. Chain Lance and Waiting Thunder, which come after it on the chart.
-
-**Not built yet.** The reaction itself should happen again at half strength. For now, a bolt falls there.
 
 **Example.** Burn and Static meet on a soldier. Flashover goes off, and a moment later the bolt follows it down.
 
@@ -46,24 +44,22 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Whenever you cast Chain Lance, using the shape you picked.
 
-**The numbers.** 3 Shards. Stepped Leader: it goes up to 12 metres, taking a step every 0.15 seconds, with 4 damage and a Static on each step. 1.2 seconds after you cast it, the return stroke hits the whole path for 14 damage, 10 stagger and a Static. Return Stroke: 0.6 seconds later, each enemy it hit takes 5 damage and 5 stagger again.
+**The numbers.** 3 Shards. Stepped Leader: it goes up to 12 metres, taking a step every 0.15 seconds, with 4 damage and a Static on each step. 1.2 seconds after you cast it, the return stroke hits the whole path for 14 damage, 10 stagger and a Static. Return Stroke: 0.6 seconds later, each enemy it hit takes 5 damage and 5 stagger again, and the charge it gives your blade lasts five blows instead of three.
 
 **Works with.** Static and Single Stroke (the return stroke's Static, then a heavy blow).
 
-**Not built yet.** Steering Stepped Leader with the stick while you fight, having your heavy blow call the return stroke, and Return Stroke charging the blade for five blows.
+**Not built yet.** Steering Stepped Leader with the stick while you fight, and having your heavy blow call the return stroke.
 
 **Example.** Send Stepped Leader down a hallway of soldiers. They all have Static when the return stroke lights up.
 
 ## lightning.lance.master
 **What it does.** Throw Chain Lance within half a second after a finisher, and it jumps to every enemy within twelve metres.
 
-**When it happens.** When a finisher lands. Chain Lance must be in a spell slot.
+**When it happens.** When you throw Chain Lance within half a second after a finisher lands. Chain Lance must be in a spell slot.
 
-**The numbers.** 3 Shards. For now, the finisher itself throws the bolt: 10 damage, 10 stagger and two Static, jumping to up to eight enemies within 12 metres, once every 7 seconds.
+**The numbers.** 3 Shards. A bolt jumps from the enemy you face to up to eight enemies within 12 metres: 10 damage, 10 stagger and two Static each.
 
 **Works with.** Static, Waiting Thunder.
-
-**Not built yet.** It should only work when you throw the lance within half a second of the finisher.
 
 **Example.** End a chain of blows on the captain, and every soldier in the yard has Static.
 
@@ -94,13 +90,11 @@ design yet, its **Not built yet** line says what is missing.
 ## lightning.waiting.master
 **What it does.** Land the heavy blow within a second of the last bolt falling from a light blow, and all five come back for a second round.
 
-**When it happens.** When a heavy blow lands. Waiting Thunder must be in a spell slot.
+**When it happens.** When a heavy blow lands within a second of the last hanging bolt falling from a light blow. Waiting Thunder must be in a spell slot.
 
-**The numbers.** 3 Shards. For now, every heavy blow brings five bolts down around the enemy you hit, each dealing 8 damage, 6 stagger and a Static, once every 10 seconds.
+**The numbers.** 3 Shards. Five bolts hang at your shoulders again for 10 seconds, each dealing 8 damage, 6 stagger and a Static when a light blow sends it. Once for each cast (the spell's own 10-second wait).
 
 **Works with.** Static, Single Stroke.
-
-**Not built yet.** It should only work within a second of the last bolt falling from a light blow.
 
 **Example.** Light, light, light, light, light, heavy: and the sky goes around again.
 
@@ -131,11 +125,9 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button. While you carry Lightning, you can always put it in a slot.
 
-**The numbers.** Comes with Lightning. It costs no mana. After you cast it, you must wait 9 seconds to cast it again (its Empower makes it 7). It reaches up to 10 metres and deals 16 damage and 45 stagger, splitting off to two more enemies. It doesn't add any Static of its own.
+**The numbers.** Comes with Lightning. It costs no mana. After you cast it, you must wait 9 seconds to cast it again (its Empower makes it 7, and the stagger 55). It reaches up to 10 metres and deals 16 damage and 45 stagger, splitting off to two more enemies. It doesn't add any Static of its own.
 
 **Works with.** Static (a heavy blow right after sets off whatever Static is there); its Master mark on a perfect guard; Stored Charge.
-
-**Not built yet.** The Empower's stronger clap (55 stagger). For now, the spell only gets the Empower's shorter wait.
 
 **Example.** A shield bearer won't open up. The clap breaks its balance, and your next blow lands.
 
@@ -144,11 +136,9 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Whenever you cast Thunderclap, using the shape you picked.
 
-**The numbers.** 3 Shards. Rolling Thunder: three claps, 3 metres apart, over 9 metres. Each deals 16 damage, 30 stagger and a Static. Held Thunder: one bolt on the enemy you face within 10 metres, for 20 damage and 90 stagger, with no splitting.
+**The numbers.** 3 Shards. Rolling Thunder: three claps, 3 metres apart, over 9 metres. Each deals 16 damage, 30 stagger and a Static. Held Thunder: hold the button for up to a second, then let go. One bolt hits the enemy you face within 10 metres, with no splitting. It grows from 16 damage and 45 stagger on a quick tap to 20 damage and 90 stagger at a full hold.
 
 **Works with.** Static and Chain Lance (Rolling Thunder down a line); Stored Charge (Held Thunder, then a double-strength blow).
-
-**Not built yet.** Held Thunder should be held on its button and grow stronger the longer you hold. For now, it is always at full strength.
 
 **Example.** Held Thunder on the captain staggers it right away.
 
@@ -157,11 +147,9 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** On a perfect guard. Thunderclap must be in a spell slot.
 
-**The numbers.** 3 Shards. Its wait ends right away, and your next cast doesn't start a new one.
+**The numbers.** 3 Shards. Its wait ends right away, your next cast skips its wind-up and leaves your hand at once, and it doesn't start a new wait.
 
 **Works with.** Stored Charge and Ring of Drums on the same guard; In One Breath.
-
-**Not built yet.** The cast should also skip its wind-up.
 
 **Example.** Guard the thrust perfectly and clap right away: guard, clap, guard, clap.
 
@@ -170,11 +158,11 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button. Then it works on each perfect guard or perfect dodge until all three drums are beaten.
 
-**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again (its Empower makes it 8). There are three beats. Each is a bolt within 1.2 metres of the enemy, for 18 damage, 35 stagger and two Static. The screen shows how many drums are left.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again (its Empower makes it 8). There are three beats. Each is a bolt within 1.2 metres of the enemy, for 18 damage, 35 stagger and two Static. The ring lasts 8 seconds (10 with its Empower), and any drums not beaten by then are gone. The screen shows how many drums are left.
 
 **Works with.** Stored Charge, which it comes after on the chart; Thunderclap's Master mark; In One Breath.
 
-**Not built yet.** The ring should last 8 seconds (for now, the drums wait until they are beaten). The third beat should be a huge clap within 4 metres (30 damage, 60 stagger) that sets off all the Static in it.
+**Not built yet.** The third beat should be a huge clap within 4 metres (30 damage, 60 stagger) that sets off all the Static in it.
 
 **Example.** Cast it before the duellist's string of attacks. Three perfect guards drop three bolts on it.
 
@@ -255,9 +243,9 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** When you cast Lightning Rod. Lightning Rod must be in a spell slot.
 
-**The numbers.** 3 Shards. For now, every cast gives you what a perfect dodge gives: 12 mana, and 1.5 seconds off the wait on every spell that is waiting.
+**The numbers.** 3 Shards. It only counts if you start it in the last 0.3 seconds before an enemy's blow (one within 6 metres) lands on you. Then it is a perfect dodge: you get 12 mana, the game slows for a moment, the blow misses, and every mark that answers a perfect dodge answers this one.
 
-**Not built yet.** The timing (casting it right as a blow would land), and the flash to the rod that would use it up.
+**Not built yet.** Flashing to the rod still uses it up.
 
 **Example.** Plant the rod in the brute's face as it swings.
 
@@ -299,11 +287,13 @@ design yet, its **Not built yet** line says what is missing.
 ## lightning.flashes.master
 **What it does.** Cast it within a third of a second of a perfect dodge, and you don't have to stand still afterwards: the cuts land right away.
 
-**When it happens.** Not yet: see below.
+**When it happens.** When you cast Seven Flashes within a third of a second of a perfect dodge.
 
-**The numbers.** 3 Shards.
+**The numbers.** 3 Shards. You come back and can move right away, with no standing still. The cuts land at once, on the very next moment.
 
-**Not built yet.** All of it. It needs a timing window for casting after a perfect dodge, and a version of Seven Flashes without the standing still. Buying it now does nothing.
+**Works with.** Never There (perfect dodges cost nothing), Afterimage.
+
+**Example.** Dodge the spear thrust perfectly, flash through the crowd, and be moving again as all seven cuts land.
 
 ## lightning.neverthere
 **What it does.** Every dodge carries you farther, and a perfect dodge costs no stamina. The cost: blocking a blow with your guard costs twice the stamina.

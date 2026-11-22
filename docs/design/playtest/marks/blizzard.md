@@ -9,13 +9,11 @@ carried. Its reaction is Rime; its Shape mark lets you choose what Rime does.
 
 **When it happens.** Every time Rime goes off while you carry both Wind and Ice. Rime goes off when Chill lands on an Unsteady enemy, or when Unsteady lands on a chilled one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Rime.
 
-**The numbers.** Mix, 3 Shards. Rime Tree: for 5 seconds, every blow that lands on the enemy, from a weapon or a spell, adds one Chill. Spindrift: two bursts land in a line behind the enemy, from 0.7 to 4.5 metres past it. Each burst deals 5 damage, 2 Chill and 1 Unsteady to everything in it. After Rime goes off on an enemy, it can't go off on that enemy again for 4 seconds.
+**The numbers.** Mix, 3 Shards. Rime Tree: for 5 seconds, every blow that lands on the side the enemy showed you when Rime went off, from a weapon or a spell, adds one Chill. While it lasts, a freeze holds 1 second longer and its shatter hits 25% harder. Spindrift: two bursts land in a line behind the enemy, from 0.7 to 4.5 metres past it. Each burst deals 5 damage, 2 Chill and 1 Unsteady to everything in it. After Rime goes off on an enemy, it can't go off on that enemy again for 4 seconds.
 
 **Works with.** Windchill, Sliding Ice, Diamond Dust (Rime Tree freezes enemies so you can shatter them), Cold Front, Gust and Hoarfrost.
 
 **Example.** A brute you need to freeze: use Rime Tree, land three quick blows, and it stands frozen. A pack behind one soldier: Spindrift sprays the ice into them the moment the two afflictions meet.
-
-**Not built yet.** Rime Tree's freeze does not yet last a second longer, and it is not yet harder to shatter.
 
 ## blizzard.windchill
 **What it does.** If the enemy you are facing is both Unsteady and chilled, it gets colder on its own, one stack at a time, until it freezes. For now, only the enemy you face gets colder.

@@ -95,6 +95,8 @@ namespace Clover.Player
             Array.Clear(conditionNews, 0, conditionNews.Length);
             Array.Clear(bitHost, 0, bitHost.Length);
             Array.Clear(links, 0, links.Length);
+            echoCount = 0;
+            Array.Clear(echoWho, 0, echoWho.Length);
         }
 
         // ---- Heard in the middle of a blow: only noted.
@@ -145,12 +147,17 @@ namespace Clover.Player
         // Queued, not done: the set is cleared as soon as this returns, so its depth is read now (Smoulder's flare, the jar's break).
         private void OnDied(Component who, AfflictionSet afflictions)
         {
-            if (who == null || afflictions == null || upgrades == null || !afflictions.Conditions.Any) return;
+            if (who == null || afflictions == null || upgrades == null) return;
+            // Told to the conditions near that hear a death (Shut in the Dark's jar), before its own are answered.
+            HearDeath(who, who.transform.position, afflictions);
+            if (!afflictions.Conditions.Any) return;
             var all = Upgrade.All;
             Vector3 at = who.transform.position;
             for (int slot = 0; slot < EnemyConditions.Slots; slot++)
             {
                 var run = afflictions.Conditions.Run(slot);
+                // A condition that drifts goes whole to the nearest other enemy (The Grudge's cloud).
+                if (run.Active && run.DriftsTo > 0f) Drift(who, at, run);
                 if (!run.Active || !run.AnswersDeath || run.Mark < 0 || run.Mark >= all.Count) continue;
                 var mark = all[run.Mark];
                 var source = SourceOf(mark);
@@ -160,6 +167,61 @@ namespace Clover.Player
                     for (int shape = 0; shape < mark.Shapes.Length; shape++)
                         if (mark.Shapes[shape] != null) AnswerDeath(ShapeEffects(mark, shape), run, who, at, source, afflictions);
             }
+        }
+
+        private readonly System.Collections.Generic.HashSet<IDamageable> driftSkip = new System.Collections.Generic.HashSet<IDamageable>();
+        /// <summary>Conditions that drifted to another enemy when their carrier died, counted for probes.</summary>
+        public int Drifted { get; private set; }
+
+        private readonly System.Collections.Generic.HashSet<IDamageable> nearSkip = new System.Collections.Generic.HashSet<IDamageable>();
+        /// <summary>The most metres a condition hears a death from (ConditionSpec.DeathsWithin).</summary>
+        public const float DeathsHeardWithin = 6f;
+        /// <summary>Deaths told to a condition near them (Shut in the Dark's ring), counted for probes.</summary>
+        public int DeathsHeard { get; private set; }
+
+        // Another enemy's death near a condition that hears deaths: told to it as a blow of its own kind, carrying the dead
+        // one's doses (Shut in the Dark: each poisoned death inside the ring feeds the jar).
+        private void HearDeath(Component dead, Vector3 at, AfflictionSet afflictions)
+        {
+            if (combat == null || upgrades == null) return;
+            int doses = afflictions != null ? afflictions.Stacks(AfflictionKind.Poison) : 0;
+            nearSkip.Clear();
+            if (dead is IDamageable deadBody) nearSkip.Add(deadBody);
+            var all = Upgrade.All;
+            for (int guard = 0; guard < 16; guard++)
+            {
+                var near = combat.EnemyNear(at, DeathsHeardWithin, nearSkip);
+                if (!(near is IDamageable body)) break;
+                nearSkip.Add(body);
+                if (!(near is IAfflictable hearer) || !hearer.Afflictions.Conditions.Any) continue;
+                Vector3 offset = near.transform.position - at;
+                offset.y = 0f;
+                for (int slot = 0; slot < EnemyConditions.Slots; slot++)
+                {
+                    var run = hearer.Afflictions.Conditions.Run(slot);
+                    if (!run.Active || run.DeathsWithin <= 0f || offset.magnitude > run.DeathsWithin || run.Mark < 0 || run.Mark >= all.Count) continue;
+                    var news = new ConditionNews { Moment = ConditionMoment.Struck, Id = run.Id, Mark = run.Mark, Count = run.Count, Blows = run.Blows, Flags = run.Flags,
+                        Scale = run.Scale, Link = run.Link, Is = run.Is, DiedNear = true, Side = -1f };
+                    var mark = all[run.Mark];
+                    var source = SourceOf(mark);
+                    AnswerFrom(OwnEffects(mark), UpgradeTrigger.ConditionStruck, news, near, near.transform.position, source, doses);
+                    if (ReactionTable.IsReactionShape(mark))
+                        for (int shape = 0; shape < mark.Shapes.Length; shape++)
+                            if (mark.Shapes[shape] != null) AnswerFrom(ShapeEffects(mark, shape), UpgradeTrigger.ConditionStruck, news, near, near.transform.position, source, doses);
+                    DeathsHeard++;
+                }
+            }
+            nearSkip.Clear();
+        }
+
+        private void Drift(Component dead, Vector3 at, in ConditionRun run)
+        {
+            if (combat == null) return;
+            driftSkip.Clear();
+            if (dead is IDamageable deadBody) driftSkip.Add(deadBody);
+            var next = combat.EnemyNear(at, run.DriftsTo, driftSkip);
+            driftSkip.Clear();
+            if (next is IAfflictable taker && taker.Afflictions.Conditions.Adopt(run, next) >= 0) Drifted++;
         }
 
         private void AnswerDeath(UpgradeEffect[] effects, in ConditionRun run, Component who, Vector3 at, LaySource source, AfflictionSet afflictions)
@@ -224,7 +286,80 @@ namespace Clover.Player
                 bitHost[i] = null;
             }
             bitCount = 0;
+            // The reactions owed a second strike whose time has come.
+            for (int i = 0; i < echoCount; i++)
+            {
+                if (Time.time < echoAt[i]) continue;
+                acted |= StrikeAgain(echoWho[i], echoWhere[i], echoPair[i], echoShare[i], echoCarried[i]);
+                echoCount--;
+                echoWho[i] = echoWho[echoCount];
+                echoWhere[i] = echoWhere[echoCount];
+                echoCarried[i] = echoCarried[echoCount];
+                echoPair[i] = echoPair[echoCount];
+                echoShare[i] = echoShare[echoCount];
+                echoAt[i] = echoAt[echoCount];
+                echoWho[echoCount] = null;
+                i--;
+            }
             if (acted && upgrades != null) upgrades.FlushNow();
+        }
+
+        // ---- A reaction struck again (the ledger's reaction-stats): Strikes Twice, Spreading Water.
+        private const int MostEchoes = 8;
+        private readonly Component[] echoWho = new Component[MostEchoes];
+        private readonly int[] echoPair = new int[MostEchoes];
+        private readonly float[] echoShare = new float[MostEchoes];
+        private readonly float[] echoAt = new float[MostEchoes];
+        private readonly Vector3[] echoWhere = new Vector3[MostEchoes];
+        private readonly int[] echoCarried = new int[MostEchoes];
+        private int echoCount;
+        /// <summary>Reactions struck again, counted for probes.</summary>
+        public int Echoed { get; private set; }
+
+        /// <summary>
+        /// The reaction of <paramref name="pair"/> strikes again on <paramref name="who"/> after <paramref name="delay"/>
+        /// seconds: its own striking effects (bursts, lanes, arcs, falls, throws, helpers) at <paramref name="share"/> of
+        /// their damage, nothing it lays or sets (ReactionRules.StrikesAgain), and nothing that answers a reaction is told.
+        /// False when the line is full.
+        /// </summary>
+        public bool Echo(Component who, int pair, float share, float delay) => who != null && Echo(who, who.transform.position, pair, share, delay);
+
+        /// <summary>
+        /// As above, where it happened: on <paramref name="who"/> while it lives, or where it stood once it is gone (Kettle: a
+        /// Soaked enemy that dies burning goes up as steam where it fell; the ledger's death-reaction).
+        /// </summary>
+        public bool Echo(Component who, Vector3 at, int pair, float share, float delay, int carried = 0)
+        {
+            if (pair < 0 || pair >= AfflictionPairs.Count || echoCount >= MostEchoes) return false;
+            echoWho[echoCount] = who;
+            echoWhere[echoCount] = at;
+            echoCarried[echoCount] = carried;
+            echoPair[echoCount] = pair;
+            echoShare[echoCount] = share;
+            echoAt[echoCount] = Time.time + Mathf.Max(0f, delay);
+            echoCount++;
+            return true;
+        }
+
+        private bool StrikeAgain(Component who, Vector3 where, int pair, float share, int carried)
+        {
+            if (upgrades == null || ReactionTable.MarkFor(pair) == null) return false;
+            // On the enemy while it lives; once it is gone, where it stood, its look left to the blows themselves.
+            if (!Alive(who)) who = null;
+            Vector3 at = who != null ? who.transform.position : where;
+            if (who != null) ReactionLook.Play(pair, at, who.transform, at - transform.position, transform);
+            int worn = ReactionTable.WornShapeIndex(pair, Loadout(), RunState.Unlocked);
+            var effects = upgrades.ReactionEffects(pair, worn);
+            upgrades.ReactingOn(who, pair);
+            upgrades.ScaleReaction(share);
+            // What its spending would have counted goes with each blow, when it is known (Kettle: all the Burn the dead one carried).
+            upgrades.StrikingAgain(true);
+            for (int i = 0; i < effects.Length; i++)
+                if (effects[i].On == UpgradeTrigger.Reacted && ReactionRules.StrikesAgain(effects[i].Do)) upgrades.Fire(effects[i], who, at, LaySource.Reaction, 0f, carried);
+            upgrades.StrikingAgain(false);
+            upgrades.ReactedOn();
+            Echoed++;
+            return true;
         }
 
         private bool Act(Component who, int pair)
@@ -252,10 +387,13 @@ namespace Clover.Player
             if (shape != null) ShapedCount++;
             // As written, or with the numbers of the duo branch's marks in force that change this reaction (Dry Pods, Deep Swell).
             var effects = upgrades.ReactionEffects(pair, worn);
+            // What a mark makes of it on this enemy now, asked before anything is spent (Goes Up: at full depth, twice as hard, spending nothing).
+            float boost = upgrades.ReactionBoost(who, pair, out bool spares);
             // A ripe seed in the pair makes the reaction's blows stronger, an unripe one softer (In Its Season).
             upgrades.ReactingOn(who, pair);
+            if (boost != 1f) upgrades.ScaleReaction(boost);
             for (int i = 0; i < effects.Length; i++)
-                if (effects[i].On == UpgradeTrigger.Reacted) upgrades.Fire(effects[i], who, at, LaySource.Reaction);
+                if (effects[i].On == UpgradeTrigger.Reacted && !(spares && effects[i].Do == UpgradeAction.Spend)) upgrades.Fire(effects[i], who, at, LaySource.Reaction);
             upgrades.ReactedOn();
             // The marks in force that answer this reaction (or any): lifts and duo marks.
             upgrades.Fire(UpgradeTrigger.Reacted, who, at, mark.Id, LaySource.Reaction);
@@ -296,19 +434,32 @@ namespace Clover.Player
             foreach (var effect in effects)
             {
                 if (effect.On != trigger || effect.Condition != news.Id) continue;
-                if (trigger == UpgradeTrigger.ConditionStruck && !Answers(effect.By, news)) continue;
+                if (trigger == UpgradeTrigger.ConditionStruck && (!Answers(effect.By, news) || !FromSide(effect, news))) continue;
+                // Its carrier's blow turned by a perfect guard, when that is what is asked (Snapped Blade).
+                if (trigger == UpgradeTrigger.ConditionAttacked && effect.By == StruckBy.Turned && !news.Turned) continue;
+                // An end the freeze brought, when that is what is asked (Stolen Warmth's last warmth).
+                if (trigger == UpgradeTrigger.ConditionEnded && effect.By == StruckBy.Frozen && !news.Frozen) continue;
                 if (effect.AtCount > 0 && effect.AtCount != (trigger == UpgradeTrigger.ConditionBeat ? news.Count : news.Blows)) continue;
-                upgrades.Fire(effect, who, at, source, news.Damage, spent);
+                // An answer that repeats what the condition kept takes its kept number, not the blow's (Collected Twice).
+                upgrades.Fire(effect, who, at, source, effect.ByPower ? news.Scale : news.Damage, spent, null, news.Link);
                 ConditionAnswers++;
                 any = true;
             }
             return any;
         }
 
+        /// <summary>True when the blow came from the side the answer asks for (<see cref="UpgradeEffect.SideLeast"/>), or its side is not known.</summary>
+        public static bool FromSide(UpgradeEffect effect, in ConditionNews news) =>
+            (effect.SideLeast <= 0f && effect.SideMost <= 0f) || news.Side < 0f || (news.Side >= effect.SideLeast && news.Side <= effect.SideMost);
+
         /// <summary>True when a condition's blow is one the answer asks for (<see cref="UpgradeEffect.By"/>).</summary>
         public static bool Answers(StruckBy by, in ConditionNews news) =>
-            by == StruckBy.Any || (by == StruckBy.Weapon && !news.Spell) || (by == StruckBy.Heavy && news.Heavy) || (by == StruckBy.Shatter && news.Shattered)
-            || (by == StruckBy.Critical && news.Critical && !news.Spell);
+            // A shove is no blow, nor a death near: only what answers that hears it.
+            news.DiedNear ? by == StruckBy.DeathNear
+            : news.Shoved ? by == StruckBy.Shove
+            : by == StruckBy.Any || (by == StruckBy.Weapon && !news.Spell) || (by == StruckBy.Heavy && news.Heavy) || (by == StruckBy.Shatter && news.Shattered)
+            || (by == StruckBy.Critical && news.Critical && !news.Spell) || (by == StruckBy.Finisher && news.Finisher && !news.Spell)
+            || (by == StruckBy.Shove && news.Heavy && !news.Spell);
 
         // A host's poison bit: each enemy joined to it takes its share, as a reaction's blow (it starts nothing).
         private bool PassBite(Component host, float damage)

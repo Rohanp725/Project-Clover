@@ -57,9 +57,10 @@ namespace Clover.Player.Trees
             const AfflictionKind T = AfflictionKind.Tremor;
 
             // The design lays Tremor with heavy blows only; a root lays its affliction with every blow, as the schema asks.
-            // NEEDS: Earth's base buff from GAME.md, afflictions on you lasting half as long (afflictions-on-player).
+            // Earth's base buff from GAME.md: afflictions laid on you (by elites and gods, PlayerAfflictions) last half as long.
             to.Add(BranchPattern.Put(new Upgrade { Id = Root, Name = "Tremor", Element = E, Kind = UpgradeKind.Root, Icon = UpgradeIcons.Rock,
-                Description = "Heavy blows and finishers shake an enemy's footing, up to three deep. A shaken enemy is slow, and its balance does not come back.",
+                Description = "Heavy blows and finishers shake an enemy's footing, up to three deep. A shaken enemy is slow, and its balance does not come back. Afflictions laid on you last half as long.",
+                Stats = new[] { new StatMod(PlayerStat.AfflictionsOnYou, -0.5f) },
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.HeavyHit, Do = UpgradeAction.Afflict, Affliction = T, Stacks = 1 }, new UpgradeEffect { On = UpgradeTrigger.FinisherHit, Do = UpgradeAction.Afflict, Affliction = T, Stacks = 3 } } },
                 BranchPattern.Root));
 
@@ -88,15 +89,14 @@ namespace Clover.Player.Trees
                     Description = "Hold to stay under for up to a second and a half and steer. Come up under an enemy, and it is thrown up as by Stone Rise, and you stand behind it.",
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Lift, Seconds = 0.6f } } },
                 "Opens two shapes of Under the Mound, chosen at any rest fire: Ditch and Bank, a wall drawn along your path, or Barrow Road, steered under the ground to come up beneath an enemy.",
-                // NEEDS: the shared movement rule's timing (started as a blow would land, blow-about-to-land), and the next blow
-                // landing as a heavy blow. Until then every cast gives what a perfect dodge gives, and the next blow that lands
-                // breaks half again as much balance and lays one Tremor more.
+                // Started as a blow would land (UpgradeEffect.BlowLanding), it is a perfect dodge (UpgradeAction.PerfectDodgeNow), and the next
+                // blow that lands breaks half again as much balance and lays one Tremor more. NEEDS: coming up behind the attacker, and
+                // that blow landing as a heavy blow (blow-made-heavy).
                 new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Mana, Amount = 12f },
-                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.CutCooldowns, Amount = 1.5f },
-                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Boon, Stat = PlayerStat.StaggerDealt, Amount = 0.5f, Seconds = 3f, UntilBlow = true },
-                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Boon, Stat = PlayerStat.AfflictionStacks, Amount = 1f, Seconds = 3f, UntilBlow = true },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, BlowLanding = 0.3f, Do = UpgradeAction.PerfectDodgeNow },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, BlowLanding = 0.3f, Do = UpgradeAction.Boon, Stat = PlayerStat.StaggerDealt, Amount = 0.5f, Seconds = 3f, UntilBlow = true },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, BlowLanding = 0.3f, Do = UpgradeAction.Boon, Stat = PlayerStat.AfflictionStacks, Amount = 1f, Seconds = 3f, UntilBlow = true },
                 },
                 "Go under in the instant a blow would land on you, as a perfect dodge, and you come up at once behind the attacker. Your next blow lands as a heavy blow, with two Tremor, and breaks half again as much balance.");
 
@@ -110,27 +110,27 @@ namespace Clover.Player.Trees
                 // The stones landing for 14 is the Learn's own fall, set by the Empower (empower-effects).
                 new Empower { Mana = 35f, Effects = new[] { new EffectChange { Index = 1, Damage = 14f } } },
                 "Cairn costs 35 mana, not 40, and each stone lands for 14.",
-                // NEEDS: the stones landing soft and waiting, so nothing falls at the cast (shape-sets-aside), and the burst as 18
-                // a stone (count-from-depth). Until then the stones still fall, and the heavy blow bursts the heap for 36.
-                new ShapeDef { Name = "Unbroken Cairn",
+                // The stones land soft and wait: nothing falls at the cast (ShapeDef.SetsAside: the Learn's fall and heap burst),
+                // and the heap keeps its stones (CountsNeeds), burst by the heavy blow at 18 a stone (ByPower).
+                new ShapeDef { Name = "Unbroken Cairn", SetsAside = new[] { 1, 2 },
                     Description = "The stones land soft and wait. Your next heavy blow on a heaped enemy breaks its cairn outward: 18 damage a stone to everything within two and a half metres. The burst waits for your blow.",
                     Effects = new[]
                     {
-                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = T, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Unbroken, Seconds = 4f, EndsWith = ConditionBlow.Heavy } },
-                        new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Unbroken, By = StruckBy.Heavy, Do = UpgradeAction.Burst, Radius = 2.5f, Damage = 36f, Stagger = 20f, Stacks = 0 },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = T, CountsNeeds = true, PerStack = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Unbroken, Seconds = 4f, EndsWith = ConditionBlow.Heavy } },
+                        new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Unbroken, By = StruckBy.Heavy, Do = UpgradeAction.Burst, ByPower = true, Share = 18f, Radius = 2.5f, Stagger = 20f, Stacks = 0 },
                     } },
-                // NEEDS: the heap flung in place of staying (shape-sets-aside), a stone for each depth (count-from-depth). Until
-                // then the stones still fall and heap, and two stones' worth is flung on.
-                new ShapeDef { Name = "Thrown Stones",
+                // The heap flung in place of staying (ShapeDef.SetsAside: the Learn's fall and heap burst), a stone for each depth
+                // counted as it is cast (CountsNeeds, PerStack): 12 damage, 5 stagger and a Tremor a stone.
+                new ShapeDef { Name = "Thrown Stones", SetsAside = new[] { 1, 2 },
                     Description = "The stones do not stay. Each enemy's heap is flung at once at the nearest other enemy within five metres: 12 damage and Tremor a stone. One shaken enemy shakes the next.",
-                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = T, Do = UpgradeAction.Arc, FromTarget = true, Count = 1, Reach = 5f, Damage = 24f, Stagger = 10f, Affliction = T, Stacks = 2 } } },
+                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = T, CountsNeeds = true, PerStack = true, Do = UpgradeAction.Arc, FromTarget = true, Count = 1, Reach = 5f, Damage = 12f, Stagger = 5f, Affliction = T, Stacks = 1 } } },
                 "Opens two shapes of Cairn, chosen at any rest fire: Unbroken Cairn, heaps your heavy blow bursts, or Thrown Stones, heaps flung on to the next enemy.",
-                // NEEDS: still for 1 s, not only Rooted (stood-still), and every stone striking twice (count-from-depth). Until
-                // then, cast while Rooted, half the mana comes back and a second fall of two stones' worth lands on each.
+                // Cast after standing still for a second (StatWhen.StoodStill): half the mana back. NEEDS: every stone striking twice
+                // (count-from-depth); until then a second fall of two stones' worth lands on each.
                 new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, While = StatWhen.Planted, Do = UpgradeAction.Mana, Amount = 20f },
-                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, While = StatWhen.Planted, Needs = T, Do = UpgradeAction.Falling, Radius = 0.8f, Delay = 0.8f, Damage = 24f, Stagger = 30f, Stacks = 0 },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, While = StatWhen.StoodStill, Do = UpgradeAction.Mana, Amount = 20f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, While = StatWhen.StoodStill, Needs = T, Do = UpgradeAction.Falling, Radius = 0.8f, Delay = 0.8f, Damage = 24f, Stagger = 30f, Stacks = 0 },
                 },
                 "Cast it after standing still for a second, and every stone strikes twice and half the mana comes back.",
                 learnEffects: new[]
@@ -172,7 +172,8 @@ namespace Clover.Player.Trees
                 BranchPattern.LeftFoot));
 
             // The nova is the stamp, and everything it strikes flinches: what it had begun is broken unless it is steadfast.
-            // NEEDS: the double stagger on an enemy showing an attack, and its attack broken only then (enemy-begins-attack).
+            // An enemy showing an attack takes double stagger and its attack is broken (UpgradeEffect.NeedsWindup); a god or an elite
+            // only the stagger, as a flinch does not break theirs.
             SpellBranch.Add(to, E, QuakeStep, "Quake Step", SpellRole.Breaker, BranchPattern.LeftA, Rooted, SpellForms.Nova,
                 new SpellSpec { Radius = 5f, Delay = 0.45f, Damage = 16f, Stagger = 30f, Stacks = 2 },
                 "You raise a foot and bring it down. The ground heaves in a ring five metres round you: 16 damage, 30 stagger and two Tremor. An enemy showing an attack takes double stagger and its attack is broken; a god or an elite takes only the stagger.",
@@ -195,11 +196,14 @@ namespace Clover.Player.Trees
                         new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = ThrownDown, Seconds = 1f, Flags = ConditionFlags.Down } },
                     } },
                 "Opens two shapes of Quake Step, chosen at any rest fire: Struck From Afar, the stamp landed on a far enemy, or The Second Wave, a quick ring and then a heavy one.",
-                // NEEDS: an enemy broken out of its wind-up as the moment (enemy-begins-attack). Until then a Quake Step that
-                // strikes anything ends its own wait, once in eighteen seconds.
-                new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.ResetCooldown, Cooldown = 18f } },
+                // An enemy broken out of its wind-up (UpgradeEffect.NeedsWindup) ends the stamp's own wait.
+                new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, NeedsWindup = 99f, Ranks = EnemyRank.Plain, Do = UpgradeAction.ResetCooldown, Cooldown = 0.5f } },
                 "Break an enemy out of its wind-up, and Quake Step is ready again at once.",
-                learnEffects: new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Flinch, Seconds = 0.4f } });
+                learnEffects: new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, NeedsWindup = 99f, Do = UpgradeAction.Burst, Radius = 0.6f, Damage = 0f, Stagger = 30f, Stacks = 0 },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, NeedsWindup = 99f, Do = UpgradeAction.Flinch, Seconds = 0.4f },
+                });
 
             // Grey Stone, re-aimed as the Learn: the parry form stands up to 2.5 s and turns the first blow, answering with a
             // light jar of stone that shakes, slows the attacker's next wind-up and loads the next heavy blow. NEEDS: every blow
@@ -213,10 +217,10 @@ namespace Clover.Player.Trees
                 // NEEDS: 25 stagger a blow turned (held-press).
                 new Empower { Seconds = 3f },
                 "You stand as stone for up to three seconds, and each blow you turn loads 25 stagger.",
-                // Stone Skin, once a major, folded in with Aftershock. NEEDS: the answer set aside (shape-sets-aside), and a plate
-                // taking 60% of one blow, not the whole of it (plates). Until then the plates are wards, given when the stance
-                // turns a blow.
-                new ShapeDef { Name = "Stone Skin",
+                // Stone Skin, once a major, folded in with Aftershock. The answer set aside: the turned blow is told for nothing
+                // (SpellSpec.Quiet). NEEDS: a plate taking 60% of one blow, not the whole of it (plates). Until then the plates
+                // are wards, given when the stance turns a blow.
+                new ShapeDef { Name = "Stone Skin", Spell = new SpellSpec { Seconds = 2.5f, Reach = 3f, Arc = 120f, Damage = 0f, Stagger = 0f, Stacks = 0, Quiet = true },
                     Description = "The blow is turned but not answered. Two plates of stone grow on your shoulders instead. Each takes most of one blow and stops its flinch, then breaks in a burst three metres round you: 14 damage, 24 stagger and Tremor.",
                     Effects = new[]
                     {
@@ -228,12 +232,12 @@ namespace Clover.Player.Trees
                     Description = "You stand as stone for up to a second and a half. The first blow to land, red ones too, is turned for nothing, and a fist of rock rises under the one who struck: 30 damage, 60 stagger and two Tremor. One blow, answered at once.",
                     Spell = new SpellSpec { Seconds = 1.5f, Reach = 4f, Arc = 90f, Damage = 30f, Stagger = 60f, Stacks = 2 } },
                 "Opens two shapes of Mountain Stance, chosen at any rest fire: Stone Skin, plates that take blows for you, or Fist of Rock, one blow answered at once.",
-                // NEEDS: a red attack as the blow turned (red-attack). Until then any blow turned holds its attacker (gods and
-                // elites for 0.4 of the time), and the stance is ready again once in twenty seconds.
+                // Only a red attack turned (UpgradeEffect.RedOnly): its attacker held (gods and elites for 0.4 of the time), and the
+                // stance ready again.
                 new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Hold, Seconds = 1.5f },
-                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.ResetCooldown, Cooldown = 20f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, RedOnly = true, Do = UpgradeAction.Hold, Seconds = 1.5f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, RedOnly = true, Do = UpgradeAction.ResetCooldown, Cooldown = 0.5f },
                 },
                 "Turn a red attack, and its attacker is stunned for a second and a half, less for a god or an elite, and Mountain Stance is ready again.",
                 learnEffects: new[]
@@ -268,7 +272,7 @@ namespace Clover.Player.Trees
             SpellBranch.Add(to, E, StoneRise, "Stone Rise", SpellRole.Opener, BranchPattern.RightA, Root, "", null,
                 "Earth's own spell, given with the element. A quarter second after the cast the ground breaks under the enemy faced, within five metres: 14 damage, 30 stagger and Tremor, and it is knocked up into the air for a moment. Then the stones sink back. No wall is left behind.",
                 UpgradeIcons.Rock,
-                // NEEDS: 18 damage and 36 stagger (base-spell-marks). The base spell is cast by its kit, which takes only the Empower's wait.
+                // 18 damage and 36 stagger. The Empower's numbers reach the kit's own cast too (PlayerUpgrades.BaseEmpower, read by PlayerElement).
                 new Empower { Cooldown = 6f, Damage = 18f, Stagger = 36f },
                 "Stone Rise waits 6 seconds, not 7, and strikes for 18 damage and 36 stagger.",
                 // NEEDS: the pillar left beside the enemy for 6 s, blocking bodies and thrown attacks, and
@@ -293,12 +297,12 @@ namespace Clover.Player.Trees
                         new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Boulder, By = StruckBy.Heavy, Do = UpgradeAction.Lane, Reach = 8f, Radius = 0.8f, Interval = 0.04f, Damage = 16f, Stagger = 30f, Affliction = T, Stacks = 1 },
                     } },
                 "Opens two shapes of Stone Rise, chosen at any rest fire: Raised Stone, a pillar to fight round and break, or Dropped From the Apron, a boulder to roll through them.",
-                // NEEDS: still for 1 s as well as Rooted (stood-still), and the throw before the stones sink. Until then, cast
-                // while Rooted, what it strikes is thrown three metres away from you and shaken once more.
+                // Cast still for a second as well as Rooted (StatWhen.StoodStill and Planted): what it strikes is thrown three metres
+                // away from you and shaken once more. NEEDS: the throw before the stones sink (form-pieces).
                 new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, While = StatWhen.Planted, Do = UpgradeAction.Push, Shape = HazardShape.Downwind, Amount = 3f },
-                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, While = StatWhen.Planted, Do = UpgradeAction.Afflict, Affliction = T, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, While = StatWhen.Planted, While2 = StatWhen.StoodStill, Do = UpgradeAction.Push, Shape = HazardShape.Downwind, Amount = 3f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, While = StatWhen.Planted, While2 = StatWhen.StoodStill, Do = UpgradeAction.Afflict, Affliction = T, Stacks = 1 },
                 },
                 "Cast it while you stand your ground, Rooted or still for a second, and the stone rises under the enemy's own feet and throws it three metres away from you, two deep in Tremor, before it stands.");
 
@@ -310,10 +314,10 @@ namespace Clover.Player.Trees
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Reacted, Needs = T, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Radius = 1f, Seconds = 6f, Interval = 1f, Damage = 3f, Stagger = 8f, Affliction = T, Stacks = 1 } } },
                 BranchPattern.RightMiddle));
 
-            // The breaker: the spikes form runs the crack and breaks it open, and what it catches is held.
-            // NEEDS: the crack glowing 0.9 s before it breaks open (form-times).
+            // The breaker: the spikes form runs the crack, it glows 0.9 s whole (SpellSpec.Glow), then breaks open, and what it
+            // catches is held.
             SpellBranch.Add(to, E, Fissure, "Fissure", SpellRole.Breaker, BranchPattern.RightB, LeftInRubble, SpellForms.Spikes,
-                new SpellSpec { Reach = 8f, Speed = 20f, Count = 1, Radius = 1f, Damage = 20f, Stagger = 35f, Stacks = 1 },
+                new SpellSpec { Reach = 8f, Speed = 20f, Count = 1, Radius = 1f, Damage = 20f, Stagger = 35f, Stacks = 1, Glow = 0.9f },
                 "You drive the weapon into the ground. A crack runs eight metres ahead in under half a second, glows, then breaks open in spikes: 20 damage, 35 stagger and Tremor. Ordinary enemies are held where they stand for 1.2 seconds.",
                 UpgradeIcons.Spike,
                 new Empower { Cooldown = 9f, Damage = 26f },
@@ -339,7 +343,7 @@ namespace Clover.Player.Trees
                         new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = OnTheFault, By = StruckBy.Heavy, Do = UpgradeAction.Burst, Radius = 2f, Damage = 24f, Stagger = 40f, Affliction = T, Stacks = 2, Cooldown = 0.5f },
                     } },
                 "Opens two shapes of Fissure, chosen at any rest fire: Basalt, a wall of columns to topple, or Fault Line, a crack that waits for your heavy blows.",
-                // NEEDS: the heavy blow landed on the crack's line while it glows (form-times, spell-windows). Until then a heavy
+                // NEEDS: the heavy blow landed on the crack's line while it glows (spell-windows). Until then a heavy
                 // blow on an enemy within 0.9 s of the spikes striking it erupts again under it for half as much.
                 new[]
                 {

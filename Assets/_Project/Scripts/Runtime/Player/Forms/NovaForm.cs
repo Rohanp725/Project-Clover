@@ -23,6 +23,24 @@ namespace Clover.Player.Forms
             return 0;
         }
 
+        // Only those within the radius carrying what the spell seeks (both, with a second), the nearest first, Count at most:
+        // each struck alone, and nothing standing by (the ledger's reach-only-afflicted).
+        private static int StrikeCarriers(in SpellCast cast, Vector3 at, float radius, System.Collections.Generic.HashSet<Clover.Gameplay.IDamageable> seen)
+        {
+            seen.Clear();
+            int most = Mathf.Max(1, cast.Spec.Count), hits = 0;
+            for (int guard = 0; guard < 32 && hits < most; guard++)
+            {
+                var near = cast.Combat.EnemyNear(at, radius, seen);
+                if (!(near is Clover.Gameplay.IDamageable body)) break;
+                seen.Add(body);
+                if (!SpellReach.Takes(near, cast.Spec.OnlyCarrying, cast.Spec.OnlyCarrying2)) continue;
+                if (cast.Combat.StrikeOne(near, cast.Blow(cast.Damage, cast.Stagger), at)) hits++;
+            }
+            seen.Clear();
+            return hits;
+        }
+
         public override bool Tick(ref SpellRun run, float deltaTime)
         {
             var cast = run.Cast;
@@ -40,7 +58,14 @@ namespace Clover.Player.Forms
                 }
                 return true;
             }
-            int hits = cast.Combat.StrikeArea(at, radius, cast.Blow(cast.Damage, cast.Stagger));
+            int hits = cast.Spec.OnlyCarrying != Clover.Gameplay.AfflictionKind.None ? StrikeCarriers(cast, at, radius, SpellWorks.Once(run))
+                : cast.Combat.StrikeArea(at, radius, cast.Blow(cast.Damage, cast.Stagger));
+            // Reaching no one it seeks, its slot gives back part of the wait (Green Under the Ice: half).
+            if (hits == 0 && cast.Spec.MissedWait > 0f && cast.Player != null)
+            {
+                var spells = cast.Player.GetComponent<PlayerSpells>();
+                if (spells != null) spells.NothingAnswered(cast.Source, cast.Spec.MissedWait);
+            }
             FormKit.Impact(cast, at, radius * 0.8f, 1.3f);
             FormFx.Lay(FormMark.Ring, at, 1f, FormKit.Lit(cast.Colour, 3.6f), 0.36f, radius * 2.1f);
             // The crown: a ring of shards thrown outward, a shorter ring inside it.

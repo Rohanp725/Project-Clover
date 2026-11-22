@@ -84,24 +84,25 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.LeftHigh));
 
-            // NEEDS: a discharge by itself at full depth, through the water to the Soaked only (now to all within 8 m).
+            // A discharge by itself at full depth, through the water to the Soaked within 8 m alone (UpgradeEffect.OnlyCarrying).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = TheSeaFindsLand, Name = "The Sea Finds Land", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { WetThread, Grounded }, Icon = UpgradeIcons.Wave,
                 Description = "Static on a Soaked enemy needs no heavy blow: at full depth it discharges by itself, through the water, to every Soaked enemy within 8 m.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.AfflictionFull, Needs = AfflictionKind.Static, NeedsFull = true, Needs2 = AfflictionKind.Soaked, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Static, Radius = 8f, Stagger = 5f, Cooldown = 1f } },
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.AfflictionFull, Needs = AfflictionKind.Static, NeedsFull = true, Needs2 = AfflictionKind.Soaked, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Static, Radius = 8f, Stagger = 5f, Cooldown = 1f,
+                    OnlyCarrying = AfflictionKind.Soaked } },
             }, HeartPattern.Keystone));
 
             // The duo spell, bought with Shards once both are carried (no god gives it): an opener on a 10 s cooldown (SpellTimings). The bolt form leaps from enemy to enemy;
             // each it reaches is charged twice (the branch's first element) and Soaked, so it is seized at once.
-            // NEEDS: a flash along the floor from the nearest Soaked enemy (aim-at-afflicted), the path staying wet 2 s, and
-            // the next blow on the last reached discharging all the flash touched (the cast remembering its targets).
+            // The flash runs first to the nearest Soaked enemy within reach (SpellSpec.AimAt). NEEDS: the path staying wet 2 s,
+            // and the next blow on the last reached discharging all the flash touched (the cast remembering its targets).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = TheFlashing, Name = "The Flashing", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Role = SpellRole.Opener, Requires = new[] { WetThread, Grounded }, Icon = UpgradeIcons.Beam,
-                Description = "You slap the floor and a flash runs across the ground to an enemy, then darts on to the next and the next, up to five. Each it reaches is struck, Soaked and charged twice, so it is seized at once.",
+                Description = "You slap the floor and a flash runs across the ground to the nearest Soaked enemy (or the one you face), then darts on to the next and the next, up to five. Each it reaches is struck, Soaked and charged twice, so it is seized at once.",
                 Form = SpellForms.Bolt,
-                Spell = new SpellSpec { Reach = 10f, Count = 4, Radius = 6f, Damage = 12f, Stagger = 20f, Stacks = 2 },
+                Spell = new SpellSpec { Reach = 10f, Count = 4, Radius = 6f, Damage = 12f, Stagger = 20f, Stacks = 2, AimAt = AfflictionKind.Soaked },
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Soaked, Stacks = 1 } },
             }, HeartPattern.Spell));
         }

@@ -50,11 +50,11 @@ draining.
 
 **When it happens.** Whenever you cast Devouring Maw, using the shape you picked. If you have not bought this, you cast the plain jaw.
 
-**The numbers.** 3 Shards. Rahu: each normal enemy bitten is held still for 1.5 seconds and can't attack or guard. Then it is dragged 5 metres toward you and takes 60 stagger. From Its Own Shadow: one jaw bites from below on the nearest enemy within 9 metres, a moment after you cast it. It covers a circle 1.6 metres across and deals 24 damage and 30 stagger.
+**The numbers.** 3 Shards. Rahu: each normal Cursed enemy bitten is swallowed for 1.5 seconds. In that time it is gone from the fight: you can't see it, hit it or bump into it, and it can't do anything. Then it rolls out in front of your feet and takes 60 stagger. An enemy with no Curse is only bitten. From Its Own Shadow: one jaw bites from below on the nearest enemy within 9 metres, a moment after you cast it. It covers a circle 1.6 metres across and deals 24 damage and 30 stagger.
 
 **Works with.** Rahu: a heavy weapon (the swallowed enemy comes out staggered at your feet, ready for a finisher), Near the Grave. From Its Own Shadow: archers and spellcasters at the back, Grasp's Tethered shape.
 
-**Not built yet.** Rahu should only swallow Cursed enemies; for now, every normal enemy bitten is swallowed, because the bite uses up the Curse first. The enemy should be hidden inside the throat; for now, it is held where it was bitten. From Its Own Shadow should look like it rises out of the enemy's shadow, and aim at the enemy you face; for now, it rises under the nearest enemy.
+**Not built yet.** The jaw doesn't yet show the enemy going down its throat and rolling back out; for now, the enemy just vanishes and comes back. From Its Own Shadow should look like it rises out of the enemy's shadow, and aim at the enemy you face; for now, it rises under the nearest enemy.
 
 **Example.** Use Rahu on a Cursed soldier. It disappears into the jaw and drops at your feet, staggered, and your heavy blow finishes it.
 
@@ -63,11 +63,9 @@ draining.
 
 **When it happens.** Each bite, while Devouring Maw is in a spell slot.
 
-**The numbers.** 3 Shards. For now, every enemy bitten has whatever it started broken off (as a flinch, 0.4 seconds). Once every 16 seconds, a bite ends Devouring Maw's wait.
+**The numbers.** 3 Shards. Only a bite on an enemy in its wind-up counts. Its attack is broken off (as a flinch, 0.4 seconds), and Devouring Maw's wait ends.
 
 **Works with.** Watching for the enemies' wind-ups, Gone to Ash (another way to answer an attack), Dread.
-
-**Not built yet.** It should only work during the enemy's wind-up; for now, every bite breaks whatever the enemy started, and the reset comes once every 16 seconds, no matter what it bit.
 
 **Example.** A brute raises its club. The jaw takes it in the middle of its swing, the blow never lands, and the jaw is ready to go again.
 
@@ -76,11 +74,11 @@ draining.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). Then let the enemies hit you.
 
-**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 9 seconds, and it lasts 1.5 seconds.) It lasts 1.2 seconds. The blow you counter does nothing to you. Then every enemy in front of you within 2.5 metres is Cursed, you step 1.5 metres past the attacker, and your first weapon blow within a second hits twice as hard and heals you 10. If nothing hits you, the wait is half as long: 5 seconds.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 9 seconds, and it lasts 1.5 seconds.) It lasts 1.2 seconds. The blow you counter does nothing to you. Then every enemy in front of you within 2.5 metres is Cursed, you step 1.5 metres past the attacker, and your first weapon blow within a second lands as a heavy blow and heals you 10. If nothing hits you, the wait is half as long: 5 seconds.
 
 **Works with.** The root mark, Dread, which it comes after on the chart, Devouring Maw (bite the enemy you came out behind), Near the Grave, and a heavy weapon.
 
-**Not built yet.** Scattering into ash and standing up again a moment later; for now, you step right away. The answering blow should count as a heavy blow; for now, it hits twice as hard.
+**Not built yet.** Scattering into ash and standing up again a moment later; for now, you step right away.
 
 **Example.** A captain swings at you. You scatter, stand up behind it, and your cut lands for double damage and gives you 10 health.
 
@@ -89,11 +87,11 @@ draining.
 
 **When it happens.** Whenever you cast Gone to Ash, using the shape you picked. If you have not bought this, you cast the plain counter.
 
-**The numbers.** 3 Shards. Ash on the Brow: the attacker's Curse doesn't fade for 6 seconds, and you get one ward that blocks the next blow that would land. Ash Hangs: a cloud 3 metres across sits on the attacker for 3 seconds, Cursing whatever stands in it each second.
+**The numbers.** 3 Shards. Ash on the Brow: the attacker's Curse doesn't fade for 6 seconds, and you get one ward that blocks the next blow that would land. Ash Hangs: a cloud 3 metres across sits on the attacker for 3 seconds, Cursing whatever stands in it each second. With either shape, you stand up again where you were, not behind the attacker.
 
 **Works with.** Ash on the Brow: a one-on-one fight with a strong enemy, Dread, Collected Twice. Ash Hangs: a pack, Dread, Debts Called's Collected shape.
 
-**Not built yet.** Both shapes still move you behind the attacker; a shape can't yet turn off its spell's step. Ash on the Brow's ward blocks any blow, not only the attacker's, and its grey smear isn't drawn yet. Ash Hangs should stop enemies inside it from turning their attacks; for now, they are only Cursed.
+**Not built yet.** Ash on the Brow's ward blocks any blow, not only the attacker's, and its grey smear isn't drawn yet. Ash Hangs should stop enemies inside it from turning their attacks; for now, they are only Cursed.
 
 **Example.** Use Ash Hangs in a ring of soldiers. The one that hit you and the two next to it come away Cursed.
 
@@ -102,26 +100,24 @@ draining.
 
 **When it happens.** Each blow Gone to Ash scatters, while it is in a spell slot.
 
-**The numbers.** 3 Shards. For now, any blow you scatter gives the attacker 60 stagger and ends Gone to Ash's wait, once every 20 seconds.
+**The numbers.** 3 Shards. Only a red attack counts. Scattering it gives the attacker 60 stagger and ends Gone to Ash's wait.
 
 **Works with.** Gods and elites (their red attacks), Devouring Maw and Pawned Heart (a big hit on the staggered enemy).
-
-**Not built yet.** It should only work on red attacks; for now, any blow does it, once every 20 seconds.
 
 **Example.** A god's red overhead swing comes down on you. You scatter, it staggers back, and the counter is ready for its next swing.
 
 ## dark.lift
 **What it does.** Collected Twice, Dark's reaction lift. Every reaction the Curse is part of leaves a black thumbprint on the forehead of the enemy it hit. Your next weapon blow on that enemy repeats the reaction's damage. Your blade collects the debt.
 
-**When it happens.** Whenever a reaction with Cursed in it happens, on any enemy. The print lasts 4 seconds, or until your next weapon blow on that enemy.
+**When it happens.** Whenever a reaction with Cursed in it happens, on any enemy. The print goes on everything the reaction hit: the enemy where it happened and every enemy its blows reached. It lasts 4 seconds, or until your next weapon blow on that enemy.
 
-**The numbers.** 3 Shards. A weapon blow on a printed enemy within 4 seconds hits it for 15 more damage.
+**The numbers.** 3 Shards. The print keeps the damage the reaction's blow dealt to that enemy. Your next weapon blow on it within 4 seconds hits it again for that much.
 
 **Works with.** Every element pair with Cursed in it (Dark's reactions with its neighbours and the rest), the root mark, Dread, which it comes after on the chart, and Never Sated and Nothing Stays Buried, which come after it.
 
-**Not built yet.** It should repeat the reaction's own damage; for now, it is always 15, no matter what the reaction did. The print should go on every enemy the reaction hit; for now, only on the enemy where the reaction happened. The black print isn't drawn on the head yet.
+**Not built yet.** The black print isn't drawn on the head yet.
 
-**Example.** A Curse reaction goes off on a soldier. Your next cut on it does 15 more damage.
+**Example.** A Curse reaction hits a soldier for 24. Your next cut on it does 24 more damage.
 
 ## dark.neversated
 **What it does.** You carry no flasks at all. Instead, every blow you land heals you a little, every Cursed kill heals you a lot, and every finisher heals you even more.
@@ -139,24 +135,22 @@ draining.
 
 **When it happens.** Only while you carry Dark twice (all in). Each Cursed death, and each death while you are Risen.
 
-**The numbers.** 6 Shards. Each shade stands where its body fell for 6 seconds. Every 0.8 seconds, it hits whatever is within 2.5 metres of it for 12 damage, 12 stagger and a Curse. Buying this also gives you the deep strike, Yama's Noose. Use it with L2 and R2 while you carry Dark alone or twice.
+**The numbers.** 6 Shards. Each shade stands where its body fell for 6 seconds. Every 0.8 seconds, it hits whatever is within 2.5 metres of it for 12 damage, 12 stagger and a Curse. Three shades can stand at once; a new one takes the place of the one closest to fading. Each death raises one shade, even a Cursed death while you are Risen. Buying this also gives you the deep strike, Yama's Noose. Use it with L2 and R2 while you carry Dark alone or twice.
 
 **Works with.** The root mark and every Dark spell (Curse enemies before they die), Dread, Collected Twice, which it comes after on the chart, Dead Already (you are always Risen, so every death stands up), A Life for a Life.
 
-**Not built yet.** There should be three shades at most; for now, there is one for every enemy that dies. Each shade should walk to its own enemy; for now, it fights where it fell. A Cursed death while you are Risen should raise two shades, not one.
+**Not built yet.** Each shade should walk to its own enemy; for now, it fights where it fell.
 
 **Example.** Kill three Cursed soldiers in a group. Three grey shades stand up among the rest and keep cutting while you turn to the captain.
 
 ## dark.bloodprice
-**What it does.** When a spell costs more mana than you have, you pay the rest with health. That health isn't lost right away. It turns grey, and dealing damage wins it back, like any grey health.
+**What it does.** You can cast a spell that is still waiting, and pay for the wait with health. That health isn't lost right away. It turns grey, and dealing damage wins it back, like any grey health.
 
 **When it happens.** Each time you cast a spell that costs mana without enough mana for it: another element's larger spell, or a duo spell. Dark's own spells cost no mana. They have waits instead, and Pawned Heart is paid for with health.
 
-**The numbers.** 3 Shards. Each point of mana you are missing costs half a point of health, taken as grey health. It never takes your last point. If you don't have the health, the spell isn't cast.
+**The numbers.** 3 Shards. Each second left on the spell's wait costs 1 health, taken as grey health. Casting it starts its wait again. It never takes your last point. If you don't have the health, the spell isn't cast.
 
 **Works with.** Near the Grave and Debts Called, which come after it on the chart (they reward low health), Pawned Heart, duo spells.
-
-**Not built yet.** The plan is for Blood Price to work on spell waits instead: you could cast a spell that is still waiting, paying 1 health for each second left, as grey health you owe, but never your last point. For now, it pays for the mana a spell is missing.
 
 **Example.** You have 10 mana and cast a duo spell that costs 40. It goes off, 15 of your health turns grey, and the blows you land next win it back.
 
@@ -165,11 +159,11 @@ draining.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4).
 
-**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 9 seconds.) The spot is 1 metre in front of you. For half a second, everything within 6 metres of it is pulled in. Then they all take 18 damage, 35 stagger and a Curse. If you cast it while below half your health, your spells hit 50% harder for the next second.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 9 seconds.) The spot is 1 metre in front of you. For half a second, everything within 6 metres of it is pulled in. Then they all take 18 damage, 35 stagger and a Curse. The damage rises smoothly as your health drops: 18 at full health, 27 at half, 36 at one point.
 
 **Works with.** The root mark, Blood Price, which it comes after on the chart, Near the Grave and Pawned Heart (low health), Dread, Devouring Maw, and the charged blade.
 
-**Not built yet.** The damage should rise smoothly as your health drops, up to 36 at one point of health; for now, it jumps up once you are below half health. The burst should also throw back the enemies it hits.
+**Not built yet.** The burst should also throw back the enemies it hits.
 
 **Example.** Four soldiers are spread around you. One cast pulls them into a tight group at the tip of your sword, all Cursed, ready for a wide swing.
 
@@ -178,11 +172,11 @@ draining.
 
 **When it happens.** Whenever you cast Debts Called, using the shape you picked. If you have not bought this, you cast the plain call.
 
-**The numbers.** 3 Shards. The Black Buffalo: it charges 8 metres down a path about 2.4 metres wide, dealing 18 damage, 35 stagger and a Curse to everything it runs through. Collected: everything within 10 metres is pulled in and takes 20 stagger and no damage. Each Cursed enemy heals you 4.
+**The numbers.** 3 Shards. The Black Buffalo: it charges 8 metres down a path about 2.4 metres wide, dealing 18 damage (rising to 36 as your health drops, like the plain spell), 35 stagger and a Curse to everything it runs through. Every enemy that was already Cursed rides on its horns to the far end and is thrown down there for 0.8 seconds (gods and bosses are too big to carry). Collected: only Cursed enemies within 10 metres are pulled in. Each takes 20 stagger and no damage, and heals you 4. Enemies without a Curse aren't moved or hit.
 
 **Works with.** The Black Buffalo: a heavy weapon to follow its path, Dread, Devouring Maw's path. Collected: the root mark and Grasp (Curse them first), Never Sated, Near the Grave.
 
-**Not built yet.** The buffalo should carry only Cursed enemies and throw them down at the far end, and it should look like a buffalo made of smoke; for now, it lunges down the path in the shape of the jaw. Collected should call only Cursed enemies; for now, it pulls in every enemy, and only the Cursed ones heal you.
+**Not built yet.** The buffalo should look like a buffalo made of smoke; for now, it lunges down the path in the shape of the jaw.
 
 **Example.** Use Collected on a pack of five Cursed soldiers. They come to your feet staggering, and you get 20 health.
 
@@ -191,7 +185,7 @@ draining.
 
 **When it happens.** Each cast while below a third of your health, while Debts Called is in a spell slot.
 
-**The numbers.** 3 Shards. For one second after you cast it, your spells deal double damage (two and a half times as much, with the Learn mark's own boost below half health).
+**The numbers.** 3 Shards. For one second after you cast it, your spells deal double damage, on top of the rise from your low health.
 
 **Works with.** Near the Grave, Pawned Heart (you stay at one point of health the whole time), Blood Price, Dead Already.
 
@@ -237,15 +231,13 @@ draining.
 ## dark.pawnedheart.master
 **What it does.** Touch the heart during a perfect dodge, and you get back 60% of the damage you dealt instead of 30%.
 
-**When it happens.** For now, each perfect dodge, while Pawned Heart is in a spell slot.
+**When it happens.** When you step onto the heart within 0.6 seconds of a perfect dodge (dodge onto it at the last moment), while Pawned Heart is in a spell slot.
 
-**The numbers.** 3 Shards. For now, a perfect dodge heals you 10, once every 3 seconds.
+**The numbers.** 3 Shards. The heart gives back everything you pawned, plus 60% of the damage you dealt while it beat, instead of 30%.
 
 **Works with.** Clean dodging, Near the Grave (low health, when a heal matters most), Gone to Ash.
 
-**Not built yet.** It should only work when you touch the heart during a perfect dodge, and give back 60%; for now, any perfect dodge heals you 10, whether you touch the heart or not.
-
-**Example.** You are at one point of health with the heart beating. Roll through a soldier's thrust at the last moment, and get 10 health back while you work your way back to the heart.
+**Example.** You are at one point of health with the heart beating, and you dealt 200 damage. Roll through a soldier's thrust at the last moment and onto the heart: you get back all you pawned and 120 more.
 
 ## dark.deadalready
 **What it does.** You don't wait to die: from now on, you are always Risen. In every fight, your health drains toward its last point, and your blows heal you. You hit much harder. You don't get a second Rise.
@@ -274,11 +266,9 @@ draining.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). While you carry Dark, you can always put it in a slot.
 
-**The numbers.** Comes with Dark. It costs no mana. After you cast it, you must wait 7 seconds to cast it again. Fighting with your weapon makes the wait shorter. Its Empower makes the wait 6 seconds. It reaches the enemy you face if it is within 6 metres, and deals 10 damage, 12 stagger and a Curse to everything within 1.7 metres of where it arrives.
+**The numbers.** Comes with Dark. It costs no mana. After you cast it, you must wait 7 seconds to cast it again. Fighting with your weapon makes the wait shorter. Its Empower makes the wait 6 seconds, the reach 8 metres and the damage 14. It reaches the enemy you face if it is within 6 metres, and deals 10 damage, 12 stagger and a Curse to everything within 1.7 metres of where it arrives.
 
 **Works with.** Its Empower, its two shapes and its Master mark; the root mark, Dread, Devouring Maw and Debts Called's Collected shape (they all want Cursed enemies), and the charged blade, which it charges with Dark.
-
-**Not built yet.** The Empower's 14 damage and 8-metre reach. For now, the spell only gets the Empower's shorter wait.
 
 **Example.** Grasp the archer at the back. It is dragged to your feet, Cursed, and the jaw finishes it.
 
@@ -287,24 +277,22 @@ draining.
 
 **When it happens.** Whenever you cast Grasp, using the shape you picked. If you have not bought this, you cast the plain ball.
 
-**The numbers.** 3 Shards. Tethered: for 4 seconds after Grasp hits an enemy, your first heavy blow on it drags it 4 metres toward you and gives it 20 stagger. The Pit: a pool 3 metres across, 6 metres ahead of you, that lasts 4 seconds. Each second, it deals 2 damage and a Curse to whatever stands in it.
+**The numbers.** 3 Shards. Tethered: for 4 seconds after Grasp hits an enemy, it can't go more than 5 metres from you; if it is farther, it is dragged back toward you. Your first heavy blow on it in that time drags it 4 metres toward you, gives it 20 stagger, and ends the tether. Gods can't be tied. The Pit: a pool 3 metres across, 6 metres ahead of you, that lasts 4 seconds. Each second, it deals 2 damage and a Curse to whatever stands in it.
 
 **Works with.** Tethered: a one-on-one fight, Devouring Maw's From Its Own Shadow shape, a heavy weapon. The Pit: Dread, Debts Called, Ash Hangs, a pack.
 
-**Not built yet.** Tethered should throw a rope instead of the ball, and keep the enemy within 5 metres of you; for now, the ball is cast, and only the heavy blow's yank is built. The Pit should drag everything to its middle; for now, it only deals damage and Curses. If you buy the Empower, The Pit uses its numbers too, and lands 8 metres ahead.
+**Not built yet.** Tethered should throw a rope instead of the ball; for now, the ball is cast. The Pit should drag everything to its middle; for now, it only deals damage and Curses. If you buy the Empower, The Pit uses its numbers too, and lands 8 metres ahead.
 
 **Example.** Put The Pit under a pack in a doorway. In four seconds they are all Cursed, and Dread is ready for the first death.
 
 ## dark.base.master
 **What it does.** Cast it within a second of being hit, and the enemy that hit you is dragged to your feet and Cursed twice. Dark strikes back when it is hurt.
 
-**When it happens.** When a blow lands on you, while Grasp is in a spell slot.
+**When it happens.** When you cast Grasp within one second after a blow lands on you.
 
-**The numbers.** 3 Shards. For one second after a blow lands on you, your first blow on the enemy that hit you, from Grasp or anything else, drags it 4 metres toward you and adds two Curses.
+**The numbers.** 3 Shards. The enemy whose blow landed on you is dragged 4 metres toward you and gets two Curses, wherever Grasp itself goes.
 
 **Works with.** Pawned Heart and Near the Grave (getting hurt is the plan), Gone to Ash, Dread.
-
-**Not built yet.** It should only work when you answer by casting Grasp; for now, any blow of yours on the attacker within that second does it.
 
 **Example.** A spearman pokes you from far away. Answer right away, and it is at your feet and Cursed.
 

@@ -44,13 +44,11 @@ both carried.
 
 **When it happens.** Each time a Soaked, burning enemy dies, while you carry both Fire and Water.
 
-**The numbers.** Mix, keystone, 5 Shards. A burst deals 8 damage, plus 4 more for each Burn the enemy had, and 15 stagger to everything within 2.5 metres.
+**The numbers.** Mix, keystone, 5 Shards. Steam goes off where it fell, in the shape you picked, even if Steam is still waiting to go off again. Its blows hit at full strength, counting every Burn the enemy had (the plain Steam: 8 damage plus 4 for each Burn, and 15 stagger, to everything within 2.5 metres).
 
 **Works with.** Hissing Blade, Steam, The Sisters' Quarrel.
 
 **Example.** Kill a soaked, burning soldier in the middle of its pack, and the pack is scalded.
-
-**Not built yet.** For now, it bursts like the plain Steam, whatever shape you picked, instead of in your chosen shape.
 
 ## steam.quarrel
 **What it does.** Flame from one hand and a wave from the other close in like pincers on the enemy you face, up to 7 metres away. Where they meet, steam bursts, dealing 30 damage and 55 stagger within 3.5 metres, and Steam goes off at full strength. For 3 seconds after, your weapon blows on the enemies caught in it hit harder and burn.

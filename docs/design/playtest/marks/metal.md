@@ -47,24 +47,20 @@ the steel you throw and plant: Flung Blade, the blades of Grave of Swords.
 
 **When it happens.** Whenever you cast Poured Bronze, using the shape you picked. If you have not bought this, you cast the plain pour.
 
-**The numbers.** 3 Shards. Set: the crust stays for 4 seconds. The next heavy blow on it shatters it for 20 damage and 15 stagger within 1 metre, and sends a path of splinters 3 metres out behind it, away from you. Each enemy the splinters reach takes 8 damage, 8 stagger and a notch. Red-Hot: for 4 seconds, every weapon blow on the enemy spits sparks for 12 more damage (worth two notches).
+**The numbers.** 3 Shards. Set: the crust stays for 4 seconds. The next heavy blow on it shatters it for 20 damage and 15 stagger within 1 metre, and sends a path of splinters 3 metres out behind it, away from you. Each enemy the splinters reach takes 8 damage, 8 stagger and a notch. Only the enemies the bronze poured into get the crust or the melted bronze. Red-Hot: there is no hold. For 4 seconds, every weapon blow on the enemy spits sparks for 6 more damage for each notch the pour used up (three notches: 18 more).
 
 **Works with.** Set: heavy weapons, Counter Cut, a pack standing in a line behind the enemy you poured into. Red-Hot: fast weapons, the charged blade, Open Line (a held enemy to keep attacking).
-
-**Not built yet.** Both shapes work on every enemy the pour reached, not only the ones it poured into, because the shape checks after the pour has already used up the notches. Red-Hot should do 6 more for each notch used up (for now, it is 12 no matter how many), and it shouldn't hold the enemy (for now, the hold still happens).
 
 **Example.** Use Set on a notched brute with two soldiers behind it. One heavy blow shatters the crust, and the splinters notch the two behind it, ready for the next pour.
 
 ## metal.bronze.master
 **What it does.** Cast it within a second after a perfect guard, and the pour on the attacker is doubled, and Poured Bronze is ready again.
 
-**When it happens.** For now, if you cast Poured Bronze within 1 second after a perfect guard, while it is ready, it doesn't start its wait. Poured Bronze must be in a spell slot.
+**When it happens.** When you cast Poured Bronze within 1 second after a perfect guard. Poured Bronze must be in a spell slot.
 
-**The numbers.** 3 Shards. A cast in that second doesn't start a wait, so you can pour again right away.
+**The numbers.** 3 Shards. The cast doesn't start a wait, so you can pour again right away. The enemy whose blow you guarded takes its pour twice: 12 more damage and 15 more stagger for each notch.
 
 **Works with.** Sunder, Open Line and Forged Answer (the same perfect guard notches, holds and makes a blade), Edge Guard (the longer perfect timing window), Master's Answer.
-
-**Not built yet.** Doubling the pour on the attacker. For now, it only skips the wait.
 
 **Example.** Perfect-guard a duellist's thrust and pour right away. It is held under the bronze, and the pour is ready again for the next one.
 
@@ -97,13 +93,11 @@ the steel you throw and plant: Flung Blade, the blades of Grave of Swords.
 ## metal.graveofswords.master
 **What it does.** A finisher sends every blade that's left, and you get 20 mana back.
 
-**When it happens.** For now, the first heavy blow (a finisher counts) that lands on an enemy that was within 8 metres when you cast Grave of Swords, during its 12 seconds; once per cast. Grave of Swords must be in a spell slot.
+**When it happens.** Your first finisher that lands on an enemy that was within 8 metres when you cast Grave of Swords, while its blades still stand; once per cast. Other heavy blows don't count. Grave of Swords must be in a spell slot.
 
 **The numbers.** 3 Shards. 20 mana back. The heavy blow already sends every blade that's left.
 
 **Works with.** Sunder (the finisher adds three notches), Counter Cut, Forged Answer, Temper (the mana for it).
-
-**Not built yet.** It should need a finisher. For now, any heavy blow on an enemy that was near when you cast it works.
 
 **Example.** Cast it, stagger the brute, and finish it. The last blades go in, and you get 20 mana back.
 
@@ -186,11 +180,11 @@ the steel you throw and plant: Flung Blade, the blades of Grave of Swords.
 
 **When it happens.** Whenever you cast Circle of Steel, using the shape you picked. If you have not bought this, you cast the plain circle.
 
-**The numbers.** 3 Shards. The Golden Chair: the answer is a cut 3 metres long and 90 degrees wide at the enemy that hit you, for 14 damage, 20 stagger and a notch. Whatever it hits is held for 2 seconds (a god or an elite for 0.4 of that), gets one more notch, and can't raise its guard for 2 seconds. Ringing Plate: ready for 1.5 seconds. The blocked blow rings out 4 metres all around, for 8 damage, 20 stagger and a notch.
+**The numbers.** 3 Shards. The Golden Chair: the answer is a cut all around you, 3 metres, for 14 damage, 20 stagger and a notch to everything it hits. Only the enemy whose blow you blocked is bound: it is held for 2 seconds (a god or an elite for 0.4 of that), gets one more notch, and can't raise its guard for 2 seconds. Ringing Plate: ready for 1.5 seconds. The blocked blow rings out 4 metres all around, for 8 damage, 20 stagger and a notch.
 
 **Works with.** The Golden Chair: Open Line, Poured Bronze (two notches and a held enemy), Counter Cut. Ringing Plate: being surrounded, Every Crack Rings.
 
-**Not built yet.** The Golden Chair's bands should go on the attacker alone, while keeping the cut all around (for now, the answer is a cone at the attacker, and everything the cone hits is bound). Ringing Plate should ring for every blow it blocks in its 1.5 seconds, up to four, each ring wider (for now, the first blocked blow rings once).
+**Not built yet.** Ringing Plate should ring for every blow it blocks in its 1.5 seconds, up to four, each ring wider (for now, the first blocked blow rings once).
 
 **Example.** Use The Golden Chair on a shield bearer's charge. It stands trapped in gold with its shield down while you cut.
 
@@ -199,24 +193,22 @@ the steel you throw and plant: Flung Blade, the blades of Grave of Swords.
 
 **When it happens.** For now, any blow the circle blocks, once every 20 seconds. Circle of Steel must be in a spell slot.
 
-**The numbers.** 3 Shards. The wait ends right away, and you get 15 mana.
+**The numbers.** 3 Shards. Only a red attack counts. The wait ends right away, and you get 15 mana.
 
 **Works with.** Edge Guard, Temper (the mana for it), Ringing Plate.
-
-**Not built yet.** It should only work on red attacks. For now, any blocked blow works, once every 20 seconds.
 
 **Example.** A god's red sweep comes. Raise the circle, block it, and raise it again for the next one.
 
 ## metal.edgeguard
-**What it does.** The perfect guard timing window is 50% longer, and every perfect guard cuts the attacker and notches its armour. The cost: dodging and every blow blocked with a normal guard cost 50% more stamina.
+**What it does.** Your guard is all edge. Held, it blocks nothing: only a perfect guard turns a blow. In return, the perfect guard timing window is 50% longer, you can press guard again sooner, and every perfect guard cuts the attacker and notches its armour.
 
-**When it happens.** Always on once you learn it. The cut comes with every perfect guard. The cost comes with every dodge and every blocked blow.
+**When it happens.** Always on once you learn it. The cut comes with every perfect guard.
 
-**The numbers.** 6 Shards. The perfect timing window grows by 55%, from 0.18 seconds to about 0.28. Each perfect guard hits everything within 1.2 metres of the attacker for 12 damage, 10 stagger and one notch of Sundered. A dodge costs 37.5 stamina instead of 25. A blocked blow costs 1.35 stamina per point of damage instead of 0.9. For now, holding your guard still blocks like normal.
+**The numbers.** 6 Shards. The perfect timing window grows by 55%, from 0.18 seconds to about 0.28. Each perfect guard hits everything within 1.2 metres of the attacker for 12 damage, 10 stagger and one notch of Sundered. A held guard lets every blow through (and costs no stamina). You can press guard again 0.2 seconds after the last press and still get a perfect window, instead of 0.4.
 
 **Works with.** Circle of Steel, which it comes after on the chart, Sunder (two notches from one guard), Forged Answer, Open Line, Master's Answer, every Master mark that works on a perfect guard, Hanging Swords, and Bright Steel and Halo of Blades on the Halo branch.
 
-**Not built yet.** Only the perfect guard should block a blow (for now, holding your guard still blocks), and you should have to press guard again after 0.2 seconds.
+**Not built yet.** The cut doesn't yet count as a blow landed (its mana and the time it takes off your waits).
 
 **Example.** Fight a fast duellist with just the guard button. Each of its blows you meet at the right moment is blocked, cut and notched.
 
@@ -275,11 +267,9 @@ the steel you throw and plant: Flung Blade, the blades of Grave of Swords.
 
 **When it happens.** Whenever a reaction with Sundered in it happens, on any enemy.
 
-**The numbers.** 3 Shards. The reaction's own damage is 25% higher. One notch on every enemy within 3 metres of where it happened.
+**The numbers.** 3 Shards. Any reaction's own blows deal 25% more to an enemy that already has a notch, and nothing extra to one that doesn't. Every reaction with Sundered in it puts one notch on everything it hit: the enemy where it happened and every enemy its blows reached.
 
 **Works with.** Every element pair with Sundered in it (Live Iron with Static, Rust with Soaked, and the rest), Poured Bronze (the notches it spreads), and To the Blade and The Guard Holds, which come after it on the chart.
-
-**Not built yet.** For now, the 25% counts on every enemy the reaction hits, not only the notched ones. The notch should go on what the reaction reached, not on everything within 3 metres.
 
 **Example.** Static meets the notches in one soldier. Live Iron goes off, and the two soldiers next to it come away notched, ready for the pour.
 
@@ -301,26 +291,24 @@ the steel you throw and plant: Flung Blade, the blades of Grave of Swords.
 
 **When it happens.** Whenever you cast To the Blade, using the shape you picked. If you have not bought this, you cast the plain flight.
 
-**The numbers.** 3 Shards. Chain: a line of five patches, 6 metres long from where you started, each 0.6 metres across, lasting 3 seconds. Once a second, it deals 20 stagger and a notch. There and Back: for now, each enemy the flight cut is cut again a second later for 10 damage, 15 stagger and a notch.
+**The numbers.** 3 Shards. Chain: a line of five patches, 6 metres long from where you started, each 0.6 metres across, lasting 3 seconds. Once a second, it deals 20 stagger and a notch. There and Back: press the slot again within 2 seconds to fly straight back to where you cast it, cutting everything on the line for 10 damage, 15 stagger and a notch.
 
 **Works with.** Chain: a doorway, Poured Bronze on enemies that crossed it, Circle of Steel. There and Back: Sunder, Poured Bronze (two notches from one flight).
 
-**Not built yet.** Chain's trip should knock enemies down (for now, it is 20 stagger each time). There and Back's flight back should come from a second press within 2 seconds (for now, the second cut happens on its own where the enemies stand).
+**Not built yet.** Chain's trip should knock enemies down (for now, it is 20 stagger each time).
 
 **Example.** Put Chain across the entrance to a hallway. The soldiers that follow you through it arrive notched and off balance.
 
 ## metal.toblade.master
-**What it does.** Cast it at the moment of a perfect dodge, and you are untouchable from the moment you press, and To the Blade is ready again.
+**What it does.** Cast it right as a blow would land on you, and it counts as a perfect dodge, you are untouchable from the moment you press, and To the Blade is ready again.
 
-**When it happens.** For now, if you cast To the Blade within 1 second after a perfect dodge, while it is ready, it doesn't start its wait. To the Blade must be in a spell slot.
+**When it happens.** Each time you cast To the Blade right as a blow would land on you. To the Blade must be in a spell slot.
 
-**The numbers.** 3 Shards. A cast in that second doesn't start a wait.
+**The numbers.** 3 Shards. It only counts if you start it in the last 0.3 seconds before an enemy's blow (one within 6 metres) lands on you. Then it is a perfect dodge: you get 12 mana, the game slows for a moment, the blow misses, and every mark that answers a perfect dodge answers this one. You are untouchable for 0.6 seconds from the press, and the spell's wait ends.
 
 **Works with.** The perfect dodge, Flung Blade and Grave of Swords (a blade to fly to), Counter Cut on the enemy you arrive at.
 
-**Not built yet.** The timing shared by the movement spells: cast it right as a blow would land, and it counts as a perfect dodge and you are untouchable from the moment you press. For now, casting it after a perfect dodge skips its wait.
-
-**Example.** Perfect-dodge a brute's swing and fly right away to the blade in the archer behind it, then on to the next one.
+**Example.** Cast it just as a brute's swing comes down. The swing misses, you fly to the blade in the archer behind it, and the spell is ready again for the next one.
 
 ## metal.devotion
 **What it does.** The Guard Holds, Metal's Devotion, for going all in on Metal only. It is Metal's basic bonus, defence, at full strength. Your guard never breaks. A blow your stamina can't cover is still blocked, and whatever your stamina can't cover comes through as grey health. Every blow you block notches the attacker and throws sparks into it. You take less damage from everything. Red attacks still need a dodge or a perfect guard.

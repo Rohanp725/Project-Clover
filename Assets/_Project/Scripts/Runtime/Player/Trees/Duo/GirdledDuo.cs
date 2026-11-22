@@ -122,7 +122,7 @@ namespace Clover.Player.Trees.Duo
         }
 
         // The coils as the plain Girdled's, under the shape's own names (prefix.coils, .bound, .tight): one coil at once,
-        // slowed a quarter and 6% more from the weapon; each weapon blow mends 1 and draws a coil tighter, 6% more each; at
+        // slowed a quarter (its feet held: Mired) and 6% more from the weapon; each weapon blow mends 1 and draws a coil tighter, 6% more each; at
         // four coils (the third blow) held 1.5 s while the roots crush, 20 and 40 stagger, and 4 to you. Then the shape's own.
         private static UpgradeEffect[] Coil(string prefix, UpgradeEffect[] more)
         {
@@ -130,7 +130,7 @@ namespace Clover.Player.Trees.Duo
             var effects = new List<UpgradeEffect>
             {
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = coils, Seconds = 8f, Blows = 3 } },
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = prefix + ".bound", Seconds = 8f, Pace = 0.75f } },
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = prefix + ".bound", Seconds = 8f, Pace = 0.75f, Flags = ConditionFlags.Mired } },
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = tight, Seconds = 8f, Flags = ConditionFlags.WeaponTakenShare, Scale = 1.06f } },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = coils, By = StruckBy.Weapon, Do = UpgradeAction.Heal, Amount = 1f },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = coils, By = StruckBy.Weapon, AtCount = 1, Do = UpgradeAction.Condition,

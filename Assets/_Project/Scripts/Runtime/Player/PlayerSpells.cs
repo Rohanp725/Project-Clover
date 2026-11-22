@@ -33,6 +33,8 @@ namespace Clover.Player
         public SpellSlots Slots { get; } = new SpellSlots();
         // Counts for tests and probes.
         public int Casts { get; private set; }
+        /// <summary>Health paid to cast spells still waiting (Blood Price), for probes.</summary>
+        public float HealthPaidForWaits { get; private set; }
         public int CutsTaken { get; private set; }
         public float SecondsCut { get; private set; }
         public int ReadyFlashes { get; private set; }
@@ -60,6 +62,14 @@ namespace Clover.Player
         private Enemy[] looseEnemies;
         private IBoss[] bosses;
         private int buffered = -1;
+        // A spell held on its button (SpellSpec.HoldUpTo): the slot gathering, how long, the most, and whether the press became a hold.
+        private int gathering = -1;
+        private float gatheredFor, gatherMost;
+        private bool gatherHeld;
+        /// <summary>The slot whose spell is being held on its button now, or -1; for the HUD and probes.</summary>
+        public int Gathering => gathering;
+        /// <summary>Spells held on their buttons and loosed, counted for probes.</summary>
+        public int HeldCasts { get; private set; }
         private float bufferLeft;
         private float untilSample;
         private float sampled;
@@ -79,6 +89,7 @@ namespace Clover.Player
         private readonly int[] waitingCast = new int[SpellSlots.Count];
         private readonly float[] waitingSince = new float[SpellSlots.Count];
         private readonly string[] waitingElement = { "", "", "", "" };
+        private readonly int[] waitingBlows = new int[SpellSlots.Count];
         private int castSerial;
 
         private void Awake()
@@ -198,7 +209,7 @@ namespace Clover.Player
                 if (waitingCast[slot] != cast) continue;
                 waitingCast[slot] = 0;
                 if (Time.time - waitingSince[slot] > ChargeWindow || combat == null || string.IsNullOrEmpty(waitingElement[slot])) return;
-                combat.Blade.Charge(waitingElement[slot]);
+                combat.Blade.Charge(waitingElement[slot], waitingBlows[slot]);
                 BladeCharges++;
                 Landed?.Invoke(slot, target);
                 return;
@@ -459,11 +470,41 @@ namespace Clover.Player
                 buffered = pressed;
                 bufferLeft = PressBufferTime;
             }
-            if (buffered >= 0 && free && (element == null || !element.IsCasting))
+            // A spell held on its button gathers while it is held, and is loosed on letting go or when its time is up.
+            if (gathering >= 0)
+            {
+                gatheredFor += deltaTime;
+                if (buttons != null && buttons.SlotHoldBegan(gathering)) gatherHeld = true;
+                bool held = buttons != null && buttons.SlotHeld(gathering);
+                if (!held || gatheredFor >= gatherMost)
+                {
+                    int loosed = gathering;
+                    gathering = -1;
+                    // A tap too short to be a hold is loosed with the spell's own numbers.
+                    if (upgrades != null) upgrades.HeldShare = gatherHeld ? SpellSpec.HeldShare(gatheredFor, gatherMost) : 0f;
+                    try { if (TryCast(loosed)) HeldCasts++; }
+                    finally { if (upgrades != null) upgrades.HeldShare = 0f; }
+                }
+                buffered = -1;
+            }
+            else if (buffered >= 0 && free && (element == null || !element.IsCasting))
             {
                 int slot = buffered;
                 buffered = -1;
-                TryCast(slot);
+                // A base spell held is one cast through its mark (Glare's Gathered); the kit's own cast is loosed at once.
+                string id = Slots[slot];
+                var held = string.IsNullOrEmpty(id) || upgrades == null ? null
+                    : SpellSlots.IsBase(id) ? (upgrades.BaseCastsThroughMark(id) ? Upgrade.ById(id) : null) : MarkIn(slot);
+                float most = held != null && Cooldowns.Ready(slot) ? upgrades.HoldUpToOf(held) : 0f;
+                if (most > 0f)
+                {
+                    // Held on its button: nothing is cast until it is let go.
+                    gathering = slot;
+                    gatheredFor = 0f;
+                    gatherMost = most;
+                    gatherHeld = false;
+                }
+                else TryCast(slot);
             }
             if (bufferLeft > 0f)
             {
@@ -523,24 +564,34 @@ namespace Clover.Player
             }
             // A spell of several presses (Three Weasels): pressed again within its window it does its next press, waiting
             // on no clock, rather than casting again.
-            if (pressSlot == slot && pressMark != null && Time.time < pressUntil && MarkIn(slot) == pressMark && upgrades != null)
+            if (pressSlot == slot && pressMark != null && Time.time < pressUntil && (MarkIn(slot) == pressMark || id == pressMark.Id) && upgrades != null)
             {
                 player.FacePointer();
                 if (upgrades.Press(pressMark, pressNext))
                 {
                     pressNext++;
-                    if (pressNext >= pressMark.Presses.Length) pressSlot = -1;
+                    var presses = upgrades.PressesOf(pressMark, out _);
+                    if (presses == null || pressNext >= presses.Length) pressSlot = -1;
                     return true;
                 }
                 pressSlot = -1;
             }
+            // Blood Price: a spell still waiting is cast anyway, each second left paid in health once the cast is made.
+            float owedForWait = 0f;
             if (!Cooldowns.Ready(slot))
             {
-                Refuse("Not ready");
-                return false;
+                owedForWait = upgrades != null && defence != null
+                    ? PlayerUpgrades.CooldownHealth(Cooldowns.Remaining(slot), upgrades.Stats.Sum(PlayerStat.CooldownPrice) * upgrades.Stats.Multiplier(PlayerStat.HealthPrices), defence.Health.Current)
+                    : -1f;
+                if (owedForWait < 0f)
+                {
+                    Refuse("Not ready");
+                    return false;
+                }
             }
             float seconds;
             string castIn;
+            int chargeBlows = 0;
             // Every blow this cast deals carries its number, so its own first landing charges the blade.
             int number = ++castSerial;
             element.CastTag = number;
@@ -562,7 +613,17 @@ namespace Clover.Player
                     {
                         if (!upgrades.Cast(Upgrade.ById(id))) return false;
                     }
-                    else if (!element.CastBase(castIn)) return false;
+                    // A slot made instant by a mark (Thunderclap's Master) is loosed with no wind-up.
+                    else if (!element.CastBase(castIn, Cooldowns.IsInstant(slot))) return false;
+                    // A base spell's later presses (its Master's: Riptide's wave sent on again) wait for their press now.
+                    var baseLearn = upgrades != null ? Upgrade.ById(id) : null;
+                    if (baseLearn != null && upgrades.PressesOf(baseLearn, out float baseWindow) != null)
+                    {
+                        pressSlot = slot;
+                        pressMark = baseLearn;
+                        pressNext = 0;
+                        pressUntil = Time.time + baseWindow;
+                    }
                     // Its own element's marks may shorten the wait (Near to Hand for Stone Rise), and its branch's Empower; every spell's rate is applied below.
                     seconds = SpellTimings.BaseCooldown(castIn, upgrades != null ? upgrades.BaseCooldownShare(castIn) : 0f);
                     if (upgrades != null) seconds = upgrades.BaseCooldownOf(id, seconds);
@@ -582,15 +643,17 @@ namespace Clover.Player
                         Refuse(mark.Spell.HealthCost > 0f ? "Not enough health" : "Cannot cast that here");
                         return false;
                     }
-                    // A duo spell charges with its first element (IMPLEMENTATION.md 8.5, question 2).
+                    // A duo spell charges with its first element (IMPLEMENTATION.md 8.5, question 2), for as many blows as it says.
                     castIn = element.ElementOf(mark).Name;
+                    chargeBlows = upgrades.ChargeBlowsOf(mark);
                     // A spell of several presses waits for its next press now.
-                    if (mark.Presses != null && mark.Presses.Length > 0)
+                    // Its own, or the worn shape's (ShapeDef.Presses).
+                    if (upgrades.PressesOf(mark, out float pressWindow) != null)
                     {
                         pressSlot = slot;
                         pressMark = mark;
                         pressNext = 0;
-                        pressUntil = Time.time + mark.PressWindow;
+                        pressUntil = Time.time + pressWindow;
                     }
                     // The wait as its branch makes it (the Empower's is shorter). A spell from outside the table (a lent
                     // one) that asks no mana still waits.
@@ -602,6 +665,12 @@ namespace Clover.Player
             {
                 element.CastTag = 0;
             }
+            // Left grey: owed, to be won back by blows.
+            if (owedForWait > 0f && defence != null)
+            {
+                defence.Health.Chip(owedForWait);
+                HealthPaidForWaits += owedForWait;
+            }
             Cooldowns.Start(slot, seconds / Mathf.Max(0.1f, CooldownRate));
             Casts++;
             LastSlot = slot;
@@ -609,6 +678,7 @@ namespace Clover.Player
             waitingCast[slot] = number;
             waitingSince[slot] = Time.time;
             waitingElement[slot] = castIn ?? "";
+            waitingBlows[slot] = chargeBlows;
             heldSlot = slot;
             SlotCast?.Invoke(slot);
             return true;

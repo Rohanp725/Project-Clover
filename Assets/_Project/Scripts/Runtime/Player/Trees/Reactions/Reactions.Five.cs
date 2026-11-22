@@ -51,37 +51,36 @@ namespace Clover.Player.Trees
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Helper, Radius = 1.5f, Count = 7, Interval = 0.4f, Damage = 3f, DamagePerSpent = 3f, Stagger = 4f,
                     Affliction = AfflictionKind.Sundered }));
 
-            // Ice and Light (48). Two mock suns hang by it for 4 s: a weapon blow on it lays two Chill and does not spend
-            // the Mark (its blows are critical, as the Mark makes them).
-            // NEEDS: the side of a blow: only a blow from its left or right, not its face, is critical, lays the Chill and
-            // spares the Mark; and the suns themselves, turning with it.
+            // Ice and Light (48). Two mock suns hang by it for 4 s: a weapon blow on it from its left or right (45 to 135
+            // degrees from its face) lays two Chill; the Mark is not spent (its blows are critical, as the Mark makes them).
+            // NEEDS: only a blow from the flank critical and sparing the Mark (now every blow, as the Mark makes it); and the
+            // suns themselves, turning with it.
             // Round 4, the owner: "encase and dazzle": the struck one is held frozen 2 s inside the ice ring, and up to
             // three enemies within 4 m are dazzled for 5 s, their next blow doing nothing.
             // NEEDS: a real miss: the dazzled blow still swings and lands, for nothing.
             to.Add(Reaction(AfflictionKind.Chill, AfflictionKind.Marked,
-                "Chill meets Marked: two mock suns hang beside it for 4 s. It is held frozen 2 s, and up to three enemies near are dazzled: their next blow does nothing. Your weapon blows on it lay two Chill and do not spend its Mark.",
+                "Chill meets Marked: two mock suns hang beside it for 4 s. It is held frozen 2 s, and up to three enemies near are dazzled: their next blow does nothing. Your weapon blows on its flanks lay two Chill, and no blow spends its Mark.",
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Suns, Seconds = 4f, Keeps = AfflictionKind.Marked } },
-                new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Suns, By = StruckBy.Weapon, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 2 },
+                new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Suns, By = StruckBy.Weapon, SideLeast = 45f, SideMost = 135f, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 2 },
                 // After the first two, so the duo marks that change them by place (Wide Fan) still find them.
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hold, Seconds = 2f, Unseen = true },
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, Radius = 4f, Count = 3,
                     State = new ConditionSpec { Id = Dazzled, Seconds = 5f, Flags = ConditionFlags.DamageDealtShare, Scale = 0f, EndsWith = ConditionBlow.TheirBlow, ToOthers = true } }));
 
             // Water and Dark (49). Swollen 5 s: 20% slower (a god is not slowed) and 15% more from weapon blows. When it
-            // dies, or a heavy blow lands while it is swollen, it bursts in black water to 4 m: 14 damage, 20 stagger,
-            // Soaked and Cursed on everything reached.
-            // NEEDS: a finisher-only blow: the entry bursts it on a finisher, not on any heavy blow.
+            // dies, or a finisher lands while it is swollen (the finisher's own blow, not any heavy blow), it bursts in black
+            // water to 4 m: 14 damage, 20 stagger, Soaked and Cursed on everything reached.
             UpgradeEffect[] BlackWater(UpgradeTrigger on) => new[]
             {
-                new UpgradeEffect { On = on, Condition = Swollen, By = StruckBy.Heavy, Do = UpgradeAction.Burst, Radius = 4f, Damage = 14f, Stagger = 20f, Affliction = AfflictionKind.Soaked, Stacks = 1 },
-                new UpgradeEffect { On = on, Condition = Swollen, By = StruckBy.Heavy, Do = UpgradeAction.Burst, Radius = 4f, Affliction = AfflictionKind.Cursed, Stacks = 1 },
+                new UpgradeEffect { On = on, Condition = Swollen, By = StruckBy.Finisher, Do = UpgradeAction.Burst, Radius = 4f, Damage = 14f, Stagger = 20f, Affliction = AfflictionKind.Soaked, Stacks = 1 },
+                new UpgradeEffect { On = on, Condition = Swollen, By = StruckBy.Finisher, Do = UpgradeAction.Burst, Radius = 4f, Affliction = AfflictionKind.Cursed, Stacks = 1 },
             };
             var struck = BlackWater(UpgradeTrigger.ConditionStruck);
             var died = BlackWater(UpgradeTrigger.ConditionDied);
             to.Add(Reaction(AfflictionKind.Soaked, AfflictionKind.Cursed,
-                "Soaked meets Cursed: the water turns black and it swells for 5 s, slower and open to your weapon. When it dies or a heavy blow lands it bursts, 14 with Soaked and Cursed to all within 4 m.",
+                "Soaked meets Cursed: the water turns black and it swells for 5 s, slower and open to your weapon. When it dies or your finisher lands on it, it bursts, 14 with Soaked and Cursed to all within 4 m.",
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition,
-                    State = new ConditionSpec { Id = Swollen, Seconds = 5f, Flags = ConditionFlags.WeaponTakenShare, Scale = 1.15f, EndsWith = ConditionBlow.Heavy } },
+                    State = new ConditionSpec { Id = Swollen, Seconds = 5f, Flags = ConditionFlags.WeaponTakenShare, Scale = 1.15f, EndsWith = ConditionBlow.Finisher } },
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = SwollenHeavy, Seconds = 5f, Pace = 0.8f } },
                 struck[0], struck[1], died[0], died[1]));
 
@@ -127,13 +126,17 @@ namespace Clover.Player.Trees
 
             // Dark and Ice (54), rest 6 s. While both last its Chill does not fade, and each weapon blow on it draws warmth
             // out: one Chill on it, and 2 health to the player (8 a second at most; a god gives half).
-            // NEEDS: a freeze moment: when it freezes the last warmth is torn out (2 health for every Chill it carried) and
-            // it stays frozen 1 s longer.
+            // When it freezes the last warmth is torn out (ConditionSpec.EndsOnFreeze, StruckBy.Frozen): 2 health for every Chill
+            // it carried (a god gives half), and it stays frozen 1 s longer.
             to.Add(Reaction(AfflictionKind.Cursed, AfflictionKind.Chill,
                 "Cursed meets Chill: the curse takes its warmth. While both last its Chill does not fade, and each of your weapon blows chills it and draws 2 health into you.",
                 6f,
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition,
-                    State = new ConditionSpec { Id = Draw, Seconds = 30f, While = AfflictionKind.Cursed, While2 = AfflictionKind.Chill, Keeps = AfflictionKind.Chill } },
+                    State = new ConditionSpec { Id = Draw, Seconds = 30f, While = AfflictionKind.Cursed, While2 = AfflictionKind.Chill, Keeps = AfflictionKind.Chill, EndsOnFreeze = true } },
+                new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Draw, By = StruckBy.Frozen, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Chill, CountOnly = true },
+                new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Draw, By = StruckBy.Frozen, Ranks = EnemyRank.Plain | EnemyRank.Elite, Do = UpgradeAction.Heal, Amount = 2f, PerStack = true },
+                new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Draw, By = StruckBy.Frozen, Ranks = EnemyRank.God, Do = UpgradeAction.Heal, Amount = 1f, PerStack = true },
+                new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Draw, By = StruckBy.Frozen, Do = UpgradeAction.KeepFrozen, Seconds = 1f },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Draw, By = StruckBy.Weapon, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 1 },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Draw, By = StruckBy.Weapon, Ranks = EnemyRank.Plain | EnemyRank.Elite, Cooldown = 0.25f, CooldownPerEnemy = true, Do = UpgradeAction.Heal, Amount = 2f },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Draw, By = StruckBy.Weapon, Ranks = EnemyRank.God, Cooldown = 0.25f, CooldownPerEnemy = true, Do = UpgradeAction.Heal, Amount = 1f }));

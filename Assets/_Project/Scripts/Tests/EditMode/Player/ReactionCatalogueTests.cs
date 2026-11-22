@@ -149,13 +149,16 @@ namespace Clover.Tests
                         && (earlier.AtCount == 0 || earlier.AtCount == effect.AtCount));
                     bool deadDepth = effect.On == UpgradeTrigger.ConditionDied && effect.Needs != AfflictionKind.None;
                     bool blowsTaken = effect.On == UpgradeTrigger.ConditionEnded && effect.SpentAtLeast > 0;
-                    Assert.IsTrue(spentBefore || (effect.PerStack && (deadDepth || blowsTaken)), where + ": counts a depth nothing gave it");
+                    // A death near the condition carries the dead one's doses (Shut in the Dark's jar, StruckBy.DeathNear).
+                    bool deathNear = effect.On == UpgradeTrigger.ConditionStruck && effect.By == StruckBy.DeathNear;
+                    Assert.IsTrue(spentBefore || (effect.PerStack && (deadDepth || blowsTaken || deathNear)), where + ": counts a depth nothing gave it");
                 }
 
                 // A condition spent by a blow answers that same kind of blow, so the blow that spends it is the one answered.
                 foreach (var setter in effects.Where(effect => effect.Do == UpgradeAction.Condition && effect.State.EndsWith != ConditionBlow.None))
                 {
-                    var by = setter.State.EndsWith == ConditionBlow.Heavy ? StruckBy.Heavy : setter.State.EndsWith == ConditionBlow.Weapon ? StruckBy.Weapon : StruckBy.Any;
+                    var by = setter.State.EndsWith == ConditionBlow.Heavy ? StruckBy.Heavy : setter.State.EndsWith == ConditionBlow.Weapon ? StruckBy.Weapon
+                        : setter.State.EndsWith == ConditionBlow.Finisher ? StruckBy.Finisher : setter.State.EndsWith == ConditionBlow.Shove ? StruckBy.Shove : StruckBy.Any;
                     foreach (var answer in effects.Where(effect => effect.On == UpgradeTrigger.ConditionStruck && effect.Condition == setter.State.Id))
                         Assert.AreEqual(by, answer.By, $"{mark.Id}: {setter.State.Id} is spent by one blow and answers another");
                 }

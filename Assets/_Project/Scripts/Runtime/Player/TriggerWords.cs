@@ -79,6 +79,12 @@ namespace Clover.Player
                 case UpgradeTrigger.TheirBlow: return "an enemy's blow lands on you or is turned";
                 case UpgradeTrigger.ConditionAttacked: return "an enemy in a state this laid strikes at you";
                 case UpgradeTrigger.RipeBurst: return "a ripe seed bursts";
+                case UpgradeTrigger.ReactionStruck: return "a reaction strikes an enemy";
+                case UpgradeTrigger.AfflictionLaid: return "an affliction is laid on an enemy";
+                case UpgradeTrigger.DanceInTime: return "every cut of a dance lands in time";
+                case UpgradeTrigger.GrownBurst: return "something you grew bursts";
+                case UpgradeTrigger.GrownBolt: return "something you grew throws a bolt";
+                case UpgradeTrigger.SpellLoosed: return "a gathered spell is loosed";
                 default: return "its moment comes";
             }
         }

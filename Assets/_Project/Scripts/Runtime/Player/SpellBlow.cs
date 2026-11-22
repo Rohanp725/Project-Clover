@@ -34,6 +34,12 @@ namespace Clover.Player
         /// <summary>A reaction dealt it: what it lays starts no reaction (<see cref="Hit.FromReaction"/>).</summary>
         public bool FromReaction;
         /// <summary>
+        /// A reaction's own blow: its pair plus one (0: none), and which time it went off, so the enemies it struck can be
+        /// answered each once (the ledger's reaction-struck, <see cref="UpgradeTrigger.ReactionStruck"/>).
+        /// </summary>
+        public int ReactionOf;
+        public int ReactionCast;
+        /// <summary>
         /// The tint a blow of the element on the weapon (its infused or charged strike) gives what it lands on
         /// (<see cref="Hit.Tint"/>, <see cref="Core.StruckLook"/>); clear for a spell's, a reaction's or an upgrade's.
         /// </summary>
@@ -43,5 +49,7 @@ namespace Clover.Player
         /// white flash sheet on every enemy in it every half second; the owner, 2026-11-20: "less flickery").
         /// </summary>
         public bool Unseen;
+        /// <summary>A critical blow: its damage multiplied as a weapon's critical is, and told as critical (Seen Plainly's reactions).</summary>
+        public bool Critical;
     }
 }

@@ -10,11 +10,12 @@ namespace Clover.Player.Magic
     {
         /// <summary>The branch an effect acts on: the one it names, else its own mark's.</summary>
         public static string BranchOf(UpgradeEffect effect) =>
-            effect == null ? "" : !string.IsNullOrEmpty(effect.Branch) ? effect.Branch : effect.Owner != null ? effect.Owner.Branch ?? "" : "";
+            effect == null ? "" : !string.IsNullOrEmpty(effect.Branch) ? effect.Branch
+            : effect.Owner == null ? "" : !string.IsNullOrEmpty(effect.Owner.Branch) ? effect.Owner.Branch : effect.Owner.Spell != null ? effect.Owner.Id : "";
 
         /// <summary>True for the actions this class does.</summary>
         public static bool Handles(UpgradeAction action) =>
-            action == UpgradeAction.CutCooldowns || action == UpgradeAction.ResetCooldown || action == UpgradeAction.InstantNext;
+            action == UpgradeAction.CutCooldowns || action == UpgradeAction.ResetCooldown || action == UpgradeAction.InstantNext || action == UpgradeAction.KeepWaitShare;
 
         /// <summary>
         /// Does the effect's action on the clocks. Returns the slot acted on (-1 for every clock, or for none: a branch whose
@@ -35,6 +36,13 @@ namespace Clover.Player.Magic
                 {
                     int slot = slots != null ? slots.SlotOf(branch) : -1;
                     if (slot >= 0) clocks.Reset(slot);
+                    return slot;
+                }
+                case UpgradeAction.KeepWaitShare:
+                {
+                    // Its own spell's wait alone, not every clock.
+                    int slot = slots != null ? slots.SlotOf(branch) : -1;
+                    if (slot >= 0) clocks.KeepShare(slot, effect.Amount > 0f ? effect.Amount : 0.5f);
                     return slot;
                 }
                 case UpgradeAction.InstantNext:

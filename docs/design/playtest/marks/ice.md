@@ -111,11 +111,9 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Whenever Chill reacts on an enemy with another affliction it has (Steam with Burn, Supercooled with Static, and the rest).
 
-**The numbers.** 3 Shards. A patch of frozen ground with a 1.5-metre radius around the reaction, lasting 4 seconds. Once a second, it deals 1 damage and a stack of Chill. The enemy where the reaction happened moves at 60% of its speed for 2 seconds (elites are slowed half as much; gods aren't slowed).
+**The numbers.** 3 Shards. A patch of frozen ground with a 1.5-metre radius around the reaction, lasting 4 seconds. Once a second, it deals 1 damage and a stack of Chill. Everything the reaction hit moves at 60% of its speed for 2 seconds: the enemy where it happened and every enemy its blows reached (elites are slowed half as much; gods aren't slowed).
 
 **Works with.** Carrying a second element: every one of Ice's ten reactions; Flying Shards, which it comes after on the chart; All at Once and Deep Winter, above it.
-
-**Not built yet.** Slowing everything the reaction hit. For now, only the enemy where it happened is slowed.
 
 **Example.** Ice and Water on a soldier in a crowd. The reaction goes off, the floor freezes around it, and soldiers walking in get Chill.
 
@@ -174,7 +172,7 @@ design yet, its **Not built yet** line says what is missing.
 
 **Works with.** Cold Read and Splinter Ward (Breath on the Steel); Winter Wall and Hanging Ice, to keep enemies in the fog (Freezing Fog).
 
-**Not built yet.** Breath on the Steel should only work for six seconds after you cast it. For now, every guard chills and every perfect guard freezes while you have the shape picked, whether you cast it or not. With the Empower, Freezing Fog reaches a 4-metre radius instead of its own 2.5 (the Empower's numbers are applied after the shape's).
+**Not built yet.** Breath on the Steel should only work for six seconds after you cast it. For now, every guard chills and every perfect guard freezes while you have the shape picked, whether you cast it or not.
 
 **Example.** A hallway and a pack: put Freezing Fog in the doorway, and they reach you with three or four stacks.
 
@@ -200,7 +198,7 @@ design yet, its **Not built yet** line says what is missing.
 
 **Works with.** Glaze (one ward when you light it), Cold Read, which it comes after on the chart, Winter Wall and Sent Sliding above it, Deep Winter, Chill.
 
-**Not built yet.** The blocked blow should count as a perfect guard for other marks too (Cold Read, Rime Guard). For now, it only gives a perfect guard's mana and time off.
+The blocked blow also counts as a perfect guard for every other mark that answers one (Cold Read, Rime Guard).
 
 **Example.** Light Glaze and let a brute's red attack land on the ward. Everything around you gets three stacks and is staggered, and your spells are two seconds closer to ready.
 
@@ -272,11 +270,9 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). While you carry Ice, you can always put it in a slot.
 
-**The numbers.** Comes with Ice. It costs no mana. After you cast it, you must wait 7 seconds to cast it again. Fighting with your weapon makes the wait shorter. Its Empower makes the wait 5.5 seconds. Thirteen crystals grow over a fan 4.5 metres long and 110 degrees wide. They deal 10 damage, 15 stagger and two stacks of Chill. They stay for 4 seconds. A weapon blow among them shatters them all, dealing 5 damage, 8 stagger and one more Chill to everything nearby.
+**The numbers.** Comes with Ice. It costs no mana. After you cast it, you must wait 7 seconds to cast it again. Fighting with your weapon makes the wait shorter. Its Empower makes the wait 5.5 seconds and the Chill three stacks. Thirteen crystals grow over a fan 4.5 metres long and 110 degrees wide. They deal 10 damage, 15 stagger and two stacks of Chill. They stay for 4 seconds. A weapon blow among them shatters them all, dealing 5 damage, 8 stagger and one more Chill to everything nearby.
 
 **Works with.** Its Empower, its two shapes and its Master mark; Chill; Brittle; and the charged blade, which it charges with Ice when it lands.
-
-**Not built yet.** The Empower's third stack of Chill. For now, the spell only gets the Empower's shorter wait.
 
 **Example.** Cast it at three soldiers, then cut into the crystals. Every one of them has three stacks before your second blow.
 
@@ -296,13 +292,13 @@ design yet, its **Not built yet** line says what is missing.
 ## ice.base.master
 **What it does.** Cast Hoarfrost within half a second after a shatter, and the crystals grow out from the shattered spot with four stacks of Chill.
 
-**When it happens.** For now, right after any shatter. Hoarfrost must be in a spell slot.
+**When it happens.** When you cast Hoarfrost within half a second after a shatter. Hoarfrost must be in a spell slot.
 
-**The numbers.** 3 Shards. For 0.8 seconds after a shatter, every enemy within 6 metres of it is marked. The next blow or spell on each one adds two more stacks of Chill.
+**The numbers.** 3 Shards. Everything that cast hits gets two more stacks of Chill: four in all.
 
 **Works with.** Flying Shards (its burst is the hit that uses up the mark); Chill; All at Once.
 
-**Not built yet.** It should only work when you cast Hoarfrost in the half second after a shatter, with the crystals growing from the shattered spot. For now, anything that hits the marked enemies in that moment adds the two extra stacks.
+**Not built yet.** The crystals should grow out from the shattered spot; for now, they come from you as usual.
 
 **Example.** Shatter one soldier and cast right away into the rest. They get the crystals' Chill plus two more, one blow away from freezing.
 
@@ -337,11 +333,11 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** For now, every time you cast Ski Run, and every time you slide through a Frozen enemy. Ski Run must be in a spell slot.
 
-**The numbers.** 3 Shards. You get what a perfect dodge gives: 12 mana, and 1.5 seconds off the wait on every spell that is waiting. Sliding through a Frozen enemy sends a path 9 metres long and 2 metres wide on from it, filling Chill all the way on everything on it, at most once a second.
+**The numbers.** 3 Shards. It only counts if you start it in the last 0.3 seconds before an enemy's blow (one within 6 metres) lands on you. Then it is a perfect dodge: you get 12 mana, the game slows for a moment, the blow misses, and every mark that answers a perfect dodge answers this one. Sliding through a Frozen enemy sends a path 9 metres long and 2 metres wide on from it, filling Chill all the way on everything on it, at most once a second.
 
 **Works with.** Rime Guard's and Cold Read's freezes, to slide through; Flying Shards; All at Once.
 
-**Not built yet.** The timing (starting it right as a blow would land), and the moment of a shatter. For now, every cast gives the dodge's mana and time off, and sliding through any Frozen enemy freezes the path past it.
+**Not built yet.** The moment of a shatter. For now, sliding through any Frozen enemy freezes the path past it.
 
 **Example.** Freeze the front soldier, then slide through it toward the line behind. The line stands frozen behind you.
 

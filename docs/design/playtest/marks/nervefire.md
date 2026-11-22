@@ -57,10 +57,10 @@ Poison and Lightning are both carried.
 
 **When it happens.** Cast it from a spell slot while you carry both Poison and Lightning. Press that slot's button (hold L2 and a face button, or press 1 to 4). The first time it lands, it charges your blade with Poison.
 
-**The numbers.** Mix, duo spell, detonator, 5 Shards. It costs no mana. After you cast it, you must wait 13 seconds to cast it again. Fighting with your weapon makes the wait shorter. It reaches an enemy within 3 metres. A normal enemy is held for 1.2 seconds. The thunder deals 30 damage, 50 stagger and a dose within 3.5 metres.
+**The numbers.** Mix, duo spell, detonator, 5 Shards. It costs no mana. After you cast it, you must wait 13 seconds to cast it again. Fighting with your weapon makes the wait shorter. You step up to 3 metres to the enemy you face and slap the seal on. A normal enemy is held for 1.2 seconds, an elite for half a second, and a god not at all. Your blows only burn the seal down. On the fifth, thunder falls: 30 damage plus 4 for each dose of poison the enemy has, all its Static set off into the same blow (7 damage and 5 stagger a charge), and 50 stagger and a dose to everything within 3.5 metres. Each dose the enemy has also passes one dose to every other enemy within 3 metres. If the 6 seconds run out first, the thunder still falls, at half strength.
 
 **Works with.** Nerve Fire, Hidden Crimes, Strike on the Beat.
 
-**Example.** Seal a captain and land five blows. Thunder falls on it and its guard.
+**Example.** Seal a captain with six doses and land five blows. Thunder falls on it for 54 damage, and its guards each take six doses.
 
-**Not built yet.** You don't step to the enemy yet. The thunder doesn't yet set off the enemy's Static, add 4 damage per dose, or pass each dose to everything nearby. It doesn't yet fall at half strength when the 6 seconds run out. Elites aren't held at all yet.
+**Not built yet.** The paper fluttering and charring at each blow and the red brush strokes aren't drawn yet; the seal shows as a sign over the enemy that shrinks with each blow.

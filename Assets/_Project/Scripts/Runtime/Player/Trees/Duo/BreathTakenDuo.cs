@@ -34,8 +34,8 @@ namespace Clover.Player.Trees.Duo
             const string A = Elements.Dark, B = Elements.Wind;
 
             // NEEDS: things thrown from an enemy riding downwind body to body (thrown-from-enemy): Black Storm's streak running
-            // on from one to the next; now the two nearest within 6 m are winded, Cursed and Unsteady at once. A boon that ends
-            // with the next dodge (until-dodge): Second Wind's next dodge free; now every dodge in the 3 s.
+            // on from one to the next; now the two nearest within 6 m are winded, Cursed and Unsteady at once. Second Wind's free
+            // dodge ends with the next dodge (UpgradeEffect.UntilDodge).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Breath Taken: Black Storm or Second Wind", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -63,64 +63,58 @@ namespace Clover.Player.Trees.Duo
                         {
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Stamina, Amount = 25f },
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Mana, Amount = 8f },
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Boon, Stat = PlayerStat.DodgeStamina, Amount = -1f, Seconds = 3f },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Boon, Stat = PlayerStat.DodgeStamina, Amount = -1f, Seconds = 3f, UntilDodge = true },
                         }),
                     },
                 },
             }, HeartPattern.Foot));
 
-            // NEEDS: the one dodged apart from everything near (attacker-of-turned-blow); now everything within 2.5 m of you is
-            // Cursed and made two deeper Unsteady, at most once a second.
+            // The one dodged alone (the perfect dodge's own enemy, UpgradeEffect.NeedsAttacker), not everything near.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = IllOmen, Name = "Ill Omen", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Moon,
                 Description = "A perfect dodge Curses the one dodged and leaves it two deeper in Unsteady.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, At = EffectAt.Self, Cooldown = 1f, Do = UpgradeAction.Afflict, Radius = 2.5f, Affliction = AfflictionKind.Cursed, Stacks = 1 },
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, At = EffectAt.Self, Cooldown = 1f, Do = UpgradeAction.Afflict, Radius = 2.5f, Affliction = AfflictionKind.Unsteady, Stacks = 2 },
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, NeedsAttacker = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Cursed, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, NeedsAttacker = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Unsteady, Stacks = 2 },
                 },
             }, HeartPattern.LeftLow));
 
-            // NEEDS: an answer to an enemy in a condition another mark set (condition-needs): the winded enemy; now Short of
-            // Breath keeps its own winding from each Breath Taken, and the half again is on every weapon blow in it, not only the
-            // heavy ones.
+            // The winded enemy read from the enemy, in whichever shape: the half again rides on a share that lasts only while it
+            // is winded (ConditionSpec.WhileIn) and asks only heavy blows (ConditionFlags.HeavyTakenShare); the clocks are cut by
+            // each heavy blow on a winded enemy (UpgradeEffect.InState).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = ShortOfBreath, Name = "Short of Breath", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Hourglass,
                 Description = "Your heavy blows on a winded enemy strike half again as hard, and each takes 1 s off every running spell cooldown.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = Reaction, Ranks = EnemyRank.Plain | EnemyRank.God, Do = UpgradeAction.Condition,
-                        State = new ConditionSpec { Id = Gasping, Seconds = 1.5f, Flags = ConditionFlags.WeaponTakenShare, Scale = 1.5f } },
-                    new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = Reaction, Ranks = EnemyRank.Elite, Do = UpgradeAction.Condition,
-                        State = new ConditionSpec { Id = Gasping, Seconds = 0.6f, Flags = ConditionFlags.WeaponTakenShare, Scale = 1.5f } },
-                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Gasping, By = StruckBy.Heavy, Cooldown = 0.3f, Do = UpgradeAction.CutCooldowns, Amount = 1f },
+                    new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = Reaction, Do = UpgradeAction.Condition,
+                        State = new ConditionSpec { Id = Gasping, Seconds = 2f, Flags = ConditionFlags.HeavyTakenShare, Scale = 1.5f, WhileIn = Reactions.Winded } },
+                    new UpgradeEffect { On = UpgradeTrigger.HeavyHit, InState = Reactions.Winded, Cooldown = 0.3f, Do = UpgradeAction.CutCooldowns, Amount = 1f },
                 },
             }, HeartPattern.RightLow));
 
-            // A winded enemy that dies lets its last breath out: everything within 4 m pushed 3 m and Cursed. It keeps its own
-            // winding from each Breath Taken, as long as the plain one's.
+            // A winded enemy that dies lets its last breath out: everything within 4 m pushed 3 m and Cursed. The winding is read
+            // from what it carried as it died, in whichever shape (UpgradeEffect.InState).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = TheLastBreath, Name = "The Last Breath", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { IllOmen, ShortOfBreath }, Icon = UpgradeIcons.Skull,
                 Description = "A winded enemy that dies lets its last breath out as a black gust: everything within 4 m is pushed 3 m and Cursed.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = Reaction, Ranks = EnemyRank.Plain | EnemyRank.God, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Last, Seconds = 1.5f } },
-                    new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = Reaction, Ranks = EnemyRank.Elite, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Last, Seconds = 0.6f } },
-                    new UpgradeEffect { On = UpgradeTrigger.ConditionDied, Condition = Last, Do = UpgradeAction.Push, Radius = 4f, Amount = 3f },
-                    new UpgradeEffect { On = UpgradeTrigger.ConditionDied, Condition = Last, Do = UpgradeAction.Afflict, Radius = 4f, Affliction = AfflictionKind.Cursed, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.Kill, InState = Reactions.Winded, Do = UpgradeAction.Push, Radius = 4f, Amount = 3f },
+                    new UpgradeEffect { On = UpgradeTrigger.Kill, InState = Reactions.Winded, Do = UpgradeAction.Afflict, Radius = 4f, Affliction = AfflictionKind.Cursed, Stacks = 1 },
                 },
             }, HeartPattern.Keystone));
 
             // The duo spell, bought with 5 Shards once both are carried (no god gives it): a counter on a 9 s cooldown
             // (SpellTimings). The parry form stands you in the gust for 1 s, cast in Dark (a Curse on what it answers); the
             // answer makes the attacker Unsteady, so its breath is taken, and the wind sets you down 2 m behind it. Your first
-            // weapon blow on it within a second is critical and cuts every running clock 4.5 s.
+            // weapon blow on it within a second is critical and gives back half its own wait.
             // NEEDS: the wind carrying you through the attacker untouchable, facing it (form-pieces; now a step to 2 m beyond
-            // it); half its own cooldown back rather than seconds off every clock (own-clock-share); the small push round you when
-            // nothing comes (missed-counter).
+            // it); the small push round you when nothing comes (missed-counter). Half its own wait back (KeepWaitShare).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = BlownThrough, Name = "Blown Through", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Role = SpellRole.Counter, Requires = new[] { IllOmen, ShortOfBreath }, Icon = UpgradeIcons.Wing,
@@ -133,7 +127,7 @@ namespace Clover.Player.Trees.Duo
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Cooldown = 0.5f, Do = UpgradeAction.Step, Reach = 4f, Amount = 2f },
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Condition,
                         State = new ConditionSpec { Id = Back, Seconds = 1f, Flags = ConditionFlags.TakesCritical, EndsWith = ConditionBlow.Weapon } },
-                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Back, By = StruckBy.Weapon, Do = UpgradeAction.CutCooldowns, Amount = 4.5f },
+                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Back, By = StruckBy.Weapon, Do = UpgradeAction.KeepWaitShare, Amount = 0.5f },
                 },
             }, HeartPattern.Spell));
 
@@ -161,9 +155,9 @@ namespace Clover.Player.Trees.Duo
             var effects = new List<UpgradeEffect>
             {
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Ranks = EnemyRank.Plain | EnemyRank.God, Do = UpgradeAction.Condition,
-                    State = new ConditionSpec { Id = id, Seconds = 1.5f, Flags = ConditionFlags.BeginsNoAttack | ConditionFlags.StaggerTakenShare, Scale = 1.3f } },
+                    State = new ConditionSpec { Id = id, Seconds = 1.5f, Flags = ConditionFlags.BeginsNoAttack | ConditionFlags.StaggerTakenShare, Scale = 1.3f, Is = Reactions.Winded } },
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Ranks = EnemyRank.Elite, Do = UpgradeAction.Condition,
-                    State = new ConditionSpec { Id = id, Seconds = 0.6f, Flags = ConditionFlags.BeginsNoAttack | ConditionFlags.StaggerTakenShare, Scale = 1.3f } },
+                    State = new ConditionSpec { Id = id, Seconds = 0.6f, Flags = ConditionFlags.BeginsNoAttack | ConditionFlags.StaggerTakenShare, Scale = 1.3f, Is = Reactions.Winded } },
             };
             effects.AddRange(more);
             return effects.ToArray();

@@ -42,6 +42,8 @@ namespace Clover.Player.Trees
         // Retired in Phase 4 (RetiredMarks): kept as names because hand-written code still asks for them, and finds none.
         public const string OpenFurnace = "fire.furnace";
         public const string ScorchedEarth = "fire.scorched";
+        /// <summary>Ash Fall's ash on those the landing caught: their balance does not recover for its five seconds.</summary>
+        public const string InTheAsh = "fire.meteor.ash";
 
         public static void Add(List<Upgrade> to)
         {
@@ -61,7 +63,7 @@ namespace Clover.Player.Trees
             SpellBranch.Add(to, E, FlameWave, "Flame Wave", SpellRole.Opener, BranchPattern.RightA, Cinder, "", null,
                 "Fire's own spell, given with the element. Fire runs out along the ground in a cone, 5.5 metres and 70 degrees, and three patches of it burn on for three seconds.",
                 UpgradeIcons.Wave,
-                // NEEDS: the patches burning 5 s. The base spell is cast by its kit, which takes only the Empower's wait.
+                // The patches burning 5 s. The Empower's numbers reach the kit's own cast too (PlayerUpgrades.BaseEmpower, read by PlayerElement).
                 new Empower { Cooldown = 5.5f, Seconds = 5f },
                 "Flame Wave waits 5.5 seconds, not 7, and its patches burn five seconds.",
                 new ShapeDef { Name = "Cinder Fan", Form = SpellForms.Wave,
@@ -139,10 +141,10 @@ namespace Clover.Player.Trees
                 new ShapeDef { Name = "The Kiln",
                     Description = "The stance as it was: up to 1.2 seconds, and the first blow turned is answered at once by a pillar of fire under the attacker, 30 damage, 50 stagger and three Burn. For single blows.",
                     Spell = new SpellSpec { Seconds = 1.2f, Reach = 4f, Arc = 90f, Damage = 30f, Stagger = 50f, Stacks = 3 } },
-                // NEEDS: walking at half speed in the stance.
+                // Walking at half the pace in the stance (SpellSpec.Walk, read by the parry form).
                 new ShapeDef { Name = "Firewalker",
                     Description = "You can walk at half speed in the stance, but it holds only 0.6 seconds before the door opens. Walk into the swing.",
-                    Change = new SpellChange { Seconds = 0.6f } },
+                    Change = new SpellChange { Seconds = 0.6f, Walk = 0.5f } },
                 "Opens two shapes of Kiln Stance, chosen at any rest fire: The Kiln, the pillar for single blows, or Firewalker, a stance you walk in.",
                 new[]
                 {
@@ -172,22 +174,21 @@ namespace Clover.Player.Trees
                 UpgradeIcons.Arrow,
                 new Empower { Cooldown = 6f, Seconds = 4f },
                 "Wildfire Rush waits 6 seconds, not 8, and its line burns four seconds.",
-                // NEEDS: the enemies carried along before you and thrown down at the end.
+                // Every enemy it meets is carried before you and thrown down at the end (SpellSpec.Carries: FormCarry in the drill).
                 new ShapeDef { Name = "Fire Front",
                     Description = "You go five metres as the front of a grass fire, a wall of flame four metres wide, slower. Every enemy it meets is carried before you, burning two deep, and thrown down at the end. The drive that pushes a crowd instead of passing through it.",
-                    Change = new SpellChange { Reach = 5f, Radius = 2f, Speed = 7f },
-                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = "fire.rush.down", Seconds = 0.6f, Flags = ConditionFlags.Down } } } },
+                    Change = new SpellChange { Reach = 5f, Radius = 2f, Speed = 7f, Carries = true } },
                 // NEEDS: the drive going back out of the fight, not on through it.
                 new ShapeDef { Name = "Smoke Road",
                     Description = "You go six metres back out of the fight in a roll of black smoke, and the line of fire is left between you and them. The escape.",
                     Change = new SpellChange { Reach = 6f, Damage = 4f } },
                 "Opens two shapes of Wildfire Rush, chosen at any rest fire: Fire Front, a wall that carries a crowd, or Smoke Road, the escape.",
-                // NEEDS: the shared movement rule's timing (started as a blow would land, blow-about-to-land), and
-                // Heat rising to five. Until then the cast gives what a perfect dodge gives.
+                // Started as a blow would land (UpgradeEffect.BlowLanding), it is a perfect dodge (UpgradeAction.PerfectDodgeNow) and Heat
+                // rises five levels, to five from nothing.
                 new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Mana, Amount = 12f },
-                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.CutCooldowns, Amount = 1.5f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, BlowLanding = 0.3f, Do = UpgradeAction.PerfectDodgeNow },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, BlowLanding = 0.3f, Do = UpgradeAction.RaiseHeat, Count = 5 },
                 },
                 "Started in the instant a blow would land on you, it counts as a perfect dodge, and your Heat goes to five.");
 
@@ -199,20 +200,23 @@ namespace Clover.Player.Trees
                 BranchPattern.RightFoot));
 
             SpellBranch.Add(to, E, Upgrade.MeteorLeap, "Meteor Leap", SpellRole.Breaker, BranchPattern.MiddleB, Upgrade.Heat, SpellForms.Leap,
-                new SpellSpec { Reach = 9f, Seconds = 0.62f, Height = 3.4f, Damage = 46f, Stagger = 55f, Radius = 3.2f, LingerDamage = 5f, Stacks = 0 },
+                new SpellSpec { Reach = 9f, Seconds = 0.62f, Height = 3.4f, Damage = 46f, Stagger = 55f, Radius = 3.2f, LingerDamage = 5f, Stacks = 0, Lasts = 4f },
                 "You leap out of the fight and come down on the enemy faced as a falling stone, leaving a burning crater. 45 mana.",
                 UpgradeIcons.Comet,
-                // NEEDS: the crater burning 6 s (the leap's form keeps its crater's time).
-                new Empower { Mana = 35f },
+                // The crater burns 6 s, not the Learn's 4 (SpellSpec.Lasts, read by the leap's form).
+                new Empower { Mana = 35f, Lasts = 6f },
                 "Meteor Leap costs 35 mana, not 45, and its crater burns longer.",
                 new ShapeDef { Name = "Falling Star", Form = SpellForms.Bomb,
                     Description = "You do not leap. A burning stone falls on the aim point after a breath, its shadow growing under it, and you go on fighting. It breaks balance harder.",
                     Spell = new SpellSpec { Delay = 0.8f, Reach = 9f, Radius = 3.2f, Damage = 46f, Stagger = 60f, Stacks = 1, Seconds = 4f, LingerDamage = 5f } },
-                // NEEDS: balance not recovering in the ash (an enemy condition flag).
+                // Those the landing catches in the ash keep their balance from recovering for its five seconds (ConditionFlags.
+                // BalanceHeld). NEEDS: an enemy that walks into the ash later held too (ground-states).
                 new ShapeDef { Name = "Ash Fall",
                     Description = "The landing throws hot ash over six metres. For five seconds enemies in the ash gain a Burn a second and their balance does not recover.",
                     // The landing's first strike lays the ash where you came down (once a landing).
-                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Hazard, At = EffectAt.Self, Shape = HazardShape.Patch, Radius = 3f, Seconds = 5f, Interval = 1f, Damage = 2f, Affliction = AfflictionKind.Burn, Stacks = 1, Cooldown = 1f } } },
+                    Effects = new[] {
+                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = InTheAsh, Seconds = 5f, Flags = ConditionFlags.BalanceHeld } },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Hazard, At = EffectAt.Self, Shape = HazardShape.Patch, Radius = 3f, Seconds = 5f, Interval = 1f, Damage = 2f, Affliction = AfflictionKind.Burn, Stacks = 1, Cooldown = 1f } } },
                 "Opens two shapes of Meteor Leap, chosen at any rest fire: Falling Star, a stone you call down, or Ash Fall, a landing that leaves hot ash.",
                 new[]
                 {

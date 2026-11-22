@@ -19,6 +19,8 @@ namespace Clover.Player.Trees.Duo
         public const string OpenTheGourd = "capsize.gourd";
         /// <summary>The condition Breakers sets: down as the plain Capsize, with the spray thrown behind it.</summary>
         public const string Breakers = "capsize.breakers";
+        /// <summary>Swamped's share of stagger, kept while the enemy is capsized.</summary>
+        public const string Swamp = "capsize.swamp";
         private const string Reaction = "react.capsize";
 
         public static void Add(List<Upgrade> to)
@@ -43,7 +45,7 @@ namespace Clover.Player.Trees.Duo
                         Description = "It goes down as before, and as it falls it throws a sheet of spray 4 m behind it: whatever stands there is Soaked and made 2 deeper Unsteady, and one already Unsteady capsizes in turn, so a line goes over like dominoes.",
                         Effects = new[]
                         {
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Ranks = EnemyRank.Plain, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Breakers, Seconds = 1.2f, Flags = ConditionFlags.Down } },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Ranks = EnemyRank.Plain, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Breakers, Seconds = 1.2f, Flags = ConditionFlags.Down, Is = Reactions.Capsized } },
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Ranks = EnemyRank.Elite, Do = UpgradeAction.Burst, Radius = 0.5f, Stagger = 25f },
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Ranks = EnemyRank.God, Do = UpgradeAction.Burst, Radius = 0.5f, Stagger = 15f },
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Burst, Shape = HazardShape.Downwind, Count = 2, Reach = 2.5f, Amount = 1.6f, Radius = 1.2f,
@@ -74,13 +76,14 @@ namespace Clover.Player.Trees.Duo
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = Reaction, Do = UpgradeAction.Pull, Shape = HazardShape.Downwind, Amount = 2f } },
             }, HeartPattern.RightLow));
 
-            // NEEDS: a stagger share on blows against an enemy in a condition (twice as fast while it is down); now each blow
-            // on a soaked, unsteady enemy adds 10 stagger.
+            // Twice the stagger on an enemy while Capsize keeps it down, in whichever shape (a share that lasts only while it
+            // is capsized: ConditionSpec.WhileIn).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Swamped, Name = "Swamped", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { Wake, RolledIn }, Icon = UpgradeIcons.Rock,
                 Description = "Blows on a capsized enemy fill its stagger meter twice as fast.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.AnyHit, Needs = AfflictionKind.Soaked, Needs2 = AfflictionKind.Unsteady, Do = UpgradeAction.Burst, Radius = 0.5f, Stagger = 10f, Cooldown = 0.2f } },
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = Reaction, Do = UpgradeAction.Condition,
+                    State = new ConditionSpec { Id = Swamp, Seconds = 2f, Flags = ConditionFlags.StaggerTakenShare, Scale = 2f, WhileIn = Reactions.Capsized } } },
             }, HeartPattern.Keystone));
 
             // The duo spell, bought with Shards once both are carried (no god gives it): a movement on a 9 s cooldown (SpellTimings). The drill form carries the player along a

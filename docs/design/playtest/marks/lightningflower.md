@@ -29,40 +29,36 @@ while Lightning and Life are both carried.
 **Example.** Land a heavy blow on each soldier in turn, and each one flowers.
 
 ## lightningflower.favouredoak
-**What it does.** A perfect guard against a Seeded enemy hangs a scorched oak leaf on your blade. Your next heavy blow sets off the enemy's Static at twice the strength.
+**What it does.** A perfect guard against a Seeded enemy hangs a scorched oak leaf on your blade. Your next heavy blow sets off Static at twice the strength, on any enemy.
 
 **When it happens.** Each perfect guard against a Seeded enemy, while you carry both Lightning and Life. Then your next heavy blow on that enemy within 8 seconds.
 
-**The numbers.** Mix, 3 Shards. The heavy blow uses up all the enemy's Static in a burst within 4 metres, dealing 14 damage and 10 stagger per stack: twice a normal burst. At most once a second.
+**The numbers.** Mix, 3 Shards. The leaf stays on your blade for 8 seconds, one at a time. When your next heavy blow sets off an enemy's Static, the burst hits a second time at the same strength, within 4 metres, with 10 more stagger: twice a normal burst. The leaf is then used up.
 
 **Works with.** Storm Season (every heavy blow Seeds and charges), Lightning Flower.
 
 **Example.** Block a seeded brute's swing perfectly, then hit it with a heavy blow for a double-strength burst.
-
-**Not built yet.** The leaf stays on the enemy you guarded instead of on your blade, so only a heavy blow on that enemy sets off the double burst.
 
 ## lightningflower.rain
 **What it does.** Each Lightning Flower heals you 3 for every bolt thrown into it, and every thing you grew that throws one stays 3 seconds longer.
 
 **When it happens.** Every time Lightning Flower goes off, while you carry both Lightning and Life.
 
-**The numbers.** Mix, keystone, 5 Shards. 3 health for each Lightning Flower.
+**The numbers.** Mix, keystone, 5 Shards. 3 health for each bolt something you grew throws into a Lightning Flower, and that grown thing stays 3 seconds longer.
 
 **Works with.** Lightning Flower and its shapes, Storm Season, Sowing Thunder.
 
 **Example.** Fight a seeded pack among your briars, and every flower heals you.
-
-**Not built yet.** The things you grow don't throw bolts into the flower yet, so it only heals 3 for the fern's own bolt, and nothing stays longer.
 
 ## lightningflower.sowing
 **What it does.** You throw seven seeds in a fan 6 metres ahead, like a farmer planting a field. Each one that hits an enemy Seeds it. For 6 seconds, your heavy blow on a seeded enemy calls lightning down onto its seed, dealing 12 damage and 20 stagger around it.
 
 **When it happens.** Cast it from a spell slot while you carry both Lightning and Life. Press that slot's button (hold L2 and a face button, or press 1 to 4). The first time it lands, it charges your blade with Lightning.
 
-**The numbers.** Mix, duo spell, detonator, 5 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. It is a cone 6 metres long and 70 degrees wide. Each enemy in it takes 4 damage, 6 stagger, a Static and a Seed, so each one flowers. For 6 seconds, your first heavy blow on each one calls down a bolt, for 12 damage, 20 stagger and a Static within 1.5 metres.
+**The numbers.** Mix, duo spell, detonator, 5 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. It is a cone 6 metres long and 70 degrees wide. Each enemy in it takes 4 damage, 6 stagger, a Static and a Seed, so each one flowers. For 6 seconds, your first heavy blow on each one calls down a bolt, for 12 damage, 20 stagger and a Static within 1.5 metres. If that heavy blow is a finisher, a second bolt falls right after the first.
 
 **Works with.** Lightning Flower (every enemy it hits gets both afflictions), Rain on the Field, Storm Season.
 
 **Example.** Sow seeds across a line of soldiers, then go down the line with heavy blows.
 
-**Not built yet.** Seeds that miss don't stay in the floor yet. One heavy blow or burst of Static doesn't yet call lightning onto every seed at once. A finisher doesn't make each bolt hit twice yet.
+**Not built yet.** Seeds that miss don't stay in the floor yet. One heavy blow or burst of Static doesn't yet call lightning onto every seed at once.

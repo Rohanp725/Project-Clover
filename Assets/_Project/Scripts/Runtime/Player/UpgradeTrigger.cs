@@ -91,5 +91,27 @@ namespace Clover.Player
         ConditionAttacked,
         /// <summary>A ripe seed burst (In Its Season): set off, its bearer dead, or a reaction on it. Target: that enemy; carries the seeds it held.</summary>
         RipeBurst,
+        /// <summary>
+        /// A reaction struck an enemy: the enemy it went off on, and each its own blows reached, each once for each time it
+        /// went off (the ledger's reaction-struck). An effect's <see cref="UpgradeEffect.Reaction"/> or
+        /// <see cref="UpgradeEffect.ReactionWith"/> picks which reactions. Target: that enemy.
+        /// </summary>
+        ReactionStruck,
+        /// <summary>
+        /// An affliction was laid on an enemy (the ledger's laying-answer); an effect's <see cref="UpgradeEffect.Spent"/> names
+        /// which kind it answers. Target: that enemy; carries the stacks laid. What the answer itself lays is not answered again.
+        /// </summary>
+        AfflictionLaid,
+        /// <summary>A dance whose every cut was struck in time has ended its cuts (Sky Dance's five rings all met). Target: none; asked of the spell's own branch.</summary>
+        DanceInTime,
+        /// <summary>A grown thing of the player's burst where it stood (a call, a withering: the ledger's grown-bursts). Target: none; the point is where it stood.</summary>
+        GrownBurst,
+        /// <summary>A grown thing of the player's threw a bolt into an enemy (Lightning Flower). Target: none; the point is where the grown thing stands.</summary>
+        GrownBolt,
+        /// <summary>
+        /// A spell begun and held is loosed: a gathered one (SpellSpec.Rings) by its second press or its time, an ebb's flood
+        /// (SpellSpec.Ebb) by its second press. Target: none; asked of the spell's own branch, its blows not yet landed.
+        /// </summary>
+        SpellLoosed,
     }
 }

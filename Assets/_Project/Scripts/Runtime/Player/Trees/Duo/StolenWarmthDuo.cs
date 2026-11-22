@@ -26,9 +26,8 @@ namespace Clover.Player.Trees.Duo
         {
             const string A = Elements.Dark, B = Elements.Ice;
 
-            // NEEDS: freeze-moment (Cold Shade's shade left when it is shattered; now when it dies with its warmth stolen) and
-            // standing-things (the shade struck by a heavy blow to shatter it a second time, 30 and two Chill in 3 m; now a
-            // patch that chills for 4 s).
+            // Cold Shade's shade is left when it is shattered (StruckBy.Shatter). NEEDS: standing-things (the shade struck by a
+            // heavy blow to shatter it a second time, 30 and two Chill in 3 m; now a patch that chills for 4 s).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Stolen Warmth: Cold Shade or The Long Night", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -42,11 +41,11 @@ namespace Clover.Player.Trees.Duo
                         Effects = new[]
                         {
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition,
-                                State = new ConditionSpec { Id = Shade, Seconds = 30f, While = AfflictionKind.Cursed, While2 = AfflictionKind.Chill, Keeps = AfflictionKind.Chill } },
+                                State = new ConditionSpec { Id = Shade, Seconds = 30f, While = AfflictionKind.Cursed, While2 = AfflictionKind.Chill, Keeps = AfflictionKind.Chill, Is = Reactions.Draw } },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Shade, By = StruckBy.Weapon, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 1 },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Shade, By = StruckBy.Weapon, Ranks = EnemyRank.Plain | EnemyRank.Elite, Cooldown = 0.25f, Do = UpgradeAction.Heal, Amount = 2f },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Shade, By = StruckBy.Weapon, Ranks = EnemyRank.God, Cooldown = 0.25f, Do = UpgradeAction.Heal, Amount = 1f },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionDied, Condition = Shade, Do = UpgradeAction.Hazard, Radius = 2.5f, Seconds = 4f, Interval = 1f, Affliction = AfflictionKind.Chill, Stacks = 1 },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Shade, By = StruckBy.Shatter, Do = UpgradeAction.Hazard, Radius = 2.5f, Seconds = 4f, Interval = 1f, Affliction = AfflictionKind.Chill, Stacks = 1 },
                         },
                     },
                     new ShapeDef
@@ -56,7 +55,7 @@ namespace Clover.Player.Trees.Duo
                         Effects = new[]
                         {
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition,
-                                State = new ConditionSpec { Id = LongNight, Seconds = 30f, Beat = 1f, While = AfflictionKind.Cursed, While2 = AfflictionKind.Chill, Keeps = AfflictionKind.Chill } },
+                                State = new ConditionSpec { Id = LongNight, Seconds = 30f, Beat = 1f, While = AfflictionKind.Cursed, While2 = AfflictionKind.Chill, Keeps = AfflictionKind.Chill, Is = Reactions.Draw } },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = LongNight, By = StruckBy.Weapon, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 1 },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = LongNight, Needs = AfflictionKind.Chill, NeedsFull = true, Do = UpgradeAction.Afflict, Radius = 3f,
                                 Affliction = AfflictionKind.Chill, Stacks = 1 },
@@ -65,16 +64,16 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.Foot));
 
-            // NEEDS: a kill answered by the condition it died in (condition-needs: warmth stolen); now any Cursed, chilled enemy
-            // that dies, at most every half second. Laid by the mark, the Curse and the Chill may start Stolen Warmth on each.
+            // A kill of an enemy whose warmth was stolen, in whichever shape (UpgradeEffect.InState, read from what it carried as
+            // it died). Laid by the mark, the Curse and the Chill may start Stolen Warmth on each.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = HelsHalf, Name = "Hel's Half", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Skull,
                 Description = "Killing an enemy whose warmth is stolen Curses every enemy within 4 m and gives each two Chill.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Cursed, Needs2 = AfflictionKind.Chill, Do = UpgradeAction.Afflict, Radius = 4f, Affliction = AfflictionKind.Cursed, Stacks = 1, Cooldown = 0.5f },
-                    new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Cursed, Needs2 = AfflictionKind.Chill, Do = UpgradeAction.Afflict, Radius = 4f, Affliction = AfflictionKind.Chill, Stacks = 2, Cooldown = 0.5f },
+                    new UpgradeEffect { On = UpgradeTrigger.Kill, InState = Reactions.Draw, Do = UpgradeAction.Afflict, Radius = 4f, Affliction = AfflictionKind.Cursed, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.Kill, InState = Reactions.Draw, Do = UpgradeAction.Afflict, Radius = 4f, Affliction = AfflictionKind.Chill, Stacks = 2 },
                 },
             }, HeartPattern.LeftLow));
 

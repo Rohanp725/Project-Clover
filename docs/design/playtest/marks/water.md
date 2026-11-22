@@ -35,11 +35,9 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). It closes on the nearest enemy in reach.
 
-**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 11 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 9 seconds and the damage 22.) It targets an enemy within 7 metres. The bubble collapses 0.4 seconds after you cast it, within 1 metre, dealing 18 damage and 40 stagger. On a Soaked enemy, its Soaked is used up, and the crack spreads to up to six other Soaked enemies, each within 5 metres of the last, dealing 18 damage and 30 stagger to each.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 11 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 9 seconds and the damage 22.) It targets an enemy within 7 metres. The bubble collapses 0.4 seconds after you cast it, within 1 metre, dealing 18 damage and 40 stagger. On a Soaked enemy, its Soaked is used up, and every other Soaked enemy within 5 metres cracks where it stands: 18 damage and 30 stagger, and its own Soaked is used up too.
 
 **Works with.** Soaked, Riptide and Whirlpool to soak a crowd first, Ebb and Flood, which it comes after on the chart, Spreading Water.
-
-**Not built yet.** Each of the other enemies should crack where it stands and have its own Soaked used up. For now, the crack spreads to them as an arc of water, and they keep their Soaked.
 
 **Example.** Pull three soldiers to your feet with Riptide, Soaked, and snap the bubble on the middle one. All three take the crack.
 
@@ -61,11 +59,11 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** For now, a heavy blow (a finisher counts) on the enemy within 0.3 seconds after the bubble cracks on it. Deep Crack must be in a spell slot.
 
-**The numbers.** 3 Shards. The crack spreads to up to twelve Soaked enemies, each within 20 metres of the last, dealing 18 damage and 30 stagger to each.
+**The numbers.** 3 Shards. Every Soaked enemy within 20 metres cracks where it stands, taking 18 damage and 30 stagger.
 
 **Works with.** Soaked, and every mark that soaks a crowd; Heavy Water; Spreading Water.
 
-**Not built yet.** The snap should be timed to your heavy blow landing, not to the crack. Each enemy should crack where it stands.
+**Not built yet.** The snap should be timed to your heavy blow landing, not to the crack.
 
 **Example.** Soak the room with Riptide and Whirlpool. Then cast it on the brute in front of you, and bring the heavy blow down as it cracks. Every soaked enemy in the room cracks with it.
 
@@ -113,11 +111,9 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Whenever Soaked reacts on an enemy with another affliction it has (Steam with Burn, The Ground Gives with Tremor, and the rest).
 
-**The numbers.** 3 Shards. For now, an arc of water runs from where the reaction happened to up to four other Soaked enemies, each within 4 metres of the last, dealing 10 damage and 15 stagger to each.
+**The numbers.** 3 Shards. The reaction hits again on every other Soaked enemy within 4 metres of where it happened, at half strength: every blow it deals comes again there for half the damage. What it adds or uses up isn't done again.
 
 **Works with.** Carrying a second element: every one of Water's ten reactions; Soaked, to soak a crowd; Ebb and Flood, which it comes after on the chart; The Sea Comes In above it.
-
-**Not built yet.** The reaction itself should spread at half strength. For now, it is a plain arc of water.
 
 **Example.** Water and Fire on a group of soaked soldiers. Steam goes off on one, and the water carries it on to the rest.
 
@@ -150,39 +146,35 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4).
 
-**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 8 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 6 seconds and the wave 10 metres long.) For now, one press is just the incoming wave: you rush 8 metres ahead at 20 metres a second, and nothing can touch you on the way. Everything on the line, 2 metres wide, takes 10 damage, 10 stagger and Soaked, and is carried 2 metres ahead of you.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 8 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 6 seconds and the wave run 5 metres past where you started.) The first press pulls you 5 metres straight back, away from the enemy you face, and nothing can touch you for 0.3 seconds. Press again within 3 seconds: you rush back along the line at 20 metres a second to 3 metres past where you started, and nothing can touch you on the way. Everything on the line, 2 metres wide, takes 10 damage, 10 stagger and Soaked, and is carried 2 metres ahead of you. If you don't press again, you only get the pull back.
 
 **Works with.** Undertow, which it comes after on the chart; Riptide, to pull enemies in before the wave; Deep Crack on the line it soaks; Heavy Water.
 
-**Not built yet.** The tide going out (pulling you 5 metres straight back in 0.3 seconds, untouchable, leaving wet sand behind) and the incoming wave as the second press back along that line. For now, one press is the wave, rushing ahead.
+**Not built yet.** The line of wet sand is only a look for now. It doesn't do anything to what stands on it yet.
 
-**Example.** A pack closes in on you. Rush through it as a wave and out the far side. Every one of them is Soaked and stumbling.
+**Example.** A pack closes in on you. Pull back out of reach, wait for them to bunch up, then press again and rush through them as a wave. Every one of them is Soaked and stumbling.
 
 ## water.tide.shape
 **What it does.** Unlocks two shapes for The Tide Turns. You pick one at any rest fire. **King Tide**: the wave comes in four metres wide and knocks down what it carries for a moment, but it stops where you started. It's the shape for a crowd. **Out to Sea**: there's no incoming wave. The outgoing tide takes the enemy you face along with you, pulling it 5 metres, Soaked, and dropping it at your feet, away from its friends. It's a pull, not a return.
 
 **When it happens.** Whenever you cast The Tide Turns, using the shape you picked. If you have not bought this, you cast the plain tide.
 
-**The numbers.** 3 Shards. King Tide: the wave is 4 metres wide and 5 metres long. Whatever it hits is knocked down for 0.6 seconds (half as long for elites; gods not at all). Out to Sea: the enemy you face is pulled 5 metres toward you and Soaked.
+**The numbers.** 3 Shards. King Tide: the wave is 4 metres wide and stops where you started. Whatever it hits is knocked down for 0.6 seconds (half as long for elites; gods not at all). Out to Sea: you are pulled 5 metres back, and the enemy you face is pulled after you to your feet and Soaked. It has no second press.
 
 **Works with.** Deep Crack and Heavy Water on the crowd King Tide knocks down; Blowhole and your blade on the one Out to Sea brings to you.
-
-**Not built yet.** King Tide should keep its own 5 metres when you buy the Empower (for now, the Empower's 10 metres wins). Out to Sea should pull you back along with the enemy.
 
 **Example.** An archer stands behind three shields. Out to Sea brings it to your feet, alone.
 
 ## water.tide.master
 **What it does.** If you start The Tide Turns right as a blow would land on you, it counts as a perfect dodge. A wave started right as a blow would land doesn't start a wait.
 
-**When it happens.** For now, every time you cast The Tide Turns, and when you cast it within a second after a perfect dodge. The Tide Turns must be in a spell slot.
+**When it happens.** When you start The Tide Turns right as a blow would land, and when you press again for the wave right as a blow would land. The Tide Turns must be in a spell slot.
 
-**The numbers.** 3 Shards. You get what a perfect dodge gives: 12 mana, and 1.5 seconds off the wait on every spell that is waiting. If you cast it within 1 second after a perfect dodge, while the spell is ready, it doesn't start a wait.
+**The numbers.** 3 Shards. Each only counts in the last 0.3 seconds before an enemy's blow (one within 6 metres) lands on you. Started then, it is a perfect dodge: you get 12 mana, the game slows for a moment, the blow misses, and every mark that answers a perfect dodge answers this one. The wave pressed then ends the wait the first press started.
 
 **Works with.** The dodge; Ebb and Flood; every spell whose wait this shortens.
 
-**Not built yet.** The timing (starting it right as a blow would land), and the wave's own press. For now, every cast gives the dodge's mana and time off, and a perfect dodge makes your next cast skip its wait.
-
-**Example.** Dodge a brute's swing perfectly, and rush through it right away. The spell is ready again before the brute turns around.
+**Example.** Pull back from a brute's swing just as it lands, then rush back through it as its next blow comes. The spell is ready again before the brute turns around.
 
 ## water.heavy
 **What it does.** Hitting a Soaked enemy makes your weapon break balance faster for a few seconds.
@@ -202,11 +194,11 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). If you aren't facing an enemy, it opens 6 metres in front of you.
 
-**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 8 seconds, and makes it last 7 seconds.) It opens on the enemy you face within 6 metres. The whirlpool has a 4-metre radius and lasts 5 seconds. It bites every half second for 3 damage, with no stagger, and adds Soaked with each bite. Each bite makes its enemy take 30% more stagger for 0.7 seconds, so while it stands in the water, every blow breaks its balance harder.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 8 seconds, and makes it last 7 seconds.) It opens on the enemy you face within 6 metres. The whirlpool has a 4-metre radius and lasts 5 seconds. It bites every half second for 3 damage, with no stagger, and adds Soaked with each bite. Each bite makes its enemy take 30% more stagger for 0.7 seconds, and its balance doesn't recover for that time, so while it stands in the water, every blow breaks its balance harder and none of it comes back.
 
 **Works with.** Soaked, Heavy Water, which it comes after on the chart, Undertow, Deep Crack, a second element's Static or Chill, and Steam if you carry Fire.
 
-**Not built yet.** Enemies should be pulled to the middle at 1.2 metres a second, and their balance shouldn't recover inside it.
+**Not built yet.** Enemies should be pulled to the middle at 1.2 metres a second.
 
 **Example.** Open it under a pack. For five seconds, every one of them stays Soaked and breaks a third faster under your blade.
 
@@ -228,11 +220,9 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** For now, the first enemy it bites on each cast. Whirlpool must be in a spell slot.
 
-**The numbers.** 3 Shards. The first enemy bitten flinches and loses whatever it had started, once every 5 seconds.
+**The numbers.** 3 Shards. An enemy it bites in the first 0.3 seconds of its attack warning flinches and loses the attack, and Whirlpool's own wait is cut in half.
 
 **Works with.** Blowhole and Ebb and Flood, for the moment an attack starts; Heavy Water.
-
-**Not built yet.** The timing (right as its attack warning shows) and the wait cut in half. For now, its first bite breaks whatever its enemy had started.
 
 **Example.** A brute raises its club. Open the whirlpool under it, and the swing never comes.
 
@@ -254,11 +244,9 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). While you carry Water, you can always put it in a slot.
 
-**The numbers.** Comes with Water. It costs no mana. After you cast it, you must wait 6 seconds to cast it again. Fighting with your weapon makes the wait shorter. Its Empower makes the wait 4.5 seconds. The wave rises 5 metres in front of you and is 90 degrees wide. It deals 8 damage, 18 stagger and Soaked, and whatever it hits is carried to your feet.
+**The numbers.** Comes with Water. It costs no mana. After you cast it, you must wait 6 seconds to cast it again. Fighting with your weapon makes the wait shorter. Its Empower makes the wait 4.5 seconds and the wave rise 6.5 metres away. The wave rises 5 metres in front of you and is 90 degrees wide. It deals 8 damage, 18 stagger and Soaked, and whatever it hits is carried to your feet.
 
 **Works with.** Its Empower, its two shapes and its Master mark; Soaked; Deep Crack and Heavy Water on what it brings; and the charged blade, which it charges with Water when it lands.
-
-**Not built yet.** The Empower's wave rising 6.5 metres away. For now, the spell only gets the Empower's shorter wait.
 
 **Example.** Three archers stand far away. Riptide brings all three to your feet, Soaked, for one wide swing.
 
@@ -278,15 +266,13 @@ design yet, its **Not built yet** line says what is missing.
 ## water.base.master
 **What it does.** Press again within a second of the wave reaching you, and it goes back out the way it came, carrying what it brought past you and on another four metres, with their backs turned. It's the tide going back out, in your hand.
 
-**When it happens.** For now, on everything the wave hits. Riptide must be in a spell slot.
+**When it happens.** When you press Riptide's button again within a second of the wave breaking at your feet. Riptide must be in a spell slot.
 
-**The numbers.** 3 Shards. For now, whatever the wave hits stands with its back to you for 1.2 seconds. It can't start anything, and your first weapon blow on it is a critical hit and ends the effect.
+**The numbers.** 3 Shards. Every enemy the wave brought in is carried on past you, to 4 metres behind you. Each stands with its back to you for 1.2 seconds. It can't start anything, and your first weapon blow on it is a critical hit and ends the effect. The second press doesn't start Riptide's wait again.
 
 **Works with.** The charged blade; Heavy Water; every mark that works on a critical hit.
 
-**Not built yet.** The second press, sending the wave back out with what it brought. For now, what it brings is left turned away.
-
-**Example.** Pull in two soldiers with Riptide and cut the nearer one right away. The first blow lands on its back as a critical hit.
+**Example.** Pull in two soldiers with Riptide and press again: they wash past you and land behind you, turned away. Spin round, and your first blow is a critical hit.
 
 ## water.drowned
 **What it does.** When a Soaked enemy dies, its water runs across the floor to you as a line of foam and refills part of an empty flask. Soak, then kill.
@@ -319,11 +305,11 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Whenever you cast Poured Blade, using the shape you picked. If you have not bought this, you cast the copy at your side.
 
-**The numbers.** 3 Shards. Poured on the Edge: for 12 seconds, you get a tenth of your weapon damage back as health. While you have this shape picked, the last blow of every chain throws a wave 5 metres long and 60 degrees wide, dealing 10 damage, 15 stagger and Soaked. Brother at Your Back: the copy works like the plain one.
+**The numbers.** 3 Shards. Poured on the Edge: it costs one flask and no mana. For 12 seconds, your weapon reaches 40% farther, every blow heals you 2 and Soaks the enemy, and the last blow of every chain throws a wave 5 metres long and 60 degrees wide, dealing 10 damage, 15 stagger and Soaked. Brother at Your Back: the copy works like the plain one.
 
 **Works with.** Heavy Water and every mark that works on the end of a chain (Poured on the Edge); Undertow and Blowhole's Blown Out shape when you're surrounded (Brother at Your Back).
 
-**Not built yet.** Poured on the Edge should cost a flask instead of mana, make your weapon reach 40% farther, and only throw its wave during its 12 seconds. Brother at Your Back's copy should stand behind you, facing the other way.
+**Not built yet.** Brother at Your Back's copy should stand behind you, facing the other way.
 
 **Example.** Four soldiers surround you. Use Brother at Your Back, and whatever comes at your back gets cut as you cut what's in front.
 

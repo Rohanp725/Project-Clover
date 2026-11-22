@@ -69,10 +69,44 @@ namespace Clover.Player
         /// (Mirror to Mirror: on from each struck that carries Sundered).
         /// </summary>
         public AfflictionKind LeapsOnFrom = AfflictionKind.None;
+        /// <summary>
+        /// Not empty: the target (or the dead one, for a kill) must be in this enemy condition, whichever mark set it,
+        /// known by its name or by what it is (<see cref="ConditionSpec.Is"/>): Hot Stone, Cold Water asks for a Cracked
+        /// enemy, Hel's Half for one whose warmth is stolen. A blow that spent the condition still finds it.
+        /// </summary>
+        public string InState = "";
+        /// <summary>For ForceReaction: one of the pair on the target is enough; the reaction itself goes off, spending nothing (the ledger's forced-alone).</summary>
+        public bool Alone;
+        /// <summary>For the Reacted and ReactionStruck triggers: only a reaction with this affliction in its pair ("every reaction with Chill in it"). None: any.</summary>
+        public AfflictionKind ReactionWith = AfflictionKind.None;
+        /// <summary>
+        /// For a Lane: not None, it runs from the target to the nearest other enemy within Reach carrying this (or
+        /// <see cref="AimAt2"/>), striking all on the line, and stops there (Laid Flat's bolt along the ground to the next
+        /// Marked or charged enemy); with none such it strikes the target alone.
+        /// </summary>
+        /// <summary>
+        /// Above zero: the effect is done once on each enemy within this many metres of the target that carries
+        /// <see cref="OnlyCarrying"/> (any, when None), as that enemy's own, <see cref="Count"/> of them at most (0: all;
+        /// the nearest first). With <see cref="EachOther"/> the target itself is left out. Thundersnow's bolt on every
+        /// chilled enemy near; Deep Crack's crack where each Soaked enemy stands (the ledger's area-set-off, spend-soaked).
+        /// </summary>
+        public float EachWithin;
+        public bool EachOther;
+        public AfflictionKind AimAt = AfflictionKind.None;
+        public AfflictionKind AimAt2 = AfflictionKind.None;
+        /// <summary>
+        /// For ConditionStruck: only a blow from this side, in degrees from the enemy's face (0) to its back (180), between
+        /// <see cref="SideLeast"/> and <see cref="SideMost"/> (the ledger's side-of-blow: Rime's crust breaks only from the
+        /// side that faced you, Mock Suns' blows only from a flank). Both zero: any side. A blow whose side is not known is answered.
+        /// </summary>
+        public float SideLeast;
+        public float SideMost;
         /// <summary>The stacks it lays are as many as the trigger carried: what the dead enemy bore of <see cref="Needs"/>, or what a set-off spent.</summary>
         public bool CarriesDepth;
         /// <summary>Only while this state of the player holds.</summary>
         public StatWhen While = StatWhen.Always;
+        /// <summary>And while this one holds too (Stone Rise's Master: still for a second as well as rooted).</summary>
+        public StatWhen While2 = StatWhen.Always;
         /// <summary>For the SetOff trigger: only when this was the affliction spent. None: any.</summary>
         public AfflictionKind Spent = AfflictionKind.None;
         /// <summary>For the SetOff trigger: only when at least this many stacks were spent.</summary>
@@ -88,6 +122,8 @@ namespace Clover.Player
         public float OnBeat;
         /// <summary>For Boon: it ends with the next swing of the weapon that lands, if that comes before its time is up.</summary>
         public bool UntilBlow;
+        /// <summary>For Boon: it ends with the player's next dodge, if that comes before its time is up (Second Wind's next dodge free; the ledger's until-dodge).</summary>
+        public bool UntilDodge;
         /// <summary>It happens only if its mark's count holds this many, and spends them.</summary>
         public int Spends;
         /// <summary>It happens only if its mark's count holds any, spends them all, and carries how many were spent (for <see cref="PerStack"/>).</summary>
@@ -169,6 +205,110 @@ namespace Clover.Player
         public AfflictionKind LeapsTo = AfflictionKind.None;
         /// <summary>For an Arc: it starts from the target without striking it and leaps to whoever is nearest, carrying anything (Glint's ray).</summary>
         public bool FromTarget;
+
+        // Depth moved between enemies (the ledger's depth-moved).
+        /// <summary>For CoatBlade: each blow raises what it strikes to the depth loaded, rather than laying that many more.</summary>
+        public bool SetsDepth;
+        /// <summary>For CoatBlade: only light blows take the coat (Dust on the Blade's three light blows).</summary>
+        public bool LightOnly;
+        /// <summary>
+        /// For SetOff: the burst carries on the doses of the one before it in the same cast, and what it burst with is carried
+        /// to the next (One by One: each passing its doses to the next before it goes, the last the largest; All Into One:
+        /// the doses gathered first). It bursts on carried doses alone when it has none of its own.
+        /// </summary>
+        public bool PassesOn;
+        /// <summary>For Pass: the doses go to the enemy the condition is joined to (Rot Roots' host), as deep as it can take, not to the nearest.</summary>
+        public bool ToLink;
+        /// <summary>
+        /// Done to the enemy chained to the trigger's (its chain-mate: <see cref="Clover.Gameplay.EnemyChains"/>), with the
+        /// trigger's enemy's place kept as the point (Dead Weight drags the mate there); nothing when it is chained to no one.
+        /// </summary>
+        public bool ToChainMate;
+        /// <summary>
+        /// Done to the enemy whose blow last landed on you (Grasp's Master), or whose blow you last turned or dodged (Glare's
+        /// Master), within the effect's CastWindow (1 s when none is named); nothing when there is none that recent.
+        /// </summary>
+        public bool ToStruckBy;
+        /// <summary>
+        /// In force only while a cast of its own branch still stands (the tree, the blades), and, with <see cref="WithinOwn"/>
+        /// above zero, only while you stand that near where it was cast (the ledger's while-spell-stands).
+        /// </summary>
+        public bool WhileOwnStands;
+        public float WithinOwn;
+        public bool ToTurnedBy;
+        /// <summary>For Tend: what the tended grown thing lays with every bite from then on (The Host: a dose of poison).</summary>
+        public AfflictionKind BitesLay = AfflictionKind.None;
+        /// <summary>
+        /// For Pass: what is pushed past the taker's depth bursts it at once (its own set-off) and passes on to the next, a
+        /// few times at most (Eaten in Turn). Without it, what does not fit is lost.
+        /// </summary>
+        public bool Overflow;
+        /// <summary>For Pass: not empty, the nearest other enemy in this condition (by its name or what it is) takes the doses before any other (the next on Eaten in Turn's line).</summary>
+        public string ToState = "";
+        /// <summary>For an Arc from the target: each enemy the arc reaches is drawn this many metres toward the target, and no one else (Drawn Iron; the ledger's afflicted-only).</summary>
+        public float DrawsIn;
+        /// <summary>
+        /// For a Condition: the condition keeps what the trigger carried (a reaction's blow's damage) as its number. For a
+        /// condition's answer: its damage is that kept number, by Share (1: all of it) (Collected Twice repeats the reaction's damage).
+        /// </summary>
+        public bool ByPower;
+        /// <summary>For BoostReaction: the reaction spends nothing when it fires (its own Spend effects are not done).</summary>
+        public bool SparesSpend;
+        /// <summary>The target must be frozen (Fire Under the Ice: a burning Frozen enemy shatters on any blow).</summary>
+        public bool NeedsFrozen;
+        /// <summary>Only just after a red attack was turned, by a perfect guard or a counter (the ledger's red-attack).</summary>
+        public bool RedOnly;
+        /// <summary>
+        /// Above zero: the target must be showing an attack (its wind-up), begun no more than this many seconds before (the
+        /// ledger's enemy-begins-attack; 99: anywhere in its wind-up; 0.3: in the instant its attack mark shows).
+        /// </summary>
+        public float NeedsWindup;
+        /// <summary>Above zero: only when an enemy's blow is about to land on the player within this many seconds (the shared movement rule's timing: 0.3).</summary>
+        public float BlowLanding;
+        /// <summary>For a spell's moments: only when the cast was timed to the poison's beat, within 0.2 s of a bite on any enemy within 8 m (the ledger's cast-on-beat).</summary>
+        public bool OnCastBeat;
+        /// <summary>
+        /// Only on the enemy whose blow was just turned or dodged (a counter's guard, a perfect guard or a perfect dodge), not
+        /// on all its answer strikes (the ledger's attacker-of-turned-blow: The Golden Chair, Gust at the Heel, Ill Omen).
+        /// </summary>
+        public bool NeedsAttacker;
+        /// <summary>
+        /// For Boon: held by the cast whose moment this answers, not by the player, so only that cast's own blows and bursts
+        /// are made stronger (One by One's Master: its own bursts, not a reaction's or Volatile's in the same moment).
+        /// </summary>
+        public bool ThisCast;
+        /// <summary>
+        /// With Needs: how deep the target carries it as the moment comes is the trigger's count (PerStack reads it), and a
+        /// Condition keeps that count as its run's number. Every effect of a moment is asked before any of them is done, so a
+        /// shape counts what its Learn spends in the same moment (Red-Hot: 6 more a notch the pour spent; the ledger's
+        /// shape-before-learn).
+        /// </summary>
+        public bool CountsNeeds;
+        /// <summary>
+        /// Above zero: only within this many seconds of its branch's own spell being cast (Poured on the Edge's wave and mending,
+        /// only in its 12 s; a shape's rule held to its cast's window).
+        /// </summary>
+        public float WithinOwnCast;
+        /// <summary>For Spends: paid from the count its branch's Learn keeps, not its own mark's (Sapling's Strangler and Dodder spend the window's saplings).</summary>
+        public bool PaysLearn;
+        /// <summary>Above zero: grown things laid by the effects of one mark with the same number share one limit (Sapling's guard and dodge plantings: three at most in all).</summary>
+        public int Kin;
+        /// <summary>For FreeSurge: the element whose surge it lights.</summary>
+        public string SurgeOf = "";
+        /// <summary>
+        /// Only for a cast begun within CastWindow seconds after this moment (the ledger's spell-windows: Chain Lance's Master
+        /// within 0.5 s after a finisher, Poured Bronze's within 1 s of a perfect guard). For a death, CastAfterCarrying names
+        /// what the dead must have carried (Reap What Is Sown's: a Seeded one).
+        /// </summary>
+        public CastMoment CastAfter;
+        public float CastWindow;
+        /// <summary>
+        /// Only within AfterWindow seconds after this moment, asked as the trigger comes rather than of the cast (Waiting
+        /// Thunder's Master: a heavy blow within a second of the last bolt falling with a light blow).
+        /// </summary>
+        public CastMoment After;
+        public float AfterWindow;
+        public AfflictionKind CastAfterCarrying = AfflictionKind.None;
 
         /// <summary>A copy with every number, its slot and its mark (an Empower's twin of its Learn's effect).</summary>
         internal UpgradeEffect Twin() => (UpgradeEffect)MemberwiseClone();

@@ -77,9 +77,8 @@ namespace Clover.Player.Trees
                 } },
                 BranchPattern.MiddleFoot));
 
-            // The detonator: the bubble's crack spends the Soaked of the enemy it closes on and runs to every other Soaked enemy
-            // near. NEEDS: each of those cracking where it stands and its own Soaked spent (spend-soaked); until then an arc
-            // runs from the first to each Soaked enemy within five metres and leaves their Soaked on them.
+            // The detonator: the bubble's crack spends the Soaked of the enemy it closes on, and every other Soaked enemy within
+            // five metres cracks where it stands and its own Soaked is spent (UpgradeEffect.EachWithin).
             SpellBranch.Add(to, E, DeepCrack, "Deep Crack", SpellRole.Detonator, BranchPattern.MiddleA, EbbAndFlood, SpellForms.Pillars,
                 new SpellSpec { Count = 1, Reach = 7f, Radius = 1f, Delay = 0.4f, Damage = 18f, Stagger = 40f, Stacks = 0 },
                 "A fist of water snaps shut on the enemy faced, up to seven metres away. A bubble as big as a body forms on it and collapses with a crack: 18 damage and 40 stagger. On a Soaked enemy the water boils out of it, and every other Soaked enemy within five metres cracks with it, 18 damage and 30 stagger each.",
@@ -101,18 +100,21 @@ namespace Clover.Player.Trees
                     Description = "Three bubbles in a row, two metres apart along the line you face, each cracking a moment after the last. Aim it down a corridor.",
                     Spell = new SpellSpec { Reach = 7f, Speed = 13f, Count = 1, Radius = 1f, Damage = 18f, Stagger = 40f, Stacks = 0 } },
                 "Opens two shapes of Deep Crack, chosen at any rest fire: Ink, a pool that hides you, or String of Bubbles, three cracks down a corridor.",
-                // NEEDS: the snap timed to the heavy blow's landing, not the crack's (spell-windows), and every Soaked enemy in
-                // the fight cracking where it stands. Until then a heavy blow on the cracked enemy within 0.3 s runs the crack on
-                // to every Soaked enemy within twenty metres.
+                // Every Soaked enemy within twenty metres cracks where it stands (UpgradeEffect.EachWithin). NEEDS: the snap
+                // timed to the heavy blow's landing, not the crack's (spell-windows); until then a heavy blow on the cracked enemy
+                // within 0.3 s.
                 new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Snapped, Seconds = 0.3f, EndsWith = ConditionBlow.Heavy } },
-                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Snapped, By = StruckBy.Heavy, Do = UpgradeAction.Arc, LeapsTo = AfflictionKind.Soaked, Count = 12, Reach = 20f, Damage = 18f, Stagger = 30f, Stacks = 0 },
+                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Snapped, By = StruckBy.Heavy, Do = UpgradeAction.Burst, EachWithin = 20f, OnlyCarrying = AfflictionKind.Soaked, Radius = 0.5f, Damage = 18f, Stagger = 30f, Stacks = 0 },
                 },
                 "Snap it as your heavy blow lands on the same enemy, and every Soaked enemy in the fight cracks.",
                 learnEffects: new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = AfflictionKind.Soaked, Do = UpgradeAction.Arc, LeapsTo = AfflictionKind.Soaked, Count = 6, Reach = 5f, Damage = 18f, Stagger = 30f, Stacks = 0 },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = AfflictionKind.Soaked, Do = UpgradeAction.Burst, EachWithin = 5f, EachOther = true, OnlyCarrying = AfflictionKind.Soaked,
+                        Radius = 0.5f, Damage = 18f, Stagger = 30f, Stacks = 0 },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = AfflictionKind.Soaked, Do = UpgradeAction.Spend, EachWithin = 5f, EachOther = true, OnlyCarrying = AfflictionKind.Soaked,
+                        Affliction = AfflictionKind.Soaked },
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = AfflictionKind.Soaked, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Soaked },
                 });
 
@@ -146,12 +148,12 @@ namespace Clover.Player.Trees
                 "Let go in the same instant as a blow lands on the vent, and the spout is doubled and the vent stays for a second round.",
                 learnEffects: new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = ThrownOpen, Seconds = 0.8f, Flags = ConditionFlags.BeginsNoAttack | ConditionFlags.CannotGuard } } });
 
-            // NEEDS: every reaction with Soaked in it running on itself, at half strength, to the other Soaked enemies (a
-            // reaction struck again elsewhere, reaction-stats). Until then an arc of its water runs from where it happened to
-            // each Soaked enemy within four metres.
+            // Every reaction with Soaked in it runs on itself, at half strength, to each other Soaked enemy within four metres
+            // (UpgradeAction.EchoReaction, done on each of them: UpgradeEffect.EachWithin).
             to.Add(BranchPattern.Put(new Upgrade { Id = SpreadingWater, Name = "Spreading Water", Element = E, Kind = UpgradeKind.Major, Lifts = E, Requires = new[] { EbbAndFlood }, Icon = UpgradeIcons.Drop,
                 Description = "Every reaction with Soaked in it runs on at half strength to every other Soaked enemy within four metres.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Reacted, Needs = AfflictionKind.Soaked, Do = UpgradeAction.Arc, LeapsTo = AfflictionKind.Soaked, Count = 4, Reach = 4f, Damage = 10f, Stagger = 15f, Stacks = 0 } } },
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Reacted, ReactionWith = AfflictionKind.Soaked, Do = UpgradeAction.EchoReaction, Amount = 0.5f,
+                    EachWithin = 4f, EachOther = true, OnlyCarrying = AfflictionKind.Soaked } } },
                 BranchPattern.MiddleCrown));
             // The Current bough's keystone (the owner's pick of 2026-11-20). The tide clock is kept by hand (PlayerUpgrades:
             // States turns it every six seconds and sets StatWhen.HighWater or LowWater, tide-clock); what each half does and
@@ -194,41 +196,43 @@ namespace Clover.Player.Trees
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.HeavyHit, Do = UpgradeAction.Pull, At = EffectAt.Self, Radius = 6f, Amount = 1.5f, Cooldown = 0.5f } } },
                 BranchPattern.LeftFoot));
 
-            // The drill carries the flood, and nothing can touch you while it runs. NEEDS: the ebb first, drawing you 5 m
-            // straight back in 0.3 s and leaving a line of wet sand, and the flood as the second press within 3 s back along
-            // that line (second-press); pressed once, the ebb alone. Until then one press is the flood, run eight metres ahead.
-            SpellBranch.Add(to, E, TheTideTurns, "The Tide Turns", SpellRole.Movement, BranchPattern.LeftA, Undertow, SpellForms.Drill,
-                new SpellSpec { Reach = 8f, Radius = 1f, Count = 1, Damage = 10f, Stagger = 10f, Stacks = 1, Speed = 20f },
+            // The ebb first (SpellSpec.Ebb): drawn 5 m straight back in a moment, untouchable. The flood is the second press within
+            // 3 s (UpgradeAction.Flood): the drill carries you back along the line and 3 m past where you began, and nothing can
+            // touch you while it runs. Pressed once, the ebb alone. (The ebb's wet sand as ground: ground-states, in Cast.)
+            var tideTurns = SpellBranch.Add(to, E, TheTideTurns, "The Tide Turns", SpellRole.Movement, BranchPattern.LeftA, Undertow, SpellForms.Drill,
+                new SpellSpec { Reach = 8f, Radius = 1f, Count = 1, Damage = 10f, Stagger = 10f, Stacks = 1, Speed = 20f, Ebb = 5f },
                 "Press, and the ebb draws you five metres straight back in a moment, out of reach, and nothing can touch you. It leaves a line of wet sand where you went. Press again within three seconds, and the flood brings you back along the line and three metres past where you began as a breaking wave. Everything on the line takes 10 damage, is Soaked and is carried two metres ahead of you.",
                 UpgradeIcons.Boot,
                 new Empower { Cooldown = 6f, Reach = 10f },
                 "The Tide Turns waits 6 seconds, not 8, and its flood runs five metres past.",
-                // NEEDS: the Empower's longer flood not reaching past this shape's own (an Empower sets its numbers after the shape's).
-                new ShapeDef { Name = "King Tide",
+                // The Empower's longer flood does not reach past this shape's own (EmpowerOverShape.KeepsOwn); its shorter wait does.
+                new ShapeDef { Name = "King Tide", Empowered = EmpowerOverShape.KeepsOwn,
                     Description = "The flood comes in four metres wide and throws what it carries down for a moment, but it stops where you began. For a crowd.",
                     Change = new SpellChange { Radius = 2f, Reach = 5f },
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = KingTideDown, Seconds = 0.6f, Flags = ConditionFlags.Down } } } },
-                // NEEDS: you drawn the 5 m back with it (the ebb). Until then the enemy faced is drawn five metres to you, Soaked.
-                new ShapeDef { Name = "Out to Sea", Form = SpellForms.Nova,
+                // The ebb draws you the 5 m back (its own Ebb), and the enemy faced is drawn after you to your feet, Soaked. There is
+                // no flood: its one press does nothing (a press with no effects is no press, and the slot casts again).
+                new ShapeDef { Name = "Out to Sea", Form = SpellForms.Nova, Presses = new[] { new UpgradeEffect[0] },
                     Description = "There is no flood. The ebb takes the enemy faced with you: it is drawn the five metres out with you, Soaked, and dropped at your feet, away from its friends. A pull, not a return.",
-                    Spell = new SpellSpec { Radius = 1f, Damage = 0f, Stagger = 0f, Stacks = 0 },
+                    Spell = new SpellSpec { Radius = 1f, Damage = 0f, Stagger = 0f, Stacks = 0, Ebb = 5f },
                     Effects = new[]
                     {
                         new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Pull, Shape = HazardShape.Downwind, Amount = 5f },
                         new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Soaked, Stacks = 1 },
                     } },
                 "Opens two shapes of The Tide Turns, chosen at any rest fire: King Tide, a wide flood that throws a crowd down, or Out to Sea, an enemy drawn away with you.",
-                // NEEDS: the shared movement rule's timing (started as a blow would land, blow-about-to-land), and the flood's
-                // own press. Until then the cast gives what a perfect dodge gives, and the next cast within a second of a perfect
-                // dodge starts no clock.
+                // Started as a blow would land (UpgradeEffect.BlowLanding), it is a perfect dodge (UpgradeAction.PerfectDodgeNow); the flood
+                // loosed as a blow would land (the SpellLoosed moment) ends the wait its first press started.
                 new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Mana, Amount = 12f },
-                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.CutCooldowns, Amount = 1.5f },
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, Do = UpgradeAction.InstantNext, Seconds = 1f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, BlowLanding = 0.3f, Do = UpgradeAction.PerfectDodgeNow },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellLoosed, OwnBranch = true, BlowLanding = 0.3f, Do = UpgradeAction.ResetCooldown },
                 },
                 "Started in the instant a blow would land on you, it counts as a perfect dodge, and a flood pressed in the instant a blow would land starts no cooldown.",
                 learnEffects: new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Push, Shape = HazardShape.Downwind, Amount = 2f } });
+            // The flood is the second press, within three seconds of the ebb.
+            tideTurns.PressWindow = 3f;
+            tideTurns.Presses = new[] { new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, Do = UpgradeAction.Flood } } };
 
             // NEAREST: an enemy's recovery cannot be changed, so blows on a Soaked enemy break its balance sooner for a while.
             to.Add(BranchPattern.Put(new Upgrade { Id = HeavyWater, Name = "Heavy Water", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Undertow }, Icon = UpgradeIcons.Hammer,
@@ -250,8 +254,9 @@ namespace Clover.Player.Trees
                 } },
                 BranchPattern.LeftCrown));
 
-            // The field form bites and soaks; each bite breaks balance harder for a moment. NEEDS: enemies drawn to the middle
-            // at 1.2 m a second (pull-to-point), and their balance not recovering inside it (enemy-balance-held).
+            // The field form bites and soaks; each bite breaks balance harder for a moment and holds it there (ConditionFlags.
+            // BalanceHeld, kept up by each bite, so it holds while they are inside). NEEDS: enemies drawn to the middle at 1.2 m a
+            // second (pull-to-point).
             SpellBranch.Add(to, E, Whirlpool, "Whirlpool", SpellRole.Breaker, BranchPattern.LeftB, HeavyWater, SpellForms.Field,
                 new SpellSpec { Reach = 6f, Radius = 4f, Seconds = 5f, Interval = 0.5f, LingerDamage = 3f, Stacks = 1 },
                 "A whirlpool four metres round opens under the enemy faced, up to six metres away, for five seconds. Enemies in it are drawn to the middle, kept Soaked and bitten for 3 twice a second. Their balance does not recover inside it, and your blows there break balance 30% harder.",
@@ -276,11 +281,15 @@ namespace Clover.Player.Trees
                     Description = "No pull to the middle. A lane of churning foam two metres wide and nine long runs from the whirlpool's point away from you for six seconds. Enemies in it are carried down it and cannot dodge against it, and your blows on a carried enemy break balance 30% harder. Cut them as the current drags them past.",
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Push, Shape = HazardShape.Downwind, Amount = 1.25f } } },
                 "Opens two shapes of Whirlpool, chosen at any rest fire: Maelstrom, a hard pull that ends in a spout, or Rip Current, a lane that carries them past you.",
-                // NEEDS: in the instant its enemy's attack mark shows (enemy-begins-attack), and its own cooldown halved
-                // (own-clock-share). Until then the first enemy it bites on a cast flinches out of what it had begun.
-                new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Flinch, Seconds = 0.4f, Cooldown = 5f } },
+                // In the instant its enemy's attack mark shows (UpgradeEffect.NeedsWindup, 0.3 s), the attack is lost and its own
+                // cooldown halved (UpgradeAction.KeepWaitShare).
+                new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, NeedsWindup = 0.3f, Do = UpgradeAction.Flinch, Seconds = 0.4f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, NeedsWindup = 0.3f, Do = UpgradeAction.KeepWaitShare, Amount = 0.5f, Cooldown = 0.5f },
+                },
                 "Open it under an enemy in the instant its attack mark shows, and the attack is lost as it goes in to the knees. Its cooldown is halved.",
-                learnEffects: new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Churned, Seconds = 0.7f, Flags = ConditionFlags.StaggerTakenShare, Scale = 1.3f } } });
+                learnEffects: new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Churned, Seconds = 0.7f, Flags = ConditionFlags.StaggerTakenShare | ConditionFlags.BalanceHeld, Scale = 1.3f } } });
 
             // ---- The right bough: Vessel. The flask and the copy.
             // NEAREST: the pool soaks; it cannot mend the player who stands in it, so the throw mends a part at once.
@@ -298,7 +307,7 @@ namespace Clover.Player.Trees
             SpellBranch.Add(to, E, Riptide, "Riptide", SpellRole.Opener, BranchPattern.RightA, Root, "", null,
                 "Water's own spell, given with the element. A wave rises five metres ahead and rolls back toward you. Everything in its path takes 8 damage and 18 stagger, is Soaked, and is carried to your feet, within reach.",
                 UpgradeIcons.Wave,
-                // NEEDS: rising 6.5 m away. The base spell is cast by its kit, which takes only the Empower's wait.
+                // Rising 6.5 m away. The Empower's numbers reach the kit's own cast too (PlayerUpgrades.BaseEmpower, read by PlayerElement).
                 new Empower { Cooldown = 4.5f, Reach = 6.5f },
                 "Riptide waits 4.5 seconds, not 6, and rises six and a half metres away.",
                 // River Serpent, once a spell, folded in. NEEDS: the serpent going out and coming back, and the first enemy it
@@ -321,11 +330,19 @@ namespace Clover.Player.Trees
                         new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = ThrownDown, Seconds = 0.6f, Flags = ConditionFlags.Down } },
                     } },
                 "Opens two shapes of Riptide, chosen at any rest fire: River Serpent, one enemy brought from further, or Breaking Swell, a wave that rolls away and makes room.",
-                // NEEDS: the second press within 1 s of the wave reaching you, sending it out again and carrying what it brought
-                // 4 m past you (second-press). Until then what the wave brings stands with its back to you a moment: it begins
-                // nothing, and your first blow on it is critical.
-                new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = BacksTurned, Seconds = 1.2f, Flags = ConditionFlags.BeginsNoAttack | ConditionFlags.TakesCritical, EndsWith = ConditionBlow.Weapon } } },
+                // A press the Master adds (its Presses, found by PlayerUpgrades.PressesOf when the Master is in force): pressed again
+                // within a second of the wave breaking at your feet (After WaveIn, noted by the kit's wave), what it brought is carried
+                // on past you four metres (UpgradeAction.CarryOn), its back to you a moment: it begins nothing, and your first blow on
+                // it is critical.
+                null,
                 "Press again within a second of the wave reaching you, and it goes out again the way it came, carrying what it brought past you and on four metres, backs turned.");
+            var riptideMaster = to[to.Count - 1];
+            riptideMaster.PressWindow = 2f;
+            riptideMaster.Presses = new[]
+            {
+                new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, After = CastMoment.WaveIn, AfterWindow = 1f, Do = UpgradeAction.CarryOn, Reach = 4f,
+                    State = new ConditionSpec { Id = BacksTurned, Seconds = 1.2f, Flags = ConditionFlags.BeginsNoAttack | ConditionFlags.TakesCritical, EndsWith = ConditionBlow.Weapon } } },
+            };
 
             // NEEDS: the line of foam seen running over the floor to you.
             to.Add(BranchPattern.Put(new Upgrade { Id = DrawnFromTheDrowned, Name = "Drawn From the Drowned", Element = E, Kind = UpgradeKind.Major, Requires = new[] { BrokenGourd }, Icon = UpgradeIcons.Flask,
@@ -341,16 +358,17 @@ namespace Clover.Player.Trees
                 UpgradeIcons.Blade,
                 new Empower { Mana = 25f, Damage = 35f, Seconds = 15f },
                 "Poured Blade costs 25 mana, not 30, and its copy strikes for 35% for fifteen seconds.",
-                // Its first design. NEEDS: the flask as its price, not mana, and the wave only within the 12 s (price-in-flasks),
-                // and the weapon's reach 40% longer. Until then the cast makes every blow mend for twelve seconds, and while this
-                // shape is worn the last blow of every chain throws a wave.
+                // Its first design: a flask is its price, not mana (SpellSpec.FlaskCost), and for its 12 s (UpgradeEffect.WithinOwnCast)
+                // the weapon reaches 40% further (PlayerStat.WeaponReach), every blow mends 2 and soaks, and a chain's last blow throws a wave.
                 new ShapeDef { Name = "Poured on the Edge", Form = SpellForms.Nova,
                     Description = "No copy. A flask is poured along the weapon, and for twelve seconds its reach is 40% longer, every blow mends 2 and soaks, and the last blow of a chain throws a wave five metres. It costs a flask, not mana.",
-                    Spell = new SpellSpec { Radius = 1f, Damage = 0f, Stagger = 0f, Stacks = 0 },
+                    Spell = new SpellSpec { Radius = 1f, Damage = 0f, Stagger = 0f, Stacks = 0, FlaskCost = 1 },
                     Effects = new[]
                     {
-                        new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Boon, Stat = PlayerStat.Leech, Amount = 0.1f, Seconds = 12f },
-                        new UpgradeEffect { On = UpgradeTrigger.ChainEnd, Do = UpgradeAction.Cone, Reach = 5f, Arc = 60f, Damage = 10f, Stagger = 15f, Affliction = AfflictionKind.Soaked, Stacks = 1 },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Boon, Stat = PlayerStat.WeaponReach, Amount = 0.4f, Seconds = 12f },
+                        new UpgradeEffect { On = UpgradeTrigger.AnyHit, WithinOwnCast = 12f, Do = UpgradeAction.Heal, Amount = 2f },
+                        new UpgradeEffect { On = UpgradeTrigger.AnyHit, WithinOwnCast = 12f, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Soaked, Stacks = 1 },
+                        new UpgradeEffect { On = UpgradeTrigger.ChainEnd, WithinOwnCast = 12f, Do = UpgradeAction.Cone, Reach = 5f, Arc = 60f, Damage = 10f, Stagger = 15f, Affliction = AfflictionKind.Soaked, Stacks = 1 },
                     } },
                 // NEEDS: the copy standing behind you, facing the other way, and striking what is behind you.
                 new ShapeDef { Name = "Brother at Your Back",

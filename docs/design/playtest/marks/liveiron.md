@@ -9,26 +9,24 @@ Metal and Lightning are both carried.
 
 **When it happens.** Every time Live Iron goes off while you carry both Metal and Lightning. Live Iron goes off when Static lands on a notched enemy, or when a notch lands on a charged one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Live Iron.
 
-**The numbers.** Mix, 3 Shards. Drawn Iron: for 6 seconds, each weapon blow on the enemy arcs to the nearest notched enemy within 8 metres for 35% of the blow's damage and notches it, up to two jumps. It also pulls everything within 8 metres 1.5 metres toward it. At most once every 0.3 seconds. Forged Bolt: for 6 seconds, the enemy's Static doesn't fade and blows don't use it up. Your first heavy blow on it takes up to three Static and throws a bolt 10 metres past it, away from you. Everything on the line takes 12 damage for each Static taken, 20 stagger and two Static. After Live Iron goes off on an enemy, it can't go off on that enemy again for 4 seconds.
+**The numbers.** Mix, 3 Shards. Drawn Iron: for 6 seconds, each weapon blow on the enemy arcs to the nearest notched enemy within 8 metres for 35% of the blow's damage and notches it, up to two jumps. Each enemy an arc reaches is pulled 1.5 metres toward the enemy you hit, and no other enemy is moved. At most once every 0.3 seconds. Forged Bolt: for 6 seconds, the enemy's Static doesn't fade and blows don't use it up. Your first heavy blow on it takes up to three Static and throws a bolt 10 metres past it, away from you. Everything on the line takes 12 damage for each Static taken, 20 stagger and two Static. After Live Iron goes off on an enemy, it can't go off on that enemy again for 4 seconds.
 
 **Works with.** Three Smiths, Bare Wire, Iron Calls the Storm, Lightning Seeks Iron.
 
 **Example.** A ring of armoured soldiers: use Drawn Iron, and fold them in onto one. A line of them: use Forged Bolt, charge the first one, and send it down the line with a heavy blow.
 
-**Not built yet.** Drawn Iron pulls every enemy within 8 metres, not only the ones the arcs reach. Forged Bolt's spikes don't show up yet, one for each blow. For now, the heavy blow tears out up to three of the Static the enemy has.
+**Not built yet.** Forged Bolt's spikes don't show up yet, one for each blow. For now, the heavy blow tears out up to three of the Static the enemy has.
 
 ## liveiron.threesmiths
 **What it does.** Every third weapon blow on an enemy with Live Iron is answered from the sky: a bolt that deals 12 damage, 15 stagger and a Static.
 
-**When it happens.** Weapon blows on an enemy that is both notched and charged, while you carry both Metal and Lightning.
+**When it happens.** Weapon blows on an enemy while its iron is live from Live Iron, in any shape, while you carry both Metal and Lightning.
 
 **The numbers.** Mix, 3 Shards. Every third blow on the enemy calls a bolt down on it 0.3 seconds later. Each enemy keeps its own count. The bolt deals 12 damage, 15 stagger and a Static within 1 metre, at most once every 0.3 seconds.
 
 **Works with.** Live Iron and its shapes, Bare Wire, Lightning Seeks Iron.
 
 **Example.** Keep hitting a notched, charged brute, and the sky joins in.
-
-**Not built yet.** For now, it counts blows on any enemy that is both notched and charged, not only on an enemy with Live Iron.
 
 ## liveiron.barewire
 **What it does.** Live Iron's arcs carry 45% of the blow's damage.
@@ -65,4 +63,4 @@ Metal and Lightning are both carried.
 
 **Example.** Shoot through a line of soldiers as a bolt, and every one of them is live.
 
-**Not built yet.** For now, it goes toward the enemy you face, not the farthest notched one, and it doesn't hit with its own blow when you arrive. A perfect guard in the 2 seconds before you cast it doesn't yet send you on to a second notched enemy.
+**Not built yet.** It goes toward the farthest notched enemy within 10 metres, or toward the enemy you face at half damage if none is notched, but it doesn't hit with its own blow when you arrive. A perfect guard in the 2 seconds before you cast it doesn't yet send you on to a second notched enemy.

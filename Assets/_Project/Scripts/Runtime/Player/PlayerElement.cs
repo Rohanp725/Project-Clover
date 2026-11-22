@@ -396,17 +396,21 @@ namespace Clover.Player
         /// roots the player for its short cast and leaves the hand part-way through. False with that element not
         /// carried, or mid-cast.
         /// </summary>
-        public bool CastBase(string elementName)
+        public bool CastBase(string elementName) => CastBase(elementName, false);
+
+        /// <summary>As above; <paramref name="instant"/> looses it now, with no wind-up (a slot a Master made instant).</summary>
+        public bool CastBase(string elementName, bool instant)
         {
             if (!HasElement || combat == null || IsCasting) return false;
             var kit = KitOf(elementName);
             if (kit == null) return false;
-            if (!kit.TryCast(combat.Mana, 0f)) return false;
+            if (!kit.TryCast(combat.Mana, 0f, instant)) return false;
             castingKit = kit;
             castingIndex = kit == kits[0] ? 0 : 1;
             // The cast's number is kept for the moment it leaves the hand.
             releaseTag = CastTag;
             BeginCast();
+            if (instant && kit.TickCast(0f)) Release();
             return true;
         }
 
@@ -441,6 +445,21 @@ namespace Clover.Player
             float reach = spec.Reach * (upgrades != null ? upgrades.Stats.Multiplier(PlayerStat.SpellReach) : 1f);
             Transform target = combat.EnemyAhead(reach);
             Vector3 forward = transform.forward;
+            // Aimed at the nearest (or farthest) enemy carrying what the spell seeks, before the one faced.
+            if (spec.AimAt != AfflictionKind.None)
+            {
+                var sought = combat.EnemyCarrying(transform.position, reach, spec.AimAt, spec.AimAt2, spec.AimFarthest);
+                if (sought != null)
+                {
+                    target = sought.transform;
+                    Vector3 toward = target.position - transform.position;
+                    toward.y = 0f;
+                    if (toward.sqrMagnitude > 0.01f) forward = toward.normalized;
+                }
+                else if (spec.AimMissShare > 0f) damage *= spec.AimMissShare;
+            }
+            // Stronger the lower the caster's health (Debts Called).
+            if (spec.HealthScaled > 1f && defence != null) damage *= SpellSpec.HealthScale(spec.HealthScaled, defence.Health.Fraction);
             return new SpellCast
             {
                 Name = name,
@@ -678,6 +697,15 @@ namespace Clover.Player
                 spec.Count = (string.IsNullOrEmpty(kit.SpellForm) ? kit.SpellLeaps : kit.SpellCount) + Mathf.Max(0, upgrades.Stats.Whole(PlayerStat.BaseSpellCount));
                 spec.Arc = kit.SpellArcDegrees * upgrades.Stats.Multiplier(PlayerStat.BaseSpellArc);
             }
+            // The base spell's Empower, once bought, gives the kit's cast all its numbers, not only its wait (the ledger's
+            // base-spell-marks: Glare strikes for 12 and reaches seven metres).
+            var empower = upgrades != null ? upgrades.BaseEmpower(kit.Name) : null;
+            if (empower != null)
+            {
+                SpellChange.Copy(spec, empoweredBase[index]);
+                empower.ApplyTo(empoweredBase[index]);
+                spec = empoweredBase[index];
+            }
             var cast = NewCast(spec, kit.SpellName, null, info);
             if (upgrades != null)
             {
@@ -698,7 +726,23 @@ namespace Clover.Player
             if (kit.SpellPull != 0f && string.IsNullOrEmpty(kit.SpellForm)) combat.Displace(transform.position, cast.Reach, Mathf.Abs(kit.SpellPull), kit.SpellPull > 0f);
             glowLevel = GlowWhenCasting;
             if (shaker != null) shaker.Shake(0.14f, 0.2f);
-            if (upgrades != null && !free) upgrades.OnSpellCast();
+            if (upgrades != null && !free) upgrades.OnSpellCast(kit.Name);
+        }
+
+        // The base spells' numbers with their Empowers laid over, made at each cast (the kit's own are never changed).
+        private readonly SpellSpec[] empoweredBase = { new SpellSpec(), new SpellSpec() };
+
+        /// <summary>
+        /// Lights the worn surge for <paramref name="seconds"/> at no cost when it is <paramref name="elementName"/>'s (Sky
+        /// Dance's Master: Tailwind). False when another surge is worn.
+        /// </summary>
+        public bool LightSurgeFree(string elementName, float seconds)
+        {
+            var info = SurgeInfo;
+            var kit = SurgeKit;
+            if (info == null || kit == null || DuoSurgeWorn != null || info.Name != elementName) return false;
+            if (kit.LightFree(seconds)) BeginSurge();
+            return true;
         }
 
         private void BeginSurge()

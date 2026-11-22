@@ -33,8 +33,8 @@ namespace Clover.Player.Trees.Duo
             const string A = Elements.Ice, B = Elements.Lightning;
 
             // Sleet Charge's two shapes. Both keep the charging (a Static every half second for 3 s); they change how it ends.
-            // NEEDS: a set-off on every enemy in reach that carries a mark, each discharging its own Static (Thundersnow: now a
-            // bolt leaps from one chilled enemy to the next within 6 m); the clear ice spear standing where the bolt struck.
+            // Thundersnow's bolt lands on every chilled enemy within 6 m and each discharges its own Static
+            // (UpgradeEffect.EachWithin). NEEDS: the clear ice spear standing where the bolt struck (looks).
             // Glass Spear freezes for 1.5 s whatever its Chill (UpgradeAction.Freeze).
             to.Add(HeartPattern.Put(new Upgrade
             {
@@ -51,8 +51,10 @@ namespace Clover.Player.Trees.Duo
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Snow, Seconds = 3f, Beat = 0.5f } },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = Snow, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Static, Stacks = 1 },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Snow, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Static, Radius = 4f, Stagger = 5f },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Snow, Do = UpgradeAction.Arc, FromTarget = true, LeapsTo = AfflictionKind.Chill, Count = 6, Reach = 6f,
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Snow, Do = UpgradeAction.Burst, EachWithin = 6f, OnlyCarrying = AfflictionKind.Chill, Radius = 0.6f,
                                 Damage = 7f, Stagger = 5f, Affliction = AfflictionKind.Static, Stacks = 1 },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Snow, Do = UpgradeAction.SetOff, EachWithin = 6f, OnlyCarrying = AfflictionKind.Chill,
+                                Affliction = AfflictionKind.Static, Radius = 2f, Stagger = 5f },
                         },
                     },
                     new ShapeDef
@@ -84,21 +86,21 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.LeftLow));
 
-            // NEEDS: a condition ended on demand (the Sleet Charge already running strikes at once); now the charge is filled
-            // and set off at once, and a new Sleet Charge may begin from the Static laid.
+            // The running Sleet Charge is filled and ended at once (UpgradeAction.EndCondition): its own end strikes with full Static.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = ColdSnap, Name = "Cold Snap", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Shield,
                 Description = "A perfect guard against a chilled enemy makes its Sleet Charge strike at once, with full Static: it is charged to full and the charge goes off, 7 a stack in 4 m.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Needs = AfflictionKind.Chill, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Static, Stacks = ToFull, Cooldown = 1f },
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Needs = AfflictionKind.Chill, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Static, Radius = 4f, Stagger = 5f, Cooldown = 1f },
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, InState = Reactions.Charging, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Static, Stacks = ToFull, Cooldown = 1f },
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, InState = Reactions.Charging, Do = UpgradeAction.EndCondition, Condition = Reactions.Charging, Cooldown = 1f },
                 },
             }, HeartPattern.RightLow));
 
-            // NEEDS: the moment an arc leaves an enemy, and an arc that keeps its full damage from one to the next; now a
-            // discharge on a chilled enemy runs on as an arc through every chilled enemy within 5 m of the last, four at most.
+            // A discharge on a chilled enemy leaves it as an arc at the discharge's full strength (UpgradeEffect.Amount 1 of the
+            // discharge's damage), running on through every chilled enemy within 5 m of the last, a Static on each. NEEDS: every
+            // other arc leaving a chilled enemy as the moment, not only a discharge (arc-leaves).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = NothingResists, Name = "Nothing Resists", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { ChargedHail, ColdSnap }, Icon = UpgradeIcons.Chain,
@@ -106,7 +108,7 @@ namespace Clover.Player.Trees.Duo
                 Effects = new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.SetOff, Spent = AfflictionKind.Static, Needs = AfflictionKind.Chill, Do = UpgradeAction.Arc, FromTarget = true, LeapsTo = AfflictionKind.Chill,
-                        Count = 4, Reach = 5f, Damage = 7f, Stagger = 5f, Affliction = AfflictionKind.Static, Stacks = 1, Cooldown = 0.5f },
+                        LeapsOnFrom = AfflictionKind.Chill, Count = 24, Reach = 5f, Amount = 1f, Damage = 7f, Stagger = 5f, Affliction = AfflictionKind.Static, Stacks = 1, Cooldown = 0.5f },
                 },
             }, HeartPattern.Keystone));
 

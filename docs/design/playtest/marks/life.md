@@ -30,15 +30,13 @@ ground: Briar Patch's bed, a thornbush, a sapling, a thicket, a tuft of briar.
 **Example.** Kill a seeded soldier in a doorway. The bush where it fell Seeds everyone who follows it through.
 
 ## life.reap
-**What it does.** Reap What Is Sown, the detonator of the Life tree. You call in the harvest. Everything you've grown bursts where it stands, the seeds in nearby enemies burst right away and are used up, and you heal for each burst.
+**What it does.** Reap What Is Sown, the detonator of the Life tree. You call in the harvest. Everything you've grown bursts where it stands, the seed in every Seeded enemy in the fight bursts right away and is used up, and you heal for each burst.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4).
 
-**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 12 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 10 seconds.) Each thing you grew, wherever it stands, bursts in a 3-metre circle for 16 damage and 25 stagger, then disappears, and heals you 5. A call reaches 6 metres around you 0.2 seconds after you cast it, dealing 16 damage and 25 stagger. Every Seeded enemy it hits has its seed burst right away, for 11 damage and 5 stagger per stack to everyone within 3 metres, and heals you 5.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 12 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 10 seconds.) Each thing you grew, wherever it stands, bursts in a 3-metre circle for 16 damage and 25 stagger, then disappears, and heals you 5. A call reaches 6 metres around you 0.2 seconds after you cast it, dealing 16 damage and 25 stagger. Every Seeded enemy within 30 metres, wherever it stands, has its seed burst right away, for 11 damage and 5 stagger per stack to everyone within 3 metres, and heals you 5.
 
 **Works with.** Fallen Seeds and Sapling (the things it bursts), Briar Patch, Seeded and Ripening, Wood Grows Back (the garden comes back), Wildwood (more to burst), and the charged blade: it charges your weapon with Life when it lands.
-
-**Not built yet.** Every Seeded enemy in the fight should burst, not only those within the call's 6 metres.
 
 **Example.** Three saplings stand around you and a pack closes in. Reap, and four bursts go off at once while you heal 20.
 
@@ -47,24 +45,22 @@ ground: Briar Patch's bed, a thornbush, a sapling, a thicket, a tuft of briar.
 
 **When it happens.** Whenever you cast Reap What Is Sown, using the shape you picked. If you have not bought this, you cast the plain call.
 
-**The numbers.** 3 Shards. Golden Sickle: one sweep 8 metres all around you, for 16 damage and 25 stagger. Each Seeded enemy it cuts has its seed burst, like the Learn mark's. Second Sowing: each seed that goes off (from Reap, Ripening or anything else) puts one Seeded on every enemy within 3 metres of it.
+**The numbers.** 3 Shards. Golden Sickle: one sweep 8 metres all around you, for 16 damage and 25 stagger. Each Seeded enemy it cuts has its seed burst, like the Learn mark's, and the things you grew are kept standing. Second Sowing: each seed that goes off (from Reap, Ripening or anything else) and each thing you grew that bursts puts one Seeded on every enemy within 3 metres of it.
 
 **Works with.** Ripening (its bursts plant seeds too, while you use Second Sowing); Fallen Seeds and Sapling, for the garden Golden Sickle should keep.
-
-**Not built yet.** Golden Sickle should keep the garden standing; for now, the things you grew still burst. In Second Sowing, the things you grew should plant seeds as they burst; for now, only seeds that go off plant new ones.
 
 **Example.** Use Second Sowing in a crowd. Reap once to Seed the whole pack again, cut, then reap again.
 
 ## life.reap.master
 **What it does.** Cast it within half a second of a Seeded enemy dying, and every burst counts twice.
 
-**When it happens.** For now, for half a second after any Seeded enemy dies. Reap What Is Sown must be in a spell slot.
+**When it happens.** When you cast Reap What Is Sown within half a second after a Seeded enemy dies. Reap What Is Sown must be in a spell slot.
 
-**The numbers.** 3 Shards. For half a second, every seed that goes off bursts twice as hard (seed bursts are 100% stronger).
+**The numbers.** 3 Shards. Every seed that cast sets off bursts twice as hard (100% stronger). Other bursts at the same time are not changed.
 
 **Works with.** Seeded's own death burst (kill one, then reap the rest); Ripening's heavy blow in the same half second.
 
-**Not built yet.** The garden's bursts and the healing should count twice too, and the half second should be tied to casting this spell. For now, any seed that goes off in that half second is doubled.
+**Not built yet.** The garden's bursts and the healing should count twice too.
 
 **Example.** Finish the seeded soldier and reap as it falls. The seeds in its friends burst for twice their thorns.
 
@@ -73,11 +69,11 @@ ground: Briar Patch's bed, a thornbush, a sapling, a thicket, a tuft of briar.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4).
 
-**The numbers.** 4 Shards, 40 mana (its Empower makes it 32, and makes it grow in 2 seconds). The ring has a 3-metre radius and lasts 18 seconds from when you cast it. Once a second, it deals 1 damage and adds Seeded. The roots first hit 3 seconds after planting, then every 3 seconds for 15 seconds, for 16 damage, 45 stagger and one Seeded. Each cast holds 15 seconds of shade: each second you spend in a fight uses one up and heals you 3. The tree doesn't count as something you grew, so Reap What Is Sown and Drawn From the Wood leave it alone.
+**The numbers.** 4 Shards, 40 mana (its Empower makes it 32, and makes it grow in 2 seconds). The ring has a 3-metre radius and lasts 18 seconds from when you cast it. Once a second, it deals 1 damage and adds Seeded. The roots first hit 3 seconds after planting, then every 3 seconds for 15 seconds, for 16 damage, 45 stagger and one Seeded. Each cast holds 15 seconds of shade: each second you spend fighting inside the ring while the tree stands uses one up and heals you 3. The tree doesn't count as something you grew, so Reap What Is Sown and Drawn From the Wood leave it alone.
 
 **Works with.** Seeded, Ripening (heavy blows on what it Seeded), Fallen Seeds, which it comes after on the chart, Sapling's Master mark (a small tree of the same kind), and the charged blade: its first hit charges your weapon with Life.
 
-**Not built yet.** The tree should have 40 health while it grows, and enemies should turn and attack it. Each root should come up under one enemy, staggered ones first (for now, the roots hit everything in the ring). The healing should only happen inside the ring while the tree stands (for now, it is 3 a second for 15 seconds of fighting, anywhere).
+**Not built yet.** The tree should have 40 health while it grows, and enemies should turn and attack it. Each root should come up under one enemy, staggered ones first (for now, the roots hit everything in the ring).
 
 **Example.** Plant it where a pack has to come to you, and fight at its foot. Every three seconds, the roots stagger and Seed them while you heal.
 
@@ -112,11 +108,9 @@ ground: Briar Patch's bed, a thornbush, a sapling, a thicket, a tuft of briar.
 
 **When it happens.** Whenever Seeded reacts on an enemy with another affliction it has (Rot Roots with Poison, and the rest).
 
-**The numbers.** 3 Shards. Each of these reactions heals you 4 and puts one Seeded on every enemy within 3 metres of where it happened.
+**The numbers.** 3 Shards. Each of these reactions heals you 4 and puts one Seeded on everything it hit: the enemy where it happened and every enemy its blows reached.
 
 **Works with.** Carrying a second element: every one of Life's ten reactions; Seeded; Fallen Seeds, which it comes after on the chart; Wood Grows Back above it.
-
-**Not built yet.** The seed should go into exactly what the reaction hit; for now, it goes into everything within 3 metres.
 
 **Example.** Life and Poison on a tight group. Rot Roots goes off on one, you heal 4, and the enemies next to it are Seeded for the next one.
 
@@ -125,11 +119,11 @@ ground: Briar Patch's bed, a thornbush, a sapling, a thicket, a tuft of briar.
 
 **When it happens.** Only while you carry Life twice (all in). A sapling is planted each time a spell hits.
 
-**The numbers.** 6 Shards. A sapling grows where a spell hits, at most one every 2 seconds. It reaches 3.5 metres and stays for 12 seconds. Every 1.5 seconds, it hits for 6 damage, 8 stagger and Seeded. Up to four can stand at once. Buying this also gives you the deep strike, Briar Root. Use it with L2 and R2 while you carry Life alone or twice. The cutting grows into a briar around the enemy's feet and roots it in place for a second.
+**The numbers.** 6 Shards. Whatever you grew grows back where it stood 6 seconds after it bursts or uses up its bites, as it was. A sapling grows where a spell hits, at most one every 2 seconds. It reaches 3.5 metres and stays for 12 seconds. Every 1.5 seconds, it hits for 6 damage, 8 stagger and Seeded. Up to four can stand at once. Buying this also gives you the deep strike, Briar Root. Use it with L2 and R2 while you carry Life alone or twice. The cutting grows into a briar around the enemy's feet and roots it in place for a second.
 
 **Works with.** Every spell in the Life tree; Reap What Is Sown and Drawn From the Wood, which use up the garden; Root Walk, which travels to it.
 
-**Not built yet.** Whatever is used up should grow back where it stood 6 seconds later; for now, there are only the saplings each spell plants. Briar Root's briar should stay as something you grew.
+**Not built yet.** Enemies can't cut down what you grew yet, so nothing grows back from that. Briar Root's briar should stay as something you grew.
 
 **Example.** Briar Patch, Reap What Is Sown, then Briar Patch again. Every cast leaves a sapling, so the reaping always has something to burst.
 
@@ -149,11 +143,11 @@ ground: Briar Patch's bed, a thornbush, a sapling, a thicket, a tuft of briar.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). It needs something you grew nearby.
 
-**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 12 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 10 seconds.) Each thing you grew, wherever it stands, bursts in a 2-metre circle for 12 damage and Seeded, then disappears. For now, if you cast it within 4 metres of something you grew, the window lasts 6 seconds: every weapon blow is a critical hit, and you get 20% of its damage back as health.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 12 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 10 seconds.) Each thing you grew within 12 metres of you bursts in a 2-metre circle for 12 damage and Seeded, then disappears; things farther away are left standing. For now, if you cast it within 4 metres of something you grew, the window lasts 6 seconds: every weapon blow is a critical hit, and you get 20% of its damage back as health.
 
 **Works with.** Fallen Seeds, Sapling, Briar Patch and Root Walk, for the garden it uses up; Wood Grows Back, to have the garden again; Ripening, which it comes after on the chart; and Seeded's healing on top.
 
-**Not built yet.** The window should last a second and a half for each thing that withered, up to ten seconds, and only count things within 12 metres. The half-second kneel.
+**Not built yet.** The window should last a second and a half for each thing that withered, up to ten seconds. The half-second kneel.
 
 **Example.** Three bushes stand around a brute. Draw them in, and cut the brute with six seconds of critical, healing blows.
 
@@ -162,11 +156,11 @@ ground: Briar Patch's bed, a thornbush, a sapling, a thicket, a tuft of briar.
 
 **When it happens.** Whenever you cast Drawn From the Wood, using the shape you picked. If you have not bought this, you cast the plain withering.
 
-**The numbers.** 3 Shards. Blood in the Furrow: a ring 8 metres across where you knelt, lasting 6 seconds. Once a second, it deals 1 damage and adds Seeded. Feed the Ground: it costs 25 health, which turns grey so you can win it back with blows. You can't cast it with 25 health or less. For 8 seconds, the things you grow hit twice as hard.
+**The numbers.** 3 Shards. Blood in the Furrow: a ring 8 metres across where you knelt, lasting 6 seconds. Once a second, it deals 1 damage and adds Seeded. Feed the Ground: it costs a quarter of the health you have now, which turns grey so you can win it back with blows. Nothing withers. For 8 seconds, the things you grow hit twice as hard.
 
 **Works with.** Blood in the Furrow: Bitter Rind and Briar Coat, which keep the fight in one place. Feed the Ground: Fallen Seeds, Sapling and Wildwood, for a garden worth feeding; and the Master mark, to pay with grey health.
 
-**Not built yet.** Blood in the Furrow's window should only work while you stand in the ring. Feed the Ground should take a quarter of your current health (for now, it takes 25), keep the garden (for now, it still withers like the Learn mark's), and double the power and speed of what is already standing (for now, only what you grow during the 8 seconds hits harder).
+**Not built yet.** Blood in the Furrow's window should only work while you stand in the ring. Feed the Ground should double the power and speed of what is already standing (for now, only what you grow during the 8 seconds hits harder).
 
 **Example.** Use Blood in the Furrow at a narrow spot. Wait in the ring and let them come to you, getting Seeded with every step.
 
@@ -188,11 +182,11 @@ ground: Briar Patch's bed, a thornbush, a sapling, a thicket, a tuft of briar.
 
 **When it happens.** Always on once you learn it, while something you grew stands within 4 metres of you.
 
-**The numbers.** 3 Shards. For now, you take 20% less damage while something you grew stands within 4 metres.
+**The numbers.** 3 Shards. It works while something you grew stands within 4 metres of you.
 
 **Works with.** Briar Patch and Fallen Seeds, for a garden to stand in; Root Walk and Wildwood, which come after it on the chart; Ripening.
 
-**Not built yet.** The footing itself (never thrown, pulled or knocked down, and no flinching from normal blows), and the roots running to your heels. For now, it only cuts the damage you take in the garden.
+**Not built yet.** The roots running from the plant to your heels aren't drawn yet.
 
 **Example.** Stand in your own bed of briars against a brute. Its blows land for a fifth less while you trade hits.
 
@@ -227,11 +221,11 @@ ground: Briar Patch's bed, a thornbush, a sapling, a thicket, a tuft of briar.
 
 **When it happens.** For now, every time you cast it. Root Walk must be in a spell slot.
 
-**The numbers.** 3 Shards. Each cast gives you a perfect dodge's mana (12) and takes 1.5 seconds off the wait on every spell and strike that is waiting. A thornbush with a 2-metre radius grows where you went down and lasts 8 seconds. Every half second, it deals 4 damage and Seeded.
+**The numbers.** 3 Shards. It only counts if you start it in the last 0.3 seconds before an enemy's blow (one within 6 metres) lands on you. Then it is a perfect dodge: you get 12 mana, the game slows for a moment, the blow misses, and every mark that answers a perfect dodge answers this one. A thornbush with a 2-metre radius then grows where you went down and lasts 8 seconds. Every half second, it deals 4 damage and Seeded.
 
 **Works with.** Every mark that uses mana; Reap What Is Sown (one more thing to burst); The Garden Holds You.
 
-**Not built yet.** The timing (starting it right as a blow would land), and the thornbush replacing the sapling; for now, it grows next to it.
+**Not built yet.** The thornbush doesn't replace the sapling yet; for now, it grows next to it.
 
 **Example.** Root Walk out of a brute's swing, then walk again sooner. Each walk leaves a bush and a sapling behind.
 
@@ -264,11 +258,9 @@ ground: Briar Patch's bed, a thornbush, a sapling, a thicket, a tuft of briar.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). While you carry Life, you can always put it in a slot.
 
-**The numbers.** Comes with Life. It costs no mana. After you cast it, you must wait 7 seconds to cast it again. Fighting with your weapon makes the wait shorter. Its Empower makes the wait 5.5 seconds. The bed is 2.5 metres across, lands 3 metres ahead of you, and lasts 6 seconds. Twice a second, it lashes for 4 damage and Seeded, and it slows whatever stands in it by a fifth.
+**The numbers.** Comes with Life. It costs no mana. After you cast it, you must wait 7 seconds to cast it again. Fighting with your weapon makes the wait shorter. Its Empower makes the wait 5.5 seconds and the bed 3.3 metres across. The bed is 2.5 metres across, lands 3 metres ahead of you, and lasts 6 seconds. Twice a second, it lashes for 4 damage and Seeded, and it slows whatever stands in it by a fifth.
 
 **Works with.** Its Empower, its two shapes and its Master mark; Seeded; Reap What Is Sown and Drawn From the Wood, which use up the bed; The Garden Holds You and Root Walk; and the charged blade, which it charges with Life when it lands.
-
-**Not built yet.** The Empower's bigger bed, 3.3 metres across. For now, the spell only gets the Empower's shorter wait.
 
 **Example.** Put the bed in a doorway and fight at its edge. Everything that comes through is Seeded and slowed.
 
@@ -314,11 +306,11 @@ ground: Briar Patch's bed, a thornbush, a sapling, a thicket, a tuft of briar.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). Then guard or dodge perfectly: press the guard button just before a blow lands, or dodge just before it.
 
-**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 9 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 7 seconds.) Each cast gives three saplings, used up by your next perfect guards and perfect dodges. Each sapling reaches 3.5 metres and stays for 12 seconds. Every 1.5 seconds, it hits everything in reach for 6 damage, 8 stagger and one stack of Seeded. Up to three can stand at once from guards, and three from dodges; one more replaces the oldest. On a dodge, it is planted at the enemy you face.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 9 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 7 seconds.) Each cast gives three saplings (four with its Empower), used up by your perfect guards and perfect dodges in the next 8 seconds. Any not used by then are gone. Each sapling reaches 3.5 metres and stays for 12 seconds. Every 1.5 seconds, it hits everything in reach for 6 damage, 8 stagger and one stack of Seeded. Up to three can stand at once in all; one more replaces the oldest. On a dodge, it is planted at the enemy you face.
 
 **Works with.** Bitter Rind and Briar Coat (they work on the same guard), Briar Coat, which it comes after on the chart, Reap What Is Sown and Drawn From the Wood (they use up the saplings), Root Walk, Wildwood, Seeded.
 
-**Not built yet.** The window should last eight seconds after you cast it (for now, the three saplings wait until used). There should be three at most in total between guards and dodges. The Empower's fourth sapling. Each sapling should only lash the nearest enemy (for now, it hits everything within reach).
+**Not built yet.** Each sapling should only lash the nearest enemy (for now, it hits everything within reach).
 
 **Example.** Cast it as a pack closes in and perfect-guard three blows. Three saplings grow among them, Seeding everything that comes near.
 
@@ -327,11 +319,9 @@ ground: Briar Patch's bed, a thornbush, a sapling, a thicket, a tuft of briar.
 
 **When it happens.** For now, on every perfect guard and perfect dodge while you have the shape picked, along with the saplings. If you have not bought this, only the saplings are planted.
 
-**The numbers.** 3 Shards. Strangler: the attacker is rooted for 1 second (it can't walk, but it can still hit whatever comes within reach) and gets two stacks of Seeded. Dodder: for 6 seconds, each of your weapon blows on it heals you 3, and it takes a quarter more stagger.
+**The numbers.** 3 Shards. Strangler: the attacker is rooted for 1 second (it can't walk, but it can still hit whatever comes within reach) and gets two stacks of Seeded. Dodder: for 6 seconds, each of your weapon blows on it heals you 3, and it takes a quarter more stagger. Either one takes the place of a sapling: it uses up one of the cast's saplings, and only works in the cast's 8 seconds. No sapling is planted.
 
 **Works with.** Strangler: Ripening on the rooted enemy. Dodder: Seeded's own healing; Bitter Rind and Briar Coat on the same attacker.
-
-**Not built yet.** Each should replace the sapling, and only work during the spell's window. For now, they work on every perfect guard and dodge while picked, and the saplings are still planted.
 
 **Example.** Use Dodder on a brute whose swing you perfectly guarded. You get six seconds of cuts that each heal 3 more and break its balance a quarter sooner.
 

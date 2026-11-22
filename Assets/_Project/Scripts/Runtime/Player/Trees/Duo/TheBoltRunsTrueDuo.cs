@@ -29,9 +29,8 @@ namespace Clover.Player.Trees.Duo
         {
             const string A = Elements.Light, B = Elements.Lightning;
 
-            // NEEDS: a line laid from one enemy to the nearest carrying a given affliction, all on it struck (aim-at-afflicted):
-            // Laid Flat's bolt along the ground to the nearest Marked or Static enemy within 10 m; now an arc to the nearest
-            // Marked one.
+            // Laid Flat's bolt runs along the ground from the reacting enemy to the nearest Marked or charged enemy within
+            // 10 m, striking all on the line (a Lane with UpgradeEffect.AimAt); with none such, the reacting one alone.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "The Bolt Runs True: Laid Flat or Struck Again", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -41,13 +40,12 @@ namespace Clover.Player.Trees.Duo
                     new ShapeDef
                     {
                         Name = "Laid Flat",
-                        Description = "The thread of light lies along the ground to the nearest other Marked enemy within 10 m, and 0.5 s later the bolt runs the line: 18 and two Static to it and to the one at the far end. Then its own Static discharges, as before.",
+                        Description = "The thread of light lies along the ground to the nearest other Marked or charged enemy within 10 m, and 0.5 s later the bolt runs the line: 18 and two Static to it, to the one at the far end and to all between. Then its own Static discharges, as before.",
                         Effects = new[]
                         {
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Flat, Seconds = 0.5f } },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Flat, Do = UpgradeAction.Burst, Radius = 0.6f, Damage = 18f, Stagger = 20f, Affliction = AfflictionKind.Static, Stacks = 2 },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Flat, Do = UpgradeAction.Arc, FromTarget = true, LeapsTo = AfflictionKind.Marked, Count = 1, Reach = 10f,
-                                Damage = 18f, Stagger = 20f, Affliction = AfflictionKind.Static, Stacks = 2 },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Flat, Do = UpgradeAction.Lane, AimAt = AfflictionKind.Marked, AimAt2 = AfflictionKind.Static, Reach = 10f,
+                                Radius = 0.6f, Damage = 18f, Stagger = 20f, Affliction = AfflictionKind.Static, Stacks = 2 },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Flat, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Static, Radius = 4f, Stagger = 5f },
                         },
                     },
@@ -102,14 +100,14 @@ namespace Clover.Player.Trees.Duo
             // The duo spell, bought with 5 Shards once both are carried (no god gives it): a detonator on an 11 s cooldown
             // (SpellTimings). The spikes form runs one stroke 14 m along the floor, cast in Light (a Mark on each); every Static
             // it meets discharges, and your first blow on each enemy struck within 2 s is critical.
-            // NEEDS: the line held on the button for up to 1.5 s, turning with you, loosed on letting go (held-press), and a
-            // perfect guard while it is held loosing it at once for twice the damage (spell-windows).
+            // The line is held on the button for up to 1.5 s, turning with you, and loosed on letting go (SpellSpec.HoldUpTo).
+            // NEEDS: a perfect guard while it is held loosing it at once for twice the damage (spell-windows).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = DiamondThunder, Name = "Diamond Thunder", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Role = SpellRole.Detonator, Requires = new[] { ChargedLight, DiamondGuard }, Icon = UpgradeIcons.Beam,
                 Description = "A straight line of light lies on the floor from your hand, 14 m, and lightning runs the whole line in one stroke: 22 and 40 stagger to every enemy on it, each Marked, and every Static it meets discharges. Your first blow on each within 2 s is critical.",
                 Form = SpellForms.Spikes,
-                Spell = new SpellSpec { Reach = 14f, Speed = 40f, Count = 1, Radius = 0.7f, Damage = 22f, Stagger = 40f, Stacks = 1 },
+                Spell = new SpellSpec { Reach = 14f, Speed = 40f, Count = 1, Radius = 0.7f, Damage = 22f, Stagger = 40f, Stacks = 1, HoldUpTo = 1.5f },
                 Effects = new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Static, Radius = 4f, Stagger = 5f },
@@ -121,8 +119,8 @@ namespace Clover.Player.Trees.Duo
             // The duo surge, worn in the Hand's surge slot with its own 45 mana and 10 s (DuoSurge). NEEDS: threads linking every
             // Marked enemy within 12 m (six at most) that carry a discharge or a bolt on one to all the others for half
             // (links-pass-blows); now a discharge on a Marked enemy arcs on through up to five Marked enemies within 12 m,
-            // half a discharge's 7 a stack each, and each critical blow on a Marked enemy lays a Static on every enemy within
-            // 12 m, Marked or not (afflicted-only).
+            // half a discharge's 7 a stack each; and each critical blow on a Marked enemy lays a Static on every Marked enemy within
+            // 12 m alone (UpgradeEffect.OnlyCarrying).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = TheNetOfJewels, Name = "The Net of Jewels", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { DiamondThunder }, Icon = UpgradeIcons.Chain,
@@ -132,7 +130,8 @@ namespace Clover.Player.Trees.Duo
                 {
                     new UpgradeEffect { On = UpgradeTrigger.SetOff, WhileSurge = true, Spent = AfflictionKind.Static, Needs = AfflictionKind.Marked, Cooldown = 0.5f, Do = UpgradeAction.Arc, FromTarget = true,
                         LeapsTo = AfflictionKind.Marked, Count = 5, Reach = 12f, Damage = 3.5f, Stagger = 2.5f, PerStack = true, Affliction = AfflictionKind.Static },
-                    new UpgradeEffect { On = UpgradeTrigger.CritHit, WhileSurge = true, Needs = AfflictionKind.Marked, Cooldown = 0.3f, Do = UpgradeAction.Afflict, Radius = 12f, Affliction = AfflictionKind.Static, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.CritHit, WhileSurge = true, Needs = AfflictionKind.Marked, Cooldown = 0.3f, Do = UpgradeAction.Afflict, Radius = 12f, Affliction = AfflictionKind.Static, Stacks = 1,
+                        OnlyCarrying = AfflictionKind.Marked },
                 },
             }, HeartPattern.RightTop));
         }

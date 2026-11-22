@@ -51,5 +51,7 @@ namespace Clover.Player
         LowWater,
         /// <summary>On a heavy blow (finishers included) that lands on an enemy in the air (or reeling). Weapon damage and stagger only.</summary>
         AirborneHeavyBlow,
+        /// <summary>While the player has stood still, not walking, dodging or stepping, for a second (the ledger's stood-still).</summary>
+        StoodStill,
     }
 }

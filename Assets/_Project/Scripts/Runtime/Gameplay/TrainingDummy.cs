@@ -108,8 +108,8 @@ namespace Clover.Gameplay
                 Health.Damage(Afflictions.Shatter());
                 CombatEvents.RaiseShattered(this);
             }
-            float takes = Afflictions.DamageTakenMultiplier(hit.Spell);
-            float unsteadies = Afflictions.StaggerTakenMultiplier;
+            float takes = Afflictions.DamageTakenMultiplier(hit.Spell, hit.Heavy);
+            float unsteadies = Afflictions.StaggerTakenFor(hit.Spell);
             Afflictions.TakeFrom(hit, this, shattered);
             // As an enemy: ground that only lays an affliction is not a blow, so the last blow's numbers stay as they were.
             if (hit.OnlyLays && detonated <= 0f) return HitOutcome.Landed;

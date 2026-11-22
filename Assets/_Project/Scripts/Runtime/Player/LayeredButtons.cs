@@ -94,6 +94,13 @@ namespace Clover.Player
             return !FromPad(slots[slot]) || Rules.PadLayerHeld;
         }
 
+        /// <summary>
+        /// True on the frame a slot's button has been held long enough to be a hold, not a tap (the Hold interaction on the
+        /// slot actions in Controls): a spell held on its button begins to gather then.
+        /// </summary>
+        public bool SlotHoldBegan(int slot) =>
+            slot >= 0 && slot < slots.Length && slots[slot] != null && slots[slot].enabled && slots[slot].WasPerformedThisFrame() && SlotHeld(slot);
+
         /// <summary>The weapon skill's button is down (a counter's stance is held on it).</summary>
         public bool SkillHeld => skill != null && skill.IsPressed() && !Rules.Swallows(FromPad(skill));
 

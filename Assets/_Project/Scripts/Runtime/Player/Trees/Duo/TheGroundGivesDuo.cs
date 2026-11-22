@@ -19,6 +19,8 @@ namespace Clover.Player.Trees.Duo
         /// <summary>The conditions the two shapes set, each a sinking as the plain reaction's.</summary>
         public const string Quicksand = "thegroundgives.quicksand";
         public const string SandBoil = "thegroundgives.boil";
+        /// <summary>Driven Down's guard opened to heavy blows while the enemy is sunk.</summary>
+        public const string DrivenDownOpen = "thegroundgives.drivendown.open";
 
         public static void Add(List<Upgrade> to)
         {
@@ -38,7 +40,7 @@ namespace Clover.Player.Trees.Duo
                         Description = "It sinks for 4 s, slowed by half, and the sand drags everything within 1.5 m of it 1 m toward it each second, so enemies end up together. A heavy blow holds it fast for 0.5 s.",
                         Effects = new[]
                         {
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Quicksand, Seconds = 4f, Beat = 1f, Pace = 0.5f } },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Quicksand, Seconds = 4f, Beat = 1f, Pace = 0.5f, Flags = ConditionFlags.Mired, Sink = 0.35f, Is = Reactions.SunkInSand } },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = Quicksand, Do = UpgradeAction.Pull, Radius = 1.5f, Amount = 1f },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Quicksand, By = StruckBy.Heavy, Do = UpgradeAction.Hold, Seconds = 0.5f },
                         },
@@ -49,7 +51,7 @@ namespace Clover.Player.Trees.Duo
                         Description = "The pool lasts only 1.2 s, then erupts in a fountain of mud and water: it is lifted for 1 s, and everything within 3 m takes 12, Soaked and a Tremor.",
                         Effects = new[]
                         {
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = SandBoil, Seconds = 1.2f, Pace = 0.5f } },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = SandBoil, Seconds = 1.2f, Pace = 0.5f, Flags = ConditionFlags.Mired, Sink = 0.35f, Is = Reactions.SunkInSand } },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = SandBoil, Do = UpgradeAction.Lift, Seconds = 1f },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = SandBoil, Do = UpgradeAction.Burst, Radius = 3f, Damage = 12f, Affliction = AfflictionKind.Soaked, Stacks = 1 },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = SandBoil, Do = UpgradeAction.Afflict, Radius = 3f, Affliction = AfflictionKind.Tremor, Stacks = 1 },
@@ -58,21 +60,26 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.Foot));
 
-            // NEEDS: an answer to an enemy that dies in a condition (sunk); now one that dies soaked and shaken.
+            // An enemy that dies sunk (InState: the plain sand or either shape's, each Is the plain one's).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = GivenToTheBog, Name = "Given to the Bog", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Flask,
                 Description = "An enemy that dies sunk is swallowed and the bog gives back: a quarter of a flask.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Soaked, Needs2 = AfflictionKind.Tremor, Do = UpgradeAction.FlaskFill, Amount = 0.25f, Cooldown = 0.5f } },
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Kill, InState = Reactions.SunkInSand, Do = UpgradeAction.FlaskFill, Amount = 0.25f, Cooldown = 0.5f } },
             }, HeartPattern.LeftLow));
 
-            // NEEDS: a heavy blow that passes the guard; an answer to blows on an enemy in a condition (sunk); now heavy blows
-            // on a soaked, shaken enemy hold it 0.5 s.
+            // While it is sunk its guard lets heavy blows through (ConditionFlags.HeavyPassesGuard, lasting only while the sand
+            // holds it: WhileIn), and each heavy blow on it holds it 0.5 s longer (InState).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = DrivenDown, Name = "Driven Down", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Hammer,
                 Description = "Heavy blows on a sunk enemy pass its guard and hold it 0.5 s longer.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.HeavyHit, Needs = AfflictionKind.Soaked, Needs2 = AfflictionKind.Tremor, Do = UpgradeAction.Hold, Seconds = 0.5f } },
+                Effects = new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = AfflictionPairs.Id(AfflictionPairs.Index(AfflictionKind.Soaked, AfflictionKind.Tremor)), Do = UpgradeAction.Condition,
+                        State = new ConditionSpec { Id = DrivenDownOpen, Seconds = 4f, Flags = ConditionFlags.HeavyPassesGuard, WhileIn = Reactions.SunkInSand } },
+                    new UpgradeEffect { On = UpgradeTrigger.HeavyHit, InState = Reactions.SunkInSand, Do = UpgradeAction.Hold, Seconds = 0.5f },
+                },
             }, HeartPattern.RightLow));
 
             // NEEDS: a dodge through ground of one's own as a slide (ground-states); now every dodge leaves wet sand behind it

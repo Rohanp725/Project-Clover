@@ -57,13 +57,11 @@ Lightning and Water are both carried.
 
 **When it happens.** Whenever Static fills up on a Soaked enemy, while you carry both Lightning and Water.
 
-**The numbers.** Mix, keystone, 5 Shards. 7 damage and 5 stagger per stack within 8 metres, at most once a second.
+**The numbers.** Mix, keystone, 5 Shards. 7 damage and 5 stagger per stack to every Soaked enemy within 8 metres, at most once a second. Dry enemies are not hit.
 
 **Works with.** Wet Thread, The Flashing, Riptide.
 
 **Example.** Fill a wet soldier with Static, and the whole wet floor goes off.
-
-**Not built yet.** For now, it reaches every enemy within 8 metres, not only the soaked ones.
 
 ## seized.flashing
 **What it does.** You slap the floor, and a flash runs across the ground to an enemy, then darts on to the next, up to five. Each one it reaches is hit, Soaked, and charged twice, so it locks up right away.
@@ -76,4 +74,4 @@ Lightning and Water are both carried.
 
 **Example.** Start a fight with it on a pack: five enemies lock up at once.
 
-**Not built yet.** It doesn't look for the nearest soaked enemy or run along the floor yet, and its path doesn't stay wet. Your next blow on the last enemy it reached doesn't set off everything it touched yet.
+**Not built yet.** It goes first to the nearest soaked enemy in reach (or the one you face), but it doesn't run along the floor yet, and its path doesn't stay wet. Your next blow on the last enemy it reached doesn't set off everything it touched yet.

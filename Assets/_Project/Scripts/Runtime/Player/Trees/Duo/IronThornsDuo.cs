@@ -38,7 +38,7 @@ namespace Clover.Player.Trees.Duo
                         Description = "Iron thorns grow through its armour for 6 s; your weapon blows prune them rather than throw them, three in all, and each one cut heals you 4.",
                         Effects = new[]
                         {
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Pruned, Seconds = 6f, Blows = 3 } },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Pruned, Seconds = 6f, Blows = 3, Is = Reactions.Thorns } },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Pruned, By = StruckBy.Weapon, Do = UpgradeAction.Heal, Amount = 4f },
                         },
                     },
@@ -48,7 +48,7 @@ namespace Clover.Player.Trees.Duo
                         Description = "Five thorns grow and none is thrown: they all burst out together when it dies or the 6 s end, a ring of blades to 3 m, 8 and a notch on each enemy.",
                         Effects = new[]
                         {
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Harvest, Seconds = 6f } },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Harvest, Seconds = 6f, Is = Reactions.Thorns } },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Harvest, Do = UpgradeAction.Burst, Radius = 3f, Damage = 8f, Stagger = 8f, Affliction = AfflictionKind.Sundered, Stacks = 1 },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionDied, Condition = Harvest, Do = UpgradeAction.Burst, Radius = 3f, Damage = 8f, Stagger = 8f, Affliction = AfflictionKind.Sundered, Stacks = 1 },
                         },
@@ -56,30 +56,28 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.Foot));
 
-            // NEEDS: an answer to an enemy that dies in a condition (thorns in it); now one that dies seeded and notched.
+            // A kill of an enemy with Iron Thorns' thorns in it, in whichever shape, read from what it carried as it died
+            // (UpgradeEffect.InState).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = SapOfIron, Name = "Sap of Iron", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Flask,
                 Description = "An enemy that dies with thorns in it gives its iron to the ground and the ground to you: a quarter of a flask fills at once.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Seeded, Needs2 = AfflictionKind.Sundered, Do = UpgradeAction.FlaskFill, Amount = 0.25f, Cooldown = 0.5f } },
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Kill, InState = Reactions.Thorns, Do = UpgradeAction.FlaskFill, Amount = 0.25f } },
             }, HeartPattern.LeftLow));
 
-            // NEEDS: grown things as sources that lay the other element's affliction when they bite (grown-sources); now your
-            // weapon blows lay a notch while you stand near one of them.
+            // Every grown thing lays a notch when it bites (Hazards.GrownBitesMask, set by PlayerUpgrades while this is owned).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = OreInTheRoot, Name = "Ore in the Root", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Leaf,
                 Description = "Things you grow draw iron from the ground: each grown thing lays a notch of Sundered when it bites.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.AnyHit, While = StatWhen.NearGrown, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Sundered, Stacks = 1, Cooldown = 0.5f } },
             }, HeartPattern.RightLow));
 
-            // NEEDS: an answer to a laying (a notch laid on a Seeded enemy lays two); now a blow on a seeded, notched enemy
-            // adds a notch.
+            // A notch laid on a Seeded enemy lays one more (UpgradeTrigger.AfflictionLaid; the second is not answered again).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = GraftedEdge, Name = "Grafted Edge", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 1, Requires = new[] { SapOfIron }, Icon = UpgradeIcons.Blade,
                 Description = "A notch laid on a Seeded enemy lays two.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.AnyHit, Needs = AfflictionKind.Seeded, Needs2 = AfflictionKind.Sundered, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Sundered, Stacks = 1, Cooldown = 0.5f } },
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.AfflictionLaid, Spent = AfflictionKind.Sundered, Needs = AfflictionKind.Seeded, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Sundered, Stacks = 1 } },
             }, HeartPattern.LeftHigh));
 
             // The duo spell, bought with Shards once both are carried (no god gives it): its pair's larger spell, 45 mana (SpellTimings). The minions form sends helpers that

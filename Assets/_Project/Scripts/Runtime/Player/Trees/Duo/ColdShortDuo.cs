@@ -31,9 +31,9 @@ namespace Clover.Player.Trees.Duo
             const string A = Elements.Ice, B = Elements.Metal;
 
             // NEEDS: ground that acts on whoever walks in later (ground-states): Shed Plate's black ice throwing flat whoever
-            // steps on it in its 4 s; now those within 1.2 m as the plate falls slip. A plain guard against a brittle enemy
-            // counted as perfect, breaking its weapon for 50 stagger and a 1 s hold (guard-made-perfect); now Snapped Blade's
-            // brittle weapon deals half for the 5 s from the reaction.
+            // steps on it in its 4 s; now those within 1.2 m as the plate falls slip. Snapped Blade: a plain guard against the
+            // brittle enemy counts as perfect (ConditionFlags.GuardMadePerfect), and a perfect guard on it breaks its weapon for
+            // 50 stagger and a 1 s hold; its blows deal half for the 5 s.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Cold Short: Shed Plate or Snapped Blade", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -46,7 +46,7 @@ namespace Clover.Player.Trees.Duo
                         Description = "It goes brittle and your next heavy blow cracks the plates off, as before; and the cracked plate falls as a sheet of black ice 2 m across under it for 4 s. Enemies on it slip flat for 0.6 s.",
                         Effects = new[]
                         {
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = PlateBrittle, Seconds = 5f, Keeps = AfflictionKind.Sundered, EndsWith = ConditionBlow.Heavy } },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = PlateBrittle, Seconds = 5f, Keeps = AfflictionKind.Sundered, EndsWith = ConditionBlow.Heavy, Is = Reactions.Brittle } },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = PlateBrittle, By = StruckBy.Heavy, Do = UpgradeAction.Condition,
                                 State = new ConditionSpec { Id = PlateCracked, Seconds = 6f, Flags = ConditionFlags.WeaponTakenShare, Scale = 1.25f } },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = PlateBrittle, By = StruckBy.Heavy, Do = UpgradeAction.Condition,
@@ -60,11 +60,13 @@ namespace Clover.Player.Trees.Duo
                     new ShapeDef
                     {
                         Name = "Snapped Blade",
-                        Description = "The armour does not crack under your blow; its own weapon goes brittle instead. For 5 s its notches do not fade and its blows deal half, as a weapon that snaps on your guard.",
+                        Description = "The armour does not crack under your blow; its own weapon goes brittle instead. For 5 s its notches do not fade and its blows deal half, and any guard against it counts as perfect: its weapon snaps on your guard for 50 stagger and a 1 s hold.",
                         Effects = new[]
                         {
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition,
-                                State = new ConditionSpec { Id = Snapped, Seconds = 5f, Keeps = AfflictionKind.Sundered, Flags = ConditionFlags.DamageDealtShare, Scale = 0.5f } },
+                                State = new ConditionSpec { Id = Snapped, Seconds = 5f, Keeps = AfflictionKind.Sundered, Flags = ConditionFlags.DamageDealtShare | ConditionFlags.GuardMadePerfect, Scale = 0.5f, Is = Reactions.Brittle } },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionAttacked, Condition = Snapped, By = StruckBy.Turned, Do = UpgradeAction.Burst, Radius = 0.6f, Damage = 0f, Stagger = 50f, Stacks = 0 },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionAttacked, Condition = Snapped, By = StruckBy.Turned, Do = UpgradeAction.Hold, Seconds = 1f },
                         },
                     },
                 },
@@ -81,30 +83,28 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.LeftLow));
 
-            // NEEDS: an answer to an enemy in a condition another mark set (condition-needs): the brittle enemy; now Glass Bell
-            // keeps its own 5 s from each Cold Short, ended by a heavy blow as the plain brittleness is.
+            // Each weapon blow on an enemy brittle from Cold Short, in whichever shape (UpgradeEffect.InState); the heavy blow
+            // that cracks the brittleness still rings.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = GlassBell, Name = "Glass Bell", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Ring,
                 Description = "Each blow on a brittle enemy rings like glass: 3 mana, and 0.3 s off every running spell cooldown.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = Reaction, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Ringing, Seconds = 5f, EndsWith = ConditionBlow.Heavy } },
-                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Ringing, By = StruckBy.Weapon, Cooldown = 0.1f, Do = UpgradeAction.Mana, Amount = 3f },
-                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Ringing, By = StruckBy.Weapon, Cooldown = 0.1f, Do = UpgradeAction.CutCooldowns, Amount = 0.3f },
+                    new UpgradeEffect { On = UpgradeTrigger.AnyHit, InState = Reactions.Brittle, Cooldown = 0.1f, Do = UpgradeAction.Mana, Amount = 3f },
+                    new UpgradeEffect { On = UpgradeTrigger.AnyHit, InState = Reactions.Brittle, Cooldown = 0.1f, Do = UpgradeAction.CutCooldowns, Amount = 0.3f },
                 },
             }, HeartPattern.RightLow));
 
-            // NEEDS: an effect that shatters a frozen enemy as a heavy blow would (shatter-made); now Cold Short on a frozen
-            // enemy strikes it with a shatter's weight, 30 and 40 stagger, and its Chill is left for your heavy blow to shatter.
+            // Cold Short on a frozen enemy shatters it as a heavy blow would (UpgradeAction.Shatter): the ice breaks, what it
+            // held takes the breaking and 40 stagger, and whatever answers a shatter hears it.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = BrittleToTheCore, Name = "Brittle to the Core", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { RimedEdge, GlassBell }, Icon = UpgradeIcons.Gem,
                 Description = "Cold Short on a frozen enemy shatters it as well, the shatter and the crack landing together.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = Reaction, Needs = AfflictionKind.Chill, NeedsFull = true, Do = UpgradeAction.Burst, Radius = 0.5f, Damage = 30f, Stagger = 40f,
-                        Affliction = AfflictionKind.Chill },
+                    new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = Reaction, Do = UpgradeAction.Shatter, Stagger = 40f, Affliction = AfflictionKind.Chill },
                 },
             }, HeartPattern.Keystone));
 

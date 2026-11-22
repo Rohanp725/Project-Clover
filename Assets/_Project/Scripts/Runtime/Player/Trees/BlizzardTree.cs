@@ -25,8 +25,9 @@ namespace Clover.Player.Trees
         {
             const string A = Elements.Wind, B = Elements.Ice;
 
-            // NEEDS: a freeze held longer and a shatter struck harder by a condition (Rime Tree: frozen 1 s longer, its shatter
-            // 25% harder; now only the Chill each blow adds); the side of a blow, as for the plain Rime.
+            // Rime Tree: while the crust holds, a freeze lasts 1 s longer and its shatter strikes 25% harder
+            // (ConditionSpec.FreezeLonger, ShatterHarder), and only blows on the side it showed you add the Chill, as for the
+            // plain Rime (ConditionSpec.KeepsFacing).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Rime: Rime Tree or Spindrift", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -36,11 +37,11 @@ namespace Clover.Player.Trees
                     new ShapeDef
                     {
                         Name = "Rime Tree",
-                        Description = "The crust never breaks: for 5 s every blow on it, weapon or spell, adds 1 Chill, so it freezes standing in its rime.",
+                        Description = "The crust never breaks: for 5 s every blow on the side it showed you, weapon or spell, adds 1 Chill, so it freezes standing in its rime, held 1 s longer, and its shatter strikes a quarter harder.",
                         Effects = new[]
                         {
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = RimeTree, Seconds = 5f } },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = RimeTree, By = StruckBy.Any, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 1 },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = RimeTree, Seconds = 5f, KeepsFacing = true, FreezeLonger = 1f, ShatterHarder = 1.25f } },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = RimeTree, By = StruckBy.Any, SideMost = 90f, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 1 },
                         },
                     },
                     new ShapeDef

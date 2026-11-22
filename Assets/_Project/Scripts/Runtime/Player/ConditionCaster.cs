@@ -15,20 +15,22 @@ namespace Clover.Player
     public static class ConditionCaster
     {
         /// <summary>Sets it; returns on how many it was set.</summary>
-        public static int Cast(UpgradeEffect effect, Component subject, Vector3 centre, PlayerCombat combat, LaySource source, HashSet<IDamageable> scratch, int stacks = 1)
+        public static int Cast(UpgradeEffect effect, Component subject, Vector3 centre, PlayerCombat combat, LaySource source, HashSet<IDamageable> scratch, int stacks = 1,
+            float scale = -1f, float spread = 1f, Vector3? facing = null)
         {
             var spec = effect != null ? effect.State : null;
             if (spec == null || string.IsNullOrEmpty(spec.Id) || combat == null) return 0;
             float pace = PaceFor(spec, stacks);
             AnswersOf(effect, spec.Id, out bool struck, out bool ended, out bool died, out bool attacked);
             int mark = effect.Owner != null ? effect.Owner.Index : -1;
-            if (!spec.ToOthers && effect.Radius <= 0f) return Set(effect, spec, subject, null, mark, struck, ended, died, attacked, combat, source, pace) ? 1 : 0;
+            Vector3 toward = facing ?? centre;
+            if (!spec.ToOthers && effect.Radius <= 0f) return Set(effect, spec, subject, null, mark, struck, ended, died, attacked, combat, source, pace, scale, toward) ? 1 : 0;
 
             // Round the trigger's enemy: the nearest first, as many as the effect allows (all within the radius when it names none).
             scratch.Clear();
             if (spec.ToOthers && subject is IDamageable self) scratch.Add(self);
             int most = effect.Count > 0 ? effect.Count : 12;
-            float radius = effect.Radius > 0f ? effect.Radius : 5f;
+            float radius = (effect.Radius > 0f ? effect.Radius : 5f) * Mathf.Max(0.1f, spread);
             int set = 0;
             while (set < most && scratch.Count < 24)
             {
@@ -37,9 +39,19 @@ namespace Clover.Player
                 scratch.Add(one);
                 // Only those carrying what the effect seeks (Chokedamp's damp runs to the shaken alone).
                 if (effect.LeapsTo != AfflictionKind.None && !(near is IAfflictable seeker && seeker.Afflictions.Has(effect.LeapsTo))) continue;
-                if (Set(effect, spec, near, spec.ToOthers ? subject : null, mark, struck, ended, died, attacked, combat, source, pace)) set++;
+                if (Set(effect, spec, near, spec.ToOthers ? subject : null, mark, struck, ended, died, attacked, combat, source, pace, scale, toward)) set++;
             }
             scratch.Clear();
+            // No one near to chain it to: it is chained to the floor where it stands (Black Chain's 2 m).
+            if (set == 0 && spec.ToOthers && spec.AloneLeash > 0f)
+            {
+                var alone = spec.Copy();
+                alone.ToOthers = false;
+                alone.Leash = spec.AloneLeash;
+                alone.LeashToPlayer = false;
+                alone.Flags &= ~ConditionFlags.Chained;
+                if (Set(effect, alone, subject, null, mark, struck, ended, died, attacked, combat, source, pace, scale, toward)) set++;
+            }
             return set;
         }
 
@@ -51,15 +63,33 @@ namespace Clover.Player
             spec != null && spec.SlowPerStack > 0f ? Mathf.Max(0.05f, 1f - spec.SlowPerStack * Mathf.Max(1, stacks)) : -1f;
 
         private static bool Set(UpgradeEffect effect, ConditionSpec spec, Component who, Component link, int mark, bool struck, bool ended, bool died, bool attacked,
-            PlayerCombat combat, LaySource source, float pace)
+            PlayerCombat combat, LaySource source, float pace, float scale, Vector3 toward)
         {
             if (!(who is IAfflictable afflictable)) return false;
             var set = afflictable.Afflictions;
             if (!Takes(spec, set)) return false;
-            if (set.Conditions.Set(spec, who, mark, link, struck, ended, ShareOf(set), died, attacked, pace) < 0) return false;
+            int slot = set.Conditions.Set(spec, who, mark, link, struck, ended, ShareOf(set), died, attacked, pace);
+            if (slot < 0) return false;
+            // The trigger's own number kept as the run's (Collected Twice: the damage the reaction dealt).
+            if (scale >= 0f) set.Conditions.Keep(slot, scale);
+            // Turned to face a point: the spell's middle, or straight away from the player.
+            if ((spec.Flags & ConditionFlags.FacesPoint) != 0)
+                set.Conditions.FaceToward(slot, FacePoint(spec, who.transform.position, combat.transform.position, toward));
             if (effect.Affliction != AfflictionKind.None && effect.Stacks > 0)
                 CombatEvents.Report(who, effect.Affliction, effect.Stacks, set.Lay(effect.Affliction, effect.Stacks + combat.ExtraStacks, 0f, combat.AfflictionPower, source, who), source);
             return true;
+        }
+
+        /// <summary>
+        /// The point a condition that turns its carrier turns it to face: straight away from the player, 10 m on, when it faces
+        /// away (Turned About); the spell's middle otherwise (Turned to the Sun's herb).
+        /// </summary>
+        public static Vector3 FacePoint(ConditionSpec spec, Vector3 carrier, Vector3 player, Vector3 spellMiddle)
+        {
+            if (spec == null || !spec.FaceAway) return spellMiddle;
+            Vector3 away = carrier - player;
+            away.y = 0f;
+            return carrier + (away.sqrMagnitude > 0.0001f ? away.normalized : Vector3.forward) * 10f;
         }
 
         /// <summary>False when the enemy cannot take this condition: one that roots, knocks flat or slows, on what cannot be frozen; one that knocks flat, on a god.</summary>
@@ -68,6 +98,8 @@ namespace Clover.Player
             if (spec == null || set == null) return false;
             // A god only staggers (Capsize: "the great only stagger"); one in a body ice can hold is still never thrown down.
             if ((spec.Flags & ConditionFlags.Down) != 0 && set.Rank == EnemyRank.God) return false;
+            // Nor is a god swung round to face a point.
+            if ((spec.Flags & ConditionFlags.FacesPoint) != 0 && set.Rank == EnemyRank.God) return false;
             bool holds = (spec.Flags & (ConditionFlags.Rooted | ConditionFlags.Down)) != 0 || spec.Pace < 1f;
             return !holds || set.CanFreeze;
         }

@@ -10,13 +10,11 @@ infusion marks on its Way.
 
 **When it happens.** Every time Glint goes off while you carry both Metal and Light. Glint goes off when a Mark lands on a notched enemy, or when Sundered lands on a Marked one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Glint. The plain one sends one ray to the nearest other enemy within 6 metres.
 
-**The numbers.** Mix, 3 Shards. Mirror to Mirror: up to four enemies, each within 6 metres of the last one, take 10 damage, 15 stagger and a Mark, and the enemy's notch is passed on. Burning Mirror: the point lasts 5 seconds. Your next weapon blow on the enemy adds two notches and 10 more damage. After Glint goes off on an enemy, it can't go off on that enemy again for 4 seconds.
+**The numbers.** Mix, 3 Shards. Mirror to Mirror: up to four enemies, each within 6 metres of the last one, take 10 damage, 15 stagger and a Mark, and the enemy's notch is passed on. The first bounce goes to any enemy. After that, the ray only bounces on from an enemy that has Sundered. Burning Mirror: the point lasts 5 seconds. Your next weapon blow on the enemy is a critical hit and adds two notches. After Glint goes off on an enemy, it can't go off on that enemy again for 4 seconds.
 
 **Works with.** Bright Steel (a perfect guard adds both afflictions), Halo of Blades, Counter Cut, Open Line.
 
 **Example.** A crowd of Marked soldiers: Mirror to Mirror sends one flash through four of them. A one-on-one fight: use Burning Mirror, then a heavy blow.
-
-**Not built yet.** Mirror to Mirror's ray bounces on from every enemy it hits, not only enemies that have Sundered. Burning Mirror's blow hits for 10 more damage instead of being a critical hit.
 
 ## halo.brightsteel
 **What it does.** A perfect guard makes your blade flash. The attacker is Marked, and its armour gets a notch.

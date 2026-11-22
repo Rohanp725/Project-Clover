@@ -25,8 +25,7 @@ namespace Clover.Player.Trees.Duo
         {
             const string A = Elements.Metal, B = Elements.Lightning;
 
-            // NEEDS: afflicted-only (Drawn Iron drawing only the enemies its arcs reach; now every enemy within 8 m, once in 0.3
-            // s); planted-blades (Forged Bolt's spikes seen standing in it, one hammered in by each weapon blow; now your heavy
+            // Drawn Iron draws in only the enemies its arcs reach (UpgradeEffect.DrawsIn). NEEDS: planted-blades (Forged Bolt's spikes seen standing in it, one hammered in by each weapon blow; now your heavy
             // blow tears out up to three of its Static as the bolt).
             to.Add(HeartPattern.Put(new Upgrade
             {
@@ -40,10 +39,9 @@ namespace Clover.Player.Trees.Duo
                         Description = "For 6 s every weapon blow on it arcs from iron to iron as before, and the arcs magnetise: each enemy an arc reaches is drawn 1.5 m toward the one struck, plates clattering, so a crowd folds in onto the blade.",
                         Effects = new[]
                         {
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Drawn, Seconds = 6f } },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Drawn, Seconds = 6f, Is = Reactions.IronLive } },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Drawn, By = StruckBy.Weapon, Cooldown = 0.3f, Do = UpgradeAction.Arc,
-                                LeapsTo = AfflictionKind.Sundered, Count = 2, Reach = 8f, Amount = 0.35f, Affliction = AfflictionKind.Sundered, Stacks = 1 },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Drawn, By = StruckBy.Weapon, Cooldown = 0.3f, Do = UpgradeAction.Pull, Radius = 8f, Amount = 1.5f },
+                                LeapsTo = AfflictionKind.Sundered, Count = 2, Reach = 8f, Amount = 0.35f, Affliction = AfflictionKind.Sundered, Stacks = 1, DrawsIn = 1.5f },
                         },
                     },
                     new ShapeDef
@@ -52,7 +50,7 @@ namespace Clover.Player.Trees.Duo
                         Description = "No arcs. For 6 s its Static holds, and each weapon blow on it hammers one into a glowing iron spike standing in it, three at most; your heavy blow tears them out as one thunderbolt thrown 10 m on: 12 a spike, 20 stagger and two Static to all on the line.",
                         Effects = new[]
                         {
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Forged, Seconds = 6f, Keeps = AfflictionKind.Static, EndsWith = ConditionBlow.Heavy } },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Forged, Seconds = 6f, Keeps = AfflictionKind.Static, EndsWith = ConditionBlow.Heavy, Is = Reactions.IronLive } },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Forged, By = StruckBy.Heavy, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Static, Count = 3 },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Forged, By = StruckBy.Heavy, Do = UpgradeAction.Lane, Reach = 10f, Radius = 0.6f, DamagePerSpent = 12f, Stagger = 20f,
                                 Affliction = AfflictionKind.Static, Stacks = 2 },
@@ -61,16 +59,15 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.Foot));
 
-            // Every third weapon blow on each enemy, counted on it, calls the bolt, at most every 0.3 s.
-            // NEEDS: the blows counted on an enemy in another mark's condition (condition-needs: a Live Iron enemy); now on an
-            // enemy both notched and charged.
+            // Every third weapon blow on each enemy, counted on it, calls the bolt, at most every 0.3 s: blows on an enemy whose
+            // iron is live from Live Iron, in whichever shape (UpgradeEffect.InState).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = ThreeSmiths, Name = "Three Smiths", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Hammer,
                 Description = "Every third weapon blow on a Live Iron enemy is answered from the sky: a bolt for 12, 15 stagger and a Static.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.AnyHit, Needs = AfflictionKind.Sundered, Needs2 = AfflictionKind.Static, EveryOnEnemy = 3, Do = UpgradeAction.Falling, Radius = 1f, Delay = 0.3f,
+                    new UpgradeEffect { On = UpgradeTrigger.AnyHit, InState = Reactions.IronLive, EveryOnEnemy = 3, Do = UpgradeAction.Falling, Radius = 1f, Delay = 0.3f,
                         Damage = 12f, Stagger = 15f, Affliction = AfflictionKind.Static, Stacks = 1, Cooldown = 0.3f },
                 },
             }, HeartPattern.LeftLow));
@@ -100,14 +97,15 @@ namespace Clover.Player.Trees.Duo
             // The duo spell, a movement on a 10 s cooldown (SpellTimings), bought with 5 Shards once both are carried. The drill
             // form makes you the bolt: in 0.25 s, along the line to the enemy faced, it cuts every enemy on it and notches it
             // (the branch's first element), and each takes two Static.
-            // NEEDS: going to the farthest Sundered enemy within 10 m, the enemy faced at half with none (aim-at-afflicted;
-            // now the enemy faced, whole); a perfect guard in the 2 s before the cast sending it on to a second (spell-windows).
+            // It goes to the farthest notched enemy within 10 m, or the enemy faced at half with none (SpellSpec.AimAt,
+            // AimFarthest, AimMissShare). NEEDS: a perfect guard in the 2 s before the cast sending it on to a second (spell-windows).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = LightningSeeksIron, Name = "Lightning Seeks Iron", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Role = SpellRole.Movement, Requires = new[] { ThreeSmiths, BareWire }, Icon = UpgradeIcons.Bolt,
                 Description = "You become a bolt and in a quarter of a second, untouchable, go to the farthest notched enemy within 10 m, cutting every enemy on the line for 10, 15 stagger and two Static; arriving, 16 and two Static.",
                 Form = SpellForms.Drill,
-                Spell = new SpellSpec { Reach = 10f, Radius = 1.2f, Count = 1, Damage = 10f, Stagger = 15f, Stacks = 1, Speed = 40f },
+                Spell = new SpellSpec { Reach = 10f, Radius = 1.2f, Count = 1, Damage = 10f, Stagger = 15f, Stacks = 1, Speed = 40f,
+                    AimAt = AfflictionKind.Sundered, AimFarthest = true, AimMissShare = 0.5f },
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Static, Stacks = 2 } },
             }, HeartPattern.Spell));
         }

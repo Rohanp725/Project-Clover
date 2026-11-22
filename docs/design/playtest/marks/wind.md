@@ -33,11 +33,9 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). If no enemy is in reach, the column comes up 5 metres in front of you, and you still have to wait.
 
-**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 9 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 7 seconds.) It targets the nearest enemy within 5 metres. The column rises 0.35 seconds after you cast it, with a 2-metre radius. It deals 8 damage, 40 stagger, counts as a heavy blow, adds one stack of Unsteady to everything in it, and keeps them in the air for 0.8 seconds.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 9 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 7 seconds.) It targets the nearest enemy within 5 metres. The column rises 0.35 seconds after you cast it, with a 2-metre radius. It deals 8 damage, 40 stagger, counts as a heavy blow, adds one stack of Unsteady to everything in it, and keeps them in the air for 1 second (1.3 seconds with its Empower).
 
 **Works with.** Rising Cut, which it comes after on the chart; Nothing Beneath; Sky Dance; Against the Wall (it counts as a spell hitting); and the charged blade: when it lands, your next three blows carry Wind.
-
-**Not built yet.** Hanging in the air for a full second (1.3 seconds with its Empower). For now, the column lifts for its own 0.8 seconds.
 
 **Example.** An archer stands behind a shield. Lift the archer, step in, and keep it up with your blows.
 
@@ -46,24 +44,22 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Whenever you cast Lifting Wind, using the shape you picked.
 
-**The numbers.** 3 Shards. Dust Devil: two columns rise under the two nearest enemies, 0.6 seconds after you cast it. Turned About: for 1.2 seconds, the enemy can't start an attack, and the first weapon blow on it is a critical hit, which ends the effect.
+**The numbers.** 3 Shards. Dust Devil: two columns rise under the two nearest enemies, 0.6 seconds after you cast it. Turned About: the column deals 8 damage and 40 stagger but lifts nothing. It spins the enemy around to face away from you for 1.2 seconds (half a second for an elite). In that time it can't start an attack or walk, and your first weapon blow on it ends the spin. If that blow lands on its back, it is a critical hit.
 
 **Works with.** Rising Cut and Nothing Beneath (Dust Devil in a pack); the heavy weapons and the colossus fights (Turned About).
 
-**Not built yet.** Dust Devil should be one column wandering for 3 seconds (for now, two rise at once). Turned About shouldn't lift the enemy, should spin it around in the column, and should give half the time against an elite and make a god's next attack swing wide (for now, it lifts the enemy too).
+**Not built yet.** Dust Devil should be one column wandering for 3 seconds (for now, two rise at once). A god isn't spun around; its next attack should swing wide instead, and it doesn't yet.
 
 **Example.** A brute too heavy to lift: use Turned About, and your next cut lands as a critical hit on its back.
 
 ## wind.lifting.master
 **What it does.** Cast Lifting Wind on the enemy a perfect dodge just took you past, and it hangs in the air twice as long.
 
-**When it happens.** A perfect dodge, then Lifting Wind within a second. Lifting Wind must be in a spell slot.
+**When it happens.** When Lifting Wind lifts the very enemy whose blow you perfectly dodged, cast within 2 seconds of that dodge.
 
-**The numbers.** 3 Shards. Within a second of a perfect dodge, casting Lifting Wind while it is ready doesn't start its wait. Each enemy the column lifts is held up for 1.6 seconds.
+**The numbers.** 3 Shards. That enemy hangs in the air for 2 seconds, twice as long as usual. Other enemies, and casts at other times, hang as usual.
 
 **Works with.** Passing Cut and Leaf on the Wind, which keep you dodging; Nothing Beneath.
-
-**Not built yet.** Only the enemy you dodged past should hang twice as long. For now, every enemy the column lifts hangs longer, whether you dodged or not.
 
 **Example.** Roll through a duellist's lunge and cast it as you come out behind it. It goes up for twice as long, and the next cast is free.
 
@@ -94,26 +90,24 @@ design yet, its **Not built yet** line says what is missing.
 ## wind.skydance.master
 **What it does.** Land all five cuts perfectly, and you come down with Tailwind lit for four seconds, for free.
 
-**When it happens.** When Sky Dance hits. Sky Dance must be in a spell slot.
+**When it happens.** When the last ring of Sky Dance closes and every cut was in time (all five, or all six with the Empower). Sky Dance must be in a spell slot.
 
-**The numbers.** 3 Shards. For 4 seconds, your dodge carries you 30% farther and keeps you safe 25% longer, and you move 15% faster. These are Tailwind's own bonuses, once per dance.
+**The numbers.** 3 Shards. Tailwind is lit for 4 seconds, with all it does, and costs no mana. If Tailwind is already lit, it lasts at least 4 more seconds. It works when Tailwind is your surge.
 
 **Works with.** Passing Cut, Leaf on the Wind, Closing Circle: the fight keeps moving after you land.
 
-**Not built yet.** It should only work when all five cuts were perfectly timed, and should light Tailwind itself (with its hanging blows and its Unsteady). For now, any dance that hits gives the dodge and speed bonuses.
+**Not built yet.** What it gives when another surge is in your surge slot is still being decided. For now, it gives nothing then.
 
 **Example.** Land five perfect cuts and throw the enemy into a pack. You land and roll right through them, farther and safer.
 
 ## wind.lift
-**What it does.** Carried Far. Every reaction with Unsteady in it throws whatever it hits away from where it happened.
+**What it does.** Carried Far. Every reaction with Unsteady in it reaches half again as far, and throws whatever it hits away from where it happened.
 
 **When it happens.** Whenever Unsteady reacts on an enemy with another affliction it has (Carried Embers with Burn, Windthrow, and the rest).
 
-**The numbers.** 3 Shards. Every enemy within 2.5 metres of the reaction is thrown 1.5 metres away from it.
+**The numbers.** 3 Shards. The reaction's bursts, ground, arcs and pulls reach 50% farther. Every enemy within 2.5 metres of the reaction is thrown 1.5 metres away from it.
 
 **Works with.** Carrying a second element: every one of Wind's ten reactions; Against the Wall, for throwing enemies into things.
-
-**Not built yet.** The reactions should reach 50% farther (the game needs a number for how far a reaction reaches first).
 
 **Example.** Wind and Fire on a soldier in a crowd. Carried Embers goes off, and the soldiers around it are thrown back.
 
@@ -176,7 +170,7 @@ design yet, its **Not built yet** line says what is missing.
 
 **Works with.** Turned About (another way to get behind an enemy); Indrawn Breath and Against the Wall (Wide Circle around a crowd).
 
-**Not built yet.** Half Circle should run half the circle (for now, it steps through the enemy). The Empower's longer hang time also applies to Wide Circle's short one (the Empower's numbers are applied after the shape's, so with the Empower, enemies hang for 1.5 seconds).
+**Not built yet.** Half Circle should run half the circle (for now, it steps through the enemy). With the Empower, Wide Circle's short hang grows by the same 0.3 seconds the plain circle's does (0.9 seconds in all).
 
 **Example.** A shield bearer is facing you. Use Half Circle, and the first cut lands as a critical hit on its unguarded back.
 
@@ -185,11 +179,11 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** For now, every time you cast Closing Circle. It must be in a spell slot.
 
-**The numbers.** 3 Shards. You get what a perfect dodge gives: 12 mana, and 1.5 seconds off the wait on every spell that is waiting.
+**The numbers.** 3 Shards. It only counts if you start it in the last 0.3 seconds before an enemy's blow (one within 6 metres) lands on you. Then it is a perfect dodge: you get 12 mana, the game slows for a moment, the blow misses, and every mark that answers a perfect dodge answers this one.
 
 **Works with.** Lifting Wind's Master mark and the other marks a perfect dodge sets off; Leaf on the Wind.
 
-**Not built yet.** The timing (starting it right as a blow would land), and running the circle around the attacker within 8 metres. For now, every cast gives the dodge's mana and time off.
+**Not built yet.** Running the circle around the attacker within 8 metres.
 
 **Example.** A spearman thrusts at you. Start the circle into it, and you run around it as the spear passes, with your mana and spell waits paid back.
 
@@ -274,11 +268,9 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). While you carry Wind, you can always put it in a slot.
 
-**The numbers.** Comes with Wind. It costs no mana. After you cast it, you must wait 6 seconds to cast it again. Fighting with your weapon makes the wait shorter. Its Empower makes the wait 4.5 seconds. It is a cone 5 metres long and 70 degrees wide. It deals 8 damage, 20 stagger and two stacks of Unsteady, and everything in it is thrown 3 metres.
+**The numbers.** Comes with Wind. It costs no mana. After you cast it, you must wait 6 seconds to cast it again. Fighting with your weapon makes the wait shorter. Its Empower makes the wait 4.5 seconds and the Unsteady three stacks. It is a cone 5 metres long and 70 degrees wide. It deals 8 damage, 20 stagger and two stacks of Unsteady, and everything in it is thrown 3 metres.
 
 **Works with.** Its Empower, its two shapes and its Master mark; Against the Wall; and the charged blade, which it charges with Wind when it lands.
-
-**Not built yet.** The Empower's third stack of Unsteady. For now, the spell only gets the Empower's shorter wait.
 
 **Example.** A soldier stands at the edge of a drop. Gust it, and it's gone.
 

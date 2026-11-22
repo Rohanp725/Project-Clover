@@ -31,7 +31,7 @@ both carried.
 ## redhot.strikewhilehot
 **What it does.** Each heavy blow on a red-hot enemy gives you 4 mana and takes 0.5 seconds off the wait on every spell that is waiting.
 
-**When it happens.** During the 5 seconds after each Red Hot, on each heavy blow on that enemy, while you carry both Metal and Fire.
+**When it happens.** Each heavy blow on an enemy while it glows red from Red Hot, in any shape, while you carry both Metal and Fire.
 
 **The numbers.** Mix, 3 Shards. 4 mana and 0.5 seconds off every spell's wait, for each heavy blow.
 
@@ -39,20 +39,16 @@ both carried.
 
 **Example.** Hammer the glowing brute, and your spells come back sooner.
 
-**Not built yet.** For now, it keeps its own 5-second timer from each Red Hot, instead of checking whether the enemy is glowing.
-
 ## redhot.redshort
 **What it does.** A finisher on a red-hot enemy crumbles its armour. Every notch is used up for 15 damage each, and for 10 seconds it takes 30% more damage from your weapon.
 
-**When it happens.** The first heavy blow on an enemy during the 5 seconds after its Red Hot, while you carry both Metal and Fire.
+**When it happens.** Each finisher on an enemy while it glows red from Red Hot, in any shape, while you carry both Metal and Fire. Other heavy blows do not crumble it.
 
-**The numbers.** Mix, keystone, 5 Shards. 15 damage for each notch used up, and 30% more damage from your weapon for 10 seconds. Once for each Red Hot.
+**The numbers.** Mix, keystone, 5 Shards. 15 damage for each notch used up, and 30% more damage from your weapon for 10 seconds.
 
 **Works with.** Heated Edge, Red Hot, Strike While Hot.
 
 **Example.** Give it lots of notches, make it glow, then crack it open.
-
-**Not built yet.** For now, any heavy blow crumbles it, not only a finisher, and it keeps its own 5-second timer from each Red Hot.
 
 ## redhot.crucible
 **What it does.** A pot of melted bronze hangs at your shoulder for 8 seconds, with four pours in it. Each pour that lands deals 14 damage, 25 stagger, a Burn and a notch, and the ground under it burns while the bronze is red. A heavy blow tips out all the pours that are left.
