@@ -11,7 +11,7 @@ namespace Clover.Gameplay
     /// the storm charges it for a while, making it faster and harder-hitting.
     /// </summary>
     [RequireComponent(typeof(CharacterController))]
-    public class Enemy : MonoBehaviour, IDamageable, IStaggerable, IBurnable, IAfflictable, IShovable, IBoss, IWeighted, IFlinchable
+    public class Enemy : MonoBehaviour, IDamageable, IStaggerable, IBurnable, IAfflictable, IShovable, IBoss, IWeighted, IFlinchable, ICarriable
     {
         [SerializeField] private string kindName = EnemyKind.SoldierName;
         [SerializeField] private Transform target;
@@ -797,6 +797,29 @@ namespace Clover.Gameplay
         }
 
         private float lastShoveMoment = -100f;
+
+        // Thrown down at the end of a carry: knocked flat a moment (the knocked-down clip's fall, lie and getting up).
+        private static readonly ConditionSpec CarriedDown = new ConditionSpec { Id = "carried.down", Seconds = 0.8f, Flags = ConditionFlags.Down };
+
+        /// <summary>Carried before a moving spell: moved along the ground to the point, walls stopping it. A god or a boss is too great to carry.</summary>
+        public bool CarryTo(Vector3 point)
+        {
+            if (IsDead || Kind.IsGod || Kind.IsBoss || !body.enabled) return false;
+            Vector3 to = point - transform.position;
+            to.y = 0f;
+            body.Move(to);
+            shove = Vector3.zero;
+            return true;
+        }
+
+        /// <summary>Thrown down where the carry ended: knocked flat for the time given (an elite half of it), a god never.</summary>
+        public bool ThrowDown(float seconds)
+        {
+            if (IsDead || Afflictions.Rank == EnemyRank.God) return false;
+            var spec = CarriedDown;
+            float share = Afflictions.FreezeScale < 1f ? 0.5f : 1f;
+            return Afflictions.Conditions.Set(spec, this, -1, null, false, false, share * Mathf.Max(0.05f, seconds) / spec.Seconds) >= 0;
+        }
 
         /// <summary>Times an effect (a reaction) has made it flinch, for probes.</summary>
         public int EffectFlinches { get; private set; }

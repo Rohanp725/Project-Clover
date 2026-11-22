@@ -91,7 +91,11 @@ namespace Clover.Player.Forms
                     }
                     run.T3 = distance;
                 }
+                // A drive that carries (Fire Front): what it met is kept at its front, a stride ahead of the player.
+                if (cast.Spec.Carries) FormCarry.Carry(SpellWorks.Once(run), at + run.B * (cast.Spec.Radius * 0.5f + 0.9f), run.B, cast.Spec.OnlyCarrying);
                 if (t < 1f) return true;
+                // And thrown down at the end.
+                if (cast.Spec.Carries) FormCarry.ThrowDown(SpellWorks.Once(run), cast.Spec.OnlyCarrying);
                 // Out the far side: back in their own shape, turned to look at what they went through.
                 run.Phase = 2;
                 run.T2 = run.Age;

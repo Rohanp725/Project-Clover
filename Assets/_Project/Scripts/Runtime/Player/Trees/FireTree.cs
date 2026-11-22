@@ -174,11 +174,10 @@ namespace Clover.Player.Trees
                 UpgradeIcons.Arrow,
                 new Empower { Cooldown = 6f, Seconds = 4f },
                 "Wildfire Rush waits 6 seconds, not 8, and its line burns four seconds.",
-                // NEEDS: the enemies carried along before you and thrown down at the end.
+                // Every enemy it meets is carried before you and thrown down at the end (SpellSpec.Carries: FormCarry in the drill).
                 new ShapeDef { Name = "Fire Front",
                     Description = "You go five metres as the front of a grass fire, a wall of flame four metres wide, slower. Every enemy it meets is carried before you, burning two deep, and thrown down at the end. The drive that pushes a crowd instead of passing through it.",
-                    Change = new SpellChange { Reach = 5f, Radius = 2f, Speed = 7f },
-                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = "fire.rush.down", Seconds = 0.6f, Flags = ConditionFlags.Down } } } },
+                    Change = new SpellChange { Reach = 5f, Radius = 2f, Speed = 7f, Carries = true } },
                 // NEEDS: the drive going back out of the fight, not on through it.
                 new ShapeDef { Name = "Smoke Road",
                     Description = "You go six metres back out of the fight in a roll of black smoke, and the line of fire is left between you and them. The escape.",

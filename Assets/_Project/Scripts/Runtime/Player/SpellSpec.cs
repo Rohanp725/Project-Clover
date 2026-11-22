@@ -100,6 +100,11 @@ namespace Clover.Player
         /// The cast is still made and its moments still come, for the shape's own effects.
         /// </summary>
         public bool Quiet;
+        /// <summary>
+        /// The moving form carries what it strikes before it and throws it down at its end (Fire Front's drive, The Black
+        /// Buffalo's charge; <see cref="Clover.Player.Forms.FormCarry"/>), only those carrying <see cref="OnlyCarrying"/> when it names one.
+        /// </summary>
+        public bool Carries;
         /// <summary>Above zero: the cast is paid in this many flasks and no mana (Poured on the Edge: one; the ledger's price-in-flasks).</summary>
         public int FlaskCost;
         /// <summary>

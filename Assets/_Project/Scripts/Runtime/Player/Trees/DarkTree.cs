@@ -207,11 +207,11 @@ namespace Clover.Player.Trees
                 // Eight metres on the Learn's own pull alone (LearnOnly), so the buffalo's lane keeps its width.
                 new Empower { Cooldown = 9f, Radius = 8f, LearnOnly = true },
                 "Debts Called waits 9 seconds, not 10, and calls from eight metres.",
-                // NEEDS: only the Cursed carried on the horns and thrown down at the far end (afflicted-only, carried-along), and
-                // a buffalo of smoke rather than the dragon's head (form-pieces).
+                // Only the Cursed are carried on the horns and thrown down at the far end (SpellSpec.Carries with OnlyCarrying).
+                // NEEDS: a buffalo of smoke rather than the dragon's head (form-pieces).
                 new ShapeDef { Name = "The Black Buffalo", Form = SpellForms.Dragon,
                     Description = "No pull. A buffalo of sinking black smoke charges eight metres through the point before you, carrying everything Cursed on its horns to the far end and throwing it down: 18 damage, rising to 36 at one point of your health, and 35 stagger. Follow the lane and cut what it threw. Dark's one push.",
-                    Spell = new SpellSpec { Reach = 8f, Radius = 1.2f, Damage = 18f, Stagger = 35f, Stacks = 1, Speed = 16f, HealthScaled = 2f } },
+                    Spell = new SpellSpec { Reach = 8f, Radius = 1.2f, Damage = 18f, Stagger = 35f, Stacks = 1, Speed = 16f, HealthScaled = 2f, Carries = true, OnlyCarrying = AfflictionKind.Cursed } },
                 // Only the Cursed called (SpellSpec.OnlyCarrying), from ten metres, with no burst; each Cursed one it reaches heals 4.
                 new ShapeDef { Name = "Collected",
                     Description = "Only the Cursed are called, from up to ten metres, and each one that reaches you gives back 4 health. There is no burst; the pull does 20 stagger.",

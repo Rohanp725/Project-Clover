@@ -172,11 +172,11 @@ draining.
 
 **When it happens.** Whenever you cast Debts Called, using the shape you picked. If you have not bought this, you cast the plain call.
 
-**The numbers.** 3 Shards. The Black Buffalo: it charges 8 metres down a path about 2.4 metres wide, dealing 18 damage (rising to 36 as your health drops, like the plain spell), 35 stagger and a Curse to everything it runs through. Collected: only Cursed enemies within 10 metres are pulled in. Each takes 20 stagger and no damage, and heals you 4. Enemies without a Curse aren't moved or hit.
+**The numbers.** 3 Shards. The Black Buffalo: it charges 8 metres down a path about 2.4 metres wide, dealing 18 damage (rising to 36 as your health drops, like the plain spell), 35 stagger and a Curse to everything it runs through. Every enemy that was already Cursed rides on its horns to the far end and is thrown down there for 0.8 seconds (gods and bosses are too big to carry). Collected: only Cursed enemies within 10 metres are pulled in. Each takes 20 stagger and no damage, and heals you 4. Enemies without a Curse aren't moved or hit.
 
 **Works with.** The Black Buffalo: a heavy weapon to follow its path, Dread, Devouring Maw's path. Collected: the root mark and Grasp (Curse them first), Never Sated, Near the Grave.
 
-**Not built yet.** The buffalo should carry only Cursed enemies and throw them down at the far end, and it should look like a buffalo made of smoke; for now, it lunges down the path in the shape of the jaw.
+**Not built yet.** The buffalo should look like a buffalo made of smoke; for now, it lunges down the path in the shape of the jaw.
 
 **Example.** Use Collected on a pack of five Cursed soldiers. They come to your feet staggering, and you get 20 health.
 

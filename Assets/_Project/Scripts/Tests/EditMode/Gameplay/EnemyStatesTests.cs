@@ -228,6 +228,50 @@ namespace Clover.Tests
             Assert.IsNull(EnemyChains.MateOf(null));
         }
 
+        // A body a spell can carry, kept apart from any scene: it goes where it is carried and remembers being thrown down.
+        private sealed class Carried : IDamageable, IAfflictable, ICarriable
+        {
+            public AfflictionSet Afflictions { get; } = NewEnemy();
+            public Vector3 At;
+            public int Down;
+            public HitOutcome TakeHit(in Hit hit) => HitOutcome.Landed;
+            public bool CarryTo(Vector3 point) { At = point; return true; }
+            public bool ThrowDown(float seconds) { Down++; return true; }
+        }
+
+        [Test]
+        public void AMovingSpellCarriesWhatItStrikesAndThrowsItDown()
+        {
+            var one = new Carried();
+            var two = new Carried();
+            var cursed = new Carried();
+            cursed.Afflictions.Lay(AfflictionKind.Cursed, 1, 0f, 1f, LaySource.Effect, null);
+            var struck = new System.Collections.Generic.HashSet<IDamageable> { one, two, cursed };
+            var front = new Vector3(0f, 0f, 5f);
+            Assert.AreEqual(3, Clover.Player.Forms.FormCarry.Carry(struck, front, Vector3.forward, AfflictionKind.None));
+            Assert.AreEqual(5f, one.At.z, 1e-5f, "kept at the front");
+            Assert.AreNotEqual(one.At.x, two.At.x, "side by side, not in one place");
+            Assert.AreEqual(3, Clover.Player.Forms.FormCarry.ThrowDown(struck, AfflictionKind.None), "all thrown down at the end");
+            two.At = Vector3.zero;
+            Assert.AreEqual(1, Clover.Player.Forms.FormCarry.Carry(struck, front * 2f, Vector3.forward, AfflictionKind.Cursed), "the buffalo carries only the Cursed");
+            Assert.AreEqual(Vector3.zero, two.At);
+            Assert.AreEqual(10f, cursed.At.z, 1e-5f);
+            Assert.AreEqual(0f, Clover.Player.Forms.FormCarry.Spread(0));
+            Assert.AreEqual(-Clover.Player.Forms.FormCarry.Spread(1), Clover.Player.Forms.FormCarry.Spread(2), 1e-5f);
+
+            var front2 = Upgrade.ById(SpellBranch.ShapeId(FireTree.WildfireRush)).Shapes.Single(each => each.Name == "Fire Front");
+            Assert.IsTrue(front2.Change.Carries, "Fire Front carries");
+            var spec = new SpellSpec();
+            front2.Change.ApplyTo(spec);
+            Assert.IsTrue(spec.Carries);
+            var copy = new SpellSpec();
+            SpellChange.Copy(spec, copy);
+            Assert.IsTrue(copy.Carries, "and the carrying is copied with its numbers");
+            var buffalo = Upgrade.ById(SpellBranch.ShapeId(DarkTree.DebtsCalled)).Shapes.Single(each => each.Name == "The Black Buffalo").Spell;
+            Assert.IsTrue(buffalo.Carries);
+            Assert.AreEqual(AfflictionKind.Cursed, buffalo.OnlyCarrying);
+        }
+
         [Test]
         public void WhirlpoolAndAshFallHoldTheBalance()
         {

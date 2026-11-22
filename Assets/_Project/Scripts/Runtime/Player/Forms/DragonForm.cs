@@ -98,6 +98,12 @@ namespace Clover.Player.Forms
                     cast.Combat.ShoveArea(run.A + run.B * (distance + size * 0.3f), cast.Spec.Radius + 0.8f, run.B * (passed * 0.9f));
                     run.T3 = distance;
                 }
+                // A charge that carries (The Black Buffalo): what it struck rides on its head down the lane.
+                if (cast.Spec.Carries)
+                {
+                    Vector3 horns = run.A + run.B * (distance + size * 0.3f);
+                    FormCarry.Carry(SpellWorks.Once(run), horns, run.B, cast.Spec.OnlyCarrying);
+                }
                 if (Mathf.Repeat(run.Age, 0.06f) < deltaTime) ElementLook.Puff(cast.Element, head - heading.normalized * size * 0.4f, -run.B, 0.6f);
                 if (t < 1f) return true;
                 // The jaws close.
@@ -107,6 +113,8 @@ namespace Clover.Player.Forms
                 var bite = cast.Blow(cast.Damage, cast.Stagger);
                 bite.Heavy = true;
                 cast.Combat.StrikeArea(end, cast.Spec.Radius * 1.5f, bite);
+                // Thrown down at the far end.
+                if (cast.Spec.Carries) FormCarry.ThrowDown(SpellWorks.Once(run), cast.Spec.OnlyCarrying);
                 FormKit.Impact(cast, end, cast.Spec.Radius * 1.4f, 1.4f);
                 FormFx.Heat(solids[0], 1f);
                 FormFx.Heat(solids[1], 1f);

@@ -243,11 +243,11 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Whenever you cast Wildfire Rush, using the shape you picked.
 
-**The numbers.** 3 Shards. Fire Front: it goes 5 metres, is 4 metres wide, and moves at a third of the speed. Each enemy it hits is knocked down for 0.6 seconds. Smoke Road: it goes 6 metres, and the cut as you pass is weaker (4 damage).
+**The numbers.** 3 Shards. Fire Front: it goes 5 metres, is 4 metres wide, and moves at a third of the speed. Every enemy it hits is pushed along in front of you, a step ahead, and thrown down at the end for 0.8 seconds (an elite for less; gods and bosses are too big to carry). Smoke Road: it goes 6 metres, and the cut as you pass is weaker (4 damage).
 
 **Works with.** Catching Fire and Black Pitch (Fire Front into a crowd); Flame Trail (Smoke Road out of one).
 
-**Not built yet.** Fire Front should carry the enemies in front of you, and Smoke Road should take you back out of the fight. For now, both charge forward.
+**Not built yet.** Smoke Road should take you back out of the fight. For now, it charges forward.
 
 **Example.** Use Fire Front through a doorway packed with soldiers. They fall down burning in a pile on the far side.
 

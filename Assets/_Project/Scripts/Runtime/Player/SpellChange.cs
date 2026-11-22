@@ -30,11 +30,13 @@ namespace Clover.Player
         public float Lasts;
         /// <summary>The share of the run's pace walked at while its stance holds (<see cref="SpellSpec.Walk"/>).</summary>
         public float Walk;
+        /// <summary>The form carries what it strikes before it (<see cref="SpellSpec.Carries"/>).</summary>
+        public bool Carries;
 
         /// <summary>True when it changes nothing.</summary>
         public bool IsEmpty =>
             Cooldown == 0f && Mana == 0f && Damage == 0f && Stagger == 0f && Reach == 0f && Radius == 0f && Arc == 0f && Seconds == 0f
-            && Interval == 0f && Count == 0 && Stacks == 0 && Delay == 0f && Speed == 0f && LingerDamage == 0f && AfflictionSeconds == 0f && ChargeBlows == 0 && Lasts == 0f && Walk == 0f;
+            && Interval == 0f && Count == 0 && Stacks == 0 && Delay == 0f && Speed == 0f && LingerDamage == 0f && AfflictionSeconds == 0f && ChargeBlows == 0 && Lasts == 0f && Walk == 0f && !Carries;
 
         /// <summary>
         /// Writes what it adds to <paramref name="learn"/>'s numbers onto <paramref name="spec"/>'s (an Empower over a shape that
@@ -108,6 +110,7 @@ namespace Clover.Player
             if (ChargeBlows > 0) spec.ChargeBlows = ChargeBlows;
             if (Lasts > 0f) spec.Lasts = Lasts;
             if (Walk > 0f) spec.Walk = Walk;
+            if (Carries) spec.Carries = true;
         }
 
         /// <summary>Copies every number of one spec into another (no allocation): how a spell's own numbers are taken before changes are laid over them.</summary>
@@ -151,6 +154,7 @@ namespace Clover.Player
             into.Glow = from.Glow;
             into.Walk = from.Walk;
             into.Quiet = from.Quiet;
+            into.Carries = from.Carries;
             into.FlaskCost = from.FlaskCost;
             into.HoldUpTo = from.HoldUpTo;
             into.HeldDamage = from.HeldDamage;
