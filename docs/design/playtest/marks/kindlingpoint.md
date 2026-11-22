@@ -42,13 +42,11 @@ are both carried.
 
 **When it happens.** Always on once you learn it, while you carry both Light and Fire.
 
-**The numbers.** Mix, a minor mark, 1 Shard.
+**The numbers.** Mix, a minor mark, 1 Shard. A Mark that would be used up by a blow on a burning enemy stays for one blow more, once each time it is laid, whether the Mark or the Burn came first.
 
 **Works with.** The Sun Points, which it comes after on the chart, Kindling Point.
 
 **Example.** One more critical hit before the Mark is used up.
-
-**Not built yet.** It does nothing yet.
 
 ## kindlingpoint.feast
 **What it does.** When a Kindling Point burst kills an enemy, every burn within 8 metres gains a stack, and you get mana.

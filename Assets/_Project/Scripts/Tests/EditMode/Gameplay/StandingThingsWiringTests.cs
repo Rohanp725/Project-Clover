@@ -591,6 +591,16 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void ClearSkyKeepsAMarkABlowLongerOnABurningEnemy()
+        {
+            Assert.IsTrue(AfflictionRules.BurningBlowMore(1, 2, false, false));
+            Assert.IsFalse(AfflictionRules.BurningBlowMore(1, 0, false, false), "not burning");
+            Assert.IsFalse(AfflictionRules.BurningBlowMore(1, 2, false, true), "once a laying");
+            Assert.IsFalse(AfflictionRules.BurningBlowMore(0, 2, false, false), "without Clear Sky");
+            Assert.IsFalse(AfflictionRules.BurningBlowMore(1, 2, true, false), "not the Burn itself");
+        }
+
+        [Test]
         public void TheSeaComesInQuickensYouOnlyInYourOwnWater()
         {
             var sea = Upgrade.ById(WaterTree.TheSeaComesIn);

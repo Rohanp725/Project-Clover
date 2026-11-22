@@ -127,6 +127,8 @@ namespace Clover.Gameplay
         private readonly float[] untilTick = new float[Afflictions.Count];
         private readonly float[] strength = new float[Afflictions.Count];
         private readonly int[] blowsLeft = new int[Afflictions.Count];
+        // Whether the blow more a burning enemy keeps it for (Clear Sky) has been given since it was laid.
+        private readonly bool[] burningBlowGiven = new bool[Afflictions.Count];
         // For the player's affliction rules (Afflictions.Rules): seconds since each kind was last laid or deepened, and
         // seconds each kind still rests after fading before it can be laid again, with one bit a resting kind.
         private readonly float[] sinceLaid = new float[Afflictions.Count];
@@ -404,6 +406,7 @@ namespace Clover.Gameplay
             present |= 1 << index;
             left[index] = seconds > 0f ? seconds : spec.Seconds;
             blowsLeft[index] = spec.Blows > 0 ? spec.Blows + Afflictions.MoreBlows : 0;
+            burningBlowGiven[index] = false;
             if (had == 0) untilTick[index] = spec.TickSeconds;
             bool full = had < deepest && stacks[index] >= deepest;
             // Flash Freeze: what is Soaked freezes sooner, and the water goes into the ice.
@@ -474,7 +477,15 @@ namespace Clover.Gameplay
                 if (stacks[i] <= 0 || blowsLeft[i] <= 0) continue;
                 // A condition that keeps it (Diamond Ring's mark) keeps it from being spent too, and so does a rule (Full Daylight).
                 if (Conditions.KeepsKind((AfflictionKind)i) || Afflictions.Rules.Unspent((AfflictionKind)i)) continue;
-                if (--blowsLeft[i] <= 0) End(i);
+                if (--blowsLeft[i] > 0) continue;
+                // On a burning enemy it lasts a blow longer, once a laying (Clear Sky), whichever came first.
+                if (AfflictionRules.BurningBlowMore(Afflictions.MoreBlowsBurning, stacks[(int)AfflictionKind.Burn], i == (int)AfflictionKind.Burn, burningBlowGiven[i]))
+                {
+                    burningBlowGiven[i] = true;
+                    blowsLeft[i] = Afflictions.MoreBlowsBurning;
+                    continue;
+                }
+                End(i);
             }
         }
 

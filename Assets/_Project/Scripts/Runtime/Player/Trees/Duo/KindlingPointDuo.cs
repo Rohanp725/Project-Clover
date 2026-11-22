@@ -79,7 +79,8 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.RightLow));
 
-            // NEEDS: a Mark lasting a blow longer on an enemy that also burns (mark-blows-on); until then it does nothing.
+            // A Mark lasts a blow longer on an enemy that also burns, whichever was laid first (Afflictions.MoreBlowsBurning, set
+            // while this mark is in force).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = ClearSky, Name = "Clear Sky", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 1, Requires = new[] { TheSunPoints }, Icon = UpgradeIcons.Eye,

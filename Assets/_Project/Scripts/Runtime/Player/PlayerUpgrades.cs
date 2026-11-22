@@ -941,6 +941,8 @@ namespace Clover.Player
             hasPlasma = On(Upgrade.Plasma);
             hasWhiteHeat = On(Trees.FireTree.WhiteHeat);
             hasIntoFire = On(Trees.FireTree.IntoTheFire);
+            // Clear Sky: a Mark (anything spent by blows) lasts one blow longer on a burning enemy.
+            Afflictions.MoreBlowsBurning = On(Trees.Duo.KindlingPointDuo.ClearSky) ? 1 : 0;
             Afflictions.BurnBiteOff = drinksFire;
             if (combat != null) combat.DrinksBurn = drinksFire ? DrinkDamage : 0f;
             bool tideNow = On(Trees.WaterTree.HighWaterLowWater);

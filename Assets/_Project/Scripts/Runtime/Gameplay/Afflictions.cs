@@ -40,6 +40,8 @@ namespace Clover.Gameplay
         public static int DeeperBy { get; private set; }
         /// <summary>How many more weapon blows an affliction that is spent by blows (a mark of light) lasts for.</summary>
         public static int MoreBlows { get; set; }
+        /// <summary>How many more weapon blows an affliction spent by blows lasts on an enemy that burns when its last would spend it (Clear Sky: a Mark one blow longer).</summary>
+        public static int MoreBlowsBurning { get; set; }
         /// <summary>While true, poison on every enemy neither bites nor fades; what it would have bitten is owed (<see cref="AfflictionSet.TakeOwed"/>). Poison's gift keeps this.</summary>
         public static bool PoisonWaits { get; set; }
         /// <summary>
@@ -162,6 +164,7 @@ namespace Clover.Gameplay
         {
             SetDeeper(AfflictionKind.None, 0);
             MoreBlows = 0;
+            MoreBlowsBurning = 0;
         }
     }
 }
