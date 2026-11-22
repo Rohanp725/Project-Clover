@@ -161,5 +161,7 @@ namespace Clover.Player
         /// Target: the enemy it leaves; the power is the arc's damage (Nothing Resists runs it on at full strength).
         /// </summary>
         ArcLeft,
+        /// <summary>An enemy shoved across a line of your own (World.OwnGrounds.DrivenAcross: Need-Fire's sparks). Target: that enemy.</summary>
+        DrivenAcross,
     }
 }

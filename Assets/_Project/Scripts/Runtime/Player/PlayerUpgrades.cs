@@ -3400,6 +3400,7 @@ namespace Clover.Player
                 Hazards.GroundActs += OnGroundActs;
                 Hazards.GroundEnds += OnGroundEnds;
                 OwnGrounds.Stopped += OnStoppedAtStones;
+                OwnGrounds.DrivenAcross += OnDrivenAcross;
             }
             while (StandingThings.TakeNews(out var item))
             {
@@ -3515,7 +3516,19 @@ namespace Clover.Player
             Hazards.GroundActs -= OnGroundActs;
             Hazards.GroundEnds -= OnGroundEnds;
             OwnGrounds.Stopped -= OnStoppedAtStones;
+            OwnGrounds.DrivenAcross -= OnDrivenAcross;
         }
+
+        // An enemy shoved across a line of yours (Need-Fire), told to the marks with it as the target, once a moment for each.
+        private void OnDrivenAcross(Component body, string line)
+        {
+            if (body == null) return;
+            DrivenAcrossLines++;
+            Trigger(UpgradeTrigger.DrivenAcross, body, body.transform.position);
+        }
+
+        /// <summary>Enemies shoved across a line of yours (Need-Fire): for probes.</summary>
+        public int DrivenAcrossLines { get; private set; }
 
         // An enemy driven against the stones of your ring (The Closed Ring), told to the marks with it as the target.
         private void OnStoppedAtStones(Component body)
@@ -3579,6 +3592,7 @@ namespace Clover.Player
             (StatWhen.InOwnGlow, OwnGrounds.Glow),
             (StatWhen.InOwnBlood, OwnGrounds.Blood),
             (StatWhen.InCloud, OwnGrounds.Cloud),
+            (StatWhen.BetweenFires, OwnGrounds.NeedFireLine),
         };
 
         /// <summary>True when you stand in ground of your own of this name now.</summary>

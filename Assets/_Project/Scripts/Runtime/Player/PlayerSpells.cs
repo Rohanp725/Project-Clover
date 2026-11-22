@@ -148,7 +148,9 @@ namespace Clover.Player
         private void OnBlowLanded(AttackStep step)
         {
             ReadStats();
-            CutAll(Cuts.ForBlow(step), combat != null ? combat.StrikeClockOf(step) : -1);
+            // A weapon blow may take more off than its own (Need-Fire: twice, standing between its fires).
+            float more = upgrades != null && upgrades.Stats != null ? upgrades.Stats.Multiplier(PlayerStat.BlowCut) : 1f;
+            CutAll(Cuts.ForBlow(step) * more, combat != null ? combat.StrikeClockOf(step) : -1);
         }
 
         private void OnFinished()

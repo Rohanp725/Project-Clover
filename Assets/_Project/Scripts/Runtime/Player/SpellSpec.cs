@@ -215,6 +215,11 @@ namespace Clover.Player
         /// turning round it once in this many seconds, striking what it crosses (The Stone Keeps the Hour: 3 s).
         /// </summary>
         public float SweepTurn;
+        /// <summary>
+        /// For the field form: a line twice its Radius long across your facing through the aim point, a fire at each end, in place
+        /// of a disc; it bites what stands on the line (Need-Fire's two fires joined by sparks).
+        /// </summary>
+        public bool Across;
         public int Bank;
         public float BankDamage;
         public float BankStagger;

@@ -125,6 +125,8 @@ namespace Clover.World
         public const string Cloud = "poison.cloud";
         /// <summary>The Closed Ring: Bedrock's ring of standing stones.</summary>
         public const string StoneRing = "earth.stonering";
+        /// <summary>Need-Fire: the line of sparks between its two fires.</summary>
+        public const string NeedFireLine = "firebloom.needfire";
 
         private struct Patch
         {
@@ -144,10 +146,17 @@ namespace Clover.World
         {
             Clear();
             Stopped = null;
+            DrivenAcross = null;
         }
 
         /// <summary>Told when a body driven against the rim of The Closed Ring is stopped there (the body; the player's marks strike it).</summary>
         public static event System.Action<Component> Stopped;
+
+        /// <summary>Told when a body shoved across a line of your own is carried over it (the body, the line's name: Need-Fire's sparks).</summary>
+        public static event System.Action<Component, string> DrivenAcross;
+
+        /// <summary>Tells the listeners that <paramref name="body"/> was shoved across the line named <paramref name="name"/>.</summary>
+        public static void TellDrivenAcross(Component body, string name) => DrivenAcross?.Invoke(body, name);
 
         /// <summary>Tells the listeners that <paramref name="body"/> was driven against a ring's stones and stopped.</summary>
         public static void TellStopped(Component body) => Stopped?.Invoke(body);

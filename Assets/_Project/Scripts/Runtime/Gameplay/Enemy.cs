@@ -1224,6 +1224,13 @@ namespace Clover.Gameplay
                     shove = Vector3.zero;
                 }
             }
+            // Shoved over a line of your own (Need-Fire's sparks): told, for the line's own answer.
+            if (deltaTime > 0f && shove.sqrMagnitude > 0.25f)
+            {
+                Vector3 carried = new Vector3(step.x, 0f, step.z);
+                if (carried.sqrMagnitude > 0f && Clover.World.OwnGrounds.Across(Clover.World.OwnGrounds.NeedFireLine, transform.position, transform.position + carried, Time.time))
+                    Clover.World.OwnGrounds.TellDrivenAcross(this, Clover.World.OwnGrounds.NeedFireLine);
+            }
             if (body.enabled) body.Move(step);
 
             // Its guard is up only while it stands ready and knows the player is there: the band going out is the opening.

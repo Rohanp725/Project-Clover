@@ -105,16 +105,23 @@ namespace Clover.Player.Trees.Duo
             // The duo spell, an opener on a 12 s cooldown (SpellTimings), bought with 5 Shards once both are carried. The field
             // form lays the fire on the enemy faced, burning (the branch's first element) and seeding each second, so the
             // pair blooms on what stands in it.
-            // NEEDS: two fires 4 m apart on either side of the enemy, joined by a line of sparks (form-pieces; now one patch 5 m
-            // across on it); each weapon blow heals 2 and takes twice its time off the clocks while you stand between them
-            // (while-spell-stands); a shove across the line setting its Burn to full (shove-moment).
+            // The field form laid across your facing (SpellSpec.Across): two fires 4 m apart on either side of the enemy, joined by
+            // a line of sparks that is your own ground (World.OwnGrounds.NeedFireLine). Standing on it (StatWhen.BetweenFires), each
+            // weapon blow heals 2 and takes twice its time off the clocks (PlayerStat.BlowCut); an enemy shoved across it has its
+            // Burn set to full (UpgradeTrigger.DrivenAcross).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = NeedFire, Name = "Need-Fire", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Role = SpellRole.Opener, Requires = new[] { KindledGuard, DryPods }, Icon = UpgradeIcons.Flame,
                 Description = "Two fires of green branches spring up on either side of the enemy you face and burn 6 s, joined by a line of sparks. Every enemy between them takes a Burn and a Seed each second.",
                 Form = SpellForms.Field,
-                Spell = new SpellSpec { Reach = 7f, Radius = 2.5f, Seconds = 6f, Interval = 1f, LingerDamage = 2f, Stacks = 1 },
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Seeded, Stacks = 1 } },
+                Spell = new SpellSpec { Reach = 7f, Radius = 2f, Seconds = 6f, Interval = 1f, LingerDamage = 2f, Stacks = 1, Across = true, Ground = Clover.World.OwnGrounds.NeedFireLine },
+                Stats = new[] { new StatMod(PlayerStat.BlowCut, 1f, StatWhen.BetweenFires) },
+                Effects = new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Seeded, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.AnyHit, While = StatWhen.BetweenFires, Do = UpgradeAction.Heal, Amount = 2f, Cooldown = 0.15f },
+                    new UpgradeEffect { On = UpgradeTrigger.DrivenAcross, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Burn, Stacks = 99, Cooldown = 0.2f, CooldownPerEnemy = true },
+                },
             }, HeartPattern.Spell));
         }
     }

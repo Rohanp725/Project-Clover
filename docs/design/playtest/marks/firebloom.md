@@ -57,10 +57,8 @@ both carried.
 
 **When it happens.** Cast it from a spell slot while you carry both Fire and Life. Press that slot's button (hold L2 and a face button, or press 1 to 4). The first time it lands, it charges your blade with Fire.
 
-**The numbers.** Mix, duo spell, opener, 5 Shards. It costs no mana. After you cast it, you must wait 12 seconds to cast it again. Fighting with your weapon makes the wait shorter. It reaches up to 7 metres away and lasts 6 seconds. Once a second, it deals 2 damage, a Burn and a Seed to every enemy in it, so Firebloom keeps going off on them.
+**The numbers.** Mix, duo spell, opener, 5 Shards. It costs no mana. After you cast it, you must wait 12 seconds to cast it again. Fighting with your weapon makes the wait shorter. It reaches up to 7 metres away and lasts 6 seconds. The two fires stand 4 metres apart, across your path, one on each side of the enemy. Once a second, the line of sparks between them deals 2 damage, a Burn and a Seed to every enemy on it, so Firebloom keeps going off on them. While you stand on the line, each weapon blow that lands heals you 2 and cuts your spell waits twice as much as usual. An enemy you shove across the line has its Burn filled all the way.
 
 **Works with.** Firebloom (everything in it blooms), Kindled Guard, The Burning Tree.
 
 **Example.** Light it on the pack's leader, and fight on the line between the fires.
-
-**Not built yet.** For now, it is one burning patch 5 metres across on the enemy, not two fires with a line between them. Standing between them doesn't yet make your blows heal you 2 and cut spell waits twice as much. Shoving an enemy across the line doesn't yet fill its Burn all the way.

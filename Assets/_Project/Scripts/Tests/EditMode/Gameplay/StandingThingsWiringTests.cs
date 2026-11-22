@@ -1637,5 +1637,38 @@ namespace Clover.Tests
             Assert.AreEqual(2f, moment.Scale, 1e-5f, "and staggers double");
             Assert.Less(moment.Seconds, 0.5f, "only the moment");
         }
+
+        [Test]
+        public void NeedFiresTwoFiresHealBetweenThemAndBurnWhatIsShovedAcross()
+        {
+            var fire = Upgrade.ById(Clover.Player.Trees.Duo.FirebloomDuo.NeedFire);
+            Assert.IsTrue(fire.Spell.Across, "a line across, a fire at each end");
+            Assert.AreEqual(2f, fire.Spell.Radius, 1e-5f, "the fires four metres apart");
+            Assert.AreEqual(OwnGrounds.NeedFireLine, fire.Spell.Ground);
+            Assert.IsTrue(PlayerUpgrades.OwnGroundStates.Any(each => each.When == StatWhen.BetweenFires && each.Ground == OwnGrounds.NeedFireLine));
+            var cut = fire.Stats.Single();
+            Assert.AreEqual(PlayerStat.BlowCut, cut.Stat);
+            Assert.AreEqual(StatWhen.BetweenFires, cut.When);
+            Assert.AreEqual(1f, cut.Amount, 1e-5f, "twice the time off");
+            var heal = fire.Effects.Single(each => each.Do == UpgradeAction.Heal);
+            Assert.AreEqual(StatWhen.BetweenFires, heal.While);
+            Assert.AreEqual(2f, heal.Amount, 1e-5f);
+            var shoved = fire.Effects.Single(each => each.On == UpgradeTrigger.DrivenAcross);
+            Assert.AreEqual(AfflictionKind.Burn, shoved.Affliction);
+            Assert.GreaterOrEqual(shoved.Stacks, 9, "to full");
+
+            OwnGrounds.LayLane(OwnGrounds.NeedFireLine, new Vector3(-2f, 0f, 3f), Vector3.right, 4f, 0.8f, 6f);
+            Assert.IsTrue(OwnGrounds.Under(OwnGrounds.NeedFireLine, new Vector3(1f, 0f, 3.5f), 1f), "standing between the fires");
+            Assert.IsFalse(OwnGrounds.Under(OwnGrounds.NeedFireLine, new Vector3(1f, 0f, 5f), 1f));
+            Assert.IsTrue(OwnGrounds.Across(OwnGrounds.NeedFireLine, new Vector3(0f, 0f, 2f), new Vector3(0f, 0f, 4f), 1f), "shoved over the line");
+            Assert.IsFalse(OwnGrounds.Across(OwnGrounds.NeedFireLine, new Vector3(3f, 0f, 2f), new Vector3(3f, 0f, 4f), 1f), "past the fire's end is not across");
+
+            var stats = new PlayerStats();
+            stats.AddLearned(cut);
+            stats.SetWhen(StatWhen.BetweenFires, true);
+            Assert.AreEqual(2f, stats.Multiplier(PlayerStat.BlowCut), 1e-5f);
+            stats.SetWhen(StatWhen.BetweenFires, false);
+            Assert.AreEqual(1f, stats.Multiplier(PlayerStat.BlowCut), 1e-5f);
+        }
     }
 }

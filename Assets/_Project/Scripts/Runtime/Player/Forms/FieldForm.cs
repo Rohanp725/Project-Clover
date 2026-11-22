@@ -16,6 +16,22 @@ namespace Clover.Player.Forms
             if (!begun) return 0;
             run.A = FormKit.AimPoint(cast);
             run.T1 = 0.3f;
+            if (cast.Spec.Across)
+            {
+                // Two fires on either side of the aim point across your facing, joined by a line of sparks (Need-Fire).
+                Vector3 right = Vector3.Cross(Vector3.up, cast.Forward);
+                right.y = 0f;
+                right = right.sqrMagnitude > 0.0001f ? right.normalized : Vector3.right;
+                run.B = right;
+                Vector3 from = run.A - right * cast.Spec.Radius;
+                float until = Time.time + Mathf.Max(0.5f, cast.Spec.Seconds);
+                if (!string.IsNullOrEmpty(cast.Spec.Ground)) Clover.World.OwnGrounds.LayLane(cast.Spec.Ground, from, right, cast.Spec.Radius * 2f, LineHalf, until);
+                SpellWorks.Marks(run)[0] = FormFx.HoldMark(FormMark.Disc, FormKit.Lit(cast.Colour, 2.4f));
+                SpellWorks.Marks(run)[1] = FormFx.HoldMark(FormMark.Disc, FormKit.Lit(cast.Colour, 2.4f));
+                FormFx.Run(FormMark.Streak, from, right, cast.Spec.Radius * 2f, 0.5f, FormKit.Lit(cast.Colour, 2f), Mathf.Max(0.5f, cast.Spec.Seconds), 0.5f);
+                SpellWorks.Gesture(cast, FormKit.Cast, 0.3f);
+                return 0;
+            }
             // A field that is ground of the player's own (Black Ice's sheet) lies as that ground for its time.
             if (!string.IsNullOrEmpty(cast.Spec.Ground))
                 Clover.World.OwnGrounds.Lay(cast.Spec.Ground, run.A, cast.Spec.Radius, Time.time + Mathf.Max(0.5f, cast.Spec.Seconds), cast.Spec.Thrown);
@@ -26,8 +42,36 @@ namespace Clover.Player.Forms
             return 0;
         }
 
+        /// <summary>How far either side of an Across field's line stands on it.</summary>
+        public const float LineHalf = 0.8f;
+
+        // An Across field: the two fires burn at the line's ends, sparks along it, and each bite strikes what stands on the line.
+        private static bool TickAcross(ref SpellRun run, float deltaTime)
+        {
+            var cast = run.Cast;
+            var marks = SpellWorks.Marks(run);
+            float seconds = Mathf.Max(0.5f, cast.Spec.Seconds);
+            float spread = Mathf.Clamp01(run.Age / 0.25f) * Mathf.Clamp01((seconds - run.Age) / 0.3f);
+            Vector3 left = run.A - run.B * cast.Spec.Radius, right = run.A + run.B * cast.Spec.Radius;
+            FormFx.PlaceMark(marks[0], left, Quaternion.identity, new Vector3(1.4f * spread, 1f, 1.4f * spread));
+            FormFx.PlaceMark(marks[1], right, Quaternion.identity, new Vector3(1.4f * spread, 1f, 1.4f * spread));
+            if (run.Age >= seconds) return false;
+            run.T2 -= deltaTime;
+            if (run.T2 <= 0f)
+            {
+                run.T2 = 0.12f;
+                ElementLook.Puff(cast.Element, (Random.value < 0.5f ? left : right) + Vector3.up * 0.4f, Vector3.up, 0.8f);
+                ElementLook.Sparks(cast.Element, Vector3.Lerp(left, right, Random.value) + Vector3.up * 0.1f, Vector3.up, 0.3f);
+            }
+            if (run.Age < run.T1) return true;
+            run.T1 += Mathf.Max(0.1f, cast.Spec.Interval);
+            cast.Combat.StrikeLane(left, run.B, cast.Spec.Radius * 2f, LineHalf, cast.Blow(cast.Spec.LingerDamage, 0f));
+            return true;
+        }
+
         public override bool Tick(ref SpellRun run, float deltaTime)
         {
+            if (run.Cast.Spec.Across) return TickAcross(ref run, deltaTime);
             var cast = run.Cast;
             var marks = SpellWorks.Marks(run);
             float radius = cast.Spec.Radius;

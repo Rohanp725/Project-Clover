@@ -67,5 +67,7 @@ namespace Clover.Player
         InOwnBlood,
         /// <summary>While the player stands in a cloud: Miasma's own, or any poison ground of theirs (Tasted Every Herb).</summary>
         InCloud,
+        /// <summary>While the player stands on the line between Need-Fire's two fires (World.OwnGrounds.NeedFireLine).</summary>
+        BetweenFires,
     }
 }
