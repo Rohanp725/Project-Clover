@@ -371,5 +371,10 @@ namespace Clover.Player
         /// go out and none bites in it (World.Purified; Circled Lamp's ring goes where you go: Follows; High Noon's column).
         /// </summary>
         Purify,
+        /// <summary>
+        /// For Seconds, every enemy whose blow lands on you or on your guard is tied to you and what it deals is counted (a blow on
+        /// the guard counts double what it would have dealt); then each is told as UpgradeTrigger.HarmPaid (The Exile's Grudge).
+        /// </summary>
+        TallyHarm,
     }
 }

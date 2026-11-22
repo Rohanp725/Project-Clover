@@ -60,17 +60,17 @@ Lightning are both carried.
 **Example.** A Cursed brute has five Static. The bolt lands, then lands again.
 
 ## thegrudge.exilesgrudge
-**What it does.** A black cloud hangs over you for 3 seconds. Whoever hits you or your guard during that time gets answered when the cloud breaks: a bolt that Curses it and gives it three Static.
+**What it does.** A black cloud hangs over you for 3 seconds. Blows still hurt you while it hangs, so guard them. Every enemy that hits you or your guard in that time is tied to the cloud. When the cloud breaks, a bolt falls on each of them and pays back what it did to you.
 
 **When it happens.** Cast it from a spell slot while you carry both Dark and Lightning. Press that slot's button (hold L2 and a face button, or press 1 to 4). The first time it lands, it charges your blade with Dark.
 
-**The numbers.** Mix, duo spell, counter, 5 Shards. It costs no mana. After you cast it, you must wait 12 seconds to cast it again. Fighting with your weapon makes the wait shorter. The cloud stays for 3 seconds. The answer is a cone 4 metres long that deals 12 damage, 15 stagger, a Curse and three Static.
+**The numbers.** Mix, duo spell, counter, 5 Shards. It costs no mana. After you cast it, you must wait 12 seconds to cast it again. Fighting with your weapon makes the wait shorter. The cloud stays for 3 seconds. When it breaks, each enemy tied to it takes 12 damage plus twice the damage it dealt you (60 more at most), 15 stagger, three Static and a Curse. A blow you held on your guard counts as double the damage it would have dealt.
 
 **Works with.** The Grudge (the answer leaves every attacker ready for it), Grievance, Given Bones.
 
-**Example.** You're surrounded. Cast it, guard whatever comes, and every attacker is Cursed and charged.
+**Example.** You're surrounded. Cast it and guard whatever comes. When the cloud breaks, every attacker is struck, Cursed and charged, and the ones that hit hardest are hit hardest.
 
-**Not built yet.** Each attacker isn't tied to you by a thread yet and paid back twice the damage it did to you (up to 60). A blow on your guard doesn't count double yet.
+**Not built yet.** The storm of ash over your head and the thin forks reaching to each attacker aren't drawn yet.
 
 ## thegrudge.ashthunder
 **What it does.** A duo surge. While it is lit, a cloud of ash streams up off your shoulders. Every blow you land adds a Static, every third one calls a bolt down on a Cursed enemy, and each Cursed enemy you kill heals you 6 more.

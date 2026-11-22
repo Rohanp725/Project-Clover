@@ -1701,5 +1701,42 @@ namespace Clover.Tests
             Assert.AreEqual(1.2f, PlayerUpgrades.HarderBy(0.1f, 2, 5), 1e-5f);
             Assert.AreEqual(UpgradeAction.Spend, fire.Effects.Last().Do, "all its Burn spent last");
         }
+
+        [Test]
+        public void TheExilesGrudgePaysEachAttackerTwiceWhatItDealt()
+        {
+            var tally = new Clover.Player.Magic.HarmTally();
+            var first = new object();
+            var second = new object();
+            {
+                tally.Add(first, 10f);
+                Assert.AreEqual(0, tally.Count, "nothing counted while closed");
+                tally.Begin(3f);
+                tally.Add(first, 10f);
+                tally.Add(second, 4f * 2f);
+                tally.Add(first, 6f);
+                Assert.AreEqual(2, tally.Count, "each attacker tied once");
+                Assert.AreEqual(16f, tally.Dealt(0), 1e-5f);
+                Assert.AreEqual(8f, tally.Dealt(1), 1e-5f, "a guarded blow of 4 counts as 8");
+                Assert.IsFalse(tally.Due(2.9f));
+                Assert.IsTrue(tally.Due(3f), "the cloud breaks at 3 s");
+                tally.Close();
+                Assert.AreEqual(0, tally.Count);
+                Assert.IsFalse(tally.Open);
+            }
+            Assert.AreEqual(32f, PlayerUpgrades.PaidBack(16f, 2f, 60f), 1e-5f, "twice what it dealt");
+            Assert.AreEqual(60f, PlayerUpgrades.PaidBack(45f, 2f, 60f), 1e-5f, "60 at most");
+
+            var grudge = Upgrade.ById(Clover.Player.Trees.Duo.TheGrudgeDuo.TheExilesGrudge);
+            Assert.IsTrue(grudge.Spell.Quiet, "no parry: the blows still land");
+            Assert.AreEqual(3f, grudge.Effects.Single(each => each.Do == UpgradeAction.TallyHarm).Seconds, 1e-5f);
+            var bolt = grudge.Effects.Single(each => each.On == UpgradeTrigger.HarmPaid && each.Do == UpgradeAction.Burst);
+            Assert.AreEqual(12f, bolt.Damage, 1e-5f);
+            Assert.AreEqual(2f, bolt.PowerShare, 1e-5f);
+            Assert.AreEqual(60f, bolt.PowerMost, 1e-5f);
+            Assert.AreEqual(AfflictionKind.Static, bolt.Affliction);
+            Assert.AreEqual(3, bolt.Stacks);
+            Assert.IsTrue(grudge.Effects.Any(each => each.On == UpgradeTrigger.HarmPaid && each.Affliction == AfflictionKind.Cursed));
+        }
     }
 }

@@ -1257,9 +1257,35 @@ namespace Clover.Player
             }
         }
 
+        // A grudge held (The Exile's Grudge): who struck you while it was open, and what each dealt; paid when it closes.
+        private readonly Magic.HarmTally harm = new Magic.HarmTally();
+        /// <summary>Grudges paid to an enemy (The Exile's Grudge): for probes.</summary>
+        public int GrudgesPaid { get; private set; }
+
+        /// <summary>What is paid back for <paramref name="dealt"/>: <paramref name="share"/> of it, <paramref name="most"/> at most (0: no cap).</summary>
+        public static float PaidBack(float dealt, float share, float most)
+        {
+            float paid = Mathf.Max(0f, dealt) * Mathf.Max(0f, share);
+            return most > 0f ? Mathf.Min(paid, most) : paid;
+        }
+
+        private void PayGrudges()
+        {
+            if (!harm.Due(Time.time)) return;
+            for (int i = 0; i < harm.Count; i++)
+            {
+                var who = harm.Who(i) as Component;
+                if (who == null || !PlayerReactions.Alive(who)) continue;
+                GrudgesPaid++;
+                Trigger(UpgradeTrigger.HarmPaid, who, who.transform.position, true, 0, null, AfflictionKind.None, "", LaySource.Effect, harm.Dealt(i));
+            }
+            harm.Close();
+        }
+
         private void Update()
         {
             KeepHour();
+            PayGrudges();
             if (toFinish.Count > 0) FinishBroken();
             if (echoForm != null && Time.time >= echoAt) CastEcho();
             ReadStandingNews();
@@ -1957,6 +1983,8 @@ namespace Clover.Player
             float spread = ReactionScale(effect.Owner, PlayerStat.ReactionReach);
             // A condition's kept number as the damage (Collected Twice: the reaction's own damage, repeated).
             if (effect.ByPower && effect.Do != UpgradeAction.Condition) eDamage = pending.Power * Or(effect.Share, 1f);
+            // The trigger's number paid on top (The Exile's Grudge: twice what the attacker dealt, 60 at most).
+            if (effect.PowerShare > 0f) eDamage += PaidBack(pending.Power, effect.PowerShare, effect.PowerMost);
             // A reaction's blow on a ripe seed is stronger, on an unripe one softer (In Its Season).
             if (pending.Ripe > 0f) eDamage *= pending.Ripe;
             // A whirl's cuts stagger by its shards, as they cut by them (Sickle Wind: 4 a shard).
@@ -2778,6 +2806,9 @@ namespace Clover.Player
                     });
                     break;
                 }
+                case UpgradeAction.TallyHarm:
+                    harm.Begin(Time.time + Or(effect.Seconds, 3f));
+                    break;
                 case UpgradeAction.Purify:
                     Purified.Add(effect.Follows ? transform.position : centre, Or(effect.Radius, 2f) * spread, Time.time + Or(effect.Seconds, 0.5f), effect.Follows ? transform : null);
                     break;
@@ -4380,9 +4411,13 @@ namespace Clover.Player
         }
 
         /// <summary>A blow was caught on the guard; the attacker stands at the given place.</summary>
-        public void OnGuard(Vector3 attacker)
+        public void OnGuard(Vector3 attacker) => OnGuard(attacker, 0f);
+
+        /// <summary>As above, with what the blow would have dealt (a grudge counts it double).</summary>
+        public void OnGuard(Vector3 attacker, float blowDamage)
         {
             NoteGuard(attacker);
+            if (harm.Open && LastGuardEnemy != null) harm.Add(LastGuardEnemy, blowDamage * 2f);
             Trigger(UpgradeTrigger.Guard, LastGuardEnemy, attacker);
             TheirBlow(LastGuardEnemy, attacker);
         }
@@ -5130,6 +5165,8 @@ namespace Clover.Player
             {
                 this.struckBy = struckBy;
                 struckByAt = Time.time;
+                // A grudge open counts what it dealt (The Exile's Grudge).
+                if (harm.Open && defence != null) harm.Add(struckBy, defence.LastWound);
             }
             Trigger(UpgradeTrigger.Struck, struckBy, attacker);
             TheirBlow(struckBy, attacker);

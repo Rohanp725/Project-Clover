@@ -488,6 +488,9 @@ namespace Clover.Player
         /// condition's end), <see cref="HarderBlowsMost"/> blows at most (Fire-Setting's quench: 10% a blow, to 50%).
         /// </summary>
         public float HarderPerBlow;
+        /// <summary>Damage added from the trigger's power: this share of it, <see cref="PowerMost"/> at most (The Exile's Grudge: twice what was dealt, 60 at most).</summary>
+        public float PowerShare;
+        public float PowerMost;
         public int HarderBlowsMost = 5;
 
         /// <summary>True when a Hazard effect lays ground that keeps acting, told to the marks at each bite (Hazards.GroundActs).</summary>

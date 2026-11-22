@@ -103,17 +103,24 @@ namespace Clover.Player.Trees.Duo
                     new UpgradeEffect { Do = UpgradeAction.Burst, Radius = 4f, Damage = 14f, Stagger = 5f, PerStack = true, Affliction = AfflictionKind.Static }),
             }, HeartPattern.Keystone));
 
-            // The duo spell, bought with Shards once both are carried (no god gives it): a counter on a 12 s cooldown (SpellTimings). The parry form stands for 3 s and answers
-            // what strikes it; the answer Curses (the branch's first element) and charges three deep.
-            // NEEDS: every attacker tied by a thread and paid back twice what it dealt (60 at most) when the cloud breaks, a
-            // blow on the guard counting double (damage-tally).
+            // The duo spell, bought with Shards once both are carried (no god gives it): a counter on a 12 s cooldown (SpellTimings). The
+            // cloud is a grudge held 3 s (UpgradeAction.TallyHarm; the brand form, quiet: only the gesture): blows still land, and every
+            // enemy whose blow lands on you or your guard is tied to it with what it dealt counted, a guarded blow double. When it
+            // breaks, a bolt falls on each (UpgradeTrigger.HarmPaid): 12 and twice what it dealt, 60 at most, three Static and a Curse.
+            // NEEDS: the storm of ash over your head and the forks to each attacker (looks).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = TheExilesGrudge, Name = "The Exile's Grudge", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Role = SpellRole.Counter, Requires = new[] { Grievance, TheExileReturns }, Icon = UpgradeIcons.Bolt,
                 Description = "A black cloud stands over you for 3 s. Whoever strikes you or your guard in that time is answered when the cloud breaks: a bolt that Curses and charges it three deep.",
-                Form = SpellForms.Parry,
-                Spell = new SpellSpec { Seconds = 3f, Reach = 4f, Arc = 120f, Damage = 12f, Stagger = 15f, Stacks = 1 },
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Static, Stacks = 3 } },
+                Form = SpellForms.Brand,
+                Spell = new SpellSpec { Seconds = 3f, Damage = 0f, Stagger = 0f, Stacks = 0, Quiet = true },
+                Effects = new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnSpell = true, Do = UpgradeAction.TallyHarm, Seconds = 3f },
+                    new UpgradeEffect { On = UpgradeTrigger.HarmPaid, Do = UpgradeAction.Burst, Radius = 0.5f, Damage = 12f, PowerShare = 2f, PowerMost = 60f, Stagger = 15f,
+                        Affliction = AfflictionKind.Static, Stacks = 3 },
+                    new UpgradeEffect { On = UpgradeTrigger.HarmPaid, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Cursed, Stacks = 1 },
+                },
             }, HeartPattern.Spell));
 
             // The duo surge, worn in the Hand's surge slot with its own 40 mana and 10 s (DuoSurge); each kill while it burns

@@ -587,7 +587,7 @@ namespace Clover.Player
                     if (shaker != null) shaker.Shake(0.07f, 0.12f);
                     Health.Chip(chip);
                     if (hitStop != null) hitStop.Freeze(0.04f);
-                    if (upgrades != null) upgrades.OnGuard(hit.HasOrigin ? hit.Origin : transform.position - hit.Direction);
+                    if (upgrades != null) upgrades.OnGuard(hit.HasOrigin ? hit.Origin : transform.position - hit.Direction, hit.Damage * DamageTaken);
                     return HitOutcome.Blocked;
                 case GuardResult.Broken:
                     if (SpendWard(hit)) return HitOutcome.Blocked;

@@ -163,5 +163,10 @@ namespace Clover.Player
         ArcLeft,
         /// <summary>An enemy shoved across a line of your own (World.OwnGrounds.DrivenAcross: Need-Fire's sparks). Target: that enemy.</summary>
         DrivenAcross,
+        /// <summary>
+        /// A grudge's time is up (UpgradeAction.TallyHarm): told once for each enemy tied to it. Target: that enemy; the power is
+        /// what it dealt you meanwhile, a blow on your guard counted double (The Exile's Grudge).
+        /// </summary>
+        HarmPaid,
     }
 }
