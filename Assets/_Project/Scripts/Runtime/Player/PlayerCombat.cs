@@ -80,6 +80,9 @@ namespace Clover.Player
 
         /// <summary>The stagger a light blow made heavy breaks: the weapon's heavy blow's, never less than its own.</summary>
         public static float HeavyStagger(float light, float heavy) => Mathf.Max(light, heavy);
+
+        // How much longer the marks in force make the weapon's reach (PlayerStat.WeaponReach).
+        private float WeaponReachScale => Stats != null ? Stats.Multiplier(PlayerStat.WeaponReach) : 1f;
         public float NextBlowStagger = 1f;
         /// <summary>How much deeper each blow of the weapon makes its target's burn, and for how long it then burns.</summary>
         public int BurnStacksOnHit;
@@ -2089,14 +2092,14 @@ namespace Clover.Player
                 {
                     // A weapon with a tip shows where the tip is: the haft's part of the fan dim, the last metre bright.
                     if (step.SweetFrom > 0f) arcs.Show(transform.position, transform.forward, step.SweetFrom, step.ArcDegrees, step.Sweep, new Color(arcColour.r * 0.45f, arcColour.g * 0.45f, arcColour.b * 0.45f, arcColour.a * 0.5f));
-                    arcs.Show(transform.position, transform.forward, step.Reach, step.ArcDegrees, step.Sweep, step.SweetFrom > 0f ? new Color(arcColour.r * 1.4f, arcColour.g * 1.4f, arcColour.b * 1.4f, arcColour.a) : arcColour);
+                    arcs.Show(transform.position, transform.forward, step.Reach * WeaponReachScale, step.ArcDegrees, step.Sweep, step.SweetFrom > 0f ? new Color(arcColour.r * 1.4f, arcColour.g * 1.4f, arcColour.b * 1.4f, arcColour.a) : arcColour);
                 }
             }
             Vector3 origin = transform.position + Vector3.up;
             Vector3 discCentre = origin + transform.forward * step.Reach;
             var held = element != null ? element.Info : null;
             // The haul on a bound enemy reaches it wherever on its leash it stands.
-            float reach = boundTo != null && step == Combo.ChainHeavy ? Mathf.Max(step.Reach, BindLeash + 1f) : step.Reach;
+            float reach = boundTo != null && step == Combo.ChainHeavy ? Mathf.Max(step.Reach, BindLeash + 1f) : step.Reach * WeaponReachScale;
             Component nearest = null;
             float nearestAt = float.MaxValue;
             Color struckTint = StruckTint;

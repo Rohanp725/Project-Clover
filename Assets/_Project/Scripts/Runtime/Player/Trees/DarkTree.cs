@@ -190,11 +190,11 @@ namespace Clover.Player.Trees
                 BranchPattern.TrunkRight));
 
             // ---- The left bough: Debt. Power bought with health.
-            // NEEDS: re-aimed at cooldowns, a spell still waiting cast anyway for 1 health a second left, grey and owed, never the
-            // last point (cast-on-cooldown). Until then it pays in health the mana a spell lacks, as built.
+            // Re-aimed at cooldowns (elements_b.md): a spell still waiting is cast anyway for 1 health a second left, grey and
+            // owed, never the last point (PlayerStat.CooldownPrice, read by the slots).
             to.Add(BranchPattern.Put(new Upgrade { Id = BloodPrice, Name = "Blood Price", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Curse }, Icon = UpgradeIcons.Drop,
-                Description = "With too little mana for a spell, the rest is paid in health. Health paid this way is only owed: blows win it back.",
-                Stats = new[] { new StatMod(PlayerStat.BloodPrice, 0.5f) } },
+                Description = "A spell still waiting can be cast anyway: each second left on its wait costs 1 health. Health paid this way is only owed: blows win it back. It never takes your last point.",
+                Stats = new[] { new StatMod(PlayerStat.CooldownPrice, 1f) } },
                 BranchPattern.LeftFoot));
 
             // The breaker: the reverse form drags all within six metres to a point before you and bursts, its damage rising as your

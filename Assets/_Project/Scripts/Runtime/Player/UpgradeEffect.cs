@@ -265,6 +265,15 @@ namespace Clover.Player
         /// shape-before-learn).
         /// </summary>
         public bool CountsNeeds;
+        /// <summary>
+        /// Above zero: only within this many seconds of its branch's own spell being cast (Poured on the Edge's wave and mending,
+        /// only in its 12 s; a shape's rule held to its cast's window).
+        /// </summary>
+        public float WithinOwnCast;
+        /// <summary>For Spends: paid from the count its branch's Learn keeps, not its own mark's (Sapling's Strangler and Dodder spend the window's saplings).</summary>
+        public bool PaysLearn;
+        /// <summary>Above zero: grown things laid by the effects of one mark with the same number share one limit (Sapling's guard and dodge plantings: three at most in all).</summary>
+        public int Kin;
 
         /// <summary>A copy with every number, its slot and its mark (an Empower's twin of its Learn's effect).</summary>
         internal UpgradeEffect Twin() => (UpgradeEffect)MemberwiseClone();

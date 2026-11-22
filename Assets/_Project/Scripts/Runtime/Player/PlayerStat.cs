@@ -207,5 +207,12 @@ namespace Clover.Player
         /// taken whole (The Garden Holds You, near something grown; the ledger's unshaken). Read with its StatWhen.
         /// </summary>
         Unshaken,
+        /// <summary>
+        /// Flat, health a second: a spell still waiting may be cast anyway, each second left on its wait paid in this much
+        /// health, left grey and owed, never the last point (Blood Price: 1; the ledger's cast-on-cooldown).
+        /// </summary>
+        CooldownPrice,
+        /// <summary>Share. The reach of the weapon's blows (Poured on the Edge: 40% longer while it lasts).</summary>
+        WeaponReach,
     }
 }

@@ -56,6 +56,56 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void BloodPriceCastsASpellStillWaitingForHealth()
+        {
+            var mod = Upgrade.ById(DarkTree.BloodPrice).Stats.Single();
+            Assert.AreEqual(PlayerStat.CooldownPrice, mod.Stat, "re-aimed at the wait, not the mana");
+            Assert.AreEqual(1f, mod.Amount, 1e-5f, "1 health a second left");
+            Assert.AreEqual(4f, PlayerUpgrades.CooldownHealth(4f, 1f, 50f), 1e-5f, "four seconds left, four health owed");
+            Assert.AreEqual(-1f, PlayerUpgrades.CooldownHealth(4f, 1f, 4.5f), 1e-5f, "never the last point");
+            Assert.AreEqual(-1f, PlayerUpgrades.CooldownHealth(4f, 0f, 50f), 1e-5f, "without the mark a waiting spell waits");
+            Assert.AreEqual(0f, PlayerUpgrades.CooldownHealth(0f, 0f, 50f), 1e-5f, "a ready spell costs nothing more");
+        }
+
+        [Test]
+        public void PouredOnTheEdgeIsPaidInAFlaskAndHoldsForItsTwelveSeconds()
+        {
+            var shape = Upgrade.ById(SpellBranch.ShapeId(WaterTree.PouredBlade)).Shapes.First(each => each.Name == "Poured on the Edge");
+            Assert.AreEqual(1, shape.Spell.FlaskCost, "a flask, not mana");
+            Assert.IsTrue(shape.Effects.Any(each => each.Do == UpgradeAction.Boon && each.Stat == PlayerStat.WeaponReach && System.Math.Abs(each.Amount - 0.4f) < 1e-5f), "the reach 40% longer");
+            foreach (var each in shape.Effects.Where(each => each.On == UpgradeTrigger.AnyHit || each.On == UpgradeTrigger.ChainEnd))
+                Assert.AreEqual(12f, each.WithinOwnCast, 1e-5f, each.Do + " only within its 12 s");
+            Assert.IsTrue(shape.Effects.Any(each => each.On == UpgradeTrigger.AnyHit && each.Do == UpgradeAction.Heal && each.Amount == 2f), "every blow mends 2");
+            Assert.IsTrue(PlayerUpgrades.CanPayFlasks(1, 1, false));
+            Assert.IsFalse(PlayerUpgrades.CanPayFlasks(1, 0, false), "no flask, no cast");
+            Assert.IsFalse(PlayerUpgrades.CanPayFlasks(1, 2, true), "not with a flask at the lips");
+            Assert.IsTrue(PlayerUpgrades.CanPayFlasks(0, 0, false), "a spell paid in mana asks no flask");
+            Assert.IsTrue(PlayerUpgrades.InCastWindow(10f, 21f, 12f));
+            Assert.IsFalse(PlayerUpgrades.InCastWindow(10f, 22.5f, 12f), "over after 12 s");
+            Assert.IsFalse(PlayerUpgrades.InCastWindow(-100f, 0f, 12f), "never cast");
+        }
+
+        [Test]
+        public void SaplingsShapesSpendTheWindowsSaplings()
+        {
+            var learn = Upgrade.ById(LifeTree.Sapling);
+            var bank = learn.Effects.Single(each => each.Do == UpgradeAction.Bank);
+            Assert.AreEqual(8f, bank.Seconds, 1e-5f, "the window is 8 s");
+            Assert.AreEqual(3, bank.Count);
+            Assert.AreEqual(4, Upgrade.ById(SpellBranch.EmpowerId(LifeTree.Sapling)).Empower.Effects.Single().Count, "four with the Empower");
+            Assert.That(learn.Tally.Cap, Is.GreaterThanOrEqualTo(4));
+            var plantings = learn.Effects.Where(each => each.Do == UpgradeAction.Hazard).ToArray();
+            Assert.AreEqual(2, plantings.Length);
+            Assert.AreEqual(PlayerUpgrades.FamilyOf(plantings[0]), PlayerUpgrades.FamilyOf(plantings[1]), "three standing at most between the guard's and the dodge's");
+            foreach (var shape in Upgrade.ById(SpellBranch.ShapeId(LifeTree.Sapling)).Shapes.Where(each => each.Name == "Strangler" || each.Name == "Dodder"))
+            {
+                CollectionAssert.AreEqual(new[] { 1, 2 }, shape.SetsAside, shape.Name + " in place of the sapling");
+                foreach (var each in shape.Effects.Where(each => each.On == UpgradeTrigger.PerfectGuard || each.On == UpgradeTrigger.PerfectDodge))
+                    Assert.IsTrue(each.Spends == 1 && each.PaysLearn, shape.Name + " pays one of the window's saplings");
+            }
+        }
+
+        [Test]
         public void TheFavouredOaksLeafRidesTheBladeToTheNextDischarge()
         {
             var oak = Upgrade.ById(LightningFlowerDuo.TheFavouredOak);

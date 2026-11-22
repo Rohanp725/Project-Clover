@@ -100,6 +100,8 @@ namespace Clover.Player
         /// The cast is still made and its moments still come, for the shape's own effects.
         /// </summary>
         public bool Quiet;
+        /// <summary>Above zero: the cast is paid in this many flasks and no mana (Poured on the Edge: one; the ledger's price-in-flasks).</summary>
+        public int FlaskCost;
 
         /// <summary>The health a cast takes: its fixed price and its share of the present health.</summary>
         public static float HealthPrice(float fixedCost, float share, float present) => System.Math.Max(0f, fixedCost) + System.Math.Max(0f, share) * System.Math.Max(0f, present);

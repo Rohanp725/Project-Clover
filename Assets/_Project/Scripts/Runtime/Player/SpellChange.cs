@@ -151,6 +151,7 @@ namespace Clover.Player
             into.Glow = from.Glow;
             into.Walk = from.Walk;
             into.Quiet = from.Quiet;
+            into.FlaskCost = from.FlaskCost;
         }
     }
 

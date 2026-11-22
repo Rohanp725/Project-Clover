@@ -516,6 +516,8 @@ namespace Clover.Player
             catalogue = Upgrade.All;
             has = new bool[catalogue.Count];
             readyAt = new float[Upgrade.EffectCount];
+            castAt = new float[catalogue.Count];
+            for (int i = 0; i < castAt.Length; i++) castAt[i] = -100f;
             sinceLast = new float[Upgrade.EffectCount];
             tally = new int[catalogue.Count];
             tallyEnds = new float[catalogue.Count];
@@ -1416,6 +1418,8 @@ namespace Clover.Player
             if (effect.NeedsWindup > 0f && !InWindup(target as IAfflictable, effect.NeedsWindup)) return;
             // Only for a cast timed to the poison's beat (Miasma's, One by One's and Share Alike's Masters).
             if (effect.OnCastBeat && !castOnBeat) return;
+            // Only within its branch's own spell's window (Poured on the Edge's 12 s).
+            if (effect.WithinOwnCast > 0f && !InCastWindow(LastCastOf(effect.Owner), Time.time, effect.WithinOwnCast)) return;
             if (effect.NeedsAttacker && !IsAttacker(target, turnedBy != null ? turnedBy : null, turnedAt, Time.time)) return;
             // Only as an enemy's blow is about to land (the shared movement rule's timing).
             if (effect.BlowLanding > 0f && (combat == null || combat.BlowAboutToLand(effect.BlowLanding, out _) == null)) return;
@@ -1474,8 +1478,8 @@ namespace Clover.Player
             if (effect.Chance < 1f && Random.value > effect.Chance) return;
             if ((effect.Spends > 0 || effect.SpendsAll) && effect.Owner != null)
             {
-                // Paid from the count its mark keeps, or it does not happen.
-                int index = effect.Owner.Index;
+                // Paid from the count its mark keeps (or its branch's Learn keeps), or it does not happen.
+                int index = PayerOf(effect).Index;
                 int holds = index < tally.Length ? tally[index] : 0;
                 int price = effect.SpendsAll ? holds : effect.Spends;
                 if (price <= 0 || holds < price) return;
@@ -1821,7 +1825,7 @@ namespace Clover.Player
                     var spec = new HazardSpec
                     {
                         Kind = ElementLook.Ground(look), Tint = look.Colour, Radius = Or(effect.Radius, 1f) * spread * Stats.Multiplier(PlayerStat.GroundSize), Seconds = Or(effect.Seconds, 3f) * Stats.Multiplier(PlayerStat.GroundSeconds), BiteEvery = Or(effect.Interval, 0.5f),
-                        Grown = effect.Grown, Family = effect.Slot + 1, Limit = effect.Grown && effect.Limit > 0 ? effect.Limit + Mathf.Max(0, Stats.Whole(PlayerStat.GrownLimit)) : 0,
+                        Grown = effect.Grown, Family = FamilyOf(effect), Limit = effect.Grown && effect.Limit > 0 ? effect.Limit + Mathf.Max(0, Stats.Whole(PlayerStat.GrownLimit)) : 0,
                         Blow = Blow(look, kind, eDamage, eStagger, eStacks), FromReaction = laying == LaySource.Reaction,
                         Spares = effect.SparesTarget ? pending.Target as IDamageable : null,
                         // Unseen ground is drawn by its reaction's look alone (Seized's film: no bolt at each bite).
@@ -2795,6 +2799,18 @@ namespace Clover.Player
             TheirBlow(combat != null ? combat.EnemyAt(attacker, 2.5f) : null, attacker);
         }
 
+        /// <summary>
+        /// The health a spell still waiting <paramref name="left"/> seconds costs to cast anyway at <paramref name="perSecond"/>
+        /// a second (Blood Price), or -1 when it cannot be: no such price, or it would take the last point of
+        /// <paramref name="present"/> health.
+        /// </summary>
+        public static float CooldownHealth(float left, float perSecond, float present)
+        {
+            if (perSecond <= 0f || left <= 0f) return left <= 0f ? 0f : -1f;
+            float price = left * perSecond;
+            return present - 1f >= price ? price : -1f;
+        }
+
         /// <summary>True while the marks in force, as their conditions hold now, keep the player unshaken (PlayerStat.Unshaken).</summary>
         public static bool IsUnshaken(PlayerStats stats) => stats != null && stats.Sum(PlayerStat.Unshaken) > 0f;
 
@@ -3492,10 +3508,39 @@ namespace Clover.Player
         /// <summary>The mana a spell asks now: its price (larger spells only) as the marks make it.</summary>
         public float PriceOf(Upgrade mark)
         {
-            // The branch's Empower may make a larger spell cheaper (Meteor Leap 45 to 35).
+            // The branch's Empower may make a larger spell cheaper (Meteor Leap 45 to 35); one paid in flasks asks no mana.
             var spec = mark != null ? branches.SpecOf(mark, RunState.Unlocked, ReadLoadout()) : null;
-            return spec == null ? 0f : spec.Cost * Stats.Multiplier(PlayerStat.SpellCost);
+            return spec == null || spec.FlaskCost > 0 ? 0f : spec.Cost * Stats.Multiplier(PlayerStat.SpellCost);
         }
+
+        /// <summary>The family a grown thing is counted in for its limit: its own effect's, or one shared by kin of the same mark (UpgradeEffect.Kin).</summary>
+        public static int FamilyOf(UpgradeEffect effect) =>
+            effect == null ? 0 : effect.Kin > 0 && effect.Owner != null ? 1000000 + effect.Owner.Index * 8 + effect.Kin : effect.Slot + 1;
+
+        // When each branch's own spell was last cast, by its Learn's place in the catalogue (UpgradeEffect.WithinOwnCast).
+        private float[] castAt = new float[0];
+
+        // The mark whose count an effect's Spends pays from: its own, or its branch's Learn's (UpgradeEffect.PaysLearn).
+        private static Upgrade PayerOf(UpgradeEffect effect)
+        {
+            var owner = effect.Owner;
+            if (effect.PaysLearn && owner != null && !string.IsNullOrEmpty(owner.Branch)) return Upgrade.ById(owner.Branch) ?? owner;
+            return owner;
+        }
+
+        // When the branch of this mark last cast its own spell; long ago when never.
+        private float LastCastOf(Upgrade owner)
+        {
+            if (owner == null) return -100f;
+            var learn = !string.IsNullOrEmpty(owner.Branch) ? Upgrade.ById(owner.Branch) ?? owner : owner;
+            return learn.Index >= 0 && learn.Index < castAt.Length ? castAt[learn.Index] : -100f;
+        }
+
+        /// <summary>True when <paramref name="now"/> is within <paramref name="window"/> seconds of a cast made at <paramref name="castAt"/>.</summary>
+        public static bool InCastWindow(float castAt, float now, float window) => window > 0f && now >= castAt && now - castAt <= window;
+
+        /// <summary>True when the player can pay a cast's flasks: enough on the belt, and none at the lips.</summary>
+        public static bool CanPayFlasks(int cost, int held, bool drinking) => cost <= 0 || (!drinking && held >= cost);
 
         /// <summary>
         /// Casts a learned (or lent) spell from a slot, through its form: the one path every slot spell takes
@@ -3518,6 +3563,8 @@ namespace Clover.Player
             // A form that can do nothing just now says so before anything is paid.
             if (form is ISpellGate gate && !gate.CanCast(cast)) return false;
             float price = PriceOf(mark);
+            // A spell paid in flasks (Poured on the Edge): enough on the belt, or it is not cast.
+            if (spec.FlaskCost > 0 && (defence == null || !CanPayFlasks(spec.FlaskCost, defence.Flasks.Count, defence.Flasks.IsDrinking))) return false;
             CoverWithHealth(price);
             if (blood > 0f && (defence == null || defence.Health.Current <= blood)) return false;
             // Spring Tide: the spell is made greater by all the mana held before its numbers are read, and takes it all.
@@ -3527,6 +3574,8 @@ namespace Clover.Player
             if (!combat.Mana.TrySpend(price)) return false;
             if (tide) TideSpent();
             if (blood > 0f) defence.Health.Chip(blood);
+            for (int i = 0; i < spec.FlaskCost; i++) defence.Flasks.TryThrow();
+            if (mark.Index >= 0 && mark.Index < castAt.Length) castAt[mark.Index] = Time.time;
             WornCasts++;
             if (form is ISpellLanding landing)
             {

@@ -317,31 +317,32 @@ namespace Clover.Player.Trees
             }, BranchPattern.RightCrown));
 
             // Sapling, once a major, is the counter: a still nova opens the window as a count of three, and each perfect guard
-            // or perfect dodge spends one on a sapling at the attacker (on a dodge, the enemy faced). NEEDS: the window as 8 s
-            // (a count that empties with its time), three at most between the guard's and the dodge's, the Empower's fourth
-            // (count-rules), and each lashing only the nearest enemy (it lashes all within its reach).
+            // or perfect dodge spends one on a sapling at the attacker (on a dodge, the enemy faced). The window is 8 s (a count
+            // banked for a time), three at most between the guard's and the dodge's, four with the Empower. NEEDS: each lashing
+            // only the nearest enemy (it lashes all within its reach).
             SpellBranch.Add(to, E, Sapling, "Sapling", SpellRole.Counter, BranchPattern.RightB, BriarCoat, SpellForms.Nova,
                 new SpellSpec { Radius = 1f, Damage = 0f, Stagger = 0f, Stacks = 0 },
                 "For eight seconds, each perfect guard or perfect dodge plants a sapling where the attacker stands, three at most. Each stands twelve seconds and every second and a half lashes the nearest enemy within three and a half metres for 6 damage and 8 stagger, Seeding it. They count as grown.",
                 UpgradeIcons.Spike,
-                new Empower { Cooldown = 7f, Count = 4 },
+                new Empower { Cooldown = 7f, Effects = new[] { new EffectChange { Index = 0, Count = 4 } } },
                 "Sapling waits 7 seconds, not 9, and plants four saplings.",
-                // NEEDS: in place of the sapling, and only within the cast's window (shape-sets-aside). Until then, while this
-                // shape is worn, every perfect guard or dodge also roots its attacker.
-                new ShapeDef { Name = "Strangler",
+                // In place of the sapling (ShapeDef.SetsAside: the Learn's plantings), and only within the cast's window: each
+                // pays one of the window's saplings (UpgradeEffect.PaysLearn).
+                new ShapeDef { Name = "Strangler", SetsAside = new[] { 1, 2 },
                     Description = "Each one climbs the attacker instead, as a strangler fig climbs its host. It is rooted for a second and Seeded two deep, and nothing stands after.",
                     Effects = new[]
                     {
-                        new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Strangled, Seconds = 1f, Flags = ConditionFlags.Rooted }, Affliction = AfflictionKind.Seeded, Stacks = 2 },
-                        new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Strangled, Seconds = 1f, Flags = ConditionFlags.Rooted }, Affliction = AfflictionKind.Seeded, Stacks = 2 },
+                        new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Spends = 1, PaysLearn = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Strangled, Seconds = 1f, Flags = ConditionFlags.Rooted }, Affliction = AfflictionKind.Seeded, Stacks = 2 },
+                        new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, Spends = 1, PaysLearn = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Strangled, Seconds = 1f, Flags = ConditionFlags.Rooted }, Affliction = AfflictionKind.Seeded, Stacks = 2 },
                     } },
-                // NEEDS: only within the cast's window, the seed in place of the sapling (shape-sets-aside).
-                new ShapeDef { Name = "Dodder",
+                // In place of the sapling (ShapeDef.SetsAside), and only within the cast's window: each pays one of the window's
+                // saplings (UpgradeEffect.PaysLearn).
+                new ShapeDef { Name = "Dodder", SetsAside = new[] { 1, 2 },
                     Description = "The seed grows on the attacker itself, pale threads of dodder that drink from it for six seconds. Each of your blows on it mends you 3 more, and its balance breaks a fifth sooner.",
                     Effects = new[]
                     {
-                        new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Dodder, Seconds = 6f, Flags = ConditionFlags.StaggerTakenShare, Scale = 1.25f } },
-                        new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Dodder, Seconds = 6f, Flags = ConditionFlags.StaggerTakenShare, Scale = 1.25f } },
+                        new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Spends = 1, PaysLearn = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Dodder, Seconds = 6f, Flags = ConditionFlags.StaggerTakenShare, Scale = 1.25f } },
+                        new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, Spends = 1, PaysLearn = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Dodder, Seconds = 6f, Flags = ConditionFlags.StaggerTakenShare, Scale = 1.25f } },
                         new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Dodder, By = StruckBy.Weapon, Do = UpgradeAction.Heal, Amount = 3f },
                     } },
                 "Opens two shapes of Sapling, chosen at any rest fire: Strangler, roots that climb the attacker, or Dodder, threads that drink from it.",
@@ -349,12 +350,12 @@ namespace Clover.Player.Trees
                 // raises a small Elder Tree on the attacker for six seconds, once in fifteen.
                 new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Form, Form = SpellForms.Rod, Cooldown = 15f, Spell = new SpellSpec { Cost = 0f, Reach = 0.5f, Radius = 3f, Seconds = 6f, Interval = 3f, Damage = 16f, Stagger = 45f, Delay = 0.3f, Stacks = 1 } } },
                 "Plant all three within three seconds, and the third comes up as a full Elder Tree for six seconds.",
-                tally: new TallySpec { Name = "Saplings", Cap = 3 },
+                tally: new TallySpec { Name = "Saplings", Cap = 4 },
                 learnEffects: new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Bank, Count = 3 },
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Spends = 1, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Grown = true, Limit = 3, Radius = 3.5f, Seconds = 12f, Interval = 1.5f, Damage = 6f, Stagger = 8f, Affliction = AfflictionKind.Seeded, Stacks = 1 },
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, Spends = 1, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Grown = true, Limit = 3, Radius = 3.5f, Seconds = 12f, Interval = 1.5f, Damage = 6f, Stagger = 8f, Affliction = AfflictionKind.Seeded, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Bank, Count = 3, Seconds = 8f },
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Spends = 1, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Grown = true, Limit = 3, Kin = 1, Radius = 3.5f, Seconds = 12f, Interval = 1.5f, Damage = 6f, Stagger = 8f, Affliction = AfflictionKind.Seeded, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, Spends = 1, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Grown = true, Limit = 3, Kin = 1, Radius = 3.5f, Seconds = 12f, Interval = 1.5f, Damage = 6f, Stagger = 8f, Affliction = AfflictionKind.Seeded, Stacks = 1 },
                 });
 
             // BESPOKE (built): SpringForm. The surge button is pressed again, not held.

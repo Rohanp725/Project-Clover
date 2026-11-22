@@ -144,15 +144,13 @@ draining.
 **Example.** Kill three Cursed soldiers in a group. Three grey shades stand up among the rest and keep cutting while you turn to the captain.
 
 ## dark.bloodprice
-**What it does.** When a spell costs more mana than you have, you pay the rest with health. That health isn't lost right away. It turns grey, and dealing damage wins it back, like any grey health.
+**What it does.** You can cast a spell that is still waiting, and pay for the wait with health. That health isn't lost right away. It turns grey, and dealing damage wins it back, like any grey health.
 
 **When it happens.** Each time you cast a spell that costs mana without enough mana for it: another element's larger spell, or a duo spell. Dark's own spells cost no mana. They have waits instead, and Pawned Heart is paid for with health.
 
-**The numbers.** 3 Shards. Each point of mana you are missing costs half a point of health, taken as grey health. It never takes your last point. If you don't have the health, the spell isn't cast.
+**The numbers.** 3 Shards. Each second left on the spell's wait costs 1 health, taken as grey health. Casting it starts its wait again. It never takes your last point. If you don't have the health, the spell isn't cast.
 
 **Works with.** Near the Grave and Debts Called, which come after it on the chart (they reward low health), Pawned Heart, duo spells.
-
-**Not built yet.** The plan is for Blood Price to work on spell waits instead: you could cast a spell that is still waiting, paying 1 health for each second left, as grey health you owe, but never your last point. For now, it pays for the mana a spell is missing.
 
 **Example.** You have 10 mana and cast a duo spell that costs 40. It goes off, 15 of your health turns grey, and the blows you land next win it back.
 

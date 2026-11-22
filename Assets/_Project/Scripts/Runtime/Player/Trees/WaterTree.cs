@@ -342,16 +342,17 @@ namespace Clover.Player.Trees
                 UpgradeIcons.Blade,
                 new Empower { Mana = 25f, Damage = 35f, Seconds = 15f },
                 "Poured Blade costs 25 mana, not 30, and its copy strikes for 35% for fifteen seconds.",
-                // Its first design. NEEDS: the flask as its price, not mana, and the wave only within the 12 s (price-in-flasks),
-                // and the weapon's reach 40% longer. Until then the cast makes every blow mend for twelve seconds, and while this
-                // shape is worn the last blow of every chain throws a wave.
+                // Its first design: a flask is its price, not mana (SpellSpec.FlaskCost), and for its 12 s (UpgradeEffect.WithinOwnCast)
+                // the weapon reaches 40% further (PlayerStat.WeaponReach), every blow mends 2 and soaks, and a chain's last blow throws a wave.
                 new ShapeDef { Name = "Poured on the Edge", Form = SpellForms.Nova,
                     Description = "No copy. A flask is poured along the weapon, and for twelve seconds its reach is 40% longer, every blow mends 2 and soaks, and the last blow of a chain throws a wave five metres. It costs a flask, not mana.",
-                    Spell = new SpellSpec { Radius = 1f, Damage = 0f, Stagger = 0f, Stacks = 0 },
+                    Spell = new SpellSpec { Radius = 1f, Damage = 0f, Stagger = 0f, Stacks = 0, FlaskCost = 1 },
                     Effects = new[]
                     {
-                        new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Boon, Stat = PlayerStat.Leech, Amount = 0.1f, Seconds = 12f },
-                        new UpgradeEffect { On = UpgradeTrigger.ChainEnd, Do = UpgradeAction.Cone, Reach = 5f, Arc = 60f, Damage = 10f, Stagger = 15f, Affliction = AfflictionKind.Soaked, Stacks = 1 },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Boon, Stat = PlayerStat.WeaponReach, Amount = 0.4f, Seconds = 12f },
+                        new UpgradeEffect { On = UpgradeTrigger.AnyHit, WithinOwnCast = 12f, Do = UpgradeAction.Heal, Amount = 2f },
+                        new UpgradeEffect { On = UpgradeTrigger.AnyHit, WithinOwnCast = 12f, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Soaked, Stacks = 1 },
+                        new UpgradeEffect { On = UpgradeTrigger.ChainEnd, WithinOwnCast = 12f, Do = UpgradeAction.Cone, Reach = 5f, Arc = 60f, Damage = 10f, Stagger = 15f, Affliction = AfflictionKind.Soaked, Stacks = 1 },
                     } },
                 // NEEDS: the copy standing behind you, facing the other way, and striking what is behind you.
                 new ShapeDef { Name = "Brother at Your Back",

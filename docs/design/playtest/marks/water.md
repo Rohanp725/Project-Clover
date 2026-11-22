@@ -313,11 +313,11 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Whenever you cast Poured Blade, using the shape you picked. If you have not bought this, you cast the copy at your side.
 
-**The numbers.** 3 Shards. Poured on the Edge: for 12 seconds, you get a tenth of your weapon damage back as health. While you have this shape picked, the last blow of every chain throws a wave 5 metres long and 60 degrees wide, dealing 10 damage, 15 stagger and Soaked. Brother at Your Back: the copy works like the plain one.
+**The numbers.** 3 Shards. Poured on the Edge: it costs one flask and no mana. For 12 seconds, your weapon reaches 40% farther, every blow heals you 2 and Soaks the enemy, and the last blow of every chain throws a wave 5 metres long and 60 degrees wide, dealing 10 damage, 15 stagger and Soaked. Brother at Your Back: the copy works like the plain one.
 
 **Works with.** Heavy Water and every mark that works on the end of a chain (Poured on the Edge); Undertow and Blowhole's Blown Out shape when you're surrounded (Brother at Your Back).
 
-**Not built yet.** Poured on the Edge should cost a flask instead of mana, make your weapon reach 40% farther, and only throw its wave during its 12 seconds. Brother at Your Back's copy should stand behind you, facing the other way.
+**Not built yet.** Brother at Your Back's copy should stand behind you, facing the other way.
 
 **Example.** Four soldiers surround you. Use Brother at Your Back, and whatever comes at your back gets cut as you cut what's in front.
 

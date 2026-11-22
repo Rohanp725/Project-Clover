@@ -33,6 +33,8 @@ namespace Clover.Player
         public SpellSlots Slots { get; } = new SpellSlots();
         // Counts for tests and probes.
         public int Casts { get; private set; }
+        /// <summary>Health paid to cast spells still waiting (Blood Price), for probes.</summary>
+        public float HealthPaidForWaits { get; private set; }
         public int CutsTaken { get; private set; }
         public float SecondsCut { get; private set; }
         public int ReadyFlashes { get; private set; }
@@ -535,10 +537,18 @@ namespace Clover.Player
                 }
                 pressSlot = -1;
             }
+            // Blood Price: a spell still waiting is cast anyway, each second left paid in health once the cast is made.
+            float owedForWait = 0f;
             if (!Cooldowns.Ready(slot))
             {
-                Refuse("Not ready");
-                return false;
+                owedForWait = upgrades != null && defence != null
+                    ? PlayerUpgrades.CooldownHealth(Cooldowns.Remaining(slot), upgrades.Stats.Sum(PlayerStat.CooldownPrice) * upgrades.Stats.Multiplier(PlayerStat.HealthPrices), defence.Health.Current)
+                    : -1f;
+                if (owedForWait < 0f)
+                {
+                    Refuse("Not ready");
+                    return false;
+                }
             }
             float seconds;
             string castIn;
@@ -604,6 +614,12 @@ namespace Clover.Player
             finally
             {
                 element.CastTag = 0;
+            }
+            // Left grey: owed, to be won back by blows.
+            if (owedForWait > 0f && defence != null)
+            {
+                defence.Health.Chip(owedForWait);
+                HealthPaidForWaits += owedForWait;
             }
             Cooldowns.Start(slot, seconds / Mathf.Max(0.1f, CooldownRate));
             Casts++;

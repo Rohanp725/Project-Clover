@@ -310,11 +310,11 @@ ground: Briar Patch's bed, a thornbush, a sapling, a thicket, a tuft of briar.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). Then guard or dodge perfectly: press the guard button just before a blow lands, or dodge just before it.
 
-**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 9 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 7 seconds.) Each cast gives three saplings, used up by your next perfect guards and perfect dodges. Each sapling reaches 3.5 metres and stays for 12 seconds. Every 1.5 seconds, it hits everything in reach for 6 damage, 8 stagger and one stack of Seeded. Up to three can stand at once from guards, and three from dodges; one more replaces the oldest. On a dodge, it is planted at the enemy you face.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 9 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 7 seconds.) Each cast gives three saplings (four with its Empower), used up by your perfect guards and perfect dodges in the next 8 seconds. Any not used by then are gone. Each sapling reaches 3.5 metres and stays for 12 seconds. Every 1.5 seconds, it hits everything in reach for 6 damage, 8 stagger and one stack of Seeded. Up to three can stand at once in all; one more replaces the oldest. On a dodge, it is planted at the enemy you face.
 
 **Works with.** Bitter Rind and Briar Coat (they work on the same guard), Briar Coat, which it comes after on the chart, Reap What Is Sown and Drawn From the Wood (they use up the saplings), Root Walk, Wildwood, Seeded.
 
-**Not built yet.** The window should last eight seconds after you cast it (for now, the three saplings wait until used). There should be three at most in total between guards and dodges. The Empower's fourth sapling. Each sapling should only lash the nearest enemy (for now, it hits everything within reach).
+**Not built yet.** Each sapling should only lash the nearest enemy (for now, it hits everything within reach).
 
 **Example.** Cast it as a pack closes in and perfect-guard three blows. Three saplings grow among them, Seeding everything that comes near.
 
@@ -323,11 +323,9 @@ ground: Briar Patch's bed, a thornbush, a sapling, a thicket, a tuft of briar.
 
 **When it happens.** For now, on every perfect guard and perfect dodge while you have the shape picked, along with the saplings. If you have not bought this, only the saplings are planted.
 
-**The numbers.** 3 Shards. Strangler: the attacker is rooted for 1 second (it can't walk, but it can still hit whatever comes within reach) and gets two stacks of Seeded. Dodder: for 6 seconds, each of your weapon blows on it heals you 3, and it takes a quarter more stagger.
+**The numbers.** 3 Shards. Strangler: the attacker is rooted for 1 second (it can't walk, but it can still hit whatever comes within reach) and gets two stacks of Seeded. Dodder: for 6 seconds, each of your weapon blows on it heals you 3, and it takes a quarter more stagger. Either one takes the place of a sapling: it uses up one of the cast's saplings, and only works in the cast's 8 seconds. No sapling is planted.
 
 **Works with.** Strangler: Ripening on the rooted enemy. Dodder: Seeded's own healing; Bitter Rind and Briar Coat on the same attacker.
-
-**Not built yet.** Each should replace the sapling, and only work during the spell's window. For now, they work on every perfect guard and dodge while picked, and the saplings are still planted.
 
 **Example.** Use Dodder on a brute whose swing you perfectly guarded. You get six seconds of cuts that each heal 3 more and break its balance a quarter sooner.
 
