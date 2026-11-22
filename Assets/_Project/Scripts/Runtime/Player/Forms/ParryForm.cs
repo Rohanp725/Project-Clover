@@ -23,6 +23,15 @@ namespace Clover.Player.Forms
         /// <summary>One more blow banked, up to <paramref name="cap"/> (0: no limit).</summary>
         public static int Banked(int banked, int cap) => cap > 0 ? Mathf.Min(cap, banked + 1) : banked + 1;
 
+        /// <summary>
+        /// True when a stance that has just turned blow number <paramref name="turned"/> (from one) stands on for the next: it
+        /// turns <paramref name="most"/> in all (one or less: the first only), and its time is not yet out.
+        /// </summary>
+        public static bool TurnsAnother(int turned, int most, float age, float seconds) => most > 1 && turned < most && age < seconds;
+
+        /// <summary>How far the answer to blow number <paramref name="turned"/> (from one) reaches: its own reach, and <paramref name="grows"/> more for each before it.</summary>
+        public static float AnswerReach(float reach, float grows, int turned) => reach + Mathf.Max(0f, grows) * Mathf.Max(0, turned - 1);
+
         /// <summary>What the door opened on letting go deals: its own damage and <paramref name="each"/> for each blow banked.</summary>
         public static float DoorDamage(float own, float each, int banked) => own + each * Mathf.Max(0, banked);
 
@@ -101,6 +110,8 @@ namespace Clover.Player.Forms
                 back.y = 0f;
                 if (back.sqrMagnitude > 0.01f) body.rotation = Quaternion.LookRotation(back, Vector3.up);
                 run.Done = Banked(run.Done, cast.Spec.Bank);
+                // It stands on, ready for the next blow.
+                player.FormParrying = true;
                 Vector3 chest = body.position + Vector3.up * 1.2f;
                 if (cast.Affliction == Clover.Gameplay.AfflictionKind.Burn)
                 {
@@ -159,22 +170,32 @@ namespace Clover.Player.Forms
                     run.T0 = run.Age;
                     return true;
                 }
+                // A stance that turns more than one blow counts them, each answer reaching further (Ringing Plate).
+                run.Done++;
+                float reach = AnswerReach(cast.Reach, cast.Spec.TurnGrows, run.Done);
                 // Split into thin rays of its own (Sunstone's five), or the cone of the caught blow.
-                if (cast.Spec.Rays > 1) cast.Combat.StrikeRays(body.position, body.forward, cast.Spec.Rays, cast.Spec.Arc, cast.Reach, blow);
-                else cast.Combat.StrikeCone(cast.Reach, cast.Spec.Arc, blow);
+                if (cast.Spec.Rays > 1) cast.Combat.StrikeRays(body.position, body.forward, cast.Spec.Rays, cast.Spec.Arc, reach, blow);
+                else cast.Combat.StrikeCone(reach, cast.Spec.Arc, blow);
                 Vector3 chest = body.position + Vector3.up * 1.1f;
-                cast.Caster.ShowArc(cast.Reach, cast.Spec.Arc, 1f, cast.Element != null ? cast.Element.Glow : cast.Colour);
-                cast.Caster.ShowArc(cast.Reach * 0.6f, cast.Spec.Arc, -1f, cast.Element != null ? cast.Element.Glow : cast.Colour);
+                cast.Caster.ShowArc(reach, cast.Spec.Arc, 1f, cast.Element != null ? cast.Element.Glow : cast.Colour);
+                cast.Caster.ShowArc(reach * 0.6f, cast.Spec.Arc, -1f, cast.Element != null ? cast.Element.Glow : cast.Colour);
                 int rays = cast.Spec.Rays > 1 ? cast.Spec.Rays : 7;
                 for (int i = 0; i < rays; i++)
                 {
                     Vector3 ray = Quaternion.Euler(0f, FormRules.InFan(i, rays, cast.Spec.Arc * 0.9f), 0f) * body.forward;
-                    FormFx.Run(FormMark.Streak, body.position + ray * 0.8f, ray, cast.Reach - 0.8f, 0.9f, FormKit.Lit(cast.Colour, 3.4f), 0.2f, 0.1f);
-                    FormFx.Fly(FormMesh.Shard, chest + ray * 0.8f, chest + ray * cast.Reach, Quaternion.LookRotation(ray), Vector3.one * 1.7f, cast.Colour, 0.2f);
+                    FormFx.Run(FormMark.Streak, body.position + ray * 0.8f, ray, reach - 0.8f, 0.9f, FormKit.Lit(cast.Colour, 3.4f), 0.2f, 0.1f);
+                    FormFx.Fly(FormMesh.Shard, chest + ray * 0.8f, chest + ray * reach, Quaternion.LookRotation(ray), Vector3.one * 1.7f, cast.Colour, 0.2f);
                 }
                 FormFx.Face(FormMark.Star, chest + body.forward * 0.9f, 3.6f, FormKit.Lit(cast.Colour, 4f), 0.11f, 4.8f);
                 FormKit.Flash(cast, 0.3f, 0.07f);
                 if (cast.Upgrades != null) cast.Upgrades.Jolt(0.13f, 0.45f, 0.3f);
+                if (TurnsAnother(run.Done, cast.Spec.Turns, run.Age, Mathf.Max(0.2f, cast.Spec.Seconds)))
+                {
+                    // Turned, answered, and still standing for the next blow from any side.
+                    player.FormParrying = true;
+                    player.FormGuardPose = true;
+                    return true;
+                }
                 FormFx.ReleaseMark(marks[0]);
                 FormFx.ReleaseMark(marks[1], 0.1f);
                 marks[0] = marks[1] = -1;

@@ -207,6 +207,13 @@ namespace Clover.Player
         public int Bank;
         public float BankDamage;
         public float BankStagger;
+        /// <summary>
+        /// For the parry form: above one, the stance stands on after turning a blow and turns up to this many in its time, each
+        /// answered (Circle of Steel's Empower: two; Ringing Plate: four). One or zero: the first blow only.
+        /// </summary>
+        public int Turns;
+        /// <summary>For the parry form with <see cref="Turns"/>: each answer after the first reaches this many metres further (Ringing Plate's wider rings).</summary>
+        public float TurnGrows;
 
         /// <summary>The share of a full hold, 0 to 1, held for <paramref name="held"/> seconds of at most <paramref name="most"/>.</summary>
         public static float HeldShare(float held, float most) => most <= 0f ? 0f : UnityEngine.Mathf.Clamp01(held / most);

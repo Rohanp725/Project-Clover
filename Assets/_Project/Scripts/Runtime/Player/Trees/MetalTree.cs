@@ -216,13 +216,13 @@ namespace Clover.Player.Trees
                 "Catch it on a perfect guard as it comes home, and Returning Edge is ready again at once.");
 
             // The counter: the parry form turns the first blow and answers with a cut all round; nothing struck, it waits 5 s
-            // (SpellSpec.MissedWait). NEEDS: two blows turned with the Empower (parry-count).
+            // (SpellSpec.MissedWait). With the Empower it stands on after the first and turns a second (SpellSpec.Turns).
             SpellBranch.Add(to, E, CircleOfSteel, "Circle of Steel", SpellRole.Counter, BranchPattern.LeftB, OpenLine, SpellForms.Parry,
                 new SpellSpec { Seconds = 1.2f, Reach = 3f, Arc = 360f, Damage = 14f, Stagger = 20f, Stacks = 1, MissedWait = 0.5f },
                 "You raise the blade for a breath, unable to move. The first blow from any side is turned for nothing and answered with a cut all round you, three metres: 14 damage, 20 stagger and a notch. If nothing strikes, it waits only half as long.",
                 UpgradeIcons.Ring,
                 // The roster's numbers alone (the owner's answer of 2026-11-20: an Empower may strengthen without a shorter wait).
-                new Empower { Damage = 16f },
+                new Empower { Damage = 16f, Turns = 2 },
                 "It turns two blows, and its answer strikes for 16.",
                 // The cut all round kept, and only the attacker bound (UpgradeEffect.NeedsAttacker: the one whose blow was turned);
                 // "passes any guard" is that it cannot raise one.
@@ -235,11 +235,11 @@ namespace Clover.Player.Trees
                         new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, NeedsAttacker = true, Do = UpgradeAction.Afflict, Affliction = S, Stacks = 1 },
                         new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, NeedsAttacker = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = GoldenChair, Seconds = 2f, Flags = ConditionFlags.CannotGuard } },
                     } },
-                // NEEDS: every blow turned in 1.5 s ringing, four at most, each ring wider than the last (parry-count). Until then
-                // the first blow turned rings once.
+                // Every blow turned in its 1.5 s rings, four at most (SpellSpec.Turns), each ring a metre wider than the last
+                // (TurnGrows): 4, 5, 6 and 7 m.
                 new ShapeDef { Name = "Ringing Plate", Form = SpellForms.Parry,
                     Description = "You stand as a struck plate. Every blow turned in a second and a half, four at most, rings: a sharp ripple to four metres, 8 damage, 20 stagger and a notch on all, each ring wider than the last. The more of them strike you, the better.",
-                    Spell = new SpellSpec { Seconds = 1.5f, Reach = 4f, Arc = 360f, Damage = 8f, Stagger = 20f, Stacks = 1 } },
+                    Spell = new SpellSpec { Seconds = 1.5f, Reach = 4f, Arc = 360f, Damage = 8f, Stagger = 20f, Stacks = 1, Turns = 4, TurnGrows = 1f } },
                 "Opens two shapes of Circle of Steel, chosen at any rest fire: The Golden Chair, bands that bind the one who struck, or Ringing Plate, a ring for every blow turned.",
                 // Only a red attack turned (UpgradeEffect.RedOnly): the mana, and its wait ended.
                 new[]

@@ -36,6 +36,8 @@ namespace Clover.Player
         public int Rings;
         /// <summary>The form carries what it strikes before it (<see cref="SpellSpec.Carries"/>).</summary>
         public bool Carries;
+        /// <summary>The blows a parry stance turns in its time (<see cref="SpellSpec.Turns"/>: Circle of Steel's Empower, two).</summary>
+        public int Turns;
         /// <summary>How far the drill reaches to a blade of yours (<see cref="SpellSpec.BladeReach"/>: To the Blade's Empower).</summary>
         public float BladeReach;
         /// <summary>The wall bursts this long after an enemy first strikes it (<see cref="SpellSpec.BurstAfterStruck"/>: Cracked Wall).</summary>
@@ -50,7 +52,7 @@ namespace Clover.Player
         /// <summary>True when it changes nothing.</summary>
         public bool IsEmpty =>
             Cooldown == 0f && Mana == 0f && Damage == 0f && Stagger == 0f && Reach == 0f && Radius == 0f && Arc == 0f && Seconds == 0f
-            && Interval == 0f && Count == 0 && Stacks == 0 && Delay == 0f && Speed == 0f && LingerDamage == 0f && AfflictionSeconds == 0f && ChargeBlows == 0 && Lasts == 0f && Walk == 0f && !Carries && BankStagger == 0f && Rings == 0
+            && Interval == 0f && Count == 0 && Stacks == 0 && Delay == 0f && Speed == 0f && LingerDamage == 0f && AfflictionSeconds == 0f && ChargeBlows == 0 && Lasts == 0f && Walk == 0f && !Carries && BankStagger == 0f && Rings == 0 && Turns == 0
             && BladeReach == 0f && BurstAfterStruck == 0f && Pull == 0f && !NoPull && !Backward;
 
         /// <summary>
@@ -128,6 +130,8 @@ namespace Clover.Player
             if (Carries) spec.Carries = true;
             if (BankStagger > 0f) spec.BankStagger = BankStagger;
             if (Rings > 0) spec.Rings = Rings;
+            // Never fewer than a shape turns already (Ringing Plate's four stand under the Empower's two).
+            if (Turns > spec.Turns) spec.Turns = Turns;
             if (BladeReach > 0f) spec.BladeReach = BladeReach;
             if (BurstAfterStruck > 0f) spec.BurstAfterStruck = BurstAfterStruck;
             if (Pull > 0f) spec.Pull = Pull;
@@ -210,6 +214,8 @@ namespace Clover.Player
             into.Bank = from.Bank;
             into.BankDamage = from.BankDamage;
             into.BankStagger = from.BankStagger;
+            into.Turns = from.Turns;
+            into.TurnGrows = from.TurnGrows;
         }
     }
 

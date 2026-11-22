@@ -941,6 +941,34 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void CircleOfSteelTurnsMoreThanOneBlowAndTheRingsGrow()
+        {
+            Assert.IsFalse(Clover.Player.Forms.ParryForm.TurnsAnother(1, 0, 0.2f, 1.2f), "the plain circle: the first blow only");
+            Assert.IsFalse(Clover.Player.Forms.ParryForm.TurnsAnother(1, 1, 0.2f, 1.2f));
+            Assert.IsTrue(Clover.Player.Forms.ParryForm.TurnsAnother(1, 2, 0.2f, 1.2f), "the Empower: a second");
+            Assert.IsFalse(Clover.Player.Forms.ParryForm.TurnsAnother(2, 2, 0.4f, 1.2f), "two turned: done");
+            Assert.IsFalse(Clover.Player.Forms.ParryForm.TurnsAnother(1, 4, 1.5f, 1.5f), "its time is out");
+            Assert.AreEqual(4f, Clover.Player.Forms.ParryForm.AnswerReach(4f, 1f, 1), 1e-5f);
+            Assert.AreEqual(7f, Clover.Player.Forms.ParryForm.AnswerReach(4f, 1f, 4), 1e-5f, "the fourth ring three metres wider");
+
+            var branch = Upgrade.ById(MetalTree.CircleOfSteel);
+            var empower = Upgrade.ById(SpellBranch.EmpowerId(MetalTree.CircleOfSteel)).Empower;
+            Assert.AreEqual(2, empower.Turns, "two blows turned");
+            var spec = new SpellSpec();
+            SpellChange.Copy(branch.Spell, spec);
+            empower.ApplyTo(spec);
+            Assert.AreEqual(2, spec.Turns);
+            Assert.AreEqual(16f, spec.Damage, 1e-5f);
+            var plate = Upgrade.ById(SpellBranch.ShapeId(MetalTree.CircleOfSteel)).Shapes.Single(each => each.Name == "Ringing Plate").Spell;
+            Assert.AreEqual(4, plate.Turns, "four at most");
+            Assert.AreEqual(1f, plate.TurnGrows, 1e-5f, "each ring wider");
+            var worn = new SpellSpec();
+            SpellChange.Copy(plate, worn);
+            empower.ApplyTo(worn);
+            Assert.AreEqual(4, worn.Turns, "the Empower never turns fewer than the shape");
+        }
+
+        [Test]
         public void StoneSkinsPlatesTakeMostOfOneBlowEach()
         {
             Assert.AreEqual(40f, PlayerDefence.PlatedWound(100f, 0.6f), 1e-4f, "a plate takes 60% of the blow");

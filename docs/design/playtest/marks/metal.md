@@ -163,11 +163,9 @@ the steel you throw and plant: Flung Blade, the blades of Grave of Swords.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). Then it works on any blow in the next 1.2 seconds.
 
-**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower blocks two blows and makes it 16 damage.) The answer hits everything within 3 metres, all the way around, for 14 damage, 20 stagger and one notch, as a heavy blow. For now, the blocked blow doesn't count as a perfect guard for your marks: it gives no mana and doesn't set off anything that needs one. If nothing hits you, the wait is half as long: 5 seconds.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes it 16 damage, and after the first blow you stay ready: a second blow in the same 1.2 seconds is blocked and answered too.) The answer hits everything within 3 metres, all the way around, for 14 damage, 20 stagger and one notch, as a heavy blow. For now, the blocked blow doesn't count as a perfect guard for your marks: it gives no mana and doesn't set off anything that needs one. If nothing hits you, the wait is half as long: 5 seconds.
 
 **Works with.** Open Line, which it comes after on the chart, Edge Guard, which comes after it, Sunder, Poured Bronze on the ring of enemies it notched, and the charged blade (the answer is a spell, so it charges your weapon with Metal).
-
-**Not built yet.** The Empower's second blocked blow.
 
 **Example.** Three soldiers surround you. Cast it as the first one lunges. The cut blocks its blow and notches all three.
 
@@ -176,11 +174,9 @@ the steel you throw and plant: Flung Blade, the blades of Grave of Swords.
 
 **When it happens.** Whenever you cast Circle of Steel, using the shape you picked. If you have not bought this, you cast the plain circle.
 
-**The numbers.** 3 Shards. The Golden Chair: the answer is a cut all around you, 3 metres, for 14 damage, 20 stagger and a notch to everything it hits. Only the enemy whose blow you blocked is bound: it is held for 2 seconds (a god or an elite for 0.4 of that), gets one more notch, and can't raise its guard for 2 seconds. Ringing Plate: ready for 1.5 seconds. The blocked blow rings out 4 metres all around, for 8 damage, 20 stagger and a notch.
+**The numbers.** 3 Shards. The Golden Chair: the answer is a cut all around you, 3 metres, for 14 damage, 20 stagger and a notch to everything it hits. Only the enemy whose blow you blocked is bound: it is held for 2 seconds (a god or an elite for 0.4 of that), gets one more notch, and can't raise its guard for 2 seconds. Ringing Plate: ready for 1.5 seconds. Every blow you block in that time rings out, up to four. Each ring deals 8 damage, 20 stagger and a notch all around you. The first ring reaches 4 metres, and each one after it reaches 1 metre further: 5, 6, then 7.
 
 **Works with.** The Golden Chair: Open Line, Poured Bronze (two notches and a held enemy), Counter Cut. Ringing Plate: being surrounded, Every Crack Rings.
-
-**Not built yet.** Ringing Plate should ring for every blow it blocks in its 1.5 seconds, up to four, each ring wider (for now, the first blocked blow rings once).
 
 **Example.** Use The Golden Chair on a shield bearer's charge. It stands trapped in gold with its shield down while you cut.
 
