@@ -245,11 +245,11 @@ the next blows on that enemy critical.
 
 **When it happens.** Whenever you cast Glare, using the shape you picked. If you have not bought this, you cast the plain ray.
 
-**The numbers.** 3 Shards. Gathered: hold the button for up to a second, then let go. The ray is 5.5 metres long and narrow. Its stagger rises from 22 to 60 the longer you hold; a quick tap gives 22. Seven Horses: a fan 70 degrees wide and 6 metres long. It deals 5 damage, 6 stagger and a Mark to every enemy in it.
+**The numbers.** 3 Shards. Gathered: hold the button for up to a second, then let go. The ray is 5.5 metres long and narrow. Its stagger rises from 22 to 60 the longer you hold; a quick tap gives 22. Seven Horses: seven thin rays in a fan 70 degrees wide, each 6 metres long. Each ray deals 5 damage, 6 stagger and a Mark to every enemy it crosses, so an enemy close in, where the rays run together, can be hit by more than one. If you buy the Empower, Seven Horses uses its numbers too: 12 damage and 7 metres.
 
 **Works with.** Gathered: Condemned, Reckoning, and a heavy weapon to finish what it breaks. Seven Horses: Spoken Sentence, Weighed, Brimming, a pack.
 
-**Not built yet.** Gathered's ray doesn't yet look like it narrows to a point while you hold. Seven Horses' seven thin rays; for now, it is one cone as wide as the fan. If you buy the Empower, Seven Horses uses its numbers too: 12 damage and 7 metres.
+**Not built yet.** Gathered's ray doesn't yet look like it narrows to a point while you hold.
 
 **Example.** Use Seven Horses on a pack of five. All five are Marked at once, and a Spoken Sentence drops five blades.
 

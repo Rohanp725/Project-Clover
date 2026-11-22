@@ -1446,6 +1446,19 @@ namespace Clover.Player
         private readonly HashSet<IDamageable> starStruck = new HashSet<IDamageable>();
 
         /// <summary>
+        /// Strikes along <paramref name="rays"/> thin rays fanned across <paramref name="arc"/> degrees about <paramref name="forward"/>,
+        /// each <paramref name="reach"/> long: each ray strikes all it crosses, so one standing where two cross is struck by both
+        /// (Seven Horses' seven rays, Sunstone's five). Returns how many strikes landed.
+        /// </summary>
+        public int StrikeRays(Vector3 from, Vector3 forward, int rays, float arc, float reach, in SpellBlow blow)
+        {
+            int hit = 0;
+            for (int i = 0; i < rays; i++)
+                hit += StrikeLane(from, Clover.Player.Forms.FormRules.RayWay(forward, i, rays, arc), reach, Clover.Player.Forms.FormRules.RayHalf, blow);
+            return hit;
+        }
+
+        /// <summary>
         /// Strikes what stands on a star of seams, once each: <paramref name="seams"/> lanes out from <paramref name="centre"/>, each
         /// <paramref name="length"/> long and <paramref name="half"/> either side, the first along <paramref name="first"/> (Earthlight's
         /// cracks). Returns how many it hit.

@@ -159,11 +159,13 @@ namespace Clover.Player.Forms
                     run.T0 = run.Age;
                     return true;
                 }
-                cast.Combat.StrikeCone(cast.Reach, cast.Spec.Arc, blow);
+                // Split into thin rays of its own (Sunstone's five), or the cone of the caught blow.
+                if (cast.Spec.Rays > 1) cast.Combat.StrikeRays(body.position, body.forward, cast.Spec.Rays, cast.Spec.Arc, cast.Reach, blow);
+                else cast.Combat.StrikeCone(cast.Reach, cast.Spec.Arc, blow);
                 Vector3 chest = body.position + Vector3.up * 1.1f;
                 cast.Caster.ShowArc(cast.Reach, cast.Spec.Arc, 1f, cast.Element != null ? cast.Element.Glow : cast.Colour);
                 cast.Caster.ShowArc(cast.Reach * 0.6f, cast.Spec.Arc, -1f, cast.Element != null ? cast.Element.Glow : cast.Colour);
-                int rays = 7;
+                int rays = cast.Spec.Rays > 1 ? cast.Spec.Rays : 7;
                 for (int i = 0; i < rays; i++)
                 {
                     Vector3 ray = Quaternion.Euler(0f, FormRules.InFan(i, rays, cast.Spec.Arc * 0.9f), 0f) * body.forward;

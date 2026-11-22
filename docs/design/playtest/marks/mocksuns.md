@@ -57,10 +57,10 @@ both carried.
 
 **When it happens.** Cast it from a spell slot while you carry both Ice and Light. Press that slot's button (hold L2 and a face button, or press 1 to 4). The first time it lands, it charges your blade with Ice.
 
-**The numbers.** Mix, duo spell, counter, 5 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. The answer is a cone 8 metres long and 80 degrees wide. It deals 12 damage, 20 stagger, two Chill and a Mark to everything in it. If nothing hits it, the wait is half as long: 5 seconds.
+**The numbers.** Mix, duo spell, counter, 5 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. The caught blow splits into five thin rays fanned 80 degrees wide toward the attacker, each 8 metres long. Each ray deals 12 damage, 20 stagger, two Chill and a Mark to everything it crosses. If nothing hits it, the wait is half as long: 5 seconds.
 
 **Works with.** Mock Suns (everything it hits gets both afflictions), White Night, Bent Light.
 
 **Example.** Raise it as the brute swings, and the pack behind it is Marked and chilled.
 
-**Not built yet.** For now, the answer is one cone, not five rays. A perfect guard in its last 0.3 seconds doesn't freeze the attacker solid yet.
+**Not built yet.** A perfect guard in its last 0.3 seconds doesn't freeze the attacker solid yet.

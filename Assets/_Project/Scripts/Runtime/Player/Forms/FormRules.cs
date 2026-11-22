@@ -5,6 +5,19 @@ namespace Clover.Player.Forms
     /// <summary>The plain geometry spell forms share: where the n-th of a count of things goes, and whether a wall stands between two points.</summary>
     public static class FormRules
     {
+        /// <summary>How far either side of its line a thin ray strikes, in metres (Seven Horses).</summary>
+        public const float RayHalf = 0.35f;
+
+        /// <summary>The way the ray numbered <paramref name="index"/> of <paramref name="rays"/> runs, fanned evenly across <paramref name="arc"/> degrees about <paramref name="forward"/> (flat; turned as a yaw turns).</summary>
+        public static Vector3 RayWay(Vector3 forward, int index, int rays, float arc)
+        {
+            forward.y = 0f;
+            if (forward.sqrMagnitude < 0.0001f) forward = Vector3.forward;
+            forward.Normalize();
+            float turn = InFan(index, rays, arc) * Mathf.Deg2Rad, cos = Mathf.Cos(turn), sin = Mathf.Sin(turn);
+            return new Vector3(forward.x * cos + forward.z * sin, 0f, forward.z * cos - forward.x * sin);
+        }
+
         /// <summary>
         /// The radius a field growing out in <paramref name="rings"/> rings reaches at its bite numbered <paramref name="bite"/>
         /// (from 0): a ring further each bite to <paramref name="radius"/>; with no rings, the whole radius at once.

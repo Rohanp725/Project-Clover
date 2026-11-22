@@ -497,6 +497,20 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void TheConesSplitIntoThinRays()
+        {
+            Assert.AreEqual(0f, FormRules.RayWay(Vector3.forward, 3, 7, 70f).x, 1e-5f, "the middle of seven runs straight ahead");
+            Assert.AreEqual(-Mathf.Sin(35f * Mathf.Deg2Rad), FormRules.RayWay(Vector3.forward, 0, 7, 70f).x, 1e-5f, "the first at the left edge of the fan");
+            Assert.AreEqual(Mathf.Sin(35f * Mathf.Deg2Rad), FormRules.RayWay(Vector3.forward, 6, 7, 70f).x, 1e-5f, "the last at the right edge");
+            var horses = Upgrade.ById(SpellBranch.ShapeId(LightTree.Glare)).Shapes.Single(each => each.Name == "Seven Horses");
+            Assert.AreEqual(7, horses.Spell.Rays);
+            Assert.AreEqual(5, Upgrade.ById(Clover.Player.Trees.Duo.MockSunsDuo.Sunstone).Spell.Rays);
+            var copy = new SpellSpec();
+            SpellChange.Copy(horses.Spell, copy);
+            Assert.AreEqual(7, copy.Rays);
+        }
+
+        [Test]
         public void TheSeaComesInQuickensYouOnlyInYourOwnWater()
         {
             var sea = Upgrade.ById(WaterTree.TheSeaComesIn);

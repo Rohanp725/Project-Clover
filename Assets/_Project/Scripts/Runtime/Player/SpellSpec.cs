@@ -105,6 +105,8 @@ namespace Clover.Player
         public float InLine;
         /// <summary>For the field form: above zero, it grows out in this many rings, one at each bite, each reaching further, to its full radius (Rime Over Rime).</summary>
         public int GrowsOut;
+        /// <summary>For the wave and parry forms: above one, the cone is this many thin rays fanned across its Arc, each striking all it crosses on its own (Seven Horses, Sunstone).</summary>
+        public int Rays;
         /// <summary>Above zero: seconds a form's whole mark glows on the ground before it breaks open (Fissure's crack: 0.9); zero breaks it just behind its running mark.</summary>
         public float Glow;
         /// <summary>Above zero: the share of the run's pace the player may walk at while the form's stance holds (Firewalker: half); zero roots them.</summary>

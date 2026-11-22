@@ -172,6 +172,7 @@ namespace Clover.Player
             into.Between = from.Between;
             into.InLine = from.InLine;
             into.GrowsOut = from.GrowsOut;
+            into.Rays = from.Rays;
             into.Glow = from.Glow;
             into.Walk = from.Walk;
             into.Quiet = from.Quiet;

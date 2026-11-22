@@ -288,11 +288,10 @@ namespace Clover.Player.Trees
                 new ShapeDef { Name = "Gathered", Form = SpellForms.Wave,
                     Description = "Hold for up to a second and the ray narrows, the dust in it drawn to a point on the enemy. Let go, and the stagger rises from 22 to 60 with the hold. A lens, for breaking one enemy.",
                     Spell = new SpellSpec { Reach = 5.5f, Arc = 12f, Damage = 8f, Stagger = 22f, Stacks = 1, HoldUpTo = 1f, HeldStagger = 60f } },
-                // NEEDS: seven thin rays rather than one cone (form-pieces). Until then the wave form throws a cone of the fan's
-                // width that strikes and Marks all in it.
+                // Seven thin rays fanned across 70 degrees, each striking all it crosses (SpellSpec.Rays on the wave form).
                 new ShapeDef { Name = "Seven Horses", Form = SpellForms.Wave,
                     Description = "The ray splits into seven thin rays in a fan of 70 degrees, six metres long, as Surya's seven horses run: 5 damage each, and every enemy touched is Marked. Marking a crowd.",
-                    Spell = new SpellSpec { Reach = 6f, Arc = 70f, Damage = 5f, Stagger = 6f, Stacks = 1 } },
+                    Spell = new SpellSpec { Reach = 6f, Arc = 70f, Damage = 5f, Stagger = 6f, Stacks = 1, Rays = 7 } },
                 "Opens two shapes of Glare, chosen at any rest fire: Gathered, a ray drawn to a point that breaks one enemy, or Seven Horses, a fan of rays that Marks a crowd.",
                 // Dazzle, once a major, folded in here. Glare cast within 0.3 s of a perfect dodge (CastAfter PerfectDodge) blinds the
                 // attacker it dodged (ToTurnedBy): it cannot turn for 2 s, 1 s for a god or an elite (CannotTurn, EliteSeconds).
