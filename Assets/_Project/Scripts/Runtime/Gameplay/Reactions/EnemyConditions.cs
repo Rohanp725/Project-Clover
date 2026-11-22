@@ -47,6 +47,9 @@ namespace Clover.Gameplay
         public float HeavyTakenScale { get; private set; } = 1f;
         /// <summary>What the stagger it takes from weapon blows is multiplied by, beyond <see cref="StaggerScale"/>.</summary>
         public float WeaponStaggerScale { get; private set; } = 1f;
+        /// <summary>Seconds a freeze lasts longer while a condition runs (the most any asks), and how much harder a shatter strikes.</summary>
+        public float FreezeLonger { get; private set; }
+        public float ShatterScale { get; private set; } = 1f;
         /// <summary>How far it sees while its sight is cut short; 0 when it is not.</summary>
         public float Sight { get; private set; }
         /// <summary>The afflictions kept from fading and from being spent by blows, as bits at <c>1 &lt;&lt; (int)kind</c>.</summary>
@@ -154,6 +157,22 @@ namespace Clover.Gameplay
             return reached;
         }
 
+        // The side of the blow being told, in degrees (see SideDegrees), or -1 when it is not known.
+        private float blowSide = -1f;
+
+        /// <summary>
+        /// The side a blow comes from, in degrees: 0 when it comes at the enemy's face, 90 at a flank, 180 at its back.
+        /// <paramref name="facing"/> is the way the enemy faces, <paramref name="travel"/> the way the blow travels. -1 when
+        /// either is not known (a test's set with no body, a blow with no way).
+        /// </summary>
+        public static float SideDegrees(Vector3 facing, Vector3 travel)
+        {
+            facing.y = 0f;
+            travel.y = 0f;
+            if (facing.sqrMagnitude < 0.0001f || travel.sqrMagnitude < 0.0001f) return -1f;
+            return Vector3.Angle(facing, -travel);
+        }
+
         // The names of what a blow spent since the last step (each run's name and what it is).
         private readonly string[] spentNames = new string[Slots * 2];
         private int spentCount;
@@ -235,6 +254,15 @@ namespace Clover.Gameplay
             run.Is = spec.Is;
             run.WhileIn = spec.WhileIn;
             run.CriticalOnly = spec.CriticalOnly;
+            run.FreezeLonger = Math.Max(0f, spec.FreezeLonger);
+            run.ShatterHarder = Math.Max(1f, spec.ShatterHarder);
+            // The way it faced as it was set, for a condition whose side is the side it showed then (Rime's crust).
+            if (fresh)
+            {
+                Vector3 facing = spec.KeepsFacing && who != null ? who.transform.forward : Vector3.zero;
+                facing.y = 0f;
+                run.Facing = facing;
+            }
             Recount();
             if (fresh) Tell(ConditionMoment.Began, in run, 0f, false, false);
             return slot;
@@ -299,7 +327,8 @@ namespace Clover.Gameplay
         /// each the blow spends, or that has had its last blow, ends without its end being told. A reaction's own blow is
         /// not one (the caller keeps those out).
         /// </summary>
-        public void Struck(float damage, bool heavy, bool spell, bool shattered = false, bool critical = false, bool finisher = false)
+        public void Struck(float damage, bool heavy, bool spell, bool shattered = false, bool critical = false, bool finisher = false,
+            Vector3 travel = default, Vector3 facing = default)
         {
             if (Count == 0) return;
             bool spentAny = false;
@@ -310,7 +339,9 @@ namespace Clover.Gameplay
                 // One that hears only critical blows lets every other blow pass as if it were not there (Kindling Point's shapes).
                 if (run.CriticalOnly && (spell || !critical)) continue;
                 if (!spell) run.Blows++;
+                blowSide = SideDegrees(run.Facing.sqrMagnitude > 0.0001f ? run.Facing : facing, travel);
                 if (run.AnswersStruck) Tell(ConditionMoment.Struck, in run, damage, heavy, spell, shattered, critical, finisher && !spell);
+                blowSide = -1f;
                 if (!SpentBy(in run, heavy, spell, finisher)) continue;
                 NoteSpent(in run);
                 runs[i] = default;
@@ -411,7 +442,7 @@ namespace Clover.Gameplay
         {
             int count = 0, keeps = 0;
             var flags = ConditionFlags.None;
-            float pace = 1f, windup = 1f, taken = 1f, dealt = 1f, weapon = 1f, spellTaken = 1f, stagger = 1f, sight = 0f, heavyTaken = 1f, weaponStagger = 1f;
+            float pace = 1f, windup = 1f, taken = 1f, dealt = 1f, weapon = 1f, spellTaken = 1f, stagger = 1f, sight = 0f, heavyTaken = 1f, weaponStagger = 1f, longer = 0f, shatter = 1f;
             for (int i = 0; i < Slots; i++)
             {
                 if (!runs[i].Active) continue;
@@ -428,6 +459,8 @@ namespace Clover.Gameplay
                 if ((run.Flags & ConditionFlags.StaggerTakenShare) != 0) stagger *= run.Scale;
                 if ((run.Flags & ConditionFlags.HeavyTakenShare) != 0) heavyTaken *= run.Scale;
                 if ((run.Flags & ConditionFlags.WeaponStaggerShare) != 0) weaponStagger *= run.Scale;
+                longer = Math.Max(longer, run.FreezeLonger);
+                shatter = Math.Max(shatter, run.ShatterHarder);
                 if ((run.Flags & ConditionFlags.SightShort) != 0) sight = sight > 0f ? Math.Min(sight, run.Sight) : run.Sight;
             }
             Count = count;
@@ -442,6 +475,8 @@ namespace Clover.Gameplay
             StaggerScale = stagger;
             HeavyTakenScale = heavyTaken;
             WeaponStaggerScale = weaponStagger;
+            FreezeLonger = longer;
+            ShatterScale = shatter;
             Sight = sight;
         }
 
@@ -450,7 +485,7 @@ namespace Clover.Gameplay
             var news = new ConditionNews
             {
                 Moment = moment, Id = run.Id, Mark = run.Mark, Count = run.Count, Blows = run.Blows, Flags = run.Flags, Scale = run.Scale, Link = run.Link,
-                Damage = damage, Heavy = heavy, Spell = spell, Shattered = shattered, Critical = critical, Is = run.Is, Finisher = finisher,
+                Damage = damage, Heavy = heavy, Spell = spell, Shattered = shattered, Critical = critical, Is = run.Is, Finisher = finisher, Side = blowSide,
             };
             if (Report != null) Report(Who, news);
             else CombatEvents.RaiseCondition(Who, news);

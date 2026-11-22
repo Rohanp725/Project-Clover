@@ -479,15 +479,15 @@ Title: Rime (Wind and Ice)
 Group: Reactions
 **What it is.** Chill meets Unsteady. A crust of ice grows on the enemy, and your heavy blow blows the ice out of its far side.
 
-**The numbers.** The crust lasts 5 seconds. Your next heavy blow on the enemy breaks it: a fan of ice about 4 metres long past the enemy, away from you, deals 10 damage, 2 Chill and 1 Unsteady to everything in it. A light blow doesn't break it. Then it waits 4 seconds.
+**The numbers.** The crust lasts 5 seconds. It grows on the side of the enemy that faced you when Rime went off. Your next heavy blow on that side breaks it: a fan of ice about 4 metres long past the enemy, away from you, deals 10 damage, 2 Chill and 1 Unsteady to everything in it. A heavy blow from behind it breaks the crust for nothing. A light blow doesn't break it. Then it waits 4 seconds.
 
 **What sets it off.** Chill landing on an Unsteady enemy, or Unsteady landing on a chilled one.
 
-**Its shapes.** If you have Blizzard's Shape mark (Rime: Rime Tree or Spindrift, 3 Shards, in the middle of the chart) and carry both Wind and Ice, Rime uses the shape you picked at a rest fire instead. Rime Tree: the crust never breaks, and for 5 seconds every blow on the enemy adds a Chill. Spindrift: the ice blows out of the enemy's far side the moment Rime goes off, at half damage (5 damage, 2 Chill and 1 Unsteady), with no heavy blow needed.
+**Its shapes.** If you have Blizzard's Shape mark (Rime: Rime Tree or Spindrift, 3 Shards, in the middle of the chart) and carry both Wind and Ice, Rime uses the shape you picked at a rest fire instead. Rime Tree: the crust never breaks, and for 5 seconds every blow on the side it showed you adds a Chill. While it lasts, a freeze holds 1 second longer and its shatter hits a quarter harder. Spindrift: the ice blows out of the enemy's far side the moment Rime goes off, at half damage (5 damage, 2 Chill and 1 Unsteady), with no heavy blow needed.
 
 **How to use it.** Get the enemy between you and the others, then land a heavy blow. The ice lands on them.
 
-**How it looks.** Its name over the enemy, then a burst of ice past it. Not built yet: the crust growing only on the side facing you, so a heavy blow from behind wastes it.
+**How it looks.** Its name over the enemy, then a burst of ice past it.
 
 ## reaction-supercooled
 Title: Supercooled (Ice and Water)
@@ -1154,15 +1154,15 @@ Title: Mock Suns (Ice and Light)
 Group: Reactions
 **What it is.** Chill meets Marked. Two fake suns appear in the sky next to the enemy, the way they sometimes do on icy days.
 
-**The numbers.** For 4 seconds, your weapon blows on the enemy add two Chill and don't use up its Mark, so they stay critical hits. Then it waits 4 seconds.
+**The numbers.** For 4 seconds, your weapon blows on the enemy's left or right side add two Chill. No blow uses up its Mark, so they stay critical hits. Then it waits 4 seconds.
 
 **What sets it off.** Chill landing on a Marked enemy, or a Mark landing on a chilled one.
 
 **Its shapes.** If you have the Shape mark of Ice and Light's duo branch (Mock Suns: Prism or Lens of Ice, 3 Shards, in the middle of the chart) and carry both, Mock Suns uses the shape you picked at a rest fire instead. Prism: no suns. Instead, for 4 seconds, its Mark isn't used up, and your next weapon blow on it sends three hits in a line past it, each dealing 8 damage, a Mark and a Chill. Lens of Ice: while the enemy is chilled and Marked, its Mark isn't used up, and a heavy blow on it at full Chill deals 18 more damage and Marks every enemy within 4 metres.
 
-**How to use it.** Hit it as often as you can within the 4 seconds. Each blow is a critical hit and chills it.
+**How to use it.** Get to its side and hit it as often as you can within the 4 seconds. Each blow is a critical hit, and each one on its flank chills it.
 
-**How it looks.** Its name over the enemy. Not built yet: the suns turning with the enemy, and only blows from its sides counting.
+**How it looks.** Its name over the enemy. Not built yet: the suns turning with the enemy. Blows on its face should not be critical or spare the Mark; for now every blow is critical and none uses the Mark.
 
 ## reaction-drowned-weight
 Title: Drowned Weight (Water and Dark)

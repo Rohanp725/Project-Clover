@@ -202,6 +202,48 @@ namespace Clover.Tests
             Assert.IsTrue(herb.Any(effect => effect.State != null && effect.State.Id == ShiningHerbDuo.Picked && (effect.State.Flags & ConditionFlags.TakesCritical) != 0), "the next blow after the picking");
         }
 
+        [Test]
+        public void TheSideOfABlowIsReadFromTheWayTheEnemyFaces()
+        {
+            var face = UnityEngine.Vector3.forward;
+            Assert.AreEqual(0f, EnemyConditions.SideDegrees(face, -face), 0.01f, "a blow travelling into its face");
+            Assert.AreEqual(180f, EnemyConditions.SideDegrees(face, face), 0.01f, "a blow at its back");
+            Assert.AreEqual(90f, EnemyConditions.SideDegrees(face, UnityEngine.Vector3.right), 0.01f, "a blow at a flank");
+            Assert.AreEqual(-1f, EnemyConditions.SideDegrees(UnityEngine.Vector3.zero, face), 1e-5f, "no facing, not known");
+
+            var heard = new List<ConditionNews>();
+            var enemy = NewEnemy(heard);
+            enemy.Conditions.Set(new ConditionSpec { Id = "test.crust", Seconds = 5f, EndsWith = ConditionBlow.Heavy, KeepsFacing = true }, null, 1, null, true);
+            enemy.Conditions.Struck(20f, true, false, false, false, false, UnityEngine.Vector3.forward, UnityEngine.Vector3.forward);
+            var fromBehind = heard.Last(news => news.Moment == ConditionMoment.Struck);
+            Assert.AreEqual(180f, fromBehind.Side, 0.01f);
+            var rimeBurst = ReactionTable.MarkFor(AfflictionPairs.Index(AfflictionKind.Unsteady, AfflictionKind.Chill)).Effects.First(effect => effect.Do == UpgradeAction.Burst);
+            Assert.IsFalse(PlayerReactions.FromSide(rimeBurst, fromBehind), "a heavy blow from behind wastes the crust");
+            Assert.IsFalse(enemy.Conditions.Holds("test.crust"), "and spends it");
+            var front = new ConditionNews { Side = 30f };
+            Assert.IsTrue(PlayerReactions.FromSide(rimeBurst, front), "from the side it showed, it breaks out");
+            Assert.IsTrue(PlayerReactions.FromSide(rimeBurst, new ConditionNews { Side = -1f }), "a blow whose side is not known is answered");
+
+            var suns = ReactionTable.MarkFor(AfflictionPairs.Index(AfflictionKind.Chill, AfflictionKind.Marked)).Effects.Single(effect => effect.On == UpgradeTrigger.ConditionStruck);
+            Assert.IsTrue(PlayerReactions.FromSide(suns, new ConditionNews { Side = 90f }), "Mock Suns: a flank");
+            Assert.IsFalse(PlayerReactions.FromSide(suns, new ConditionNews { Side = 10f }), "not its face");
+        }
+
+        [Test]
+        public void RimeTreeHoldsTheFreezeLongerAndShattersHarder()
+        {
+            var plain = new Afflicted();
+            var rimed = new Afflicted();
+            var tree = Upgrade.ById(BlizzardTree.Shape).Shapes.First(shape => shape.Name == "Rime Tree").Effects.First(effect => effect.Do == UpgradeAction.Condition).State;
+            Assert.IsTrue(tree.KeepsFacing);
+            rimed.Afflictions.Conditions.Set(tree, null, 1);
+            Assert.IsTrue(plain.Afflictions.FreezeFor(2f));
+            Assert.IsTrue(rimed.Afflictions.FreezeFor(2f));
+            Assert.AreEqual(plain.Afflictions.FrozenLeft + 1f, rimed.Afflictions.FrozenLeft, 1e-3f, "a second longer");
+            float plainShatter = plain.Afflictions.Shatter(), rimedShatter = rimed.Afflictions.Shatter();
+            Assert.AreEqual(plainShatter * 1.25f, rimedShatter, 1e-3f, "a quarter harder");
+        }
+
         private sealed class Afflicted : IAfflictable
         {
             public AfflictionSet Afflictions { get; } = new AfflictionSet { Reactions = new ReactionEngine((who, pair, laid) => { }, () => 0) };

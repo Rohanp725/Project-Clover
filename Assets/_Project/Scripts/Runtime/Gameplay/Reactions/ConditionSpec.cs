@@ -71,5 +71,14 @@ namespace Clover.Gameplay
         /// there (Kindling Point's shapes count only critical blows; Shining Herb's leaf is picked only by one).
         /// </summary>
         public bool CriticalOnly;
+        /// <summary>
+        /// The side of a blow on it is read against the way the enemy faced as it was set, not as it faces now (Rime's crust
+        /// grows on the side that faced you when it reacted).
+        /// </summary>
+        public bool KeepsFacing;
+        /// <summary>While it runs, a freeze on the enemy lasts this many seconds longer (Rime Tree: 1).</summary>
+        public float FreezeLonger;
+        /// <summary>While it runs, a shatter of the enemy strikes this many times as hard (Rime Tree: 1.25); 0 or 1 as written.</summary>
+        public float ShatterHarder;
     }
 }

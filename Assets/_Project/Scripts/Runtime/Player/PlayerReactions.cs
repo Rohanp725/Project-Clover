@@ -296,7 +296,7 @@ namespace Clover.Player
             foreach (var effect in effects)
             {
                 if (effect.On != trigger || effect.Condition != news.Id) continue;
-                if (trigger == UpgradeTrigger.ConditionStruck && !Answers(effect.By, news)) continue;
+                if (trigger == UpgradeTrigger.ConditionStruck && (!Answers(effect.By, news) || !FromSide(effect, news))) continue;
                 if (effect.AtCount > 0 && effect.AtCount != (trigger == UpgradeTrigger.ConditionBeat ? news.Count : news.Blows)) continue;
                 upgrades.Fire(effect, who, at, source, news.Damage, spent);
                 ConditionAnswers++;
@@ -304,6 +304,10 @@ namespace Clover.Player
             }
             return any;
         }
+
+        /// <summary>True when the blow came from the side the answer asks for (<see cref="UpgradeEffect.SideLeast"/>), or its side is not known.</summary>
+        public static bool FromSide(UpgradeEffect effect, in ConditionNews news) =>
+            (effect.SideLeast <= 0f && effect.SideMost <= 0f) || news.Side < 0f || (news.Side >= effect.SideLeast && news.Side <= effect.SideMost);
 
         /// <summary>True when a condition's blow is one the answer asks for (<see cref="UpgradeEffect.By"/>).</summary>
         public static bool Answers(StruckBy by, in ConditionNews news) =>

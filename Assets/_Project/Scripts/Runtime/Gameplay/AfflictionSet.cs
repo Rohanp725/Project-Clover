@@ -174,7 +174,8 @@ namespace Clover.Gameplay
                 CombatEvents.Report(who, hit.Affliction, hit.AfflictionStacks, Lay(hit.Affliction, hit.AfflictionStacks, hit.AfflictionSeconds, hit.AfflictionPower, source, who), source);
             if (hit.Affliction2 != AfflictionKind.None && hit.Affliction2Stacks > 0)
                 CombatEvents.Report(who, hit.Affliction2, hit.Affliction2Stacks, Lay(hit.Affliction2, hit.Affliction2Stacks, hit.Affliction2Seconds, hit.AfflictionPower, source, who), source);
-            if (!hit.FromReaction && hit.Damage > 0f) Conditions.Struck(hit.Damage, hit.Heavy, hit.Spell, shattered, hit.Critical, hit.Finisher);
+            if (!hit.FromReaction && hit.Damage > 0f) Conditions.Struck(hit.Damage, hit.Heavy, hit.Spell, shattered, hit.Critical, hit.Finisher,
+                    hit.Direction, who != null ? who.transform.forward : UnityEngine.Vector3.zero);
         }
 
         /// <summary>Lights the burn a blow gives in seconds (<see cref="Hit.BurnSeconds"/>), through the laying rules, so a weapon's fire reacts like any affliction.</summary>
@@ -388,7 +389,8 @@ namespace Clover.Gameplay
             if (freezes && spec.FreezesAtFull)
             {
                 IsFrozen = true;
-                FrozenLeft = GodHolds.Seconds(spec.FrozenSeconds * Afflictions.FreezeSeconds * RuleFreezeScale, phase, FreezeScale);
+                // A condition may hold the freeze longer (Rime Tree: a second more).
+                FrozenLeft = GodHolds.Seconds((spec.FrozenSeconds * Afflictions.FreezeSeconds + Conditions.FreezeLonger) * RuleFreezeScale, phase, FreezeScale);
                 left[index] = Math.Max(left[index], FrozenLeft);
                 if (flash)
                 {
@@ -836,7 +838,7 @@ namespace Clover.Gameplay
             int index = (int)AfflictionKind.Chill;
             stacks[index] = Math.Max(stacks[index], Afflictions.Depth(AfflictionKind.Chill));
             present |= 1 << index;
-            float time = GodHolds.Seconds(seconds * RuleFreezeScale, phase, FreezeScale);
+            float time = GodHolds.Seconds((seconds + Conditions.FreezeLonger) * RuleFreezeScale, phase, FreezeScale);
             FrozenLeft = IsFrozen ? Math.Max(FrozenLeft, time) : time;
             IsFrozen = true;
             shatterScale = Math.Max(shatterScale, Math.Max(1f, shatter));
@@ -861,7 +863,9 @@ namespace Clover.Gameplay
         public float Shatter()
         {
             if (!IsFrozen) return 0f;
-            float damage = Afflictions.Spec(AfflictionKind.Chill).ShatterDamage * strength[(int)AfflictionKind.Chill] * Afflictions.ShatterDamage * shatterScale;
+            // The harder of the freeze's own and what a condition asks (Rime Tree: a quarter harder).
+            float damage = Afflictions.Spec(AfflictionKind.Chill).ShatterDamage * strength[(int)AfflictionKind.Chill] * Afflictions.ShatterDamage
+                * Math.Max(shatterScale, Conditions.ShatterScale);
             shatterScale = 1f;
             End((int)AfflictionKind.Chill);
             return damage;

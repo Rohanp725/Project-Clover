@@ -77,6 +77,13 @@ namespace Clover.Player
         public string InState = "";
         /// <summary>For ForceReaction: one of the pair on the target is enough; the reaction itself goes off, spending nothing (the ledger's forced-alone).</summary>
         public bool Alone;
+        /// <summary>
+        /// For ConditionStruck: only a blow from this side, in degrees from the enemy's face (0) to its back (180), between
+        /// <see cref="SideLeast"/> and <see cref="SideMost"/> (the ledger's side-of-blow: Rime's crust breaks only from the
+        /// side that faced you, Mock Suns' blows only from a flank). Both zero: any side. A blow whose side is not known is answered.
+        /// </summary>
+        public float SideLeast;
+        public float SideMost;
         /// <summary>The stacks it lays are as many as the trigger carried: what the dead enemy bore of <see cref="Needs"/>, or what a set-off spent.</summary>
         public bool CarriesDepth;
         /// <summary>Only while this state of the player holds.</summary>

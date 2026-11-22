@@ -60,15 +60,15 @@ namespace Clover.Player.Trees
 
             // Wind and Ice (3). A crust of rime for 5 s; the next heavy blow breaks it and the ice blows out of its far
             // side: a cone 4 m long (two bursts on the player's line beyond it, reaching 0.7 to 4.5 m past it), 10 damage,
-            // 2 Chill and 1 Unsteady to everything in it.
-            // NEEDS: the side of a blow: only a heavy from the side facing the player when it reacted (within 90 degrees)
-            // breaks the crust; one from behind wastes it.
+            // 2 Chill and 1 Unsteady to everything in it. The crust grows on the side that faced the player as it reacted
+            // (ConditionSpec.KeepsFacing): only a heavy blow from within 90 degrees of that side breaks it out; one from behind
+            // spends the crust for nothing.
             to.Add(Reaction(AfflictionKind.Unsteady, AfflictionKind.Chill,
-                "Chill meets Unsteady: rime grows on it for 5 s. Your next heavy blow breaks it and the ice blows out of its far side, 10, 2 Chill and 1 Unsteady to all behind it.",
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Crust, Seconds = 5f, EndsWith = ConditionBlow.Heavy } },
-                new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Crust, By = StruckBy.Heavy, Do = UpgradeAction.Burst, Shape = HazardShape.Downwind, Count = 2,
+                "Chill meets Unsteady: rime grows on it for 5 s. Your next heavy blow from the side it showed you breaks it and the ice blows out of its far side, 10, 2 Chill and 1 Unsteady to all behind it; one from its back wastes it.",
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Crust, Seconds = 5f, EndsWith = ConditionBlow.Heavy, KeepsFacing = true } },
+                new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Crust, By = StruckBy.Heavy, SideMost = 90f, Do = UpgradeAction.Burst, Shape = HazardShape.Downwind, Count = 2,
                     Reach = 2.6f, Amount = 1.6f, Radius = 1.1f, Damage = 10f, Affliction = AfflictionKind.Chill, Stacks = 2 },
-                new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Crust, By = StruckBy.Heavy, Do = UpgradeAction.Burst, Shape = HazardShape.Downwind, Count = 2,
+                new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Crust, By = StruckBy.Heavy, SideMost = 90f, Do = UpgradeAction.Burst, Shape = HazardShape.Downwind, Count = 2,
                     Reach = 2.6f, Amount = 1.6f, Radius = 1.1f, Affliction = AfflictionKind.Unsteady, Stacks = 1 }));
 
             // Ice and Water (4). Still below freezing for 6 s: the next weapon blow freezes it outright whatever its Chill

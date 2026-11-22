@@ -1230,7 +1230,7 @@ namespace Clover.Player
                 var effect = list[i];
                 // By its own name, or by what it is: a shape's rocking is a Logan Stone's rocking (New Face).
                 if (!effect.AnyMark || (effect.Condition != news.Id && effect.Condition != news.Is)) continue;
-                if (trigger == UpgradeTrigger.ConditionStruck && !PlayerReactions.Answers(effect.By, news)) continue;
+                if (trigger == UpgradeTrigger.ConditionStruck && (!PlayerReactions.Answers(effect.By, news) || !PlayerReactions.FromSide(effect, news))) continue;
                 if (effect.AtCount > 0 && effect.AtCount != (trigger == UpgradeTrigger.ConditionBeat ? news.Count : news.Blows)) continue;
                 Consider(effect, who, at, true);
                 any = true;

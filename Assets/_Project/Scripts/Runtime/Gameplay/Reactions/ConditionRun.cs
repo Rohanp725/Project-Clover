@@ -51,5 +51,10 @@ namespace Clover.Gameplay
         public string WhileIn;
         /// <summary>Only critical weapon blows are counted, told and spend it (<see cref="ConditionSpec.CriticalOnly"/>).</summary>
         public bool CriticalOnly;
+        /// <summary>The way the enemy faced as it was set, when the spec keeps it (<see cref="ConditionSpec.KeepsFacing"/>); zero otherwise.</summary>
+        public Vector3 Facing;
+        /// <summary>Seconds a freeze lasts longer, and how much harder a shatter strikes, while it runs.</summary>
+        public float FreezeLonger;
+        public float ShatterHarder;
     }
 }

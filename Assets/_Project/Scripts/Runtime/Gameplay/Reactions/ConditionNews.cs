@@ -31,5 +31,7 @@ namespace Clover.Gameplay
         public string Is;
         /// <summary>For a blow: it was the finisher's own blow (a finisher is heavy too).</summary>
         public bool Finisher;
+        /// <summary>For a blow: the side it came from, in degrees from the face (0) to the back (180); -1 when not known (<see cref="EnemyConditions.SideDegrees"/>).</summary>
+        public float Side;
     }
 }

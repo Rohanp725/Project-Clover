@@ -49,14 +49,14 @@ namespace Clover.Player.Trees
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Helper, Radius = 1.5f, Count = 7, Interval = 0.4f, Damage = 3f, DamagePerSpent = 3f, Stagger = 4f,
                     Affliction = AfflictionKind.Sundered }));
 
-            // Ice and Light (48). Two mock suns hang by it for 4 s: a weapon blow on it lays two Chill and does not spend
-            // the Mark (its blows are critical, as the Mark makes them).
-            // NEEDS: the side of a blow: only a blow from its left or right, not its face, is critical, lays the Chill and
-            // spares the Mark; and the suns themselves, turning with it.
+            // Ice and Light (48). Two mock suns hang by it for 4 s: a weapon blow on it from its left or right (45 to 135
+            // degrees from its face) lays two Chill; the Mark is not spent (its blows are critical, as the Mark makes them).
+            // NEEDS: only a blow from the flank critical and sparing the Mark (now every blow, as the Mark makes it); and the
+            // suns themselves, turning with it.
             to.Add(Reaction(AfflictionKind.Chill, AfflictionKind.Marked,
-                "Chill meets Marked: two mock suns hang beside it for 4 s. Your weapon blows on it lay two Chill and do not spend its Mark.",
+                "Chill meets Marked: two mock suns hang beside it for 4 s. Your weapon blows on its flanks lay two Chill, and no blow spends its Mark.",
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Suns, Seconds = 4f, Keeps = AfflictionKind.Marked } },
-                new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Suns, By = StruckBy.Weapon, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 2 }));
+                new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Suns, By = StruckBy.Weapon, SideLeast = 45f, SideMost = 135f, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 2 }));
 
             // Water and Dark (49). Swollen 5 s: 20% slower (a god is not slowed) and 15% more from weapon blows. When it
             // dies, or a finisher lands while it is swollen (the finisher's own blow, not any heavy blow), it bursts in black
