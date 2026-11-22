@@ -92,13 +92,12 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.RightLow));
 
-            // NEEDS: a state of an enemy within 8 m being Frozen (freeze-moment); now Hunger's health price is set aside for 4 s
-            // after each shatter.
+            // Hunger's drain set aside while any enemy within 8 m is Frozen (PlayerStat.SurgeDrain while StatWhen.FrozenNear).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = NoSummer, Name = "No Summer", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { HelsHalf, DeepVeins }, Icon = UpgradeIcons.Moon,
                 Description = "Hunger costs no health while any enemy within 8 m is Frozen.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Shatter, Do = UpgradeAction.Boon, Stat = PlayerStat.HealthPrices, Amount = -1f, Seconds = 4f, Cooldown = 0.5f } },
+                Stats = new[] { new StatMod(PlayerStat.SurgeDrain, -1f, StatWhen.FrozenNear) },
             }, HeartPattern.Keystone));
 
             // The duo spell, a detonator on a 12 s cooldown (SpellTimings), bought with 5 Shards once both are carried. The

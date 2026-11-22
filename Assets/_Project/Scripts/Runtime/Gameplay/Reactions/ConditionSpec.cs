@@ -82,6 +82,8 @@ namespace Clover.Gameplay
         public float FreezeLonger;
         /// <summary>While it runs, a shatter of the enemy strikes this many times as hard (Rime Tree: 1.25); 0 or 1 as written.</summary>
         public float ShatterHarder;
+        /// <summary>What it Keeps is kept only while its carrier is frozen (Lens of Ice: the Mark not spent while Frozen).</summary>
+        public bool KeepsWhileFrozen;
         /// <summary>
         /// It ends at once when the enemy freezes, and its end is told then as an end the freeze brought (the ledger's
         /// freeze-moment: Sleet Charge's bolt "at once if it freezes"; Stolen Warmth's last warmth torn out).

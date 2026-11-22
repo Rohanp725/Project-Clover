@@ -9,13 +9,13 @@ both carried.
 
 **When it happens.** Every time Mock Suns goes off while you carry both Ice and Light. Mock Suns goes off when a Mark lands on a chilled enemy, or when Chill lands on a Marked one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Mock Suns.
 
-**The numbers.** Mix, 3 Shards. Prism: for 4 seconds, the enemy's Mark isn't used up. Your next weapon blow on it, a critical hit thanks to the Mark, sends its light out of the enemy's far side as a fan of rays 6 metres long and 30 degrees wide. Every other enemy in it takes 8 damage, a Mark and a Chill. Lens of Ice: while the enemy stays chilled and Marked, blows don't use up its Mark. A heavy blow on it at full Chill deals 18 more damage and puts a Mark on every enemy within 4 metres. After Mock Suns goes off on an enemy, it can't go off on that enemy again for 4 seconds.
+**The numbers.** Mix, 3 Shards. Prism: for 4 seconds, the enemy's Mark isn't used up. Your next weapon blow on it, a critical hit thanks to the Mark, sends its light out of the enemy's far side as a fan of rays 6 metres long and 30 degrees wide. Every other enemy in it takes 8 damage, a Mark and a Chill. Lens of Ice: while the enemy is Frozen, blows don't use up its Mark. Shattering it while it is Marked and Frozen deals 60% more and puts a Mark on every enemy within 4 metres. After Mock Suns goes off on an enemy, it can't go off on that enemy again for 4 seconds.
 
 **Works with.** Bent Light, Wide Fan, White Night (freeze a Marked enemy with a perfect guard), Sunstone.
 
 **Example.** A crowd behind one soldier: use Prism, and hit the soldier so the rays run through the rest. A pack around a big enemy: use Lens of Ice, then freeze and shatter the big one to Mark them all.
 
-**Not built yet.** Lens of Ice keeps the Mark while the enemy is chilled, not only while it is Frozen, and for now its heavy blow at full Chill takes the place of the shatter's 60%. Prism's rays are struck at once; each thin ray isn't drawn yet.
+**Not built yet.** Prism's rays are struck at once; each thin ray isn't drawn yet.
 
 ## mocksuns.bentlight
 **What it does.** A ray that meets ice you made (Hoarfrost's crystals, a wall of ice, a frozen enemy) bends toward the nearest enemy and keeps going 5 metres, dealing 8 damage and a Mark.

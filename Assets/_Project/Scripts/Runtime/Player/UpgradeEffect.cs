@@ -500,6 +500,8 @@ namespace Clover.Player
         public float GroundSeconds;
         /// <summary>For Burst: struck at the star of your own ground of this name nearest the trigger's place, as it was laid, not round the enemy (Lit Seam's flash).</summary>
         public string AtOwnGround = "";
+        /// <summary>Only when the trigger's enemy froze within this many seconds, frozen still or broken by this blow (AfflictionSet.FrozeWithin: Hanging Ice's Master, 0.3 s).</summary>
+        public float FrozeWithin;
         public int HarderBlowsMost = 5;
 
         /// <summary>True when a Hazard effect lays ground that keeps acting, told to the marks at each bite (Hazards.GroundActs).</summary>

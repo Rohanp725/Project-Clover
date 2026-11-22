@@ -101,7 +101,8 @@ namespace Clover.Player.Trees
                 "Land a heavy blow on the enemy as the shards close, and every shard counts as a shatter.",
                 learnEffects: new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = AfflictionKind.Chill, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Chill, Damage = 5f, Stagger = 2f, Radius = 0.8f } });
 
-            // The sword form carries the icicle. NEEDS: the shatter of a Frozen target for 90 (it shatters as a heavy blow does, 45).
+            // The sword form carries the icicle; on a Frozen enemy it shatters it as a heavy blow does, and the breaking is counted twice
+            // (UpgradeAction.Shatter, Amount 2: 90 where a heavy blow breaks for 45).
             SpellBranch.Add(to, E, HangingIce, "Hanging Ice", SpellRole.Breaker, BranchPattern.MiddleB, FlyingShards, SpellForms.Sword,
                 new SpellSpec { Reach = 7f, Delay = 3f, Radius = 2f, Damage = 30f, Stagger = 60f, Stacks = 3, Seconds = 2f, LingerDamage = 2f },
                 "A great icicle hangs over the enemy faced, up to seven metres away, and follows it while its shadow grows for three seconds. Then it falls: 30 damage, 60 stagger and three Chill on everything within two metres. On a Frozen enemy it shatters it for 90.",
@@ -117,10 +118,15 @@ namespace Clover.Player.Trees
                     Description = "It does not fall by itself. It hangs up to eight seconds and falls with your next heavy blow on its enemy. Weave it into the heavy.",
                     Spell = new SpellSpec { Reach = 7f, Seconds = 8f, Count = 1, Radius = 2f, Damage = 30f, Stagger = 60f, Stacks = 3 } },
                 "Opens two shapes of Hanging Ice, chosen at any rest fire: Icicles, that punish running, or Held by a Thread, that falls with your next heavy blow.",
-                // NEEDS: landing within 0.3 s of the enemy freezing (freeze-moment), and the shatter four times over. Until then
-                // a fall that freezes what it strikes brings the cooldown back.
-                new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = AfflictionKind.Chill, NeedsFull = true, Do = UpgradeAction.ResetCooldown } },
-                "Let it land in the moment its enemy freezes, and it shatters it four times over and its cooldown comes back.");
+                // Landing within 0.3 s of the enemy freezing (UpgradeEffect.FrozeWithin: frozen that recently, or broken by the fall
+                // after so short a freeze): the breaking is counted twice more, four times over with the Learn's, and the wait ends.
+                new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, FrozeWithin = 0.3f, Do = UpgradeAction.Shatter, Amount = 3f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, FrozeWithin = 0.3f, Do = UpgradeAction.ResetCooldown },
+                },
+                "Let it land in the moment its enemy freezes, and it shatters it four times over and its cooldown comes back.",
+                learnEffects: new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Shatter, Amount = 2f } });
 
             // Every reaction with Chill in it slows all it struck: the enemy it went off on and each its blows reached
             // (UpgradeTrigger.ReactionStruck, UpgradeEffect.ReactionWith).

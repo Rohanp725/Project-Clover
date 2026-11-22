@@ -59,6 +59,20 @@ namespace Clover.Gameplay
         /// <summary>Seconds since it last froze, while it is frozen (a cast landing within a moment of the freeze).</summary>
         public float FrozenFor => IsFrozen ? frozenFor : float.MaxValue;
         private float frozenFor;
+        /// <summary>Seconds since its ice was last broken, what that breaking dealt, and how long it had been frozen then (Hanging Ice's Master).</summary>
+        public float SinceShatter { get; private set; } = float.MaxValue;
+        public float LastShatterDamage { get; private set; }
+        public float LastShatterFrozenFor { get; private set; } = float.MaxValue;
+
+        /// <summary>
+        /// True when it froze within <paramref name="window"/> seconds: frozen that recently, or broken a moment ago (this very blow)
+        /// after being frozen no longer than that (the ledger's freeze-moment: a cast landing within a moment of the freeze).
+        /// </summary>
+        public bool FrozeWithin(float window) =>
+            (IsFrozen && frozenFor <= window) || (SinceShatter < ShatterMoment && LastShatterFrozenFor <= window);
+
+        /// <summary>How long after a breaking the blow that broke it still counts as breaking it.</summary>
+        public const float ShatterMoment = 0.1f;
         public float FrozenLeft { get; private set; }
         /// <summary>Seconds it stays brittle after a freeze ended (see <see cref="Afflictions.BrittleSeconds"/>).</summary>
         public float BrittleLeft { get; private set; }
@@ -623,7 +637,9 @@ namespace Clover.Gameplay
             BitThisTick = false;
             LandedThisTick = false;
             if (notedLeft > 0f) notedLeft -= deltaTime;
+            Conditions.CarrierFrozen = IsFrozen;
             Conditions.Tick(deltaTime);
+            if (SinceShatter < float.MaxValue) SinceShatter += deltaTime;
             // A condition that lasts only while afflictions are carried ends once one is gone.
             if (Conditions.Any) Conditions.Keep(PresentMask);
             if (sinceBite < float.MaxValue) sinceBite += deltaTime;
@@ -1004,7 +1020,11 @@ namespace Clover.Gameplay
             float damage = Afflictions.Spec(AfflictionKind.Chill).ShatterDamage * strength[(int)AfflictionKind.Chill] * Afflictions.ShatterDamage
                 * Math.Max(shatterScale, Conditions.ShatterScale);
             shatterScale = 1f;
+            LastShatterFrozenFor = frozenFor;
+            LastShatterDamage = damage;
+            SinceShatter = 0f;
             End((int)AfflictionKind.Chill);
+            Conditions.CarrierFrozen = false;
             return damage;
         }
 

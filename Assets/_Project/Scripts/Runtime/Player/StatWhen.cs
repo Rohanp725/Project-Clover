@@ -71,5 +71,7 @@ namespace Clover.Player
         BetweenFires,
         /// <summary>While the player stands on Earthlight's glowing seams (World.OwnGrounds.Seams).</summary>
         OnSeams,
+        /// <summary>While any enemy within 8 m of the player is Frozen (No Summer).</summary>
+        FrozenNear,
     }
 }

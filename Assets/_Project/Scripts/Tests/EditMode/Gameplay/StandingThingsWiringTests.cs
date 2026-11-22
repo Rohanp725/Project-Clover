@@ -1859,5 +1859,41 @@ namespace Clover.Tests
             int slot = set.Conditions.Set(live, null);
             Assert.AreEqual(6f, set.Conditions.Run(slot).DischargesWithin, 1e-5f, "the run keeps its reach");
         }
+
+        [Test]
+        public void TheFreezeMomentCountsForHangingIceLensOfIceAndNoSummer()
+        {
+            var cold = new AfflictionSet { Reactions = new ReactionEngine((who, pair, laid) => { }, () => 0) };
+            Assert.IsFalse(cold.FrozeWithin(0.3f), "not frozen");
+            Assert.AreEqual(float.MaxValue, cold.SinceShatter);
+
+            var master = Upgrade.ById(SpellBranch.MasterId(IceTree.HangingIce)).Effects;
+            Assert.IsTrue(master.All(each => each.FrozeWithin == 0.3f), "only landing within 0.3 s of the freeze");
+            Assert.AreEqual(3f, master.Single(each => each.Do == UpgradeAction.Shatter).Amount, 1e-5f, "four times over with the Learn's twice");
+            Assert.IsTrue(master.Any(each => each.Do == UpgradeAction.ResetCooldown));
+            Assert.AreEqual(2f, Upgrade.ById(IceTree.HangingIce).Effects.Single(each => each.Do == UpgradeAction.Shatter).Amount, 1e-5f, "90 on a Frozen enemy");
+
+            var lens = Upgrade.ById(Clover.Player.Trees.Duo.MockSunsDuo.Shape).Shapes.Single(each => each.Name == "Lens of Ice").Effects;
+            var held = lens.Single(each => each.On == UpgradeTrigger.Reacted).State;
+            Assert.IsTrue(held.KeepsWhileFrozen, "the Mark kept only while Frozen");
+            Assert.AreEqual(1.6f, held.ShatterHarder, 1e-5f, "60% harder");
+            var thrown = lens.Single(each => each.On == UpgradeTrigger.ConditionStruck);
+            Assert.AreEqual(StruckBy.Shatter, thrown.By);
+            Assert.AreEqual(4f, thrown.Radius, 1e-5f);
+
+            var set = new AfflictionSet { Reactions = new ReactionEngine((who, pair, laid) => { }, () => 0) };
+            set.Conditions.Set(held, null);
+            set.Conditions.CarrierFrozen = false;
+            Assert.IsFalse(set.Conditions.KeepsKind(AfflictionKind.Marked), "not frozen: the Mark is spent as usual");
+            set.Conditions.CarrierFrozen = true;
+            Assert.IsTrue(set.Conditions.KeepsKind(AfflictionKind.Marked), "frozen: kept");
+            Assert.IsTrue(set.Conditions.KeepsFrom(AfflictionKind.Marked, -1f));
+
+            var noSummer = Upgrade.ById(Clover.Player.Trees.Duo.StolenWarmthDuo.NoSummer);
+            var free = noSummer.Stats.Single();
+            Assert.AreEqual(PlayerStat.SurgeDrain, free.Stat, "Hunger's drain, not every health price");
+            Assert.AreEqual(StatWhen.FrozenNear, free.When);
+            Assert.AreEqual(8f, PlayerUpgrades.FrozenNearWithin, 1e-5f);
+        }
     }
 }

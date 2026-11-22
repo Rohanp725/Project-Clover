@@ -44,13 +44,11 @@ are both carried.
 
 **When it happens.** While you have Dark's Hunger as your surge, and carry both Dark and Ice.
 
-**The numbers.** Mix, keystone, 5 Shards. For now: for 4 seconds after each shatter, costs paid with health are skipped.
+**The numbers.** Mix, keystone, 5 Shards. While any enemy within 8 metres of you is Frozen, Hunger drains no health.
 
 **Works with.** Stolen Warmth (its Chill doesn't fade, so freezing comes easily), The Long Night, Three Winters, Dark's Hunger.
 
 **Example.** Keep one enemy frozen near you, and feed Hunger for free.
-
-**Not built yet.** It doesn't check yet whether an enemy near you is Frozen. For now, the cost is skipped for 4 seconds after each shatter, and for every cost paid with health, not only Hunger's.
 
 ## stolenwarmth.iceinblood
 **What it does.** A sign of black frost is put on the enemy you face for 6 seconds. Each of your next four weapon blows on it freezes one of its veins, for 8 damage and two Chill. The fourth breaks it from the inside: 35 damage, 50 stagger, and a Curse and two Chill on everything within 3 metres.

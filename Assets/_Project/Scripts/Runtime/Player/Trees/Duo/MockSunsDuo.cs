@@ -26,8 +26,8 @@ namespace Clover.Player.Trees.Duo
             const string A = Elements.Ice, B = Elements.Light;
 
             // Prism's rays leave its far side as a cone 6 m long and 30 degrees wide (UpgradeAction.Pieces, PieceAim.FarCone).
-            // NEEDS: freeze-moment (Lens of Ice's Mark kept only while it is Frozen and its shatter 60% harder;
-            // now kept while it is chilled and Marked, and a heavy blow on it at full Chill strikes 18 more and throws its Mark).
+            // Lens of Ice: its Mark is kept only while it is Frozen (ConditionSpec.KeepsWhileFrozen), a shatter of it is 60% harder
+            // (ShatterHarder), and the shatter throws its Mark on every enemy within 4 m (StruckBy.Shatter).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Mock Suns: Prism or Lens of Ice", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -51,10 +51,9 @@ namespace Clover.Player.Trees.Duo
                         Description = "No rays: the light is gathered into the one body. While it is Frozen its Mark is not spent by blows, and a shatter of it, Marked and frozen, deals 60% more and throws its Mark onto every enemy within 4 m.",
                         Effects = new[]
                         {
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Lens, Seconds = 30f, While = AfflictionKind.Chill, While2 = AfflictionKind.Marked, Keeps = AfflictionKind.Marked } },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Lens, By = StruckBy.Heavy, Needs = AfflictionKind.Chill, NeedsFull = true, Do = UpgradeAction.Burst, Radius = 0.5f, Damage = 18f,
-                                Affliction = AfflictionKind.Marked },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Lens, By = StruckBy.Heavy, Needs = AfflictionKind.Chill, NeedsFull = true, Do = UpgradeAction.Afflict, Radius = 4f,
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Lens, Seconds = 30f, While = AfflictionKind.Chill, While2 = AfflictionKind.Marked,
+                                Keeps = AfflictionKind.Marked, KeepsWhileFrozen = true, ShatterHarder = 1.6f } },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Lens, By = StruckBy.Shatter, Do = UpgradeAction.Afflict, Radius = 4f,
                                 Affliction = AfflictionKind.Marked, Stacks = 1 },
                         },
                     },

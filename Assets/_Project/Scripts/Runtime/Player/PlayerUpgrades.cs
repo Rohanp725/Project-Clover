@@ -1219,6 +1219,32 @@ namespace Clover.Player
         /// <summary>True while the hour is up: the next heavy blow is on it (for probes and the dial).</summary>
         public bool OnTheHour => hour.Ready;
 
+        /// <summary>How near an enemy must stand for its being Frozen to count (StatWhen.FrozenNear: No Summer, 8 m).</summary>
+        public const float FrozenNearWithin = 8f;
+        private readonly HashSet<IDamageable> frozenLooked = new HashSet<IDamageable>();
+        private float frozenLookIn;
+        private bool frozenNear;
+
+        // Looked for a few times a second, not every frame: any enemy within reach that is Frozen.
+        private bool FrozenNear()
+        {
+            if (combat == null) return false;
+            frozenLookIn -= Time.deltaTime;
+            if (frozenLookIn > 0f) return frozenNear;
+            frozenLookIn = 0.2f;
+            frozenNear = false;
+            frozenLooked.Clear();
+            for (int guard = 0; guard < 16 && !frozenNear; guard++)
+            {
+                var near = combat.EnemyNear(transform.position, FrozenNearWithin, frozenLooked);
+                if (!(near is IDamageable body)) break;
+                frozenLooked.Add(body);
+                frozenNear = near is IAfflictable cold && cold.Afflictions.IsFrozen;
+            }
+            frozenLooked.Clear();
+            return frozenNear;
+        }
+
         private float HourEvery()
         {
             if (byTrigger == null) return 0f;
@@ -1440,6 +1466,7 @@ namespace Clover.Player
             Stats.SetWhen(StatWhen.HeavySwing, combat != null && combat.InHeavySwing);
             Stats.SetWhen(StatWhen.NearGrown, Hazards.GrownNear(transform.position, 4f));
             Stats.SetWhen(StatWhen.FarFromGrown, !Hazards.GrownNear(transform.position, 7f));
+            Stats.SetWhen(StatWhen.FrozenNear, FrozenNear());
             bool inFire = scorched && Hazards.FireUnder(transform.position);
             Stats.SetWhen(StatWhen.InOwnFire, inFire);
             Stats.SetWhen(StatWhen.InOwnWater, Hazards.OwnGroundUnder(transform.position, AfflictionKind.Soaked));
@@ -1619,6 +1646,7 @@ namespace Clover.Player
             if (effect.While2 != StatWhen.Always && !Stats.Holds(effect.While2)) return;
             if (effect.NeedsAirborne && !(target is IAfflictable flying && flying.Afflictions.IsAirborne)) return;
             if (effect.NeedsFrozen && !(target is IAfflictable icy && icy.Afflictions.IsFrozen)) return;
+            if (effect.FrozeWithin > 0f && !(target is IAfflictable froze && froze.Afflictions.FrozeWithin(effect.FrozeWithin))) return;
             if (effect.NeedsWindup > 0f && !InWindup(target as IAfflictable, effect.NeedsWindup)) return;
             // Only for a cast timed to the poison's beat (Miasma's, One by One's and Share Alike's Masters).
             if (effect.OnCastBeat && !castOnBeat) return;
@@ -3262,14 +3290,24 @@ namespace Clover.Player
                     break;
                 case UpgradeAction.Shatter:
                 {
-                    // The ice breaks as under a heavy blow: what it held takes the breaking, and the shatter is told.
+                    // The ice breaks as under a heavy blow: what it held takes the breaking, and the shatter is told. Counted as Amount
+                    // shatters in all (Hanging Ice: twice; its Master four times over); broken by this very blow already, the
+                    // breaking is struck again for the rest.
                     if (!(subject is IAfflictable icy)) break;
+                    float times = Or(effect.Amount, 1f);
                     float broke = ShatterNow(icy);
+                    bool already = broke <= 0f;
+                    if (already)
+                    {
+                        if (icy.Afflictions.SinceShatter >= AfflictionSet.ShatterMoment || times <= 1f) break;
+                        broke = icy.Afflictions.LastShatterDamage;
+                        times -= 1f;
+                    }
                     if (broke <= 0f) break;
                     ShattersMade++;
-                    CombatEvents.RaiseShattered(subject);
+                    if (!already) CombatEvents.RaiseShattered(subject);
                     var chill = lookOf[(int)AfflictionKind.Chill] ?? look;
-                    combat.StrikeOne(subject, Blow(chill, AfflictionKind.None, broke + eDamage, eStagger, 0), self);
+                    combat.StrikeOne(subject, Blow(chill, AfflictionKind.None, broke * times + eDamage, eStagger, 0), self);
                     if (!bespoke) ElementLook.Strike(chill, centre, 0.3f);
                     break;
                 }

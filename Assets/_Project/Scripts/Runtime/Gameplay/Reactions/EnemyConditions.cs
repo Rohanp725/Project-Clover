@@ -61,8 +61,13 @@ namespace Clover.Gameplay
 
         public bool Has(ConditionFlags flag) => (Flags & flag) != 0;
 
+        /// <summary>True while its carrier is frozen, set by the carrier each step: what is kept only while frozen holds then.</summary>
+        public bool CarrierFrozen;
+        /// <summary>What is kept only while the carrier is frozen (<see cref="ConditionSpec.KeepsWhileFrozen"/>), as bits.</summary>
+        public int FrozenKeeps { get; private set; }
+
         /// <summary>True when a running condition keeps this affliction from fading.</summary>
-        public bool KeepsKind(AfflictionKind kind) => (Keeps & (1 << (int)kind)) != 0;
+        public bool KeepsKind(AfflictionKind kind) => ((Keeps | (CarrierFrozen ? FrozenKeeps : 0)) & (1 << (int)kind)) != 0;
 
         /// <summary>True when a side in degrees lies outside a run's flank (<see cref="ConditionSpec.FlankLeast"/>); an unknown side (-1) or no flank never does.</summary>
         public static bool OffFlank(float least, float most, float side) => (least > 0f || most > 0f) && side >= 0f && (side < least || side > most);
@@ -76,7 +81,7 @@ namespace Clover.Gameplay
             if (!KeepsKind(kind)) return false;
             int bit = 1 << (int)kind;
             for (int i = 0; i < Slots; i++)
-                if (runs[i].Active && (runs[i].KeepsMask & bit) != 0 && !OffFlank(runs[i].FlankLeast, runs[i].FlankMost, side)) return true;
+                if (runs[i].Active && (runs[i].KeepsMask & bit) != 0 && (!runs[i].KeepsWhileFrozen || CarrierFrozen) && !OffFlank(runs[i].FlankLeast, runs[i].FlankMost, side)) return true;
             return false;
         }
 
@@ -400,6 +405,7 @@ namespace Clover.Gameplay
             run.AnswersDeath = answersDeath;
             run.AnswersAttack = answersAttack;
             run.KeepsMask = Bit(spec.Keeps);
+            run.KeepsWhileFrozen = spec.KeepsWhileFrozen;
             run.DeepMask = Bit(spec.Deepens);
             run.BiteMask = spec.BiteScale > 0f && spec.BiteScale != 1f ? Bit(spec.BitesHarder) : 0;
             run.BiteScale = spec.BiteScale;
@@ -704,7 +710,7 @@ namespace Clover.Gameplay
 
         private void Recount()
         {
-            int count = 0, keeps = 0;
+            int count = 0, keeps = 0, frozenKeeps = 0;
             var flags = ConditionFlags.None;
             float pace = 1f, windup = 1f, taken = 1f, dealt = 1f, weapon = 1f, spellTaken = 1f, stagger = 1f, sight = 0f, heavyTaken = 1f, weaponStagger = 1f, longer = 0f, shatter = 1f, turn = 1f, sink = 0f;
             for (int i = 0; i < Slots; i++)
@@ -713,7 +719,8 @@ namespace Clover.Gameplay
                 ref var run = ref runs[i];
                 count++;
                 flags |= run.Flags;
-                keeps |= run.KeepsMask;
+                if (run.KeepsWhileFrozen) frozenKeeps |= run.KeepsMask;
+                else keeps |= run.KeepsMask;
                 pace *= run.Pace;
                 if ((run.Flags & ConditionFlags.WindupSlowed) != 0) windup *= run.Scale;
                 if ((run.Flags & ConditionFlags.DamageTakenShare) != 0) taken *= run.Scale;
@@ -733,6 +740,7 @@ namespace Clover.Gameplay
             Count = count;
             Flags = flags;
             Keeps = keeps;
+            FrozenKeeps = frozenKeeps;
             Pace = pace;
             WindupPace = Math.Max(0.05f, windup);
             TakenScale = taken;

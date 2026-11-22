@@ -34,6 +34,8 @@ namespace Clover.Gameplay
         public bool AnswersAttack;
         /// <summary>The afflictions it keeps from fading, and those it lasts only while, as bits at <c>1 &lt;&lt; (int)kind</c>.</summary>
         public int KeepsMask;
+        /// <summary>Its Keeps hold only while its carrier is frozen (<see cref="ConditionSpec.KeepsWhileFrozen"/>).</summary>
+        public bool KeepsWhileFrozen;
         /// <summary>The affliction it lets lie deeper, as a bit, and by how much.</summary>
         public int DeepMask;
         /// <summary>The affliction it makes bite harder, as a bit, by how much, and whether only while frozen.</summary>

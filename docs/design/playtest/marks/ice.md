@@ -72,11 +72,9 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). If you aren't facing an enemy, the spell is still used up and you have to wait.
 
-**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 8 seconds, and makes it fall after 2.4 seconds.) It targets an enemy within 7 metres, or 7 metres ahead if there is none. It falls after 3 seconds, following its enemy until a moment before. The fall hits everything within 2 metres for 30 damage, 60 stagger and three stacks of Chill, as a heavy blow. The cracked ground has a 1.5-metre radius. Every half second for 2 seconds, it deals 2 damage and a stack of Chill.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 8 seconds, and makes it fall after 2.4 seconds.) It targets an enemy within 7 metres, or 7 metres ahead if there is none. It falls after 3 seconds, following its enemy until a moment before. The fall hits everything within 2 metres for 30 damage, 60 stagger and three stacks of Chill, as a heavy blow. On a Frozen enemy it shatters it twice over: 90 where a heavy blow shatters for 45. The cracked ground has a 1.5-metre radius. Every half second for 2 seconds, it deals 2 damage and a stack of Chill.
 
 **Works with.** Chill (freeze the enemy while you wait, and the icicle shatters it), Flying Shards, which it comes after on the chart, Eight Points, Brittle, All at Once.
-
-**Not built yet.** Shattering a Frozen enemy for 90. For now, the fall shatters it like any heavy blow does, for 45.
 
 **Example.** Hang it over a brute, and chill it to five with your blade while the icicle waits. The icicle comes down on a frozen body and breaks it.
 
@@ -98,11 +96,9 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** For now, when the fall itself freezes what it hits. Hanging Ice must be in a spell slot.
 
-**The numbers.** 3 Shards. The spell's wait ends right away.
+**The numbers.** 3 Shards. When the icicle lands within 0.3 seconds of its enemy becoming Frozen (by anything, the fall included), the shatter counts four times over (180 where a heavy blow shatters for 45), and the spell's wait ends right away.
 
 **Works with.** Chill and Cold Read, to get the enemy to two stacks before it lands; Eight Points; Rime Guard.
-
-**Not built yet.** The timing (within 0.3 seconds of the enemy becoming Frozen, from anything), and shattering four times over. For now, a fall that brings its enemy to five stacks freezes it and gives the wait back.
 
 **Example.** Give a brute two Chill, then the icicle adds its three. It freezes under the fall, and a second icicle is ready to hang over it.
 

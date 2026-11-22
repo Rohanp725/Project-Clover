@@ -510,7 +510,7 @@ namespace Clover.Player
             if (surgeKit.SurgeActive && surgeKit.SurgeHealPerSecond != 0f && defence != null && !defence.IsDead)
             {
                 // Given or taken a point at a time, so the bar moves in steps that can be seen.
-                surgeHealOwed += surgeKit.SurgeHealPerSecond * deltaTime * (surgeKit.SurgeHealPerSecond < 0f && stats != null ? stats.Multiplier(PlayerStat.HealthPrices) : 1f);
+                surgeHealOwed += surgeKit.SurgeHealPerSecond * deltaTime * (surgeKit.SurgeHealPerSecond < 0f && stats != null ? stats.Multiplier(PlayerStat.HealthPrices) * stats.Multiplier(PlayerStat.SurgeDrain) : 1f);
                 if (surgeHealOwed >= 1f)
                 {
                     defence.Heal(1f, false);
