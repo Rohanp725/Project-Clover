@@ -215,6 +215,58 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void SecondShadowStandsWhereLeftAndItsPressesChangePlacesOrGiveTheWoundsBack()
+        {
+            var learn = Upgrade.ById(DarkTree.SecondShadow);
+            Assert.IsTrue(learn.Spell.StaysPut, "the shadow is left where you stand");
+            var swap = PlayerUpgrades.PressesOf(learn, null, out float window);
+            Assert.AreEqual(8f, window, 1e-5f, "within its eight seconds");
+            Assert.AreEqual(1, swap.Length, "once");
+            Assert.AreEqual(UpgradeAction.SwapWithShadow, swap[0].Single().Do);
+            var shapes = Upgrade.ById(SpellBranch.ShapeId(DarkTree.SecondShadow)).Shapes;
+            var back = shapes.Single(each => each.Name == "Return to the Shadow");
+            Assert.AreEqual(UpgradeAction.ReturnToShadow, PlayerUpgrades.PressesOf(learn, back, out _)[0].Single().Do, "sunk into it, not swapped");
+            Assert.IsTrue(back.Effects == null || back.Effects.Length == 0, "the stand-in quarter less taken is gone");
+            Assert.AreEqual(0, PlayerUpgrades.PressesOf(learn, shapes.Single(each => each.Name == "Long Shadow"), out _)[0].Length, "Long Shadow leaves no shadow to press");
+
+            Assert.AreEqual(30f, PlayerUpgrades.WoundsSince(80f, 50f), 1e-5f);
+            Assert.AreEqual(0f, PlayerUpgrades.WoundsSince(50f, 70f), 1e-5f, "healed since: nothing to give back");
+            var health = new RegainHealth { Maximum = 100f };
+            health.Fill();
+            health.Damage(30f);
+            Assert.AreEqual(30f, health.Return(30f), 1e-5f, "every wound since comes back grey");
+            Assert.AreEqual(70f, health.Current, 1e-5f, "grey, to be won back, not healed");
+            Assert.AreEqual(30f, health.Grey, 1e-5f);
+            Assert.AreEqual(0f, health.Return(10f), 1e-5f, "never past the maximum");
+            Assert.AreEqual(10f, health.Regain(10f), 1e-5f, "won back by blows");
+
+            var master = Upgrade.ById(SpellBranch.MasterId(DarkTree.SecondShadow)).Effects.Single();
+            Assert.AreEqual(UpgradeTrigger.SpellPressed, master.On, "as you change places");
+            Assert.AreEqual(CastMoment.Struck, master.After);
+            Assert.AreEqual(1f, master.AfterWindow, 1e-5f, "within a second of being struck");
+            Assert.AreEqual(UpgradeAction.UndoWound, master.Do, "the health it took comes back");
+            Assert.AreEqual(2.5f, Clover.Player.Forms.CloneForm.ShadowReach, 1e-5f);
+        }
+
+        [Test]
+        public void LightningRodsSecondPressStepsToTheRodAndSpendsItUnlessItsMasterKeepsIt()
+        {
+            var rod = Upgrade.ById(Upgrade.LightningRod);
+            var step = PlayerUpgrades.PressesOf(rod, null, out float window)[0].Single();
+            Assert.AreEqual(UpgradeAction.StepToStanding, step.Do);
+            Assert.GreaterOrEqual(window, 8f, "while the rod stands");
+            Assert.AreEqual(2.5f, step.Radius, 1e-5f, "a 2.5 m shock");
+            Assert.AreEqual(14f, step.Damage, 1e-5f);
+            Assert.AreEqual(20f, step.Stagger, 1e-5f);
+            var lodestone = Upgrade.ById(SpellBranch.ShapeId(Upgrade.LightningRod)).Shapes.Single(each => each.Name == "Lodestone");
+            Assert.AreEqual(0, PlayerUpgrades.PressesOf(rod, lodestone, out _)[0].Length, "Lodestone has no step");
+            var master = Upgrade.ById(SpellBranch.MasterId(Upgrade.LightningRod)).Effects;
+            var inForce = master.Where(each => each.On == UpgradeTrigger.SpellPressed).ToList();
+            Assert.IsTrue(PlayerUpgrades.KeepsStanding(inForce, Upgrade.LightningRod), "the Master keeps the rod past the step");
+            Assert.IsFalse(PlayerUpgrades.KeepsStanding(new System.Collections.Generic.List<UpgradeEffect>(), Upgrade.LightningRod), "without it the rod is spent");
+        }
+
+        [Test]
         public void AHeldStanceStandsWhileHeldBanksEveryBlowAndPaysOnLettingGo()
         {
             Assert.IsTrue(Clover.Player.Forms.ParryForm.StanceHolds(true, 2.9f, 3f), "held, within its most");

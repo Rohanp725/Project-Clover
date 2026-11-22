@@ -72,6 +72,19 @@ namespace Clover.Player
             return won;
         }
 
+        /// <summary>
+        /// Wounds given back as grey health to win back (Return to the Shadow): up to <paramref name="amount"/> more grey, never
+        /// past the maximum; returns what was given.
+        /// </summary>
+        public float Return(float amount)
+        {
+            if (amount <= 0f || IsDead) return 0f;
+            float given = Math.Min(amount, Math.Max(0f, Maximum - Current - Grey));
+            Grey += given;
+            sinceGrey = 0f;
+            return given;
+        }
+
         /// <summary>Stands the dead up again with this much health and nothing grey.</summary>
         public void Rise(float amount)
         {

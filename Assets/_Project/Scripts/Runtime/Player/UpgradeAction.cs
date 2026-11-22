@@ -234,5 +234,22 @@ namespace Clover.Player
         Spill,
         /// <summary>Throws the base spell of its mark's element at no cost, the way the player faces, as Storm Front's Gust is (Loose Neck: each wind a free Gust).</summary>
         FreeBase,
+        /// <summary>The player and the copy their spell left standing change places (Second Shadow's second press). Nothing when none stands.</summary>
+        SwapWithShadow,
+        /// <summary>
+        /// The player sinks into the copy their spell left standing and rises where it lies, the copy gone, and every wound taken
+        /// since it was cast comes back as grey health to win back (Return to the Shadow; the ledger's wounds-returned).
+        /// </summary>
+        ReturnToShadow,
+        /// <summary>The health the last blow that landed on the player took, given back, when it landed within CastWindow (1) seconds (Second Shadow's Master).</summary>
+        UndoWound,
+        /// <summary>
+        /// Steps the player in a flash to the thing its own branch's spell left standing (Lightning Rod's rod), with a shock round
+        /// where they land (Radius 2.5, Damage, Stagger, Affliction, Stacks), and the thing is spent, unless a KeepStanding of the
+        /// same branch is in force. Nothing when none stands.
+        /// </summary>
+        StepToStanding,
+        /// <summary>A mark of a branch whose StepToStanding leaves its thing standing (Lightning Rod's Master). Nothing is done when its moment comes.</summary>
+        KeepStanding,
     }
 }

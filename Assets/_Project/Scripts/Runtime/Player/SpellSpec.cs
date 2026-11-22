@@ -142,6 +142,8 @@ namespace Clover.Player
         /// each (Mountain Stance). Nothing banked: the spell waits only its MissedWait share (the ledger's held-press stances).
         /// </summary>
         public bool HeldStance;
+        /// <summary>For the clone form: the copy is left standing where the spell was cast, and repeats each blow on the nearest enemy within a sword's reach of it (Second Shadow).</summary>
+        public bool StaysPut;
         public int Bank;
         public float BankDamage;
         public float BankStagger;

@@ -213,15 +213,13 @@ design yet, its **Not built yet** line says what is missing.
 **Example.** Roll through a gap between two soldiers, and both are shocked as you pass.
 
 ## lightning.rod
-**What it does.** You plant a sword point-up a little in front of you. For eight seconds, bolts fall again and again inside a circle around it, hitting whatever stands there and adding Static.
+**What it does.** You plant a sword point-up a little in front of you. For eight seconds, bolts fall again and again inside a circle around it, hitting whatever stands there and adding Static. Press again while it stands, and you flash to it, landing with a shock. That uses the rod up.
 
-**When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4).
+**When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). Press the same button again while the rod stands to flash to it.
 
-**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again (its Empower makes it 8, and the circle's radius 4.5 metres). It is planted 2 metres in front of you; the circle has a 3.5-metre radius. It hits 0.2 seconds after you plant it, then every 0.9 seconds for 8 seconds, for 12 damage, 12 stagger and one stack of Static each time.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again (its Empower makes it 8, and the circle's radius 4.5 metres). It is planted 2 metres in front of you; the circle has a 3.5-metre radius. It hits 0.2 seconds after you plant it, then every 0.9 seconds for 8 seconds, for 12 damage, 12 stagger and one stack of Static each time. The flash lands you beside the rod with a shock 2.5 metres around you: 14 damage, 20 stagger and a Static. Then the rod is gone.
 
 **Works with.** Blink, which it comes after on the chart; Static (heavy blows on enemies inside set it off).
-
-**Not built yet.** Pressing again while the rod stands should flash you to it, landing with a shock.
 
 **Example.** Plant it in a doorway and fight at its edge. Everything that comes through arrives with Static already on it.
 
@@ -230,22 +228,20 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Whenever you cast Lightning Rod, using the shape you picked.
 
-**The numbers.** 3 Shards. Lodestone: everything within 7 metres is pulled in, then a burst deals 14 damage and 30 stagger and sets off all their Static. Thrown Rod: it is planted up to 10 metres away.
+**The numbers.** 3 Shards. Lodestone: everything within 7 metres is pulled in, then a burst deals 14 damage and 30 stagger and sets off all their Static. It has no flash. Thrown Rod: it is planted up to 10 metres away, so the flash to it goes that far.
 
 **Works with.** Chain Lance and Waiting Thunder, to add the Static first (Lodestone).
 
-**Not built yet.** Lodestone should pull toward the rod (for now, it pulls toward you). The flash to the rod, which is what makes Thrown Rod's reach worth it.
+**Not built yet.** Lodestone should pull toward the rod (for now, it pulls toward you).
 
 **Example.** Lance a pack, then use Lodestone. They come together and go off all at once.
 
 ## lightning.rod.master
 **What it does.** Cast it right as a blow would land on you, and Lightning Rod counts as a perfect dodge, and flashing to the rod doesn't use it up.
 
-**When it happens.** When you cast Lightning Rod. Lightning Rod must be in a spell slot.
+**When it happens.** When you cast Lightning Rod, and when you flash to it. Lightning Rod must be in a spell slot.
 
-**The numbers.** 3 Shards. It only counts if you start it in the last 0.3 seconds before an enemy's blow (one within 6 metres) lands on you. Then it is a perfect dodge: you get 12 mana, the game slows for a moment, the blow misses, and every mark that answers a perfect dodge answers this one.
-
-**Not built yet.** Flashing to the rod still uses it up.
+**The numbers.** 3 Shards. It only counts if you start it in the last 0.3 seconds before an enemy's blow (one within 6 metres) lands on you. Then it is a perfect dodge: you get 12 mana, the game slows for a moment, the blow misses, and every mark that answers a perfect dodge answers this one. Flashing to the rod no longer uses it up: it keeps striking for the rest of its eight seconds.
 
 **Example.** Plant the rod in the brute's face as it swings.
 

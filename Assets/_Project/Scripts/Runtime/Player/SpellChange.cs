@@ -171,6 +171,7 @@ namespace Clover.Player
             into.RingsBy = from.RingsBy;
             into.RingsLapse = from.RingsLapse;
             into.HeldStance = from.HeldStance;
+            into.StaysPut = from.StaysPut;
             into.Bank = from.Bank;
             into.BankDamage = from.BankDamage;
             into.BankStagger = from.BankStagger;

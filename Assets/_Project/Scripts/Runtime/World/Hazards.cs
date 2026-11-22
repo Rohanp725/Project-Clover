@@ -96,6 +96,22 @@ namespace Clover.World
             return set;
         }
 
+        /// <summary>Ends every patch laid in one group at once (a rod spent by the step to it). Returns how many ended.</summary>
+        public static int EndGroup(int group)
+        {
+            if (instance == null || group == 0) return 0;
+            int ended = 0;
+            for (int i = 0; i < instance.zones.Length; i++)
+            {
+                ref var zone = ref instance.zones[i];
+                if (!zone.Active || zone.Spec.Group != group) continue;
+                zone.Active = false;
+                Puff(zone.Spec, zone.Position, 1.5f);
+                ended++;
+            }
+            return ended;
+        }
+
         /// <summary>How many patches are alive now, so probes can see them without the screen.</summary>
         public static int Alive
         {

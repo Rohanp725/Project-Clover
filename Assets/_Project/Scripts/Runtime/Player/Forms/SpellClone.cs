@@ -15,6 +15,17 @@ namespace Clover.Player.Forms
         public Vector3 Offset = new Vector3(1.25f, 0f, -0.55f);
 
         public bool Showing { get; private set; }
+        /// <summary>True while the copy stands where it was left rather than at the shoulder (Second Shadow).</summary>
+        public bool Anchored { get; private set; }
+        private Vector3 anchor;
+
+        /// <summary>The copy stands at <paramref name="at"/> from now, doing what the player did a beat ago there.</summary>
+        public void AnchorAt(Vector3 at)
+        {
+            Anchored = true;
+            anchor = at;
+            Position = at;
+        }
         /// <summary>Where the copy stands now.</summary>
         public Vector3 Position { get; private set; }
         public Vector3 Forward { get; private set; }
@@ -91,6 +102,7 @@ namespace Clover.Player.Forms
             if (shapes == null || owner == null) return;
             colour = light;
             Showing = true;
+            Anchored = false;
             filled = 0;
             Position = owner.TransformPoint(Offset);
             Forward = owner.forward;
@@ -120,7 +132,8 @@ namespace Clover.Player.Forms
             next = (next + 1) % Frames;
             if (filled < Frames) filled++;
             int oldest = filled < Frames ? 0 : next;
-            Vector3 aside = Quaternion.LookRotation(faced[oldest], Vector3.up) * Offset;
+            // At the shoulder, or where it was left: the same pose, moved there.
+            Vector3 aside = Anchored ? anchor - stood[oldest] : Quaternion.LookRotation(faced[oldest], Vector3.up) * Offset;
             Position = stood[oldest] + aside;
             Forward = faced[oldest];
             block.SetColor(ColourId, new Color(colour.r, colour.g, colour.b, colour.a * (0.82f + 0.18f * Mathf.Sin(Time.time * 9f))));

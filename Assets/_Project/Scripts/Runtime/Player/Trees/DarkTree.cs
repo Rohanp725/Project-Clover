@@ -301,30 +301,33 @@ namespace Clover.Player.Trees
                 },
                 "Cast it within a second of being struck, and the one that struck you is dragged to your feet and Cursed twice. Dark answers when it is hurt.");
 
-            // The movement spell: the clone form leaves your shadow to repeat your blows. NEEDS: the second press that changes
-            // places with it, once (press-on-standing-thing).
-            SpellBranch.Add(to, E, SecondShadow, "Second Shadow", SpellRole.Movement, BranchPattern.RightB, HollowStrength, SpellForms.Clone,
-                new SpellSpec { Seconds = 8f, Damage = 50f, Stacks = 1 },
+            // The movement spell: the clone form leaves your shadow standing where you cast it (SpellSpec.StaysPut) to repeat your
+            // blows on the nearest enemy within its reach; the second press changes places with it, once (UpgradeAction.SwapWithShadow).
+            // NEEDS: the thin line joining it to you on the ground (looks).
+            var secondShadow = SpellBranch.Add(to, E, SecondShadow, "Second Shadow", SpellRole.Movement, BranchPattern.RightB, HollowStrength, SpellForms.Clone,
+                new SpellSpec { Seconds = 8f, Damage = 50f, Stacks = 1, StaysPut = true },
                 "Leave your shadow where you stand: your shape in flat black with violet eyes, joined to you by a thin line on the ground. For eight seconds it repeats every blow you land a tenth of a second late on the nearest enemy within its reach, at half the damage, Cursing. Press again to change places with it, once.",
                 UpgradeIcons.Moon,
                 // 60% on the Learn's own shadow alone (LearnOnly), so Long Shadow's road keeps its own damage.
                 new Empower { Cooldown = 10f, Damage = 60f, LearnOnly = true },
                 "Second Shadow waits 10 seconds, not 12, and repeats your blows at 60%.",
-                // NEEDS: the second press that sinks you into the shadow, and every wound taken since you left it given back as
-                // grey health (press-on-standing-thing, wounds-returned). Until then you take a quarter less from every blow while it stands.
-                new ShapeDef { Name = "Return to the Shadow",
-                    Description = "The shadow fights as learned, but the second press does not swap. Within its eight seconds, press again to sink into it and rise where it lies, and every wound taken since you left it comes back as grey health to win back. A rewind paid in position.",
-                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Boon, Stat = PlayerStat.DamageTaken, Amount = -0.25f, Seconds = 8f } } },
+                // Its second press sinks you into the shadow (UpgradeAction.ReturnToShadow): you rise where it lies, it is gone, and
+                // every wound taken since you left it comes back as grey health (RegainHealth.Return).
+                new ShapeDef { Name = "Return to the Shadow", PressWindow = 8f, Presses = new[] { new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, Do = UpgradeAction.ReturnToShadow } } },
+                    Description = "The shadow fights as learned, but the second press does not swap. Within its eight seconds, press again to sink into it and rise where it lies, and every wound taken since you left it comes back as grey health to win back. A rewind paid in position." },
                 // NEEDS: sunk into the floor and unseen along the road (form-pieces). The drill form carries you eight metres and
                 // Curses all it passes.
-                new ShapeDef { Name = "Long Shadow", Form = SpellForms.Drill,
+                new ShapeDef { Name = "Long Shadow", Form = SpellForms.Drill, Presses = new[] { new UpgradeEffect[0] },
                     Description = "Your shadow is thrown out along the floor eight metres ahead, long as an evening shadow. You sink into its foot and rise at its head a moment later, and everything it lay across is Cursed. No copy: just the road.",
                     Spell = new SpellSpec { Reach = 8f, Radius = 1f, Count = 1, Damage = 2f, Stagger = 0f, Stacks = 1, Speed = 26f } },
                 "Opens two shapes of Second Shadow, chosen at any rest fire: Return to the Shadow, a shadow to sink back into and mend, or Long Shadow, a road along the floor.",
-                // NEEDS: changing places within a second of being struck as the moment, the blow passed to the shadow and its
-                // health given back (press-on-standing-thing, spell-windows). Until then each cast turns the next blow that would land.
-                new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Ward, Count = 1 } },
+                // Changing places (the SpellPressed moment) within a second of being struck (After Struck): the blow passes to the
+                // shadow, and the health it took comes back (UpgradeAction.UndoWound).
+                new[] { new UpgradeEffect { On = UpgradeTrigger.SpellPressed, OwnBranch = true, After = CastMoment.Struck, AfterWindow = 1f, Do = UpgradeAction.UndoWound, CastWindow = 1f } },
                 "Change places within a second of being struck, and the blow passes to the shadow, and the health it took comes back to you.");
+            // Pressed again within its eight seconds, you change places with the shadow, once.
+            secondShadow.PressWindow = 8f;
+            secondShadow.Presses = new[] { new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, Do = UpgradeAction.SwapWithShadow } } };
 
             // BESPOKE (built): the finisher that buys the Rise back, in RiseForm (the Rise itself is the root's, rise-on-root).
             to.Add(BranchPattern.Put(new Upgrade { Id = LifeForALife, Name = "A Life for a Life", Element = E, Kind = UpgradeKind.Signature, Icon = UpgradeIcons.Crown,

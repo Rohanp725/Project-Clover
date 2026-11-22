@@ -115,5 +115,7 @@ namespace Clover.Player
         SpellLoosed,
         /// <summary>A ring (a wind) was added to a gathered spell. Target: none; asked of that spell's own branch; carries the rings it holds.</summary>
         RingAdded,
+        /// <summary>A later press of a spell was made (Second Shadow's change of places). Target: none; asked of that spell's own branch.</summary>
+        SpellPressed,
     }
 }

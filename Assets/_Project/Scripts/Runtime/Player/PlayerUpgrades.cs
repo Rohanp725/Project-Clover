@@ -190,6 +190,9 @@ namespace Clover.Player
         /// <summary>True while a gathered spell waits to be loosed, and the rings it holds, for the HUD and probes.</summary>
         public bool Gathering => rings.Active;
         public int RingsHeld => rings.Rings;
+        /// <summary>Counts for probes: grey health given back by Return to the Shadow, and wounds undone by Second Shadow's Master.</summary>
+        public float WoundsReturned { get; private set; }
+        public int WoundsUndone { get; private set; }
         /// <summary>Counts for probes: gathered spells ended with nothing loosed (Bag of Winds burst as a whirlwind).</summary>
         public int RingsSpilled { get; private set; }
         /// <summary>Counts for probes: gathered spells loosed, and the rings the last one held.</summary>
@@ -2024,6 +2027,58 @@ namespace Clover.Player
                 case UpgradeAction.Flood:
                     if (Ebbing) LooseFlood();
                     break;
+                case UpgradeAction.SwapWithShadow:
+                case UpgradeAction.ReturnToShadow:
+                {
+                    var shadow = Forms.SpellWorks.Clone;
+                    if (shadow == null || !shadow.Showing || !shadow.Anchored) break;
+                    Vector3 mine = transform.position;
+                    Vector3 theirs = shadow.Position;
+                    ElementLook.Puff(held, mine + Vector3.up * 0.4f, Vector3.up, 1.1f);
+                    ElementLook.Puff(held, theirs + Vector3.up * 0.4f, Vector3.up, 1.1f);
+                    player.PassTo(theirs);
+                    if (effect.Do == UpgradeAction.SwapWithShadow)
+                    {
+                        shadow.AnchorAt(mine);
+                        PlacesSwapped++;
+                        break;
+                    }
+                    // Sunk into it: the copy is gone, and the wounds since it was left come back as grey.
+                    if (SpellForms.Get(SpellForms.Clone) is Forms.RunningForm copy) Forms.SpellWorks.EndRunsOf(copy);
+                    if (defence != null) WoundsReturned += defence.Health.Return(WoundsSince(shadowHealth, defence.Health.Current));
+                    break;
+                }
+                case UpgradeAction.StepToStanding:
+                {
+                    string branch = effect.Owner != null ? effect.Owner.Branch : "";
+                    if (!StandingOf(branch)) break;
+                    Vector3 to = standingAt;
+                    to.y = self.y;
+                    Vector3 way = to - self;
+                    way.y = 0f;
+                    if (afterimage != null) afterimage.Leave(0.35f);
+                    ElementLook.Sparks(held, self + Vector3.up, way, 1f);
+                    // Beside the rod, not on its point: half a metre short, along the way.
+                    Vector3 landing = way.sqrMagnitude > 0.36f ? to - way.normalized * 0.5f : self;
+                    player.PassTo(landing);
+                    if (eDamage > 0f || eStagger > 0f)
+                        combat.StrikeArea(landing, Or(effect.Radius, 2.5f), Blow(look, kind, eDamage, eStagger, effect.Affliction != AfflictionKind.None ? eStacks : 0));
+                    ElementLook.Strike(look, landing, 0.5f);
+                    if (!KeepsStanding(byTrigger[(int)UpgradeTrigger.SpellPressed], branch))
+                    {
+                        Hazards.EndGroup(standingGroup);
+                        standingMark = null;
+                    }
+                    StepsToStanding++;
+                    break;
+                }
+                case UpgradeAction.UndoWound:
+                    if (defence != null && !defence.IsDead && Time.time - defence.LastWoundAt <= Or(effect.CastWindow, 1f) && defence.LastWound > 0f)
+                    {
+                        defence.Heal(defence.LastWound, false);
+                        WoundsUndone++;
+                    }
+                    break;
                 case UpgradeAction.Spill:
                     if (rings.Active && effect.Owner != null && rings.Mark.Branch == effect.Owner.Branch)
                     {
@@ -2604,11 +2659,53 @@ namespace Clover.Player
                 if (effect.Do == UpgradeAction.Flood && !Ebbing) continue;
                 Consider(effect, null, transform.position, false);
             }
-            castSource = null;
-            if (queued == before) return false;
+            if (queued == before)
+            {
+                castSource = null;
+                return false;
+            }
             PressesDone++;
+            // The press is a moment of its own branch's (Second Shadow's Master answers its change of places).
+            Trigger(UpgradeTrigger.SpellPressed, null, transform.position, false);
+            castSource = null;
             return true;
         }
+
+        // The thing a spell left standing (Lightning Rod's rod): whose, where, its ground's group, and until when.
+        private Upgrade standingMark;
+        private Vector3 standingAt;
+        private int standingGroup;
+        private float standingUntil;
+
+        /// <summary>A spell of <paramref name="mark"/>'s left a thing standing at <paramref name="at"/> for <paramref name="seconds"/>, its ground laid as <paramref name="group"/>.</summary>
+        public void NoteStanding(Upgrade mark, Vector3 at, int group, float seconds)
+        {
+            standingMark = mark;
+            standingAt = at;
+            standingGroup = group;
+            standingUntil = Time.time + seconds;
+        }
+
+        /// <summary>True while a thing of <paramref name="branch"/>'s spell still stands.</summary>
+        public bool StandingOf(string branch) => standingMark != null && Time.time < standingUntil && standingMark.Branch == branch;
+
+        /// <summary>True when an effect in force of <paramref name="branch"/> keeps its standing thing past the step to it (UpgradeAction.KeepStanding).</summary>
+        public static bool KeepsStanding(List<UpgradeEffect> inForce, string branch)
+        {
+            if (inForce == null) return false;
+            for (int i = 0; i < inForce.Count; i++)
+                if (inForce[i].Do == UpgradeAction.KeepStanding && inForce[i].Owner != null && inForce[i].Owner.Branch == branch) return true;
+            return false;
+        }
+
+        /// <summary>Counts for probes: steps taken to a thing a spell left standing.</summary>
+        public int StepsToStanding { get; private set; }
+
+        // The player's health as a spell left its copy standing (Return to the Shadow gives back what was lost since).
+        private float shadowHealth;
+
+        /// <summary>The wounds taken since a moment: what health was then less what it is now, never below nothing.</summary>
+        public static float WoundsSince(float then, float now) => Mathf.Max(0f, then - now);
 
         /// <summary>
         /// The later presses of a mark's spell as it is cast now: the worn shape's, when it adds any (ShapeDef.Presses), else the
@@ -3962,6 +4059,7 @@ namespace Clover.Player
                 Quickened++;
             }
             var cast = element.NewCast(spec, mark.Name, mark);
+            if (spec.StaysPut && defence != null) shadowHealth = defence.Health.Current;
             // A form that can do nothing just now says so before anything is paid.
             if (form is ISpellGate gate && !gate.CanCast(cast)) return false;
             float price = PriceOf(mark);
