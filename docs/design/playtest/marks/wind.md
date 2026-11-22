@@ -203,7 +203,7 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). The bag stays open for 8 seconds. Press the same button again in that time to open it. If you don't, it opens by itself when the time is up.
 
-**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again (its Empower makes it 8 and lets the bag hold four winds). While the bag is open, each perfect guard or perfect dodge catches a wind, up to three, and throws that attacker back 2 metres. When it opens, it throws one cone 7 metres long and 60 degrees wide. For each wind inside it deals 12 damage, 25 stagger and a stack of Unsteady: 36 damage and 75 stagger with three. Opened empty, it does nothing.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again (its Empower makes it 8 and lets the bag hold four winds). While the bag is open, each perfect guard or perfect dodge catches a wind, up to three, and throws that attacker back 2 metres. When it opens, it throws one cone 7 metres long and 60 degrees wide. For each wind inside it deals 12 damage, 25 stagger and a stack of Unsteady: 36 damage and 75 stagger with three. Opened empty, it does nothing. While the bag is open, the number of winds inside shows by its spell slot ("2 of 3 winds").
 
 **Works with.** Turned Aside, which it comes after on the chart; the Master marks of Lifting Wind and Closing Circle (more perfect dodges); Indrawn Breath.
 

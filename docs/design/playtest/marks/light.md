@@ -280,7 +280,7 @@ the next blows on that enemy critical.
 
 **When it happens.** Cast it from a spell slot (hold L2 and a face button, or press 1 to 4) to start it. Press the same button again within 8 seconds to fire it. If you don't, it fires by itself when the 8 seconds are up.
 
-**The numbers.** 4 Shards, 45 mana, paid when you start it. Each ring is worth 8 damage and 6 stagger, up to eight rings. The beam is 12 metres long and 1.6 metres wide and lasts 0.4 seconds, hitting four times. An enemy that stays in it takes 8 damage and 6 stagger for each ring, plus a Mark: 64 damage and 48 stagger at eight rings. Fired with no rings, it only Marks. Its Empower makes each ring worth 10 damage instead of 8. The two shapes keep their own numbers.
+**The numbers.** 4 Shards, 45 mana, paid when you start it. Each ring is worth 8 damage and 6 stagger, up to eight rings. The beam is 12 metres long and 1.6 metres wide and lasts 0.4 seconds, hitting four times. An enemy that stays in it takes 8 damage and 6 stagger for each ring, plus a Mark: 64 damage and 48 stagger at eight rings. Fired with no rings, it only Marks. While it gathers, the number of rings shows by its spell slot ("3 of 8 rings"). Its Empower makes each ring worth 10 damage instead of 8. The two shapes keep their own numbers.
 
 **Works with.** Brimming (mana kept full for it), Seen Plainly, which it comes after on the chart, Weighed, Condemned, Spoken Sentence, and the charged blade, which it charges with Light.
 

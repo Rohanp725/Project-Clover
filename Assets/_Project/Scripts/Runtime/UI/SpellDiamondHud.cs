@@ -30,6 +30,14 @@ namespace Clover.UI
         private const float Spread = 84f;
         private const float StrikeSize = 50f;
         private const int Slots = 4;
+        /// <summary>
+        /// The smallest a word the player reads may be on the 1920 by 1080 board (ui_rest_fire_plan.md 4.1: glyph captions and
+        /// counts, 24, bold, Text 2), and the size a count is set at inside the corner, which is drawn at SmallScale until the layer is held.
+        /// </summary>
+        public const int ReadableMinimum = 24;
+        public static int CountSize(float smallScale) => Mathf.CeilToInt(ReadableMinimum / Mathf.Max(0.1f, smallScale));
+        // Text 2 of the style guide (4.2): meta lines and counts.
+        private static readonly Color Text2 = new Color(0.722f, 0.694f, 0.647f, 1f);
 
         private static readonly Color Ink = new Color(0.03f, 0.025f, 0.06f, 0.82f);
         private static readonly Color Shade = new Color(0.02f, 0.015f, 0.04f, 0.72f);
@@ -44,7 +52,8 @@ namespace Clover.UI
         {
             public RectTransform Root;
             public Image Rim, RimBack, Back, Icon, Clock;
-            public Text Initials, Wait, Key, Price, Name;
+            public Text Initials, Wait, Key, Price, Name, Count;
+            public int ShownCount = -1;
             public int ShownWait = -1;
             public float ShownFill = -1f;
             public float Flash;
@@ -70,6 +79,8 @@ namespace Clover.UI
         private string layerLine = "", surgeLine = "";
         private int shownHas = -1;
         private Font font;
+        // Asked for the spell gathering now, to count by its slot.
+        private PlayerUpgrades upgrades;
 
         /// <summary>Counts for probes: whether it is drawn large now, and how often the words were rewritten.</summary>
         public bool Large => shownLarge;
@@ -112,6 +123,7 @@ namespace Clover.UI
         {
             player = owner;
             spells = owner.GetComponent<PlayerSpells>();
+            upgrades = owner.GetComponent<PlayerUpgrades>();
             combat = owner.GetComponent<PlayerCombat>();
             element = owner.GetComponent<PlayerElement>();
             font = withFont;
@@ -132,8 +144,16 @@ namespace Clover.UI
             Vector2[] nameAt = { new Vector2(-half - 128f, 0f), new Vector2(0f, half + 18f), new Vector2(half + 128f, 0f), new Vector2(0f, -half - 40f) };
             TextAnchor[] nameAnchor = { TextAnchor.MiddleRight, TextAnchor.MiddleCenter, TextAnchor.MiddleLeft, TextAnchor.MiddleCenter };
             Vector2[] priceAt = { new Vector2(0f, -half - 10f), new Vector2(-half - 34f, 0f), new Vector2(0f, -half - 10f), new Vector2(-half - 34f, 0f) };
+            // Where a spell that gathers (Daybreak's rings, Bag of Winds' winds) shows its count: under West's and East's price,
+            // beside North's and South's, clear of the keys.
+            Vector2[] countAt = { new Vector2(0f, -half - 44f), new Vector2(-half - 70f, -30f), new Vector2(0f, -half - 44f), new Vector2(-half - 70f, -30f) };
             for (int i = 0; i < Slots; i++)
+            {
                 slots[i] = MakeButton("Slot " + ControlNames.SlotWord(i), middle + places[i], SlotSize, keyAt[i], nameAt[i], nameAnchor[i], priceAt[i]);
+                slots[i].Count = Label("Count", slots[i].Root, CountSize(SmallScale), TextAnchor.MiddleCenter, Text2, countAt[i], new Vector2(220f, 40f));
+                slots[i].Count.fontStyle = FontStyle.Bold;
+                slots[i].Count.text = "";
+            }
             surge = MakeButton("Surge", middle, SlotSize * 0.62f, Vector2.zero, Vector2.zero, TextAnchor.MiddleCenter, Vector2.zero);
             surge.Key.gameObject.SetActive(false);
             surge.Price.gameObject.SetActive(false);
@@ -239,6 +259,7 @@ namespace Clover.UI
                 var slot = slots[i];
                 float price = spells.ManaIn(i);
                 Clocked(slot, spells.Cooldowns.Fraction(i), spells.Cooldowns.Remaining(i), price <= 0f || mana >= price);
+                Counted(slot, spells.MarkIn(i));
             }
             Clocked(strikeFirst, spells.Cooldowns.Fraction(SpellCooldowns.StrikeFirst), spells.Cooldowns.Remaining(SpellCooldowns.StrikeFirst), true);
             // R2 asks mana only as the deep strike (all in or one element, its Devotion bought); otherwise it is a plain strike.
@@ -256,6 +277,34 @@ namespace Clover.UI
         }
 
         private static bool PauseMenuOpen() => PauseMenu.Instance != null && PauseMenu.Instance.IsOpen;
+
+        // A spell that gathers shows how many it holds by its slot, in plain words, while it gathers ("3 of 8 rings").
+        private void Counted(Button button, Upgrade inSlot)
+        {
+            int held = upgrades != null && upgrades.Gathering && SameSpell(upgrades.GatheringMark, inSlot) ? upgrades.RingsHeld : -1;
+            int most = held >= 0 ? upgrades.RingsMost : 0;
+            int key = held < 0 ? -1 : held * 100 + most;
+            if (key == button.ShownCount) return;
+            button.ShownCount = key;
+            button.Count.text = held < 0 ? "" : GatherWords(held, most, upgrades.GatheringBy);
+        }
+
+        /// <summary>True when two marks are the same spell: the same mark, or marks of one branch (a Learn and its shape).</summary>
+        public static bool SameSpell(Upgrade a, Upgrade b)
+        {
+            if (a == null || b == null) return false;
+            if (ReferenceEquals(a, b)) return true;
+            string branchA = string.IsNullOrEmpty(a.Branch) ? a.Id : a.Branch, branchB = string.IsNullOrEmpty(b.Branch) ? b.Id : b.Branch;
+            return branchA == branchB;
+        }
+
+        /// <summary>The count of a gathering spell in plain words: "1 ring", "3 of 8 rings", "2 of 3 winds".</summary>
+        public static string GatherWords(int held, int most, RingSource by)
+        {
+            string one = by == RingSource.Turned ? "wind" : "ring";
+            string word = held == 1 && most <= 1 ? one : one + "s";
+            return most > 0 ? held + " of " + most + " " + (most == 1 ? one : one + "s") : held + " " + word;
+        }
 
         // One button's clock: the shade over it, the seconds in it, a glow when it came ready, dim when it cannot be paid for.
         private void Clocked(Button button, float fraction, float remaining, bool affordable)

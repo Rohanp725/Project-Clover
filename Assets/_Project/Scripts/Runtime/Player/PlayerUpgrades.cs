@@ -190,6 +190,10 @@ namespace Clover.Player
         /// <summary>True while a gathered spell waits to be loosed, and the rings it holds, for the HUD and probes.</summary>
         public bool Gathering => rings.Active;
         public int RingsHeld => rings.Rings;
+        /// <summary>The spell gathering now (its mark), the most rings it takes, and what adds them: for the HUD's count by its slot.</summary>
+        public Upgrade GatheringMark => rings.Mark;
+        public int RingsMost => rings.Most;
+        public RingSource GatheringBy => rings.By;
         /// <summary>Counts for probes: grey health given back by Return to the Shadow, and wounds undone by Second Shadow's Master.</summary>
         public float WoundsReturned { get; private set; }
         public int WoundsUndone { get; private set; }

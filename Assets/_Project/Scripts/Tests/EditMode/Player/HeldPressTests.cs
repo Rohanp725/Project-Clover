@@ -299,5 +299,19 @@ namespace Clover.Tests
             Assert.IsFalse(Upgrade.ById(EarthTree.MountainStance).Effects.Any(each => each.Do == UpgradeAction.Boon), "the stand-in boon is gone");
             Assert.AreEqual(1f, Clover.Player.Forms.ParryForm.LoadSeconds, 1e-5f, "the heavy blow within a second of letting go");
         }
+
+        [Test]
+        public void AGatheringSpellShowsItsCountByItsSlotInPlainWords()
+        {
+            Assert.AreEqual("3 of 8 rings", Clover.UI.SpellDiamondHud.GatherWords(3, 8, RingSource.Blows), "Daybreak's rings");
+            Assert.AreEqual("2 of 3 winds", Clover.UI.SpellDiamondHud.GatherWords(2, 3, RingSource.Turned), "Bag of Winds' winds");
+            Assert.AreEqual("0 of 4 winds", Clover.UI.SpellDiamondHud.GatherWords(0, 4, RingSource.Turned));
+            Assert.GreaterOrEqual(Clover.UI.SpellDiamondHud.CountSize(0.7f) * 0.7f, Clover.UI.SpellDiamondHud.ReadableMinimum, "readable at the HUD minimum even while the corner is small");
+            Assert.AreEqual(24, Clover.UI.SpellDiamondHud.ReadableMinimum, "the style guide's smallest size");
+            var daybreak = Upgrade.ById(LightTree.Daybreak);
+            var shape = Upgrade.ById(SpellBranch.ShapeId(LightTree.Daybreak));
+            Assert.IsTrue(Clover.UI.SpellDiamondHud.SameSpell(daybreak, shape), "its shape is the same spell in the slot");
+            Assert.IsFalse(Clover.UI.SpellDiamondHud.SameSpell(daybreak, Upgrade.ById(LightTree.TwoSuns)));
+        }
     }
 }
