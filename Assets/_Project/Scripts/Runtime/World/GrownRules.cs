@@ -358,4 +358,57 @@ namespace Clover.World
             return false;
         }
     }
+    /// <summary>
+    /// Ground the player's light has made clean (the ledger's purify): no enemy cloud, flame or frost lies there or bites in it.
+    /// Your own glow (Standing Light's, Row of Lamps') is clean while it lasts, and a mark may make a place clean for a while,
+    /// or a ring round you that goes where you go (Circled Lamp, High Noon). Enemy ground asks <see cref="Covers"/>: a patch
+    /// whose middle lies in clean ground goes out, and none bites whoever stands in it. Pure but for where a follower stands.
+    /// </summary>
+    public static class Purified
+    {
+        private struct Zone
+        {
+            public bool Active;
+            public Vector3 At;
+            public Transform Follows;
+            public float Radius, Until;
+        }
+
+        public const int Most = 8;
+        private static readonly Zone[] zones = new Zone[Most];
+
+        // Domain reload is off: no clean ground from the last play may lie in this one.
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => Clear();
+
+        /// <summary>Forgets every clean place (a new play, a test).</summary>
+        public static void Clear()
+        {
+            for (int i = 0; i < Most; i++) zones[i] = default;
+        }
+
+        /// <summary>Makes ground <paramref name="radius"/> round <paramref name="at"/> clean until <paramref name="until"/>; round <paramref name="follows"/> wherever it goes, when given.</summary>
+        public static void Add(Vector3 at, float radius, float until, Transform follows = null)
+        {
+            int slot = 0;
+            for (int i = 0; i < Most; i++)
+            {
+                if (!zones[i].Active) { slot = i; break; }
+                if (zones[i].Until < zones[slot].Until) slot = i;
+            }
+            zones[slot] = new Zone { Active = true, At = at, Follows = follows, Radius = Mathf.Max(0f, radius), Until = until };
+        }
+
+        /// <summary>True when <paramref name="at"/> is clean ground at <paramref name="now"/>: inside a clean place, or your own glow.</summary>
+        public static bool Covers(Vector3 at, float now)
+        {
+            for (int i = 0; i < Most; i++)
+            {
+                if (!zones[i].Active || now >= zones[i].Until) continue;
+                Vector3 centre = zones[i].Follows != null ? zones[i].Follows.position : zones[i].At;
+                if (GroundRules.Within(at, centre, zones[i].Radius)) return true;
+            }
+            return OwnGrounds.Under(OwnGrounds.Glow, at, now) || Hazards.NamedUnder(at, OwnGrounds.Glow);
+        }
+    }
 }

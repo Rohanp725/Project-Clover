@@ -235,8 +235,8 @@ namespace Clover.Player.Trees
 
             // The counter: the rod form is the lamp; enemies in its glow are struck lightly and Marked. Its perfect-guard burst is
             // banked by each lamp (three, the most a lamp is likely to meet), and only for a perfect guard made inside the glow
-            // (the lamp's ground is the player's own glow, SpellSpec.Ground: StatWhen.InOwnGlow). NEEDS: no enemy cloud, flame or
-            // frost inside the glow (purify).
+            // (the lamp's ground is the player's own glow, SpellSpec.Ground: StatWhen.InOwnGlow). No enemy cloud, flame or frost
+            // lies inside the glow: your glow is clean ground (World.Purified), and enemy ground asks it.
             SpellBranch.Add(to, E, StandingLight, "Standing Light", SpellRole.Counter, BranchPattern.LeftB, JustCut, SpellForms.Rod,
                 new SpellSpec { Reach = 2.5f, Radius = 5f, Seconds = 10f, Interval = 2.5f, Damage = 2f, Stagger = 0f, Delay = 0.2f, Stacks = 1, Ground = Clover.World.OwnGrounds.Glow },
                 "You plant a lamp of brass. A shaft of light stands over it, dust turning in it, and a glow five metres round lies about it for ten seconds. Enemies in the glow are Marked every two and a half seconds, and a perfect guard made inside it bursts round you: 10 damage and 25 stagger within three and a half metres. No enemy cloud, flame or frost can lie inside the glow.",
@@ -246,8 +246,8 @@ namespace Clover.Player.Trees
                 new Empower(),
                 "Inside its glow, the moments for a perfect guard and a perfect dodge are half again as long.",
                 // The lamp still stands; a row of light six metres ahead Marks what stands on it each second, and is glow of your own
-                // (Ground), so the ray down the row comes only from a perfect guard made standing in the row or the glow. NEEDS: the
-                // lamps drawn as three (form-pieces), and nothing laid between them (purify).
+                // (Ground), so the ray down the row comes only from a perfect guard made standing in the row or the glow, and nothing
+                // enemy lies between the lamps (the glow is clean ground). NEEDS: the lamps drawn as three (form-pieces).
                 new ShapeDef { Name = "Row of Lamps",
                     Description = "Three small lamps are set in a line six metres long. Every enemy between two lamps is Marked each second and can carry no cloud, flame or frost, and a perfect guard made in line with them throws a ray down the row: 12 damage and 25 stagger. The guard fires the row.",
                     Effects = new[]
@@ -256,11 +256,13 @@ namespace Clover.Player.Trees
                             Ground = Clover.World.OwnGrounds.Glow },
                         new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, While = StatWhen.InOwnGlow, Do = UpgradeAction.Lane, Reach = 6f, Radius = 0.6f, Damage = 12f, Stagger = 25f, Affliction = M, Stacks = 1, Cooldown = 1f },
                     } },
-                // NEEDS: the lamp drawn circling you, and hazards you walk into burned away (form-pieces, purify). The circling is
+                // Hazards you walk into are burned away: a ring of clean ground two metres round you that goes where you go for the
+                // eight seconds (UpgradeAction.Purify, Follows). NEEDS: the lamp drawn circling you (form-pieces). The circling is
                 // the discs form, one disc at two metres for eight seconds.
                 new ShapeDef { Name = "Circled Lamp", Form = SpellForms.Discs,
                     Description = "A smaller lamp circles you two metres out, once a second, for eight seconds. It Marks what it passes and burns away any hazard you walk into. It goes where you go.",
-                    Spell = new SpellSpec { Count = 1, Radius = 2f, Seconds = 8f, Interval = 1f, Damage = 2f, Stagger = 0f, Stacks = 1 } },
+                    Spell = new SpellSpec { Count = 1, Radius = 2f, Seconds = 8f, Interval = 1f, Damage = 2f, Stagger = 0f, Stacks = 1 },
+                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Purify, Follows = true, Radius = 2f, Seconds = 8f } } },
                 "Opens two shapes of Standing Light, chosen at any rest fire: Row of Lamps, a row your perfect guard fires, or Circled Lamp, a lamp that walks round you.",
                 // Inside the glow only (StatWhen.InOwnGlow). The resets are data, once in twelve seconds; Daybreak waits on no
                 // clock, so it has none to end.
@@ -354,10 +356,15 @@ namespace Clover.Player.Trees
                 new ShapeDef { Name = "Red Before the Sun", Form = SpellForms.Wall,
                     Description = "The rings are not loosed as a beam. They stand before you as a curved shield of red dawn three metres wide for four seconds, which stops thrown attacks and blows from the front. Each blow it stops adds a ring; press again to loose what is left as the beam. Light's one shield, and still a beam at the end.",
                     Spell = new SpellSpec { Reach = 1.5f, Arc = 3f, Delay = 0.15f, Seconds = 4f, Radius = 2.5f, Damage = 0f, Stagger = 0f, Stacks = 0, Rings = 8, RingsFor = 6, RingsBy = RingSource.Stopped } },
-                // The afflictions on you are cleared as it comes down (UpgradeAction.Cleanse, as it is loosed). NEEDS: enemy clouds,
-                // flame, frost and hazards burned away inside (purify). The column is the nova form, gathered as the beam is: 6 a ring.
+                // The afflictions on you are cleared as it comes down (UpgradeAction.Cleanse, as it is loosed), and enemy clouds,
+                // flame, frost and hazards inside are burned away (UpgradeAction.Purify, the column's 2.5 m for a moment). The column
+                // is the nova form, gathered as the beam is: 6 a ring.
                 new ShapeDef { Name = "High Noon", Form = SpellForms.Nova,
-                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellLoosed, OwnBranch = true, Do = UpgradeAction.Cleanse } },
+                    Effects = new[]
+                    {
+                        new UpgradeEffect { On = UpgradeTrigger.SpellLoosed, OwnBranch = true, Do = UpgradeAction.Cleanse },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellLoosed, OwnBranch = true, Do = UpgradeAction.Purify, Follows = true, Radius = 2.5f, Seconds = 1f },
+                    },
                     Description = "The light comes straight down on you as a column five metres across. It burns away every enemy cloud, flame, frost and hazard inside, clears every affliction on you, and strikes everything inside for 6 damage a ring, Marking it. The purifying version.",
                     Spell = new SpellSpec { Radius = 2.5f, Delay = 0.3f, Damage = 36f, Stagger = 36f, Stacks = 1, Rings = 8, RingsFor = 6 } },
                 "Opens two shapes of Daybreak, chosen at any rest fire: Red Before the Sun, a shield of dawn before the beam, or High Noon, a column that burns the ground clean.",

@@ -366,5 +366,10 @@ namespace Clover.Player
         /// Lake: 0.5 m and 1 s for each enemy killed on it).
         /// </summary>
         GrowGround,
+        /// <summary>
+        /// Ground Radius round you (or the trigger's place, with At) is made clean for Seconds: enemy clouds, flame and frost there
+        /// go out and none bites in it (World.Purified; Circled Lamp's ring goes where you go: Follows; High Noon's column).
+        /// </summary>
+        Purify,
     }
 }

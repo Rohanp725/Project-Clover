@@ -201,6 +201,8 @@ namespace Clover.Gameplay
                     pieces[i].gameObject.SetActive(false);
                     continue;
                 }
+                // Clean ground (the player's light) burns it away: it fades at once.
+                if (kind[i] != Wall && age[i] < life[i] - FadeSeconds && Clover.World.Purified.Covers(pieces[i].position, Time.time)) age[i] = life[i] - FadeSeconds;
                 if (kind[i] == Wall && age[i] >= WallSeconds - FadeSeconds && walls[i] != null && walls[i].enabled) walls[i].enabled = false;
                 Shape(i);
                 // Hot gold smokes and spits now and then; the wall more.
@@ -217,7 +219,7 @@ namespace Clover.Gameplay
                 if (untilBite <= 0f)
                 {
                     untilBite = BurnEvery;
-                    float bite = Bite(player.transform.position);
+                    float bite = Clover.World.Purified.Covers(player.transform.position, Time.time) ? 0f : Bite(player.transform.position);
                     if (bite > 0f && defence != null && !defence.IsDead && defence.Scorch(bite) > 0f)
                         Vfx.Play(VfxKind.Fire, player.transform.position + Vector3.up * 0.3f, Vector3.up, 0.4f);
                 }

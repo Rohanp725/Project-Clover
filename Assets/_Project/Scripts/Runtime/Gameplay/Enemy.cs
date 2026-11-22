@@ -1495,6 +1495,12 @@ namespace Clover.Gameplay
         private void TickBurn(float deltaTime)
         {
             burnLeft -= deltaTime;
+            // Ground the player's light has made clean puts it out (Standing Light's glow, High Noon).
+            if (Clover.World.Purified.Covers(burnAt, Time.time))
+            {
+                burnLeft = 0f;
+                return;
+            }
             untilBurnShow -= deltaTime;
             if (untilBurnShow <= 0f && !BurnDrawn)
             {
@@ -1507,7 +1513,7 @@ namespace Clover.Gameplay
             untilBurnBite += burnEvery;
             Vector3 offset = target.position - burnAt;
             offset.y = 0f;
-            if (offset.magnitude > burnRadius || targetDefence == null) return;
+            if (offset.magnitude > burnRadius || targetDefence == null || Clover.World.Purified.Covers(target.position, Time.time)) return;
             targetDefence.TakeHit(new Hit(burnDamage, 0f, offset.sqrMagnitude > 0.01f ? offset.normalized : transform.forward, false, true));
         }
 

@@ -2723,6 +2723,9 @@ namespace Clover.Player
                     });
                     break;
                 }
+                case UpgradeAction.Purify:
+                    Purified.Add(effect.Follows ? transform.position : centre, Or(effect.Radius, 2f) * spread, Time.time + Or(effect.Seconds, 0.5f), effect.Follows ? transform : null);
+                    break;
                 case UpgradeAction.GrowGround:
                     if (OwnGrounds.Grow(effect.Ground, subject != null ? subject.transform.position : centre, effect.Amount, effect.Seconds, Time.time)) GroundsGrown++;
                     break;

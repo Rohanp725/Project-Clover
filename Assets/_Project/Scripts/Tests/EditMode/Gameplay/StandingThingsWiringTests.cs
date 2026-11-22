@@ -1565,5 +1565,29 @@ namespace Clover.Tests
             Assert.AreEqual(learnLight.Amount, master.Amount, 1e-5f);
             Assert.AreEqual(16f, PlayerUpgrades.CoatBurst(16f, 8f, 2, 70f) * master.BurningShare, 1e-5f, "two spreads: the coat 32, the others 16");
         }
+
+        [Test]
+        public void TheLampsGlowAndHighNoonMakeCleanGround()
+        {
+            Purified.Clear();
+            Assert.IsFalse(Purified.Covers(Vector3.zero, 1f), "nothing clean yet");
+            OwnGrounds.Lay(OwnGrounds.Glow, new Vector3(10f, 0f, 0f), 5f, 10f);
+            Assert.IsTrue(Purified.Covers(new Vector3(13f, 0f, 0f), 1f), "your own glow is clean ground");
+            Assert.IsFalse(Purified.Covers(new Vector3(13f, 0f, 0f), 11f), "while it lasts");
+            Purified.Add(Vector3.zero, 2.5f, 2f);
+            Assert.IsTrue(Purified.Covers(new Vector3(2f, 0f, 0f), 1f));
+            Assert.IsFalse(Purified.Covers(new Vector3(3f, 0f, 0f), 1f), "only inside");
+            Assert.IsFalse(Purified.Covers(Vector3.zero, 2.5f), "for its time");
+            Purified.Clear();
+
+            var circled = Upgrade.ById(SpellBranch.ShapeId(LightTree.StandingLight)).Shapes.Single(each => each.Name == "Circled Lamp").Effects.Single();
+            Assert.AreEqual(UpgradeAction.Purify, circled.Do);
+            Assert.IsTrue(circled.Follows, "it goes where you go");
+            Assert.AreEqual(8f, circled.Seconds, 1e-5f);
+            var noon = Upgrade.ById(SpellBranch.ShapeId(LightTree.Daybreak)).Shapes.Single(each => each.Name == "High Noon").Effects;
+            var burnt = noon.Single(each => each.Do == UpgradeAction.Purify);
+            Assert.AreEqual(UpgradeTrigger.SpellLoosed, burnt.On);
+            Assert.AreEqual(2.5f, burnt.Radius, 1e-5f, "the column five metres across");
+        }
     }
 }

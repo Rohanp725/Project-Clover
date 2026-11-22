@@ -121,7 +121,7 @@ namespace Clover.Tests
             Assert.IsTrue(master.Any(each => each.Do == UpgradeAction.Boon && each.ThisCast && each.Stat == PlayerStat.CritChance), "the beam is critical");
             var noon = Upgrade.ById(SpellBranch.ShapeId(LightTree.Daybreak)).Shapes.Single(each => each.Name == "High Noon");
             Assert.AreEqual(8, noon.Spell.Rings, "the column is gathered too");
-            Assert.AreEqual(UpgradeTrigger.SpellLoosed, noon.Effects.Single().On, "cleansed as it comes down");
+            Assert.AreEqual(UpgradeTrigger.SpellLoosed, noon.Effects.Single(each => each.Do == UpgradeAction.Cleanse).On, "cleansed as it comes down");
         }
 
         [Test]

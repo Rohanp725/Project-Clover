@@ -167,11 +167,9 @@ the next blows on that enemy critical.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). Then guard.
 
-**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 12 seconds to cast it again. Fighting with your weapon makes the wait shorter. It is planted 2.5 metres in front of you. The glow has a 5-metre radius and lasts 10 seconds. It hits 0.2 seconds after you plant it, then every 2.5 seconds, for 2 damage and a Mark each time. Each lamp gives three perfect-guard bursts, shown next to the weapon as Lamp. A burst comes only from a perfect guard made while you stand inside the glow. Each burst deals 10 damage and 25 stagger within 3.5 metres of you. Empowered: inside the glow, your perfect guard and perfect dodge windows are half again as long.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 12 seconds to cast it again. Fighting with your weapon makes the wait shorter. It is planted 2.5 metres in front of you. The glow has a 5-metre radius and lasts 10 seconds. It hits 0.2 seconds after you plant it, then every 2.5 seconds, for 2 damage and a Mark each time. Each lamp gives three perfect-guard bursts, shown next to the weapon as Lamp. A burst comes only from a perfect guard made while you stand inside the glow. Each burst deals 10 damage and 25 stagger within 3.5 metres of you. Empowered: inside the glow, your perfect guard and perfect dodge windows are half again as long. The glow is clean ground: enemy fire whose middle lies in it goes out, and no enemy fire or burning floor hurts you while you stand in it.
 
 **Works with.** The root mark (a fresh Mark, and three fresh critical hits, every 2.5 seconds), Unblemished, which comes after it on the chart, Clarity's longer perfect timing windows, Reckoning's Witnessed shape, Condemned.
-
-**Not built yet.** The glow doesn't clear away enemy clouds, flames or frost yet.
 
 **Example.** Plant it in a doorway and fight at its edge. Everything that comes through arrives Marked, and each perfect guard throws them back.
 
@@ -180,11 +178,11 @@ the next blows on that enemy critical.
 
 **When it happens.** Whenever you cast Standing Light, using the shape you picked. If you have not bought this, you plant the plain lamp.
 
-**The numbers.** 3 Shards. Row of Lamps: the lamp still stands, and three patches, each a metre across, along 6 metres in front of you Mark whatever stands in them once a second for 10 seconds. Each perfect guard shoots a ray 6 metres past the attacker, for 12 damage, 25 stagger and a Mark, at most once a second. Circled Lamp: one lamp circles you 2 metres away for 8 seconds, hitting whatever it passes for 2 damage and Marking it.
+**The numbers.** 3 Shards. Row of Lamps: the lamp still stands, and three patches, each a metre across, along 6 metres in front of you Mark whatever stands in them once a second for 10 seconds. The row is glow too, so it is clean ground like the lamp's. Each perfect guard shoots a ray 6 metres past the attacker, for 12 damage, 25 stagger and a Mark, at most once a second. Circled Lamp: one lamp circles you 2 metres away for 8 seconds, hitting whatever it passes for 2 damage and Marking it. For those 8 seconds the ground 2 metres around you is clean, wherever you walk: enemy fire there goes out and can't hurt you.
 
 **Works with.** Row of Lamps: a build that counters attacks, Unblemished, perfect guards. Circled Lamp: a fight on the move, fast weapons, Brimming.
 
-**Not built yet.** Row of Lamps should show three lamps, with nothing placed between them. For now the ray fires on a perfect guard made standing on the row or in the glow. Circled Lamp should burn away danger zones, and look like a lamp (for now, it is a disc of light).
+**Not built yet.** Row of Lamps should show three lamps. For now the ray fires on a perfect guard made standing on the row or in the glow. Circled Lamp should look like a lamp (for now, it is a disc of light).
 
 **Example.** Use Row of Lamps across a hall. Stand at one end and perfect-guard the brute that comes down it, and the ray runs back through the pack behind it.
 
@@ -283,11 +281,11 @@ the next blows on that enemy critical.
 
 **When it happens.** Whenever you cast Daybreak, using the shape you picked. If you have not bought this, you cast the plain beam.
 
-**The numbers.** 3 Shards, and the same 45 mana. Red Before the Sun: a wall 3 metres wide stands 1.5 metres in front of you for 4 seconds. Nothing can walk through it or reach you from the other side. Each blow it stops adds a ring of light, up to eight. Press the button again, or wait for the wall to fall, and the wall comes down and its rings fire as Daybreak's beam: 8 damage and 6 stagger a ring (10 damage with the Empower), and a Mark. High Noon: it is started and built up with rings like the beam. When you fire it, a column 5 metres across lands on you, dealing 6 damage and 6 stagger for each ring and a Mark to everything inside, and clearing every affliction on you.
+**The numbers.** 3 Shards, and the same 45 mana. Red Before the Sun: a wall 3 metres wide stands 1.5 metres in front of you for 4 seconds. Nothing can walk through it or reach you from the other side. Each blow it stops adds a ring of light, up to eight. Press the button again, or wait for the wall to fall, and the wall comes down and its rings fire as Daybreak's beam: 8 damage and 6 stagger a ring (10 damage with the Empower), and a Mark. High Noon: it is started and built up with rings like the beam. When you fire it, a column 5 metres across lands on you, dealing 6 damage and 6 stagger for each ring and a Mark to everything inside, and clearing every affliction on you. As it lands, enemy fire inside the column goes out.
 
 **Works with.** Red Before the Sun: archers and charges coming at you, a build that counters attacks, Unblemished. High Noon: being surrounded, Weighed, Spoken Sentence.
 
-**Not built yet.** Red Before the Sun doesn't stop thrown attacks yet. High Noon doesn't yet burn away enemy clouds, flames, frost and danger zones.
+**Not built yet.** Red Before the Sun doesn't stop thrown attacks yet.
 
 **Example.** Use High Noon in the middle of a pack. Everything around you is Marked at once, and the cuts that follow are critical hits.
 
