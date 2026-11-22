@@ -141,20 +141,20 @@ ground: Briar Patch's bed, a thornbush, a sapling, a thicket, a tuft of briar.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). It needs something you grew nearby.
 
-**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 12 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 10 seconds.) Each thing you grew within 12 metres of you bursts in a 2-metre circle for 12 damage and Seeded, then disappears; things farther away are left standing. For now, if you cast it within 4 metres of something you grew, the window lasts 6 seconds: every weapon blow is a critical hit, and you get 20% of its damage back as health.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 12 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 10 seconds, and the thorns deal 16.) Each thing you grew within 12 metres of you bursts in a 2-metre circle for 12 damage and Seeded, then disappears; things farther away are left standing. Each thing that withers gives a second and a half of green blood, up to ten seconds: every weapon blow is a critical hit, and you get 20% of its damage back as health. If nothing withers, there is no green blood.
 
 **Works with.** Fallen Seeds, Sapling, Briar Patch and Root Walk, for the garden it uses up; Wood Grows Back, to have the garden again; Ripening, which it comes after on the chart; and Seeded's healing on top.
 
-**Not built yet.** The window should last a second and a half for each thing that withered, up to ten seconds. The half-second kneel.
+**Not built yet.** The half-second kneel.
 
-**Example.** Three bushes stand around a brute. Draw them in, and cut the brute with six seconds of critical, healing blows.
+**Example.** Four bushes stand around a brute. Draw them in, and cut the brute with six seconds of critical, healing blows.
 
 ## life.harvest.shape
 **What it does.** Unlocks two shapes for Drawn From the Wood. You pick one at any rest fire. **Blood in the Furrow**: the green blood soaks into the ground where you knelt, making a ring that Seeds everything in it each second. You fight in one place, instead of carrying the power around with you. **Feed the Ground**: the one spell where Life costs you health. Nothing withers. Instead, you give a quarter of your health to your garden, and for a while everything you've grown hits twice as hard and twice as often.
 
 **When it happens.** Whenever you cast Drawn From the Wood, using the shape you picked. If you have not bought this, you cast the plain withering.
 
-**The numbers.** 3 Shards. Blood in the Furrow: a ring 8 metres across where you knelt, lasting 6 seconds. Once a second, it deals 1 damage and adds Seeded. While you stand in the ring, every weapon blow is a critical hit and heals you a fifth of its damage. Step out and you lose it. Feed the Ground: it costs a quarter of the health you have now, which turns grey so you can win it back with blows. Nothing withers. For 8 seconds, the things you grow hit twice as hard.
+**The numbers.** 3 Shards. Blood in the Furrow: a ring 8 metres across where you knelt, lasting 6 seconds. Once a second, it deals 1 damage and adds Seeded. While you stand in the ring, every weapon blow is a critical hit and heals you a fifth of its damage. Step out and you lose it. Feed the Ground: it costs a quarter of the health you have now, which turns grey so you can win it back with blows. Nothing withers, so there is no green blood. For 8 seconds, the things you grow hit twice as hard.
 
 **Works with.** Blood in the Furrow: Bitter Rind and Briar Coat, which keep the fight in one place. Feed the Ground: Fallen Seeds, Sapling and Wildwood, for a garden worth feeding; and the Master mark, to pay with grey health.
 

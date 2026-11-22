@@ -689,7 +689,7 @@ Title: Iron Thorns (Life and Metal)
 Group: Reactions
 **What it is.** Seeded meets Sundered. Iron thorns grow out through the broken armour and fly off with each blow.
 
-**The numbers.** For 6 seconds, each of your weapon blows on the enemy snaps a thorn off at the nearest other enemy within 6 metres, for 6 damage, a Seeded and a notch. There are three thorns. Then it waits 4 seconds.
+**The numbers.** For 6 seconds, each of your weapon blows on the enemy snaps a thorn off at the nearest other enemy within 6 metres, for 6 damage, a Seeded and a notch. It grows one thorn for each notch it had, up to three. Then it waits 4 seconds.
 
 **What sets it off.** A seed landing on a notched enemy, or a notch landing on a Seeded one.
 
@@ -697,7 +697,7 @@ Group: Reactions
 
 **How to use it.** Fight the enemy with the thorns. The others around it take the thorns.
 
-**How it looks.** Its name over the enemy, and a hit where each thorn lands. Not built yet: one thorn for each notch the enemy had.
+**How it looks.** Its name over the enemy, and a hit where each thorn lands.
 
 ## reaction-earthlight
 Title: Earthlight (Earth and Light)

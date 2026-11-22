@@ -148,6 +148,13 @@ namespace Clover.Player
         public float OnBeat;
         /// <summary>For Boon: it ends with the next swing of the weapon that lands, if that comes before its time is up.</summary>
         public bool UntilBlow;
+        /// <summary>
+        /// For Boon: it lasts this many seconds for each thing the effect before it in the same mark counted (a Spend, or the
+        /// grown things a BurstGrown withered), Seconds at most; nothing when none was (Drawn From the Wood: 1.5 s a withered thing, 10 s at most).
+        /// </summary>
+        public float SecondsEach;
+        /// <summary>For Hold: held the time named as it is, not shortened by how the enemy resists ice; a god's cap still holds (Poured Bronze's quarter on a god or elite).</summary>
+        public bool Exact;
         /// <summary>For Boon: it ends with the player's next dodge, if that comes before its time is up (Second Wind's next dodge free; the ledger's until-dodge).</summary>
         public bool UntilDodge;
         /// <summary>It happens only if its mark's count holds this many, and spends them.</summary>

@@ -64,10 +64,11 @@ namespace Clover.Player.Trees
                 BranchPattern.Root));
 
             // ---- The middle bough: Sentence. Marks laid deep, and judgement passed on them.
-            // NEAREST: marks go three deep, as designed. Critical damage by the depth of the mark is a boon when a mark fills.
+            // Marks go three deep, as designed, and each depth makes critical blows on that enemy harder: 0.1 more of the blow a
+            // Mark (StatMod PerDepth against Marked), so three deep strikes 1.8 times.
             to.Add(BranchPattern.Put(new Upgrade { Id = Weighed, Name = "Weighed", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Root }, Icon = UpgradeIcons.Target,
-                Description = "Marks deepen, up to three. When a mark reaches three, your critical blows strike 30% harder for six seconds.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.AfflictionFull, Do = UpgradeAction.Boon, Stat = PlayerStat.CritDamage, Amount = 0.3f, Seconds = 6f } }, Stats = new[] { new StatMod(PlayerStat.AfflictionDepth, 2f) } },
+                Description = "Marks deepen, up to three, and each Mark an enemy carries makes your critical blows on it strike harder.",
+                Stats = new[] { new StatMod(PlayerStat.AfflictionDepth, 2f), new StatMod(PlayerStat.CritDamage, 0.1f, M, true) } },
                 BranchPattern.MiddleFoot));
 
             // The detonator: the brand form sets the seal on the enemy faced and flashes, striking nothing, at each blow it

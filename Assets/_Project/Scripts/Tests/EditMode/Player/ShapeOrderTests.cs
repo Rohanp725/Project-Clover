@@ -31,7 +31,10 @@ namespace Clover.Tests
             SetsAside(MetalTree.PouredBronze, "Red-Hot", UpgradeAction.Hold);
             SetsAside(PoisonTree.OneByOne, "Eaten in Turn", UpgradeAction.SetOff);
             SetsAside(LifeTree.ReapWhatIsSown, "Golden Sickle", UpgradeAction.BurstGrown);
-            SetsAside(LifeTree.DrawnFromTheWood, "Feed the Ground", UpgradeAction.BurstGrown);
+            // Feed the Ground: nothing withers, so the green blood it would give is set aside with the withering.
+            var feed = Upgrade.ById(SpellBranch.ShapeId(LifeTree.DrawnFromTheWood)).Shapes.First(each => each.Name == "Feed the Ground");
+            var drawn = Upgrade.ById(LifeTree.DrawnFromTheWood).Effects;
+            CollectionAssert.AreEqual(new[] { UpgradeAction.BurstGrown, UpgradeAction.Boon, UpgradeAction.Boon }, feed.SetsAside.Select(index => drawn[index].Do).ToArray(), "Feed the Ground sets aside what it says");
             Assert.IsFalse(ShapeDef.SetAside(null, 0), "no shape worn: everything runs");
             Assert.IsFalse(ShapeDef.SetAside(new ShapeDef(), 0));
         }

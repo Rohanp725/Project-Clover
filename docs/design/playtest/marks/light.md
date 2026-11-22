@@ -19,17 +19,15 @@ the next blows on that enemy critical.
 **Example.** Three light blows on a soldier: the third Marks it. A heavy blow and two more light blows after that all land as critical hits.
 
 ## light.weighed
-**What it does.** Marks stack up, to three. When an affliction on an enemy fills all the way up (including a Mark at three), your critical hits hit harder for a while.
+**What it does.** Marks stack up, to three. Each Mark an enemy carries makes your critical hits on that enemy hit harder.
 
-**When it happens.** Always on once you learn it. Stacking Marks needs Light as your first element; if Light is your second, a Mark stays at one. The stronger critical hits come each time any affliction you add fills up on an enemy.
+**When it happens.** Always on once you learn it. Stacking Marks needs Light as your first element; if Light is your second, a Mark stays at one (so you still get the first step).
 
-**The numbers.** 3 Shards. Marks stack up to three, one more for each Mark added. When an affliction fills up, critical hits deal 1.8 times their damage instead of 1.5, for 6 seconds.
+**The numbers.** 3 Shards. Marks stack up to three, one more for each Mark added. A critical hit normally deals 1.5 times its damage. On a Marked enemy, it deals 0.1 times more for each Mark: 1.6 times with one Mark, 1.7 with two, 1.8 with three.
 
 **Works with.** The root mark, Reckoning's Spoken Sentence shape (12 more for each stack, once built), Ring of Spears and Brimming (they add Marks fast), Condemned, which comes after it on the chart, Unblemished and Just Cut (more critical hits to use it on).
 
-**Not built yet.** Each stack should make critical hits stronger on its own. For now, the stronger critical hits come when a Mark fills up.
-
-**Example.** End three chains on a brute. It has three Marks, and for six seconds every critical hit does 1.8 times damage.
+**Example.** End three chains on a brute. It has three Marks, and every critical hit on it does 1.8 times damage.
 
 ## light.reckoning
 **What it does.** Reckoning, the detonator of the Light tree. You put a seal on the enemy you face: a ring like a clock face on the ground under it, with one hand that sweeps around it in six seconds. On the last tick, it breaks upward in a column of light. It deals 8 damage for each weapon blow you landed on that enemy in those six seconds, along with a big hit to its balance.

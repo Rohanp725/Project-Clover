@@ -2189,7 +2189,14 @@ namespace Clover.Player
                         ElementLook.Sparks(held, self + Vector3.up * 1.2f, Vector3.up, 0.6f);
                         break;
                     }
-                    Stats.AddBoon(effect.Stat, effect.Amount, Or(effect.Seconds, 5f) * Stats.Multiplier(PlayerStat.BoonSeconds));
+                    float boonSeconds = Or(effect.Seconds, 5f);
+                    // By the count before it (Drawn From the Wood: 1.5 s for each grown thing withered, 10 s at most).
+                    if (effect.SecondsEach > 0f)
+                    {
+                        if (counted <= 0) break;
+                        boonSeconds = Mathf.Min(boonSeconds, effect.SecondsEach * counted);
+                    }
+                    Stats.AddBoon(effect.Stat, effect.Amount, boonSeconds * Stats.Multiplier(PlayerStat.BoonSeconds));
                     if (effect.UntilBlow && untilBlowCount < untilBlow.Length) untilBlow[untilBlowCount++] = effect;
                     if (effect.UntilDodge && untilDodgeCount < untilDodge.Length) untilDodge[untilDodgeCount++] = effect;
                     ElementLook.Sparks(held, self + Vector3.up * 1.2f, Vector3.up, 0.6f);
@@ -2931,7 +2938,7 @@ namespace Clover.Player
                     // PerStack: held for each stack counted (Poured Bronze's 0.4 s a notch).
                     float seconds = Or(effect.Seconds, 1.5f) * per;
                     if (effect.Radius > 0f) Holds += combat.HoldArea(centre, effect.Radius * spread, seconds, effect.OnlyCarrying);
-                    else if (subject is IAfflictable gripped && gripped.Afflictions.Hold(seconds)) Holds++;
+                    else if (subject is IAfflictable gripped && gripped.Afflictions.Hold(seconds, effect.Exact)) Holds++;
                     // An unseen hold is drawn by its reaction's look alone: no ring (Seized, the owner's "remove the circles").
                     if (!effect.Unseen)
                     {
@@ -3036,6 +3043,10 @@ namespace Clover.Player
                 {
                     // Only what stands within the effect's reach of you when it names one (Drawn From the Wood: 12 m).
                     int burst = Hazards.BurstGrown(Blow(look, kind, eDamage, eStagger, eStacks), Or(effect.Radius, 3f), self, effect.Reach, grownBursts);
+                    // Counted as a Spend counts, for the effects after it in the mark (Drawn From the Wood's green blood).
+                    lastSpent = burst;
+                    spentBy = effect.Owner;
+                    spentOn = pending.Target;
                     if (burst > 0 && defence != null && eAmount > 0f) defence.Heal(eAmount * burst);
                     // Each burst is a moment of its own, where it was (Second Sowing sows in all it reaches).
                     for (int b = 0; b < burst && b < grownBursts.Length; b++) Trigger(UpgradeTrigger.GrownBurst, null, grownBursts[b]);

@@ -29,6 +29,8 @@ namespace Clover.Player
                 if (reacted.Afflictions.Unbound(reactionPair)) spec = Unbound(spec);
                 startAt = spec.Blows > 0 ? reacted.Afflictions.CountStartsAt(reactionPair) : 0;
             }
+            // One blow for each stack counted, its Blows at most (Iron Thorns): the rest counted as already drawn.
+            if (spec.BlowsByStacks) startAt = Mathf.Max(startAt, BlowsDrawn(spec, stacks));
             float pace = PaceFor(spec, stacks);
             // Turning slowed by the stacks counted (Seized Joints): its run's one number is the turn it keeps.
             if (spec.TurnPerStack > 0f) scale = TurnFor(spec, stacks);
@@ -85,6 +87,10 @@ namespace Clover.Player
         /// </summary>
         public static float TurnFor(ConditionSpec spec, int stacks) =>
             spec != null && spec.TurnPerStack > 0f ? Mathf.Max(0.1f, 1f - spec.TurnPerStack * Mathf.Max(1, stacks)) : 1f;
+
+        /// <summary>The blows counted as drawn at the start for a condition set one blow a stack (<see cref="ConditionSpec.BlowsByStacks"/>).</summary>
+        public static int BlowsDrawn(ConditionSpec spec, int stacks) =>
+            spec != null && spec.BlowsByStacks && spec.Blows > 0 ? spec.Blows - Mathf.Clamp(stacks, 1, spec.Blows) : 0;
 
         public static float PaceFor(ConditionSpec spec, int stacks) =>
             spec != null && spec.SlowPerStack > 0f ? Mathf.Max(0.05f, 1f - spec.SlowPerStack * Mathf.Max(1, stacks)) : -1f;

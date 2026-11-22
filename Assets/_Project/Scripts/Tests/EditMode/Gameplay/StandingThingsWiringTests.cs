@@ -228,7 +228,7 @@ namespace Clover.Tests
             Assert.AreEqual(OwnGrounds.Glow, row.Single(each => each.Do == UpgradeAction.Hazard).Ground);
             Assert.AreEqual(StatWhen.InOwnGlow, row.Single(each => each.On == UpgradeTrigger.PerfectGuard).While, "the guard made in the row");
             var furrow = Upgrade.ById(SpellBranch.ShapeId(LifeTree.DrawnFromTheWood)).Shapes.Single(each => each.Name == "Blood in the Furrow");
-            Assert.IsTrue(ShapeDef.SetAside(furrow, 0) && ShapeDef.SetAside(furrow, 1), "the window does not go with you");
+            Assert.IsTrue(ShapeDef.SetAside(furrow, 1) && ShapeDef.SetAside(furrow, 2) && !ShapeDef.SetAside(furrow, 0), "the window does not go with you; the withering still comes");
             Assert.IsTrue(furrow.Stats.All(each => each.When == StatWhen.InOwnBlood));
             Assert.AreEqual(OwnGrounds.Blood, furrow.Effects.Single().Ground);
         }
@@ -1397,6 +1397,86 @@ namespace Clover.Tests
 
             var downwind = Upgrade.ById(Clover.Player.Trees.Duo.SickleWindDuo.Shape).Shapes.Single(each => each.Name == "Sent Downwind").Effects.Single(each => each.Do == UpgradeAction.Hazard);
             Assert.AreEqual(Reactions.SickleWhirl, downwind.Named, "the wandering whirl is fed too");
+        }
+
+        [Test]
+        public void IronThornsGrowAThornANotchThreeAtMost()
+        {
+            var thorns = new ConditionSpec { Id = Reactions.Thorns, Seconds = 6f, Blows = 3, BlowsByStacks = true };
+            Assert.AreEqual(2, ConditionCaster.BlowsDrawn(thorns, 1), "one notch: one thorn");
+            Assert.AreEqual(1, ConditionCaster.BlowsDrawn(thorns, 2));
+            Assert.AreEqual(0, ConditionCaster.BlowsDrawn(thorns, 5), "three at most");
+            Assert.AreEqual(0, ConditionCaster.BlowsDrawn(new ConditionSpec { Id = "x", Seconds = 1f, Blows = 3 }, 1), "a plain count starts at none");
+
+            var enemy = new AfflictionSet { Reactions = new ReactionEngine((who, pair, laid) => { }, () => 0) };
+            int slot = enemy.Conditions.Set(thorns, null, 1, null, true);
+            enemy.Conditions.StartAt(slot, ConditionCaster.BlowsDrawn(thorns, 1));
+            enemy.Conditions.Struck(5f, false, false);
+            Assert.IsFalse(enemy.Conditions.Holds(Reactions.Thorns), "one notch, one thorn: gone after the first blow");
+
+            var reaction = Upgrade.ById(AfflictionPairs.Id(AfflictionPairs.Index(AfflictionKind.Seeded, AfflictionKind.Sundered))).Effects;
+            var count = reaction.First();
+            Assert.AreEqual(UpgradeAction.Spend, count.Do);
+            Assert.IsTrue(count.CountOnly, "the notches are counted, not spent");
+            var grown = reaction.Single(each => each.State != null && each.State.Id == Reactions.Thorns);
+            Assert.IsTrue(grown.PerStack && grown.State.BlowsByStacks);
+        }
+
+        [Test]
+        public void DrawnFromTheWoodGivesGreenBloodForEachThingWithered()
+        {
+            var learn = Upgrade.ById(LifeTree.DrawnFromTheWood).Effects;
+            Assert.AreEqual(UpgradeAction.BurstGrown, learn[0].Do, "the withering is counted first");
+            var boons = learn.Where(each => each.Do == UpgradeAction.Boon).ToArray();
+            Assert.AreEqual(2, boons.Length);
+            foreach (var boon in boons)
+            {
+                Assert.AreEqual(1.5f, boon.SecondsEach, 1e-5f, "a second and a half a withered thing");
+                Assert.AreEqual(10f, boon.Seconds, 1e-5f, "ten seconds at most");
+                Assert.AreEqual(StatWhen.Always, boon.While, "not by standing near the garden any more");
+            }
+            Assert.AreEqual(16f, Upgrade.ById(SpellBranch.EmpowerId(LifeTree.DrawnFromTheWood)).Empower.Effects.Single().Damage, 1e-5f);
+        }
+
+        [Test]
+        public void CairnsMasterDropsEveryStoneAgainAndPouredBronzeHoldsAGodAQuarter()
+        {
+            var again = Upgrade.ById(SpellBranch.MasterId(EarthTree.Cairn)).Effects.Single(each => each.Do == UpgradeAction.Falling);
+            Assert.IsTrue(again.CountsNeeds && again.PerStack, "one stone again for each depth");
+            Assert.AreEqual(12f, again.Damage, 1e-5f, "the stone's own fall");
+            Assert.AreEqual(15f, again.Stagger, 1e-5f);
+
+            var holds = Upgrade.ById(MetalTree.PouredBronze).Effects.Where(each => each.Do == UpgradeAction.Hold).ToArray();
+            var plain = holds.Single(each => each.Ranks == EnemyRank.Plain);
+            var great = holds.Single(each => each.Ranks == (EnemyRank.Elite | EnemyRank.God));
+            Assert.AreEqual(plain.Seconds / 4f, great.Seconds, 1e-5f, "a quarter on a god or elite");
+            Assert.IsTrue(great.Exact);
+
+            var elite = new AfflictionSet { Reactions = new ReactionEngine((who, pair, laid) => { }, () => 0), FreezeScale = 0.4f };
+            Assert.IsTrue(elite.Hold(0.3f, true));
+            Assert.AreEqual(0.3f, elite.HeldLeft, 1e-5f, "held as asked, not shortened again");
+            var other = new AfflictionSet { Reactions = new ReactionEngine((who, pair, laid) => { }, () => 0), FreezeScale = 0.4f };
+            Assert.IsTrue(other.Hold(0.3f));
+            Assert.AreEqual(0.12f, other.HeldLeft, 1e-5f, "a plain hold is its share");
+        }
+
+        [Test]
+        public void WeighedMakesCriticalBlowsHarderForEachMark()
+        {
+            var weighed = Upgrade.ById(LightTree.Weighed);
+            var mod = weighed.Stats.Single(each => each.Stat == PlayerStat.CritDamage);
+            Assert.AreEqual(AfflictionKind.Marked, mod.Against);
+            Assert.IsTrue(mod.PerDepth);
+            Assert.IsEmpty(weighed.Effects ?? new UpgradeEffect[0], "no boon when a mark fills any more");
+
+            var stats = new PlayerStats();
+            stats.AddLearned(mod);
+            var target = new AfflictionSet { Reactions = new ReactionEngine((who, pair, laid) => { }, () => 0) };
+            Assert.AreEqual(0f, stats.Against(PlayerStat.CritDamage, target), 1e-5f, "unmarked: nothing");
+            target.Lay(AfflictionKind.Marked, 1, 0f, 1f, LaySource.Weapon, null);
+            Assert.AreEqual(0.1f, stats.Against(PlayerStat.CritDamage, target), 1e-5f, "one Mark");
+            stats.AddLearned(new StatMod(PlayerStat.CritDamage, 0.2f, AfflictionKind.Marked));
+            Assert.AreEqual(0.3f, stats.Against(PlayerStat.CritDamage, target), 1e-5f, "a plain one counts once");
         }
     }
 }

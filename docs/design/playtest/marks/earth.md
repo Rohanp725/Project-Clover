@@ -97,11 +97,9 @@ Rise's rocks, a pillar, a heap of rubble.
 
 **When it happens.** When you cast it after standing still for one second (not walking, dodging or stepping). Cairn must be in a spell slot.
 
-**The numbers.** 3 Shards. You get 20 mana back. A second fall hits each shaken enemy 0.8 seconds after you cast it, for 24 damage and 30 stagger.
+**The numbers.** 3 Shards. You get 20 mana back. Every stone falls on each shaken enemy a second time, 0.8 seconds after you cast it: one more stone for each depth of Tremor it had, each for 12 damage and 15 stagger.
 
 **Works with.** Rooted, Immovable, Heavy Hand, and Mountain Stance, which keeps you standing still.
-
-**Not built yet.** Every stone should hit twice (for now there is a second fall worth two stones).
 
 **Example.** Hold your ground through a soldier's string of blows, then stamp. You get twice the stones, and half the cost back for the next one.
 

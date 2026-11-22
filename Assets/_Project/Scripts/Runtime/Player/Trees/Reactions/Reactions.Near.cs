@@ -218,11 +218,12 @@ namespace Clover.Player.Trees
                 new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = SunkInSand, By = StruckBy.Heavy, Do = UpgradeAction.Hold, Seconds = 0.5f }));
 
             // Life and Metal (17). Iron thorns grow out of it for 6 s; each weapon blow snaps one off and it flies at the
-            // nearest other enemy within 6 m: 6 damage, Seeded and a notch. Three thorns.
-            // NEEDS: a count set from depth: one thorn for each notch it carried (three at most); three are built.
+            // nearest other enemy within 6 m: 6 damage, Seeded and a notch. One thorn for each notch it carried, three at most
+            // (the notches counted, not spent: ConditionSpec.BlowsByStacks).
             to.Add(Reaction(AfflictionKind.Seeded, AfflictionKind.Sundered,
                 "Seeded meets Sundered: iron thorns grow through its armour for 6 s. Each of your weapon blows snaps one off at the nearest enemy within 6 m, 6, Seeded and a notch.",
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Thorns, Seconds = 6f, Blows = 3 } },
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Sundered, CountOnly = true },
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, PerStack = true, State = new ConditionSpec { Id = Thorns, Seconds = 6f, Blows = 3, BlowsByStacks = true } },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Thorns, By = StruckBy.Weapon, Do = UpgradeAction.Arc, FromTarget = true, Count = 1, Reach = 6f, Damage = 6f,
                     Affliction = AfflictionKind.Seeded, Stacks = 1 },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Thorns, By = StruckBy.Weapon, Do = UpgradeAction.Pass, Reach = 6f, Affliction = AfflictionKind.Sundered, Stacks = 1 }));

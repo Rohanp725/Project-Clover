@@ -186,25 +186,25 @@ namespace Clover.Player.Trees
 
             // Red Harvest rebuilt (its id kept): the garden is the price, not health. The kneel is a still nova; every grown
             // thing within 12 m bursts in thorns as it withers (BurstGrown's Reach), and the green blood is two timed boons.
-            // NEEDS: the window as 1.5 s for each grown thing withered, 10 s at most (count-from-depth), and the 0.5 s kneel.
-            // Until then, cast within four metres of something you grew, the window is six seconds.
+            // The window is 1.5 s for each grown thing withered, 10 s at most (UpgradeEffect.SecondsEach after the BurstGrown, which
+            // counts them); nothing withered, no window. NEEDS: the 0.5 s kneel (form-pieces).
             SpellBranch.Add(to, E, DrawnFromTheWood, "Drawn From the Wood", SpellRole.Breaker, BranchPattern.LeftA, Ripening, SpellForms.Nova,
                 new SpellSpec { Radius = 1f, Damage = 0f, Stagger = 0f, Stacks = 0 },
                 "You kneel, and every grown thing of yours within twelve metres withers into you. As each withers it bursts in thorns, 12 damage and Seeded, and gives a second and a half of green blood, ten seconds at most: every weapon blow is critical and mends a fifth of its damage. The garden you grew is the price.",
                 UpgradeIcons.Heart,
                 // The thorns doing 16 are the Learn's own, set by the Empower (empower-effects).
-                new Empower { Cooldown = 10f, Effects = new[] { new EffectChange { Index = 2, Damage = 16f } } },
+                new Empower { Cooldown = 10f, Effects = new[] { new EffectChange { Index = 0, Damage = 16f } } },
                 "Drawn From the Wood waits 10 seconds, not 12, and its thorns do 16.",
-                // The ring is ground of your own (World.OwnGrounds.Blood): the window's two boons are set aside (SetsAside 0, 1) for
+                // The ring is ground of your own (World.OwnGrounds.Blood): the window's two boons are set aside (SetsAside 1, 2) for
                 // the same numbers held only while you stand in the ring (StatWhen.InOwnBlood), as long as it lies.
-                new ShapeDef { Name = "Blood in the Furrow", SetsAside = new[] { 0, 1 },
+                new ShapeDef { Name = "Blood in the Furrow", SetsAside = new[] { 1, 2 },
                     Description = "The green blood soaks into the ground where you knelt, a ring eight metres across for as long as it lasts, and everything in it is Seeded each second. Fight in a place, not round yourself.",
                     Stats = new[] { new StatMod(PlayerStat.CritChance, 1f, StatWhen.InOwnBlood), new StatMod(PlayerStat.Leech, 0.2f, StatWhen.InOwnBlood) },
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Hazard, At = EffectAt.Self, Shape = HazardShape.Patch, Radius = 4f, Seconds = 6f, Interval = 1f, Damage = 1f, Affliction = AfflictionKind.Seeded, Stacks = 1,
                         Ground = Clover.World.OwnGrounds.Blood } } },
-                // Nothing withers (ShapeDef.SetsAside: the Learn's withering burst), and it takes a quarter of your present health
+                // Nothing withers (ShapeDef.SetsAside: the Learn's withering burst and the green blood it gives), and it takes a quarter of your present health
                 // (SpellSpec.HealthShare). What you grow in the next eight seconds strikes twice as hard.
-                new ShapeDef { Name = "Feed the Ground", Form = SpellForms.Nova, SetsAside = new[] { 2 },
+                new ShapeDef { Name = "Feed the Ground", Form = SpellForms.Nova, SetsAside = new[] { 0, 1, 2 },
                     Description = "The one place Life pays in blood. Nothing withers: you give a quarter of your present health to your garden, and for eight seconds everything you have grown within twelve metres strikes twice as hard and twice as often.",
                     Spell = new SpellSpec { Radius = 1f, Damage = 0f, Stagger = 0f, Stacks = 0, HealthShare = 0.25f },
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Boon, Stat = PlayerStat.GrownDamage, Amount = 1f, Seconds = 8f } } },
@@ -215,9 +215,9 @@ namespace Clover.Player.Trees
                 "Cast it within a second of being struck, and the price comes from the grey health that blow left: nothing withers, each still gives its time, and Feed the Ground takes no real health.",
                 learnEffects: new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, While = StatWhen.NearGrown, Do = UpgradeAction.Boon, Stat = PlayerStat.CritChance, Amount = 1f, Seconds = 6f },
-                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, While = StatWhen.NearGrown, Do = UpgradeAction.Boon, Stat = PlayerStat.Leech, Amount = 0.2f, Seconds = 6f },
                     new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.BurstGrown, Reach = 12f, Damage = 12f, Stagger = 0f, Radius = 2f, Affliction = AfflictionKind.Seeded, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Boon, Stat = PlayerStat.CritChance, Amount = 1f, Seconds = 10f, SecondsEach = 1.5f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Boon, Stat = PlayerStat.Leech, Amount = 0.2f, Seconds = 10f, SecondsEach = 1.5f },
                 });
 
             // Within 4 m of something you grew you are unshaken (PlayerStat.Unshaken while StatWhen.NearGrown): never thrown or

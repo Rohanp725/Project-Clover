@@ -505,18 +505,24 @@ namespace Clover.Gameplay
         /// <see cref="GodHolds"/>: a moment, only when nothing already stops it and its guard is over, and never made
         /// longer while it lasts. False when it did not take.
         /// </summary>
-        public bool Hold(float seconds)
+        public bool Hold(float seconds) => Hold(seconds, false);
+
+        /// <summary>
+        /// As <see cref="Hold(float)"/>; <paramref name="exact"/> holds the time asked as it is, already the share a mark gives
+        /// an elite or a god (Poured Bronze: a quarter), with a god's cap and guard still kept.
+        /// </summary>
+        public bool Hold(float seconds, bool exact)
         {
             if (seconds <= 0f) return false;
             var phase = GodPhase;
             if (phase == GodPhase.None)
             {
-                if (!CanFreeze || HoldsRefused) return false;
-                HeldLeft = Math.Max(HeldLeft, seconds * FreezeScale);
+                if (HoldsRefused || (!CanFreeze && !exact)) return false;
+                HeldLeft = Math.Max(HeldLeft, exact ? seconds : seconds * FreezeScale);
                 return HeldLeft > 0f;
             }
             if (!GodMayStop) return false;
-            HeldLeft = GodHolds.Seconds(seconds, phase);
+            HeldLeft = exact ? Math.Min(seconds, GodHolds.Cap(phase)) : GodHolds.Seconds(seconds, phase);
             return HeldLeft > 0f;
         }
 

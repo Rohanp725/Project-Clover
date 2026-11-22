@@ -58,6 +58,8 @@ namespace Clover.Gameplay
         public ConditionBlow EndsWith;
         /// <summary>It ends once it has taken this many weapon blows, after answering the last (Logan Stone's third); 0 for no limit.</summary>
         public int Blows;
+        /// <summary>Its Blows are the most: it is set with one blow for each stack its effect counted, Blows at most (Iron Thorns: a thorn a notch, three at most).</summary>
+        public bool BlowsByStacks;
         /// <summary>
         /// What it is, when a shape sets it under a name of its own: the plain reaction's name for the same state (Hot
         /// Shards' crack is a <c>thermalshock.cracked</c>). A mark that asks for an enemy in a condition another mark set

@@ -127,6 +127,10 @@ namespace Clover.Player
         /// <summary>The chance that a blow of the weapon is critical, and what a critical blow multiplies its damage by.</summary>
         public float CritChance;
         public float CritMultiplier = 1.5f;
+
+        /// <summary>What a critical blow on <paramref name="target"/> multiplies by: the standing multiplier, and what a mark adds against what it carries (Weighed: 0.1 a Mark).</summary>
+        public float CritOn(Clover.Gameplay.IAfflictable target) =>
+            CritMultiplier + (Stats != null && target != null ? Stats.Against(PlayerStat.CritDamage, target.Afflictions) : 0f);
         /// <summary>The affliction every blow of the weapon lays once the element's root is learned, and how deep.</summary>
         public AfflictionKind WeaponAffliction;
         public int WeaponAfflictionStacks;
@@ -1096,7 +1100,7 @@ namespace Clover.Player
             if (Stats != null && carrier != null) damage *= Mathf.Max(0.1f, 1f + Stats.Against(PlayerStat.SpellDamage, carrier.Afflictions));
             // A reaction's own blow, harder on what carries what a mark asks (Every Crack Rings: the notched), and critical when a mark makes it so.
             if (blow.ReactionOf > 0 && Stats != null && carrier != null) damage *= Mathf.Max(0.1f, 1f + Stats.Against(PlayerStat.ReactionDamageOn, carrier.Afflictions));
-            if (critical) damage *= CritMultiplier;
+            if (critical) damage *= CritOn(carrier);
             if (blow.Affliction == AfflictionKind.Burn)
             {
                 // A burn is given in seconds, with or without depth.
@@ -2397,7 +2401,7 @@ namespace Clover.Player
                     staggerShare = Mathf.Max(0.1f, 1f + Stats.Blow(PlayerStat.StaggerDealt, heavy, critical, endsChain) + Stats.Against(PlayerStat.StaggerDealt, carried)
                         + (inAir ? Stats.InAir(PlayerStat.StaggerDealt) + (heavy ? Stats.InAirHeavy(PlayerStat.StaggerDealt) : 0f) : 0f));
                 }
-                if (critical) damage *= CritMultiplier;
+                if (critical) damage *= CritOn(afflictable);
                 // A back is a back: the knives' blows count for more on it. The finisher has its own number.
                 bool fromBehind = false;
                 if (Weapon.BackMultiplier != 1f && !Combo.IsFinishing && target is Component back)

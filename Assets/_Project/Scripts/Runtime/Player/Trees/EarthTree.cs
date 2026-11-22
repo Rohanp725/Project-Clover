@@ -128,12 +128,12 @@ namespace Clover.Player.Trees
                     Description = "The stones do not stay. Each enemy's heap is flung at once at the nearest other enemy within five metres: 12 damage and Tremor a stone. One shaken enemy shakes the next.",
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = T, CountsNeeds = true, PerStack = true, Do = UpgradeAction.Arc, FromTarget = true, Count = 1, Reach = 5f, Damage = 12f, Stagger = 5f, Affliction = T, Stacks = 1 } } },
                 "Opens two shapes of Cairn, chosen at any rest fire: Unbroken Cairn, heaps your heavy blow bursts, or Thrown Stones, heaps flung on to the next enemy.",
-                // Cast after standing still for a second (StatWhen.StoodStill): half the mana back. NEEDS: every stone striking twice
-                // (count-from-depth); until then a second fall of two stones' worth lands on each.
+                // Cast after standing still for a second (StatWhen.StoodStill): half the mana back, and every stone strikes twice: a
+                // second fall of the same stones, counted by the Tremor as it is cast (CountsNeeds, PerStack), 0.4 s after the first.
                 new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, While = StatWhen.StoodStill, Do = UpgradeAction.Mana, Amount = 20f },
-                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, While = StatWhen.StoodStill, Needs = T, Do = UpgradeAction.Falling, Radius = 0.8f, Delay = 0.8f, Damage = 24f, Stagger = 30f, Stacks = 0 },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, While = StatWhen.StoodStill, Needs = T, CountsNeeds = true, PerStack = true, Do = UpgradeAction.Falling, Radius = 0.8f, Delay = 0.8f, Damage = 12f, Stagger = 15f, Stacks = 0 },
                 },
                 "Cast it after standing still for a second, and every stone strikes twice and half the mana comes back.",
                 learnEffects: new[]

@@ -34,11 +34,11 @@ the steel you throw and plant: Flung Blade, the blades of Grave of Swords.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). Bronze only pours into enemies that have Sundered.
 
-**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 12 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes it 15 damage for each notch.) It reaches every enemy within 8 metres, 0.4 seconds after you cast it. Each notched enemy takes 10 damage, plus 12 damage and 15 stagger for each notch it had (46 damage and 45 stagger at three). Its notches are used up, and it is held for 0.4 seconds for each notch it had (1.2 seconds at three; a god or an elite for 0.4 of that).
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 12 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes it 15 damage for each notch.) It reaches every enemy within 8 metres, 0.4 seconds after you cast it. Each notched enemy takes 10 damage, plus 12 damage and 15 stagger for each notch it had (46 damage and 45 stagger at three). Its notches are used up, and it is held for 0.4 seconds for each notch it had (1.2 seconds at three). A god or an elite is held for a quarter of that: 0.1 seconds for each notch.
 
 **Works with.** Sunder, Open Line and Forged Answer (they notch on a perfect guard), Every Crack Rings, the charged blade (its charged blows notch), and Grave of Swords and Returning Edge, which notch a crowd for it to pour into.
 
-**Not built yet.** A god or an elite should be held for a quarter of the time. For now, it is held for 0.4 of it. The pot of bronze tipping over each enemy and the crust cooling on it aren't shown yet.
+**Not built yet.** The pot of bronze tipping over each enemy and the crust cooling on it aren't shown yet.
 
 **Example.** Give three soldiers three notches each with heavy blows and Grave of Swords, then pour. Each takes 46 damage and is held while you choose which to finish.
 

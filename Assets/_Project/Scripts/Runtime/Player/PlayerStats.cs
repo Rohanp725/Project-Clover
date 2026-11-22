@@ -130,7 +130,8 @@ namespace Clover.Player
             if (againstCount == 0 || target == null) return 0f;
             float sum = 0f;
             for (int i = 0; i < againstCount; i++)
-                if (against[i].Stat == stat && target.Has(against[i].Against)) sum += against[i].Amount;
+                if (against[i].Stat == stat && target.Has(against[i].Against))
+                    sum += against[i].PerDepth ? against[i].Amount * target.Stacks(against[i].Against) : against[i].Amount;
             return sum;
         }
 
