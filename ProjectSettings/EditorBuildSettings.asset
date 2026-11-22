@@ -15,4 +15,4 @@ EditorBuildSettings:
     path: Assets/_Project/Scenes/Summit.unity
     guid: d5c365a6d946ca845943a79783aa64ee
   m_configObjects:
-    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 87b023e3d5962054fbe54d72eddcc3d7, type: 3}

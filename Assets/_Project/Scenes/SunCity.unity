@@ -474,6 +474,8 @@ MonoBehaviour:
   LandFrom: 1.7
   BeatsPerSecond: 2.5
   BeatSwell: 0.16
+  OverBars: 0.55
+  OverHeadSize: 0.65
 --- !u!1 &2829325
 GameObject:
   m_ObjectHideFlags: 0
@@ -10580,6 +10582,8 @@ MonoBehaviour:
   LandFrom: 1.7
   BeatsPerSecond: 2.5
   BeatSwell: 0.16
+  OverBars: 0.55
+  OverHeadSize: 0.65
 --- !u!1 &22941493
 GameObject:
   m_ObjectHideFlags: 0
@@ -10846,6 +10850,8 @@ MonoBehaviour:
   LandFrom: 1.7
   BeatsPerSecond: 2.5
   BeatSwell: 0.16
+  OverBars: 0.55
+  OverHeadSize: 0.65
 --- !u!1 &24746884
 GameObject:
   m_ObjectHideFlags: 0
@@ -29134,6 +29140,8 @@ MonoBehaviour:
   LandFrom: 1.7
   BeatsPerSecond: 2.5
   BeatSwell: 0.16
+  OverBars: 0.55
+  OverHeadSize: 0.65
 --- !u!1 &70101414
 GameObject:
   m_ObjectHideFlags: 0
@@ -78381,6 +78389,8 @@ MonoBehaviour:
   LandFrom: 1.7
   BeatsPerSecond: 2.5
   BeatSwell: 0.16
+  OverBars: 0.55
+  OverHeadSize: 0.65
 --- !u!1 &195779982
 GameObject:
   m_ObjectHideFlags: 0
@@ -93574,6 +93584,8 @@ MonoBehaviour:
   LandFrom: 1.7
   BeatsPerSecond: 2.5
   BeatSwell: 0.16
+  OverBars: 0.55
+  OverHeadSize: 0.65
 --- !u!1 &232371103
 GameObject:
   m_ObjectHideFlags: 0
@@ -126984,6 +126996,8 @@ MonoBehaviour:
   LandFrom: 1.7
   BeatsPerSecond: 2.5
   BeatSwell: 0.16
+  OverBars: 0.55
+  OverHeadSize: 0.65
 --- !u!1 &285163733
 GameObject:
   m_ObjectHideFlags: 0
@@ -137865,6 +137879,8 @@ MonoBehaviour:
   LandFrom: 1.7
   BeatsPerSecond: 2.5
   BeatSwell: 0.16
+  OverBars: 0.55
+  OverHeadSize: 0.65
 --- !u!1 &307324077
 GameObject:
   m_ObjectHideFlags: 0
@@ -196974,6 +196990,8 @@ MonoBehaviour:
   LandFrom: 1.7
   BeatsPerSecond: 2.5
   BeatSwell: 0.16
+  OverBars: 0.55
+  OverHeadSize: 0.65
 --- !u!1 &445011634
 GameObject:
   m_ObjectHideFlags: 0
@@ -220609,6 +220627,7 @@ MonoBehaviour:
     StaminaPerDamage: 0.9
     ChipFraction: 0.35
     ArcDegrees: 200
+    RedWindowBonus: 0
   Flasks:
     Maximum: 3
     HealAmount: 45
@@ -220897,6 +220916,7 @@ MonoBehaviour:
   StatStagger: 1
   StatMana: 1
   StatSwing: 1
+  StatPoise: 0
   StatAfflicted: 1
   CritChance: 0
   CritMultiplier: 1.5
@@ -220944,6 +220964,7 @@ MonoBehaviour:
   SpinDegreesPerSecond: 24
   Width: 2.1
   Height: 0.05
+  FlareBrightness: 0.95
 --- !u!114 &476403645
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -260049,6 +260070,8 @@ MonoBehaviour:
   LandFrom: 1.7
   BeatsPerSecond: 2.5
   BeatSwell: 0.16
+  OverBars: 0.55
+  OverHeadSize: 0.65
 --- !u!1 &554105209
 GameObject:
   m_ObjectHideFlags: 0
@@ -263154,6 +263177,8 @@ MonoBehaviour:
   LandFrom: 1.7
   BeatsPerSecond: 2.5
   BeatSwell: 0.16
+  OverBars: 0.55
+  OverHeadSize: 0.65
 --- !u!1 &558440183
 GameObject:
   m_ObjectHideFlags: 0
@@ -269970,6 +269995,8 @@ MonoBehaviour:
   LandFrom: 1.7
   BeatsPerSecond: 2.5
   BeatSwell: 0.16
+  OverBars: 0.55
+  OverHeadSize: 0.65
 --- !u!1 &571894842
 GameObject:
   m_ObjectHideFlags: 0
@@ -281794,6 +281821,8 @@ MonoBehaviour:
   LandFrom: 1.7
   BeatsPerSecond: 2.5
   BeatSwell: 0.16
+  OverBars: 0.55
+  OverHeadSize: 0.65
 --- !u!1 &607585529
 GameObject:
   m_ObjectHideFlags: 0
@@ -282401,6 +282430,8 @@ MonoBehaviour:
   LandFrom: 1.7
   BeatsPerSecond: 2.5
   BeatSwell: 0.16
+  OverBars: 0.55
+  OverHeadSize: 0.65
 --- !u!1 &609748922
 GameObject:
   m_ObjectHideFlags: 0
@@ -287154,6 +287185,8 @@ MonoBehaviour:
   LandFrom: 1.7
   BeatsPerSecond: 2.5
   BeatSwell: 0.16
+  OverBars: 0.55
+  OverHeadSize: 0.65
 --- !u!1 &627467312
 GameObject:
   m_ObjectHideFlags: 0
@@ -305007,6 +305040,8 @@ MonoBehaviour:
   LandFrom: 1.7
   BeatsPerSecond: 2.5
   BeatSwell: 0.16
+  OverBars: 0.55
+  OverHeadSize: 0.65
 --- !u!1 &683944910
 GameObject:
   m_ObjectHideFlags: 0
@@ -341540,6 +341575,8 @@ MonoBehaviour:
   LandFrom: 1.7
   BeatsPerSecond: 2.5
   BeatSwell: 0.16
+  OverBars: 0.55
+  OverHeadSize: 0.65
 --- !u!1 &771212712
 GameObject:
   m_ObjectHideFlags: 0
@@ -365740,6 +365777,8 @@ MonoBehaviour:
   LandFrom: 1.7
   BeatsPerSecond: 2.5
   BeatSwell: 0.16
+  OverBars: 0.55
+  OverHeadSize: 0.65
 --- !u!1 &822925557
 GameObject:
   m_ObjectHideFlags: 0
@@ -380529,6 +380568,8 @@ MonoBehaviour:
   LandFrom: 1.7
   BeatsPerSecond: 2.5
   BeatSwell: 0.16
+  OverBars: 0.55
+  OverHeadSize: 0.65
 --- !u!1 &858432807
 GameObject:
   m_ObjectHideFlags: 0
@@ -414396,6 +414437,8 @@ MonoBehaviour:
   LandFrom: 1.7
   BeatsPerSecond: 2.5
   BeatSwell: 0.16
+  OverBars: 0.55
+  OverHeadSize: 0.65
 --- !u!1 &951088087
 GameObject:
   m_ObjectHideFlags: 0
@@ -613337,6 +613380,8 @@ MonoBehaviour:
   LandFrom: 1.7
   BeatsPerSecond: 2.5
   BeatSwell: 0.16
+  OverBars: 0.55
+  OverHeadSize: 0.65
 --- !u!1 &1055075845
 GameObject:
   m_ObjectHideFlags: 0
@@ -620775,6 +620820,8 @@ MonoBehaviour:
   LandFrom: 1.7
   BeatsPerSecond: 2.5
   BeatSwell: 0.16
+  OverBars: 0.55
+  OverHeadSize: 0.65
 --- !u!1 &1074915798
 GameObject:
   m_ObjectHideFlags: 0
@@ -670557,6 +670604,8 @@ MonoBehaviour:
   LandFrom: 1.7
   BeatsPerSecond: 2.5
   BeatSwell: 0.16
+  OverBars: 0.55
+  OverHeadSize: 0.65
 --- !u!1 &1200975936
 GameObject:
   m_ObjectHideFlags: 0
@@ -670733,6 +670782,8 @@ MonoBehaviour:
   LandFrom: 1.7
   BeatsPerSecond: 2.5
   BeatSwell: 0.16
+  OverBars: 0.55
+  OverHeadSize: 0.65
 --- !u!1 &1201468869
 GameObject:
   m_ObjectHideFlags: 0
@@ -692452,6 +692503,8 @@ MonoBehaviour:
   LandFrom: 1.7
   BeatsPerSecond: 2.5
   BeatSwell: 0.16
+  OverBars: 0.55
+  OverHeadSize: 0.65
 --- !u!1 &1238517576
 GameObject:
   m_ObjectHideFlags: 0
@@ -704764,6 +704817,8 @@ MonoBehaviour:
   LandFrom: 1.7
   BeatsPerSecond: 2.5
   BeatSwell: 0.16
+  OverBars: 0.55
+  OverHeadSize: 0.65
 --- !u!1 &1267884813
 GameObject:
   m_ObjectHideFlags: 0
@@ -706217,6 +706272,8 @@ MonoBehaviour:
   LandFrom: 1.7
   BeatsPerSecond: 2.5
   BeatSwell: 0.16
+  OverBars: 0.55
+  OverHeadSize: 0.65
 --- !u!1 &1275719031
 GameObject:
   m_ObjectHideFlags: 0
@@ -708643,6 +708700,8 @@ MonoBehaviour:
   LandFrom: 1.7
   BeatsPerSecond: 2.5
   BeatSwell: 0.16
+  OverBars: 0.55
+  OverHeadSize: 0.65
 --- !u!4 &1276016181
 Transform:
   m_ObjectHideFlags: 0
@@ -717960,6 +718019,8 @@ MonoBehaviour:
   LandFrom: 1.7
   BeatsPerSecond: 2.5
   BeatSwell: 0.16
+  OverBars: 0.55
+  OverHeadSize: 0.65
 --- !u!1 &1291715545
 GameObject:
   m_ObjectHideFlags: 0
@@ -723706,6 +723767,8 @@ MonoBehaviour:
   LandFrom: 1.7
   BeatsPerSecond: 2.5
   BeatSwell: 0.16
+  OverBars: 0.55
+  OverHeadSize: 0.65
 --- !u!1 &1300907710
 GameObject:
   m_ObjectHideFlags: 0
@@ -778702,6 +778765,8 @@ MonoBehaviour:
   LandFrom: 1.7
   BeatsPerSecond: 2.5
   BeatSwell: 0.16
+  OverBars: 0.55
+  OverHeadSize: 0.65
 --- !u!1 &1419700724
 GameObject:
   m_ObjectHideFlags: 0
@@ -795806,6 +795871,8 @@ MonoBehaviour:
   LandFrom: 1.7
   BeatsPerSecond: 2.5
   BeatSwell: 0.16
+  OverBars: 0.55
+  OverHeadSize: 0.65
 --- !u!1 &1475397175
 GameObject:
   m_ObjectHideFlags: 0
@@ -801220,6 +801287,8 @@ MonoBehaviour:
   LandFrom: 1.7
   BeatsPerSecond: 2.5
   BeatSwell: 0.16
+  OverBars: 0.55
+  OverHeadSize: 0.65
 --- !u!1 &1482223838
 GameObject:
   m_ObjectHideFlags: 0
@@ -805351,6 +805420,8 @@ MonoBehaviour:
   LandFrom: 1.7
   BeatsPerSecond: 2.5
   BeatSwell: 0.16
+  OverBars: 0.55
+  OverHeadSize: 0.65
 --- !u!1 &1492671152
 GameObject:
   m_ObjectHideFlags: 0
@@ -815175,6 +815246,8 @@ MonoBehaviour:
   LandFrom: 1.7
   BeatsPerSecond: 2.5
   BeatSwell: 0.16
+  OverBars: 0.55
+  OverHeadSize: 0.65
 --- !u!1 &1521556844
 GameObject:
   m_ObjectHideFlags: 0
@@ -836264,6 +836337,8 @@ MonoBehaviour:
   LandFrom: 1.7
   BeatsPerSecond: 2.5
   BeatSwell: 0.16
+  OverBars: 0.55
+  OverHeadSize: 0.65
 --- !u!1 &1603682642
 GameObject:
   m_ObjectHideFlags: 0
@@ -836545,6 +836620,8 @@ MonoBehaviour:
   LandFrom: 1.7
   BeatsPerSecond: 2.5
   BeatSwell: 0.16
+  OverBars: 0.55
+  OverHeadSize: 0.65
 --- !u!1 &1606288268
 GameObject:
   m_ObjectHideFlags: 0
@@ -864401,6 +864478,8 @@ MonoBehaviour:
   LandFrom: 1.7
   BeatsPerSecond: 2.5
   BeatSwell: 0.16
+  OverBars: 0.55
+  OverHeadSize: 0.65
 --- !u!1 &1666591124
 GameObject:
   m_ObjectHideFlags: 0
@@ -875454,6 +875533,74 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     vectorLabel1_3: W
+--- !u!1 &1680814977
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1680814980}
+  - component: {fileID: 1680814979}
+  - component: {fileID: 1680814978}
+  m_Layer: 0
+  m_Name: Menus
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1680814978
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1680814977}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df1819461142c5148a4e3246fbcc70aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.UI.Toolkit.LoadoutScreen
+--- !u!114 &1680814979
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1680814977}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
+  m_PanelSettings: {fileID: 11400000, guid: a0a1a80ebdd01f84db8bc8f4d5a02812, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 9197481963319205126, guid: 0b37c22b711d053448a35b8d07e8e377, type: 3}
+  m_SortingOrder: 0
+  m_Position: 0
+  m_WorldSpaceSizeMode: 1
+  m_WorldSpaceWidth: 1920
+  m_WorldSpaceHeight: 1080
+  m_PivotReferenceSize: 0
+  m_Pivot: 0
+  m_WorldSpaceCollider: {fileID: 0}
+--- !u!4 &1680814980
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1680814977}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1681028510
 GameObject:
   m_ObjectHideFlags: 0
@@ -920928,6 +921075,8 @@ MonoBehaviour:
   LandFrom: 1.7
   BeatsPerSecond: 2.5
   BeatSwell: 0.16
+  OverBars: 0.55
+  OverHeadSize: 0.65
 --- !u!1 &1807126571
 GameObject:
   m_ObjectHideFlags: 0
@@ -935699,6 +935848,8 @@ MonoBehaviour:
   LandFrom: 1.7
   BeatsPerSecond: 2.5
   BeatSwell: 0.16
+  OverBars: 0.55
+  OverHeadSize: 0.65
 --- !u!1 &1842484652
 GameObject:
   m_ObjectHideFlags: 0
@@ -963043,6 +963194,8 @@ MonoBehaviour:
   LandFrom: 1.7
   BeatsPerSecond: 2.5
   BeatSwell: 0.16
+  OverBars: 0.55
+  OverHeadSize: 0.65
 --- !u!1 &1911123101
 GameObject:
   m_ObjectHideFlags: 0
@@ -968824,6 +968977,8 @@ MonoBehaviour:
   LandFrom: 1.7
   BeatsPerSecond: 2.5
   BeatSwell: 0.16
+  OverBars: 0.55
+  OverHeadSize: 0.65
 --- !u!1 &1920228568
 GameObject:
   m_ObjectHideFlags: 0
@@ -972394,6 +972549,8 @@ MonoBehaviour:
   LandFrom: 1.7
   BeatsPerSecond: 2.5
   BeatSwell: 0.16
+  OverBars: 0.55
+  OverHeadSize: 0.65
 --- !u!1 &1941689128
 GameObject:
   m_ObjectHideFlags: 0
@@ -982894,6 +983051,8 @@ MonoBehaviour:
   LandFrom: 1.7
   BeatsPerSecond: 2.5
   BeatSwell: 0.16
+  OverBars: 0.55
+  OverHeadSize: 0.65
 --- !u!1 &1967402645
 GameObject:
   m_ObjectHideFlags: 0
@@ -995061,6 +995220,8 @@ MonoBehaviour:
   LandFrom: 1.7
   BeatsPerSecond: 2.5
   BeatSwell: 0.16
+  OverBars: 0.55
+  OverHeadSize: 0.65
 --- !u!1 &1998101151
 GameObject:
   m_ObjectHideFlags: 0
@@ -1003563,6 +1003724,8 @@ MonoBehaviour:
   LandFrom: 1.7
   BeatsPerSecond: 2.5
   BeatSwell: 0.16
+  OverBars: 0.55
+  OverHeadSize: 0.65
 --- !u!1 &2019462682
 GameObject:
   m_ObjectHideFlags: 0
@@ -1040010,6 +1040173,8 @@ MonoBehaviour:
   LandFrom: 1.7
   BeatsPerSecond: 2.5
   BeatSwell: 0.16
+  OverBars: 0.55
+  OverHeadSize: 0.65
 --- !u!1 &2117422304
 GameObject:
   m_ObjectHideFlags: 0
@@ -1047292,3 +1047457,4 @@ SceneRoots:
   - {fileID: 235540009}
   - {fileID: 24746886}
   - {fileID: 1509682806}
+  - {fileID: 1680814980}

@@ -193,9 +193,14 @@ namespace Clover.UI
             {
                 case RestEntry.Hand:
                 {
-                    // LOADOUT HOOK (ui_rest_fire_plan.md 5.1, U3 and U4): once the Menus object carries the Loadout's
-                    // UIDocument, this case opens Toolkit.LoadoutScreen.Ensure().Open() instead, and Update's wait below
-                    // reads LoadoutScreen.Showing and LoadoutScreen.BusyThisFrame where it reads HandMenu's. Not wired yet.
+                    // The Loadout (ui_rest_fire_plan.md 5.1, U3 and U4) on the scene's Menus object; a scene built before
+                    // it has one keeps the old Hand until it is rebuilt (UiToolkitBuilder.PlaceMenus).
+                    var loadout = Toolkit.LoadoutScreen.Ensure();
+                    if (loadout != null && loadout.Open())
+                    {
+                        Leave(RestEntry.Hand);
+                        return true;
+                    }
                     var hand = HandMenu.Ensure();
                     if (hand == null || !hand.Open()) return false;
                     Leave(RestEntry.Hand);
@@ -281,8 +286,8 @@ namespace Clover.UI
             {
                 // Back in front once the screen opened from here has closed (and on the frame after, so its last press is its own).
                 bool stillOpen = waiting == RestEntry.Chart ? UpgradeMenu.Instance != null && UpgradeMenu.Instance.IsOpen
-                    : waiting == RestEntry.Shapes ? ShapeMenu.Showing : HandMenu.Showing;
-                if (!stillOpen && !GuidePage.BusyThisFrame && !HandMenu.BusyThisFrame && !ShapeMenu.BusyThisFrame) Return();
+                    : waiting == RestEntry.Shapes ? ShapeMenu.Showing : HandMenu.Showing || Toolkit.LoadoutScreen.Showing;
+                if (!stillOpen && !GuidePage.BusyThisFrame && !HandMenu.BusyThisFrame && !Toolkit.LoadoutScreen.BusyThisFrame && !ShapeMenu.BusyThisFrame) Return();
                 return;
             }
             if (Time.frameCount == openedOnFrame || moveAction == null || interactAction == null || dodgeAction == null) return;

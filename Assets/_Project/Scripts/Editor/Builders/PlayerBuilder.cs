@@ -132,6 +132,8 @@ namespace Clover.EditorTools
             cameraObject.AddComponent<Clover.World.OcclusionFader>().Configure(built.Player.transform);
 
             BuildHud(controller, built.Player.GetComponent<PlayerCombat>(), built.Player.GetComponent<PlayerDefence>(), hint);
+            // The menus over it: the Loadout opened from a rest fire (UiToolkitBuilder).
+            UiToolkitBuilder.PlaceMenus();
             BuildFeedback(built.Player, cameraObject.transform, fireLand);
             // The player's lingering effects on the ground live in the scene, not on the player.
             new GameObject("Hazards").AddComponent<Clover.World.Hazards>();
