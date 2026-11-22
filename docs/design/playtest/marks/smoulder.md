@@ -53,10 +53,10 @@ both carried.
 
 **When it happens.** Cast it from a spell slot while you carry both Dark and Fire. Press that slot's button (hold L2 and a face button, or press 1 to 4). The first time it lands, it charges your blade with Dark.
 
-**The numbers.** Mix, duo spell, 5 Shards. It costs no mana. After you cast it, you must wait 16 seconds to cast it again. Fighting with your weapon makes the wait shorter. It lands up to 8 metres ahead of you, is 4 metres across, and lasts 7 seconds. Once a second, it deals 2 damage, a Curse and a Burn to everything on it.
+**The numbers.** Mix, duo spell, 5 Shards. It costs no mana. After you cast it, you must wait 16 seconds to cast it again. Fighting with your weapon makes the wait shorter. It lands up to 8 metres ahead of you, is 4 metres across, and lasts 7 seconds. Once a second, it deals 2 damage, a Curse and a Burn to everything on it, and enemies on it walk 20% slower. Each enemy killed on it makes the lake half a metre wider and makes it last 1 second longer. A finisher on an enemy on the lake makes every smouldering enemy on the lake flare up at once.
 
 **Works with.** Smoulder and its shapes, The Sun Goes Under, Third Eye.
 
-**Example.** Open it under a pack and let them smoulder while you hold the edge.
+**Example.** Open it under a pack and let them smoulder while you hold the edge. When they are all smouldering, land a finisher on one, and the whole lake flares.
 
-**Not built yet.** It doesn't slow enemies standing on it yet, grow with each enemy killed on it, or make every smoulder flare up at once on a finisher.
+**Not built yet.** Enemies killed on it aren't shown sinking under the surface yet.

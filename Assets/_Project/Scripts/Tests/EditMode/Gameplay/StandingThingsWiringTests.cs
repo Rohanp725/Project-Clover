@@ -1519,5 +1519,35 @@ namespace Clover.Tests
             Assert.IsNull(gather.Form, "forgotten once loosed");
             Assert.IsTrue(Upgrade.ById(LightTree.Daybreak).Presses[0].Any(each => each.Do == UpgradeAction.Loose), "the second press looses it");
         }
+
+        [Test]
+        public void TheBurningLakeSlowsGrowsAndFlaresOnAFinisher()
+        {
+            var lake = Upgrade.ById(Clover.Player.Trees.Duo.SmoulderDuo.TheBurningLake);
+            string ground = Clover.Player.Trees.Duo.SmoulderDuo.LakeGround;
+            Assert.AreEqual(ground, lake.Spell.Ground, "the lake is your own ground");
+            var slow = lake.Effects.Single(each => each.State != null && each.State.Id == Clover.Player.Trees.Duo.SmoulderDuo.LakeSlowed);
+            Assert.AreEqual(0.8f, slow.State.Pace, 1e-5f, "a fifth slower");
+            Assert.Greater(slow.State.Seconds, lake.Spell.Interval, "lasting past the next bite");
+            var grow = lake.Effects.Single(each => each.Do == UpgradeAction.GrowGround);
+            Assert.AreEqual(UpgradeTrigger.Kill, grow.On);
+            Assert.AreEqual(ground, grow.TargetOnGround, "only a kill on the lake");
+            Assert.AreEqual(0.5f, grow.Amount, 1e-5f);
+            Assert.AreEqual(1f, grow.Seconds, 1e-5f);
+            var flare = lake.Effects.Single(each => each.Do == UpgradeAction.EndCondition);
+            Assert.AreEqual(UpgradeTrigger.FinisherHit, flare.On);
+            Assert.AreEqual(Reactions.Sunk, flare.Condition, "every smoulder");
+            Assert.AreEqual(ground, flare.TargetOnGround, "on the lake, and only those on it");
+            Assert.Greater(flare.EachWithin, 0f);
+
+            OwnGrounds.Lay(ground, Vector3.zero, 2f, 7f);
+            Assert.IsFalse(OwnGrounds.Under(ground, new Vector3(2.3f, 0f, 0f), 1f));
+            Assert.IsTrue(OwnGrounds.Grow(ground, new Vector3(1f, 0f, 0f), 0.5f, 1f, 1f), "a kill on it grows it");
+            Assert.IsTrue(OwnGrounds.Under(ground, new Vector3(2.3f, 0f, 0f), 1f), "half a metre wider");
+            Assert.IsTrue(OwnGrounds.Extent(ground, Vector3.zero, 1f, out float radius, out float until));
+            Assert.AreEqual(2.5f, radius, 1e-5f);
+            Assert.AreEqual(8f, until, 1e-5f, "a second longer");
+            Assert.IsFalse(OwnGrounds.Grow(ground, new Vector3(9f, 0f, 0f), 0.5f, 1f, 1f), "a kill off it does nothing");
+        }
     }
 }

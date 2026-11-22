@@ -130,6 +130,8 @@ namespace Clover.Player
         public int Lifts { get; private set; }
         /// <summary>Standing things fed a shard (Bellows, Wind Sickle): for probes.</summary>
         public int Fed { get; private set; }
+        /// <summary>Your own grounds grown (The Burning Lake): for probes.</summary>
+        public int GroundsGrown { get; private set; }
         /// <summary>Goes up whenever a count kept by a mark changes; the HUD writes <see cref="TallyText"/> again then.</summary>
         public int TallyVersion { get; private set; }
         /// <summary>The counts kept by the marks in force, as the HUD shows them: "Plates 2/3".</summary>
@@ -299,6 +301,8 @@ namespace Clover.Player
                 // The one that just died where it is done (a swollen enemy's burst) is no one to hand it to.
                 if (near is Enemy fallen && fallen.IsDead) continue;
                 if (!PlayerCombat.Carries(near, effect.OnlyCarrying)) continue;
+                // Only those standing in your ground of that name, when it names one (The Burning Lake's flare).
+                if (!string.IsNullOrEmpty(effect.TargetOnGround) && !OwnGrounds.Under(effect.TargetOnGround, near.transform.position, Time.time)) continue;
                 var each = pending;
                 each.Target = near;
                 each.At = near.transform.position;
@@ -1569,7 +1573,7 @@ namespace Clover.Player
             if (effect.StoneAtBack > 0f && (target == null || !StoneBehind(transform.position, target.transform.position, effect.StoneAtBack))) return;
             if (effect.NearStanding > 0f && !StandingThings.NearKind(transform.position, effect.NearStanding, effect.Raises)) return;
             // Only on an enemy standing in your own ground of that name (The Hag's Staff: heavy blows on its frozen disc).
-            if (!string.IsNullOrEmpty(effect.TargetOnGround) && !(target != null && OwnGrounds.Under(effect.TargetOnGround, target.transform.position, Time.time))) return;
+            if (!string.IsNullOrEmpty(effect.TargetOnGround) && !((target != null || hasAt) && OwnGrounds.Under(effect.TargetOnGround, target != null ? target.transform.position : at, Time.time))) return;
             if (effect.Needs != AfflictionKind.None || effect.Needs2 != AfflictionKind.None)
             {
                 // Asked of what the dead one carried, of the trigger's own enemy, or, when the trigger names no one, of the enemy faced.
@@ -2698,6 +2702,9 @@ namespace Clover.Player
                     });
                     break;
                 }
+                case UpgradeAction.GrowGround:
+                    if (OwnGrounds.Grow(effect.Ground, subject != null ? subject.transform.position : centre, effect.Amount, effect.Seconds, Time.time)) GroundsGrown++;
+                    break;
                 case UpgradeAction.Feed:
                 {
                     // A shard torn from the trigger's enemy goes to the whirl only when a whirl stands near (Wind Sickle).

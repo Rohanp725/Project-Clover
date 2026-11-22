@@ -16,6 +16,9 @@ namespace Clover.Player.Trees.Duo
         public const string DeepCoal = "smoulder.deepcoal";
         public const string TheSunGoesUnder = "smoulder.sungoesunder";
         public const string TheBurningLake = "smoulder.lake";
+        /// <summary>The Burning Lake's surface, your own ground while it lasts, and the slow on what stands in it.</summary>
+        public const string LakeGround = "smoulder.lake.ground";
+        public const string LakeSlowed = "smoulder.lake.slowed";
         /// <summary>The condition Night Sun sets: the fire sunk in, as the plain reaction's.</summary>
         public const string NightSun = "smoulder.nightsun";
         /// <summary>The condition Deep Coal sets while its enemy smoulders: its Burn may lie two deeper.</summary>
@@ -92,15 +95,23 @@ namespace Clover.Player.Trees.Duo
 
             // The duo spell, bought with Shards once both are carried (no god gives it): a zone on a 16 s cooldown (SpellTimings). The field form lays a lake at the aim point;
             // it Curses what stands in it (the branch's first element) and each bite lays a Burn, so all of them smoulder.
-            // NEEDS: slowing what stands in it by a fifth; an enemy killed on it drawn under, the lake growing 0.5 m and
-            // lasting 1 s longer; a finisher on it flaring every smoulder on the lake.
+            // The lake is your own ground (SpellSpec.Ground): what stands in it at each bite is slowed by a fifth (a condition set at
+            // each bite, lasting a little past the next); an enemy killed on it grows it 0.5 m and 1 s (UpgradeAction.GrowGround;
+            // the field reads its size from the ground); a finisher on it ends every smoulder on the lake at once, so each flares
+            // (EndCondition fanned to those on the ground). NEEDS: the dead drawn under the surface (looks).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = TheBurningLake, Name = "The Burning Lake", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Role = SpellRole.Opener, Requires = new[] { ThirdEye, DeepCoal }, Icon = UpgradeIcons.Wave,
                 Description = "A lake 4 m across opens at the aim point for 7 s: a still black surface, flame licking at its rim. Every enemy on it is Cursed and takes a Burn each second, so all of them smoulder.",
                 Form = SpellForms.Field,
-                Spell = new SpellSpec { Reach = 8f, Radius = 2f, Seconds = 7f, Interval = 1f, LingerDamage = 2f, Stacks = 1 },
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Burn, Stacks = 1 } },
+                Spell = new SpellSpec { Reach = 8f, Radius = 2f, Seconds = 7f, Interval = 1f, LingerDamage = 2f, Stacks = 1, Ground = LakeGround },
+                Effects = new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Burn, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = LakeSlowed, Seconds = 1.2f, Pace = 0.8f } },
+                    new UpgradeEffect { On = UpgradeTrigger.Kill, TargetOnGround = LakeGround, Do = UpgradeAction.GrowGround, Ground = LakeGround, Amount = 0.5f, Seconds = 1f },
+                    new UpgradeEffect { On = UpgradeTrigger.FinisherHit, TargetOnGround = LakeGround, Do = UpgradeAction.EndCondition, Condition = Reactions.Sunk, EachWithin = 12f, Cooldown = 0.2f },
+                },
             }, HeartPattern.Spell));
         }
 

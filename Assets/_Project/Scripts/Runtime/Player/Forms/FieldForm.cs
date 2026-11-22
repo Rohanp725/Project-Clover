@@ -32,6 +32,13 @@ namespace Clover.Player.Forms
             var marks = SpellWorks.Marks(run);
             float radius = cast.Spec.Radius;
             float seconds = Mathf.Max(0.5f, cast.Spec.Seconds);
+            // A field that is ground of your own takes its size and time from that ground, so what grows it is seen and bites
+            // (The Burning Lake: wider and longer for each enemy killed on it).
+            if (!string.IsNullOrEmpty(cast.Spec.Ground) && Clover.World.OwnGrounds.Extent(cast.Spec.Ground, run.A, Time.time, out float ownRadius, out float ownUntil))
+            {
+                radius = ownRadius;
+                seconds = Mathf.Max(seconds, run.Age + (ownUntil - Time.time));
+            }
             // It spreads out from its middle in a moment, and draws in again at the end.
             float spread = Mathf.Clamp01(run.Age / 0.25f) * Mathf.Clamp01((seconds - run.Age) / 0.3f);
             // A field that grows out ring by ring (Rime Over Rime) shows only as far as it has grown.

@@ -230,6 +230,45 @@ namespace Clover.World
             return false;
         }
 
+        /// <summary>
+        /// Grows the live round ground of this name under <paramref name="at"/> by <paramref name="wider"/> metres and
+        /// <paramref name="longer"/> seconds (The Burning Lake: each enemy killed on it). False when none lies there.
+        /// </summary>
+        public static bool Grow(string name, Vector3 at, float wider, float longer, float now)
+        {
+            if (string.IsNullOrEmpty(name)) return false;
+            for (int i = 0; i < Most; i++)
+            {
+                if (!Live(i, now) || patches[i].Name != name || patches[i].Length > 0f || !On(i, at)) continue;
+                patches[i].Radius += Mathf.Max(0f, wider);
+                patches[i].Until += Mathf.Max(0f, longer);
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// The reach and end of the live round ground of this name laid at <paramref name="centre"/> (a spell's field reads its own
+        /// size so what grows it is seen); false when none lies there.
+        /// </summary>
+        public static bool Extent(string name, Vector3 centre, float now, out float radius, out float until)
+        {
+            radius = 0f;
+            until = 0f;
+            if (string.IsNullOrEmpty(name)) return false;
+            for (int i = 0; i < Most; i++)
+            {
+                if (!Live(i, now) || patches[i].Name != name || patches[i].Length > 0f) continue;
+                Vector3 apart = patches[i].At - centre;
+                apart.y = 0f;
+                if (apart.sqrMagnitude > 0.01f) continue;
+                radius = patches[i].Radius;
+                until = patches[i].Until;
+                return true;
+            }
+            return false;
+        }
+
         /// <summary>How many grounds of this name lie at <paramref name="now"/>.</summary>
         public static int Count(string name, float now)
         {

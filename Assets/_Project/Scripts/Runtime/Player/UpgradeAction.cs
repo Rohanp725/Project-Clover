@@ -361,5 +361,10 @@ namespace Clover.Player
         /// trigger's enemy as it feeds; nothing is fed or taken when nothing of that name stands near.
         /// </summary>
         Feed,
+        /// <summary>
+        /// Your own ground named Ground under the trigger's place grows Amount metres wider and lasts Seconds longer (The Burning
+        /// Lake: 0.5 m and 1 s for each enemy killed on it).
+        /// </summary>
+        GrowGround,
     }
 }
