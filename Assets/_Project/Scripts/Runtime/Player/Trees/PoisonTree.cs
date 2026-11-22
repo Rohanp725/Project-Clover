@@ -141,14 +141,15 @@ namespace Clover.Player.Trees
                 // For eight seconds each enemy on the line that dies poisoned passes twice its doses to the nearest other on the
                 // line (UpgradeEffect.ToState), else the nearest within ten metres; one pushed past eight bursts at once, 6 a dose,
                 // and passes the rest on (UpgradeEffect.Overflow); the snap bursts nothing (ShapeDef.SetsAside: the Learn's set-off).
-                // NEEDS: the next by the line's own order rather than the nearest on it.
+                // The next is the next by the line's own order (ConditionSpec.Numbered, UpgradeEffect.InOrder), the nearest on the
+                // line only when none comes after it.
                 new ShapeDef { Name = "Eaten in Turn", SetsAside = new[] { 0 },
                     Description = "The line is drawn, but nothing bursts. For eight seconds, when an enemy on it dies, all its doses pass to the next on the line, doubled; one pushed past eight bursts at once, 6 a dose, and passes on. The blade chooses the order.",
                     Effects = new[]
                     {
-                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = EatenInTurn, Seconds = 8f } },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = EatenInTurn, Seconds = 8f, Numbered = true } },
                         new UpgradeEffect { On = UpgradeTrigger.ConditionDied, Condition = EatenInTurn, Needs = P, Do = UpgradeAction.Pass, Affliction = P, PerStack = true, Stacks = 2, Reach = 10f,
-                            ToState = EatenInTurn, Overflow = true },
+                            ToState = EatenInTurn, Overflow = true, InOrder = true },
                     } },
                 // The doses of every poisoned enemy within ten metres are gathered as it is cast (UpgradeAction.Gather) and the one
                 // pillar, under the one faced when it is poisoned, bursts with them all, with no limit. NEEDS: the beads of mercury

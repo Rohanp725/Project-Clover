@@ -88,6 +88,11 @@ namespace Clover.Player
         /// <summary>For Kill: only a death dealt by this reaction's own blow, by its id (The Feast: a Kindling Point burst that kills).</summary>
         public string KilledBy = "";
         /// <summary>
+        /// For a Pass with ToState answering a numbered condition's death (ConditionSpec.Numbered): the next on the line by its
+        /// number after the dead one's, not the nearest in that state (Eaten in Turn).
+        /// </summary>
+        public bool InOrder;
+        /// <summary>
         /// For ForceReaction, or a Pass that sets <see cref="Reaction"/> off on the enemy it reaches: the counts of blows the
         /// reaction's conditions keep there start this many blows along (Held Down, What the Yew Keeps: the fig at two coils).
         /// </summary>

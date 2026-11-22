@@ -2687,7 +2687,9 @@ namespace Clover.Player
                     // Pushed past the taker's depth, the rest bursts it and runs on, a few bodies at most (Eaten in Turn).
                     for (int hop = 0; hop < 4 && give > 0; hop++)
                     {
-                        var next = NearestInState(effect.ToState, from, passReach, passExcept) ?? combat.EnemyNear(from, passReach, passExcept);
+                        // By the line's own order when it keeps one (Eaten in Turn), the first hop only; else the nearest in the state.
+                        var next = (effect.InOrder && hop == 0 ? NextOnLine(effect.ToState, pending.Power, from, passReach, passExcept) : null)
+                            ?? NearestInState(effect.ToState, from, passReach, passExcept) ?? combat.EnemyNear(from, passReach, passExcept);
                         if (!(next is IAfflictable taker) || !(next is IDamageable passedTo)) break;
                         passExcept.Add(passedTo);
                         // The reaction it may set off there starts along its count (What the Yew Keeps: the fig at two coils).
@@ -3050,9 +3052,11 @@ namespace Clover.Player
                     if (subject is IFlinchable flinching && flinching.Flinch(Or(effect.Seconds, 0.4f))) Flinches++;
                     break;
                 case UpgradeAction.Condition:
-                    // It keeps the trigger's number (ByPower), or the depth counted as the moment came (CountsNeeds).
+                    // It keeps the trigger's number (ByPower), or the depth counted as the moment came (CountsNeeds), or its place
+                    // in the cast's line (Numbered).
                     ConditionsSet += ConditionCaster.Cast(effect, subject, centre, combat, laying, conditionScratch, per,
-                        effect.ByPower ? pending.Power : effect.CountsNeeds ? per : -1f, spread, pending.From, pending.ReactionOf - 1);
+                        effect.State != null && effect.State.Numbered ? NextNumber(pending.CastTag) : effect.ByPower ? pending.Power : effect.CountsNeeds ? per : -1f,
+                        spread, pending.From, pending.ReactionOf - 1);
                     break;
                 case UpgradeAction.Shatter:
                 {
@@ -4125,6 +4129,47 @@ namespace Clover.Player
 
         // The nearest enemy within reach in the condition named (by its name or what it is), leaving out those given; null
         // when none is, or when no condition is named.
+        // The numbers a numbered condition is set at, counted again for each cast.
+        private int numbered, numberedCast = -1;
+
+        private float NextNumber(int cast)
+        {
+            if (cast != numberedCast)
+            {
+                numberedCast = cast;
+                numbered = 0;
+            }
+            return ++numbered;
+        }
+
+        /// <summary>
+        /// True when an enemy numbered <paramref name="candidate"/> on a line comes after <paramref name="after"/> and before the
+        /// best found so far (<paramref name="best"/>; 0 for none): the next on the line by its order.
+        /// </summary>
+        public static bool NextInLine(float after, float candidate, float best) => candidate > after && (best <= 0f || candidate < best);
+
+        // The next enemy on a numbered line after the number given, within reach of the point; null when none comes after it.
+        private Component NextOnLine(string state, float after, Vector3 from, float reach, HashSet<IDamageable> except)
+        {
+            if (string.IsNullOrEmpty(state) || combat == null || after <= 0f) return null;
+            stateScratch.Clear();
+            foreach (var left in except) stateScratch.Add(left);
+            Component found = null;
+            float best = 0f;
+            for (int guard = 0; guard < 24; guard++)
+            {
+                var near = combat.EnemyNear(from, reach, stateScratch);
+                if (!(near is IDamageable one)) break;
+                stateScratch.Add(one);
+                if (!(near is IAfflictable carrier) || !carrier.Afflictions.Conditions.NewsOf(state, ConditionMoment.Began, out var news)) continue;
+                if (!NextInLine(after, news.Scale, best)) continue;
+                best = news.Scale;
+                found = near;
+            }
+            stateScratch.Clear();
+            return found;
+        }
+
         private Component NearestInState(string state, Vector3 from, float reach, HashSet<IDamageable> except)
         {
             if (string.IsNullOrEmpty(state) || combat == null) return null;

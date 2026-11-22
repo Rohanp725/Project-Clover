@@ -230,7 +230,8 @@ namespace Clover.Player
             foreach (var effect in effects)
             {
                 if (effect.On != UpgradeTrigger.ConditionDied || effect.Condition != run.Id) continue;
-                upgrades.Fire(effect, who, at, source, 0f, run.Blows, afflictions);
+                // A line's order goes with its answer: the dead one's number (Eaten in Turn).
+                upgrades.Fire(effect, who, at, source, effect.InOrder ? run.Scale : 0f, run.Blows, afflictions);
                 ConditionAnswers++;
             }
         }

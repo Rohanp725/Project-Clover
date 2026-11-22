@@ -125,5 +125,10 @@ namespace Clover.Gameplay
         /// </summary>
         public int TheirBlowPoints;
         public int TurnedPoints;
+        /// <summary>
+        /// Each one a cast sets it on is numbered in turn, 1, 2, 3 (its run's Scale), so a line keeps its order (Eaten in Turn:
+        /// the doses pass to the next on the line, not the nearest).
+        /// </summary>
+        public bool Numbered;
     }
 }

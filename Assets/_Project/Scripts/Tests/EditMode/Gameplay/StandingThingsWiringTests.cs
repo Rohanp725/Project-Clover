@@ -941,6 +941,26 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void EatenInTurnPassesToTheNextOnTheLineByItsOrder()
+        {
+            Assert.IsTrue(PlayerUpgrades.NextInLine(2f, 3f, 0f), "the one after it");
+            Assert.IsTrue(PlayerUpgrades.NextInLine(2f, 3f, 5f), "nearer in the line than the best so far");
+            Assert.IsFalse(PlayerUpgrades.NextInLine(2f, 5f, 3f), "farther down the line than one found");
+            Assert.IsFalse(PlayerUpgrades.NextInLine(2f, 1f, 0f), "before it on the line");
+            Assert.IsFalse(PlayerUpgrades.NextInLine(2f, 2f, 0f), "itself");
+            var enemy = new AfflictionSet { Reactions = new ReactionEngine((who, pair, laid) => { }, () => 0) };
+            int slot = enemy.Conditions.Set(new ConditionSpec { Id = PoisonTree.EatenInTurn, Seconds = 8f, Numbered = true }, null, 2);
+            enemy.Conditions.Keep(slot, 4f);
+            Assert.IsTrue(enemy.Conditions.NewsOf(PoisonTree.EatenInTurn, ConditionMoment.Began, out var news));
+            Assert.AreEqual(4f, news.Scale, 1e-5f, "its place on the line is kept on it");
+            var eaten = Upgrade.ById(SpellBranch.ShapeId(PoisonTree.OneByOne)).Shapes.Single(each => each.Name == "Eaten in Turn").Effects;
+            Assert.IsTrue(eaten.Single(each => each.On == UpgradeTrigger.SpellHit).State.Numbered, "the line is numbered as it is drawn");
+            var pass = eaten.Single(each => each.On == UpgradeTrigger.ConditionDied);
+            Assert.IsTrue(pass.InOrder, "the next by the line's order");
+            Assert.AreEqual(PoisonTree.EatenInTurn, pass.ToState);
+        }
+
+        [Test]
         public void NothingResistsRunsOnEveryArcThatLeavesAChilledEnemy()
         {
             var resists = Upgrade.ById(Clover.Player.Trees.Duo.SleetChargeDuo.NothingResists);
