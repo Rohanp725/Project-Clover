@@ -256,5 +256,17 @@ namespace Clover.Player
         /// something its mark's effects of the same Kin grew wins it back (Corpse Flowers: 3 a blow within 3 m of a flower, 8 s).
         /// </summary>
         Regain,
+        /// <summary>Drives every blade of yours standing in the target at once (PlantedBlades; Flung Blade's Master on the attacker).</summary>
+        DriveBlades,
+        /// <summary>
+        /// Throws Count more of the element's own blades, each into a different enemy within Reach of you, never the one faced
+        /// nor one already holding a blade (Cherry Red's fan). Each is planted and driven as the kit's own blade is.
+        /// </summary>
+        PlantBlades,
+        /// <summary>
+        /// Calls every blade of yours home at once (All Blades Home on the surge): each strikes every enemy on its line to you
+        /// for Damage, Stagger and the affliction, and each adds Seconds to the surge.
+        /// </summary>
+        CallBladesHome,
     }
 }

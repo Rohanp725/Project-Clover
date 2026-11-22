@@ -39,6 +39,8 @@ namespace Clover.Player.Trees
         public const string HangingSwords = "metal.hangingswords";
         // Conditions the branches set on enemies.
         public const string CherryRed = "metal.base.red";
+        /// <summary>Flung Blade's two shapes by name: PlayerUpgrades.OrdersOf reads which is worn to plant the kit's blade.</summary>
+        public const string CherryRedName = "Cherry Red", NailName = "The Nail";
         public const string Nailed = "metal.base.nail";
         public const string Kneeling = "metal.base.kneel";
         public const string GoldenChair = "metal.circle.chair";
@@ -168,17 +170,18 @@ namespace Clover.Player.Trees
 
             // The third keystone, back under its id (the owner's word of 2026-11-20: trees may keep three). It stands at the
             // top of the trunk, grown from Grave of Swords' Master, the blades left standing.
-            // NEEDS: conjured blades that never fade (sixteen at most), and lighting the surge calling every one home in a
-            // straight line through whatever stands between, 12 damage, 8 stagger and a notch each, each adding 0.4 s to the
-            // surge (blades-home). Until then: lighting the surge throws five blades out in a fan and calls them back.
+            // Your thrown blades never fade (PlayerUpgrades.OrdersOf: sixteen at most stand, the oldest going home), and lighting
+            // the surge calls every one home in a straight line through whatever stands between, 12 damage, 8 stagger and a
+            // notch on each enemy on its line, each blade adding 0.4 s to the surge (UpgradeAction.CallBladesHome). NEEDS:
+            // Grave of Swords' blades standing in their ring as blades of yours (form-pieces).
             to.Add(BranchPattern.Put(new Upgrade { Id = AllBladesHome, Name = "All Blades Home", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { SpellBranch.MasterId(GraveOfSwords) }, Icon = UpgradeIcons.Spiral,
-                Description = "Beginning Temper throws five blades out in a fan and calls them back, and they cut and notch what they pass. Temper costs more and lasts a little longer.",
+                Description = "Blades you throw never fade: they stand in enemies or in the ground, sixteen at most. Beginning Temper calls every one back to you in a straight line, cutting and notching each enemy in the way, and each blade that comes home makes Temper last a little longer. Temper costs more.",
                 Stats = new[]
                 {
                     new StatMod(PlayerStat.SurgeCost, 0.375f),
                     new StatMod(PlayerStat.SurgeSeconds, 0.2f),
                 },
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.Projectile, Flight = Flight.Returning, Count = 5, Damage = 12f, Stagger = 8f, Speed = 14f, Seconds = 1.2f, Affliction = S, Stacks = 1 } } },
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.CallBladesHome, Damage = 12f, Stagger = 8f, Radius = 0.7f, Seconds = 0.4f, Affliction = S, Stacks = 1 } } },
                 BranchPattern.TrunkRight));
 
             // ---- The left bough: Guard. Meet the blow exactly.
@@ -278,40 +281,36 @@ namespace Clover.Player.Trees
             SpellBranch.Add(to, E, FlungBlade, "Flung Blade", SpellRole.Opener, BranchPattern.RightA, Root, "", null,
                 "Metal's own spell, given with the element. A blade flies into the enemy faced within nine metres, 4 damage, and stands in it six seconds. Your next weapon blow on that enemy drives it in: 12 damage, 15 stagger, a notch and a burst of sparks, and it flies back to your hand, cutting the lane for a third as much.",
                 UpgradeIcons.Blade,
-                // Buried Blades, once a major, folded in here. NEEDS: 16 when driven, up to three blades standing in one enemy
-                // and a heavy blow driving them all (planted-blades). The Empower's 16 is the drive's, not the throw's, so the
-                // kit's own cast takes none of it (Empower.NotForKit).
+                // Buried Blades, once a major, folded in here: 16 when driven, up to three blades standing in one enemy and a
+                // heavy blow driving them all (PlayerUpgrades.OrdersOf, PlantedBlades). The Empower's 16 is the drive's, not the
+                // throw's, so the kit's own cast takes none of it (Empower.NotForKit).
                 new Empower { Damage = 16f, NotForKit = true },
                 "It drives in for 16. Up to three blades may stand in one enemy, and a heavy blow drives them all.",
-                // NEEDS: three blades each standing in a different enemy, glowing as they cool (planted-blades). Until then two
-                // more blades fly in a fan beside the kit's and cut what they pass, and the kit's blade driven within 2 s
-                // strikes a second time.
-                new ShapeDef { Name = "Cherry Red",
+                // The kit's blade and two more thrown into two other enemies within its nine metres (UpgradeAction.PlantBlades),
+                // each a Cherry Red blade: a ring of heat cooling over six seconds, and a drive in its first two striking double
+                // (BladeRules.DriveDamage).
+                new ShapeDef { Name = CherryRedName,
                     Description = "Three red-hot blades fly in a fan, each standing in a different enemy. They glow cherry red and cool to black over six seconds, and one driven while still red, in its first two seconds, strikes double. You throw wide and then hurry.",
                     Effects = new[]
                     {
-                        new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Projectile, Flight = Flight.Straight, Count = 2, Radius = 0.6f, Speed = 18f, Seconds = 0.5f, Damage = 4f, Stagger = 0f, Affliction = S, Stacks = 1 },
-                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = CherryRed, Seconds = 2f, EndsWith = ConditionBlow.Weapon } },
-                        new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = CherryRed, By = StruckBy.Weapon, Do = UpgradeAction.Burst, Radius = 1f, Damage = 12f, Stagger = 15f, Stacks = 0 },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.PlantBlades, Count = 2, Reach = 9f, Affliction = S,
+                            Spell = new SpellSpec { Damage = 12f, Stagger = 15f, Reach = 9f, Radius = 1.5f, Seconds = 6f, Count = 1, Stacks = 1 } },
                     } },
-                // NEEDS: the nail staying and driven deeper by each heavy blow, 12, 16 and 24 (planted-blades), and the third
-                // counted among heavy blows alone (count-rules). Until then the kit's blade flies, every heavy blow on the nailed
-                // enemy drives for 16, and a third weapon blow that is heavy brings it to its knees.
-                new ShapeDef { Name = "The Nail",
+                // The kit's blade is the nail (PlantedKind.Nail): it stays ten seconds, only heavy blows drive it, 12, 16 and 24
+                // (BladeRules.NailDrives), and it never comes home. Its third drive is the moment (UpgradeTrigger.BladeDriven
+                // carrying the nail's drives), so only heavy blows count toward it.
+                new ShapeDef { Name = NailName,
                     Description = "One long bronze nail is driven low into the enemy, and it does not come back. Each heavy blow on that enemy drives it deeper: 12, then 16, then 24. At the third it kneels for a second and a half, less for a god or an elite, and golden ichor runs out round it, a pool three metres across for four seconds that bites for 3 and notches. Three heavies on one enemy.",
                     Effects = new[]
                     {
-                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Nailed, Seconds = 10f } },
-                        new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Nailed, By = StruckBy.Heavy, Do = UpgradeAction.Burst, Radius = 0.6f, Damage = 16f, Stagger = 15f, Affliction = S, Stacks = 1 },
-                        new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Nailed, By = StruckBy.Heavy, AtCount = 3, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Kneeling, Seconds = 1.5f, Flags = ConditionFlags.Down } },
-                        new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Nailed, By = StruckBy.Heavy, AtCount = 3, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Radius = 1.5f, Seconds = 4f, Interval = 1f, Damage = 3f, Stagger = 0f, Affliction = S, Stacks = 1 },
+                        new UpgradeEffect { On = UpgradeTrigger.BladeDriven, SpentAtLeast = BladeRules.NailKneelsAt, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Kneeling, Seconds = 1.5f, Flags = ConditionFlags.Down } },
+                        new UpgradeEffect { On = UpgradeTrigger.BladeDriven, SpentAtLeast = BladeRules.NailKneelsAt, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Radius = 1.5f, Seconds = 4f, Interval = 1f, Damage = 3f, Stagger = 0f, Affliction = S, Stacks = 1 },
                     } },
                 "Opens two shapes of Flung Blade, chosen at any rest fire: Cherry Red, a fan of blades to drive while they glow, or The Nail, one nail three heavy blows drive home.",
-                // NEEDS: only the blades standing in the attacker driven (planted-blades). Until then a perfect guard on a
-                // notched attacker drives one blade's worth into it.
+                // Every blade standing in the attacker driven at once (UpgradeAction.DriveBlades: each strikes as its own drive).
                 new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Needs = S, Do = UpgradeAction.Burst, Radius = 0.8f, Damage = 12f, Stagger = 15f, Affliction = S, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.DriveBlades },
                     new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.ResetCooldown },
                 },
                 "A perfect guard drives every blade standing in the attacker at once, and Flung Blade is ready again.");
@@ -324,16 +323,15 @@ namespace Clover.Player.Trees
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.ReactionStruck, ReactionWith = S, Do = UpgradeAction.Afflict, Affliction = S, Stacks = 1 } } },
                 BranchPattern.RightMiddle));
 
-            // The movement spell: the drill form carries you through what lies on the line and strikes it. NEEDS: flying to a
-            // blade of yours within 12 m (a Flung Blade standing in an enemy or the ground, a blade of Grave of Swords),
-            // untouchable for the flight, and driving that blade as you arrive (planted-blades). Until then it is the throw
-            // with no blade out: six metres ahead.
+            // The movement spell: the drill form carries you through what lies on the line and strikes it, untouchable, to the
+            // nearest blade of yours standing within 12 m (SpellSpec.BladeReach, PlantedBlades: a Flung Blade in an enemy or the
+            // ground), and drives that blade as you arrive; with none, six metres ahead. NEEDS: Grave of Swords' blades standing
+            // as blades of yours (form-pieces).
             SpellBranch.Add(to, E, ToTheBlade, "To the Blade", SpellRole.Movement, BranchPattern.RightB, EveryCrackRings, SpellForms.Drill,
-                new SpellSpec { Reach = 6f, Radius = 1f, Count = 1, Damage = 10f, Stagger = 15f, Stacks = 1, Speed = 24f },
+                new SpellSpec { Reach = 6f, Radius = 1f, Count = 1, Damage = 10f, Stagger = 15f, Stacks = 1, Speed = 24f, BladeReach = BladeRules.ToBladeReach },
                 "You fly along a line of sparks to a blade of yours within twelve metres, a Flung Blade standing in an enemy or the ground or a blade of Grave of Swords, untouchable for the quarter second of the flight. What lies between is cut, 10 damage, 15 stagger and a notch, and you arrive driving that blade. With no blade out, you throw one six metres ahead into the ground and go to it.",
                 UpgradeIcons.Arrow,
-                // NEEDS: fourteen metres to a blade (planted-blades).
-                new Empower { Cooldown = 7f },
+                new Empower { Cooldown = 7f, BladeReach = BladeRules.ToBladeEmpoweredReach },
                 "To the Blade waits 7 seconds, not 8, and reaches a blade fourteen metres off.",
                 // NEEDS: tripped as a fall, a knock-down for each crossing (ground-states). Until then the chain is ground along
                 // your path that notches and staggers what stands on it.

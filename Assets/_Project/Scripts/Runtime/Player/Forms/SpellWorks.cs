@@ -347,6 +347,8 @@ namespace Clover.Player.Forms
         /// <summary>A blow of the weapon landed on something.</summary>
         public static void Blow(AttackStep step, Component target, float damage)
         {
+            // The blades standing in what was struck are driven first: the forms showing them strike on their next step.
+            PlantedBlades.WeaponBlow(target, step != null && step.Heavy);
             if (instance == null) return;
             for (int i = 0; i < instance.runs.Length; i++)
                 if (instance.runs[i].Active) instance.runs[i].Form.Struck(ref instance.runs[i], step, target, damage);

@@ -262,6 +262,9 @@ namespace Clover.Player
         private int triggerPair = -1;
 
         private readonly HashSet<IDamageable> fanTaken = new HashSet<IDamageable>();
+        // Cherry Red's fan: the enemies already given a blade, or passed over, this throw; and where each blade called home stood.
+        private readonly HashSet<IDamageable> plantExcept = new HashSet<IDamageable>();
+        private readonly Vector3[] bladePlaces = new Vector3[PlantedBlades.Most];
 
         // One copy of the effect for each enemy near the target carrying what it asks, nearest first.
         private void FanOut(in Pending pending)
@@ -2080,6 +2083,56 @@ namespace Clover.Player
                     StepsToStanding++;
                     break;
                 }
+                case UpgradeAction.DriveBlades:
+                    if (target != null) PlantedBlades.DriveAllIn(target.GetComponentInParent<IDamageable>() as Component);
+                    break;
+                case UpgradeAction.PlantBlades:
+                {
+                    var tap = SpellForms.Get(SpellForms.Tap);
+                    if (tap == null) break;
+                    // Each into a different enemy: never the one faced (the kit's own blade goes there), nor one already holding a blade.
+                    plantExcept.Clear();
+                    var faced = combat.EnemyAhead(Or(effect.Reach, 9f));
+                    if (faced != null && faced.GetComponentInParent<IDamageable>() is IDamageable facedBody) plantExcept.Add(facedBody);
+                    int thrownBlades = 0;
+                    for (int guard = 0; guard < 12 && thrownBlades < Or(eCount, 2); guard++)
+                    {
+                        var next = combat.EnemyNear(self, Or(effect.Reach, 9f), plantExcept);
+                        if (!(next is IDamageable body)) break;
+                        plantExcept.Add(body);
+                        if (PlantedBlades.CountIn(next) > 0 || !PlayerReactions.Alive(next)) continue;
+                        var cast = element.NewCast(effect.Spell ?? plainSpell, effect.Owner != null ? effect.Owner.Name : "", effect.Owner);
+                        cast.Element = held;
+                        cast.Colour = held.Colour;
+                        cast.Affliction = held.Affliction;
+                        cast.Cast = 0;
+                        cast.Target = next.transform;
+                        cast.Aim = next.transform.position;
+                        tap.Cast(cast);
+                        thrownBlades++;
+                        BladesPlanted++;
+                    }
+                    plantExcept.Clear();
+                    break;
+                }
+                case UpgradeAction.CallBladesHome:
+                {
+                    int called = PlantedBlades.RecallAll(bladePlaces);
+                    var home = Blow(look, kind, eDamage, eStagger, eStacks);
+                    for (int i = 0; i < called && i < bladePlaces.Length; i++)
+                    {
+                        Vector3 from = bladePlaces[i];
+                        from.y = self.y;
+                        Vector3 line = self - from;
+                        line.y = 0f;
+                        // Through whatever stands between: every enemy on the blade's straight line home.
+                        if (line.sqrMagnitude > 0.04f) combat.StrikeLane(from, line.normalized, line.magnitude, Or(effect.Radius, 0.7f), home);
+                        ElementLook.Sparks(look, from + Vector3.up, line, 0.8f);
+                    }
+                    if (called > 0 && element.SurgeActive) element.SurgeKit.Lengthen(called * Or(effect.Seconds, 0.4f));
+                    BladesCalledHome += called;
+                    break;
+                }
                 case UpgradeAction.Regain:
                     if (effect.Seconds > 0f)
                     {
@@ -2745,6 +2798,48 @@ namespace Clover.Player
             string masterId = SpellBranch.MasterId(branch);
             return PressesOf(mark, worn, Has(masterId) ? Upgrade.ById(masterId) : null, out window);
         }
+
+        /// <summary>
+        /// The rules a Flung Blade thrown now is planted and driven by: its Empower (16, three in one enemy, a heavy blow driving
+        /// all), its shape (Cherry Red, The Nail) and All Blades Home (never fading). Plain for any other spell's blade.
+        /// </summary>
+        public BladeOrders BladeOrdersFor(in SpellCast cast)
+        {
+            var orders = BladeOrders.Plain;
+            string branch = Trees.MetalTree.FlungBlade;
+            bool flung = cast.Source == null ? cast.Element != null && cast.Element.Name == Elements.Metal : cast.Source.Id == branch || cast.Source.Branch == branch;
+            if (!flung) return orders;
+            orders = OrdersOf(SpellBranches.WornShape(branch, RunState.Unlocked, ReadLoadout()), Has(SpellBranch.EmpowerId(branch)), Has(Trees.MetalTree.AllBladesHome));
+            return orders;
+        }
+
+        /// <summary>A Flung Blade's orders, with its shape worn, its Empower and All Blades Home given.</summary>
+        public static BladeOrders OrdersOf(ShapeDef worn, bool empowered, bool neverFades)
+        {
+            var orders = BladeOrders.Plain;
+            if (empowered)
+            {
+                orders.Drive = BladeRules.EmpoweredDrive;
+                orders.MostInOne = BladeRules.EmpoweredMostInOne;
+                orders.HeavyDrivesAll = true;
+            }
+            if (worn != null && worn.Name == Trees.MetalTree.CherryRedName) orders.Kind = PlantedKind.CherryRed;
+            else if (worn != null && worn.Name == Trees.MetalTree.NailName) orders.Kind = PlantedKind.Nail;
+            orders.NeverFades = neverFades;
+            return orders;
+        }
+
+        /// <summary>A blade of yours was driven into <paramref name="host"/> (null: in the ground) for the <paramref name="drives"/>th time.</summary>
+        public void OnBladeDriven(Component host, int drives)
+        {
+            BladesDriven++;
+            if (host != null) Trigger(UpgradeTrigger.BladeDriven, host, host.transform.position, true, drives);
+        }
+
+        /// <summary>Counts for probes: blades of yours driven, thrown by a mark, and called home.</summary>
+        public int BladesDriven { get; private set; }
+        public int BladesPlanted { get; private set; }
+        public int BladesCalledHome { get; private set; }
 
         /// <summary>As above, with the shape worn given: its presses stand in place of the mark's.</summary>
         public static UpgradeEffect[][] PressesOf(Upgrade mark, ShapeDef worn, out float window) => PressesOf(mark, worn, null, out window);

@@ -87,6 +87,8 @@ namespace Clover.Player
                 case UpgradeTrigger.SpellLoosed: return "a gathered spell is loosed";
                 case UpgradeTrigger.RingAdded: return "a gathered spell takes another ring";
                 case UpgradeTrigger.SpellPressed: return "a spell is pressed again";
+                case UpgradeTrigger.BladeDriven: return "a blade of yours is driven in";
+                case UpgradeTrigger.BladeCaught: return "you catch your blade on a perfect guard";
                 default: return "its moment comes";
             }
         }

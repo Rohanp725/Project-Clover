@@ -157,6 +157,12 @@ namespace Clover.Player
         public bool StaysPut;
         /// <summary>For the heart form: where the pawned heart is set (Pawned Heart's shapes; the ledger's heart-places).</summary>
         public HeartPlace HeartAt;
+        /// <summary>
+        /// For the drill form: above zero, it flies to the nearest blade of yours standing within this many metres (in an
+        /// enemy or the ground, PlantedBlades), ahead of you first, and drives that blade as it arrives (To the Blade: 12 m,
+        /// its Empower 14). With none standing it goes its own Reach straight ahead.
+        /// </summary>
+        public float BladeReach;
         public int Bank;
         public float BankDamage;
         public float BankStagger;

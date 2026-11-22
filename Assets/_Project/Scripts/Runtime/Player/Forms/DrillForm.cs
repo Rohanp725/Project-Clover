@@ -13,6 +13,8 @@ namespace Clover.Player.Forms
 
         private const float WindSeconds = 0.14f;
         private const float BetweenCuts = 0.07f;
+        // To the Blade stops this far short of a body its blade stands in, and drives the blade it arrives within this of.
+        private const float ShortOfBody = 0.9f, ArrivedWithin = 1.5f;
 
         public override int Cast(in SpellCast cast)
         {
@@ -26,6 +28,22 @@ namespace Clover.Player.Forms
             run.A = cast.Origin;
             run.B = cast.Forward;
             run.T0 = cast.Player.ClearRun(cast.Forward, cast.Reach);
+            // To the Blade: to a blade of yours standing within reach, in an enemy or the ground, ahead of you first; it stops
+            // just short of the body a blade stands in, and drives that blade as it arrives.
+            if (cast.Spec.BladeReach > 0f)
+            {
+                int blade = PlantedBlades.Nearest(cast.Origin, cast.Forward, cast.Spec.BladeReach);
+                Vector3 to = PlantedBlades.Get(blade).Place;
+                Vector3 way = to - cast.Origin;
+                way.y = 0f;
+                if (blade >= 0 && way.sqrMagnitude > 0.25f)
+                {
+                    run.B = way.normalized;
+                    run.T0 = cast.Player.ClearRun(run.B, Mathf.Max(0.5f, way.magnitude - (PlantedBlades.Get(blade).Host != null ? ShortOfBody : 0f)));
+                    run.Flag2 = true;
+                    SpellWorks.Points(run)[0] = to;
+                }
+            }
             run.T1 = Mathf.Max(0.08f, run.T0 / Mathf.Max(6f, cast.Spec.Speed * 1.8f));
             run.Count = Mathf.Max(1, cast.Spec.Count);
             SpellWorks.Solids(run)[0] = FormFx.Hold(FormMesh.Drill, cast.Colour, 0.05f);
@@ -94,6 +112,12 @@ namespace Clover.Player.Forms
                 // A drive that carries (Fire Front): what it met is kept at its front, a stride ahead of the player.
                 if (cast.Spec.Carries) FormCarry.Carry(SpellWorks.Once(run), at + run.B * (cast.Spec.Radius * 0.5f + 0.9f), run.B, cast.Spec.OnlyCarrying);
                 if (t < 1f) return true;
+                // Arrived at the blade: it is driven in, as a weapon blow would drive it.
+                if (run.Flag2)
+                {
+                    int arrived = PlantedBlades.Nearest(SpellWorks.Points(run)[0], run.B, ArrivedWithin);
+                    if (arrived >= 0) PlantedBlades.Drive(arrived);
+                }
                 // And thrown down at the end.
                 if (cast.Spec.Carries) FormCarry.ThrowDown(SpellWorks.Once(run), cast.Spec.OnlyCarrying);
                 // Out the far side: back in their own shape, turned to look at what they went through.

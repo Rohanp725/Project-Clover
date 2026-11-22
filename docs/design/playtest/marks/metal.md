@@ -228,11 +228,9 @@ the steel you throw and plant: Flung Blade, the blades of Grave of Swords.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). While you carry Metal, you can always put it in a slot.
 
-**The numbers.** Comes with Metal. It costs no mana. After you cast it, you must wait 6 seconds to cast it again. Fighting with your weapon makes the wait shorter. Its Empower makes the drive hit for 16. It targets an enemy within 9 metres. It deals 4 damage when it lands, and stays stuck for 6 seconds. When your next weapon blow drives it in, it deals 12 damage, 15 stagger, a notch, and a burst of sparks 1.5 metres around, plus a third as much to anything on its path home.
+**The numbers.** Comes with Metal. It costs no mana. After you cast it, you must wait 6 seconds to cast it again. Fighting with your weapon makes the wait shorter. It targets an enemy within 9 metres. It deals 3 damage when it lands, and stays stuck for 6 seconds. When your next weapon blow on that enemy drives it in, it deals 12 damage, 15 stagger, a notch, and a burst of sparks 1.5 metres around, plus a third as much to anything on its path home. Only one blade sticks in one enemy: throw another at it, and the first flies home. If it hits no one, it sticks in the ground for a moment and then flies home. Its Empower makes the drive hit for 16, lets up to three blades stick in one enemy, and makes a heavy blow drive all of them in at once (a light blow drives in the oldest).
 
 **Works with.** Its Empower, its two shapes and its Master mark; Sunder, Poured Bronze, To the Blade (it is a blade to fly to), and the charged blade, which it charges with Metal when it lands.
-
-**Not built yet.** The Empower's 16 damage when driven, and up to three blades stuck in one enemy with a heavy blow driving them all in (it used to be called Buried Blades). The spell doesn't read the Empower's numbers yet, so for now the Empower does nothing.
 
 **Example.** Throw the blade into the archer at the back, then close in and cut it. The blade bursts out of it and flies home through the soldier in between.
 
@@ -241,11 +239,9 @@ the steel you throw and plant: Flung Blade, the blades of Grave of Swords.
 
 **When it happens.** Whenever you cast Flung Blade, using the shape you picked. If you have not bought this, you throw the plain blade.
 
-**The numbers.** 3 Shards. Cherry Red: for now, two more blades fly in a fan next to the normal one, dealing 4 damage and a notch to each enemy they pass. The normal blade, if driven in within 2 seconds, hits again for 12 damage and 15 stagger. The Nail: for 10 seconds, every heavy blow on the nailed enemy drives it in for 16 damage, 15 stagger and a notch. If its third weapon blow is a heavy blow, it is knocked down for 1.5 seconds (an elite for half that, a god not at all), and a pool of golden blood 1.5 metres around it stays for 4 seconds, dealing 3 damage and a notch once a second.
+**The numbers.** 3 Shards. Cherry Red: your normal blade and two more, each flying into a different enemy within 9 metres (not the one you face, and not one that already has a blade in it). Each one deals 3 damage when it lands and stays 6 seconds, with a red ring of heat around it that fades to dark as it cools. Drive one in within its first 2 seconds and it hits double: 24 damage instead of 12. The Nail: your blade becomes the nail. It stays stuck for 10 seconds and never flies home. Only heavy blows drive it, and each one drives it deeper: 12 damage, then 16, then 24, each with 15 stagger and a notch, and the nail sinks lower each time. The third drive knocks the enemy down for 1.5 seconds (an elite for half that, a god not at all), and a pool of golden blood 1.5 metres around it stays for 4 seconds, dealing 3 damage and a notch once a second. Light blows in between don't count.
 
 **Works with.** Cherry Red: fast weapons, a pack spread out wide, Poured Bronze. The Nail: heavy weapons, Counter Cut, Open Line (a held enemy to hammer).
-
-**Not built yet.** Cherry Red's three blades should each stick in a different enemy and cool over 6 seconds (for now, the normal blade sticks, and the fan cuts and keeps flying). The Nail should stay in its enemy and be driven deeper, for 12, then 16, then 24 (for now, the normal blade still flies home, and each heavy blow drives in for 16). The third hit should count only heavy blows (for now, it is the third weapon blow, if that one is heavy).
 
 **Example.** Put The Nail in a brute. Three heavy blows in a row, and it is down on one knee in a pool of gold.
 
@@ -254,11 +250,9 @@ the steel you throw and plant: Flung Blade, the blades of Grave of Swords.
 
 **When it happens.** Every perfect guard while Flung Blade is in a spell slot.
 
-**The numbers.** 3 Shards. The wait ends right away. For now, a notched attacker takes one blade's drive: 12 damage, 15 stagger and a notch within 0.8 metres of it.
+**The numbers.** 3 Shards. The wait ends right away. Every blade stuck in the attacker is driven in at once, each for its own drive (12, or 16 with the Empower; a Cherry Red blade still red hits double; the Nail goes one step deeper). An attacker with no blade in it takes nothing extra, but the wait still ends.
 
 **Works with.** Edge Guard and Open Line (the perfect guard), Forged Answer, Sunder.
-
-**Not built yet.** Only the blades stuck in the attacker should be driven in. For now, a notched attacker takes one blade's worth, no matter what is stuck in it.
 
 **Example.** Throw the blade into a duellist and perfect-guard its lunge. The blade drives in, and the next one is ready in your hand.
 
@@ -278,11 +272,11 @@ the steel you throw and plant: Flung Blade, the blades of Grave of Swords.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4).
 
-**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 8 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 7 seconds and the reach 14 metres.) For now, it always works like you have no blade out: you rush 6 metres ahead at 24 metres a second, in a quarter of a second. Each enemy on the line, within 1 metre on each side, is hit once for 10 damage, 15 stagger and a notch.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 8 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 7 seconds and the reach 14 metres.) It flies to the nearest of your blades within 12 metres, picking one in front of you first, and stops just short of the enemy the blade is stuck in. You fly at 24 metres a second, and nothing can hit you on the way. Each enemy on the line, within 1 metre on each side, is hit once for 10 damage, 15 stagger and a notch. When you arrive, the blade is driven in, just like a weapon blow would drive it. With no blade within reach, you rush 6 metres straight ahead.
 
 **Works with.** Flung Blade and Grave of Swords (blades to fly to), Every Crack Rings, which it comes after on the chart, Sunder, Poured Bronze. When it lands, it charges your blade with Metal.
 
-**Not built yet.** Flying to one of your blades within 12 metres (a Flung Blade stuck in an enemy or the ground, or a blade from Grave of Swords), being untouchable on the way, and driving that blade in when you arrive. The Empower's 14 metres. For now, it always throws a blade ahead.
+**Not built yet.** Flying to a blade from Grave of Swords: those blades don't stay standing in their ring yet.
 
 **Example.** Throw Flung Blade into the archer across the room, then fly to it through the two soldiers in between.
 
@@ -333,14 +327,14 @@ the steel you throw and plant: Flung Blade, the blades of Grave of Swords.
 **Example.** Light Temper and stand in the middle of a pack with your guard up. Every blow is blocked, and when Temper ends, eight swords come down on them.
 
 ## metal.allbladeshome
-**What it does.** All Blades Home, a keystone. Lighting Temper throws five blades out around you in a fan, and they come back to you, cutting and notching everything they pass, both ways. Temper costs more and lasts a little longer.
+**What it does.** All Blades Home, a keystone. The blades you throw never fade. They stay stuck in enemies, or in the ground once their enemy falls, until you drive them in. Lighting Temper calls every one of them back to you in a straight line, cutting and notching every enemy in the way, and each blade that comes home makes Temper last a little longer. Temper costs more.
 
 **When it happens.** When you light Temper, the surge. Always on once you learn it, while you carry Metal.
 
-**The numbers.** 6 Shards. Five blades fly at 14 metres a second, out and back over 1.2 seconds. Each deals 12 damage, 8 stagger and one notch of Sundered to whatever it passes. Temper costs 37.5% more mana (55 instead of 40) and lasts 20% longer.
+**The numbers.** 6 Shards. Up to sixteen blades can stand at once; a seventeenth sends the oldest home. When you light Temper, each blade flies straight back to you and deals 12 damage, 8 stagger and one notch of Sundered to every enemy on its line, within 0.7 metres on each side. Each blade that comes home adds 0.4 seconds to Temper. Temper costs 37.5% more mana (55 instead of 40) and lasts 20% longer. Blades called home are gone.
 
 **Works with.** Grave of Swords, which it comes after on the chart (from its Master mark), To the Blade, Forged Answer, Every Crack Rings, Hanging Swords (Temper's god's gift).
 
-**Not built yet.** The blades you summon should never fade (up to sixteen), and lighting Temper should call every one of them home in a straight line through whatever stands in between, each adding a moment to Temper. For now, the surge throws its own five blades instead.
+**Not built yet.** The blades of Grave of Swords should be blades of yours too (they don't stand in their ring yet). The blades fly home at once; the short pause with their points turned toward you, and the wheel of blades folding into your weapon, aren't shown yet.
 
-**Example.** Cast Grave of Swords, fight among the blades, then light Temper. Five more fly out and back through the crowd, and every enemy they cross is notched.
+**Example.** Throw Flung Blade into three enemies over a fight and let the blades stand. Then light Temper. All three fly home through the crowd, and every enemy they cross is notched.
