@@ -84,6 +84,14 @@ namespace Clover.Player
         /// <see cref="AimAt2"/>), striking all on the line, and stops there (Laid Flat's bolt along the ground to the next
         /// Marked or charged enemy); with none such it strikes the target alone.
         /// </summary>
+        /// <summary>
+        /// Above zero: the effect is done once on each enemy within this many metres of the target that carries
+        /// <see cref="OnlyCarrying"/> (any, when None), as that enemy's own, <see cref="Count"/> of them at most (0: all;
+        /// the nearest first). With <see cref="EachOther"/> the target itself is left out. Thundersnow's bolt on every
+        /// chilled enemy near; Deep Crack's crack where each Soaked enemy stands (the ledger's area-set-off, spend-soaked).
+        /// </summary>
+        public float EachWithin;
+        public bool EachOther;
         public AfflictionKind AimAt = AfflictionKind.None;
         public AfflictionKind AimAt2 = AfflictionKind.None;
         /// <summary>

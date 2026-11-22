@@ -1094,7 +1094,8 @@ namespace Clover.Player
             StrikeArea(centre, radius, blow, once, 0f);
 
         /// <summary>The same for a band: whoever stands nearer the middle than <paramref name="innerRadius"/> is left alone.</summary>
-        public int StrikeArea(Vector3 centre, float radius, in SpellBlow blow, HashSet<IDamageable> once, float innerRadius)
+        public int StrikeArea(Vector3 centre, float radius, in SpellBlow blow, HashSet<IDamageable> once, float innerRadius,
+            AfflictionKind onlyCarrying = AfflictionKind.None)
         {
             spellStruck.Clear();
             int count = Overlap(centre + Vector3.up, radius + 0.5f);
@@ -1104,6 +1105,8 @@ namespace Clover.Player
                 if (other.transform.root == transform.root) continue;
                 var target = other.GetComponentInParent<IDamageable>();
                 if (target == null || spellStruck.Contains(target) || (once != null && once.Contains(target))) continue;
+                // Only those carrying what is asked (The Sea Finds Land's discharge runs through the water to the Soaked).
+                if (!Carries(target, onlyCarrying)) continue;
                 Vector3 offset = other.ClosestPoint(centre) - centre;
                 offset.y = 0f;
                 if (offset.magnitude > radius) continue;

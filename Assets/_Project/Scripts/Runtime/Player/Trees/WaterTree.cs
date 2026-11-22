@@ -77,9 +77,8 @@ namespace Clover.Player.Trees
                 } },
                 BranchPattern.MiddleFoot));
 
-            // The detonator: the bubble's crack spends the Soaked of the enemy it closes on and runs to every other Soaked enemy
-            // near. NEEDS: each of those cracking where it stands and its own Soaked spent (spend-soaked); until then an arc
-            // runs from the first to each Soaked enemy within five metres and leaves their Soaked on them.
+            // The detonator: the bubble's crack spends the Soaked of the enemy it closes on, and every other Soaked enemy within
+            // five metres cracks where it stands and its own Soaked is spent (UpgradeEffect.EachWithin).
             SpellBranch.Add(to, E, DeepCrack, "Deep Crack", SpellRole.Detonator, BranchPattern.MiddleA, EbbAndFlood, SpellForms.Pillars,
                 new SpellSpec { Count = 1, Reach = 7f, Radius = 1f, Delay = 0.4f, Damage = 18f, Stagger = 40f, Stacks = 0 },
                 "A fist of water snaps shut on the enemy faced, up to seven metres away. A bubble as big as a body forms on it and collapses with a crack: 18 damage and 40 stagger. On a Soaked enemy the water boils out of it, and every other Soaked enemy within five metres cracks with it, 18 damage and 30 stagger each.",
@@ -101,18 +100,21 @@ namespace Clover.Player.Trees
                     Description = "Three bubbles in a row, two metres apart along the line you face, each cracking a moment after the last. Aim it down a corridor.",
                     Spell = new SpellSpec { Reach = 7f, Speed = 13f, Count = 1, Radius = 1f, Damage = 18f, Stagger = 40f, Stacks = 0 } },
                 "Opens two shapes of Deep Crack, chosen at any rest fire: Ink, a pool that hides you, or String of Bubbles, three cracks down a corridor.",
-                // NEEDS: the snap timed to the heavy blow's landing, not the crack's (spell-windows), and every Soaked enemy in
-                // the fight cracking where it stands. Until then a heavy blow on the cracked enemy within 0.3 s runs the crack on
-                // to every Soaked enemy within twenty metres.
+                // Every Soaked enemy within twenty metres cracks where it stands (UpgradeEffect.EachWithin). NEEDS: the snap
+                // timed to the heavy blow's landing, not the crack's (spell-windows); until then a heavy blow on the cracked enemy
+                // within 0.3 s.
                 new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Snapped, Seconds = 0.3f, EndsWith = ConditionBlow.Heavy } },
-                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Snapped, By = StruckBy.Heavy, Do = UpgradeAction.Arc, LeapsTo = AfflictionKind.Soaked, Count = 12, Reach = 20f, Damage = 18f, Stagger = 30f, Stacks = 0 },
+                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Snapped, By = StruckBy.Heavy, Do = UpgradeAction.Burst, EachWithin = 20f, OnlyCarrying = AfflictionKind.Soaked, Radius = 0.5f, Damage = 18f, Stagger = 30f, Stacks = 0 },
                 },
                 "Snap it as your heavy blow lands on the same enemy, and every Soaked enemy in the fight cracks.",
                 learnEffects: new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = AfflictionKind.Soaked, Do = UpgradeAction.Arc, LeapsTo = AfflictionKind.Soaked, Count = 6, Reach = 5f, Damage = 18f, Stagger = 30f, Stacks = 0 },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = AfflictionKind.Soaked, Do = UpgradeAction.Burst, EachWithin = 5f, EachOther = true, OnlyCarrying = AfflictionKind.Soaked,
+                        Radius = 0.5f, Damage = 18f, Stagger = 30f, Stacks = 0 },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = AfflictionKind.Soaked, Do = UpgradeAction.Spend, EachWithin = 5f, EachOther = true, OnlyCarrying = AfflictionKind.Soaked,
+                        Affliction = AfflictionKind.Soaked },
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = AfflictionKind.Soaked, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Soaked },
                 });
 

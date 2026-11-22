@@ -10,13 +10,13 @@ both are carried (in the playtest, whenever you pick Ice beside Lightning or Lig
 
 **When it happens.** Every time Sleet Charge goes off while you carry both Ice and Lightning. Sleet Charge goes off when Static lands on a chilled enemy, or when Chill lands on a charged one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Sleet Charge.
 
-**The numbers.** Mix, 3 Shards. Both shapes: a Static every 0.5 seconds for 3 seconds, then the Static goes off, dealing 7 damage and 5 stagger per stack to everything within 4 metres. Thundersnow: then a bolt jumps on to every chilled enemy within 6 metres of the last one, up to six, dealing 7 damage, 5 stagger and a Static to each. Glass Spear: then a normal enemy is Frozen for 1.5 seconds, however much Chill it had. An elite gets 3 Chill and a god 2. A heavy blow still sets off the Static early. After Sleet Charge goes off on an enemy, it can't go off on that enemy again for 4 seconds.
+**The numbers.** Mix, 3 Shards. Both shapes: a Static every 0.5 seconds for 3 seconds, then the Static goes off, dealing 7 damage and 5 stagger per stack to everything within 4 metres. Thundersnow: then a bolt falls at once on every chilled enemy within 6 metres, dealing 7 damage, 5 stagger and a Static to each, and each one's own Static goes off where it stands. Glass Spear: then a normal enemy is Frozen for 1.5 seconds, however much Chill it had. An elite gets 3 Chill and a god 2. A heavy blow still sets off the Static early. After Sleet Charge goes off on an enemy, it can't go off on that enemy again for 4 seconds.
 
 **Works with.** Hoarfrost or Glass Storm to add the Chill, Thunderclap or Static to add the charge, Charged Hail (Glass Spear's frozen enemy is ready to shatter), Nothing Resists.
 
 **Example.** A frozen line of soldiers: use Thundersnow and charge one of them. Three seconds later, the bolt runs through every chilled enemy near it. Against one brute: use Glass Spear, and when the charge breaks, it stands frozen for your heavy blow.
 
-**Not built yet.** Thundersnow's bolt jumps from one chilled enemy to the next instead of falling on each one at once, and each takes 7 damage instead of setting off the Static it has. The spear of clear ice isn't drawn yet.
+**Not built yet.** The spear of clear ice isn't drawn yet.
 
 ## sleetcharge.hail
 **What it does.** Shattering an enemy that had Static throws its charge into the shards. Everything the shards hit gets a Static.

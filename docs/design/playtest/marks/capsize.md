@@ -42,15 +42,13 @@ both carried.
 ## capsize.swamped
 **What it does.** Blows on a capsized enemy fill its stagger meter twice as fast.
 
-**When it happens.** Always on once you learn it, while you carry both Wind and Water.
+**When it happens.** While Capsize keeps an enemy down, in any shape that knocks it down, while you carry both Wind and Water.
 
-**The numbers.** Mix, keystone, 5 Shards. For now: each blow that lands on an enemy that is both Soaked and Unsteady adds 10 stagger, at most five times a second.
+**The numbers.** Mix, keystone, 5 Shards. Every blow on the enemy while it is down breaks its balance twice as fast. It ends the moment it gets up.
 
 **Works with.** Capsize, Rolled In, the finisher.
 
 **Example.** Knock a brute down, and two blows leave it open for a finisher.
-
-**Not built yet.** For now, it adds a flat 10 stagger to blows on any Soaked, Unsteady enemy, instead of doubling the stagger of blows on an enemy that is down.
 
 ## capsize.squall
 **What it does.** You ride 7 metres in the direction of the stick on a low, fast sheet of spray. Every enemy near your path takes 6 damage, is Soaked, and gets 2 more stacks of Unsteady. So if it was already Unsteady, it capsizes.

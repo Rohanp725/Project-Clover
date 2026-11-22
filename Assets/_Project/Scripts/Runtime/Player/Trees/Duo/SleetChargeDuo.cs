@@ -33,8 +33,8 @@ namespace Clover.Player.Trees.Duo
             const string A = Elements.Ice, B = Elements.Lightning;
 
             // Sleet Charge's two shapes. Both keep the charging (a Static every half second for 3 s); they change how it ends.
-            // NEEDS: a set-off on every enemy in reach that carries a mark, each discharging its own Static (Thundersnow: now a
-            // bolt leaps from one chilled enemy to the next within 6 m); the clear ice spear standing where the bolt struck.
+            // Thundersnow's bolt lands on every chilled enemy within 6 m and each discharges its own Static
+            // (UpgradeEffect.EachWithin). NEEDS: the clear ice spear standing where the bolt struck (looks).
             // Glass Spear freezes for 1.5 s whatever its Chill (UpgradeAction.Freeze).
             to.Add(HeartPattern.Put(new Upgrade
             {
@@ -51,8 +51,10 @@ namespace Clover.Player.Trees.Duo
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Snow, Seconds = 3f, Beat = 0.5f } },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = Snow, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Static, Stacks = 1 },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Snow, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Static, Radius = 4f, Stagger = 5f },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Snow, Do = UpgradeAction.Arc, FromTarget = true, LeapsTo = AfflictionKind.Chill, Count = 6, Reach = 6f,
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Snow, Do = UpgradeAction.Burst, EachWithin = 6f, OnlyCarrying = AfflictionKind.Chill, Radius = 0.6f,
                                 Damage = 7f, Stagger = 5f, Affliction = AfflictionKind.Static, Stacks = 1 },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Snow, Do = UpgradeAction.SetOff, EachWithin = 6f, OnlyCarrying = AfflictionKind.Chill,
+                                Affliction = AfflictionKind.Static, Radius = 2f, Stagger = 5f },
                         },
                     },
                     new ShapeDef

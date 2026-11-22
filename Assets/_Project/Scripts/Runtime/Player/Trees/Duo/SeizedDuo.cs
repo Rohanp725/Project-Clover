@@ -84,12 +84,13 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.LeftHigh));
 
-            // NEEDS: a discharge by itself at full depth, through the water to the Soaked only (now to all within 8 m).
+            // A discharge by itself at full depth, through the water to the Soaked within 8 m alone (UpgradeEffect.OnlyCarrying).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = TheSeaFindsLand, Name = "The Sea Finds Land", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { WetThread, Grounded }, Icon = UpgradeIcons.Wave,
                 Description = "Static on a Soaked enemy needs no heavy blow: at full depth it discharges by itself, through the water, to every Soaked enemy within 8 m.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.AfflictionFull, Needs = AfflictionKind.Static, NeedsFull = true, Needs2 = AfflictionKind.Soaked, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Static, Radius = 8f, Stagger = 5f, Cooldown = 1f } },
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.AfflictionFull, Needs = AfflictionKind.Static, NeedsFull = true, Needs2 = AfflictionKind.Soaked, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Static, Radius = 8f, Stagger = 5f, Cooldown = 1f,
+                    OnlyCarrying = AfflictionKind.Soaked } },
             }, HeartPattern.Keystone));
 
             // The duo spell, bought with Shards once both are carried (no god gives it): an opener on a 10 s cooldown (SpellTimings). The bolt form leaps from enemy to enemy;

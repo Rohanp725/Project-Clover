@@ -35,11 +35,9 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). It closes on the nearest enemy in reach.
 
-**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 11 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 9 seconds and the damage 22.) It targets an enemy within 7 metres. The bubble collapses 0.4 seconds after you cast it, within 1 metre, dealing 18 damage and 40 stagger. On a Soaked enemy, its Soaked is used up, and the crack spreads to up to six other Soaked enemies, each within 5 metres of the last, dealing 18 damage and 30 stagger to each.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 11 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 9 seconds and the damage 22.) It targets an enemy within 7 metres. The bubble collapses 0.4 seconds after you cast it, within 1 metre, dealing 18 damage and 40 stagger. On a Soaked enemy, its Soaked is used up, and every other Soaked enemy within 5 metres cracks where it stands: 18 damage and 30 stagger, and its own Soaked is used up too.
 
 **Works with.** Soaked, Riptide and Whirlpool to soak a crowd first, Ebb and Flood, which it comes after on the chart, Spreading Water.
-
-**Not built yet.** Each of the other enemies should crack where it stands and have its own Soaked used up. For now, the crack spreads to them as an arc of water, and they keep their Soaked.
 
 **Example.** Pull three soldiers to your feet with Riptide, Soaked, and snap the bubble on the middle one. All three take the crack.
 
@@ -61,11 +59,11 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** For now, a heavy blow (a finisher counts) on the enemy within 0.3 seconds after the bubble cracks on it. Deep Crack must be in a spell slot.
 
-**The numbers.** 3 Shards. The crack spreads to up to twelve Soaked enemies, each within 20 metres of the last, dealing 18 damage and 30 stagger to each.
+**The numbers.** 3 Shards. Every Soaked enemy within 20 metres cracks where it stands, taking 18 damage and 30 stagger.
 
 **Works with.** Soaked, and every mark that soaks a crowd; Heavy Water; Spreading Water.
 
-**Not built yet.** The snap should be timed to your heavy blow landing, not to the crack. Each enemy should crack where it stands.
+**Not built yet.** The snap should be timed to your heavy blow landing, not to the crack.
 
 **Example.** Soak the room with Riptide and Whirlpool. Then cast it on the brute in front of you, and bring the heavy blow down as it cracks. Every soaked enemy in the room cracks with it.
 

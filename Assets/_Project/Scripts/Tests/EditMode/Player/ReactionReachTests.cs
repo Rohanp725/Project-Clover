@@ -74,6 +74,25 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void TheEffectsDoneOnEachEnemyNearAskWhatEachCarries()
+        {
+            var snow = Upgrade.ById(Clover.Player.Trees.Duo.SleetChargeDuo.Shape).Shapes.First(shape => shape.Name == "Thundersnow").Effects;
+            Assert.IsFalse(snow.Any(effect => effect.Do == UpgradeAction.Arc), "no bolt leaping chilled to chilled");
+            Assert.IsTrue(snow.Any(effect => effect.Do == UpgradeAction.Burst && effect.EachWithin == 6f && effect.OnlyCarrying == AfflictionKind.Chill), "a bolt on each chilled");
+            Assert.IsTrue(snow.Any(effect => effect.Do == UpgradeAction.SetOff && effect.EachWithin == 6f && effect.OnlyCarrying == AfflictionKind.Chill), "each discharging its own");
+            var crack = Upgrade.ById(WaterTree.DeepCrack).Effects;
+            Assert.IsFalse(crack.Any(effect => effect.Do == UpgradeAction.Arc));
+            Assert.IsTrue(crack.Any(effect => effect.Do == UpgradeAction.Burst && effect.EachWithin == 5f && effect.EachOther && effect.OnlyCarrying == AfflictionKind.Soaked), "each other Soaked cracks where it stands");
+            Assert.IsTrue(crack.Any(effect => effect.Do == UpgradeAction.Spend && effect.EachWithin == 5f && effect.EachOther && effect.Affliction == AfflictionKind.Soaked), "and its Soaked is spent");
+            var sea = Upgrade.ById(Clover.Player.Trees.Duo.SeizedDuo.TheSeaFindsLand).Effects.Single();
+            Assert.AreEqual(AfflictionKind.Soaked, sea.OnlyCarrying, "the discharge runs to the Soaked alone");
+            var swamp = Upgrade.ById(Clover.Player.Trees.Duo.CapsizeDuo.Swamped).Effects.Single().State;
+            Assert.AreEqual(ConditionFlags.StaggerTakenShare, swamp.Flags);
+            Assert.AreEqual(2f, swamp.Scale, 1e-5f, "twice as fast");
+            Assert.AreEqual(Reactions.Capsized, swamp.WhileIn, "only while it is capsized");
+        }
+
+        [Test]
         public void TheMarksAnswerWhatTheReactionStruck()
         {
             UpgradeEffect Struck(string id) => Upgrade.ById(id).Effects.Single(effect => effect.On == UpgradeTrigger.ReactionStruck);

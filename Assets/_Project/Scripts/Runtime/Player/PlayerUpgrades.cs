@@ -157,6 +157,37 @@ namespace Clover.Player
             // The reaction whose own effect this is (its pair plus one; 0 none), and which time it went off.
             public int ReactionOf;
             public int ReactionCast;
+            // Already handed to one enemy of several (UpgradeEffect.EachWithin): done as it stands.
+            public bool Fanned;
+        }
+
+        private readonly HashSet<IDamageable> fanTaken = new HashSet<IDamageable>();
+
+        // One copy of the effect for each enemy near the target carrying what it asks, nearest first.
+        private void FanOut(in Pending pending)
+        {
+            var effect = pending.Effect;
+            Component from = pending.Target;
+            Vector3 centre = from != null ? from.transform.position : pending.HasAt ? pending.At : transform.position;
+            fanTaken.Clear();
+            if (effect.EachOther && from is IDamageable self) fanTaken.Add(self);
+            int most = effect.Count > 0 && effect.Do != UpgradeAction.Arc ? effect.Count : 24;
+            int done = 0;
+            for (int guard = 0; guard < 32 && done < most; guard++)
+            {
+                var near = combat.EnemyNear(centre, effect.EachWithin, fanTaken);
+                if (!(near is IDamageable one)) break;
+                fanTaken.Add(one);
+                if (!PlayerCombat.Carries(near, effect.OnlyCarrying)) continue;
+                var each = pending;
+                each.Target = near;
+                each.At = near.transform.position;
+                each.HasAt = true;
+                each.Fanned = true;
+                Enqueue(each);
+                done++;
+            }
+            fanTaken.Clear();
         }
 
         // ---- The keystones of 2026-11-20 (keystones_fire_water_life.md).
@@ -1479,6 +1510,12 @@ namespace Clover.Player
 
             var effect = pending.Effect;
             if (effect == null) return;
+            // Done on each enemy near that carries what it asks, as each one's own: put back in the line once for each.
+            if (effect.EachWithin > 0f && !pending.Fanned)
+            {
+                FanOut(pending);
+                return;
+            }
             EffectsDone++;
             // An effect that names no affliction lays, and is seen in, its own mark's element (IMPLEMENTATION.md 3.6).
             var held = OwnElement(effect.Owner);
@@ -1837,7 +1874,8 @@ namespace Clover.Player
                     float ripeShare = carrier.Afflictions.RipeShare(kind);
                     float damage = (carrier.Afflictions.SetOff(kind) * reactionScale + eDamage * depth) * Stats.Multiplier(PlayerStat.BurstDamage) * ripeShare;
                     if (ripeSeed) RipeBurstAt(subject, centre, depth);
-                    combat.StrikeArea(centre, Or(effect.Radius, 3f) * Stats.Multiplier(PlayerStat.BurstReach), Blow(look, kind, damage, eStagger * depth * Stats.Multiplier(PlayerStat.BurstStagger), 0));
+                    combat.StrikeArea(centre, Or(effect.Radius, 3f) * Stats.Multiplier(PlayerStat.BurstReach), Blow(look, kind, damage, eStagger * depth * Stats.Multiplier(PlayerStat.BurstStagger), 0),
+                        null, 0f, effect.OnlyCarrying);
                     ElementLook.Strike(look, centre, 0.3f);
                     // Whatever waits on an affliction being spent is told, with how deep it was.
                     Trigger(UpgradeTrigger.SetOff, subject, centre, true, depth, null, kind, "", laying, damage);
