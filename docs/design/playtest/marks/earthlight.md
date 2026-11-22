@@ -18,17 +18,15 @@ are both carried.
 **Not built yet.** The cracks aren't drawn as a star on the floor yet. Lit Seam's flash runs along a star around where the enemy stands now, not along the first seams if it has moved off them.
 
 ## earthlight.hour
-**What it does.** Every 6 seconds during a fight, your next heavy blow is right on the hour: it hits harder and shakes the enemy twice.
+**What it does.** Every 6 seconds during a fight, your next heavy blow is right on the hour: it is a critical hit and shakes the enemy twice. A small dial at your feet fills up to show when the hour comes.
 
-**When it happens.** A heavy blow or finisher that lands, at most once every 6 seconds.
+**When it happens.** During a fight, the dial fills over 6 seconds. Once it is full, it waits for your next heavy blow or finisher that lands. Then it empties and starts again. Out of a fight it stays empty.
 
-**The numbers.** Mix, 3 Shards. Two stacks of Tremor and 10 more damage.
+**The numbers.** Mix, 3 Shards. The heavy blow on the hour is a critical hit and adds two stacks of Tremor.
 
 **Works with.** Earthlight (gives the Tremor to start it), Quartz Vein, The Stone Keeps the Hour.
 
 **Example.** Keep your heavy blows six seconds apart, and each one shakes and lights up a Marked soldier.
-
-**Not built yet.** There's no sundial at your feet to show the hour yet. For now, the blow hits for 10 more damage instead of being a critical hit.
 
 ## earthlight.dawn
 **What it does.** A perfect guard against a Marked enemy blinds the attacker. It gets Marked again, and its Tremor is filled all the way.

@@ -1589,5 +1589,31 @@ namespace Clover.Tests
             Assert.AreEqual(UpgradeTrigger.SpellLoosed, burnt.On);
             Assert.AreEqual(2.5f, burnt.Radius, 1e-5f, "the column five metres across");
         }
+
+        [Test]
+        public void KeepingTheHourFillsInAFightAndMakesTheHeavyBlowOnItCritical()
+        {
+            var clock = new Clover.Player.Magic.HourClock();
+            Assert.IsFalse(clock.Tick(5f, 6f, true));
+            Assert.AreEqual(5f / 6f, clock.Share(6f), 1e-4f, "the dial five sixths full");
+            Assert.IsTrue(clock.Tick(1.5f, 6f, true), "on the hour");
+            Assert.IsTrue(clock.Ready);
+            Assert.IsFalse(clock.Tick(10f, 6f, true), "it waits, full, for its heavy blow");
+            Assert.IsTrue(clock.Ready);
+            clock.Spend();
+            Assert.IsFalse(clock.Ready);
+            Assert.AreEqual(0f, clock.Share(6f), 1e-5f, "it fills again from the blow");
+            clock.Tick(4f, 6f, true);
+            clock.Tick(0.1f, 6f, false);
+            Assert.AreEqual(0f, clock.Share(6f), 1e-5f, "out of a fight it empties");
+            Assert.IsFalse(clock.Tick(10f, 6f, false), "and does not fill");
+
+            var hour = Upgrade.ById(Clover.Player.Trees.Duo.EarthlightDuo.KeepingTheHour).Effects.Single();
+            Assert.AreEqual(UpgradeTrigger.HeavyHit, hour.On);
+            Assert.AreEqual(6f, hour.Hour, 1e-5f);
+            Assert.AreEqual(AfflictionKind.Tremor, hour.Affliction);
+            Assert.AreEqual(2, hour.Stacks);
+            Assert.AreEqual(0f, hour.Cooldown, 1e-5f, "the hour, not a cooldown");
+        }
     }
 }

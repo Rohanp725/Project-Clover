@@ -47,4 +47,43 @@ namespace Clover.Player.Magic
             Calm = 0f;
         }
     }
+
+    /// <summary>
+    /// The hour a mark keeps in a fight (Keeping the Hour): it fills over its seconds while a fight is on, stays full until a
+    /// heavy blow spends it, and empties when the fight ends. Plain C#: the caller says how long an hour is and whether a fight is on.
+    /// </summary>
+    public sealed class HourClock
+    {
+        /// <summary>Seconds filled toward the hour.</summary>
+        public float Filled { get; private set; }
+        /// <summary>True while the hour is up and waits for its heavy blow.</summary>
+        public bool Ready { get; private set; }
+
+        /// <summary>Runs it on; true on the tick the hour comes up.</summary>
+        public bool Tick(float deltaTime, float every, bool inFight)
+        {
+            if (every <= 0f || !inFight)
+            {
+                Filled = 0f;
+                Ready = false;
+                return false;
+            }
+            if (Ready) return false;
+            Filled += Math.Max(0f, deltaTime);
+            if (Filled < every) return false;
+            Filled = every;
+            Ready = true;
+            return true;
+        }
+
+        /// <summary>How full it is, 0 to 1, for the dial.</summary>
+        public float Share(float every) => every > 0f ? Math.Min(1f, Filled / every) : 0f;
+
+        /// <summary>The heavy blow on the hour landed: it starts filling again.</summary>
+        public void Spend()
+        {
+            Filled = 0f;
+            Ready = false;
+        }
+    }
 }

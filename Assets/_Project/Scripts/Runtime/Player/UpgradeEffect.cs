@@ -478,6 +478,11 @@ namespace Clover.Player
         /// </summary>
         public float BurningShare;
         public float BurningWithin;
+        /// <summary>
+        /// For HeavyHit: only the heavy blow on the hour, once in each Hour seconds of fighting (Magic.HourClock); while the hour is up
+        /// the next heavy blow is critical, and a dial at your feet fills toward it (Keeping the Hour: 6 s).
+        /// </summary>
+        public float Hour;
 
         /// <summary>True when a Hazard effect lays ground that keeps acting, told to the marks at each bite (Hazards.GroundActs).</summary>
         public bool ActsAsGround => Inside != null || Mends > 0f || InsideDo != null || InsideAtEnd != null || YouInside != null || !string.IsNullOrEmpty(Ground);

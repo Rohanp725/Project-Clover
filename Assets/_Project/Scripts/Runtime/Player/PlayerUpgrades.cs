@@ -1208,8 +1208,55 @@ namespace Clover.Player
             defence.Health.GreyDelay = Mathf.Max(0f, baseGreyDelay + Stats.Sum(PlayerStat.GreyDelay));
         }
 
+        // The hour kept in a fight (Keeping the Hour) and its dial at your feet: a faint ring, and a disc filling inside it.
+        private readonly Magic.HourClock hour = new Magic.HourClock();
+        private int hourRing = -1, hourDisc = -1;
+        private static readonly Color HourColour = new Color(1f, 0.78f, 0.35f, 1f);
+
+        /// <summary>True while the hour is up: the next heavy blow is on it (for probes and the dial).</summary>
+        public bool OnTheHour => hour.Ready;
+
+        private float HourEvery()
+        {
+            if (byTrigger == null) return 0f;
+            float every = 0f;
+            var heavy = byTrigger[(int)UpgradeTrigger.HeavyHit];
+            for (int i = 0; i < heavy.Count; i++)
+                if (heavy[i].Hour > 0f && (every <= 0f || heavy[i].Hour < every)) every = heavy[i].Hour;
+            return every;
+        }
+
+        private void KeepHour()
+        {
+            float every = HourEvery();
+            bool fighting = spells != null && spells.Fight.InFight;
+            hour.Tick(Time.deltaTime, every, fighting);
+            // While the hour is up, the next heavy blow is critical.
+            if (hour.Ready && combat != null) combat.PromiseHeavyCritical(0.1f);
+            bool shown = every > 0f && fighting;
+            if (!shown)
+            {
+                if (hourRing >= 0) Forms.FormFx.ReleaseMark(hourRing, 0.2f);
+                if (hourDisc >= 0) Forms.FormFx.ReleaseMark(hourDisc, 0.2f);
+                hourRing = hourDisc = -1;
+                return;
+            }
+            if (hourRing < 0) hourRing = Forms.FormFx.HoldMark(Forms.FormMark.Ring, Forms.FormKit.Lit(HourColour, 0.8f, 0.5f));
+            if (hourDisc < 0) hourDisc = Forms.FormFx.HoldMark(Forms.FormMark.Disc, Forms.FormKit.Lit(HourColour, 1.4f));
+            Vector3 feet = transform.position + Vector3.up * 0.03f;
+            float across = 1.4f;
+            float filled = Mathf.Max(0.05f, hour.Share(every)) * across;
+            if (hourRing >= 0) Forms.FormFx.PlaceMark(hourRing, feet, Quaternion.identity, new Vector3(across, 1f, across));
+            if (hourDisc >= 0)
+            {
+                Forms.FormFx.PlaceMark(hourDisc, feet, Quaternion.identity, new Vector3(filled, 1f, filled));
+                Forms.FormFx.TintMark(hourDisc, Forms.FormKit.Lit(HourColour, hour.Ready ? 3f : 1.2f));
+            }
+        }
+
         private void Update()
         {
+            KeepHour();
             if (toFinish.Count > 0) FinishBroken();
             if (echoForm != null && Time.time >= echoAt) CastEcho();
             ReadStandingNews();
@@ -1570,6 +1617,8 @@ namespace Clover.Player
             if (effect.RedOnly && !RedJustTurned(Time.time, redTurnedAt)) return;
             if (effect.OnBeat > 0f && !(target is IAfflictable beaten && beaten.Afflictions.NearBeat(effect.OnBeat))) return;
             if (effect.HealthBelow > 0f && !(defence != null && !defence.IsDead && defence.Health.Fraction < effect.HealthBelow)) return;
+            // Only the heavy blow on the hour (Keeping the Hour).
+            if (effect.Hour > 0f && !hour.Ready) return;
             if (effect.StoneAtBack > 0f && (target == null || !StoneBehind(transform.position, target.transform.position, effect.StoneAtBack))) return;
             if (effect.NearStanding > 0f && !StandingThings.NearKind(transform.position, effect.NearStanding, effect.Raises)) return;
             // Only on an enemy standing in your own ground of that name (The Hag's Staff: heavy blows on its frozen disc).
@@ -3986,7 +4035,12 @@ namespace Clover.Player
                 Trigger(UpgradeTrigger.FinisherHit, struck, at);
             }
             if (step == combat.Combo.Skill) Trigger(UpgradeTrigger.SkillHit, struck, at);
-            else if (heavy || finisher) Trigger(UpgradeTrigger.HeavyHit, struck, at);
+            else if (heavy || finisher)
+            {
+                Trigger(UpgradeTrigger.HeavyHit, struck, at);
+                // The heavy blow on the hour has landed: the dial empties and fills again.
+                if (hour.Ready) hour.Spend();
+            }
             // Storm Front: the heavy blow or finisher that lands is owed a Gust, thrown in the next step once the swing has been reckoned.
             // The Gust's own short wait must not turn a heavy blow into a light one for the marks.
             if (heavy || finisher)

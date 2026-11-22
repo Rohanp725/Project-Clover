@@ -59,16 +59,15 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.Foot));
 
-            // NEEDS: a fight's clock and a dial at the feet; a blow made critical (blow-made-critical). Now a heavy blow at most
-            // every 6 s lays two Tremor and strikes 10 more.
+            // The hour (UpgradeEffect.Hour): once in each 6 s of fighting the next heavy blow is on it, critical (the hour's promise)
+            // with two Tremor, and a dial at your feet fills toward it (PlayerUpgrades.KeepHour).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = KeepingTheHour, Name = "Keeping the Hour", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Hourglass,
-                Description = "Every 6 s in a fight, the next heavy blow is on the hour: it strikes harder and lays two Tremor.",
+                Description = "Every 6 s in a fight, the next heavy blow is on the hour: critical, with two Tremor. A small dial at your feet fills to show it.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.HeavyHit, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Tremor, Stacks = 2, Cooldown = 6f },
-                    new UpgradeEffect { On = UpgradeTrigger.HeavyHit, Do = UpgradeAction.Burst, Radius = 0.5f, Damage = 10f, Cooldown = 6f },
+                    new UpgradeEffect { On = UpgradeTrigger.HeavyHit, Hour = 6f, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Tremor, Stacks = 2 },
                 },
             }, HeartPattern.LeftLow));
 
