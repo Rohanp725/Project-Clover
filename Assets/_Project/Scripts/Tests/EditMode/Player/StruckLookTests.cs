@@ -178,6 +178,39 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void TheAttackArcIsHeldBelowWhite()
+        {
+            // A surge's glow and every weapon's HDR slash colour drew a pure-white crescent (the surge-while-moving films of
+            // 2026-11-22). Whatever the arc is drawn in, it keeps a channel low and is no brighter than one.
+            var colours = new System.Collections.Generic.List<(string, Color)>();
+            foreach (var info in Elements.All)
+            {
+                colours.Add((info.Name + "'s surge glow", info.Glow));
+                colours.Add((info.Name + "'s lit arc", new Color(info.Colour.r * 1.9f, info.Colour.g * 1.9f, info.Colour.b * 1.9f, 0.95f)));
+            }
+            foreach (var weapon in new[] { Weapons.Katana(), Weapons.MassiveSword(), Weapons.GreatHammer(), Weapons.TwinKnives(), Weapons.Scythe(), Weapons.GreatSpear(), Weapons.ChainSickle(), Weapons.GreatBow(), Weapons.Fists() })
+            {
+                colours.Add((weapon.Name + "'s slash", weapon.SlashColour));
+                colours.Add((weapon.Name + "'s tip", new Color(weapon.SlashColour.r * 1.4f, weapon.SlashColour.g * 1.4f, weapon.SlashColour.b * 1.4f, weapon.SlashColour.a)));
+            }
+            foreach (var (what, colour) in colours)
+            {
+                Color arc = StruckLook.Arc(colour);
+                Assert.LessOrEqual(Palest(arc), StruckLook.ArcPalest + 1e-4f, what + " draws a white arc");
+                Assert.LessOrEqual(Peak(arc), StruckLook.ArcPeak + 1e-4f, what + "'s arc is lit past one");
+                Assert.AreEqual(colour.a, arc.a, 1e-4f, what + " keeps its see-through");
+            }
+            // The faint arc under a swing look is already below white and is left exactly as it was.
+            var faint = new Color(0.66f, 0.63f, 0.56f, 0.18f);
+            Assert.AreEqual(faint, StruckLook.Arc(faint));
+            // The hue's lean is kept: a gold slash stays warmer than it is blue.
+            Color gold = StruckLook.Arc(new Color(2.6f, 2.1f, 1.1f, 0.9f));
+            Assert.Greater(gold.r, gold.b);
+            // The glow shader's core is lit from the mesh's white, not the arc's colour: the player's arcs go without it.
+            Assert.That(System.IO.File.ReadAllText("Assets/_Project/Scripts/Runtime/Player/PlayerCombat.cs").Contains("arcs.NoHotCore = true"), "the player's arcs keep a white core");
+        }
+
+        [Test]
         public void TheBowsSparksTheShatterTheCrackleAndTheBurnAwayAreNeverThrownPlain()
         {
             // The sources the films of 2026-11-22 caught throwing white: each now names a Spark colour.

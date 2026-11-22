@@ -354,6 +354,7 @@ namespace Clover.Player
 
         private void Awake()
         {
+            if (arcs != null) arcs.NoHotCore = true;
             player = GetComponent<PlayerController>();
             defence = GetComponent<PlayerDefence>();
             upgrades = GetComponent<PlayerUpgrades>();
@@ -2280,7 +2281,7 @@ namespace Clover.Player
         /// <summary>Draws a swing's arc from the player, for effects that follow a blow.</summary>
         public void ShowArc(float reach, float arcDegrees, Color colour)
         {
-            if (arcs != null) arcs.Show(transform.position, transform.forward, reach, arcDegrees, 0f, colour);
+            if (arcs != null) arcs.Show(transform.position, transform.forward, reach, arcDegrees, 0f, StruckLook.Arc(colour));
         }
 
         /// <summary>Whom the weapon's move in progress has struck.</summary>
@@ -2374,6 +2375,9 @@ namespace Clover.Player
                 Color plain = Weapon.SlashColour;
                 arcColour = new Color(plain.r * 0.35f, plain.g * 0.35f, plain.b * 0.35f, plain.a * 0.2f);
             }
+            // Held below white whatever it was drawn in: a weapon's slash colour and a surge's glow are lit past white and
+            // drew a pure-white crescent (the surge-while-moving films of 2026-11-22).
+            arcColour = StruckLook.Arc(arcColour);
             // A strike drawn in its weapon's shape draws no reach arc: the shape's look replaces it (a pale half-disc over
             // the spear's and the scythe's strikes in the stills of 2026-11-22).
             if (fresh && arcs != null && !(infused && SlamsHere(step)))
@@ -2384,7 +2388,7 @@ namespace Clover.Player
                 {
                     // A weapon with a tip shows where the tip is: the haft's part of the fan dim, the last metre bright.
                     if (step.SweetFrom > 0f) arcs.Show(transform.position, transform.forward, step.SweetFrom, step.ArcDegrees, step.Sweep, new Color(arcColour.r * 0.45f, arcColour.g * 0.45f, arcColour.b * 0.45f, arcColour.a * 0.5f));
-                    arcs.Show(transform.position, transform.forward, step.Reach * WeaponReachScale, step.ArcDegrees, step.Sweep, step.SweetFrom > 0f ? new Color(arcColour.r * 1.4f, arcColour.g * 1.4f, arcColour.b * 1.4f, arcColour.a) : arcColour);
+                    arcs.Show(transform.position, transform.forward, step.Reach * WeaponReachScale, step.ArcDegrees, step.Sweep, step.SweetFrom > 0f ? StruckLook.Arc(new Color(arcColour.r * 1.4f, arcColour.g * 1.4f, arcColour.b * 1.4f, arcColour.a)) : arcColour);
                 }
             }
             Vector3 origin = transform.position + Vector3.up;

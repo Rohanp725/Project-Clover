@@ -20,6 +20,14 @@ namespace Clover.Core
         public float Height = 1.1f;
 
         private static readonly int ColourId = Shader.PropertyToID("_Color");
+        private static readonly int CoreId = Shader.PropertyToID("_Core");
+
+        /// <summary>
+        /// True for the player's arcs: drawn without the glow shader's hot core, which is lit from the mesh's own white
+        /// and not the arc's colour, so a bright arc kept a pure-white sliver inside it however its colour was held
+        /// (the surge-while-moving films of 2026-11-22). Enemies' arcs keep their core.
+        /// </summary>
+        [System.NonSerialized] public bool NoHotCore;
 
         private Transform[] arcs;
         private MeshFilter[] filters;
@@ -114,6 +122,7 @@ namespace Clover.Core
             var colour = colours[i];
             colour.a *= alpha;
             block.SetColor(ColourId, colour);
+            if (NoHotCore) block.SetFloat(CoreId, 0f);
             renderers[i].SetPropertyBlock(block);
         }
 

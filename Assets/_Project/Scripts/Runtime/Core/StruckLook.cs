@@ -112,6 +112,36 @@ namespace Clover.Core
             return new Color(r * brightness, g * brightness, b * brightness, 1f);
         }
 
+        /// <summary>The most an attack arc's palest channel may reach, and its strongest: past these it drew a white crescent.</summary>
+        public const float ArcPalest = 0.6f, ArcPeak = 1f;
+
+        /// <summary>
+        /// An attack arc's colour held below white. A colour already under <see cref="ArcPalest"/> in its palest channel is
+        /// left as it is (the faint arc under a swing look); a bright or pale one (a weapon's HDR slash colour, a surge's
+        /// glow, which drew a pure-white crescent at the first swing of every surge-while-moving film of 2026-11-22) keeps
+        /// its hue deepened so its palest channel is half its strongest, its strongest at most <see cref="ArcPeak"/>, and
+        /// its alpha.
+        /// </summary>
+        public static Color Arc(Color colour)
+        {
+            if (Palest(colour) <= ArcPalest && Peak(colour) <= ArcPeak) return colour;
+            float peak = Peak(colour);
+            if (peak <= 1e-4f) return colour;
+            float r = colour.r / peak, g = colour.g / peak, b = colour.b / peak;
+            float palest = Mathf.Min(r, Mathf.Min(g, b));
+            const float Share = 0.5f;
+            if (palest > 0.999f) { r = 1f; g = 0.75f; b = Share; }
+            else if (palest > Share)
+            {
+                float stretch = (1f - Share) / (1f - palest);
+                r = 1f - (1f - r) * stretch;
+                g = 1f - (1f - g) * stretch;
+                b = 1f - (1f - b) * stretch;
+            }
+            float lit = Mathf.Min(peak, ArcPeak);
+            return new Color(r * lit, g * lit, b * lit, colour.a);
+        }
+
         /// <summary>The ink under the cut streak: unchanged for a plain blow, as faint as the stroke under an element.</summary>
         public static Color Ink(Color plain, Color tint) => Tinted(tint) ? new Color(plain.r, plain.g, plain.b, plain.a * TintStrength) : plain;
     }

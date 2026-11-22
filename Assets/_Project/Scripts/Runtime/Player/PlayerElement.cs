@@ -428,7 +428,7 @@ namespace Clover.Player
         /// <summary>Draws an arc of a given light: a spell's front in its own element.</summary>
         public void ShowArc(float reach, float arcDegrees, float sweep, Color colour)
         {
-            if (arcs != null) arcs.Show(transform.position, transform.forward, reach, arcDegrees, sweep, colour);
+            if (arcs != null) arcs.Show(transform.position, transform.forward, reach, arcDegrees, sweep, StruckLook.Arc(colour));
         }
 
         /// <summary>A cast of a spell in its own element (the mark's; the first attunement's for none). See <see cref="NewCast(SpellSpec, string, Upgrade, ElementInfo)"/>.</summary>
