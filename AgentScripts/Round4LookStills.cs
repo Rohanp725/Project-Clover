@@ -238,15 +238,28 @@ public class Round4LookStillsRunner : MonoBehaviour
         else Shoot(look.slug, main, playerAt);
         string extra = look.how == How.Surge ? $", surge {element.SurgeActive}, fever {element.FeverLevel:0.00}, charge {element.ChargeLevel:0.00}, plates {element.BedrockPlates}, jaws {SurgeArt.JawsShown}" : "";
         Say($"{look.slug}: {(setOff ? "set off" : "NOT SET OFF")}, taken at {Time.time - began:0.00} s{extra}");
+        // The surge on the player close up, standing, then mid-swing, so what the bones carry is seen following the arms.
+        if (look.how == How.Surge) Shoot(look.slug + "_close_idle", player.transform.position, player.transform.position, 5f);
         yield return null;
         Time.timeScale = 1f;
+        if (look.how == How.Surge)
+        {
+            yield return Tap(Key.J);
+            float swing = Time.time + 0.18f;
+            while (Time.time < swing) yield return null;
+            Time.timeScale = 0f;
+            yield return null;
+            Shoot(look.slug + "_close_swing", player.transform.position, player.transform.position, 5f);
+            yield return null;
+            Time.timeScale = 1f;
+        }
         if (look.how == How.Surge && element.SurgeKit != null) element.SurgeKit.SurgeSeconds = surgeWas;
         yield return Real(look.how == How.Surge ? 3.5f : 1.6f);
     }
 
     // The recipe's game camera: 12.7 m off, 55 degrees down, a 40 degree view, looking the strip's way (along -z), at the
     // main body a quarter of the way toward the player.
-    private static void Shoot(string name, Vector3 main, Vector3 playerAt)
+    private static void Shoot(string name, Vector3 main, Vector3 playerAt, float distance = 12.7f)
     {
         Vector3 looking = Quaternion.Euler(55f, 180f, 0f) * Vector3.forward;
         Vector3 centre = Vector3.Lerp(main, playerAt, 0.25f) + Vector3.up * 0.6f;
@@ -254,7 +267,7 @@ public class Round4LookStillsRunner : MonoBehaviour
         var camera = holder.AddComponent<Camera>();
         camera.fieldOfView = 40f;
         camera.nearClipPlane = 0.1f;
-        holder.transform.position = centre - looking * 12.7f;
+        holder.transform.position = centre - looking * distance;
         holder.transform.rotation = Quaternion.LookRotation(looking);
         var target = new RenderTexture(1280, 720, 24);
         camera.targetTexture = target;

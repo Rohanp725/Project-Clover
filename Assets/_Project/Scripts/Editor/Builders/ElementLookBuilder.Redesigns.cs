@@ -173,7 +173,7 @@ namespace Clover.EditorTools
             // flush (the player's own material draws it, FeverFlush), and the soft cards' and the shimmer's tints.
             ["rd_fang_rim"] = new ReactionArtBuilder.Paint(0.02f, 0.012f, 0.03f),
             ["rd_fever_skin"] = new ReactionArtBuilder.Paint(0.3f, 0.42f, 0.15f, 0.76f, 1f, true),
-            ["rd_fogcard"] = new ReactionArtBuilder.Paint(0.07f, 0.13f, 0.05f, 0.7f, 1f, true),
+            ["rd_fogcard"] = new ReactionArtBuilder.Paint(0.07f, 0.13f, 0.05f, 0.95f, 1f, true),
             ["rd_glowgold"] = new ReactionArtBuilder.Paint(1f, 0.62f, 0.16f, 0.55f, 1f, true),
             ["rd_heatshimmer"] = new ReactionArtBuilder.Paint(0.62f, 0.6f, 0.36f, 0.5f, 1f, true),
         };
@@ -223,7 +223,7 @@ namespace Clover.EditorTools
             {
                 made.SetFloat("_SrcBlend", added ? (float)UnityEngine.Rendering.BlendMode.One : (float)UnityEngine.Rendering.BlendMode.SrcAlpha);
                 made.SetFloat("_DstBlend", added ? (float)UnityEngine.Rendering.BlendMode.One : (float)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-                made.SetFloat("_Density", added ? 1f : 2.6f);
+                made.SetFloat("_Density", added ? 1f : 4.5f);
                 made.SetFloat("_Softness", added ? 0.25f : 0.15f);
                 made.SetFloat("_Breathe", added ? 0.2f : 0.45f);
             }
