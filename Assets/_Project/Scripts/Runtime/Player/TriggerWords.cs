@@ -84,6 +84,7 @@ namespace Clover.Player
                 case UpgradeTrigger.DanceInTime: return "every cut of a dance lands in time";
                 case UpgradeTrigger.GrownBurst: return "something you grew bursts";
                 case UpgradeTrigger.GrownBolt: return "something you grew throws a bolt";
+                case UpgradeTrigger.SpellLoosed: return "a gathered spell is loosed";
                 default: return "its moment comes";
             }
         }

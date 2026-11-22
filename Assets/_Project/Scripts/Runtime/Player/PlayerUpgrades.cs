@@ -183,6 +183,19 @@ namespace Clover.Player
         // Boons held by one cast (UpgradeEffect.ThisCast), and the cast whose moment is being answered now.
         private readonly CastBoons castBoons = new CastBoons();
         private int answeringCast;
+        // A spell begun and gathered ring by ring by the blows landed after it (Daybreak), and the numbers it is loosed with.
+        private readonly RingGather rings = new RingGather();
+        private readonly SpellSpec loosedSpec = new SpellSpec();
+
+        /// <summary>True while a gathered spell waits to be loosed, and the rings it holds, for the HUD and probes.</summary>
+        public bool Gathering => rings.Active;
+        public int RingsHeld => rings.Rings;
+        /// <summary>Counts for probes: gathered spells loosed, and the rings the last one held.</summary>
+        public int RingsLoosed { get; private set; }
+        public int LastRingsLoosed { get; private set; }
+
+        /// <summary>True when the cast numbered <paramref name="cast"/> was made critical by a mark (UpgradeEffect.ThisCast on CritChance).</summary>
+        public bool CastCritical(int cast) => cast != 0 && castBoons.Multiplier(cast, PlayerStat.CritChance, Time.time) > 1f;
         // Whom the cast numbered castHitsOf struck, in order (The Yellow Gale shares its store among them).
         private readonly List<Component> castHits = new List<Component>(MostStruck);
         private int castHitsOf;
@@ -1159,6 +1172,8 @@ namespace Clover.Player
         private void Update()
         {
             if (toFinish.Count > 0) FinishBroken();
+            // A gathered spell nobody loosed goes by itself when its press window is over.
+            if (rings.Due(Time.time)) LooseRings();
             if (mending.Owed > 0f && defence != null && !defence.IsDead) defence.Heal(mending.Take(Time.deltaTime), false);
             sinceBlowLanded += Time.deltaTime;
             if (hasWell && well > 0f && sinceBlowLanded < WellBlowSeconds && defence != null && !defence.IsDead && defence.Health.Fraction < 0.999f)
@@ -1994,6 +2009,9 @@ namespace Clover.Player
                     if (effect.UntilDodge && untilDodgeCount < untilDodge.Length) untilDodge[untilDodgeCount++] = effect;
                     ElementLook.Sparks(held, self + Vector3.up * 1.2f, Vector3.up, 0.6f);
                     break;
+                case UpgradeAction.Loose:
+                    if (rings.Active) LooseRings();
+                    break;
                 case UpgradeAction.Ward:
                     if (defence != null) defence.GiveWards(Or(eCount, 1));
                     Vfx.Play(VfxKind.TintRing, self + Vector3.up * 0.2f, Vector3.up, 1f, new Color(0.7f, 0.92f, 1f));
@@ -2537,7 +2555,12 @@ namespace Clover.Player
             castSource = mark;
             castOrigin = transform.position;
             int before = queued;
-            foreach (var effect in presses[index]) Consider(effect, null, transform.position, false);
+            foreach (var effect in presses[index])
+            {
+                // Nothing gathered to loose: the press is no press, and the slot casts again.
+                if (effect.Do == UpgradeAction.Loose && !rings.Active) continue;
+                Consider(effect, null, transform.position, false);
+            }
             castSource = null;
             if (queued == before) return false;
             PressesDone++;
@@ -2673,6 +2696,8 @@ namespace Clover.Player
             var struck = target as Component;
             Vector3 at = struck != null ? struck.transform.position : transform.position;
             bool finisher = outcome == HitOutcome.Finisher;
+            // Each blow landed adds a ring of light up the blade to a gathered spell (Daybreak).
+            if (rings.Add() && element != null) ElementLook.Sparks(OwnElement(rings.Mark), transform.position + Vector3.up * 1.2f, Vector3.up, 0.3f);
             if (hasHeat && Heat.Landed())
             {
                 Vfx.Play(VfxKind.Embers, transform.position + Vector3.up * 1.2f, Vector3.up, 0.8f);
@@ -3837,6 +3862,23 @@ namespace Clover.Player
             for (int i = 0; i < spec.FlaskCost; i++) defence.Flasks.TryThrow();
             if (mark.Index >= 0 && mark.Index < castAt.Length) castAt[mark.Index] = Time.time;
             WornCasts++;
+            if (spec.Rings > 0)
+            {
+                // Begun, not loosed: the blows landed from now each add a ring, and a second press (or the press window's end)
+                // looses it with what it gathered (LooseRings).
+                PressesOf(mark, out float window);
+                rings.Begin(mark, spec, cast.Cast, Time.time + (window > 0f ? window : 8f));
+                if (element != null) ElementLook.Sparks(OwnElement(mark), transform.position + Vector3.up * 1.2f, Vector3.up, 0.5f);
+                castSource = mark;
+                castOrigin = transform.position;
+                castFrom = transform.position;
+                BeginCast();
+                answeringCast = cast.Cast;
+                try { Trigger(UpgradeTrigger.SpellCast, null, transform.position, false); }
+                finally { answeringCast = 0; }
+                castSource = null;
+                return true;
+            }
             if (form is ISpellLanding landing)
             {
                 // The form throws the player into the air; it is told again when they come down.
@@ -3867,6 +3909,44 @@ namespace Clover.Player
             finally { answeringCast = 0; }
             castSource = null;
             return true;
+        }
+
+        // Looses the gathered spell now with the rings it holds, facing the enemy faced: its own branch's SpellLoosed moment is
+        // told first, so what that moment gives the cast (Daybreak's Master: critical) is held before its blows land.
+        private void LooseRings()
+        {
+            var mark = rings.Mark;
+            int tag = rings.Tag;
+            int gathered = rings.Rings;
+            if (mark == null || element == null || combat == null)
+            {
+                rings.End();
+                return;
+            }
+            rings.Loose(loosedSpec);
+            var form = SpellForms.Get(SpellBranches.FormOf(mark, RunState.Unlocked, ReadLoadout()));
+            if (form == null) return;
+            var cast = element.NewCast(loosedSpec, mark.Name, mark);
+            cast.Cast = tag;
+            if (cast.Target != null)
+            {
+                Vector3 toward = cast.Target.position - transform.position;
+                toward.y = 0f;
+                if (toward.sqrMagnitude > 0.0025f)
+                {
+                    transform.rotation = Quaternion.LookRotation(toward, Vector3.up);
+                    cast.Forward = transform.forward;
+                }
+            }
+            castSource = mark;
+            answeringCast = tag;
+            try { Trigger(UpgradeTrigger.SpellLoosed, null, transform.position, false); }
+            finally { answeringCast = 0; }
+            castSource = mark;
+            form.Cast(cast);
+            castSource = null;
+            RingsLoosed++;
+            LastRingsLoosed = gathered;
         }
 
         /// <summary>

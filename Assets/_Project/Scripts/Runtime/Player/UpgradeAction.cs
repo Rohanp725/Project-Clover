@@ -218,5 +218,7 @@ namespace Clover.Player
         /// moment, does not stand still and its cuts land at once). Nothing is done when its moment comes.
         /// </summary>
         Quicken,
+        /// <summary>Looses the spell its own branch began and gathered (SpellSpec.Rings) now, with the rings it holds: Daybreak's second press.</summary>
+        Loose,
     }
 }

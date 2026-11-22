@@ -159,6 +159,8 @@ namespace Clover.Player
             into.HoldUpTo = from.HoldUpTo;
             into.HeldDamage = from.HeldDamage;
             into.HeldStagger = from.HeldStagger;
+            into.Rings = from.Rings;
+            into.RingsFor = from.RingsFor;
         }
     }
 

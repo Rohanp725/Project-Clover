@@ -1031,24 +1031,26 @@ namespace Clover.Player
         private Hit Make(in SpellBlow blow, IDamageable target, Vector3 direction, Vector3 origin)
         {
             float damage = blow.Damage;
+            // Critical by its own word, or because its cast was made critical (Daybreak's Master: loosed as a blow would land).
+            bool critical = blow.Critical || (upgrades != null && upgrades.CastCritical(blow.Cast));
             var carrier = target as IAfflictable;
             if (StatAfflicted != 1f && carrier != null && carrier.Afflictions.Any) damage *= StatAfflicted;
             if (Stats != null && carrier != null) damage *= Mathf.Max(0.1f, 1f + Stats.Against(PlayerStat.SpellDamage, carrier.Afflictions));
             // A reaction's own blow, harder on what carries what a mark asks (Every Crack Rings: the notched), and critical when a mark makes it so.
             if (blow.ReactionOf > 0 && Stats != null && carrier != null) damage *= Mathf.Max(0.1f, 1f + Stats.Against(PlayerStat.ReactionDamageOn, carrier.Afflictions));
-            if (blow.Critical) damage *= CritMultiplier;
+            if (critical) damage *= CritMultiplier;
             if (blow.Affliction == AfflictionKind.Burn)
             {
                 // A burn is given in seconds, with or without depth.
                 float seconds = (blow.AfflictionSeconds > 0f ? blow.AfflictionSeconds : Clover.Gameplay.Afflictions.Spec(AfflictionKind.Burn).Seconds) * AfflictionSeconds;
                 return new Hit(damage, blow.Stagger, direction, blow.Heavy, true, origin, seconds, blow.Stacks > 0 ? blow.Stacks + ExtraStacks : 0, blow.Detonate,
-                    AfflictionKind.None, 0, 0f, AfflictionPower, blow.Spell, blow.Critical, fromReaction: blow.FromReaction, tint: blow.Struck);
+                    AfflictionKind.None, 0, 0f, AfflictionPower, blow.Spell, critical, fromReaction: blow.FromReaction, tint: blow.Struck);
             }
             bool lays = blow.Affliction != AfflictionKind.None && blow.Stacks > 0;
             float lasts = !lays ? 0f : blow.AfflictionSeconds > 0f ? blow.AfflictionSeconds * AfflictionSeconds
                 : AfflictionSeconds != 1f ? Clover.Gameplay.Afflictions.Spec(blow.Affliction).Seconds * AfflictionSeconds : 0f;
             return new Hit(damage, blow.Stagger, direction, blow.Heavy, true, origin, 0f, 0, blow.Detonate,
-                lays ? blow.Affliction : AfflictionKind.None, lays ? blow.Stacks + ExtraStacks : 0, lasts, AfflictionPower, blow.Spell, blow.Critical, fromReaction: blow.FromReaction, tint: blow.Struck);
+                lays ? blow.Affliction : AfflictionKind.None, lays ? blow.Stacks + ExtraStacks : 0, lasts, AfflictionPower, blow.Spell, critical, fromReaction: blow.FromReaction, tint: blow.Struck);
         }
 
         // What every spell's blow does once it has landed: its effect, what it earns, and word to the upgrades.

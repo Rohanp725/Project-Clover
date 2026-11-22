@@ -115,6 +115,14 @@ namespace Clover.Player
         public float HoldUpTo;
         /// <summary>Above zero: the damage and the stagger at a full hold, risen from the spell's own with the hold (Gathered: stagger 22 to 60).</summary>
         public float HeldDamage, HeldStagger;
+        /// <summary>
+        /// Above zero: the spell is begun, not loosed, and every weapon blow landed after it adds a ring, this many at most; a
+        /// second press looses it (or its press window ending), its damage and stagger scaled by the rings over
+        /// <see cref="RingsFor"/>, the rings its numbers are written for (the ledger's gathered-rings: Daybreak, eight at most,
+        /// written for six). See <see cref="RingGather"/>.
+        /// </summary>
+        public int Rings;
+        public int RingsFor = 6;
 
         /// <summary>The share of a full hold, 0 to 1, held for <paramref name="held"/> seconds of at most <paramref name="most"/>.</summary>
         public static float HeldShare(float held, float most) => most <= 0f ? 0f : UnityEngine.Mathf.Clamp01(held / most);

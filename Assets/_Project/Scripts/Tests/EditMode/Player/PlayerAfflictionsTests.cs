@@ -103,7 +103,7 @@ namespace Clover.Tests
             Assert.IsFalse(plain.Any);
 
             var noon = Upgrade.All.Where(mark => mark.Shapes != null).SelectMany(mark => mark.Shapes).First(shape => shape != null && shape.Name == "High Noon");
-            Assert.IsTrue(noon.Effects.Any(effect => effect.Do == UpgradeAction.Cleanse && effect.On == UpgradeTrigger.SpellCast), "High Noon clears what is on you");
+            Assert.IsTrue(noon.Effects.Any(effect => effect.Do == UpgradeAction.Cleanse && effect.On == UpgradeTrigger.SpellLoosed), "High Noon clears what is on you as it comes down");
         }
     }
 }

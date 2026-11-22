@@ -312,39 +312,41 @@ namespace Clover.Player.Trees
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.ReactionStruck, ReactionWith = M, Do = UpgradeAction.Afflict, Affliction = M, Stacks = 1 } } },
                 BranchPattern.RightMiddle));
 
-            // The larger spell, as built: the beam is loosed at once at the strength of six rings over its four bites. NEEDS:
-            // begun, then gathered ring by ring by the blows you land, eight at most, and loosed by a second press
-            // (gathered-rings, second-press).
-            SpellBranch.Add(to, E, Daybreak, "Daybreak", SpellRole.Detonator, BranchPattern.RightB, SeenPlainly, SpellForms.Beam,
-                new SpellSpec { Reach = 12f, Radius = 0.8f, Seconds = 0.4f, Interval = 0.1f, Damage = 12f, Stagger = 9f, Stacks = 1 },
+            // The larger spell: begun, then gathered ring by ring by the weapon blows you land, eight at most (SpellSpec.Rings,
+            // RingGather), and loosed by a second press, or by itself when the eight seconds of its press window are over. Its
+            // numbers are written for six rings over the beam's four bites (12 a bite: 8 damage and 6 stagger a ring).
+            var daybreak = SpellBranch.Add(to, E, Daybreak, "Daybreak", SpellRole.Detonator, BranchPattern.RightB, SeenPlainly, SpellForms.Beam,
+                new SpellSpec { Reach = 12f, Radius = 0.8f, Seconds = 0.4f, Interval = 0.1f, Damage = 12f, Stagger = 9f, Stacks = 1, Rings = 8, RingsFor = 6 },
                 "Begin, and every blow you land adds a ring of light up the blade, eight at most. Press again to loose it all as a beam twelve metres long and a metre and a half wide: 8 damage and 6 stagger a ring, and it Marks. 45 mana.",
                 UpgradeIcons.Beam,
                 // The roster's numbers alone (the owner's answer of 2026-11-20): 10 a ring, not 8, on the beam (four bites of 15
                 // for six rings), and the shapes' own wall and column left as they are (LearnOnly).
                 new Empower { Damage = 15f, LearnOnly = true },
                 "Each ring of the beam strikes for 10, not 8.",
-                // NEEDS: each blow it stops adding a ring, and the beam loosed by a second press (gathered-rings, second-press);
-                // stopping thrown attacks as well (form-pieces). Until then the wall form stands before you four seconds and
-                // bursts along its width when its time is up or your heavy blow breaks it.
+                // NEEDS: each blow it stops adding a ring, and what is left loosed as the beam by a second press (gathered-rings:
+                // the wall's own stopping of blows is form-pieces); stopping thrown attacks as well (form-pieces). Until then the
+                // wall form stands before you four seconds and bursts along its width when its time is up or your heavy blow breaks it.
                 new ShapeDef { Name = "Red Before the Sun", Form = SpellForms.Wall,
                     Description = "The rings are not loosed as a beam. They stand before you as a curved shield of red dawn three metres wide for four seconds, which stops thrown attacks and blows from the front. Each blow it stops adds a ring; press again to loose what is left as the beam. Light's one shield, and still a beam at the end.",
                     Spell = new SpellSpec { Reach = 1.5f, Arc = 3f, Delay = 0.15f, Seconds = 4f, Radius = 2.5f, Damage = 48f, Stagger = 36f, Stacks = 1 } },
-                // The afflictions on you are cleared as it comes down (UpgradeAction.Cleanse). NEEDS: enemy clouds, flame, frost
-                // and hazards burned away inside (purify). The column is the nova form, six rings' worth.
+                // The afflictions on you are cleared as it comes down (UpgradeAction.Cleanse, as it is loosed). NEEDS: enemy clouds,
+                // flame, frost and hazards burned away inside (purify). The column is the nova form, gathered as the beam is: 6 a ring.
                 new ShapeDef { Name = "High Noon", Form = SpellForms.Nova,
-                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Cleanse } },
+                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellLoosed, OwnBranch = true, Do = UpgradeAction.Cleanse } },
                     Description = "The light comes straight down on you as a column five metres across. It burns away every enemy cloud, flame, frost and hazard inside, clears every affliction on you, and strikes everything inside for 6 damage a ring, Marking it. The purifying version.",
-                    Spell = new SpellSpec { Radius = 2.5f, Delay = 0.3f, Damage = 36f, Stagger = 36f, Stacks = 1 } },
+                    Spell = new SpellSpec { Radius = 2.5f, Delay = 0.3f, Damage = 36f, Stagger = 36f, Stacks = 1, Rings = 8, RingsFor = 6 } },
                 "Opens two shapes of Daybreak, chosen at any rest fire: Red Before the Sun, a shield of dawn before the beam, or High Noon, a column that burns the ground clean.",
-                // NEEDS: the loosing within 0.2 s of a blow landing on you as the moment (blow-about-to-land). Until then every cast
-                // turns the next blow that would land, and one loosed in the half second after a perfect guard strikes half again
-                // as hard.
+                // Loosed (the SpellLoosed moment) as a blow is about to land on you, within a fifth of a second (BlowLanding): the
+                // blow is turned (a ward) and the loosed cast is critical (a boon held by the cast, read as its blows land).
                 new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Ward, Count = 1 },
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Boon, Stat = PlayerStat.SpellDamage, Amount = 0.5f, Seconds = 0.5f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellLoosed, OwnBranch = true, BlowLanding = 0.2f, Do = UpgradeAction.Ward, Count = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellLoosed, OwnBranch = true, BlowLanding = 0.2f, Do = UpgradeAction.Boon, ThisCast = true, Stat = PlayerStat.CritChance, Amount = 1f, Seconds = 2f },
                 },
                 "Loose it within a fifth of a second of a blow landing on you, and the blow is turned and the beam is critical.");
+            // The second press looses it (UpgradeAction.Loose) within its eight seconds; with nothing gathering the press is no press.
+            daybreak.PressWindow = 8f;
+            daybreak.Presses = new[] { new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, Do = UpgradeAction.Loose } } };
 
             // The RuleBook's affliction rules (task 4.4), read by every enemy's set: a mark is not spent by blows, and once it
             // has faded no mark can be laid on that enemy for 4 s. It fades in six seconds, not eight (the stat: every

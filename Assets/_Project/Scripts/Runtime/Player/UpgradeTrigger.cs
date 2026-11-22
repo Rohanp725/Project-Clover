@@ -108,5 +108,7 @@ namespace Clover.Player
         GrownBurst,
         /// <summary>A grown thing of the player's threw a bolt into an enemy (Lightning Flower). Target: none; the point is where the grown thing stands.</summary>
         GrownBolt,
+        /// <summary>A spell begun and gathered (SpellSpec.Rings) is loosed, by its second press or its time. Target: none; asked of the spell's own branch, its blows not yet landed.</summary>
+        SpellLoosed,
     }
 }

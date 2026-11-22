@@ -276,41 +276,37 @@ the next blows on that enemy critical.
 **Example.** A reaction goes off on one Marked soldier in a pack. The two next to it come away Marked, and your next cuts on all of them are critical hits.
 
 ## light.daybreak
-**What it does.** Daybreak, Light's larger spell, paid for with mana. You brace yourself and fire a beam of light down one long line. It hits everything in it four times and Marks it. You can turn it slowly with the stick or the cursor while it burns.
+**What it does.** Daybreak, Light's larger spell, paid for with mana. Start it, and every blow you land adds a ring of light up your blade, eight at most. Press again to fire it all as a beam down one long line. It hits everything in it four times and Marks it. You can turn it slowly with the stick or the cursor while it burns.
 
-**When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4).
+**When it happens.** Cast it from a spell slot (hold L2 and a face button, or press 1 to 4) to start it. Press the same button again within 8 seconds to fire it. If you don't, it fires by itself when the 8 seconds are up.
 
-**The numbers.** 4 Shards, 45 mana. You brace, then fire a beam 12 metres long and 1.6 metres wide for 0.4 seconds. It hits every 0.1 seconds, four times in all, for 12 damage, 9 stagger and a Mark each time. An enemy that stays in it takes 48 damage and 36 stagger. Its Empower makes each hit 15 damage instead of 12 (60 in total). The two shapes keep their own numbers.
+**The numbers.** 4 Shards, 45 mana, paid when you start it. Each ring is worth 8 damage and 6 stagger, up to eight rings. The beam is 12 metres long and 1.6 metres wide and lasts 0.4 seconds, hitting four times. An enemy that stays in it takes 8 damage and 6 stagger for each ring, plus a Mark: 64 damage and 48 stagger at eight rings. Fired with no rings, it only Marks. Its Empower makes each ring worth 10 damage instead of 8. The two shapes keep their own numbers.
 
 **Works with.** Brimming (mana kept full for it), Seen Plainly, which it comes after on the chart, Weighed, Condemned, Spoken Sentence, and the charged blade, which it charges with Light.
 
-**Not built yet.** The rings should build up on the blade from the blows you land after starting it, up to eight, each worth 8 damage and 6 stagger, and fire with a second press. For now, the beam fires right away, as strong as six rings would be (48 damage).
-
-**Example.** A line of spearmen comes up a staircase. One beam down the stairs Marks them all and leaves them staggering.
+**Example.** A line of spearmen comes up a staircase. Start Daybreak, cut the first one four times, and fire it down the stairs. It Marks them all and leaves them staggering.
 
 ## light.daybreak.shape
 **What it does.** Unlocks two shapes for Daybreak. You pick one at any rest fire. **Red Before the Sun** (Aruna riding in front of the sun god Surya to shield the world from his heat): the rings stand in front of you as a curved shield of red dawn that stops blows from the front, and then fire as the beam. It is Light's only shield, and still a beam at the end. **High Noon**: the light comes straight down on you as a column, burning away every enemy danger zone inside it, clearing every affliction on you, and Marking everything it hits. This is the cleansing version.
 
 **When it happens.** Whenever you cast Daybreak, using the shape you picked. If you have not bought this, you cast the plain beam.
 
-**The numbers.** 3 Shards, and the same 45 mana. Red Before the Sun: a wall 3 metres wide stands 1.5 metres in front of you for 4 seconds. Nothing can walk through it or reach you from the other side. When its time is up, or when your heavy blow hits it, it bursts along its width for 48 damage, 36 stagger and a Mark. High Noon: a column 5 metres across lands on you a moment after you cast it, dealing 36 damage, 36 stagger and a Mark to everything inside.
+**The numbers.** 3 Shards, and the same 45 mana. Red Before the Sun: a wall 3 metres wide stands 1.5 metres in front of you for 4 seconds. Nothing can walk through it or reach you from the other side. When its time is up, or when your heavy blow hits it, it bursts along its width for 48 damage, 36 stagger and a Mark. High Noon: it is started and built up with rings like the beam. When you fire it, a column 5 metres across lands on you, dealing 6 damage and 6 stagger for each ring and a Mark to everything inside, and clearing every affliction on you.
 
 **Works with.** Red Before the Sun: archers and charges coming at you, a build that counters attacks, Unblemished. High Noon: being surrounded, Weighed, Spoken Sentence.
 
-**Not built yet.** Red Before the Sun should add rings for each blow it stops, and fire the beam with a second press; for now, it bursts where it stands. It should also stop thrown attacks. High Noon clears the afflictions on you as it comes down, but it doesn't yet burn away enemy clouds, flames, frost and danger zones.
+**Not built yet.** Red Before the Sun should add rings for each blow it stops, and fire what is left as the beam with a second press; for now, it bursts where it stands. It should also stop thrown attacks. High Noon doesn't yet burn away enemy clouds, flames, frost and danger zones.
 
 **Example.** Use High Noon in the middle of a pack. Everything around you is Marked at once, and the cuts that follow are critical hits.
 
 ## light.daybreak.master
 **What it does.** Fire it within a fifth of a second of a blow landing on you, and the blow is blocked and the beam is a critical hit.
 
-**When it happens.** Each time you cast it, while Daybreak is in a spell slot.
+**When it happens.** When you fire Daybreak (its second press, or when it fires by itself) and an enemy's blow is a fifth of a second or less from landing on you. Daybreak must be in a spell slot.
 
-**The numbers.** 3 Shards. For now, every cast gives you a ward that blocks the next blow that would land on you. A beam fired in the half second after a perfect guard hits 50% harder (spells are 50% stronger for that half second).
+**The numbers.** 3 Shards. You get a ward that blocks that blow, and every hit of the beam is a critical hit.
 
 **Works with.** Standing Light and perfect guards, Unblemished (a blocked blow doesn't count as getting hurt), Brimming.
-
-**Not built yet.** It should work when a blow lands on you right as you cast it. For now, the ward and the perfect guard bonus take its place.
 
 **Example.** A brute's swing comes in as you fire the beam. It glances off, and the beam runs down the whole pack behind it.
 

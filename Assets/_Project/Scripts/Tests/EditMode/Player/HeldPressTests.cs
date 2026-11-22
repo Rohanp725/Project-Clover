@@ -85,5 +85,43 @@ namespace Clover.Tests
             Assert.IsFalse(gathered.Effects != null && gathered.Effects.Any(each => each.Do == UpgradeAction.Burst), "no stand-in burst at a full hold");
             Assert.AreEqual(1.5f, Upgrade.ById(TheBoltRunsTrueDuo.DiamondThunder).Spell.HoldUpTo, 1e-5f, "the line held up to 1.5 s");
         }
+
+        [Test]
+        public void DaybreakIsGatheredRingByRingAndLoosedWithWhatItHolds()
+        {
+            var learn = Upgrade.ById(LightTree.Daybreak);
+            Assert.AreEqual(8, learn.Spell.Rings, "eight rings at most");
+            Assert.AreEqual(6, learn.Spell.RingsFor, "its numbers are written for six");
+            var gather = new RingGather();
+            Assert.IsFalse(gather.Add(), "nothing gathering");
+            gather.Begin(learn, learn.Spell, 7, 18f);
+            Assert.IsTrue(gather.Active);
+            for (int i = 0; i < 10; i++) gather.Add();
+            Assert.AreEqual(8, gather.Rings, "no more than eight");
+            Assert.IsFalse(gather.Due(17.9f));
+            Assert.IsTrue(gather.Due(18f), "loosed by itself when its window is over");
+            var loosed = new SpellSpec();
+            Assert.IsTrue(gather.Loose(loosed));
+            Assert.IsFalse(gather.Active);
+            Assert.AreEqual(16f, loosed.Damage, 1e-4f, "eight rings: 8 a ring over four bites");
+            Assert.AreEqual(12f, loosed.Stagger, 1e-4f, "6 stagger a ring over four bites");
+            Assert.AreEqual(0, loosed.Rings, "what is loosed gathers no more");
+            gather.Begin(learn, learn.Spell, 8, 30f);
+            gather.Add();
+            gather.Add();
+            gather.Loose(loosed);
+            Assert.AreEqual(4f, loosed.Damage, 1e-4f, "two rings");
+            Assert.AreEqual(0f, RingGather.Scale(0, 6), 1e-5f);
+            var presses = PlayerUpgrades.PressesOf(learn, null, out float window);
+            Assert.AreEqual(8f, window, 1e-5f);
+            Assert.AreEqual(UpgradeAction.Loose, presses[0].Single().Do, "the second press looses it");
+            var master = Upgrade.ById(SpellBranch.MasterId(LightTree.Daybreak)).Effects;
+            Assert.IsTrue(master.All(each => each.On == UpgradeTrigger.SpellLoosed && each.BlowLanding == 0.2f), "as it is loosed, a blow a fifth of a second from landing");
+            Assert.IsTrue(master.Any(each => each.Do == UpgradeAction.Ward), "the blow is turned");
+            Assert.IsTrue(master.Any(each => each.Do == UpgradeAction.Boon && each.ThisCast && each.Stat == PlayerStat.CritChance), "the beam is critical");
+            var noon = Upgrade.ById(SpellBranch.ShapeId(LightTree.Daybreak)).Shapes.Single(each => each.Name == "High Noon");
+            Assert.AreEqual(8, noon.Spell.Rings, "the column is gathered too");
+            Assert.AreEqual(UpgradeTrigger.SpellLoosed, noon.Effects.Single().On, "cleansed as it comes down");
+        }
     }
 }
