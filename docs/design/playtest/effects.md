@@ -9,7 +9,7 @@ Group: Afflictions
 
 **The numbers.** 5 damage a second. Each stack adds 30%, up to 5 stacks (12.5 damage a second at full). Adding it again keeps whichever time is longer, but never more than 8 seconds. When it goes out, all its stacks go too. When something sets it off, it deals 10 damage plus 10 for each stack, all at once.
 
-**What sets it off.** Flame Wave sets whatever it touches on fire for 5 seconds, and its burning ground does too. Each blow during Kindle sets the enemy on fire for 3 seconds. Once you learn Fire's root mark, every weapon blow sets the enemy on fire for 4 seconds and adds a stack. Some marks set off a burn.
+**What sets it off.** Flame Wave sets whatever it touches on fire for 5 seconds, and its burning ground does too. Kindle no longer sets enemies on fire by itself. Instead, each blow you land on a burning enemy while Kindle lasts adds 0.4 seconds to it, up to twice its length, and each blow you take puts out 2 seconds of it. Once you learn Fire's root mark, every weapon blow sets the enemy on fire for 4 seconds and adds a stack. Some marks set off a burn.
 
 **How to use it.** Burn keeps working while you guard and dodge. Set the enemy on fire, then fight safely. Build up stacks before a mark sets it off, so the burst hits harder.
 
@@ -61,7 +61,7 @@ Group: Afflictions
 
 **The numbers.** It is either on or off, and lasts 8 seconds. Spells deal 25% more damage to it. Static or Chill put on it is also put on everyone within 4 metres.
 
-**What sets it off.** Riptide soaks everything its wave carries. Once you learn Water's root mark, every weapon blow soaks. During Wellspring, every weapon blow soaks too.
+**What sets it off.** Riptide soaks everything its wave carries. Once you learn Water's root mark, every weapon blow soaks. During Wellspring, every weapon blow soaks too, and each flask you drink bursts out of you as a ring of water 4 metres across: 20 damage, 30 stagger and Soaked. It throws enemies 2.5 metres and takes 4 seconds off every spell's wait.
 
 **How to use it.** Soak a group, then charge or chill one of them, and it reaches all of them. Cast your spells on Soaked enemies.
 

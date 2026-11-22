@@ -2140,7 +2140,10 @@ namespace Clover.Player
                 else if (distance > 0.6f && Vector3.Angle(transform.forward, offset) > step.ArcDegrees * 0.5f) continue;
                 var afflictable = target as IAfflictable;
                 // A blow is critical by chance, or always on an enemy that is Marked.
-                bool promised = (heavy && HeavyCriticalLeft > 0f) || step.Critical;
+                // Overdrive: while it lasts, the last blow of every chain is critical.
+                bool chainEnds = step == Combo.ChainHeavy || (Combo.Steps.Count > 0 && step == Combo.Steps[Combo.Steps.Count - 1]);
+                bool surgeCrit = chainEnds && element != null && element.SurgeActive && element.SurgeKit != null && element.SurgeKit.SurgeCritsChainEnd;
+                bool promised = (heavy && HeavyCriticalLeft > 0f) || step.Critical || surgeCrit;
                 float chance = CritChance;
                 if (Stats != null) chance += Stats.Blow(PlayerStat.CritChance, heavy, false) + (afflictable != null ? Stats.Against(PlayerStat.CritChance, afflictable.Afflictions) : 0f);
                 // Counter Cut: a blow that lands on an enemy showing its own attack (winding up or striking) is critical.

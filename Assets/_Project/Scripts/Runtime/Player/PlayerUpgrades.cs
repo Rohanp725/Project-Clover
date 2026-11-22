@@ -2548,6 +2548,13 @@ namespace Clover.Player
             if (wasAfflicted) Trigger(UpgradeTrigger.AfflictedHit, struck, at);
 
             var afflictable = target as IAfflictable;
+            // Fed Flame: a blow on a burning enemy feeds the burning surge.
+            var burning = element != null && element.SurgeActive ? element.SurgeKit : null;
+            if (burning != null && burning.SurgeFeeds > 0f && afflictable != null && afflictable.Afflictions.Burn.IsBurning)
+            {
+                burning.Feed(burning.SurgeFeeds);
+                SurgeFed++;
+            }
             // What the edge carries (Carried on the Blade, Dust on the Blade) goes into what it strikes.
             if (afflictable != null && struck != null && Coat.Any)
             {
@@ -3434,6 +3441,9 @@ namespace Clover.Player
             }
             Heat.Struck();
             sinceStruck = 0f;
+            // Fed Flame: each blow taken smothers the burning surge.
+            var smothered = element != null && element.SurgeActive ? element.SurgeKit : null;
+            if (smothered != null && smothered.SurgeSmothers > 0f) smothered.Smother(smothered.SurgeSmothers);
             var struckBy = combat != null ? combat.EnemyAt(attacker, 2.5f) : null;
             Trigger(UpgradeTrigger.Struck, struckBy, attacker);
             TheirBlow(struckBy, attacker);
@@ -3470,6 +3480,28 @@ namespace Clover.Player
                 ShowWell();
             }
             Trigger(UpgradeTrigger.FlaskDrunk, null, transform.position, false);
+            // The Flask Breaks: while Wellspring lasts, the flask bursts out as a ring of water 4 m across.
+            var flowing = element != null && element.SurgeActive ? element.SurgeKit : null;
+            if (flowing != null && flowing.SurgeFlaskBreaks && combat != null) FlaskBreaks();
+        }
+
+        /// <summary>The Flask Breaks' ring: 4 m across, 20 damage, 30 stagger and Soaked, thrown 2.5 m, and 4 s off every running wait.</summary>
+        public const float FlaskRingRadius = 2f, FlaskRingDamage = 20f, FlaskRingStagger = 30f, FlaskRingThrow = 2.5f, FlaskRingCut = 4f;
+        /// <summary>Rings The Flask Breaks has thrown, counted for probes.</summary>
+        public int FlaskRings { get; private set; }
+        /// <summary>Seconds of surge fed by blows on burning enemies (Fed Flame), counted for probes.</summary>
+        public int SurgeFed { get; private set; }
+
+        private void FlaskBreaks()
+        {
+            Vector3 at = transform.position;
+            var water = lookOf[(int)AfflictionKind.Soaked] ?? Elements.ByName(Elements.Water);
+            combat.StrikeArea(at, FlaskRingRadius, Blow(water, AfflictionKind.Soaked, FlaskRingDamage, FlaskRingStagger, 1));
+            combat.Displace(at, FlaskRingRadius + 0.5f, FlaskRingThrow, false);
+            if (spells != null) spells.Cooldowns.Cut(FlaskRingCut);
+            ElementLook.Ring(water, at + Vector3.up * 0.2f);
+            ElementLook.Puff(water, at + Vector3.up * 0.4f, Vector3.up, 1.2f);
+            FlaskRings++;
         }
 
         // The well is shown as the count its mark keeps, in whole points.
