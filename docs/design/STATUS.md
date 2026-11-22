@@ -57,3 +57,40 @@ One page that lists everything done, in progress, parked or not started, so noth
       `ui_rest_fire_plan.md`).
   4. Freeze new combat content until the Fire land is a finished slice: levels signed off, Khepharu relooked, enemies played, and basic sound.
   5. Then build the lands one at a time, Water first.
+
+## Run plan (2026-11-21, evening, after the usage reset)
+
+The tracks run side by side. One Unity worker and one Blender worker at a time; offline workers use their own worktrees. Each item is ticked here when it's done.
+
+**The owner (in parallel):**
+- [ ] The push history fix (the commands are in the chat), then push.
+- [ ] Reviewing the reactions. When the owner says the comments are done, collect them word for word, then run round 4.
+
+**Blender:**
+- [ ] B1. Finish SLAM (Great Hammer only): read the 11 strips, write the recipe, kit and notes, then send them to the owner.
+- [ ] B2. The other shapes, in order: SPIN (Scythe), THRUST (Great Spear), DASH-THROUGH (Twin Knives), LASH (Chain Sickle), SHOT (Great Bow). The owner sees each one's strips.
+- [ ] B3. New Katana clips for the Way (way_build_plan.md: up to 27 clips), after the Way wiring.
+
+**Unity, in order:**
+- [ ] U1. The Twin Knives grip (angles, and fingers closed on the handles).
+- [ ] U2. The enemy-size anchors and body-scaled on-body pieces (round-4 notes), before any round-4 re-films.
+- [ ] U3. Build each strike shape as the owner approves it; film only that shape's weapons.
+- [ ] U4. Stand-in passes: the rest of 2 and 3, then 4 (`steel/standin_clearance_plan.md`).
+- [ ] U5. Merge the Way wiring from offline (O1), then the Katana's Way per `steel/way_build_plan.md`.
+- [ ] U6. The Loadout screen in UI Toolkit (`ui_rest_fire_plan.md`, layout C).
+
+**Offline:**
+- [ ] O1. The Way's rules and wiring in the worktree `Clover-way`:
+  - `Armoury.Resolve` used at every equip point;
+  - Way marks on a chart;
+  - Memories paid out (AreaDirector deaths, god falls, found pickups), with the light that flies in and the +N;
+  - 5.3 (temper, infusion, the chord) and 5.4 (the Body branch) as rules and tests.
+
+**Strike shape groups** (confirmed by the owner from each weapon's real clip):
+- ARC: Katana, Massive Sword, Armament, Fists (a kick), War Fan.
+- SPIN: Scythe.
+- THRUST: Great Spear.
+- DASH-THROUGH: Twin Knives.
+- SLAM: Great Hammer.
+- LASH: Chain Sickle.
+- SHOT: Great Bow.
