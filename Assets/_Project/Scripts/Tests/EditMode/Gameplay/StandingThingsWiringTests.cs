@@ -941,6 +941,24 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void StoneSkinsPlatesTakeMostOfOneBlowEach()
+        {
+            Assert.AreEqual(40f, PlayerDefence.PlatedWound(100f, 0.6f), 1e-4f, "a plate takes 60% of the blow");
+            Assert.AreEqual(0f, PlayerDefence.PlatedWound(100f, 1f), 1e-4f);
+            Assert.AreEqual(100f, PlayerDefence.PlatedWound(100f, 0f), 1e-4f);
+            var skin = Upgrade.ById(SpellBranch.ShapeId(EarthTree.MountainStance)).Shapes.Single(each => each.Name == "Stone Skin").Effects;
+            var grow = skin.Single(each => each.On == UpgradeTrigger.SpellHit);
+            Assert.AreEqual(UpgradeAction.Plate, grow.Do, "plates, not wards that turn the whole blow");
+            Assert.AreEqual(2, grow.Count);
+            Assert.AreEqual(0.6f, grow.Amount, 1e-5f);
+            Assert.IsFalse(skin.Any(each => each.Do == UpgradeAction.Ward || each.On == UpgradeTrigger.WardSpent), "nothing answers wards");
+            var breaks = skin.Single(each => each.On == UpgradeTrigger.PlateBroken);
+            Assert.AreEqual(UpgradeAction.Burst, breaks.Do, "each plate breaks in its burst");
+            Assert.AreEqual(14f, breaks.Damage, 1e-5f);
+            Assert.AreNotEqual("its moment comes", TriggerWords.Of(UpgradeTrigger.PlateBroken));
+        }
+
+        [Test]
         public void TheSecondWaveThrowsDownOnlyWhatBothRingsCatch()
         {
             var wave = Upgrade.ById(SpellBranch.ShapeId(EarthTree.QuakeStep)).Shapes.Single(each => each.Name == "The Second Wave").Effects;

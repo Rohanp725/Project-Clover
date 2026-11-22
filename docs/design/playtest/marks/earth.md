@@ -182,11 +182,11 @@ Rise's rocks, a pillar, a heap of rubble.
 
 **When it happens.** Whenever you cast Mountain Stance, using the shape you picked. If you have not bought this, you cast Grey Stone.
 
-**The numbers.** 3 Shards. Stone Skin: when the stance blocks a blow, it does not hit back. You get two wards instead, up to three. Each one blocks one blow and breaks in a burst 3 metres around you, for 14 damage, 24 stagger and one Tremor. Fist of Rock: you stand for up to 1.5 seconds. The answer is a cone 4 metres long and 90 degrees wide, for 30 damage, 60 stagger and two Tremor.
+**The numbers.** 3 Shards. Stone Skin: when the stance blocks a blow, it does not hit back. You get two plates of stone instead, up to two at a time. Each plate takes 60% of one blow that reaches you, and you don't flinch from it; the other 40% still hurts you. Then the plate breaks in a burst 3 metres around you, for 14 damage, 24 stagger and one Tremor. Fist of Rock: you stand for up to 1.5 seconds. The answer is a cone 4 metres long and 90 degrees wide, for 30 damage, 60 stagger and two Tremor.
 
-**Works with.** Stone Skin: Glaze's ward if you carry Ice, Heavy Hand, Immovable. Fist of Rock: Tremor and Cairn, and Unbroken Cairn's heavy blow after it.
+**Works with.** Stone Skin: Heavy Hand, Immovable. Fist of Rock: Tremor and Cairn, and Unbroken Cairn's heavy blow after it.
 
-**Not built yet.** Stone Skin's plates should take 60% of one blow (for now, a ward takes all of it). Fist of Rock's answer should rise under the enemy that hit you; for now, it is a cone thrown at it.
+**Not built yet.** Fist of Rock's answer should rise under the enemy that hit you; for now, it is a cone thrown at it.
 
 **Example.** Use Stone Skin before a pack closes in. The first two blows that reach you each throw stone back at the whole ring.
 

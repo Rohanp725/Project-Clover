@@ -154,5 +154,7 @@ namespace Clover.Player
         CarriedTo,
         /// <summary>A counter's stance ran out with nothing struck at it (the parry form). Answered as the counter's own cast (Blown Through).</summary>
         CounterMissed,
+        /// <summary>A plate of stone took its share of a blow and broke (Stone Skin). The point is where you stand.</summary>
+        PlateBroken,
     }
 }

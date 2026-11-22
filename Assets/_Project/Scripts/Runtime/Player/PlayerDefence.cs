@@ -240,6 +240,43 @@ namespace Clover.Player
             if (count > 0) Wards = Mathf.Min(MaximumWards, Wards + count);
         }
 
+        /// <summary>The share of a blow a plate of stone takes when its mark names none.</summary>
+        public const float PlainPlateShare = 0.6f;
+        /// <summary>Plates of stone held at most (Stone Skin grows two).</summary>
+        public int MaximumPlates = 2;
+        /// <summary>
+        /// Plates of stone held (Stone Skin): each takes its share of one blow that lands and stops its flinch, then breaks.
+        /// Spent after the wards, which turn the whole blow.
+        /// </summary>
+        public int Plates { get; private set; }
+        /// <summary>The share of a blow each plate held takes.</summary>
+        public float PlateShare { get; private set; } = PlainPlateShare;
+        /// <summary>Blows a plate took its share of: for probes.</summary>
+        public int BlowsPlated { get; private set; }
+
+        public void GivePlates(int count, float share)
+        {
+            if (count <= 0) return;
+            Plates = Mathf.Min(MaximumPlates, Plates + count);
+            PlateShare = Mathf.Clamp01(share);
+        }
+
+        /// <summary>What of a wound gets past a plate that takes <paramref name="share"/> of it.</summary>
+        public static float PlatedWound(float wound, float share) => Mathf.Max(0f, wound) * (1f - Mathf.Clamp01(share));
+
+        // A plate breaks on a blow that was about to land: the blow lands at what the plate let through, and does not stagger.
+        private bool SpendPlate(in Hit hit)
+        {
+            if (Plates <= 0) return false;
+            Plates--;
+            BlowsPlated++;
+            Vfx.Play(VfxKind.Burst, GuardPoint());
+            Callout("Plate broken");
+            Land(hit, 0f, false, PlateShare);
+            if (upgrades != null) upgrades.OnPlateBroken();
+            return true;
+        }
+
         /// <summary>Takes every ward away, as when the element that gave them is put down.</summary>
         public void ClearWards() => Wards = 0;
 
@@ -518,6 +555,7 @@ namespace Clover.Player
                     return HitOutcome.Blocked;
                 case GuardResult.Broken:
                     if (SpendWard(hit)) return HitOutcome.Blocked;
+                    if (SpendPlate(hit)) return HitOutcome.Landed;
                     Callout("Guard broken");
                     if (guardArc != null) guardArc.Pulse(new Color(5f, 0.4f, 0.3f, 1f), 0.4f, 0.9f);
                     Vfx.Play(VfxKind.Danger, GuardPoint());
@@ -525,6 +563,7 @@ namespace Clover.Player
                     return HitOutcome.Landed;
                 default:
                     if (SpendWard(hit)) return HitOutcome.Blocked;
+                    if (SpendPlate(hit)) return HitOutcome.Landed;
                     Land(hit, HurtSeconds);
                     // The blow that kills teaches nothing.
                     if (!IsDead) Tips.UnguardedBlow();
@@ -536,10 +575,12 @@ namespace Clover.Player
         public float LastWound { get; private set; }
         public float LastWoundAt { get; private set; } = -100f;
 
-        private void Land(in Hit hit, float seconds, bool guardBroken = false)
+        private void Land(in Hit hit, float seconds, bool guardBroken = false, float plated = 0f)
         {
             BlowsTaken++;
             float wound = hit.Damage * DamageTaken;
+            // A plate of stone took its share first (Stone Skin).
+            if (plated > 0f) wound = PlatedWound(wound, plated);
             // Shared Roots: a share of the wound is carried by the Seeded enemies near, as much as they can take of it.
             if (WoundShare > 0f && ShareWound != null && wound > 0f) wound -= Mathf.Clamp(ShareWound(wound * WoundShare), 0f, wound);
             float before = Health.Current;
@@ -551,6 +592,12 @@ namespace Clover.Player
             if (upgrades != null) upgrades.OnStruck(hit.HasOrigin ? hit.Origin : transform.position - hit.Direction);
             Vfx.Play(VfxKind.Wound, transform.position + Vector3.up * 1.1f, hit.Direction);
             ScreenFlash.Flash(new Color(1f, 0.08f, 0.1f, 0.16f), 0.09f);
+            if (!IsDead && plated > 0f)
+            {
+                // The plate stopped its flinch: it hurts, and you stand through it.
+                if (shaker != null) shaker.Shake(0.1f, 0.12f);
+                return;
+            }
             if (!IsDead && combat != null && (!hit.Unblockable || (combat.HeavyUnbroken && combat.InHeavySwing)) && combat.Poised(hit.Damage))
             {
                 // Inside a heavy swing a small blow is taken and walked through: it hurts, the swing goes on.
@@ -618,6 +665,7 @@ namespace Clover.Player
             Flasks.Refill();
             player.Stamina.Fill();
             Wards = 0;
+            Plates = 0;
         }
 
         private void Revive()

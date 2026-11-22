@@ -330,5 +330,11 @@ namespace Clover.Player
         /// (Gone to Ash: scattered as ash, standing again 0.4 s later, behind the attacker or where you were).
         /// </summary>
         Scatter,
+        /// <summary>
+        /// Plates of stone grow on you, Count of them (2 at most held): each takes Amount of one blow that lands (60% when
+        /// none is named) and stops its flinch, then breaks (UpgradeTrigger.PlateBroken). Unlike a ward, the rest of the blow
+        /// still lands (Stone Skin).
+        /// </summary>
+        Plate,
     }
 }

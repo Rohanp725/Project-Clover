@@ -224,14 +224,14 @@ namespace Clover.Player.Trees
                 new Empower { Seconds = 3f, BankStagger = 25f },
                 "You stand as stone for up to three seconds, and each blow you turn loads 25 stagger.",
                 // Stone Skin, once a major, folded in with Aftershock. The answer set aside: the turned blow is told for nothing
-                // (SpellSpec.Quiet). NEEDS: a plate taking 60% of one blow, not the whole of it (plates). Until then the plates
-                // are wards, given when the stance turns a blow.
+                // (SpellSpec.Quiet). Two plates grow when the stance turns a blow (UpgradeAction.Plate): each takes 60% of one blow
+                // that lands and stops its flinch, then breaks in its burst (UpgradeTrigger.PlateBroken).
                 new ShapeDef { Name = "Stone Skin", Spell = new SpellSpec { Seconds = 2.5f, Reach = 3f, Arc = 120f, Damage = 0f, Stagger = 0f, Stacks = 0, Quiet = true },
                     Description = "The blow is turned but not answered. Two plates of stone grow on your shoulders instead. Each takes most of one blow and stops its flinch, then breaks in a burst three metres round you: 14 damage, 24 stagger and Tremor.",
                     Effects = new[]
                     {
-                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Ward, Count = 2, Cooldown = 1f },
-                        new UpgradeEffect { On = UpgradeTrigger.WardSpent, Do = UpgradeAction.Burst, At = EffectAt.Self, Radius = 3f, Damage = 14f, Stagger = 24f, Affliction = T, Stacks = 1 },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Plate, Count = 2, Amount = 0.6f, Cooldown = 1f },
+                        new UpgradeEffect { On = UpgradeTrigger.PlateBroken, Do = UpgradeAction.Burst, At = EffectAt.Self, Radius = 3f, Damage = 14f, Stagger = 24f, Affliction = T, Stacks = 1 },
                     } },
                 // The stance as it was built; the answer is a cone at the one who struck, not a fist under it.
                 new ShapeDef { Name = "Fist of Rock", Form = SpellForms.Parry,
