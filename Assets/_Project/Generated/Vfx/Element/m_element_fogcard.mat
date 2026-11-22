@@ -26,7 +26,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _Breathe: 0.45
-    - _Density: 1.5
+    - _Density: 2.2
     - _Drift: 0.25
     - _DstBlend: 10
     - _Softness: 0.6

@@ -70,6 +70,9 @@ namespace Clover.EditorTools
             ["rime"] = new Vector4(0.08f, 0.19f, 0.22f, 1.05f),
             // Winter Seed: the frost the seed slept under thaws and is gone by 0.6 s (it stayed over the body to the end).
             ["winter_seed"] = new Vector4(-0.3f, 0f, 0.01f, 0.6f),
+            // Round 4's Rime: the crust climbs a band each 0.12 s from 0.04 s and the heavy's gusts tear it off by 0.84 s (its
+            // recipe's windows); held to the look's end it stood white over the body after the frost had gone to the others.
+            ["rd_rime"] = new Vector4(0.0375f, 0.12f, 0.26f, 0.84f),
         };
 
         /// <summary>
@@ -1113,6 +1116,8 @@ namespace Clover.EditorTools
         };
 
         private static readonly StringBuilder Report = new StringBuilder();
+        // While a round-4 look is built: no kit aliases (KitAliases).
+        private static bool RdNoAliases;
         private static readonly HashSet<string> Unknown = new HashSet<string>();
         private static readonly Dictionary<Material, Material> ReactionSolids = new Dictionary<Material, Material>();
 
@@ -1413,6 +1418,9 @@ namespace Clover.EditorTools
             // A reaction whose doing outlasts its look keeps it standing on the body struck as long (ReactionHolds).
             // What the game does with the look is read by its own slug; a round-4 redesign's tweak name is "rd_" and that.
             string game = GameSlug(slug);
+            // A round-4 look takes its kit pieces as drawn: the elements 3 kit is in the project, and its glint (0.64 m,
+            // flat) drawn as Light's charged glint (1.07 m, deep) blew Glint's and Glare's flashes up three times over.
+            RdNoAliases = look.ContainsKey("round");
             if (lists.Reactions && (onBody == 0 || onBody > 0 && HeldOnEveryBody.Contains(game)) && ReactionHolds.TryGetValue(game, out float hold)) made.Hold = hold;
             else if (lists.Reactions && onBody >= 0) made.Hold = AftermathHold;
             // The way the recipe's player faced: toward the main body.
@@ -1681,6 +1689,8 @@ namespace Clover.EditorTools
                         float end = hide >= 9f ? seconds : hide;
                         float degrees = 360f * Number(orbit, "turns_per_second", 0f) * Mathf.Max(0.01f, end - start);
                         part.OrbitCentre = part.Position;
+                        // A round-4 ribbon turns about its own origin and its path carries it (ElementLookSet.Part.TurnsInPlace).
+                        part.TurnsInPlace = look.ContainsKey("round");
                         part.OrbitFirst = lists.Keys.Count;
                         lists.Keys.Add(new ElementLookSet.Key { Time = start, Value = Vector3.zero, Ease = ElementLookSet.Linear });
                         lists.Keys.Add(new ElementLookSet.Key { Time = end, Value = new Vector3(degrees, 0f, 0f), Ease = ElementLookSet.Linear });
@@ -1726,6 +1736,7 @@ namespace Clover.EditorTools
                 }
             }
             lists.Looks.Add(made);
+            RdNoAliases = false;
             Report.AppendLine($"| {key} | {made.Seconds:0.0} s | {(made.OnPlayer ? "player" : "body")} | {made.PartCount} | {ribbonsMade} | {made.LoopFrom:0.00} s | " +
                 $"{(made.Shell == ElementLookSet.NoShell ? "-" : $"{made.ShellBands} bands from {made.ShellStart:0.00} s, every {made.ShellStep:0.00} s, {made.ShellGrow:0.00} s each")} |");
         }
@@ -2208,7 +2219,7 @@ namespace Clover.EditorTools
                     kitObject = "vfx2c_" + kitObject.Substring("vfxc3_c2_".Length);
                 }
             }
-            if (KitAliases.TryGetValue(kit + "|" + kitObject, out var alias)) (kit, kitObject) = alias;
+            if (!RdNoAliases && KitAliases.TryGetValue(kit + "|" + kitObject, out var alias)) (kit, kitObject) = alias;
             string path = kit == E2Kit || kit == BrazierKit || kit == E3Kit || kit == E4Kit || kit == R5Kit || kit == StrikesKit || kit == SlamKit || kit == RdKit ?ReactionArtBuilder.CombosFolder + "/" + kit : ReactionArtBuilder.KitPath(kit);
             comboTurn = path.StartsWith(ReactionArtBuilder.CombosFolder);
             if (!kits.TryGetValue(path, out var loaded))

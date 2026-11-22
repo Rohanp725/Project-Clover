@@ -67,6 +67,29 @@ public class BodySizeProbeRunner : MonoBehaviour
         new Effect { Name = "briar_patch", How = How.Strike, Slug = "e3_briar_patch", Moments = new[] { 1.0f } },
     };
 
+    // The round-4 redesigns' looks on bodies (staging/blender/2026-11-22_round4), at the strips' beats; taken only when
+    // named in the only-file (prefixed "r4_"), so the standard set stays as it was.
+    private static readonly Effect[] Round4 =
+    {
+        new Effect { Name = "r4_rime", How = How.Reaction, Slug = "rime", Moments = new[] { 0.55f, 1.2f } },
+        new Effect { Name = "r4_quickening", How = How.Reaction, Slug = "quickening", Moments = new[] { 1.0f } },
+        new Effect { Name = "r4_diamond_ring", How = How.Reaction, Slug = "diamond_ring", Moments = new[] { 1.05f } },
+        new Effect { Name = "r4_shut_in_the_dark", How = How.Reaction, Slug = "shut_in_the_dark", Moments = new[] { 0.55f } },
+        new Effect { Name = "r4_carried_embers", How = How.Reaction, Slug = "carried_embers", Moments = new[] { 0.8f } },
+        new Effect { Name = "r4_winter_seed", How = How.Reaction, Slug = "winter_seed", Moments = new[] { 0.85f } },
+        new Effect { Name = "r4_smoulder", How = How.Reaction, Slug = "smoulder", Moments = new[] { 0.75f } },
+        new Effect { Name = "r4_thermal_shock", How = How.Reaction, Slug = "thermal_shock", Moments = new[] { 0.8f } },
+        new Effect { Name = "r4_logan_stone", How = How.Reaction, Slug = "logan_stone", Moments = new[] { 1.15f } },
+        new Effect { Name = "r4_chokedamp", How = How.Reaction, Slug = "chokedamp", Moments = new[] { 0.9f } },
+        new Effect { Name = "r4_breath_taken", How = How.Reaction, Slug = "breath_taken", Moments = new[] { 0.85f } },
+        new Effect { Name = "r4_glint", How = How.Reaction, Slug = "glint", Moments = new[] { 0.9f } },
+        new Effect { Name = "r4_static", How = How.Affliction, Kind = AfflictionKind.Static, Depth = 3, Moments = new[] { 0.9f } },
+        new Effect { Name = "r4_marked", How = How.Affliction, Kind = AfflictionKind.Marked, Depth = 3, Moments = new[] { 0.8f } },
+        new Effect { Name = "r4_flung_blade", How = How.Strike, Slug = "e3_flung_blade@b", Moments = new[] { 0.7f } },
+        new Effect { Name = "r4_glare", How = How.Strike, Slug = "e3_glare@b", Moments = new[] { 0.2f } },
+        new Effect { Name = "r4_hunger_jaws", How = How.Strike, Slug = "dark_hunger@b", Moments = new[] { 0.8f } },
+    };
+
     private const string Folder = "review/shots/current/size";
     private PlayerController player;
     private PlayerDefence defence;
@@ -163,7 +186,7 @@ public class BodySizeProbeRunner : MonoBehaviour
         }
 
         string only = File.Exists("AgentScripts/body_size_only.txt") ? File.ReadAllText("AgentScripts/body_size_only.txt").Trim() : "";
-        var chosen = string.IsNullOrEmpty(only) ? Standard : Standard.Where(e => only.Split(',').Select(s => s.Trim()).Contains(e.Name)).ToArray();
+        var chosen = string.IsNullOrEmpty(only) ? Standard : Standard.Concat(Round4).Where(e => only.Split(',').Select(s => s.Trim()).Contains(e.Name)).ToArray();
         foreach (var effect in chosen)
         {
             foreach (var enemy in row) enemy.Afflictions.Clear();

@@ -15,7 +15,7 @@
 | thunder_gust@2 | 1.6 s | body | 2 | 2 | 1.51 s | - |
 | thunder_gust@3 | 1.6 s | body | 1 | 1 | 1.54 s | - |
 | rime@p | 1.5 s | player | 0 | 0 | 1.50 s | - |
-| rime | 1.5 s | body | 51 | 15 | -0.23 s | 5 bands from 0.04 s, every 0.12 s, 0.80 s each |
+| rime | 1.5 s | body | 51 | 15 | -0.23 s | 5 bands from 0.04 s, every 0.12 s, 0.26 s each |
 | rime@1 | 1.5 s | body | 11 | 0 | 1.50 s | - |
 | rime@2 | 1.5 s | body | 11 | 0 | 1.50 s | - |
 | rime@3 | 1.5 s | body | 11 | 0 | 1.50 s | - |

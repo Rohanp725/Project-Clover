@@ -744,7 +744,13 @@ namespace Clover.Player.Forms
                 run.T0 = FlungSticks;
                 run.Look = ElementMoves.HoldSpellOnBody(ElementSubstance.Metal, run.Victim.transform.position, toward, run.T0 + Mathf.Max(0.5f, cast.Spec.Seconds) + 0.5f);
                 // T2 marks a blade that stood in the chest: it tears out from there, never dropped from over the head.
-                if (run.Look >= 0) run.T2 = 1f;
+                if (run.Look >= 0)
+                {
+                    run.T2 = 1f;
+                    // No sign over the head: the blade in the chest is the mark.
+                    if (SpellWorks.Marks(run)[0] >= 0) FormFx.ReleaseMark(SpellWorks.Marks(run)[0], 0f);
+                    SpellWorks.Marks(run)[0] = -1;
+                }
             }
             TickMetal(ref run);
             return 0;

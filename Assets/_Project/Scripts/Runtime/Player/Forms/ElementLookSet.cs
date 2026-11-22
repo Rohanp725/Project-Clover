@@ -124,6 +124,12 @@ namespace Clover.Player.Forms
             public int PathFirst, PathCount, ScaleFirst, ScaleCount, SpinFirst, SpinCount, OrbitFirst, OrbitCount;
             public Vector3 SpinAxis;
             public Vector3 OrbitCentre;
+            /// <summary>
+            /// A ribbon turned about its own origin while its path carries it, as the round-4 recipes' Blender builder keys
+            /// a ribbon (staging/blender/2026-11-22_round4/tools/rdlib_blender.py, key_ribbon): Carried Embers' tight whirl
+            /// walking down its lane. Otherwise its path is turned with it, which flung the whirl's curls wide.
+            /// </summary>
+            public bool TurnsInPlace;
             /// <summary>A ribbon's keys: the share of it drawn on from its tail (x), and the share wiped off from its tail (x).</summary>
             public int DrawFirst, DrawCount, EraseFirst, EraseCount;
             /// <summary>A ribbon's ink: its colour and width in metres (none: no ink), and how much of it is stippled away (dust).</summary>
@@ -345,7 +351,7 @@ namespace Clover.Player.Forms
             if (part.OrbitCount > 0)
             {
                 var round = Quaternion.AngleAxis(SampleOnward(part.OrbitFirst, part.OrbitCount, angleTime), Vector3.up);
-                position = part.OrbitCentre + round * (position - part.OrbitCentre);
+                if (!part.TurnsInPlace) position = part.OrbitCentre + round * (position - part.OrbitCentre);
                 rotation = round * rotation;
             }
         }

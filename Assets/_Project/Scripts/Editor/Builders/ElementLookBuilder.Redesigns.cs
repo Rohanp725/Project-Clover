@@ -223,7 +223,7 @@ namespace Clover.EditorTools
             {
                 made.SetFloat("_SrcBlend", added ? (float)UnityEngine.Rendering.BlendMode.One : (float)UnityEngine.Rendering.BlendMode.SrcAlpha);
                 made.SetFloat("_DstBlend", added ? (float)UnityEngine.Rendering.BlendMode.One : (float)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-                made.SetFloat("_Density", added ? 1f : 1.5f);
+                made.SetFloat("_Density", added ? 1f : 2.2f);
                 made.SetFloat("_Softness", added ? 0.25f : 0.6f);
                 made.SetFloat("_Breathe", added ? 0.2f : 0.45f);
             }

@@ -37,24 +37,32 @@ namespace Clover.Player
             }
         }
 
-        // The Blender worker's ten plates: both shins, both hips, the chest in three, both shoulders, and the back; in the
-        // order they grow, from the feet up as the stone climbs.
+        // Round 4's sixteen slabs (staging/blender/2026-11-22_round4, Bedrock round 2: "thicker, chunkier plates that visibly
+        // change the silhouette at the game camera"): the shins, the thighs, the hip and the back, the chest in three, both
+        // upper arms, a big layered pauldron on each shoulder (two slabs, about 0.7 m across together) and a crest at the
+        // nape; in the order they grow, from the feet up as the stone climbs. They stand a little off the body.
         private static readonly Spot[] Spots =
         {
-            new Spot("shin.L", new Vector3(0f, 0.18f, 0.05f), new Vector3(-0.2f, 0f, 1f), 0.17f),
-            new Spot("shin.R", new Vector3(0f, 0.18f, 0.05f), new Vector3(0.2f, 0f, 1f), 0.17f),
-            new Spot("thigh.L", new Vector3(-0.07f, 0.06f, 0f), new Vector3(-1f, 0f, 0.25f), 0.19f),
-            new Spot("thigh.R", new Vector3(0.07f, 0.06f, 0f), new Vector3(1f, 0f, 0.25f), 0.19f),
-            new Spot("spine", new Vector3(0f, 0.12f, -0.12f), new Vector3(0f, 0.15f, -1f), 0.22f),
-            new Spot("chest", new Vector3(0f, 0.1f, 0.12f), new Vector3(0f, 0.2f, 1f), 0.24f),
-            new Spot("chest", new Vector3(-0.12f, 0.04f, 0.1f), new Vector3(-0.55f, 0.2f, 1f), 0.19f),
-            new Spot("chest", new Vector3(0.12f, 0.04f, 0.1f), new Vector3(0.55f, 0.2f, 1f), 0.19f),
-            new Spot("shoulder.L", new Vector3(-0.06f, 0.07f, 0f), new Vector3(-0.55f, 1f, 0f), 0.21f),
-            new Spot("shoulder.R", new Vector3(0.06f, 0.07f, 0f), new Vector3(0.55f, 1f, 0f), 0.21f),
+            new Spot("shin.L", new Vector3(0f, 0.18f, 0.07f), new Vector3(-0.2f, 0f, 1f), 0.2f),
+            new Spot("shin.R", new Vector3(0f, 0.18f, 0.07f), new Vector3(0.2f, 0f, 1f), 0.2f),
+            new Spot("thigh.L", new Vector3(-0.09f, 0.06f, 0f), new Vector3(-1f, 0f, 0.25f), 0.24f),
+            new Spot("thigh.R", new Vector3(0.09f, 0.06f, 0f), new Vector3(1f, 0f, 0.25f), 0.24f),
+            new Spot("spine", new Vector3(0f, 0.02f, 0.13f), new Vector3(0f, -0.1f, 1f), 0.26f),
+            new Spot("spine", new Vector3(0f, 0.12f, -0.14f), new Vector3(0f, 0.15f, -1f), 0.3f),
+            new Spot("chest", new Vector3(0f, 0.1f, 0.14f), new Vector3(0f, 0.2f, 1f), 0.3f),
+            new Spot("chest", new Vector3(-0.13f, 0.04f, 0.12f), new Vector3(-0.55f, 0.2f, 1f), 0.22f),
+            new Spot("chest", new Vector3(0.13f, 0.04f, 0.12f), new Vector3(0.55f, 0.2f, 1f), 0.22f),
+            new Spot("upperarm.L", new Vector3(-0.05f, 0.1f, 0f), new Vector3(-1f, 0.1f, 0f), 0.2f),
+            new Spot("upperarm.R", new Vector3(0.05f, 0.1f, 0f), new Vector3(1f, 0.1f, 0f), 0.2f),
+            new Spot("shoulder.L", new Vector3(-0.08f, 0.08f, 0f), new Vector3(-0.6f, 1f, 0f), 0.42f),
+            new Spot("shoulder.R", new Vector3(0.08f, 0.08f, 0f), new Vector3(0.6f, 1f, 0f), 0.42f),
+            new Spot("shoulder.L", new Vector3(-0.16f, 0.15f, 0f), new Vector3(-0.85f, 1f, 0f), 0.3f),
+            new Spot("shoulder.R", new Vector3(0.16f, 0.15f, 0f), new Vector3(0.85f, 1f, 0f), 0.3f),
+            new Spot("head", new Vector3(0f, -0.1f, -0.1f), new Vector3(0f, 0.35f, -1f), 0.22f),
         };
 
-        /// <summary>How thick a plate is against how wide: a plate of stone, not a boulder.</summary>
-        public const float Thickness = 0.55f;
+        /// <summary>How thick a plate is against the slab's own: round 4's slab carries its 15 cm in its mesh.</summary>
+        public const float Thickness = 1f;
 
         private static readonly int IceId = Shader.PropertyToID("_Ice");
         private static readonly int IceRevealId = Shader.PropertyToID("_IceReveal");
