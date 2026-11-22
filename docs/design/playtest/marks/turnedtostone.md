@@ -31,15 +31,13 @@ are both carried.
 ## turnedtostone.brokenidol
 **What it does.** A finisher on an enemy that was just broken out of stone heals you and Curses every enemy nearby.
 
-**When it happens.** Each finisher that lands on an enemy that has both Tremor and a Curse.
+**When it happens.** Each finisher that breaks an enemy out of stone (the plain Turned to Stone's stone or a shape's).
 
 **The numbers.** Mix, 3 Shards. You heal 10, and everything within 5 metres is Cursed.
 
 **Works with.** Turned to Stone (breaking out often leaves the enemy on its knees), Grave Dirt.
 
 **Example.** Break a brute out of stone, finish it, and the pack around it is Cursed.
-
-**Not built yet.** For now, it works on any finisher on an enemy that has both, not only one just broken out of stone.
 
 ## turnedtostone.heavycurse
 **What it does.** The stone climbs up the enemy half a second faster.

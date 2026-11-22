@@ -42,15 +42,13 @@ Dark are both carried.
 ## drownedweight.debtpasses
 **What it does.** When a swollen enemy bursts, the nearest enemy the burst reaches swells right away. Killing a swollen enemy heals you 6 more.
 
-**When it happens.** Each time a swollen enemy dies, while you carry both Water and Dark.
+**When it happens.** Each time a swollen enemy bursts: when it dies, or when your finisher lands on it, while you carry both Water and Dark.
 
-**The numbers.** Mix, keystone, 5 Shards. For now: when an enemy that is both Soaked and Cursed dies, every enemy within 4 metres is Cursed, at most once a second, and you heal 6. This is on purpose: it may make those enemies swell too.
+**The numbers.** Mix, keystone, 5 Shards. The one enemy nearest the burst, within its 4 metres, gets a Curse and swells at once, as if Drowned Weight went off on it. Killing a swollen enemy also heals you 6.
 
 **Works with.** Drowned Weight (its burst soaks them all first), Held Under, Under the Black Water.
 
 **Example.** Kill the first swollen soldier, and the debt passes down the line.
-
-**Not built yet.** For now, it works when any Soaked, Cursed enemy dies, and the Curse passes to every enemy within 4 metres, not only the nearest.
 
 ## drownedweight.blackwater
 **What it does.** Black water opens under you and under the enemy you face. You both sink, and each of you comes up out of the other's water: you where it stood, and it where you stood. It comes up Soaked, Cursed, and held knee-deep for 1 second. The water you came up from stays for 3 seconds as a pool that soaks.

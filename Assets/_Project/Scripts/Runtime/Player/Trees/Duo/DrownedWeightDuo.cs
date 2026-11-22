@@ -11,6 +11,16 @@ namespace Clover.Player.Trees.Duo
     /// </summary>
     public static class DrownedWeightDuo
     {
+        /// <summary>The plain reaction's id, forced on the next to swell (The Debt Passes).</summary>
+        public const string DrownedWeight = "react.drownedweight";
+
+        // The Debt Passes' swelling of the nearest one a swollen enemy's burst reaches: a Curse on it, then Drowned Weight forced
+        // on it alone, once on the one nearest within the burst's 4 m.
+        private static UpgradeEffect Swell(UpgradeTrigger on, UpgradeAction what) => new UpgradeEffect
+        {
+            On = on, InState = Reactions.Swollen, Do = what, EachWithin = 4f, EachOther = true, Count = 1,
+            Affliction = AfflictionKind.Cursed, Stacks = 1, Reaction = DrownedWeight, Alone = true,
+        };
         public const string Shape = "drownedweight.shape";
         public const string HeldUnder = "drownedweight.heldunder";
         public const string DeepSwell = "drownedweight.deepswell";
@@ -96,16 +106,20 @@ namespace Clover.Player.Trees.Duo
 
             // The debt passes on: a Curse laid by the mark (not the reaction, so on purpose it reacts) on every enemy near a
             // soaked, cursed enemy that dies, and 6 more health for the kill.
-            // NEEDS: an answer to an enemy that dies swollen (death-in-condition), the nearest one the burst reaches swelling
-            // alone; now every enemy within 4 m of a soaked, cursed enemy that dies is Cursed, once a second.
+            // A swollen enemy's burst (its death, or the finisher that bursts it; UpgradeEffect.InState) swells the nearest enemy the
+            // burst reaches, 4 m, at once: a Curse laid and Drowned Weight forced on it (UpgradeAction.ForceReaction, Alone). Killing
+            // a swollen enemy heals 6 more.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = TheDebtPasses, Name = "The Debt Passes", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { HeldUnder, DeepSwell }, Icon = UpgradeIcons.Chain,
                 Description = "When a swollen enemy bursts, the nearest enemy the burst reaches swells at once, and killing a swollen enemy heals you 6 more.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Soaked, Needs2 = AfflictionKind.Cursed, Do = UpgradeAction.Afflict, Radius = 4f, Affliction = AfflictionKind.Cursed, Stacks = 1, Cooldown = 1f },
-                    new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Soaked, Needs2 = AfflictionKind.Cursed, Do = UpgradeAction.Heal, Amount = 6f },
+                    new UpgradeEffect { On = UpgradeTrigger.Kill, InState = Reactions.Swollen, Do = UpgradeAction.Heal, Amount = 6f },
+                    Swell(UpgradeTrigger.Kill, UpgradeAction.Afflict),
+                    Swell(UpgradeTrigger.Kill, UpgradeAction.ForceReaction),
+                    Swell(UpgradeTrigger.FinisherHit, UpgradeAction.Afflict),
+                    Swell(UpgradeTrigger.FinisherHit, UpgradeAction.ForceReaction),
                 },
             }, HeartPattern.Keystone));
 

@@ -69,15 +69,15 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.LeftLow));
 
-            // NEEDS: an answer to an enemy just broken out of stone (death-in-condition); now a finisher on one shaken and cursed.
+            // A finisher that breaks an enemy out of stone (UpgradeEffect.InState: the stone it just spent, in whichever shape).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = BrokenIdol, Name = "Broken Idol", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Hammer,
                 Description = "A finisher on an enemy just broken out of stone heals you 10 and Curses every enemy within 5 m.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.FinisherHit, Needs = AfflictionKind.Tremor, Needs2 = AfflictionKind.Cursed, Do = UpgradeAction.Heal, Amount = 10f },
-                    new UpgradeEffect { On = UpgradeTrigger.FinisherHit, Needs = AfflictionKind.Tremor, Needs2 = AfflictionKind.Cursed, Do = UpgradeAction.Afflict, Radius = 5f, Affliction = AfflictionKind.Cursed, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.FinisherHit, InState = Reactions.Stone, Do = UpgradeAction.Heal, Amount = 10f },
+                    new UpgradeEffect { On = UpgradeTrigger.FinisherHit, InState = Reactions.Stone, Do = UpgradeAction.Afflict, Radius = 5f, Affliction = AfflictionKind.Cursed, Stacks = 1 },
                 },
             }, HeartPattern.RightLow));
 
@@ -141,7 +141,7 @@ namespace Clover.Player.Trees.Duo
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = climbs, Seconds = 1f, Pace = 0.7f } },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = climbs, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = climbed, Seconds = 1f, Pace = 0.4f } },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = climbed, Do = UpgradeAction.Condition,
-                    State = new ConditionSpec { Id = stone, Seconds = 1.5f, Flags = ConditionFlags.Rooted | ConditionFlags.BeginsNoAttack | ConditionFlags.StaggerTakenShare, Scale = 2f, EndsWith = ConditionBlow.Heavy } },
+                    State = new ConditionSpec { Id = stone, Seconds = 1.5f, Flags = ConditionFlags.Rooted | ConditionFlags.BeginsNoAttack | ConditionFlags.StaggerTakenShare, Scale = 2f, EndsWith = ConditionBlow.Heavy, Is = Reactions.Stone } },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = climbed, Do = UpgradeAction.Condition,
                     State = new ConditionSpec { Id = spellproof, Seconds = 1.5f, Flags = ConditionFlags.SpellTakenShare, Scale = 0.5f, EndsWith = ConditionBlow.Heavy } },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = stone, By = StruckBy.Heavy, Do = UpgradeAction.Burst, Radius = 0.5f, Stagger = 50f, Affliction = AfflictionKind.Tremor },

@@ -210,6 +210,8 @@ namespace Clover.Player
                 var near = combat.EnemyNear(centre, effect.EachWithin, fanTaken);
                 if (!(near is IDamageable one)) break;
                 fanTaken.Add(one);
+                // The one that just died where it is done (a swollen enemy's burst) is no one to hand it to.
+                if (near is Enemy fallen && fallen.IsDead) continue;
                 if (!PlayerCombat.Carries(near, effect.OnlyCarrying)) continue;
                 var each = pending;
                 each.Target = near;

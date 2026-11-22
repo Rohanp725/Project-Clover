@@ -170,6 +170,26 @@ namespace Clover.Tests
             Assert.IsFalse(still.Any(effect => effect.Do == UpgradeAction.Spend), "the shove itself sheds");
         }
 
+        [Test]
+        public void TheDeathsAndBreaksOfAConditionAreAnsweredByWhatItIs()
+        {
+            Assert.GreaterOrEqual(ReactionTable.PairOf(DrownedWeightDuo.DrownedWeight), 0, "a real reaction");
+            var debt = Upgrade.ById(DrownedWeightDuo.TheDebtPasses).Effects;
+            Assert.IsTrue(debt.All(effect => effect.InState == Reactions.Swollen), "only a swollen enemy's burst");
+            Assert.IsTrue(debt.Any(effect => effect.On == UpgradeTrigger.Kill && effect.Do == UpgradeAction.Heal && effect.Amount == 6f));
+            foreach (var on in new[] { UpgradeTrigger.Kill, UpgradeTrigger.FinisherHit })
+            {
+                var swell = debt.Single(effect => effect.On == on && effect.Do == UpgradeAction.ForceReaction);
+                Assert.IsTrue(swell.Alone && swell.EachWithin == 4f && swell.Count == 1 && swell.EachOther, on + ": the nearest the burst reaches swells");
+            }
+            var idol = Upgrade.ById(TurnedToStoneDuo.BrokenIdol).Effects;
+            Assert.IsTrue(idol.All(effect => effect.On == UpgradeTrigger.FinisherHit && effect.InState == Reactions.Stone), "a finisher that breaks it out of stone");
+            var set = Quiet();
+            set.Conditions.Set(new ConditionSpec { Id = "test.shape.stone", Is = Reactions.Stone, Seconds = 1.5f, EndsWith = ConditionBlow.Heavy }, null);
+            set.Conditions.Struck(30f, true, false, false, false, true);
+            Assert.IsTrue(set.Conditions.Held(Reactions.Stone), "just broken out of a shape's stone is still known as stone");
+        }
+
         private sealed class Afflicted : IAfflictable
         {
             public Afflicted(AfflictionSet set) => Afflictions = set;
