@@ -68,6 +68,8 @@ namespace Clover.UI
         public SpellDiamondHud Diamond { get; private set; }
         /// <summary>A reaction's name over the enemy it happened on (task 3.2).</summary>
         public ReactionWords Reactions { get; private set; }
+        /// <summary>"+4 Memories" under the Shards count, and the light that flies in with them (task 5.6).</summary>
+        public MemoryGain Memories { get; private set; }
         private int shownTallies = -1;
         private int shownFlasks;
 
@@ -116,6 +118,8 @@ namespace Clover.UI
             if (player != null && player.GetComponent<PlayerSpells>() != null && status != null)
                 Diamond = SpellDiamondHud.Make(status.transform.parent, status, player);
             if (player != null && status != null) Reactions = ReactionWords.Make(status.transform.parent, status, player);
+            // The line under the Shards count that says Memories were paid, and the amber light that brings them (task 5.6).
+            if (embers != null) Memories = MemoryGain.Make(embers);
         }
 
         private void LateUpdate()

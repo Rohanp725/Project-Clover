@@ -49,6 +49,11 @@ namespace Clover.Gameplay
         public string Title = "";
         /// <summary>An elite stands between the ordinary enemies and a boss: its name is shown over its own bars while it fights.</summary>
         public bool IsElite;
+        /// <summary>
+        /// An elite that pays Memories as an ordinary new kind (1), not as an elite (4): one who teaches nothing yet. The
+        /// Gate Captain, until the castle is reworked (way_build_plan.md question 11, the owner's answer).
+        /// </summary>
+        public bool PaysAsCommon;
         /// <summary>A god fighting in this body (Narukami; Khepharu as a man): it ranks as a god for the reactions, though ice holds it for a breath (AfflictionSet.IsGod).</summary>
         public bool IsGod;
         /// <summary>What a chain feels on the end of it: a soldier is 1. At 2 and over it is not dragged; whoever pulls goes to it.</summary>
@@ -291,6 +296,7 @@ namespace Clover.Gameplay
             // About 1.3 times the soldier, who is himself drawn at 1.12.
             Scale = 1.45f,
             IsElite = true,
+            PaysAsCommon = true,
             Embers = 3,
             DrawsStorm = false,
             Health = 260f,

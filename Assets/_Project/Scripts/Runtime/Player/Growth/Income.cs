@@ -98,6 +98,31 @@ namespace Clover.Player.Growth
             return duoLand ? FoundInDuoLand : FoundInSoloLand;
         }
 
+        /// <summary>
+        /// One death among an area's enemies, paid into the wallet: the Memories <see cref="Defeat(EnemyKind, ICollection{string})"/>
+        /// gives. An enemy that is not the area's own (one let out of a Proving Ground pen) pays nothing, as it pays no
+        /// Shards (phase5_questions.md 5.6 Q3). Returns what was paid.
+        /// </summary>
+        public int PayKill(EnemyKind kind, bool areasOwn, ICollection<string> paid, Wallet wallet)
+        {
+            if (!areasOwn || wallet == null) return 0;
+            return Paid(Defeat(kind, paid), wallet);
+        }
+
+        /// <summary>A god's fall, paid into the wallet once under its flag. Returns what was paid.</summary>
+        public int PayGodFall(string element, ICollection<string> paid, Wallet wallet) =>
+            wallet == null ? 0 : Paid(GodFelled(element, paid), wallet);
+
+        /// <summary>Memories found lying in the world, paid into the wallet once under the pickup's key. Returns what was paid.</summary>
+        public int PayFound(string key, bool duoLand, ICollection<string> found, Wallet wallet) =>
+            wallet == null ? 0 : Paid(Found(key, duoLand, found), wallet);
+
+        private static int Paid(int memories, Wallet wallet)
+        {
+            wallet.Earn(Currency.Memories, memories);
+            return memories;
+        }
+
         /// <summary>The Shards one kill pays by the enemy's rank and the land's tier.</summary>
         public int ShardsFor(DefeatTier tier, int landTier)
         {
@@ -125,7 +150,7 @@ namespace Clover.Player.Growth
             // NEEDS: a field on EnemyKind for a named fighter, the Teacher and the last champion, when the first of each is built.
             if (kind == null) return DefeatTier.Common;
             if (kind.IsGod) return DefeatTier.God;
-            if (kind.IsElite) return DefeatTier.Elite;
+            if (kind.IsElite) return kind.PaysAsCommon ? DefeatTier.Common : DefeatTier.Elite;
             return DefeatTier.Common;
         }
 

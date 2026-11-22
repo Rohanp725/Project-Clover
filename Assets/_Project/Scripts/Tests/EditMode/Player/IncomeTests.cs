@@ -44,7 +44,9 @@ namespace Clover.Tests
         {
             var income = new Income();
             var paid = new List<string>();
-            Assert.AreEqual(DefeatTier.Elite, Income.TierOf(EnemyKind.Captain()));
+            // The Gate Captain teaches nothing yet: he pays as an ordinary new kind (way_build_plan.md Q11).
+            Assert.AreEqual(DefeatTier.Common, Income.TierOf(EnemyKind.Captain()));
+            Assert.AreEqual(1, income.Defeat(EnemyKind.Captain(), paid));
             Assert.AreEqual(DefeatTier.Elite, Income.TierOf(EnemyKind.Champion()));
             Assert.AreEqual(4, income.Defeat(EnemyKind.Champion(), paid));
             Assert.AreEqual(0, income.Defeat(EnemyKind.Champion(), paid), "the Champion again after a rest");
