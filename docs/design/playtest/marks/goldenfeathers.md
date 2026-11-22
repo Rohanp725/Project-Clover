@@ -9,13 +9,13 @@ Wind are both carried.
 
 **When it happens.** Every time Golden Feathers goes off while you carry both Light and Wind. Golden Feathers goes off when a Mark lands on an Unsteady enemy, or when Unsteady lands on a Marked one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Golden Feathers.
 
-**The numbers.** Mix, 3 Shards. Eagle's Sight: for 4 seconds, your next weapon blow on the enemy is a critical hit and deals 10 more damage. Wingbeat: everything within 3 metres of the enemy is thrown 3 metres away from it and Marked. After Golden Feathers goes off on an enemy, it can't go off on that enemy again for 4 seconds.
+**The numbers.** Mix, 3 Shards. Eagle's Sight: for 4 seconds, a dodge toward the enemy from up to 6 metres away carries you all the way to it, stopping 1 metre short, and ends in a cut for 10 damage, 10 stagger and a Mark. Your next weapon blow on it is a critical hit. Wingbeat: everything within 3 metres of the enemy is thrown 3 metres away from it and Marked. After Golden Feathers goes off on an enemy, it can't go off on that enemy again for 4 seconds.
 
 **Works with.** Bane of Serpents, Riding High, Wings Behind, Sweep of Wings.
 
 **Example.** One enemy you want to reach: use Eagle's Sight. Surrounded: use Wingbeat, and the crowd is thrown back and Marked.
 
-**Not built yet.** Eagle's Sight doesn't carry your dodge to the enemy yet. For now, it waits for your next weapon blow on it instead.
+**Not built yet.** The carry is the plain roll, made longer. The cut is a burst of light, not a sword swing.
 
 ## goldenfeathers.bane
 **What it does.** A feather that reaches an enemy that is already Marked hits it for 12 damage and 20 stagger.
@@ -35,7 +35,7 @@ Wind are both carried.
 
 **When it happens.** Each time Golden Feathers goes off.
 
-**The numbers.** Mix, a minor mark, 1 Shard. Four feathers fly instead of three, and the farthest one lands 9 metres past the enemy.
+**The numbers.** Mix, a minor mark, 1 Shard. Four feathers fly instead of three, and they ride 9 metres instead of 6.
 
 **Works with.** Golden Feathers, Bane of Serpents.
 
@@ -46,23 +46,21 @@ Wind are both carried.
 
 **When it happens.** Each perfect dodge, while you carry both Light and Wind.
 
-**The numbers.** Mix, keystone, 5 Shards. A Mark and an Unsteady on every enemy within 4 metres, at most once every half second. Since this mark adds both at once, it sets off Golden Feathers on each enemy.
+**The numbers.** Mix, keystone, 5 Shards. A half ring of feathers behind you flies out 4 metres: a Mark and an Unsteady on every enemy it reaches behind you, at most once every half second. You keep facing the way you were. Since this mark adds both at once, it sets off Golden Feathers on each enemy.
 
 **Works with.** Golden Feathers, Bane of Serpents, Sweep of Wings.
 
 **Example.** Dodge through a pack at the last moment, and every one of them throws feathers.
 
-**Not built yet.** For now, the feathers reach all around you, not just a half ring behind you.
+**Not built yet.** The feathers themselves aren't drawn yet; for now, puffs of light fly out behind you.
 
 ## goldenfeathers.sweep
 **What it does.** A huge wing made of layers of gold feathers sweeps out from your side through 160 degrees, reaching 6 metres. It deals 10 damage, 25 stagger, a Mark and two Unsteady, and everything it hits is thrown 3 metres in the direction of the sweep. For 3 seconds after that, each weapon blow on an enemy it threw adds another Unsteady.
 
 **When it happens.** Cast it from a spell slot while you carry both Light and Wind. Press that slot's button (hold L2 and a face button, or press 1 to 4). The first time it lands, it charges your blade with Light.
 
-**The numbers.** Mix, duo spell, opener, 5 Shards. It costs no mana. After you cast it, you must wait 9 seconds to cast it again. Fighting with your weapon makes the wait shorter. It is a cone 6 metres long and 160 degrees wide. It deals 10 damage, 25 stagger, a Mark and two Unsteady, and throws enemies 3 metres. Then, for 3 seconds, each weapon blow on an enemy it threw adds one Unsteady.
+**The numbers.** Mix, duo spell, opener, 5 Shards. It costs no mana. After you cast it, you must wait 9 seconds to cast it again. Fighting with your weapon makes the wait shorter. It is a cone 6 metres long and 160 degrees wide. It deals 10 damage, 25 stagger, a Mark and two Unsteady, and throws enemies 3 metres sideways across your front, to your left, the way the wing sweeps from your right. Then, for 3 seconds, each weapon blow on an enemy it threw adds one Unsteady.
 
 **Works with.** Golden Feathers (everything it hits gets both afflictions), Bane of Serpents, Wings Behind.
 
 **Example.** Start a fight with it on a crowd. They are Marked and knocked off balance, and the feathers fly.
-
-**Not built yet.** For now, the enemies it hits are thrown straight away from you, instead of sideways in the direction of the sweep.

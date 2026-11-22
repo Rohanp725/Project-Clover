@@ -23,6 +23,8 @@ namespace Clover.Player.Trees.Duo
         public const string Hungry = "kindlingpoint.hungry";
         /// <summary>Hands of the Sun's grip, let go at the first weapon blow.</summary>
         public const string Hand = "kindlingpoint.hand";
+        /// <summary>The reaction's id, for what answers a death its own burst dealt (The Feast).</summary>
+        public static readonly string KindlingReaction = AfflictionPairs.Id(AfflictionPairs.Index(AfflictionKind.Marked, AfflictionKind.Burn));
 
         public static void Add(List<Upgrade> to)
         {
@@ -79,22 +81,23 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.RightLow));
 
-            // NEEDS: a Mark lasting a blow longer on an enemy that also burns (mark-blows-on); until then it does nothing.
+            // A Mark lasts a blow longer on an enemy that also burns, whichever was laid first (Afflictions.MoreBlowsBurning, set
+            // while this mark is in force).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = ClearSky, Name = "Clear Sky", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 1, Requires = new[] { TheSunPoints }, Icon = UpgradeIcons.Eye,
                 Description = "A Mark lasts one blow longer on a burning enemy.",
             }, HeartPattern.LeftHigh));
 
-            // NEEDS: a kill made by the reaction's own burst (now any burning enemy that dies).
+            // Only a death dealt by Kindling Point's own blow (UpgradeEffect.KilledBy).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = TheFeast, Name = "The Feast", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { TheSunPoints, NoonGuard }, Icon = UpgradeIcons.Flame,
                 Description = "When a Kindling Point burst kills, every burn within 8 m deepens by one and you gain 10 mana back.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Burn, Needs2 = AfflictionKind.Marked, Do = UpgradeAction.Afflict, Radius = 8f, Affliction = AfflictionKind.Burn, Stacks = 1, Cooldown = 0.5f },
-                    new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Burn, Needs2 = AfflictionKind.Marked, Do = UpgradeAction.Mana, Amount = 10f, Cooldown = 0.5f },
+                    new UpgradeEffect { On = UpgradeTrigger.Kill, KilledBy = KindlingReaction, Do = UpgradeAction.Afflict, Radius = 8f, Affliction = AfflictionKind.Burn, Stacks = 1, Cooldown = 0.5f },
+                    new UpgradeEffect { On = UpgradeTrigger.Kill, KilledBy = KindlingReaction, Do = UpgradeAction.Mana, Amount = 10f, Cooldown = 0.5f },
                 },
             }, HeartPattern.Keystone));
 

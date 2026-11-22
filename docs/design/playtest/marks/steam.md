@@ -9,13 +9,11 @@ both carried.
 
 **When it happens.** Every time Steam goes off while you carry both Fire and Water. Steam goes off when Fire lands on a Soaked enemy, or when Water lands on a burning one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Steam.
 
-**The numbers.** Mix, 3 Shards. Blind Steam: like the plain one, the Soaked is used up, along with half the Burn. The cloud covers 3 metres around the enemy for 4 seconds and stings for 3 damage a second. Enemies in it when it forms can only see 2 metres for those 4 seconds, and their swings come a fifth slower. Scald: the Soaked is used up, but the Burn stays. A burst within 2.5 metres deals 14 damage, plus 6 more for each Burn the enemy has, and 30 stagger, and throws everything in it 1.5 metres. After Steam goes off on an enemy, it can't go off on that enemy again for 3 seconds.
+**The numbers.** Mix, 3 Shards. Blind Steam: like the plain one, the Soaked is used up, along with half the Burn. The cloud covers 3 metres around the enemy for 4 seconds and stings for 3 damage a second. Any enemy in it, when it forms or later, can only see 2 metres and swings a fifth slower, for as long as it stands in the cloud. Scald: the Soaked is used up, but the Burn stays. A burst within 2.5 metres deals 14 damage, plus 6 more for each Burn the enemy has, and 30 stagger, and throws everything in it 1.5 metres. After Steam goes off on an enemy, it can't go off on that enemy again for 3 seconds.
 
 **Works with.** Hissing Blade to set it up, Strike Through Steam, Kettle, The Sisters' Quarrel.
 
 **Example.** A crowd closing in on you: use Blind Steam, and they lose you in the cloud. One brute with lots of Burn: use Scald, again and again, since its Burn is never used up.
-
-**Not built yet.** An enemy that walks into Blind Steam's cloud after it forms gets stung, but not blinded.
 
 ## steam.hissingblade
 **What it does.** Your heavy blows add Burn and Soaked at the same time.

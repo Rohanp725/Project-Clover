@@ -181,6 +181,10 @@ namespace Clover.Gameplay
         private float basePreferred;
         private Clover.Player.PlayerController targetController;
         private Clover.Player.PlayerDefence targetDefence;
+        // The player it fights, kept while a standing thing that draws enemies has it fighting that thing instead (the thing's
+        // place in Clover.World.StandingThings, or -1).
+        private Transform fought;
+        private int decoy = -1;
         private int drinksSeen;
         private int drinkHash, holdHash, thrownHash, riseHash, dormantHash, searchHash;
         // Knocked flat (task 3.7): the fall, the lying breath and getting up; whether the animator has them is learned
@@ -699,7 +703,8 @@ namespace Clover.Gameplay
             // Read before this blow lays anything of its own: the blow is judged against what was already there.
             float takes = Afflictions.DamageTakenMultiplier(hit.Spell, hit.Heavy) * harder;
             float unsteadies = Afflictions.StaggerTakenFor(hit.Spell) * harder;
-            float shoved = Afflictions.ShoveMultiplier;
+            // On a slick ground of the player's (Black Ice's sheet) it is thrown farther.
+            float shoved = Afflictions.ShoveMultiplier * Clover.World.OwnGrounds.ThrownAt(transform.position, Time.time);
             Afflictions.TakeFrom(hit, this, shattered);
             // Ground that only lays an affliction is not a blow: it does not shove, flinch, wear poise or meet the guard.
             if (hit.OnlyLays && detonated <= 0f) return HitOutcome.Landed;
@@ -805,15 +810,20 @@ namespace Clover.Gameplay
         public float Weight => Kind != null ? Kind.Weight : 1f;
 
         /// <summary>A pull or a push from outside a blow. The great are moved less.</summary>
+        /// <summary>The way it was last shoved, and when (what it carries rides that way: Golden Feathers downwind).</summary>
+        public Vector3 LastShoveWay { get; private set; }
+        public float LastShovedAt => lastShoveMoment;
+
         public void Push(Vector3 impulse, PushKind kind = PushKind.Blow)
         {
             if (IsDead) return;
             impulse.y = 0f;
-            shove += impulse * (Kind.IsBoss ? 0.3f : Kind.IsElite ? 0.6f : 1f);
+            shove += impulse * (Kind.IsBoss ? 0.3f : Kind.IsElite ? 0.6f : 1f) * Clover.World.OwnGrounds.ThrownAt(transform.position, Time.time);
             // A real shove, not a pull's steady drag, is a moment its conditions answer (Windthrow tears out, Ill Wind sheds).
             if (ShoveRules.IsMoment(kind, impulse.magnitude, Time.time, lastShoveMoment))
             {
                 lastShoveMoment = Time.time;
+                LastShoveWay = impulse.normalized;
                 Afflictions.Conditions.Shoved();
             }
         }
@@ -911,6 +921,7 @@ namespace Clover.Gameplay
                 if (deadFor >= CorpseSeconds) gameObject.SetActive(false);
                 return;
             }
+            Retarget();
             if (target == null) return;
             // The enemies' own time can be made to drag while the player's does not.
             deltaTime *= WorldClock.EnemyScale;
@@ -1106,6 +1117,8 @@ namespace Clover.Gameplay
                 walked = (Kind.LitWalkSpeed > 0f && Sense.FoundLit ? Kind.LitWalkSpeed : Kind.WalkSpeed) * pace * (Brain.MoveWish > 0 ? 1f : 0.75f);
                 step = toTarget / distance * (Brain.MoveWish * walked * deltaTime);
             }
+            // Standing things are walked round, not into (Clover.World.StandingThings: the anvil, the mound, the wall).
+            if (step.sqrMagnitude > 0f) step = Clover.World.StandingThings.SteerAround(transform.position, step, body.radius);
             if (Brain.IsWaiting && distance > 0.05f)
             {
                 // Waiting its turn it does not stand still: it circles, changing direction now and then.
@@ -1220,6 +1233,26 @@ namespace Clover.Gameplay
             // beyond. A god is never leashed.
             if (!Afflictions.IsGod && EnemyChains.LeashOf(this, target != null ? target.position : transform.position, out Vector3 leashAnchor, out float leash))
                 step = EnemyChains.Leash(transform.position, step, leashAnchor, leash, deltaTime);
+            // Nothing walks, leaps or is thrown across The Closed Ring's stones (World.OwnGrounds.StoneRing); a god is not held.
+            // One driven against them hard is stopped there and told, for the ring's own blow.
+            if (!Afflictions.IsGod && deltaTime > 0f)
+            {
+                Vector3 flat = new Vector3(step.x, 0f, step.z);
+                if (flat.sqrMagnitude > 0f && Clover.World.OwnGrounds.AcrossRim(Clover.World.OwnGrounds.StoneRing, transform.position, transform.position + flat, Time.time))
+                {
+                    if (flat.magnitude / deltaTime >= Clover.World.OwnGrounds.DrivenAtLeast) Clover.World.OwnGrounds.TellStopped(this);
+                    step.x = 0f;
+                    step.z = 0f;
+                    shove = Vector3.zero;
+                }
+            }
+            // Shoved over a line of your own (Need-Fire's sparks): told, for the line's own answer.
+            if (deltaTime > 0f && shove.sqrMagnitude > 0.25f)
+            {
+                Vector3 carried = new Vector3(step.x, 0f, step.z);
+                if (carried.sqrMagnitude > 0f && Clover.World.OwnGrounds.Across(Clover.World.OwnGrounds.NeedFireLine, transform.position, transform.position + carried, Time.time))
+                    Clover.World.OwnGrounds.TellDrivenAcross(this, Clover.World.OwnGrounds.NeedFireLine);
+            }
             if (body.enabled) body.Move(step);
 
             // Its guard is up only while it stands ready and knows the player is there: the band going out is the opening.
@@ -1276,6 +1309,8 @@ namespace Clover.Gameplay
                 offset.y = 0f;
                 if (offset.magnitude > attack.Radius + 0.35f) return;
                 if (!ReachesHeight(attack)) return;
+                // A thrown blow meets a standing thing in its way first, and that takes it.
+                if (attack.Ranged && decoy < 0 && StrikeInTheWay(transform.position, centre, damage)) return;
                 // A leaper's blow comes from the leaper, who has landed at the circle's edge: a guard must face him, not the middle of the circle.
                 if (attack.Leap) Deal(attack, damage, forward, transform.position);
                 else Deal(attack, damage, offset.sqrMagnitude > 0.01f ? offset.normalized : forward, centre);
@@ -1357,8 +1392,50 @@ namespace Clover.Gameplay
             LightningBolts.Strike(to, 0.3f);
         }
 
+        /// <summary>
+        /// Fights a standing thing that draws enemies (one within its pull, Clover.World.StandingThings.DrawnTo) in the player's
+        /// place while it stands, and the player again once it is gone. A god or a boss is never drawn.
+        /// </summary>
+        private void Retarget()
+        {
+            if (decoy < 0) fought = target;
+            if (fought == null) return;
+            int drawn = Kind.IsBoss || Afflictions.IsGod ? -1 : Clover.World.StandingThings.DrawnTo(transform.position);
+            var thing = Clover.World.StandingThings.BodyOf(drawn);
+            if (thing != null)
+            {
+                decoy = drawn;
+                target = thing.transform;
+                return;
+            }
+            decoy = -1;
+            target = fought;
+        }
+
+        // A standing thing between where a blow comes from and where it lands takes it, not the player.
+        private bool StrikeInTheWay(Vector3 from, Vector3 to, float damage)
+        {
+            int wall = Clover.World.StandingThings.FirstOnLine(from, to);
+            if (wall < 0) return false;
+            Clover.World.StandingThings.Strike(wall, damage, Time.time);
+            ThingsStruck++;
+            return true;
+        }
+
+        /// <summary>Blows of its own that a standing thing took (one in its way, or one it was drawn to): for probes.</summary>
+        public int ThingsStruck { get; private set; }
+
         private void Deal(EnemyAttack attack, float damage, Vector3 direction, Vector3 from)
         {
+            // Drawn to a standing thing: the blow is the thing's.
+            if (decoy >= 0)
+            {
+                Clover.World.StandingThings.Strike(decoy, damage, Time.time);
+                ThingsStruck++;
+                return;
+            }
+            // A standing thing between the striker and the player takes the blow (the wall stops it, the pillar blocks it).
+            if (!attack.IsCircle && StrikeInTheWay(from, target.position, damage)) return;
             var struck = target.GetComponentInParent<IDamageable>();
             if (struck == null) return;
             var outcome = struck.TakeHit(new Hit(damage, 0f, direction, false, attack.Unblockable, from));
@@ -1447,6 +1524,12 @@ namespace Clover.Gameplay
         private void TickBurn(float deltaTime)
         {
             burnLeft -= deltaTime;
+            // Ground the player's light has made clean puts it out (Standing Light's glow, High Noon).
+            if (Clover.World.Purified.Covers(burnAt, Time.time))
+            {
+                burnLeft = 0f;
+                return;
+            }
             untilBurnShow -= deltaTime;
             if (untilBurnShow <= 0f && !BurnDrawn)
             {
@@ -1459,7 +1542,7 @@ namespace Clover.Gameplay
             untilBurnBite += burnEvery;
             Vector3 offset = target.position - burnAt;
             offset.y = 0f;
-            if (offset.magnitude > burnRadius || targetDefence == null) return;
+            if (offset.magnitude > burnRadius || targetDefence == null || Clover.World.Purified.Covers(target.position, Time.time)) return;
             targetDefence.TakeHit(new Hit(burnDamage, 0f, offset.sqrMagnitude > 0.01f ? offset.normalized : transform.forward, false, true));
         }
 

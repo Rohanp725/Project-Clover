@@ -25,7 +25,7 @@ namespace Clover.Player.Trees.Duo
         {
             const string A = Elements.Life, B = Elements.Metal;
 
-            // NEEDS: thorns as separate blades, five flying out at once (Iron Harvest; now one ring of 8 to all within 3 m).
+            // Iron Harvest's thorns are five separate blades flying out at once, each striking the first it meets (UpgradeAction.Pieces).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Iron Thorns: Pruning Hook or Iron Harvest", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -45,12 +45,12 @@ namespace Clover.Player.Trees.Duo
                     new ShapeDef
                     {
                         Name = "Iron Harvest",
-                        Description = "Five thorns grow and none is thrown: they all burst out together when it dies or the 6 s end, a ring of blades to 3 m, 8 and a notch on each enemy.",
+                        Description = "Five thorns grow and none is thrown: they all burst out together when it dies or the 6 s end, five blades flying out 3 m, 8 and a notch on the first enemy each meets.",
                         Effects = new[]
                         {
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Harvest, Seconds = 6f, Is = Reactions.Thorns } },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Harvest, Do = UpgradeAction.Burst, Radius = 3f, Damage = 8f, Stagger = 8f, Affliction = AfflictionKind.Sundered, Stacks = 1 },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionDied, Condition = Harvest, Do = UpgradeAction.Burst, Radius = 3f, Damage = 8f, Stagger = 8f, Affliction = AfflictionKind.Sundered, Stacks = 1 },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Harvest, Do = UpgradeAction.Pieces, Thrown = PieceAim.Ring, Count = 5, Reach = 3f, Speed = 12f, Radius = 0.5f, Damage = 8f, Stagger = 8f, Affliction = AfflictionKind.Sundered, Stacks = 1 },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionDied, Condition = Harvest, Do = UpgradeAction.Pieces, Thrown = PieceAim.Ring, Count = 5, Reach = 3f, Speed = 12f, Radius = 0.5f, Damage = 8f, Stagger = 8f, Affliction = AfflictionKind.Sundered, Stacks = 1 },
                         },
                     },
                 },

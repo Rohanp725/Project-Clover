@@ -226,6 +226,21 @@ namespace Clover.Player
         /// fuller than the game's own; whoever holds the old list must be told (the menu and the player's upgrades
         /// each have a way to look again).
         /// </summary>
+        // What ground does to each one standing in it (UpgradeEffect.InsideDo) is its mark's too, with clocks of its own.
+        private static void SlotInside(UpgradeEffect effect, Upgrade owner, ref int slots)
+        {
+            foreach (var list in new[] { effect.InsideDo, effect.InsideAtEnd, effect.YouInside })
+            {
+                if (list == null) continue;
+                foreach (var inner in list)
+                {
+                    if (inner == null) continue;
+                    inner.Slot = slots++;
+                    inner.Owner = owner;
+                }
+            }
+        }
+
         public static void Gather(Action<List<Upgrade>> more)
         {
             var list = new List<Upgrade>();
@@ -248,6 +263,7 @@ namespace Clover.Player
                 {
                     effect.Slot = slots++;
                     effect.Owner = upgrade;
+                    SlotInside(effect, upgrade, ref slots);
                 }
                 // A later press's effects are its spell's own, done when the press comes (PlayerUpgrades.Press).
                 if (upgrade.Presses != null)
@@ -269,6 +285,7 @@ namespace Clover.Player
                         {
                             effect.Slot = slots++;
                             effect.Owner = upgrade;
+                            SlotInside(effect, upgrade, ref slots);
                         }
                         // A shape's later presses are its own too (ShapeDef.Presses).
                         if (shape.Presses != null)

@@ -16,16 +16,23 @@ namespace Clover.Player.Trees.Duo
         public const string DeepCoal = "smoulder.deepcoal";
         public const string TheSunGoesUnder = "smoulder.sungoesunder";
         public const string TheBurningLake = "smoulder.lake";
+        /// <summary>The Burning Lake's surface, your own ground while it lasts, and the slow on what stands in it.</summary>
+        public const string LakeGround = "smoulder.lake.ground";
+        public const string LakeSlowed = "smoulder.lake.slowed";
         /// <summary>The condition Night Sun sets: the fire sunk in, as the plain reaction's.</summary>
         public const string NightSun = "smoulder.nightsun";
+        /// <summary>The condition Deep Coal sets while its enemy smoulders: its Burn may lie two deeper.</summary>
+        public const string DeepCoalBed = "smoulder.deepcoal.bed";
+        private const string SmoulderReaction = "react.smoulder";
 
         public static void Add(List<Upgrade> to)
         {
             const string A = Elements.Dark, B = Elements.Fire;
 
             // Night Sun heals 1 for each Burn on the enemy struck (UpgradeEffect.PerDepthOf).
-            // NEEDS: the coal seam flaring at its end and setting off every smoulder on it (Coal Seam; now a patch that curses
-            // what stands on it, on purpose able to react).
+            // Coal Seam's patch curses what stands on it, on purpose able to react, and flares as it ends: every burning enemy
+            // standing on it then flares as a smoulder does, its Burn spent for 10 a stack in 3 m and a Burn to all there
+            // (UpgradeEffect.InsideAtEnd).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Smoulder: Night Sun or Coal Seam", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -44,7 +51,8 @@ namespace Clover.Player.Trees.Duo
                         Description = "The fire goes down into the floor where it reacted: a patch of smouldering ground 2.5 m across for 8 s, almost dark. Any burning enemy that stands on it is Cursed, and so smoulders.",
                         Effects = new[]
                         {
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Radius = 1.25f, Seconds = 8f, Interval = 2f, Damage = 0f, Affliction = AfflictionKind.Cursed, Stacks = 1, Cascades = true },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Radius = 1.25f, Seconds = 8f, Interval = 2f, Damage = 0f, Affliction = AfflictionKind.Cursed, Stacks = 1, Cascades = true,
+                                InsideAtEnd = Flare() },
                         },
                     },
                 },
@@ -62,35 +70,58 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.LeftLow));
 
-            // NEEDS: an affliction's depth raised on one enemy while it is in a condition; until then it does nothing.
+            // Each Smoulder sets a condition that lasts while its enemy is Cursed, so while it smoulders, in whichever shape: its
+            // Burn may lie two deeper than its usual depth (ConditionSpec.Deepens, as Rust's notches past three).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = DeepCoal, Name = "Deep Coal", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Flame,
                 Description = "Burn on a smouldering enemy can lie two deeper.",
+                Effects = new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = SmoulderReaction, Do = UpgradeAction.Condition,
+                        State = new ConditionSpec { Id = DeepCoalBed, Seconds = 30f, While = AfflictionKind.Cursed, Deepens = AfflictionKind.Burn, DeepensBy = 2 } },
+                },
             }, HeartPattern.RightLow));
 
-            // NEEDS: every Burn laid smouldering, curse or no curse (now each blow that lands on a burning enemy while you are
-            // below half health Curses it, once a second, so it smoulders).
+            // Every Burn laid while you are below half health sets Smoulder off as if a Curse had come (UpgradeEffect.AsLaid): in
+            // whichever shape is worn, not while it rests on that enemy, and what it sets there lasts without the Curse.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = TheSunGoesUnder, Name = "The Sun Goes Under", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { ThirdEye, DeepCoal }, Icon = UpgradeIcons.Moon,
                 Description = "While your health is below half, every Burn you lay smoulders, curse or no curse.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.AnyHit, While = StatWhen.HalfHealth, Needs = AfflictionKind.Burn, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Cursed, Stacks = 1, Cooldown = 1f } },
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.AfflictionLaid, Spent = AfflictionKind.Burn, While = StatWhen.HalfHealth, Do = UpgradeAction.ForceReaction,
+                    Reaction = SmoulderReaction, AsLaid = true } },
             }, HeartPattern.Keystone));
 
             // The duo spell, bought with Shards once both are carried (no god gives it): a zone on a 16 s cooldown (SpellTimings). The field form lays a lake at the aim point;
             // it Curses what stands in it (the branch's first element) and each bite lays a Burn, so all of them smoulder.
-            // NEEDS: slowing what stands in it by a fifth; an enemy killed on it drawn under, the lake growing 0.5 m and
-            // lasting 1 s longer; a finisher on it flaring every smoulder on the lake.
+            // The lake is your own ground (SpellSpec.Ground): what stands in it at each bite is slowed by a fifth (a condition set at
+            // each bite, lasting a little past the next); an enemy killed on it grows it 0.5 m and 1 s (UpgradeAction.GrowGround;
+            // the field reads its size from the ground); a finisher on it ends every smoulder on the lake at once, so each flares
+            // (EndCondition fanned to those on the ground). NEEDS: the dead drawn under the surface (looks).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = TheBurningLake, Name = "The Burning Lake", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Role = SpellRole.Opener, Requires = new[] { ThirdEye, DeepCoal }, Icon = UpgradeIcons.Wave,
                 Description = "A lake 4 m across opens at the aim point for 7 s: a still black surface, flame licking at its rim. Every enemy on it is Cursed and takes a Burn each second, so all of them smoulder.",
                 Form = SpellForms.Field,
-                Spell = new SpellSpec { Reach = 8f, Radius = 2f, Seconds = 7f, Interval = 1f, LingerDamage = 2f, Stacks = 1 },
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Burn, Stacks = 1 } },
+                Spell = new SpellSpec { Reach = 8f, Radius = 2f, Seconds = 7f, Interval = 1f, LingerDamage = 2f, Stacks = 1, Ground = LakeGround },
+                Effects = new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Burn, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = LakeSlowed, Seconds = 1.2f, Pace = 0.8f } },
+                    new UpgradeEffect { On = UpgradeTrigger.Kill, TargetOnGround = LakeGround, Do = UpgradeAction.GrowGround, Ground = LakeGround, Amount = 0.5f, Seconds = 1f },
+                    new UpgradeEffect { On = UpgradeTrigger.FinisherHit, TargetOnGround = LakeGround, Do = UpgradeAction.EndCondition, Condition = Reactions.Sunk, EachWithin = 12f, Cooldown = 0.2f },
+                },
             }, HeartPattern.Spell));
         }
+
+        // A smoulder's flare on one burning enemy, as the plain Smoulder's end: its Burn spent for 10 a stack in 3 m, and a Burn to all there.
+        private static UpgradeEffect[] Flare() => new[]
+        {
+            new UpgradeEffect { On = UpgradeTrigger.InGround, Needs = AfflictionKind.Burn, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Burn },
+            new UpgradeEffect { On = UpgradeTrigger.InGround, Needs = AfflictionKind.Burn, Do = UpgradeAction.Burst, Radius = 3f, Damage = 10f, PerStack = true, Affliction = AfflictionKind.Burn },
+            new UpgradeEffect { On = UpgradeTrigger.InGround, Needs = AfflictionKind.Burn, Do = UpgradeAction.Afflict, Radius = 3f, Affliction = AfflictionKind.Burn, Stacks = 1 },
+        };
 
         // The fire sunk in as the plain Smoulder's: deepening every 2 s (a god's every 3 s) while the curse lasts, and flaring
         // when it ends or the enemy dies; then the shape's own answers.

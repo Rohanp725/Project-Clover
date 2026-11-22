@@ -13,6 +13,9 @@ namespace Clover.Player
     /// </summary>
     public static class MarkRules
     {
+        /// <summary>True when an effect that happens once a fight may go off in the fight numbered <paramref name="fight"/>: it last went off in another.</summary>
+        public static bool FirstInFight(int lastFight, int fight) => lastFight != fight;
+
         /// <summary>A gate that opens on a count of gods felled: <c>gods.3</c> opens at the third (the Way's stages, depth_weapons.md 6).</summary>
         public const string GodsGate = "gods.";
 
@@ -122,6 +125,9 @@ namespace Clover.Player
         /// Way's rules (<see cref="Way.WayRules.InForce"/>): its weapon kind carried, its bough the active aspect, its
         /// keystone the one set. The rules for Heresies, Bond and Evolutions join here as their fields are added (phase 6).
         /// </summary>
+        /// <summary>True when swing number <paramref name="swing"/> is the turn <paramref name="turn"/> of blows that take <paramref name="every"/> turns (fewer than two: every swing).</summary>
+        public static bool OnTurn(int swing, int every, int turn) => every < 2 || ((swing % every) + every) % every == turn;
+
         public static bool InForce(Upgrade mark, Build.Loadout loadout)
         {
             // A hidden mark (a spare spell kept for the Evolutions, a plain reaction) is never in force as a mark: a

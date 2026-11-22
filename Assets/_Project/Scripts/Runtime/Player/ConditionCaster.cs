@@ -14,17 +14,30 @@ namespace Clover.Player
     /// </summary>
     public static class ConditionCaster
     {
-        /// <summary>Sets it; returns on how many it was set.</summary>
+        /// <summary>
+        /// Sets it; returns on how many it was set. <paramref name="reactionPair"/> is the reaction whose own effect this is
+        /// (-1: none): one that went off on the trigger's enemy as if laid sets its conditions there to last without their partner.
+        /// </summary>
         public static int Cast(UpgradeEffect effect, Component subject, Vector3 centre, PlayerCombat combat, LaySource source, HashSet<IDamageable> scratch, int stacks = 1,
-            float scale = -1f, float spread = 1f, Vector3? facing = null)
+            float scale = -1f, float spread = 1f, Vector3? facing = null, int reactionPair = -1)
         {
             var spec = effect != null ? effect.State : null;
             if (spec == null || string.IsNullOrEmpty(spec.Id) || combat == null) return 0;
+            int startAt = 0;
+            if (reactionPair >= 0 && subject is IAfflictable reacted)
+            {
+                if (reacted.Afflictions.Unbound(reactionPair)) spec = Unbound(spec);
+                startAt = spec.Blows > 0 ? reacted.Afflictions.CountStartsAt(reactionPair) : 0;
+            }
+            // One blow for each stack counted, its Blows at most (Iron Thorns): the rest counted as already drawn.
+            if (spec.BlowsByStacks) startAt = Mathf.Max(startAt, BlowsDrawn(spec, stacks));
             float pace = PaceFor(spec, stacks);
+            // Turning slowed by the stacks counted (Seized Joints): its run's one number is the turn it keeps.
+            if (spec.TurnPerStack > 0f) scale = TurnFor(spec, stacks);
             AnswersOf(effect, spec.Id, out bool struck, out bool ended, out bool died, out bool attacked);
             int mark = effect.Owner != null ? effect.Owner.Index : -1;
             Vector3 toward = facing ?? centre;
-            if (!spec.ToOthers && effect.Radius <= 0f) return Set(effect, spec, subject, null, mark, struck, ended, died, attacked, combat, source, pace, scale, toward) ? 1 : 0;
+            if (!spec.ToOthers && effect.Radius <= 0f) return Set(effect, spec, subject, null, mark, struck, ended, died, attacked, combat, source, pace, scale, toward, startAt) ? 1 : 0;
 
             // Round the trigger's enemy: the nearest first, as many as the effect allows (all within the radius when it names none).
             scratch.Clear();
@@ -55,21 +68,53 @@ namespace Clover.Player
             return set;
         }
 
+        /// <summary>Sets it on <paramref name="who"/> alone, as for one found by the caller (a step's path: Stone Underfoot); true when it took.</summary>
+        public static bool CastOne(UpgradeEffect effect, Component who, PlayerCombat combat, LaySource source, int stacks = 1)
+        {
+            var spec = effect != null ? effect.State : null;
+            if (spec == null || string.IsNullOrEmpty(spec.Id) || combat == null || who == null) return false;
+            AnswersOf(effect, spec.Id, out bool struck, out bool ended, out bool died, out bool attacked);
+            int mark = effect.Owner != null ? effect.Owner.Index : -1;
+            return Set(effect, spec, who, null, mark, struck, ended, died, attacked, combat, source, PaceFor(spec, stacks), -1f, who.transform.position);
+        }
+
+        /// <summary>
+        /// The condition as it is set by a reaction that went off as if laid (The Sun Goes Under): the same, but lasting without
+        /// the afflictions it would last with. The spec itself when it lasts with none.
+        /// </summary>
+        public static ConditionSpec Unbound(ConditionSpec spec)
+        {
+            if (spec == null || (spec.While == AfflictionKind.None && spec.While2 == AfflictionKind.None)) return spec;
+            var loose = spec.Copy();
+            loose.While = AfflictionKind.None;
+            loose.While2 = AfflictionKind.None;
+            return loose;
+        }
+
         /// <summary>
         /// The pace a condition is set at for <paramref name="stacks"/> counted: by <see cref="ConditionSpec.SlowPerStack"/>
         /// when it has one (Cairn: 15% a stone), never below 0.05; -1 (the spec's own pace) otherwise.
         /// </summary>
+        public static float TurnFor(ConditionSpec spec, int stacks) =>
+            spec != null && spec.TurnPerStack > 0f ? Mathf.Max(0.1f, 1f - spec.TurnPerStack * Mathf.Max(1, stacks)) : 1f;
+
+        /// <summary>The blows counted as drawn at the start for a condition set one blow a stack (<see cref="ConditionSpec.BlowsByStacks"/>).</summary>
+        public static int BlowsDrawn(ConditionSpec spec, int stacks) =>
+            spec != null && spec.BlowsByStacks && spec.Blows > 0 ? spec.Blows - Mathf.Clamp(stacks, 1, spec.Blows) : 0;
+
         public static float PaceFor(ConditionSpec spec, int stacks) =>
             spec != null && spec.SlowPerStack > 0f ? Mathf.Max(0.05f, 1f - spec.SlowPerStack * Mathf.Max(1, stacks)) : -1f;
 
         private static bool Set(UpgradeEffect effect, ConditionSpec spec, Component who, Component link, int mark, bool struck, bool ended, bool died, bool attacked,
-            PlayerCombat combat, LaySource source, float pace, float scale, Vector3 toward)
+            PlayerCombat combat, LaySource source, float pace, float scale, Vector3 toward, int startAt = 0)
         {
             if (!(who is IAfflictable afflictable)) return false;
             var set = afflictable.Afflictions;
             if (!Takes(spec, set)) return false;
             int slot = set.Conditions.Set(spec, who, mark, link, struck, ended, ShareOf(set), died, attacked, pace);
             if (slot < 0) return false;
+            // A count begun along (the fig at two coils): the blows already drawn.
+            if (startAt > 0) set.Conditions.StartAt(slot, startAt);
             // The trigger's own number kept as the run's (Collected Twice: the damage the reaction dealt).
             if (scale >= 0f) set.Conditions.Keep(slot, scale);
             // Turned to face a point: the spell's middle, or straight away from the player.

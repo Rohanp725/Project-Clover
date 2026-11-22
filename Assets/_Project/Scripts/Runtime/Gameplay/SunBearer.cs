@@ -2533,6 +2533,8 @@ namespace Clover.Gameplay
             {
                 if (hotLeft[i] <= 0f) continue;
                 hotLeft[i] -= deltaTime;
+                // A burning patch whose middle lies in clean ground (the player's light) goes out to char.
+                if (!hotIsLane[i] && hotLeft[i] > HotResidual && Clover.World.Purified.Covers(hotFrom[i], Time.time)) hotLeft[i] = HotResidual;
                 if (hotLeft[i] <= 0f) continue;
                 float heat = HeatOf(i);
                 bool burning = hotLeft[i] > HotResidual;
@@ -2574,7 +2576,8 @@ namespace Clover.Gameplay
             if (target == null || victim == null) return;
             // Hot floor bites whoever stands on it, half a second after they step on and every half second after; never
             // through a dodge roll, never in the air, and under the obelisk's shadow it is cold.
-            bool standsOn = patches > 0 && target.position.y < 1f && !carrying && OnHotFloor(target.position) && !Sunlight.InHand(target.position);
+            bool standsOn = patches > 0 && target.position.y < 1f && !carrying && OnHotFloor(target.position) && !Sunlight.InHand(target.position)
+                && !Clover.World.Purified.Covers(target.position, Time.time);
             bool rollingThrough = victimBody != null && victimBody.Dodge.IsRolling;
             if (!hotClock.Tick(deltaTime, standsOn, rollingThrough)) return;
             HotBites++;

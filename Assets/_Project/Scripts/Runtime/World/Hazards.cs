@@ -41,6 +41,13 @@ namespace Clover.World
             public HazardSpec Spec;
             public Vector3 Position, Velocity;
             public float Delay, Left, UntilBite, UntilShow;
+            // Seconds it rides on before it settles again (a slick carried by a wave).
+            public float DriftLeft;
+            // The turn a sweeping line is on, so each one is struck once a turn.
+            public int Turn;
+            // What its next bite lays on all it reaches, once (a whirl fed by a dodge: Bellows).
+            public AfflictionKind NextLays;
+            public int NextLaysStacks;
             public bool Burst, Turned;
             public int Bitten;
         }
@@ -210,6 +217,164 @@ namespace Clover.World
                 if (offset.sqrMagnitude <= reach * reach) return true;
             }
             return false;
+        }
+
+        /// <summary>
+        /// True when <paramref name="at"/> stands in ground of the player's that lays <paramref name="kind"/> with its bites (their own
+        /// water: ground that Soaks), settled and not moving.
+        /// </summary>
+        public static bool OwnGroundUnder(Vector3 at, AfflictionKind kind)
+        {
+            if (instance == null || kind == AfflictionKind.None) return false;
+            for (int i = 0; i < instance.zones.Length; i++)
+            {
+                ref var zone = ref instance.zones[i];
+                if (!zone.Active || zone.Spec.Blow.Affliction != kind || zone.Delay > 0f || zone.Velocity.sqrMagnitude > 0.01f || zone.Spec.Once) continue;
+                if (GroundRules.Within(at, zone.Position, zone.Spec.Radius + 0.35f)) return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Ends every settled patch laid by <paramref name="source"/>, writing where each lay and how wide it was, as many as fit;
+        /// returns how many were ended (a heavy blow bursting every puddle of Weeping Sore's).
+        /// </summary>
+        public static int TakeAllOf(object source, Vector3[] at, float[] radius)
+        {
+            if (instance == null || source == null) return 0;
+            int taken = 0;
+            for (int i = 0; i < instance.zones.Length && taken < at.Length && taken < radius.Length; i++)
+            {
+                ref var zone = ref instance.zones[i];
+                if (!zone.Active || zone.Delay > 0f || !ReferenceEquals(zone.Spec.Source, source)) continue;
+                at[taken] = zone.Position;
+                radius[taken] = zone.Spec.Radius;
+                taken++;
+                zone.Active = false;
+            }
+            return taken;
+        }
+
+        /// <summary>
+        /// Every settled patch of the named ground lying on the lane <paramref name="length"/> long from <paramref name="from"/> along
+        /// <paramref name="way"/>, <paramref name="half"/> either side, rides on at <paramref name="velocity"/> for <paramref name="seconds"/>,
+        /// then settles where it was brought (The Tide Brings It: Riptide's wave carrying the slicks it crosses). Returns how many.
+        /// </summary>
+        public static int Drift(string name, Vector3 from, Vector3 way, float length, float half, Vector3 velocity, float seconds)
+        {
+            if (instance == null || string.IsNullOrEmpty(name) || seconds <= 0f) return 0;
+            int carried = 0;
+            velocity.y = 0f;
+            for (int i = 0; i < instance.zones.Length; i++)
+            {
+                ref var zone = ref instance.zones[i];
+                if (!zone.Active || zone.Delay > 0f || zone.Spec.Name != name || zone.Velocity.sqrMagnitude > 0.01f) continue;
+                if (!GroundRules.OnLane(zone.Position, from, way, length, half + zone.Spec.Radius)) continue;
+                zone.Velocity = velocity;
+                zone.DriftLeft = seconds;
+                zone.Left = Mathf.Max(zone.Left, seconds);
+                carried++;
+            }
+            return carried;
+        }
+
+        /// <summary>The way a line turning once in <paramref name="turn"/> seconds from <paramref name="from"/> points after <paramref name="seconds"/>, and which turn it is on.</summary>
+        public static Vector3 SweepWay(Vector3 from, float turn, float seconds, out int turnNumber)
+        {
+            from.y = 0f;
+            if (from.sqrMagnitude < 0.0001f) from = Vector3.forward;
+            float turns = turn > 0f ? Mathf.Max(0f, seconds) / turn : 0f;
+            turnNumber = Mathf.FloorToInt(turns);
+            // Turned clockwise seen from above, as a yaw is, worked by hand so it is plain arithmetic.
+            from.Normalize();
+            float angle = (turns - turnNumber) * 2f * Mathf.PI;
+            float sin = Mathf.Sin(angle), cos = Mathf.Cos(angle);
+            return new Vector3(from.x * cos + from.z * sin, 0f, from.z * cos - from.x * sin);
+        }
+
+        // A line turning round its place: what it crosses now, each once a turn.
+        private int StrikeSweep(int index, ref Zone zone)
+        {
+            float stood = zone.Spec.Seconds - zone.Left;
+            Vector3 way = SweepWay(zone.Spec.SweepFrom, zone.Spec.SweepTurn, stood, out int turn);
+            if (turn != zone.Turn)
+            {
+                zone.Turn = turn;
+                bitten[index].Clear();
+            }
+            if (!zone.Spec.Quiet) Vfx.Play(VfxKind.TintSpark, zone.Position + way * (zone.Spec.Radius * Random.value) + Vector3.up * 0.2f, Vector3.up, 0.5f, zone.Spec.Tint);
+            return owner.StrikeLane(zone.Position, way, zone.Spec.Radius, Mathf.Max(0.2f, zone.Spec.SweepHalf), zone.Spec.Blow, bitten[index]);
+        }
+
+        /// <summary>True when a place <paramref name="at"/> is within <paramref name="within"/> of the edge of a thing at <paramref name="thing"/> <paramref name="radius"/> round.</summary>
+        public static bool FeedsWithin(Vector3 at, Vector3 thing, float radius, float within)
+        {
+            Vector3 apart = at - thing;
+            apart.y = 0f;
+            return apart.magnitude <= Mathf.Max(0f, radius) + Mathf.Max(0f, within);
+        }
+
+        /// <summary>
+        /// Feeds the nearest standing thing of the given name whose edge is within <paramref name="within"/> of <paramref name="at"/>:
+        /// each bite from then on deals <paramref name="damage"/> and <paramref name="stagger"/> more, and its next bite lays
+        /// <paramref name="lays"/> (Bellows, Wind Sickle: a shard more for Sickle Wind's whirl). False when none stands near.
+        /// </summary>
+        public static bool Feed(string name, Vector3 at, float within, float damage, float stagger, AfflictionKind lays, int stacks)
+        {
+            if (instance == null || string.IsNullOrEmpty(name)) return false;
+            int best = -1;
+            float bestApart = float.MaxValue;
+            for (int i = 0; i < instance.zones.Length; i++)
+            {
+                ref var zone = ref instance.zones[i];
+                if (!zone.Active || zone.Delay > 0f || zone.Spec.Name != name || !FeedsWithin(at, zone.Position, zone.Spec.Radius, within)) continue;
+                float apart = (zone.Position - at).sqrMagnitude;
+                if (apart < bestApart)
+                {
+                    bestApart = apart;
+                    best = i;
+                }
+            }
+            if (best < 0) return false;
+            ref var fed = ref instance.zones[best];
+            fed.Spec.Blow.Damage += Mathf.Max(0f, damage);
+            fed.Spec.Blow.Stagger += Mathf.Max(0f, stagger);
+            if (lays != AfflictionKind.None)
+            {
+                fed.NextLays = lays;
+                fed.NextLaysStacks = Mathf.Max(1, stacks);
+            }
+            if (!fed.Spec.Quiet) Puff(fed.Spec, fed.Position + Vector3.up * 0.5f, 2f);
+            return true;
+        }
+
+        /// <summary>True when <paramref name="at"/> stands in a settled patch of the player's ground of the given name (Wet Ground's sand, Low Mist's sheet).</summary>
+        public static bool NamedUnder(Vector3 at, string name)
+        {
+            if (instance == null || string.IsNullOrEmpty(name)) return false;
+            for (int i = 0; i < instance.zones.Length; i++)
+            {
+                ref var zone = ref instance.zones[i];
+                if (!zone.Active || zone.Delay > 0f || zone.Spec.Name != name) continue;
+                if (GroundRules.Within(at, zone.Position, zone.Spec.Radius + 0.35f)) return true;
+            }
+            return false;
+        }
+
+        /// <summary>Writes where each settled patch of ground of the given name lies and how wide it is, as many as fit; returns how many.</summary>
+        public static int AllNamed(string name, Vector3[] at, float[] radius)
+        {
+            if (instance == null || string.IsNullOrEmpty(name)) return 0;
+            int found = 0;
+            for (int i = 0; i < instance.zones.Length && found < at.Length && found < radius.Length; i++)
+            {
+                ref var zone = ref instance.zones[i];
+                if (!zone.Active || zone.Delay > 0f || zone.Spec.Name != name) continue;
+                at[found] = zone.Position;
+                radius[found] = zone.Spec.Radius;
+                found++;
+            }
+            return found;
         }
 
         /// <summary>How many things the player has grown stand now.</summary>
@@ -565,6 +730,12 @@ namespace Clover.World
                                 Vfx.Play(VfxKind.Fire, centre + Quaternion.Euler(0f, puff * 72f, 0f) * Vector3.forward * (zone.Spec.Radius * 0.55f), Vector3.up, 0.8f);
                     }
                 }
+                // Carried for a while (a slick on a wave), then it settles where it was brought.
+                if (zone.DriftLeft > 0f)
+                {
+                    zone.DriftLeft -= deltaTime;
+                    if (zone.DriftLeft <= 0f) zone.Velocity = Vector3.zero;
+                }
                 bool moving = zone.Velocity.sqrMagnitude > 0.01f;
                 if (moving) Steer(ref zone, i, deltaTime);
                 zone.Position += zone.Velocity * deltaTime;
@@ -580,12 +751,45 @@ namespace Clover.World
                 if (zone.UntilBite <= 0f && owner != null)
                 {
                     zone.UntilBite = zone.Spec.BiteEvery;
-                    int hits = owner.StrikeArea(zone.Position, zone.Spec.Radius, zone.Spec.Blow, LeftAlone(i, zone));
-                    if (zone.Spec.AlsoLays != AfflictionKind.None) owner.AfflictArea(zone.Position, zone.Spec.Radius, zone.Spec.AlsoLays, 1);
+                    if (zone.Spec.CrackReach > 0f)
+                    {
+                        // A stone that cracks once, when an enemy first stands at it (Fire-Cracked): nothing until then.
+                        if (owner.EnemyNear(zone.Position, zone.Spec.Radius, null) != null)
+                        {
+                            owner.StrikeArea(zone.Position, zone.Spec.CrackReach, zone.Spec.Blow);
+                            Vfx.Play(VfxKind.Burst, zone.Position + Vector3.up * 0.3f);
+                            zone.Active = false;
+                            continue;
+                        }
+                        if (zone.Left <= 0f) zone.Active = false;
+                        continue;
+                    }
+                    int hits = zone.Spec.SweepTurn > 0f
+                        ? StrikeSweep(i, ref zone)
+                        : zone.Spec.Seams > 0
+                        ? owner.StrikeStar(zone.Position, zone.Spec.Seams, zone.Spec.Radius, GroundRules.SeamHalf, zone.Spec.SeamWay, zone.Spec.Blow, LeftAlone(i, zone))
+                        : owner.StrikeArea(zone.Position, zone.Spec.Radius, zone.Spec.Blow, LeftAlone(i, zone));
+                    if (zone.Spec.AlsoLays != AfflictionKind.None && (!zone.Spec.StopsAtFirst || hits > 0)) owner.AfflictArea(zone.Position, zone.Spec.Radius, zone.Spec.AlsoLays, 1);
+                    // Fed (Bellows): the next cut lays what it was fed with, once.
+                    if (zone.NextLays != AfflictionKind.None)
+                    {
+                        owner.AfflictArea(zone.Position, zone.Spec.Radius, zone.NextLays, zone.NextLaysStacks);
+                        zone.NextLays = AfflictionKind.None;
+                    }
+                    if (zone.Spec.StopsAtFirst && hits > 0)
+                    {
+                        zone.Active = false;
+                        Spent(zone);
+                        continue;
+                    }
                     // What the player's marks make every grown thing lay with its bites (Ore in the Root, Hidden in the Tree).
                     if (zone.Spec.Grown && GrownBitesMask != 0 && hits > 0)
                         for (int k = 1; k < 32; k++)
                             if ((GrownBitesMask & (1 << k)) != 0) owner.AfflictArea(zone.Position, zone.Spec.Radius, (AfflictionKind)k, 1);
+                    // Ground that keeps acting: it draws in, and its mark sets what it sets on whoever stands in it now.
+                    if (zone.Spec.Pull > 0f) owner.Displace(zone.Position, zone.Spec.Radius, GroundRules.PullStep(zone.Spec.Pull, zone.Spec.BiteEvery), true);
+                    if (zone.Spec.Carry.sqrMagnitude > 0f) owner.ShoveArea(zone.Position, zone.Spec.Radius, zone.Spec.Carry);
+                    if (zone.Spec.Acts != null) GroundActs?.Invoke(zone.Spec.Acts, zone.Position, zone.Spec.Radius, zone.Spec.BiteEvery, zone.Spec.LaidFor);
                     zone.Bitten++;
                     // A standing storm drops a bolt somewhere in itself each time it bites, whether or not anyone is under it.
                     if (zone.Spec.Quiet) { }
@@ -604,9 +808,32 @@ namespace Clover.World
                         Spent(zone);
                     }
                 }
-                if (zone.Left <= 0f) zone.Active = false;
+                if (zone.Left <= 0f)
+                {
+                    zone.Active = false;
+                    // Ground that keeps acting is told as its time runs out, for what flares at its end.
+                    if (zone.Spec.Acts != null && owner != null) GroundEnds?.Invoke(zone.Spec.Acts, zone.Position, zone.Spec.Radius, zone.Spec.BiteEvery, zone.Spec.LaidFor);
+                }
             }
         }
+
+        /// <summary>
+        /// Told at each bite of ground that keeps acting (HazardSpec.Acts): the mark's effect, where the ground lies, how wide it
+        /// is, the seconds between its bites and the enemy it was laid for (or null). The player's marks set its state on whoever
+        /// stands in it, do its effects on each one, and mend the player standing in it.
+        /// </summary>
+        public static event System.Action<object, Vector3, float, float, object> GroundActs;
+
+        // Domain reload is off: a listener from the last play must not be told in this one.
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetGroundActs()
+        {
+            GroundActs = null;
+            GroundEnds = null;
+        }
+
+        /// <summary>Told as ground that keeps acting runs out of time, with the same news as <see cref="GroundActs"/>.</summary>
+        public static event System.Action<object, Vector3, float, float, object> GroundEnds;
 
         /// <summary>
         /// One step of a helper walking to its enemy: moves <paramref name="at"/> up to <paramref name="step"/> toward

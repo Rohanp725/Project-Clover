@@ -41,5 +41,7 @@ namespace Clover.Gameplay
         public bool Shoved;
         /// <summary>For a blow: it was no blow but another enemy's death near its carrier (<see cref="ConditionSpec.DeathsWithin"/>).</summary>
         public bool DiedNear;
+        /// <summary>For a blow: it was no blow but a discharge or arc near its carrier bending into it (<see cref="ConditionSpec.DischargesWithin"/>).</summary>
+        public bool DischargeNear;
     }
 }

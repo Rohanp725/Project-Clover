@@ -25,7 +25,12 @@ namespace Clover.Player.Forms
             {
                 clone.Show(FormKit.Lit(cast.Colour, 4.4f, 1f));
                 // Left where you stood (Second Shadow), not at your shoulder.
-                if (cast.Spec.StaysPut) clone.AnchorAt(cast.Origin);
+                if (cast.Spec.StaysPut)
+                {
+                    clone.AnchorAt(cast.Origin);
+                    // The copy standing up out of your shadow (the recipe look, once it is in the game).
+                    CreatureLooks.Play(CreatureLooks.Copy, null, cast.Origin, cast.Forward);
+                }
                 SpellWorks.Marks(run)[0] = FormFx.HoldMark(FormMark.Brackets, FormKit.Lit(cast.Colour, 3f));
                 SpellWorks.Marks(run)[1] = FormFx.HoldMark(FormMark.Ring, FormKit.Lit(cast.Colour, 1.6f));
                 FormKit.Gather(cast, clone.Position, 2f);

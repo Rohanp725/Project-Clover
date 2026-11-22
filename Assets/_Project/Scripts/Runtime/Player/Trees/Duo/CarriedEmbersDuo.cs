@@ -25,7 +25,7 @@ namespace Clover.Player.Trees.Duo
             const string A = Elements.Fire, B = Elements.Wind;
 
             // NEEDS: a moving whirl hazard that pulls (Fire Whirl; now a column on the enemy that draws in and lights what is
-            // near once a second); a lane that shoves all in it (Hot Wind; now the lane burns them and only the enemy is shoved).
+            // near once a second). Hot Wind's gust shoves everything on its lane 2 m down it (UpgradeEffect.Carry on a Lane).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Carried Embers: Fire Whirl or Hot Wind", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -46,11 +46,10 @@ namespace Clover.Player.Trees.Duo
                     new ShapeDef
                     {
                         Name = "Hot Wind",
-                        Description = "One long gust instead of embers: a lane 8 m long and 2 m wide downwind, away from you, that lays a Burn on all in it, and the enemy itself is shoved 2 m.",
+                        Description = "One long gust instead of embers: a lane 8 m long and 2 m wide downwind, away from you, that lays a Burn on all in it and shoves everything in it 2 m down it.",
                         Effects = new[]
                         {
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Lane, Reach = 8f, Radius = 1f, Damage = 0f, Affliction = AfflictionKind.Burn, Stacks = 1 },
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Push, Shape = HazardShape.Downwind, Amount = 2f },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Lane, Reach = 8f, Radius = 1f, Damage = 0f, Affliction = AfflictionKind.Burn, Stacks = 1, Carry = 2f },
                         },
                     },
                 },

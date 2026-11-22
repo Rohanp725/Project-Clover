@@ -124,5 +124,49 @@ namespace Clover.Player
         BladeDriven,
         /// <summary>A turning blade of yours was met by a perfect guard as it came home to the hand (Returning Edge). Target: none.</summary>
         BladeCaught,
+        /// <summary>
+        /// A standing thing a mark raised was struck: asked only of the marks of the mark that raised it. The point is where it
+        /// stands; By = StruckBy.Heavy asks for your heavy blow on it. Carries 1 when the blow broke it.
+        /// </summary>
+        StandingStruck,
+        /// <summary>A standing thing a mark raised burst by itself (Cracked Wall struck by an enemy). The point is where it stood.</summary>
+        StandingBurst,
+        /// <summary>
+        /// You walked over a pickup a mark dropped and took it (World.Pickups). Asked of the effects written beside the one that
+        /// dropped it (a reaction's too), and of any effect with AnyDrops whose Drops names its kind. The point is where it lay; carries 1 when it was drawn to you.
+        /// </summary>
+        PickedUp,
+        /// <summary>A pickup lay untaken until its time ran out (Shining Herb's herb flowers). The point is where it lay.</summary>
+        PickupLeft,
+        /// <summary>
+        /// An enemy stands in ground that keeps acting, at one of its bites: asked of the effects whose Condition names that
+        /// ground (UpgradeEffect.Ground). Target: the enemy standing in it; the point is where it stands.
+        /// </summary>
+        InGround,
+        /// <summary>
+        /// An enemy driven hard against the stones of a ring of your own (World.OwnGrounds.StoneRing) was stopped there (The
+        /// Closed Ring). Target: that enemy.
+        /// </summary>
+        StoppedAtStones,
+        /// <summary>A perfect dodge has run its length. The point is where it ended (Sun on the Spray, Wake along its path).</summary>
+        PerfectDodgeEnd,
+        /// <summary>A dodge carried you to an enemy that draws it (ConditionFlags.DrawsDodge: Eagle's Sight). Target: that enemy.</summary>
+        CarriedTo,
+        /// <summary>A counter's stance ran out with nothing struck at it (the parry form). Answered as the counter's own cast (Blown Through).</summary>
+        CounterMissed,
+        /// <summary>A plate of stone took its share of a blow and broke (Stone Skin). The point is where you stand.</summary>
+        PlateBroken,
+        /// <summary>
+        /// An arc struck an enemy and leaves it for the next (a bolt's chain, an arc from one to another; the ledger's arc-leaves).
+        /// Target: the enemy it leaves; the power is the arc's damage (Nothing Resists runs it on at full strength).
+        /// </summary>
+        ArcLeft,
+        /// <summary>An enemy shoved across a line of your own (World.OwnGrounds.DrivenAcross: Need-Fire's sparks). Target: that enemy.</summary>
+        DrivenAcross,
+        /// <summary>
+        /// A grudge's time is up (UpgradeAction.TallyHarm): told once for each enemy tied to it. Target: that enemy; the power is
+        /// what it dealt you meanwhile, a blow on your guard counted double (The Exile's Grudge).
+        /// </summary>
+        HarmPaid,
     }
 }

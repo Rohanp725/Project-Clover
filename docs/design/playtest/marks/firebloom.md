@@ -9,13 +9,13 @@ both carried.
 
 **When it happens.** Every time Firebloom goes off while you carry both Fire and Life. Firebloom goes off when Burn lands on a Seeded enemy, or when a seed lands on a burning one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Firebloom.
 
-**The numbers.** Mix, 3 Shards. Between Two Fires: the Seeded is used up, and a pair of lilies grows for each seed the enemy had, 3 metres apart on either side of it. Each lily stays for 5 seconds and burns anything within 1 metre, dealing 3 damage and a Burn every half second. Each lily counts as something you grew. Ash Bed: nothing is used up. While the enemy stays Seeded, its Burn doesn't fade. When it dies, a bed of shoots 3 metres across stays for 6 seconds where it fell, Seeding every enemy in it once a second. After Firebloom goes off on an enemy, it can't go off on that enemy again for 4 seconds.
+**The numbers.** Mix, 3 Shards. Between Two Fires: the Seeded is used up, and a pair of lilies grows for each seed the enemy had, 3 metres apart on either side of it. Each lily stays for 5 seconds and burns anything within 1 metre, dealing 3 damage and a Burn every half second. Each lily counts as something you grew. Walking between the two lilies of a pair, through the spot where the enemy stood (within 1.2 metres of it, for the lilies' 5 seconds), heals you 8 and charges your blade with two blows of Burn. Ash Bed: nothing is used up. While the enemy stays Seeded, its Burn doesn't fade. When it dies, a bed of shoots 3 metres across stays for 6 seconds where it fell, Seeding every enemy in it once a second and healing you 2 health a second while you stand in it. After Firebloom goes off on an enemy, it can't go off on that enemy again for 4 seconds.
 
 **Works with.** Kindled Guard (make a lily flare with a perfect guard), Dry Pods, The Burning Tree, Need-Fire.
 
 **Example.** A crowd rushing at you: use Between Two Fires, and fight in the gap. One big burning brute: use Ash Bed, and keep it Seeded so it never stops burning.
 
-**Not built yet.** Between Two Fires' pairs don't heal you or charge your blade yet when you walk between them. With more than one seed, the lilies stand in a ring instead of in facing pairs. Ash Bed's shoots don't heal you yet while you stand in them.
+**Not built yet.** With more than one seed, the lilies stand in a ring instead of in facing pairs.
 
 ## firebloom.kindledguard
 **What it does.** A perfect guard made within 3 metres of a lily makes it flare up. It deals 12 damage and two Burn within 2 metres, and the lily stays 3 seconds longer.
@@ -44,23 +44,21 @@ both carried.
 
 **When it happens.** When Firebloom goes off, while you carry both Fire and Life.
 
-**The numbers.** Mix, keystone, 5 Shards. For now: five throws over 10 seconds, each dealing 4 damage, 4 stagger and a Burn, at most once every 30 seconds.
+**The numbers.** Mix, keystone, 5 Shards. Only the first lily of each fight. For now: five throws over 10 seconds, each dealing 4 damage, 4 stagger, a Burn and a Seed.
 
 **Works with.** Firebloom, Kindled Guard, Need-Fire (which Seeds and burns again).
 
 **Example.** Start a fight with one bloom, and the tree keeps the pack burning while you work.
 
-**Not built yet.** No tree appears yet. For now, the throws go at the enemy that bloomed, not the nearest one, and add a Burn without a seed. It comes once every 30 seconds, not once a fight.
+**Not built yet.** No tree appears yet. For now, the throws go at the enemy that bloomed, not the nearest one.
 
 ## firebloom.needfire
 **What it does.** Two fires of green branches spring up on either side of the enemy you face and burn for 6 seconds, joined by a line of sparks. Every enemy between them gets a Burn and a Seed each second.
 
 **When it happens.** Cast it from a spell slot while you carry both Fire and Life. Press that slot's button (hold L2 and a face button, or press 1 to 4). The first time it lands, it charges your blade with Fire.
 
-**The numbers.** Mix, duo spell, opener, 5 Shards. It costs no mana. After you cast it, you must wait 12 seconds to cast it again. Fighting with your weapon makes the wait shorter. It reaches up to 7 metres away and lasts 6 seconds. Once a second, it deals 2 damage, a Burn and a Seed to every enemy in it, so Firebloom keeps going off on them.
+**The numbers.** Mix, duo spell, opener, 5 Shards. It costs no mana. After you cast it, you must wait 12 seconds to cast it again. Fighting with your weapon makes the wait shorter. It reaches up to 7 metres away and lasts 6 seconds. The two fires stand 4 metres apart, across your path, one on each side of the enemy. Once a second, the line of sparks between them deals 2 damage, a Burn and a Seed to every enemy on it, so Firebloom keeps going off on them. While you stand on the line, each weapon blow that lands heals you 2 and cuts your spell waits twice as much as usual. An enemy you shove across the line has its Burn filled all the way.
 
 **Works with.** Firebloom (everything in it blooms), Kindled Guard, The Burning Tree.
 
 **Example.** Light it on the pack's leader, and fight on the line between the fires.
-
-**Not built yet.** For now, it is one burning patch 5 metres across on the enemy, not two fires with a line between them. Standing between them doesn't yet make your blows heal you 2 and cut spell waits twice as much. Shoving an enemy across the line doesn't yet fill its Burn all the way.

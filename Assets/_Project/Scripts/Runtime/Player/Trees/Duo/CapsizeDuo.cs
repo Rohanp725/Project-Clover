@@ -57,15 +57,15 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.Foot));
 
-            // NEEDS: the dodge's own path (now a short line ahead of where it ends).
+            // Laid along the perfect dodge's own path once it has run (PerfectDodgeEnd, UpgradeEffect.AlongDodge).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Wake, Name = "Wake", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Drop,
                 Description = "A perfect dodge leaves a line of spray for 3 s that Soaks and unsteadies what crosses it.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, At = EffectAt.Self, Do = UpgradeAction.Hazard, Shape = HazardShape.Line, Count = 4, Reach = 3f, Radius = 0.8f, Seconds = 3f, Interval = 0.5f, Affliction = AfflictionKind.Soaked, Stacks = 1 },
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, At = EffectAt.Self, Do = UpgradeAction.Hazard, Shape = HazardShape.Line, Count = 4, Reach = 3f, Radius = 0.8f, Seconds = 3f, Interval = 1f, Affliction = AfflictionKind.Unsteady, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectDodgeEnd, At = EffectAt.Self, AlongDodge = true, Do = UpgradeAction.Hazard, Shape = HazardShape.Line, Count = 4, Reach = 3f, Radius = 0.8f, Seconds = 3f, Interval = 0.5f, Affliction = AfflictionKind.Soaked, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectDodgeEnd, At = EffectAt.Self, AlongDodge = true, Do = UpgradeAction.Hazard, Shape = HazardShape.Line, Count = 4, Reach = 3f, Radius = 0.8f, Seconds = 3f, Interval = 1f, Affliction = AfflictionKind.Unsteady, Stacks = 1 },
                 },
             }, HeartPattern.LeftLow));
 

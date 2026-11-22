@@ -58,6 +58,8 @@ namespace Clover.Gameplay
         public ConditionBlow EndsWith;
         /// <summary>It ends once it has taken this many weapon blows, after answering the last (Logan Stone's third); 0 for no limit.</summary>
         public int Blows;
+        /// <summary>Its Blows are the most: it is set with one blow for each stack its effect counted, Blows at most (Iron Thorns: a thorn a notch, three at most).</summary>
+        public bool BlowsByStacks;
         /// <summary>
         /// What it is, when a shape sets it under a name of its own: the plain reaction's name for the same state (Hot
         /// Shards' crack is a <c>thermalshock.cracked</c>). A mark that asks for an enemy in a condition another mark set
@@ -80,6 +82,8 @@ namespace Clover.Gameplay
         public float FreezeLonger;
         /// <summary>While it runs, a shatter of the enemy strikes this many times as hard (Rime Tree: 1.25); 0 or 1 as written.</summary>
         public float ShatterHarder;
+        /// <summary>What it Keeps is kept only while its carrier is frozen (Lens of Ice: the Mark not spent while Frozen).</summary>
+        public bool KeepsWhileFrozen;
         /// <summary>
         /// It ends at once when the enemy freezes, and its end is told then as an end the freeze brought (the ledger's
         /// freeze-moment: Sleet Charge's bolt "at once if it freezes"; Stolen Warmth's last warmth torn out).
@@ -95,6 +99,11 @@ namespace Clover.Gameplay
         /// carrying the dead one's doses (StruckBy.DeathNear; the ledger's jar-deaths: Shut in the Dark's ring, 4 m across).
         /// </summary>
         public float DeathsWithin;
+        /// <summary>
+        /// Above zero: a discharge or arc within this many metres of its carrier bends into it and is told to it as a blow of its
+        /// own kind (StruckBy.Discharge; the ledger's bending-discharges: Flashover's live flame, 6 m).
+        /// </summary>
+        public float DischargesWithin;
         /// <summary>Metres its body is drawn down into the floor while it runs, for the look (The Ground Gives' sand: to the knees).</summary>
         public float Sink;
         /// <summary>
@@ -118,5 +127,29 @@ namespace Clover.Gameplay
         public float AloneLeash;
         /// <summary>With <see cref="ConditionFlags.Chained"/>: spell blows pass along the chain too, not only weapon blows (Shared Wound).</summary>
         public bool SharesSpells;
+        /// <summary>
+        /// Above zero: its count of blows counts its carrier's blows on you or your guard instead of yours on it, this many
+        /// points each, and <see cref="TurnedPoints"/> more for each one turned by a perfect guard (Witnessed: 2 and 1, paid 15 a
+        /// point). Its end carries the count, as any end carries the weapon blows it took.
+        /// </summary>
+        public int TheirBlowPoints;
+        public int TurnedPoints;
+        /// <summary>
+        /// Each one a cast sets it on is numbered in turn, 1, 2, 3 (its run's Scale), so a line keeps its order (Eaten in Turn:
+        /// the doses pass to the next on the line, not the nearest).
+        /// </summary>
+        public bool Numbered;
+        /// <summary>
+        /// Above zero (<see cref="FlankMost"/> too): what it keeps (<see cref="Keeps"/>) is kept, and the afflictions' own critical
+        /// blows come, only for weapon blows from this side, in degrees from its face (see EnemyConditions.SideDegrees): a blow
+        /// from elsewhere is not made critical by them and spends as usual (Mock Suns: 45 to 135, the flanks).
+        /// </summary>
+        public float FlankLeast;
+        public float FlankMost;
+        /// <summary>
+        /// Above zero: it slows turning by this share for each of the stacks counted as it is set (ConditionFlags.TurnSlowed with
+        /// its run's Scale; Seized Joints: 10% a notch), never below a tenth.
+        /// </summary>
+        public float TurnPerStack;
     }
 }

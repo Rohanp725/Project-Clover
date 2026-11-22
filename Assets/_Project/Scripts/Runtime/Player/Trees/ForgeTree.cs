@@ -28,7 +28,7 @@ namespace Clover.Player.Trees
             // Laid as stacks, more than any affliction holds: "to full depth", whatever the depth is.
             const int ToFull = 99;
 
-            // NEEDS: flakes thrown as pieces at the four nearest enemies (Hammer Scale; now an arc from it through four).
+            // Hammer Scale's flakes are pieces of their own, one at each of the four nearest enemies (UpgradeAction.Pieces).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Anvil Stone: Ringing Iron or Hammer Scale", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -51,22 +51,22 @@ namespace Clover.Player.Trees
                         Description = "No ring: flakes of glowing scale fly from it at the nearest enemies within 6 m, up to four, 8, a notch and a Tremor each.",
                         Effects = new[]
                         {
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Arc, FromTarget = true, Count = 4, Reach = 6f, Damage = 8f, Affliction = Notch, Stacks = 1 },
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Arc, FromTarget = true, Count = 4, Reach = 6f, Affliction = Tremor, Stacks = 1 },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Pieces, Thrown = PieceAim.AtNearest, Count = 4, Reach = 6f, Speed = 14f, Radius = 0.5f, Damage = 8f,
+                                Affliction = Notch, Stacks = 1, BitesLay = Tremor },
                         },
                     },
                 },
             }, HeartPattern.Foot));
 
-            // NEEDS: a condition "the target stands within 1.5 m of a wall or pillar" (or Anvil Stone's stone). Here the second
-            // strike comes on an enemy already shaken.
+            // Only on an enemy with stone at its back within 1.5 m as you see it: a standing thing (Anvil Stone's stone, a pillar,
+            // a wall of ice) or the level's own wall (UpgradeEffect.StoneAtBack).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = HammerAndAnvil, Name = "Hammer and Anvil", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Hammer,
                 Description = "A heavy blow on an enemy with stone at its back strikes twice: once from your weapon, once from the stone. Heavy blows lay Tremor and Sundered together.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.HeavyHit, Needs = Tremor, Do = UpgradeAction.Echo, Amount = 0.6f, Delay = 0.15f, Radius = 2.3f, Stagger = 20f, Cooldown = 0.5f },
+                    new UpgradeEffect { On = UpgradeTrigger.HeavyHit, StoneAtBack = 1.5f, Do = UpgradeAction.Echo, Amount = 0.6f, Delay = 0.15f, Radius = 2.3f, Stagger = 20f, Cooldown = 0.5f },
                     new UpgradeEffect { On = UpgradeTrigger.HeavyHit, Do = UpgradeAction.Afflict, Affliction = Tremor, Stacks = 1 },
                     new UpgradeEffect { On = UpgradeTrigger.HeavyHit, Do = UpgradeAction.Afflict, Affliction = Notch, Stacks = 1 },
                 },

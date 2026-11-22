@@ -50,6 +50,8 @@ namespace Clover.Player.Trees
         public const string Churned = "water.whirlpool.churn";
         public const string SpoutRising = "water.whirlpool.spout";
         public const string InInk = "water.crack.ink";
+        public const string InTheCurrent = "water.whirlpool.current";
+        public const string InTheSea = "water.sea.in";
         public const string Snapped = "water.crack.snap";
 
         // Retired in Phase 4 (RetiredMarks): kept as names because code still asks for them.
@@ -85,20 +87,19 @@ namespace Clover.Player.Trees
                 UpgradeIcons.Burst,
                 new Empower { Cooldown = 9f, Damage = 22f },
                 "Deep Crack waits 9 seconds, not 11, and cracks for 22.",
-                // NEEDS: only what stands in the ink losing track of you while it stands there (ground-states). Until then what
-                // the ink first reaches loses track of you for its five seconds.
+                // Only what stands in the ink loses track of you, while it stands there (UpgradeEffect.Inside).
                 new ShapeDef { Name = "Ink",
                     Description = "The bubble is black water from the deep. It bursts into a pool of ink three metres across that stays five seconds. Enemies in it lose track of you beyond three metres and stay Soaked. You stay in plain sight.",
                     Effects = new[]
                     {
-                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Radius = 1.5f, Seconds = 5f, Interval = 1f, Damage = 1f, Affliction = AfflictionKind.Soaked, Stacks = 1, Cooldown = 0.5f },
-                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, Radius = 1.5f, State = new ConditionSpec { Id = InInk, Seconds = 5f, Flags = ConditionFlags.SightShort, Sight = 3f } },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Radius = 1.5f, Seconds = 5f, Interval = 1f, Damage = 1f, Affliction = AfflictionKind.Soaked, Stacks = 1, Cooldown = 0.5f,
+                            Inside = new ConditionSpec { Id = InInk, Seconds = 0.5f, Flags = ConditionFlags.SightShort, Sight = 3f } },
                     } },
-                // NEEDS: three bubbles 2 m apart each cracking 0.15 s after the last. Until then one line of water runs seven
-                // metres along the way you face at that pace and cracks on all it crosses.
-                new ShapeDef { Name = "String of Bubbles", Form = SpellForms.Spikes,
+                // Three bubbles 2 m apart along the way you face, each cracking 0.15 s after the last (the pillars form in a row:
+                // SpellSpec.InLine, Between).
+                new ShapeDef { Name = "String of Bubbles", Form = SpellForms.Pillars,
                     Description = "Three bubbles in a row, two metres apart along the line you face, each cracking a moment after the last. Aim it down a corridor.",
-                    Spell = new SpellSpec { Reach = 7f, Speed = 13f, Count = 1, Radius = 1f, Damage = 18f, Stagger = 40f, Stacks = 0 } },
+                    Spell = new SpellSpec { Reach = 7f, Count = 3, InLine = 2f, Between = 0.15f, Delay = 0.4f, Radius = 1f, Damage = 18f, Stagger = 40f, Stacks = 0 } },
                 "Opens two shapes of Deep Crack, chosen at any rest fire: Ink, a pool that hides you, or String of Bubbles, three cracks down a corridor.",
                 // Every Soaked enemy within twenty metres cracks where it stands (UpgradeEffect.EachWithin). NEEDS: the snap
                 // timed to the heavy blow's landing, not the crack's (spell-windows); until then a heavy blow on the cracked enemy
@@ -180,13 +181,14 @@ namespace Clover.Player.Trees
                     new UpgradeEffect { On = UpgradeTrigger.FlaskDrunk, Do = UpgradeAction.Push, At = EffectAt.Self, Radius = 3.5f, Amount = 2.5f },
                 } },
                 BranchPattern.TrunkTop));
-            // NEEDS: the pools four at most, enemies in them 15% slower, and the dodge and the clocks quicker only while you
-            // stand in your own water (in-own-water, ground-states). Until then every spell that strikes leaves
-            // a soaking pool where it lands, and the dodge and the clocks are quicker everywhere.
+            // Every spell that strikes leaves a soaking pool where it lands, four at most (the oldest gives way), enemies in them
+            // 15% slower while they stand there (UpgradeEffect.Inside), and the dodge and the clocks quicker only while you stand
+            // in your own water (StatWhen.InOwnWater).
             to.Add(BranchPattern.Put(new Upgrade { Id = TheSeaComesIn, Name = "The Sea Comes In", Element = E, Kind = UpgradeKind.Devotion, Requires = new[] { SpreadingWater }, Icon = UpgradeIcons.Moon,
                 Description = "All in on Water only. Every spell leaves standing water where it lands, a pool four metres across, for ten seconds, four at most. Enemies in water are always Soaked and slower. In water your dodge slides half again as far and your cooldowns run 30% faster. Draw the fight onto your own water and stay there.",
-                Stats = new[] { new StatMod(PlayerStat.DodgeDistance, 0.5f), new StatMod(PlayerStat.SpellCooldown, 0.3f) },
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Radius = 2f, Seconds = 10f, Interval = 1f, Damage = 1f, Affliction = AfflictionKind.Soaked, Stacks = 1, Cooldown = 2.5f } } },
+                Stats = new[] { new StatMod(PlayerStat.DodgeDistance, 0.5f, StatWhen.InOwnWater), new StatMod(PlayerStat.SpellCooldown, 0.3f, StatWhen.InOwnWater) },
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Radius = 2f, Seconds = 10f, Interval = 1f, Damage = 1f, Affliction = AfflictionKind.Soaked, Stacks = 1, Cooldown = 2.5f,
+                    Limit = 4, Inside = new ConditionSpec { Id = InTheSea, Seconds = 1f, Pace = 0.85f } } } },
                 BranchPattern.TrunkRight));
 
             // ---- The left bough: Tide. Pulling and placing.
@@ -255,31 +257,34 @@ namespace Clover.Player.Trees
                 BranchPattern.LeftCrown));
 
             // The field form bites and soaks; each bite breaks balance harder for a moment and holds it there (ConditionFlags.
-            // BalanceHeld, kept up by each bite, so it holds while they are inside). NEEDS: enemies drawn to the middle at 1.2 m a
-            // second (pull-to-point).
+            // BalanceHeld, kept up by each bite, so it holds while they are inside); everything in it is drawn to the middle at
+            // 1.2 m a second (SpellSpec.Pull).
             SpellBranch.Add(to, E, Whirlpool, "Whirlpool", SpellRole.Breaker, BranchPattern.LeftB, HeavyWater, SpellForms.Field,
-                new SpellSpec { Reach = 6f, Radius = 4f, Seconds = 5f, Interval = 0.5f, LingerDamage = 3f, Stacks = 1 },
+                new SpellSpec { Reach = 6f, Radius = 4f, Seconds = 5f, Interval = 0.5f, LingerDamage = 3f, Stacks = 1, Pull = 1.2f },
                 "A whirlpool four metres round opens under the enemy faced, up to six metres away, for five seconds. Enemies in it are drawn to the middle, kept Soaked and bitten for 3 twice a second. Their balance does not recover inside it, and your blows there break balance 30% harder.",
                 UpgradeIcons.Spiral,
                 new Empower { Cooldown = 8f, Seconds = 7f },
                 "Whirlpool waits 8 seconds, not 10, and lasts seven seconds.",
-                // NEEDS: the hard pull (3 m a second, pull-to-point). The throw at its end is the end of each enemy's churn: when
-                // the bites stop.
+                // The hard pull, 3 m a second (SpellChange.Pull). The throw at its end is the end of each enemy's churn: when the
+                // bites stop.
                 new ShapeDef { Name = "Maelstrom",
                     Description = "Smaller, two and a half metres round, and pulling hard. At its end it throws everything inside up in a spout and down again for 50 stagger.",
-                    Change = new SpellChange { Radius = 2.5f },
+                    Change = new SpellChange { Radius = 2.5f, Pull = 3f },
                     Effects = new[]
                     {
                         new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = SpoutRising, Seconds = 0.7f } },
                         new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = SpoutRising, Do = UpgradeAction.Lift, Seconds = 0.8f },
                         new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = SpoutRising, Do = UpgradeAction.Burst, Damage = 0f, Stagger = 50f, Radius = 0.6f },
                     } },
-                // NEEDS: the lane of foam 2 m wide and 9 m long running from the point away from you for 6 s, and no dodging
-                // against it (ground-states, no-dodge-or-leap). Until then the whirlpool carries what it bites away from you at
-                // two and a half metres a second instead of drawing it in.
+                // The lane of foam, 2 m wide and 9 m long from the point away from you for 6 s, carries all in it down it at 2.5 m a
+                // second (UpgradeEffect.Carry), and blows on one in it break balance 30% harder (UpgradeEffect.Inside); the
+                // whirlpool draws nothing in (SpellChange.NoPull). NEEDS: no dodging against it (no-dodge-or-leap).
                 new ShapeDef { Name = "Rip Current",
                     Description = "No pull to the middle. A lane of churning foam two metres wide and nine long runs from the whirlpool's point away from you for six seconds. Enemies in it are carried down it and cannot dodge against it, and your blows on a carried enemy break balance 30% harder. Cut them as the current drags them past.",
-                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Push, Shape = HazardShape.Downwind, Amount = 1.25f } } },
+                    Change = new SpellChange { NoPull = true },
+                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Hazard, Shape = HazardShape.Downwind, Count = 5, Reach = 4.5f, Amount = 2f,
+                        Radius = 1f, Seconds = 6f, Interval = 0.25f, Damage = 0f, Stacks = 0, Affliction = AfflictionKind.Soaked, Carry = 2.5f,
+                        Inside = new ConditionSpec { Id = InTheCurrent, Seconds = 0.25f, Flags = ConditionFlags.StaggerTakenShare, Scale = 1.3f } } } },
                 "Opens two shapes of Whirlpool, chosen at any rest fire: Maelstrom, a hard pull that ends in a spout, or Rip Current, a lane that carries them past you.",
                 // In the instant its enemy's attack mark shows (UpgradeEffect.NeedsWindup, 0.3 s), the attack is lost and its own
                 // cooldown halved (UpgradeAction.KeepWaitShare).
@@ -310,16 +315,15 @@ namespace Clover.Player.Trees
                 // Rising 6.5 m away. The Empower's numbers reach the kit's own cast too (PlayerUpgrades.BaseEmpower, read by PlayerElement).
                 new Empower { Cooldown = 4.5f, Reach = 6.5f },
                 "Riptide waits 4.5 seconds, not 6, and rises six and a half metres away.",
-                // River Serpent, once a spell, folded in. NEEDS: the serpent going out and coming back, and the first enemy it
-                // takes dropped 1.5 m in front of you. Until then the dragon runs its lane and the first enemy it strikes is
-                // drawn four metres back toward you with its guard down.
-                new ShapeDef { Name = "River Serpent", Form = SpellForms.Dragon,
+                // River Serpent, once a spell, folded in: the serpent form goes out along its lane and back, and carries the first
+                // enemy it bites to 1.5 m in front of you (SerpentForm). Its guard is down 1.5 s from the bite, a second after it is
+                // set down.
+                new ShapeDef { Name = "River Serpent", Form = SpellForms.Serpent,
                     Description = "A serpent of water goes eight metres out along a lane and back, and brings only the first enemy it takes, dropping it in front of you with its guard down for a second. One target, from further.",
                     Spell = new SpellSpec { Reach = 8f, Radius = 1.2f, Damage = 12f, Stagger = 30f, Stacks = 1, Speed = 16f },
                     Effects = new[]
                     {
-                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Pull, Shape = HazardShape.Downwind, Amount = 4f, Cooldown = 0.5f },
-                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = GuardDown, Seconds = 1f, Flags = ConditionFlags.CannotGuard }, Cooldown = 0.5f },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = GuardDown, Seconds = 1.5f, Flags = ConditionFlags.CannotGuard }, Cooldown = 0.5f },
                     } },
                 new ShapeDef { Name = "Breaking Swell", Form = SpellForms.Wave,
                     Description = "The wave does not come back. It rolls six metres away from you and breaks, throwing everything in it down three metres off. The shape that makes room.",

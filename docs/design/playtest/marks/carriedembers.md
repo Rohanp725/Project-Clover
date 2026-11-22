@@ -9,13 +9,13 @@ are both carried.
 
 **When it happens.** Every time Carried Embers goes off while you carry both Fire and Wind. Carried Embers goes off when Unsteady lands on a burning enemy, or when Burn lands on an Unsteady one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Carried Embers. The plain one sends a column of fire 5 metres with the wind, setting fire to what it reaches.
 
-**The numbers.** Mix, 3 Shards. Fire Whirl: lasts 3 seconds. Once a second, every enemy within 3 metres is pulled 1 metre toward it, and every enemy within 2 metres gets a Burn. Hot Wind: a path 8 metres long and 2 metres wide past the enemy puts a Burn on everything in it, and the enemy is shoved 2 metres. After Carried Embers goes off on an enemy, it can't go off on that enemy again for 4 seconds.
+**The numbers.** Mix, 3 Shards. Fire Whirl: lasts 3 seconds. Once a second, every enemy within 3 metres is pulled 1 metre toward it, and every enemy within 2 metres gets a Burn. Hot Wind: a path 8 metres long and 2 metres wide past the enemy puts a Burn on everything in it and shoves everything in it 2 metres down the path. After Carried Embers goes off on an enemy, it can't go off on that enemy again for 4 seconds.
 
 **Works with.** Flame Wave and Gust to set it up, Fan the Flame, The Fire Breathes In.
 
 **Example.** A ring of soldiers: Fire Whirl pulls them in around the burning one. A hallway: stand at one end, and Hot Wind burns all the way down it.
 
-**Not built yet.** The whirl stays on the enemy, instead of moving around and pulling as a danger of its own. Hot Wind only shoves the enemy, not everything in the path.
+**Not built yet.** The whirl stays on the enemy, instead of moving around and pulling as a danger of its own.
 
 ## carriedembers.fan
 **What it does.** A perfect dodge fans the flames on the attacker. It gets one more stack of Burn. If it is also Unsteady, Carried Embers goes off again right away, even if it would normally have to wait.

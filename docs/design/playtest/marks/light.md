@@ -19,17 +19,15 @@ the next blows on that enemy critical.
 **Example.** Three light blows on a soldier: the third Marks it. A heavy blow and two more light blows after that all land as critical hits.
 
 ## light.weighed
-**What it does.** Marks stack up, to three. When an affliction on an enemy fills all the way up (including a Mark at three), your critical hits hit harder for a while.
+**What it does.** Marks stack up, to three. Each Mark an enemy carries makes your critical hits on that enemy hit harder.
 
-**When it happens.** Always on once you learn it. Stacking Marks needs Light as your first element; if Light is your second, a Mark stays at one. The stronger critical hits come each time any affliction you add fills up on an enemy.
+**When it happens.** Always on once you learn it. Stacking Marks needs Light as your first element; if Light is your second, a Mark stays at one (so you still get the first step).
 
-**The numbers.** 3 Shards. Marks stack up to three, one more for each Mark added. When an affliction fills up, critical hits deal 1.8 times their damage instead of 1.5, for 6 seconds.
+**The numbers.** 3 Shards. Marks stack up to three, one more for each Mark added. A critical hit normally deals 1.5 times its damage. On a Marked enemy, it deals 0.1 times more for each Mark: 1.6 times with one Mark, 1.7 with two, 1.8 with three.
 
 **Works with.** The root mark, Reckoning's Spoken Sentence shape (12 more for each stack, once built), Ring of Spears and Brimming (they add Marks fast), Condemned, which comes after it on the chart, Unblemished and Just Cut (more critical hits to use it on).
 
-**Not built yet.** Each stack should make critical hits stronger on its own. For now, the stronger critical hits come when a Mark fills up.
-
-**Example.** End three chains on a brute. It has three Marks, and for six seconds every critical hit does 1.8 times damage.
+**Example.** End three chains on a brute. It has three Marks, and every critical hit on it does 1.8 times damage.
 
 ## light.reckoning
 **What it does.** Reckoning, the detonator of the Light tree. You put a seal on the enemy you face: a ring like a clock face on the ground under it, with one hand that sweeps around it in six seconds. On the last tick, it breaks upward in a column of light. It deals 8 damage for each weapon blow you landed on that enemy in those six seconds, along with a big hit to its balance.
@@ -49,11 +47,9 @@ the next blows on that enemy critical.
 
 **When it happens.** Whenever you cast Reckoning, using the shape you picked. If you have not bought this, you cast the plain seal.
 
-**The numbers.** 3 Shards. Witnessed: when the six seconds end, a column falls on the sealed enemy within 1.2 metres, for 30 damage, 40 stagger and a Mark. Spoken Sentence: for 8 seconds, your next heavy blow on the sealed enemy makes a blade fall a moment later on every Marked enemy within 8 metres. Each blade deals 20 damage, plus 12 more for each stack of Mark, and 40 stagger within 1.2 metres, and uses up their Marks. With either shape, the plain seal's own count doesn't pay out.
+**The numbers.** 3 Shards. Witnessed: for six seconds the seal counts every blow the sealed enemy lands on you or your guard. Your own blows on it don't count. When the six seconds end, a column falls on it within 1.2 metres, for 40 stagger and a Mark, and deals 30 damage for each of its blows, plus 15 more for each one you blocked with a perfect guard, up to 150. If it never hit at you, the column deals no damage. Spoken Sentence: for 8 seconds, your next heavy blow on the sealed enemy makes a blade fall a moment later on every Marked enemy within 8 metres. Each blade deals 20 damage, plus 12 more for each stack of Mark, and 40 stagger within 1.2 metres, and uses up their Marks. With either shape, the plain seal's own count doesn't pay out.
 
 **Works with.** Witnessed: a build that counters attacks, perfect guards, Standing Light, the root mark (perfect guards Mark the attacker). Spoken Sentence: Weighed (stacked Marks), Ring of Spears and Glare's Seven Horses shape (lots of Marked enemies at once), Brimming, heavy weapons.
-
-**Not built yet.** Witnessed should count the enemy's blows on you, at 30 per blow, plus 15 more for each one you perfectly guarded. For now, the column is worth one blow.
 
 **Example.** Use Spoken Sentence on a captain with three Marked soldiers around it. One heavy blow, and four blades fall.
 
@@ -62,11 +58,9 @@ the next blows on that enemy critical.
 
 **When it happens.** While the seal is on its enemy, during the six seconds after you cast it, while Reckoning is in a spell slot.
 
-**The numbers.** 3 Shards. For now, your finisher on the sealed enemy hits it again for 40 damage and 40 stagger, once per seal. Other heavy blows do nothing.
+**The numbers.** 3 Shards. Your finisher on the sealed enemy makes the seal pay out right away: 8 damage for each weapon blow you have landed on it so far (10 with Reckoning's Empower, up to 180), and 40 stagger. The seal keeps running and pays out again when it breaks. With Witnessed, it pays that seal's count instead. Once per seal. Other heavy blows do nothing.
 
 **Works with.** Heavy weapons, Condemned (the full Mark's stagger sets up the finisher), Ring of Spears (holds it still to be finished).
-
-**Not built yet.** It should pay out the count a second time. For now, it is a flat 40.
 
 **Example.** Stagger the sealed brute with a full Mark and finish it. The seal pays out right away, and again when it breaks.
 
@@ -86,11 +80,11 @@ the next blows on that enemy critical.
 
 **When it happens.** Whenever you cast Ring of Spears, using the shape you picked. If you have not bought this, you cast the plain ring.
 
-**The numbers.** 3 Shards. The Drawn Line: for now, the spears still drive in, then stand in the floor for 5 seconds in their ring 3 metres around the enemy. There are six spears, each 0.7 metres across. Once a second, they Mark and jolt whatever stands at them for 12 stagger. In Turn: six blades fall on the enemy one after another, a quarter second apart, each for 6 damage, 5 stagger and a Mark. For a second and a half after that, each weapon blow on it hits for one more spear's worth, 6 damage and 5 stagger, at most four times a second.
+**The numbers.** 3 Shards. The Drawn Line: the spears do not go near the enemy. They stand in a line 6 metres long across your front, 1.5 metres ahead of you, for 5 seconds. An enemy that steps onto the line is held for 1 second and Marked, once every 3 seconds. Any weapon blow you strike across the line is a critical hit. In Turn: six blades fall on the enemy one after another, a quarter second apart, each for 6 damage, 5 stagger and a Mark. For a second and a half after that, each weapon blow on it hits for one more spear's worth, 6 damage and 5 stagger, at most four times a second.
 
 **Works with.** The Drawn Line: a doorway or a staircase, ranged weapons and spears that reach across it, the root mark (Marked enemies take critical hits). In Turn: fast weapons, Just Cut, the charged blade.
 
-**Not built yet.** The Drawn Line should be a straight line six metres across in front of you that holds anything crossing it for a second, without the spears driving into the enemy. In Turn should check for a spear landing within a tenth of a second of your blow.
+**Not built yet.** The Drawn Line's spears are shown as small puffs of light along the line, not as spears. In Turn should check for a spear landing within a tenth of a second of your blow.
 
 **Example.** Put The Drawn Line across a hallway. The pack comes on, each one is Marked as it reaches the spears, and every cut you make across them is a critical hit.
 
@@ -156,15 +150,15 @@ the next blows on that enemy critical.
 **Example.** Use Behind the Eye on a captain. Step, turn, and one heavy blow lands as a critical hit, three times as hard.
 
 ## light.step.master
-**What it does.** Cast it through two enemies standing in a line. Both are cut and Marked, and Step Into Light is ready again. Light goes straight.
+**What it does.** Cast it through two enemies standing in a line. The second one cut is Marked, and Step Into Light is ready again. Light goes straight.
 
 **When it happens.** As the step cuts, while Step Into Light is in a spell slot.
 
-**The numbers.** 3 Shards. For now, a step that cuts anything ends its own wait, once every 16 seconds.
+**The numbers.** 3 Shards. Once one step has cut two enemies, its wait ends and the second is Marked, at most once every 16 seconds.
 
 **Works with.** Hallways and staircases, a line of spearmen, Aruna's Road (a second road right away).
 
-**Not built yet.** It should need one step to cut two enemies. For now, any step that cuts works, at most once every 16 seconds.
+**Not built yet.** Only the second enemy is Marked, not both.
 
 **Example.** Two soldiers come up a staircase one behind the other. Step through both, then step again right away.
 
@@ -173,11 +167,9 @@ the next blows on that enemy critical.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). Then guard.
 
-**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 12 seconds to cast it again. Fighting with your weapon makes the wait shorter. It is planted 2.5 metres in front of you. The glow has a 5-metre radius and lasts 10 seconds. It hits 0.2 seconds after you plant it, then every 2.5 seconds, for 2 damage and a Mark each time. Each lamp gives three perfect-guard bursts, shown next to the weapon as Lamp. Each burst deals 10 damage and 25 stagger within 3.5 metres of you.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 12 seconds to cast it again. Fighting with your weapon makes the wait shorter. It is planted 2.5 metres in front of you. The glow has a 5-metre radius and lasts 10 seconds. It hits 0.2 seconds after you plant it, then every 2.5 seconds, for 2 damage and a Mark each time. Each lamp gives three perfect-guard bursts, shown next to the weapon as Lamp. A burst comes only from a perfect guard made while you stand inside the glow. Each burst deals 10 damage and 25 stagger within 3.5 metres of you. Empowered: inside the glow, your perfect guard and perfect dodge windows are half again as long. The glow is clean ground: enemy fire whose middle lies in it goes out, and no enemy fire or burning floor hurts you while you stand in it.
 
 **Works with.** The root mark (a fresh Mark, and three fresh critical hits, every 2.5 seconds), Unblemished, which comes after it on the chart, Clarity's longer perfect timing windows, Reckoning's Witnessed shape, Condemned.
-
-**Not built yet.** The burst should only come from a perfect guard made inside the glow. For now, your next three perfect guards after each lamp burst, wherever you stand. The glow doesn't clear away enemy clouds, flames or frost yet. The Empower's longer perfect guard and dodge windows inside the glow; for now, the Empower does nothing.
 
 **Example.** Plant it in a doorway and fight at its edge. Everything that comes through arrives Marked, and each perfect guard throws them back.
 
@@ -186,11 +178,11 @@ the next blows on that enemy critical.
 
 **When it happens.** Whenever you cast Standing Light, using the shape you picked. If you have not bought this, you plant the plain lamp.
 
-**The numbers.** 3 Shards. Row of Lamps: the lamp still stands, and three patches, each a metre across, along 6 metres in front of you Mark whatever stands in them once a second for 10 seconds. Each perfect guard shoots a ray 6 metres past the attacker, for 12 damage, 25 stagger and a Mark, at most once a second. Circled Lamp: one lamp circles you 2 metres away for 8 seconds, hitting whatever it passes for 2 damage and Marking it.
+**The numbers.** 3 Shards. Row of Lamps: the lamp still stands, and three patches, each a metre across, along 6 metres in front of you Mark whatever stands in them once a second for 10 seconds. The row is glow too, so it is clean ground like the lamp's. Each perfect guard shoots a ray 6 metres past the attacker, for 12 damage, 25 stagger and a Mark, at most once a second. Circled Lamp: one lamp circles you 2 metres away for 8 seconds, hitting whatever it passes for 2 damage and Marking it. For those 8 seconds the ground 2 metres around you is clean, wherever you walk: enemy fire there goes out and can't hurt you.
 
 **Works with.** Row of Lamps: a build that counters attacks, Unblemished, perfect guards. Circled Lamp: a fight on the move, fast weapons, Brimming.
 
-**Not built yet.** Row of Lamps should only affect enemies between two lamps, only fire on a guard made in line with them, and show the three lamps, with nothing placed between them. Circled Lamp should burn away danger zones, and look like a lamp (for now, it is a disc of light).
+**Not built yet.** Row of Lamps should show three lamps. For now the ray fires on a perfect guard made standing on the row or in the glow. Circled Lamp should look like a lamp (for now, it is a disc of light).
 
 **Example.** Use Row of Lamps across a hall. Stand at one end and perfect-guard the brute that comes down it, and the ray runs back through the pack behind it.
 
@@ -199,11 +191,9 @@ the next blows on that enemy critical.
 
 **When it happens.** A perfect guard, while Standing Light is in a spell slot.
 
-**The numbers.** 3 Shards. The waits on Glare, Step Into Light, Ring of Spears, Standing Light and Reckoning end right away, for any that are in a slot. Once every 12 seconds. Daybreak doesn't have a wait, so nothing changes for it.
+**The numbers.** 3 Shards. When you make a perfect guard standing inside the lamp's glow, the waits on Glare, Step Into Light, Ring of Spears, Standing Light and Reckoning end right away, for any that are in a slot. Once every 12 seconds. Daybreak doesn't have a wait, so nothing changes for it.
 
 **Works with.** A Hand full of Light spells, Unblemished, Just Cut, Clarity's longer perfect timing windows.
-
-**Not built yet.** It should only work on a perfect guard made inside the glow. For now, any perfect guard works, once every 12 seconds.
 
 **Example.** Cast everything, plant the lamp, perfect-guard one blow, and cast everything again.
 
@@ -245,11 +235,11 @@ the next blows on that enemy critical.
 
 **When it happens.** Whenever you cast Glare, using the shape you picked. If you have not bought this, you cast the plain ray.
 
-**The numbers.** 3 Shards. Gathered: hold the button for up to a second, then let go. The ray is 5.5 metres long and narrow. Its stagger rises from 22 to 60 the longer you hold; a quick tap gives 22. Seven Horses: a fan 70 degrees wide and 6 metres long. It deals 5 damage, 6 stagger and a Mark to every enemy in it.
+**The numbers.** 3 Shards. Gathered: hold the button for up to a second, then let go. The ray is 5.5 metres long and narrow. Its stagger rises from 22 to 60 the longer you hold; a quick tap gives 22. Seven Horses: seven thin rays in a fan 70 degrees wide, each 6 metres long. Each ray deals 5 damage, 6 stagger and a Mark to every enemy it crosses, so an enemy close in, where the rays run together, can be hit by more than one. If you buy the Empower, Seven Horses uses its numbers too: 12 damage and 7 metres.
 
 **Works with.** Gathered: Condemned, Reckoning, and a heavy weapon to finish what it breaks. Seven Horses: Spoken Sentence, Weighed, Brimming, a pack.
 
-**Not built yet.** Gathered's ray doesn't yet look like it narrows to a point while you hold. Seven Horses' seven thin rays; for now, it is one cone as wide as the fan. If you buy the Empower, Seven Horses uses its numbers too: 12 damage and 7 metres.
+**Not built yet.** Gathered's ray doesn't yet look like it narrows to a point while you hold.
 
 **Example.** Use Seven Horses on a pack of five. All five are Marked at once, and a Spoken Sentence drops five blades.
 
@@ -280,7 +270,7 @@ the next blows on that enemy critical.
 
 **When it happens.** Cast it from a spell slot (hold L2 and a face button, or press 1 to 4) to start it. Press the same button again within 8 seconds to fire it. If you don't, it fires by itself when the 8 seconds are up.
 
-**The numbers.** 4 Shards, 45 mana, paid when you start it. Each ring is worth 8 damage and 6 stagger, up to eight rings. The beam is 12 metres long and 1.6 metres wide and lasts 0.4 seconds, hitting four times. An enemy that stays in it takes 8 damage and 6 stagger for each ring, plus a Mark: 64 damage and 48 stagger at eight rings. Fired with no rings, it only Marks. Its Empower makes each ring worth 10 damage instead of 8. The two shapes keep their own numbers.
+**The numbers.** 4 Shards, 45 mana, paid when you start it. Each ring is worth 8 damage and 6 stagger, up to eight rings. The beam is 12 metres long and 1.6 metres wide and lasts 0.4 seconds, hitting four times. An enemy that stays in it takes 8 damage and 6 stagger for each ring, plus a Mark: 64 damage and 48 stagger at eight rings. Fired with no rings, it only Marks. While it gathers, the number of rings shows by its spell slot ("3 of 8 rings"). Its Empower makes each ring worth 10 damage instead of 8. The two shapes keep their own numbers.
 
 **Works with.** Brimming (mana kept full for it), Seen Plainly, which it comes after on the chart, Weighed, Condemned, Spoken Sentence, and the charged blade, which it charges with Light.
 
@@ -291,11 +281,11 @@ the next blows on that enemy critical.
 
 **When it happens.** Whenever you cast Daybreak, using the shape you picked. If you have not bought this, you cast the plain beam.
 
-**The numbers.** 3 Shards, and the same 45 mana. Red Before the Sun: a wall 3 metres wide stands 1.5 metres in front of you for 4 seconds. Nothing can walk through it or reach you from the other side. When its time is up, or when your heavy blow hits it, it bursts along its width for 48 damage, 36 stagger and a Mark. High Noon: it is started and built up with rings like the beam. When you fire it, a column 5 metres across lands on you, dealing 6 damage and 6 stagger for each ring and a Mark to everything inside, and clearing every affliction on you.
+**The numbers.** 3 Shards, and the same 45 mana. Red Before the Sun: a wall 3 metres wide stands 1.5 metres in front of you for 4 seconds. Nothing can walk through it or reach you from the other side. Each blow it stops adds a ring of light, up to eight. Press the button again, or wait for the wall to fall, and the wall comes down and its rings fire as Daybreak's beam: 8 damage and 6 stagger a ring (10 damage with the Empower), and a Mark. High Noon: it is started and built up with rings like the beam. When you fire it, a column 5 metres across lands on you, dealing 6 damage and 6 stagger for each ring and a Mark to everything inside, and clearing every affliction on you. As it lands, enemy fire inside the column goes out.
 
 **Works with.** Red Before the Sun: archers and charges coming at you, a build that counters attacks, Unblemished. High Noon: being surrounded, Weighed, Spoken Sentence.
 
-**Not built yet.** Red Before the Sun should add rings for each blow it stops, and fire what is left as the beam with a second press; for now, it bursts where it stands. It should also stop thrown attacks. High Noon doesn't yet burn away enemy clouds, flames, frost and danger zones.
+**Not built yet.** Red Before the Sun doesn't stop thrown attacks yet.
 
 **Example.** Use High Noon in the middle of a pack. Everything around you is Marked at once, and the cuts that follow are critical hits.
 

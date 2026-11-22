@@ -9,13 +9,13 @@ Light are both carried.
 
 **When it happens.** Every time Caught Light goes off while you carry both Water and Light. Caught Light goes off when Water lands on a Marked enemy, or when a Mark lands on a Soaked one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Caught Light.
 
-**The numbers.** Mix, 3 Shards. Thrown Wide: a net 5 metres across that lasts 4 seconds. It Marks anything standing in it twice a second. Enemies inside it when it is thrown move a quarter slower. When it ends, everything within 2.5 metres of its enemy is dragged 2 metres toward that enemy. The Fish's Eye: for 6 seconds, your next weapon blow on the enemy is a critical hit and deals double damage on top of that (three times the damage in total). Its Mark is used up, and a hit of 12 damage and 10 stagger lands in a line 2 metres behind it. After Caught Light goes off on an enemy, it can't go off on that enemy again for 6 seconds.
+**The numbers.** Mix, 3 Shards. Thrown Wide: a net 5 metres across that lasts 4 seconds. It Marks anything standing in it twice a second. Enemies on it move a quarter slower: those inside it when it is thrown, and those who walk onto it later for as long as they stand on it. When it ends, everything within 2.5 metres of its enemy is dragged 2 metres toward that enemy. The Fish's Eye: for 6 seconds, your next weapon blow on the enemy is a critical hit and deals double damage on top of that (three times the damage in total). Its Mark is used up, and a hit of 12 damage and 10 stagger lands in a line 2 metres behind it. After Caught Light goes off on an enemy, it can't go off on that enemy again for 6 seconds.
 
 **Works with.** Bright Water to set it up, Sun on the Spray, Seen in the Water, The Gods' Road.
 
 **Example.** A spread-out pack: use Thrown Wide, and pull them into one pile. A captain behind its shield bearer: use The Fish's Eye, and hit through one into the other.
 
-**Not built yet.** Enemies who walk onto the net later are Marked, but they are not slowed or pulled in. The Fish's Eye's blow doesn't yet go through with its own damage; for now, a hit of 12 lands behind instead.
+**Not built yet.** The Fish's Eye's blow doesn't yet go through with its own damage; for now, a hit of 12 lands behind instead.
 
 ## caughtlight.brightwater
 **What it does.** The blow that ends a chain of blows adds Soaked and a Mark at the same time.
@@ -31,7 +31,7 @@ Light are both carried.
 ## caughtlight.spray
 **What it does.** A perfect dodge Soaks and Marks every enemy within 3 metres of where the dodge ends.
 
-**When it happens.** Each perfect dodge, while you carry both Water and Light.
+**When it happens.** When a perfect dodge ends, while you carry both Water and Light.
 
 **The numbers.** Mix, 3 Shards. One Soaked and one Mark on every enemy within 3 metres, at most once every half second.
 
@@ -39,20 +39,16 @@ Light are both carried.
 
 **Example.** Dodge through a pack at the last moment, and a net of light opens under each enemy.
 
-**Not built yet.** The spray happens around you at the moment of the perfect dodge, not where the dodge ends.
-
 ## caughtlight.seen
 **What it does.** While an enemy is on the net, your blows on any other enemy on the net are critical hits, as if that enemy were Marked. No Mark is used up.
 
 **When it happens.** While an enemy is caught in the net of light from Caught Light (4 seconds), while you carry both Water and Light.
 
-**The numbers.** Mix, keystone, 5 Shards. When the net opens, every enemy caught in it takes critical hits until the net lets it go. No Mark is used up by these hits.
+**The numbers.** Mix, keystone, 5 Shards. When the net opens, every enemy caught in it takes critical hits until the net lets it go. An enemy that walks onto the net later takes them too, for as long as it stands on it. No Mark is used up by these hits.
 
 **Works with.** Caught Light (its net), Bright Water, Sun on the Spray.
 
 **Example.** Catch a pack in the net and land critical hits on all of them, saving their Marks for later.
-
-**Not built yet.** It only works on enemies caught when the net forms, not on enemies who walk onto it later.
 
 ## caughtlight.road
 **What it does.** A rainbow of falling spray arches from you to the nearest Soaked or Marked enemy within 10 metres. If there is none, it goes to the enemy you face. You run along it, and nothing can hit you. You come down on the enemy with a falling cut that deals 18 damage and 30 stagger and adds Soaked and a Mark. The road stays for 3 seconds and Soaks and Marks anything standing in it.

@@ -89,6 +89,19 @@ namespace Clover.Player
                 case UpgradeTrigger.SpellPressed: return "a spell is pressed again";
                 case UpgradeTrigger.BladeDriven: return "a blade of yours is driven in";
                 case UpgradeTrigger.BladeCaught: return "you catch your blade on a perfect guard";
+                case UpgradeTrigger.StandingStruck: return "something you raised is struck";
+                case UpgradeTrigger.StandingBurst: return "something you raised bursts";
+                case UpgradeTrigger.PickedUp: return "you pick something up off the floor";
+                case UpgradeTrigger.PickupLeft: return "something on the floor is left untaken";
+                case UpgradeTrigger.InGround: return "an enemy stands in the ground";
+                case UpgradeTrigger.StoppedAtStones: return "an enemy is driven into your stones";
+                case UpgradeTrigger.DrivenAcross: return "an enemy is shoved across your line";
+                case UpgradeTrigger.HarmPaid: return "a grudge is paid back";
+                case UpgradeTrigger.PerfectDodgeEnd: return "a perfect dodge ends";
+                case UpgradeTrigger.CarriedTo: return "a dodge carries you to an enemy";
+                case UpgradeTrigger.CounterMissed: return "nothing comes at your counter";
+                case UpgradeTrigger.PlateBroken: return "a plate of stone breaks";
+                case UpgradeTrigger.ArcLeft: return "an arc leaves an enemy";
                 default: return "its moment comes";
             }
         }

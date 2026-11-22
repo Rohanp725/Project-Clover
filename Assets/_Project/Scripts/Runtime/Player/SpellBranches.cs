@@ -89,8 +89,18 @@ namespace Clover.Player
         public static bool OwnBranch(Upgrade owner, Upgrade castSource, string element)
         {
             if (owner == null || string.IsNullOrEmpty(owner.Branch)) return false;
-            if (castSource == null) return SpellSlots.IsBase(owner.Branch) && (string.IsNullOrEmpty(element) || owner.Branch == SpellSlots.BaseId(element));
-            return castSource.Id == owner.Branch || castSource.Branch == owner.Branch;
+            return CastOf(owner.Branch, castSource, element);
+        }
+
+        /// <summary>
+        /// True when what was cast (<paramref name="castSource"/>; null for a base spell cast by its kit of <paramref name="element"/>)
+        /// is the spell of <paramref name="branch"/> (its Learn id), through any of its marks (UpgradeEffect.CastOf).
+        /// </summary>
+        public static bool CastOf(string branch, Upgrade castSource, string element)
+        {
+            if (string.IsNullOrEmpty(branch)) return false;
+            if (castSource == null) return SpellSlots.IsBase(branch) && (string.IsNullOrEmpty(element) || branch == SpellSlots.BaseId(element));
+            return castSource.Id == branch || castSource.Branch == branch;
         }
 
         // ---- What is cast.
@@ -162,6 +172,19 @@ namespace Clover.Player
                 else empower?.ApplyTo(spec);
             }
             return spec;
+        }
+
+        /// <summary>
+        /// The Learn's own spell with its Empower, whatever shape is worn (Red Before the Sun gathers into the Learn's beam while
+        /// its own wall stands); null when the Learn has no spell.
+        /// </summary>
+        public SpellSpec PlainSpecOf(Upgrade learn, ICollection<string> learned, SpellSpec into)
+        {
+            if (learn == null || learn.Spell == null || into == null) return null;
+            string branch = learn.Branch.Length > 0 ? learn.Branch : learn.Id;
+            SpellChange.Copy(learn.Spell, into);
+            if (Empowered(branch, learned)) EmpowerOf(branch)?.ApplyTo(into);
+            return into;
         }
 
         /// <summary>Seconds the slot waits after the spell: the table's, the shape's, then the Empower's. For a base spell its kit casts, the base wait with the Empower's.</summary>

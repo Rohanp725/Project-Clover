@@ -9,13 +9,13 @@ while Lightning and Life are both carried.
 
 **When it happens.** Every time Lightning Flower goes off while you carry both Lightning and Life. Lightning Flower goes off when Static lands on a Seeded enemy, or when a Seed lands on a charged one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Lightning Flower.
 
-**The numbers.** Mix, 3 Shards. The Rice Wakes: like the plain one, the fern throws a bolt to the nearest other Seeded enemy within 8 metres, for 8 damage, 10 stagger and a Static. The shoots cover a 3-metre radius around the enemy for 6 seconds. They count as something you grew (up to two fields), and they add a Static once a second to each enemy in them. Struck Oak: a burst within 3 metres deals 16 damage, plus 5 more for each Static and each Seed the enemy had, and 20 stagger. Its Static and Seeds are used up. After Lightning Flower goes off on an enemy, it can't go off on that enemy again for 4 seconds.
+**The numbers.** Mix, 3 Shards. The Rice Wakes: like the plain one, the fern throws a bolt to the nearest other Seeded enemy within 8 metres, for 8 damage, 10 stagger and a Static. The shoots cover a 3-metre radius around the enemy for 6 seconds. They count as something you grew (up to two fields), and they add a Static once a second to each enemy in them. While you stand in the shoots, you heal 2 health a second. Struck Oak: a burst within 3 metres deals 16 damage, plus 5 more for each Static and each Seed the enemy had, and 20 stagger. Its Static and Seeds are used up. After Lightning Flower goes off on an enemy, it can't go off on that enemy again for 4 seconds.
 
 **Works with.** Storm Season to set it up, The Favoured Oak, Rain on the Field, Sowing Thunder.
 
 **Example.** A pack in a garden you grew: use The Rice Wakes, and the field keeps charging them. One brute with lots of seeds: use Struck Oak.
 
-**Not built yet.** The Rice Wakes' shoots don't heal you 2 a second yet while you stand on them. The things you grew nearby don't throw their own bolts into the flower yet.
+**Not built yet.** The things you grew nearby don't throw their own bolts into the flower yet.
 
 ## lightningflower.stormseason
 **What it does.** Your heavy blows add Static and a Seed at the same time.

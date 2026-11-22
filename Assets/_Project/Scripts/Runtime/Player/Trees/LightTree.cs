@@ -64,10 +64,11 @@ namespace Clover.Player.Trees
                 BranchPattern.Root));
 
             // ---- The middle bough: Sentence. Marks laid deep, and judgement passed on them.
-            // NEAREST: marks go three deep, as designed. Critical damage by the depth of the mark is a boon when a mark fills.
+            // Marks go three deep, as designed, and each depth makes critical blows on that enemy harder: 0.1 more of the blow a
+            // Mark (StatMod PerDepth against Marked), so three deep strikes 1.8 times.
             to.Add(BranchPattern.Put(new Upgrade { Id = Weighed, Name = "Weighed", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Root }, Icon = UpgradeIcons.Target,
-                Description = "Marks deepen, up to three. When a mark reaches three, your critical blows strike 30% harder for six seconds.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.AfflictionFull, Do = UpgradeAction.Boon, Stat = PlayerStat.CritDamage, Amount = 0.3f, Seconds = 6f } }, Stats = new[] { new StatMod(PlayerStat.AfflictionDepth, 2f) } },
+                Description = "Marks deepen, up to three, and each Mark an enemy carries makes your critical blows on it strike harder.",
+                Stats = new[] { new StatMod(PlayerStat.AfflictionDepth, 2f), new StatMod(PlayerStat.CritDamage, 0.1f, M, true) } },
                 BranchPattern.MiddleFoot));
 
             // The detonator: the brand form sets the seal on the enemy faced and flashes, striking nothing, at each blow it
@@ -82,15 +83,16 @@ namespace Clover.Player.Trees
                 // on the Learn's own burst (empower-effects).
                 new Empower { Effects = new[] { new EffectChange { Index = 1, Damage = 10f, PerMost = 18 } } },
                 "Reckoning pays back 10 for each blow, not 8, up to 180.",
-                // The Learn's own count set aside (ShapeDef.SetsAside: its clock and both its payouts). NEEDS: the bearer's blows
-                // on you and your guard counted, 15 more for each turned with a perfect guard (seal-counts-bearer). Until then a
-                // column falls on the sealed enemy for one blow's worth as the seal ends.
+                // The Learn's own count set aside (ShapeDef.SetsAside: its clock and both its payouts). The seal counts the
+                // bearer's blows on you and your guard (ConditionSpec.TheirBlowPoints): 2 points a blow and 1 more for each turned
+                // with a perfect guard, paid 15 a point (30 a blow, 45 turned), 10 points (150) at most, as the column falls.
                 new ShapeDef { Name = "Witnessed", SetsAside = new[] { 0, 1, 2 },
                     Description = "The seal counts the bearer's deeds, not yours. For six seconds every blow it lands on you or your guard is scratched in gold on the clock's rim. On the last tick a column falls on it: 30 for each blow written and 15 more for each you turned with a perfect guard, 150 at most, and 40 stagger. Guard well and the sun judges for you.",
                     Effects = new[]
                     {
-                        new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Witnessed, Seconds = 6f } },
-                        new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Witnessed, Do = UpgradeAction.Falling, Radius = 1.2f, Delay = 0.3f, Damage = 30f, Stagger = 40f, Affliction = M, Stacks = 1 },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Witnessed, Seconds = 6f, TheirBlowPoints = 2, TurnedPoints = 1, Is = Sealed } },
+                        new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Witnessed, SpentAtLeast = 1, Do = UpgradeAction.Burst, PerStack = true, PerMost = 10, Unseen = true, Radius = 0.6f, Damage = 15f, Stagger = 0f, Stacks = 0 },
+                        new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Witnessed, Do = UpgradeAction.Falling, Radius = 1.2f, Delay = 0.3f, Damage = 0f, Stagger = 40f, Affliction = M, Stacks = 1 },
                     } },
                 // Sentence and What It Owes, once majors, folded in here. No clock (ShapeDef.SetsAside: the Learn's clock and its
                 // payouts): the heavy blow sets a short sentence on every Marked enemy within eight metres whose end drops a blade
@@ -105,12 +107,13 @@ namespace Clover.Player.Trees
                         new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Sentenced, Do = UpgradeAction.Spend, Affliction = M },
                     } },
                 "Opens two shapes of Reckoning, chosen at any rest fire: Witnessed, a seal that counts the blows struck at you, or Spoken Sentence, a seal your heavy blow breaks over every Marked enemy.",
-                // A finisher on the sealed enemy (StruckBy.Finisher), not any heavy blow. NEEDS: the count paid a second time
-                // (damage-tally); until then the finisher strikes it for 40 and 40 stagger, once a seal.
+                // A finisher on the sealed enemy (StruckBy.Finisher), not any heavy blow, once a seal: the seal pays its count now, as
+                // it stands, as it would at its end (UpgradeAction.PayNow: with the Empower's numbers, or Witnessed's count in that
+                // shape, which is a seal by what it is), and pays again as it breaks.
                 new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Owed, Seconds = 6f, EndsWith = ConditionBlow.Finisher } },
-                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Owed, By = StruckBy.Finisher, Do = UpgradeAction.Burst, Radius = 1.2f, Damage = 40f, Stagger = 40f, Stacks = 0 },
+                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Owed, By = StruckBy.Finisher, Do = UpgradeAction.PayNow, ToState = Sealed },
                 },
                 "A finisher on the sealed enemy pays the count twice.",
                 learnEffects: new[]
@@ -128,12 +131,23 @@ namespace Clover.Player.Trees
                 // The roster's numbers alone (the owner's answer of 2026-11-20: an Empower may strengthen without a shorter wait).
                 new Empower { Stagger = 6.7f },
                 "Its spears break 40 stagger in all.",
-                // NEEDS: a line six metres across your front that holds what crosses it and makes your blows across it critical,
-                // the spears not driving into the enemy (ground-states, form-pieces, shape-sets-aside). Until then the spears
-                // still drive in, and stand five seconds in the floor in their ring round it, Marking and jarring what is inside.
-                new ShapeDef { Name = "The Drawn Line",
+                // The spears go nowhere near the enemy (a quiet brand: SpellSpec.Quiet). They stand in a line six metres across your
+                // front, 1.5 m ahead (Shape Line, AcrossFront): one stepping onto it is held a second and Marked, once in 3 s
+                // (InsideDo), and your weapon blows struck across it are critical (World.OwnGrounds.SpearLine, read by PlayerCombat).
+                new ShapeDef { Name = "The Drawn Line", Form = SpellForms.Brand, Spell = new SpellSpec { Reach = 6f, Damage = 0f, Stagger = 0f, Stacks = 0, Quiet = true },
                     Description = "The six spears drive into the floor in a straight line six metres across your front and stand five seconds, dust lit along them. An enemy that crosses it is held a second and Marked, and your blows across the line are critical. Fight across it.",
-                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Hazard, Shape = HazardShape.Ring, Reach = 3f, Count = 6, Radius = 0.7f, Seconds = 5f, Interval = 1f, Damage = 0f, Stagger = 12f, Affliction = M, Stacks = 1, Cooldown = 1f } } },
+                    Effects = new[]
+                    {
+                        new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.OwnGround, At = EffectAt.Self, Shape = HazardShape.Line, AcrossFront = true, Amount = 1.5f, Reach = 6f, Radius = 0.5f, Seconds = 5f,
+                            Ground = Clover.World.OwnGrounds.SpearLine },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Hazard, At = EffectAt.Self, Shape = HazardShape.Line, AcrossFront = true, Amount = 1.5f, Reach = 6f, Count = 6, Radius = 0.7f,
+                            Seconds = 5f, Interval = 0.25f, Damage = 0f, Stagger = 0f, Affliction = M, Stacks = 0,
+                            InsideDo = new[]
+                            {
+                                new UpgradeEffect { On = UpgradeTrigger.InGround, Do = UpgradeAction.Hold, Seconds = 1f, CooldownPerEnemy = true, Cooldown = 3f },
+                                new UpgradeEffect { On = UpgradeTrigger.InGround, Do = UpgradeAction.Afflict, Affliction = M, Stacks = 1, CooldownPerEnemy = true, Cooldown = 3f },
+                            } },
+                    } },
                 // A quarter second between spears (SpellSpec.Between). NEEDS: a spear landing within 0.1 s of a weapon blow as
                 // the moment (spell-windows). Until then each weapon blow on the enemy for a second and a half after strikes a
                 // spear's worth more.
@@ -210,56 +224,69 @@ namespace Clover.Player.Trees
                     Description = "You step to behind the enemy rather than through, landing at its back. Your first blow within a second deals a finisher's damage, three times as much, without ending any stagger.",
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Boon, Stat = PlayerStat.WeaponDamage, Amount = 2f, Seconds = 1f, UntilBlow = true } } },
                 "Opens two shapes of Step Into Light, chosen at any rest fire: Aruna's Road, a road of dust that Marks and leads you home, or Behind the Eye, a step to the enemy's back for one great blow.",
-                // NEEDS: two enemies struck by one cast as the moment (struck-count). Until then a step that cuts anything ends its
-                // own wait, once in sixteen seconds.
-                new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.ResetCooldown, Cooldown = 16f } },
+                // Only a step that has cut two (UpgradeEffect.StruckAtLeast): the second is Marked and the wait ends, once in sixteen
+                // seconds.
+                new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, StruckAtLeast = 2, Do = UpgradeAction.ResetCooldown, Cooldown = 16f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, StruckAtLeast = 2, Do = UpgradeAction.Afflict, Affliction = M, Stacks = 1, Cooldown = 16f },
+                },
                 "Cast it through two enemies standing in one line: both are cut and Marked, and Step Into Light is ready again. Light is straight.");
 
             // The counter: the rod form is the lamp; enemies in its glow are struck lightly and Marked. Its perfect-guard burst is
-            // banked by each lamp (three, the most a lamp is likely to meet). NEEDS: the burst only for a perfect guard made
-            // inside the glow (in-own-ground), and no enemy cloud, flame or frost inside the glow (purify).
+            // banked by each lamp (three, the most a lamp is likely to meet), and only for a perfect guard made inside the glow
+            // (the lamp's ground is the player's own glow, SpellSpec.Ground: StatWhen.InOwnGlow). No enemy cloud, flame or frost
+            // lies inside the glow: your glow is clean ground (World.Purified), and enemy ground asks it.
             SpellBranch.Add(to, E, StandingLight, "Standing Light", SpellRole.Counter, BranchPattern.LeftB, JustCut, SpellForms.Rod,
-                new SpellSpec { Reach = 2.5f, Radius = 5f, Seconds = 10f, Interval = 2.5f, Damage = 2f, Stagger = 0f, Delay = 0.2f, Stacks = 1 },
+                new SpellSpec { Reach = 2.5f, Radius = 5f, Seconds = 10f, Interval = 2.5f, Damage = 2f, Stagger = 0f, Delay = 0.2f, Stacks = 1, Ground = Clover.World.OwnGrounds.Glow },
                 "You plant a lamp of brass. A shaft of light stands over it, dust turning in it, and a glow five metres round lies about it for ten seconds. Enemies in the glow are Marked every two and a half seconds, and a perfect guard made inside it bursts round you: 10 damage and 25 stagger within three and a half metres. No enemy cloud, flame or frost can lie inside the glow.",
                 UpgradeIcons.Tower,
-                // The roster's numbers alone (the owner's answer of 2026-11-20): no shorter wait. NEEDS: the longer windows inside
-                // the glow (in-own-ground: standing inside one's own lamp's glow as a state the stats read). Until then it does
-                // nothing.
+                // The roster's numbers alone (the owner's answer of 2026-11-20): no shorter wait. Its windows half again as long
+                // inside the glow are the Empower mark's stats (StatWhen.InOwnGlow), set below.
                 new Empower(),
                 "Inside its glow, the moments for a perfect guard and a perfect dodge are half again as long.",
-                // NEEDS: the enemies between two lamps, and the guard made in line with them (in-own-ground), the lamps drawn as
-                // three (form-pieces), and nothing laid between them (purify). Until then the lamp still stands, a row of light
-                // six metres ahead Marks what stands on it each second, and a perfect guard throws a ray along the attacker's line.
+                // The lamp still stands; a row of light six metres ahead Marks what stands on it each second, and is glow of your own
+                // (Ground), so the ray down the row comes only from a perfect guard made standing in the row or the glow, and nothing
+                // enemy lies between the lamps (the glow is clean ground). NEEDS: the lamps drawn as three (form-pieces).
                 new ShapeDef { Name = "Row of Lamps",
                     Description = "Three small lamps are set in a line six metres long. Every enemy between two lamps is Marked each second and can carry no cloud, flame or frost, and a perfect guard made in line with them throws a ray down the row: 12 damage and 25 stagger. The guard fires the row.",
                     Effects = new[]
                     {
-                        new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Hazard, At = EffectAt.Self, Shape = HazardShape.Line, Reach = 6f, Count = 3, Radius = 1f, Seconds = 10f, Interval = 1f, Damage = 0f, Stagger = 0f, Affliction = M, Stacks = 1 },
-                        new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Lane, Reach = 6f, Radius = 0.6f, Damage = 12f, Stagger = 25f, Affliction = M, Stacks = 1, Cooldown = 1f },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Hazard, At = EffectAt.Self, Shape = HazardShape.Line, Reach = 6f, Count = 3, Radius = 1f, Seconds = 10f, Interval = 1f, Damage = 0f, Stagger = 0f, Affliction = M, Stacks = 1,
+                            Ground = Clover.World.OwnGrounds.Glow },
+                        new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, While = StatWhen.InOwnGlow, Do = UpgradeAction.Lane, Reach = 6f, Radius = 0.6f, Damage = 12f, Stagger = 25f, Affliction = M, Stacks = 1, Cooldown = 1f },
                     } },
-                // NEEDS: the lamp drawn circling you, and hazards you walk into burned away (form-pieces, purify). The circling is
+                // Hazards you walk into are burned away: a ring of clean ground two metres round you that goes where you go for the
+                // eight seconds (UpgradeAction.Purify, Follows). NEEDS: the lamp drawn circling you (form-pieces). The circling is
                 // the discs form, one disc at two metres for eight seconds.
                 new ShapeDef { Name = "Circled Lamp", Form = SpellForms.Discs,
                     Description = "A smaller lamp circles you two metres out, once a second, for eight seconds. It Marks what it passes and burns away any hazard you walk into. It goes where you go.",
-                    Spell = new SpellSpec { Count = 1, Radius = 2f, Seconds = 8f, Interval = 1f, Damage = 2f, Stagger = 0f, Stacks = 1 } },
+                    Spell = new SpellSpec { Count = 1, Radius = 2f, Seconds = 8f, Interval = 1f, Damage = 2f, Stagger = 0f, Stacks = 1 },
+                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Purify, Follows = true, Radius = 2f, Seconds = 8f } } },
                 "Opens two shapes of Standing Light, chosen at any rest fire: Row of Lamps, a row your perfect guard fires, or Circled Lamp, a lamp that walks round you.",
-                // NEEDS: inside the glow only (in-own-ground). The resets are data, once in twelve seconds; Daybreak waits on no
+                // Inside the glow only (StatWhen.InOwnGlow). The resets are data, once in twelve seconds; Daybreak waits on no
                 // clock, so it has none to end.
                 new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.ResetCooldown, Cooldown = 12f },
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.ResetCooldown, Branch = Glare, Cooldown = 12f },
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.ResetCooldown, Branch = StepIntoLight, Cooldown = 12f },
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.ResetCooldown, Branch = RingOfSpears, Cooldown = 12f },
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.ResetCooldown, Branch = Reckoning, Cooldown = 12f },
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, While = StatWhen.InOwnGlow, Do = UpgradeAction.ResetCooldown, Cooldown = 12f },
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, While = StatWhen.InOwnGlow, Do = UpgradeAction.ResetCooldown, Branch = Glare, Cooldown = 12f },
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, While = StatWhen.InOwnGlow, Do = UpgradeAction.ResetCooldown, Branch = StepIntoLight, Cooldown = 12f },
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, While = StatWhen.InOwnGlow, Do = UpgradeAction.ResetCooldown, Branch = RingOfSpears, Cooldown = 12f },
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, While = StatWhen.InOwnGlow, Do = UpgradeAction.ResetCooldown, Branch = Reckoning, Cooldown = 12f },
                 },
                 "The first perfect guard inside the glow makes every Light spell ready again, once a lamp.",
                 tally: new TallySpec { Name = "Lamp", Cap = 3 },
                 learnEffects: new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Bank, Count = 3 },
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Spends = 1, Do = UpgradeAction.Burst, At = EffectAt.Self, Radius = 3.5f, Damage = 10f, Stagger = 25f, Stacks = 0 },
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, While = StatWhen.InOwnGlow, Spends = 1, Do = UpgradeAction.Burst, At = EffectAt.Self, Radius = 3.5f, Damage = 10f, Stagger = 25f, Stacks = 0 },
                 });
+            // Standing Light's Empower: inside the glow the perfect guard's and the perfect dodge's moments are half again as long.
+            to.Find(each => each.Id == SpellBranch.EmpowerId(StandingLight)).Stats = new[]
+            {
+                new StatMod(PlayerStat.PerfectGuardWindow, 0.5f, StatWhen.InOwnGlow),
+                new StatMod(PlayerStat.DodgeSafeTime, 0.5f, StatWhen.InOwnGlow),
+            };
 
             // Built as data (StatWhen.Unhurt). It grows from Standing Light's Learn, whose line passes clear.
             to.Add(BranchPattern.Put(new Upgrade { Id = Unblemished, Name = "Unblemished", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { StandingLight }, Icon = UpgradeIcons.Star,
@@ -288,11 +315,10 @@ namespace Clover.Player.Trees
                 new ShapeDef { Name = "Gathered", Form = SpellForms.Wave,
                     Description = "Hold for up to a second and the ray narrows, the dust in it drawn to a point on the enemy. Let go, and the stagger rises from 22 to 60 with the hold. A lens, for breaking one enemy.",
                     Spell = new SpellSpec { Reach = 5.5f, Arc = 12f, Damage = 8f, Stagger = 22f, Stacks = 1, HoldUpTo = 1f, HeldStagger = 60f } },
-                // NEEDS: seven thin rays rather than one cone (form-pieces). Until then the wave form throws a cone of the fan's
-                // width that strikes and Marks all in it.
+                // Seven thin rays fanned across 70 degrees, each striking all it crosses (SpellSpec.Rays on the wave form).
                 new ShapeDef { Name = "Seven Horses", Form = SpellForms.Wave,
                     Description = "The ray splits into seven thin rays in a fan of 70 degrees, six metres long, as Surya's seven horses run: 5 damage each, and every enemy touched is Marked. Marking a crowd.",
-                    Spell = new SpellSpec { Reach = 6f, Arc = 70f, Damage = 5f, Stagger = 6f, Stacks = 1 } },
+                    Spell = new SpellSpec { Reach = 6f, Arc = 70f, Damage = 5f, Stagger = 6f, Stacks = 1, Rays = 7 } },
                 "Opens two shapes of Glare, chosen at any rest fire: Gathered, a ray drawn to a point that breaks one enemy, or Seven Horses, a fan of rays that Marks a crowd.",
                 // Dazzle, once a major, folded in here. Glare cast within 0.3 s of a perfect dodge (CastAfter PerfectDodge) blinds the
                 // attacker it dodged (ToTurnedBy): it cannot turn for 2 s, 1 s for a god or an elite (CannotTurn, EliteSeconds).
@@ -322,16 +348,23 @@ namespace Clover.Player.Trees
                 // for six rings), and the shapes' own wall and column left as they are (LearnOnly).
                 new Empower { Damage = 15f, LearnOnly = true },
                 "Each ring of the beam strikes for 10, not 8.",
-                // NEEDS: each blow it stops adding a ring, and what is left loosed as the beam by a second press (gathered-rings:
-                // the wall's own stopping of blows is form-pieces); stopping thrown attacks as well (form-pieces). Until then the
-                // wall form stands before you four seconds and bursts along its width when its time is up or your heavy blow breaks it.
+                // The wall form stands before you four seconds and screens blows from its far side; each blow it stops adds a ring
+                // (SpellSpec.RingsBy Stopped, eight at most) to the Learn's own beam, loosed with what it gathered by a second press
+                // or when the wall falls (RingGather.Form: through the Learn's beam form, the Learn's numbers and Empower); the wall
+                // comes down as it is loosed, and bursts for nothing. The order of presses is the plan's question 17 (built as a).
+                // NEEDS: stopping thrown attacks as well (form-pieces).
                 new ShapeDef { Name = "Red Before the Sun", Form = SpellForms.Wall,
                     Description = "The rings are not loosed as a beam. They stand before you as a curved shield of red dawn three metres wide for four seconds, which stops thrown attacks and blows from the front. Each blow it stops adds a ring; press again to loose what is left as the beam. Light's one shield, and still a beam at the end.",
-                    Spell = new SpellSpec { Reach = 1.5f, Arc = 3f, Delay = 0.15f, Seconds = 4f, Radius = 2.5f, Damage = 48f, Stagger = 36f, Stacks = 1 } },
-                // The afflictions on you are cleared as it comes down (UpgradeAction.Cleanse, as it is loosed). NEEDS: enemy clouds,
-                // flame, frost and hazards burned away inside (purify). The column is the nova form, gathered as the beam is: 6 a ring.
+                    Spell = new SpellSpec { Reach = 1.5f, Arc = 3f, Delay = 0.15f, Seconds = 4f, Radius = 2.5f, Damage = 0f, Stagger = 0f, Stacks = 0, Rings = 8, RingsFor = 6, RingsBy = RingSource.Stopped } },
+                // The afflictions on you are cleared as it comes down (UpgradeAction.Cleanse, as it is loosed), and enemy clouds,
+                // flame, frost and hazards inside are burned away (UpgradeAction.Purify, the column's 2.5 m for a moment). The column
+                // is the nova form, gathered as the beam is: 6 a ring.
                 new ShapeDef { Name = "High Noon", Form = SpellForms.Nova,
-                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellLoosed, OwnBranch = true, Do = UpgradeAction.Cleanse } },
+                    Effects = new[]
+                    {
+                        new UpgradeEffect { On = UpgradeTrigger.SpellLoosed, OwnBranch = true, Do = UpgradeAction.Cleanse },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellLoosed, OwnBranch = true, Do = UpgradeAction.Purify, Follows = true, Radius = 2.5f, Seconds = 1f },
+                    },
                     Description = "The light comes straight down on you as a column five metres across. It burns away every enemy cloud, flame, frost and hazard inside, clears every affliction on you, and strikes everything inside for 6 damage a ring, Marking it. The purifying version.",
                     Spell = new SpellSpec { Radius = 2.5f, Delay = 0.3f, Damage = 36f, Stagger = 36f, Stacks = 1, Rings = 8, RingsFor = 6 } },
                 "Opens two shapes of Daybreak, chosen at any rest fire: Red Before the Sun, a shield of dawn before the beam, or High Noon, a column that burns the ground clean.",

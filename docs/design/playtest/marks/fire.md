@@ -64,15 +64,15 @@ design yet, its **Not built yet** line says what is missing.
 **Example.** Wave, three blows, and wave again right away: a burning crowd that never gets back on its feet.
 
 ## fire.uraeus
-**What it does.** A cobra made of flame rises from your shoulder and stays for a while, spitting burning venom at enemies near you.
+**What it does.** A cobra made of flame rises on your left shoulder and stays for a while. Whenever an enemy near you starts an attack, the cobra spits burning venom at it as it winds up.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button. It spits on its own while it is there.
 
-**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again (its Empower makes it 8). It stays for 8 seconds and spits at enemies within 8 metres, up to six times (its Empower makes it eight). Each spit deals 8 damage, 6 stagger and two Burn.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again (its Empower makes it 8). It stays for 8 seconds and spits at enemies within 8 metres that start an attack, at most once a second each, up to six times (its Empower makes it eight). Each spit deals 8 damage, 6 stagger and two Burn, and the venom burns on the floor at the enemy's feet for 2 seconds.
 
 **Works with.** Heat, which it comes after on the chart; Cinder; and its Master mark on enemies that are already burning.
 
-**Not built yet.** The spit should answer an enemy that starts an attack (the game needs a way to notice an enemy's wind-up), and the venom should burn at the enemy's feet. For now, the cobra spits on its own, like a guard made of fire.
+**Not built yet.** The cobra is a tongue of flame until its model is brought into the game (it waits in staging for the owner).
 
 **Example.** Cast it before a pack closes in. Every enemy that comes near gets hit with venom while you fight the first one.
 
@@ -81,7 +81,7 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Whenever you cast Uraeus, using the shape you picked.
 
-**The numbers.** 3 Shards. Coiled: it reaches 3 metres, and adds three Burn per spit. Set Down: it spits every 1.2 seconds at an enemy within 9 metres of the cobra, for 8 damage and two Burn, for 8 seconds.
+**The numbers.** 3 Shards. Coiled: it only spits at enemies that start an attack within 3 metres, and adds three Burn per spit. Set Down: the cobra is planted half a metre in front of where you cast it, full size, and spits every 1.2 seconds at the nearest enemy within 9 metres of it, attacking or not, for 8 damage and two Burn, up to seven times in its 8 seconds.
 
 **Works with.** Kiln Stance and Breath of the Lioness (Coiled, for fighting up close). Black Pitch and Catching Fire (Set Down next to a crowd).
 
@@ -94,11 +94,9 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** When your Uraeus's spit hits an enemy that is already burning. Uraeus must be in a spell slot.
 
-**The numbers.** 3 Shards. Two more stacks of Burn on top of the spit's own.
+**The numbers.** 3 Shards. Two more stacks of Burn on top of the spit's own, and the cobra stays one second longer for each such spit.
 
 **Works with.** Cinder and Flame Wave, which set enemies on fire first.
-
-**Not built yet.** The cobra should stay a second longer for each spit that feeds the fire.
 
 **Example.** Set a pack on fire with Flame Wave, then cast Uraeus. Every spit brings them a step closer to five stacks.
 
@@ -118,11 +116,11 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Whenever you cast Meteor Leap, using the shape you picked.
 
-**The numbers.** 3 Shards. Falling Star: it falls 0.8 seconds after you cast it, within 9 metres. It deals 46 damage, 60 stagger and a stack of Burn within 3.2 metres, and leaves a burning patch for 4 seconds. Ash Fall: ash covers 3 metres around where you land for 5 seconds. Every second, it deals a Burn and 2 damage to everything in it. Enemies the landing hits can't get their balance back for those 5 seconds.
+**The numbers.** 3 Shards. Falling Star: it falls 0.8 seconds after you cast it, within 9 metres. It deals 46 damage, 60 stagger and a stack of Burn within 3.2 metres, and leaves a burning patch for 4 seconds. Ash Fall: ash covers 3 metres around where you land for 5 seconds. Every second, it deals a Burn and 2 damage to everything in it. Enemies the landing hits can't get their balance back for those 5 seconds, and an enemy that walks into the ash later can't either, for as long as it stands in it.
 
 **Works with.** Cinder and Catching Fire (Ash Fall in a crowd). Kiln Stance and Breath of the Lioness (Falling Star while you hold your ground).
 
-**Not built yet.** Falling Star's own stone and growing shadow (for now, it uses the thrown ball). An enemy that walks into Ash Fall's ash later doesn't yet lose its balance recovery.
+**Not built yet.** Falling Star's own stone and growing shadow (for now, it uses the thrown ball).
 
 **Example.** Hold the line with your guard, and call the stone down on the brute behind it.
 
@@ -283,41 +281,39 @@ design yet, its **Not built yet** line says what is missing.
 **Example.** Kill a soldier with five Burn in the middle of a pack. The two next to it get five stacks right away, without you hitting them.
 
 ## fire.pitch
-**What it does.** You throw a jar of embalmer's pitch (a thick, sticky tar) at the enemy you face. Your next blows on it splash fire over everyone near it.
+**What it does.** You throw a jar of embalmer's pitch (a thick, sticky tar) at the enemy you face, and it is coated. Your blows on a coated enemy spread the pitch to the enemies around it. The first fire that touches any coated enemy sets all of them alight at once.
 
-**When it happens.** Cast it from a spell slot. Press that slot's button. Then it works on your next three weapon blows on the coated enemy, within 8 seconds.
+**When it happens.** Cast it from a spell slot. Press that slot's button. The coat lasts 8 seconds. Any Burn laid on a coated enemy lights it: from a spell, a burning patch, a reaction or your blade.
 
-**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 11 seconds to cast it again (its Empower makes it 9, and makes the coat last 10 seconds). You can throw it up to 7 metres. Each of the three blows on the coated enemy sets off a burst 2 metres around it, for 16 damage, 35 stagger and three Burn.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 11 seconds to cast it again (its Empower makes it 9, and makes the coat last 10 seconds). You can throw it up to 7 metres. Each weapon blow on a coated enemy coats every other enemy within 2 metres and counts once, up to 7. When it lights, every coated enemy goes up: 16 damage and 8 more for each blow that spread the pitch (70 at most), 35 stagger and three Burn, and the floor under each one burns for 3 seconds.
 
 **Works with.** Catching Fire, which it comes after on the chart; Cinder; Firebomb Flask.
 
-**Not built yet.** The planned pitch: your blows spread the coat from enemy to enemy without lighting it. Then the first fire that touches any coated enemy (a Burn, a burning patch, or a reaction) sets all of them on fire at once, for 16 damage plus 8 more for each blow that spread it, up to 70, and the floor under each one burns. For now, the coat is a mark that your next blows set off around the coated enemy.
+**Not built yet.** The coat has no look of its own yet: the black, glossy pitch on the floor and on the enemies, and the flames standing up over all of it, are made and wait to be brought in.
 
 **Example.** Coat the soldier in the middle of a pack and cut it three times. The pack burns with three stacks.
 
 ## fire.pitch.shape
-**What it does.** Unlocks two shapes for Black Pitch. You pick one at any rest fire. **Pitch Pool**: it is thrown on the floor as a pool of burning pitch. **The Torch**: one enemy is coated thickly, and nothing splashes. It burns, and every second it sets fire to everyone near it as it walks.
+**What it does.** Unlocks two shapes for Black Pitch. You pick one at any rest fire. **Pitch Pool**: it is thrown on the floor as a pool of pitch. Anything that walks through it is coated, and lights the same way. **The Torch**: one enemy is coated thickly, and nothing spreads. Once fire touches it, it burns, and every second it sets fire to everyone near it as it walks.
 
 **When it happens.** Whenever you cast Black Pitch, using the shape you picked.
 
-**The numbers.** 3 Shards. Pitch Pool: 3 metres across, lasts 8 seconds, and deals 3 damage and a stack of Burn every half second. The Torch: for 8 seconds, every second, everyone within 2 metres of the torch gets a stack of Burn. Your blows on it set off a burst 0.8 metres across.
+**The numbers.** 3 Shards. Pitch Pool: 3 metres across, lasts 8 seconds. Every half second, whatever stands in it is coated for 8 seconds. The Torch: the coat lasts 8 seconds. When a Burn lands on it, it is lit for 8 seconds, and every second everyone within 2 metres of it gets a stack of Burn.
 
 **Works with.** Catching Fire (send The Torch into a crowd); Flame Wave's Running Fire across the pool.
 
-**Not built yet.** The pool should coat anyone who walks through it, and The Torch should only light up when fire touches it (for now, it lights up right away).
+**Not built yet.** The pool can't be seen yet: its look waits to be brought in.
 
 **Example.** Turn the brute into The Torch and let it walk into its friends.
 
 ## fire.pitch.master
 **What it does.** Light it with a finisher, and every other burning enemy nearby goes up in flames along with the coated one, at half strength.
 
-**When it happens.** When a finisher lands on a burning enemy. Black Pitch must be in a spell slot.
+**When it happens.** When a finisher lands on a coated enemy. Black Pitch must be in a spell slot.
 
-**The numbers.** 3 Shards. The finished enemy's burn goes off for 5 damage per stack within 4 metres.
+**The numbers.** 3 Shards. A finisher on a coated enemy lights the coat just like a Burn would: every coated enemy goes up for 16 damage, plus 8 for each blow that spread the coat (70 at most), 35 stagger and 3 Burn. Every other burning enemy within 10 metres goes up with them: its Burn is used up, and it bursts for half the coat's damage and stagger.
 
 **Works with.** Cinder, Catching Fire.
-
-**Not built yet.** Every other burning enemy within 10 metres should go up at half strength, and only when the finisher lights the coat.
 
 **Example.** End a string of blows on a coated soldier with a finisher, and the fire spreads to the next one.
 

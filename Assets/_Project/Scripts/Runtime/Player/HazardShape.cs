@@ -11,5 +11,7 @@ namespace Clover.Player
         Ring,
         /// <summary>A row of circles beyond the target, carried away from the player along their line to it (downwind): Reach is how far the middle one lands, Amount the gap between them (1).</summary>
         Downwind,
+        /// <summary>A row of circles Reach wide across your line to the target, centred on it (Running Water's band); with Speed they all run on away from you.</summary>
+        Band,
     }
 }

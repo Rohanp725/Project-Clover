@@ -171,7 +171,7 @@ namespace Clover.Tests
             var cairn = Upgrade.All.SelectMany(upgrade => upgrade.Effects).Single(effect => effect.State != null && effect.State.Id == EarthTree.Heaped);
             Assert.IsTrue(cairn.PerStack);
             Assert.AreEqual(0.15f, cairn.State.SlowPerStack, 1e-5f);
-            var bronze = Upgrade.ById(MetalTree.PouredBronze).Effects.Single(effect => effect.Do == UpgradeAction.Hold);
+            var bronze = Upgrade.ById(MetalTree.PouredBronze).Effects.Single(effect => effect.Do == UpgradeAction.Hold && effect.Ranks == EnemyRank.Plain);
             Assert.IsTrue(bronze.PerStack, "Poured Bronze holds for each notch");
             Assert.AreEqual(0.4f, bronze.Seconds, 1e-5f);
         }

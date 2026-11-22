@@ -17,6 +17,8 @@ namespace Clover.Player.Trees.Duo
         public const string NeitherWins = "thermalshock.neitherwins";
         public const string FireUnderTheIce = "thermalshock.underice";
         public const string FireSetting = "thermalshock.firesetting";
+        /// <summary>Fire-Setting's fire banked against the enemy, quenched at its end.</summary>
+        public const string Banked = "thermalshock.firesetting.banked";
         public const string TheYawningGap = "thermalshock.gap";
         /// <summary>The conditions the two shapes set, each a crack as the plain reaction's.</summary>
         public const string Shards = "thermalshock.shards";
@@ -111,22 +113,37 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.Keystone));
 
-            // The duo spell, bought with Shards once both are carried (no god gives it): a detonator on a 12 s cooldown (SpellTimings). The brand form sets a fire against the
-            // enemy that blows set off; each landing lays rime as the quench.
-            // NEEDS: a second press of a slot spell (the quench on the second press; now the brand's own set-off), the Burn
-            // deepening each second while the fire is banked, and blows before the quench making it harder.
+            // The duo spell, bought with Shards once both are carried (no god gives it): a detonator on a 12 s cooldown (SpellTimings).
+            // The first press banks a fire against the enemy faced (a quiet brand: only the gesture; the condition Banked, 4 s): 4
+            // damage and a Burn more each second. The second press (or the 4 s ending) quenches it: the condition ends now, and its
+            // end is the quench, 20 and 8 a Burn, 60 stagger, Chill three deep, the Burn spent, neighbours within 2.5 m half, each
+            // weapon blow it took before 10% harder (UpgradeEffect.HarderPerBlow, five at most), and Thermal Shock forced on it.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = FireSetting, Name = "Fire-Setting", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Role = SpellRole.Detonator, Requires = new[] { SparkAndRime, HotStoneColdWater }, Icon = UpgradeIcons.Flame,
                 Description = "A fire is laid against the enemy you face. When it is quenched with a dash of rime the heated body splits: a hard blow, Chill three deep, and its neighbours take half.",
                 Form = SpellForms.Brand,
-                Spell = new SpellSpec { Reach = 6f, Seconds = 4f, Count = 1, Radius = 2.5f, Damage = 20f, Stagger = 60f, Stacks = 2 },
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 3 } },
+                Spell = new SpellSpec { Reach = 6f, Seconds = 4f, Damage = 0f, Stagger = 0f, Stacks = 0, Quiet = true },
+                PressWindow = 4f,
+                Presses = new[] { new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, Do = UpgradeAction.EndCondition, Condition = Banked, EachWithin = 30f } } },
+                Effects = new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnSpell = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Banked, Seconds = 4f, Beat = 1f } },
+                    new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = Banked, Do = UpgradeAction.Burst, Radius = 0.3f, Damage = 4f, Stagger = 0f, Affliction = AfflictionKind.Burn, Stacks = 1 },
+                    // The quench, at the fire's end however it came.
+                    new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Banked, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Burn, CountOnly = true },
+                    new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Banked, Do = UpgradeAction.Burst, Radius = 0.4f, Damage = 20f, DamagePerSpent = 8f, Stagger = 60f,
+                        Affliction = AfflictionKind.Chill, Stacks = 3, HarderPerBlow = 0.1f },
+                    new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Banked, Do = UpgradeAction.Burst, Radius = 2.5f, SparesTarget = true, Damage = 10f, DamagePerSpent = 4f, Stagger = 30f,
+                        Affliction = AfflictionKind.Chill, Stacks = 1, HarderPerBlow = 0.1f },
+                    new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Banked, Do = UpgradeAction.ForceReaction, Reaction = Reaction, Alone = true },
+                    new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Banked, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Burn },
+                },
             }, HeartPattern.Spell));
 
-            // The duo surge, worn in the Hand's surge slot with its own 40 mana and 10 s (DuoSurge). NEEDS: blows that alternate
-            // affliction, Thermal Shock once per enemy every 2 s while it lasts (alternate-blows); now while it burns each blow
-            // lays a Chill, and each Thermal Shock heals you 2.
+            // The duo surge, worn in the Hand's surge slot with its own 40 mana and 10 s (DuoSurge). While it burns the weapon's
+            // swings take turns (UpgradeEffect.TakesTurns), a Burn then a Chill; Thermal Shock rests only 2 s on each enemy
+            // (UpgradeAction.ShortenRest), and each one heals you 2.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = TheYawningGap, Name = "The Yawning Gap", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { FireSetting }, Icon = UpgradeIcons.Sun,
@@ -134,7 +151,9 @@ namespace Clover.Player.Trees.Duo
                 Surge = new DuoSurge { Mana = 40f, Seconds = 10f },
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.AnyHit, WhileSurge = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.AnyHit, WhileSurge = true, TakesTurns = 2, Turn = 0, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Burn, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.AnyHit, WhileSurge = true, TakesTurns = 2, Turn = 1, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = Reaction, WhileSurge = true, Do = UpgradeAction.ShortenRest, Seconds = 2f },
                     new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = Reaction, WhileSurge = true, Do = UpgradeAction.Heal, Amount = 2f },
                 },
             }, HeartPattern.RightTop));

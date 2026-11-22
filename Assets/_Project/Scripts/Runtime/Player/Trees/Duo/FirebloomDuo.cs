@@ -25,9 +25,9 @@ namespace Clover.Player.Trees.Duo
         {
             const string A = Elements.Fire, B = Elements.Life;
 
-            // NEEDS: pickups (Between Two Fires: passing between the two lilies of a pair heals 8 and charges the blade with
-            // two blows of Burn; now the pairs only burn); mending-ground (Ash Bed's shoots mending 2 a second; now they only
-            // seed what steps in).
+            // Between Two Fires: the gap between each pair is a pickup at the enemy's spot (World.Pickups), passing through it heals
+            // 8 and charges the blade with two blows of Burn. Ash Bed's shoots mend the player standing in them 2 a second
+            // (UpgradeEffect.Mends).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Firebloom: Between Two Fires or Ash Bed", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -43,6 +43,9 @@ namespace Clover.Player.Trees.Duo
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Seeded },
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Shape = HazardShape.Ring, Count = 2, PerStack = true, Reach = 1.5f, Radius = 1f, Seconds = 5f,
                                 Interval = 0.5f, Damage = 3f, Grown = true, Affliction = AfflictionKind.Burn, Stacks = 1 },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.DropPickup, Drops = Clover.World.PickupKind.LilyFire, RaiseAt = Clover.World.StandingPlace.At, Count = 1, PerStack = true, Radius = 1.2f, Seconds = 5f },
+                            new UpgradeEffect { On = UpgradeTrigger.PickedUp, Do = UpgradeAction.Heal, Amount = 8f },
+                            new UpgradeEffect { On = UpgradeTrigger.PickedUp, Do = UpgradeAction.CoatBlade, Affliction = AfflictionKind.Burn, Stacks = 1, Count = 2 },
                         },
                     },
                     new ShapeDef
@@ -53,7 +56,7 @@ namespace Clover.Player.Trees.Duo
                         {
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = AshBed, Seconds = 30f, While = AfflictionKind.Seeded, Keeps = AfflictionKind.Burn } },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionDied, Condition = AshBed, Do = UpgradeAction.Hazard, Radius = 1.5f, Seconds = 6f, Interval = 1f, Grown = true,
-                                Affliction = AfflictionKind.Seeded, Stacks = 1 },
+                                Affliction = AfflictionKind.Seeded, Stacks = 1, Mends = 2f },
                         },
                     },
                 },
@@ -85,9 +88,9 @@ namespace Clover.Player.Trees.Duo
             }, HeartPattern.RightLow));
 
             // The burning tree: a helper that strikes the enemy that bloomed every 2 s for 10 s, a Burn each time.
-            // NEEDS: standing-things (a tree that stands 10 s and throws a burning seed, Seeded and Burn, at the nearest
-            // enemy every 2 s; and only the first lily of each fight, once-per-fight); now the helper strikes the enemy that
-            // bloomed, Burn only, at most once in 30 s.
+            // Only the first lily of each fight (UpgradeEffect.OncePerFight), and each burning seed Seeds as well as Burns
+            // (UpgradeEffect.BitesLay). NEEDS: standing-things (a tree that stands 10 s and throws its seed at the nearest enemy
+            // every 2 s); now a helper strikes the enemy that bloomed.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = TheBurningTree, Name = "The Burning Tree", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { KindledGuard, DryPods }, Icon = UpgradeIcons.Tower,
@@ -95,23 +98,30 @@ namespace Clover.Player.Trees.Duo
                 Effects = new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = Reaction, Do = UpgradeAction.Helper, Count = 5, Interval = 2f, Radius = 6f, Damage = 4f, Stagger = 4f,
-                        Affliction = AfflictionKind.Burn, Stacks = 1, Cooldown = 30f },
+                        Affliction = AfflictionKind.Burn, Stacks = 1, BitesLay = AfflictionKind.Seeded, OncePerFight = true },
                 },
             }, HeartPattern.Keystone));
 
             // The duo spell, an opener on a 12 s cooldown (SpellTimings), bought with 5 Shards once both are carried. The field
             // form lays the fire on the enemy faced, burning (the branch's first element) and seeding each second, so the
             // pair blooms on what stands in it.
-            // NEEDS: two fires 4 m apart on either side of the enemy, joined by a line of sparks (form-pieces; now one patch 5 m
-            // across on it); each weapon blow heals 2 and takes twice its time off the clocks while you stand between them
-            // (while-spell-stands); a shove across the line setting its Burn to full (shove-moment).
+            // The field form laid across your facing (SpellSpec.Across): two fires 4 m apart on either side of the enemy, joined by
+            // a line of sparks that is your own ground (World.OwnGrounds.NeedFireLine). Standing on it (StatWhen.BetweenFires), each
+            // weapon blow heals 2 and takes twice its time off the clocks (PlayerStat.BlowCut); an enemy shoved across it has its
+            // Burn set to full (UpgradeTrigger.DrivenAcross).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = NeedFire, Name = "Need-Fire", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Role = SpellRole.Opener, Requires = new[] { KindledGuard, DryPods }, Icon = UpgradeIcons.Flame,
                 Description = "Two fires of green branches spring up on either side of the enemy you face and burn 6 s, joined by a line of sparks. Every enemy between them takes a Burn and a Seed each second.",
                 Form = SpellForms.Field,
-                Spell = new SpellSpec { Reach = 7f, Radius = 2.5f, Seconds = 6f, Interval = 1f, LingerDamage = 2f, Stacks = 1 },
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Seeded, Stacks = 1 } },
+                Spell = new SpellSpec { Reach = 7f, Radius = 2f, Seconds = 6f, Interval = 1f, LingerDamage = 2f, Stacks = 1, Across = true, Ground = Clover.World.OwnGrounds.NeedFireLine },
+                Stats = new[] { new StatMod(PlayerStat.BlowCut, 1f, StatWhen.BetweenFires) },
+                Effects = new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Seeded, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.AnyHit, While = StatWhen.BetweenFires, Do = UpgradeAction.Heal, Amount = 2f, Cooldown = 0.15f },
+                    new UpgradeEffect { On = UpgradeTrigger.DrivenAcross, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Burn, Stacks = 99, Cooldown = 0.2f, CooldownPerEnemy = true },
+                },
             }, HeartPattern.Spell));
         }
     }

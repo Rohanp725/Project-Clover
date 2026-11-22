@@ -40,6 +40,17 @@ namespace Clover.Player.Trees
         public const string ShardsClosing = "ice.eight.closing";
         public const string RimeFog = "ice.rime.fog";
         public const string ThroughTheIce = "ice.ski.through";
+
+        // Thin Ice: what an enemy on the lane takes as it cracks through, once a lane each (a god slowed, not held).
+        private static UpgradeEffect[] CracksThrough() => new[]
+        {
+            new UpgradeEffect { On = UpgradeTrigger.InGround, Ranks = EnemyRank.Plain | EnemyRank.Elite, Do = UpgradeAction.Hold, Seconds = 1.2f, CooldownPerEnemy = true, Cooldown = 5f },
+            new UpgradeEffect { On = UpgradeTrigger.InGround, Ranks = EnemyRank.God, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = ThroughTheIce + ".slowed", Seconds = 1.2f, Pace = 0.7f },
+                CooldownPerEnemy = true, Cooldown = 5f },
+            new UpgradeEffect { On = UpgradeTrigger.InGround, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 1, CooldownPerEnemy = true, Cooldown = 5f },
+            new UpgradeEffect { On = UpgradeTrigger.InGround, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = ThroughTheIce, Seconds = 1.2f, EndsWith = ConditionBlow.Heavy },
+                CooldownPerEnemy = true, Cooldown = 5f },
+        };
         public const string Settled = "ice.lift.slow";
 
         // Retired in Phase 4 (RetiredMarks): kept as names because code still asks for them.
@@ -90,7 +101,8 @@ namespace Clover.Player.Trees
                 "Land a heavy blow on the enemy as the shards close, and every shard counts as a shatter.",
                 learnEffects: new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = AfflictionKind.Chill, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Chill, Damage = 5f, Stagger = 2f, Radius = 0.8f } });
 
-            // The sword form carries the icicle. NEEDS: the shatter of a Frozen target for 90 (it shatters as a heavy blow does, 45).
+            // The sword form carries the icicle; on a Frozen enemy it shatters it as a heavy blow does, and the breaking is counted twice
+            // (UpgradeAction.Shatter, Amount 2: 90 where a heavy blow breaks for 45).
             SpellBranch.Add(to, E, HangingIce, "Hanging Ice", SpellRole.Breaker, BranchPattern.MiddleB, FlyingShards, SpellForms.Sword,
                 new SpellSpec { Reach = 7f, Delay = 3f, Radius = 2f, Damage = 30f, Stagger = 60f, Stacks = 3, Seconds = 2f, LingerDamage = 2f },
                 "A great icicle hangs over the enemy faced, up to seven metres away, and follows it while its shadow grows for three seconds. Then it falls: 30 damage, 60 stagger and three Chill on everything within two metres. On a Frozen enemy it shatters it for 90.",
@@ -106,10 +118,15 @@ namespace Clover.Player.Trees
                     Description = "It does not fall by itself. It hangs up to eight seconds and falls with your next heavy blow on its enemy. Weave it into the heavy.",
                     Spell = new SpellSpec { Reach = 7f, Seconds = 8f, Count = 1, Radius = 2f, Damage = 30f, Stagger = 60f, Stacks = 3 } },
                 "Opens two shapes of Hanging Ice, chosen at any rest fire: Icicles, that punish running, or Held by a Thread, that falls with your next heavy blow.",
-                // NEEDS: landing within 0.3 s of the enemy freezing (freeze-moment), and the shatter four times over. Until then
-                // a fall that freezes what it strikes brings the cooldown back.
-                new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = AfflictionKind.Chill, NeedsFull = true, Do = UpgradeAction.ResetCooldown } },
-                "Let it land in the moment its enemy freezes, and it shatters it four times over and its cooldown comes back.");
+                // Landing within 0.3 s of the enemy freezing (UpgradeEffect.FrozeWithin: frozen that recently, or broken by the fall
+                // after so short a freeze): the breaking is counted twice more, four times over with the Learn's, and the wait ends.
+                new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, FrozeWithin = 0.3f, Do = UpgradeAction.Shatter, Amount = 3f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, FrozeWithin = 0.3f, Do = UpgradeAction.ResetCooldown },
+                },
+                "Let it land in the moment its enemy freezes, and it shatters it four times over and its cooldown comes back.",
+                learnEffects: new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Shatter, Amount = 2f } });
 
             // Every reaction with Chill in it slows all it struck: the enemy it went off on and each its blows reached
             // (UpgradeTrigger.ReactionStruck, UpgradeEffect.ReactionWith).
@@ -191,10 +208,11 @@ namespace Clover.Player.Trees
                 } },
                 BranchPattern.LeftMiddle));
 
-            // NEEDS: the wall's 60 health and its touch chilling, and the burst thrown forward as a cone of 6 m. As built it
-            // chills only when it bursts, round itself.
+            // The wall stands as a standing thing with 60 health that enemy blows strike (SpellSpec.WallHealth; broken, it bursts),
+            // and what stands against it is chilled once a second (TouchStacks). NEEDS: the burst thrown forward as a cone of
+            // 6 m (form-pieces); as built it bursts round itself.
             SpellBranch.Add(to, E, WinterWall, "Winter Wall", SpellRole.Breaker, BranchPattern.LeftB, SplinterWard, SpellForms.Wall,
-                new SpellSpec { Reach = 2f, Arc = 5f, Delay = 0.2f, Seconds = 6f, Radius = 4f, Damage = 30f, Stagger = 50f, Stacks = 3 },
+                new SpellSpec { Reach = 2f, Arc = 5f, Delay = 0.2f, Seconds = 6f, Radius = 4f, Damage = 30f, Stagger = 50f, Stacks = 3, WallHealth = 60f, TouchStacks = 1 },
                 "A wall of ice five metres wide rises two metres ahead for six seconds. It stops blows, and what touches it is chilled. Your heavy blow bursts it forward as a cone: 30 damage, 50 stagger and three Chill. 35 mana.",
                 UpgradeIcons.Wall,
                 new Empower { Mana = 30f, Damage = 36f },
@@ -203,11 +221,10 @@ namespace Clover.Player.Trees
                 new ShapeDef { Name = "Shield Wall",
                     Description = "A shorter wall, three metres, that moves two metres ahead of you at walking pace for four seconds. Advance behind it.",
                     Change = new SpellChange { Arc = 3f, Seconds = 4f } },
-                // NEEDS: the wall bursting 1.5 s after an enemy first strikes it (a wall struck, standing-things). Until then it
-                // bursts by itself three seconds after it rises.
+                // It bursts by itself a second and a half after an enemy first strikes it (SpellSpec.BurstAfterStruck, StandingRules.BurstDue).
                 new ShapeDef { Name = "Cracked Wall",
                     Description = "It bursts by itself a second and a half after an enemy first strikes it. A trap that answers the enemy, not you.",
-                    Change = new SpellChange { Seconds = 3f } },
+                    Change = new SpellChange { BurstAfterStruck = 1.5f } },
                 "Opens two shapes of Winter Wall, chosen at any rest fire: Shield Wall, a wall you advance behind, or Cracked Wall, a trap that answers the enemy.",
                 // NEEDS: only a heavy blow's burst within 0.3 s of an enemy striking the wall (blow-about-to-land). Until then
                 // every burst freezes what it reaches.
@@ -236,11 +253,13 @@ namespace Clover.Player.Trees
                 // Chill three deep. The Empower's numbers reach the kit's own cast too (PlayerUpgrades.BaseEmpower, read by PlayerElement).
                 new Empower { Cooldown = 5.5f, Stacks = 3 },
                 "Hoarfrost waits 5.5 seconds, not 7, and chills three deep.",
-                // Black Ice, once a major, folded in. NEEDS: enemies on the sheet thrown half again as far, and a dodge on it
-                // sliding twice as far.
+                // Black Ice, once a major, folded in. The sheet is ground of your own (SpellSpec.Ground, World.OwnGrounds): an enemy
+                // shoved on it goes half again as far (SpellSpec.Thrown, read by Enemy), and your dodge from it slides twice as far
+                // (StatWhen.OnOwnIce). NEEDS: the slide as its own move (the clip roll_slide); it is the plain roll, farther.
                 new ShapeDef { Name = "Black Ice", Form = SpellForms.Field,
                     Description = "No crystals. A sheet of clear ice covers the fan's ground for five seconds. Enemies on it gain a Chill a second and are thrown half again as far, and a dodge on it slides twice as far.",
-                    Spell = new SpellSpec { Reach = 2.5f, Radius = 2.3f, Seconds = 5f, Interval = 1f, Damage = 0f, Stagger = 0f, LingerDamage = 1f, Stacks = 1 } },
+                    Spell = new SpellSpec { Reach = 2.5f, Radius = 2.3f, Seconds = 5f, Interval = 1f, Damage = 0f, Stagger = 0f, LingerDamage = 1f, Stacks = 1, Ground = Clover.World.OwnGrounds.Sheet, Thrown = 1.5f },
+                    Stats = new[] { new StatMod(PlayerStat.DodgeDistance, 1f, StatWhen.OnOwnIce) } },
                 new ShapeDef { Name = "Frost Line", Form = SpellForms.Spikes,
                     Description = "One branching line of frost creeps ten metres along the floor in a moment, laying two Chill on all it crosses. It reaches the archer behind the shield.",
                     Spell = new SpellSpec { Reach = 10f, Speed = 16f, Count = 1, Radius = 0.7f, Damage = 8f, Stagger = 10f, Stacks = 2 } },
@@ -267,15 +286,15 @@ namespace Clover.Player.Trees
                 UpgradeIcons.Boot,
                 new Empower { Cooldown = 6f, Reach = 12f },
                 "Ski Run waits 6 seconds, not 8, and its lane is twelve metres.",
-                // NEEDS: an enemy stepping onto the lane later cracking through (ground-states), and a god slowed by 30% instead
-                // of held. Until then each enemy the slide passes is held, three deep, and a heavy blow on it then freezes it.
+                // The lane is ground of its own for its five seconds (UpgradeEffect.InsideDo): each enemy on it, the slide's or one
+                // that steps on later, cracks through once, held 1.2 s and chilled; a god is slowed 30% instead of held. A heavy blow
+                // on one cracked through freezes it.
                 new ShapeDef { Name = "Thin Ice",
                     Description = "The lane is lake ice over black water. An enemy that steps onto it within five seconds cracks through to the knees: held for a moment and three deep in Chill. A heavy blow on it then freezes the water round it, and it is Frozen.",
                     Effects = new[]
                     {
-                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Hold, Seconds = 1.2f },
-                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 1 },
-                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = ThroughTheIce, Seconds = 1.2f, EndsWith = ConditionBlow.Heavy } },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Hazard, At = EffectAt.Self, Shape = HazardShape.Line, Reach = 9f, Count = 6, Radius = 1f,
+                            Seconds = 5f, Interval = 0.25f, Damage = 0f, Stacks = 0, Affliction = AfflictionKind.Chill, Unseen = true, InsideDo = CracksThrough() },
                         new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = ThroughTheIce, By = StruckBy.Heavy, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 5 },
                     } },
                 // NEEDS: the shards loosed through the slide, not all as it begins.

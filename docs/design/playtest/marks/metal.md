@@ -34,11 +34,11 @@ the steel you throw and plant: Flung Blade, the blades of Grave of Swords.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). Bronze only pours into enemies that have Sundered.
 
-**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 12 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes it 15 damage for each notch.) It reaches every enemy within 8 metres, 0.4 seconds after you cast it. Each notched enemy takes 10 damage, plus 12 damage and 15 stagger for each notch it had (46 damage and 45 stagger at three). Its notches are used up, and it is held for 0.4 seconds for each notch it had (1.2 seconds at three; a god or an elite for 0.4 of that).
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 12 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes it 15 damage for each notch.) It reaches every enemy within 8 metres, 0.4 seconds after you cast it. Each notched enemy takes 10 damage, plus 12 damage and 15 stagger for each notch it had (46 damage and 45 stagger at three). Its notches are used up, and it is held for 0.4 seconds for each notch it had (1.2 seconds at three). A god or an elite is held for a quarter of that: 0.1 seconds for each notch.
 
 **Works with.** Sunder, Open Line and Forged Answer (they notch on a perfect guard), Every Crack Rings, the charged blade (its charged blows notch), and Grave of Swords and Returning Edge, which notch a crowd for it to pour into.
 
-**Not built yet.** A god or an elite should be held for a quarter of the time. For now, it is held for 0.4 of it. The pot of bronze tipping over each enemy and the crust cooling on it aren't shown yet.
+**Not built yet.** The pot of bronze tipping over each enemy and the crust cooling on it aren't shown yet.
 
 **Example.** Give three soldiers three notches each with heavy blows and Grave of Swords, then pour. Each takes 46 damage and is held while you choose which to finish.
 
@@ -163,11 +163,9 @@ the steel you throw and plant: Flung Blade, the blades of Grave of Swords.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). Then it works on any blow in the next 1.2 seconds.
 
-**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower blocks two blows and makes it 16 damage.) The answer hits everything within 3 metres, all the way around, for 14 damage, 20 stagger and one notch, as a heavy blow. For now, the blocked blow doesn't count as a perfect guard for your marks: it gives no mana and doesn't set off anything that needs one. If nothing hits you, the wait is half as long: 5 seconds.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes it 16 damage, and after the first blow you stay ready: a second blow in the same 1.2 seconds is blocked and answered too.) The answer hits everything within 3 metres, all the way around, for 14 damage, 20 stagger and one notch, as a heavy blow. For now, the blocked blow doesn't count as a perfect guard for your marks: it gives no mana and doesn't set off anything that needs one. If nothing hits you, the wait is half as long: 5 seconds.
 
 **Works with.** Open Line, which it comes after on the chart, Edge Guard, which comes after it, Sunder, Poured Bronze on the ring of enemies it notched, and the charged blade (the answer is a spell, so it charges your weapon with Metal).
-
-**Not built yet.** The Empower's second blocked blow.
 
 **Example.** Three soldiers surround you. Cast it as the first one lunges. The cut blocks its blow and notches all three.
 
@@ -176,11 +174,9 @@ the steel you throw and plant: Flung Blade, the blades of Grave of Swords.
 
 **When it happens.** Whenever you cast Circle of Steel, using the shape you picked. If you have not bought this, you cast the plain circle.
 
-**The numbers.** 3 Shards. The Golden Chair: the answer is a cut all around you, 3 metres, for 14 damage, 20 stagger and a notch to everything it hits. Only the enemy whose blow you blocked is bound: it is held for 2 seconds (a god or an elite for 0.4 of that), gets one more notch, and can't raise its guard for 2 seconds. Ringing Plate: ready for 1.5 seconds. The blocked blow rings out 4 metres all around, for 8 damage, 20 stagger and a notch.
+**The numbers.** 3 Shards. The Golden Chair: the answer is a cut all around you, 3 metres, for 14 damage, 20 stagger and a notch to everything it hits. Only the enemy whose blow you blocked is bound: it is held for 2 seconds (a god or an elite for 0.4 of that), gets one more notch, and can't raise its guard for 2 seconds. Ringing Plate: ready for 1.5 seconds. Every blow you block in that time rings out, up to four. Each ring deals 8 damage, 20 stagger and a notch all around you. The first ring reaches 4 metres, and each one after it reaches 1 metre further: 5, 6, then 7.
 
 **Works with.** The Golden Chair: Open Line, Poured Bronze (two notches and a held enemy), Counter Cut. Ringing Plate: being surrounded, Every Crack Rings.
-
-**Not built yet.** Ringing Plate should ring for every blow it blocks in its 1.5 seconds, up to four, each ring wider (for now, the first blocked blow rings once).
 
 **Example.** Use The Golden Chair on a shield bearer's charge. It stands trapped in gold with its shield down while you cut.
 
@@ -200,11 +196,9 @@ the steel you throw and plant: Flung Blade, the blades of Grave of Swords.
 
 **When it happens.** Always on once you learn it. The cut comes with every perfect guard.
 
-**The numbers.** 6 Shards. The perfect timing window grows by 55%, from 0.18 seconds to about 0.28. Each perfect guard hits everything within 1.2 metres of the attacker for 12 damage, 10 stagger and one notch of Sundered. A held guard lets every blow through (and costs no stamina). You can press guard again 0.2 seconds after the last press and still get a perfect window, instead of 0.4.
+**The numbers.** 6 Shards. The perfect timing window grows by 55%, from 0.18 seconds to about 0.28. Each perfect guard hits everything within 1.2 metres of the attacker for 12 damage, 10 stagger and one notch of Sundered, and counts as a light blow landed: it gives you that blow's mana and takes that blow's time off your waits. A held guard lets every blow through (and costs no stamina). You can press guard again 0.2 seconds after the last press and still get a perfect window, instead of 0.4.
 
 **Works with.** Circle of Steel, which it comes after on the chart, Sunder (two notches from one guard), Forged Answer, Open Line, Master's Answer, every Master mark that works on a perfect guard, Hanging Swords, and Bright Steel and Halo of Blades on the Halo branch.
-
-**Not built yet.** The cut doesn't yet count as a blow landed (its mana and the time it takes off your waits).
 
 **Example.** Fight a fast duellist with just the guard button. Each of its blows you meet at the right moment is blocked, cut and notched.
 
@@ -281,11 +275,9 @@ the steel you throw and plant: Flung Blade, the blades of Grave of Swords.
 
 **When it happens.** Whenever you cast To the Blade, using the shape you picked. If you have not bought this, you cast the plain flight.
 
-**The numbers.** 3 Shards. Chain: a line of five patches, 6 metres long from where you started, each 0.6 metres across, lasting 3 seconds. Once a second, it deals 20 stagger and a notch. There and Back: press the slot again within 2 seconds to fly straight back to where you cast it, cutting everything on the line for 10 damage, 15 stagger and a notch.
+**The numbers.** 3 Shards. Chain: a line of five patches, 6 metres long from where you started, each 0.6 metres across, lasting 3 seconds. Twice a second, it deals 10 stagger and a notch to what stands on it, and each enemy that crosses it is tripped and knocked flat for 0.6 seconds (each one at most once every 1.5 seconds). There and Back: press the slot again within 2 seconds to fly straight back to where you cast it, cutting everything on the line for 10 damage, 15 stagger and a notch.
 
 **Works with.** Chain: a doorway, Poured Bronze on enemies that crossed it, Circle of Steel. There and Back: Sunder, Poured Bronze (two notches from one flight).
-
-**Not built yet.** Chain's trip should knock enemies down (for now, it is 20 stagger each time).
 
 **Example.** Put Chain across the entrance to a hallway. The soldiers that follow you through it arrive notched and off balance.
 

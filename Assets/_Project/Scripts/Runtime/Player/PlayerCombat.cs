@@ -68,15 +68,30 @@ namespace Clover.Player
         /// <summary>What the element's upgrades add: a standing share of damage (Heat), and a one-off multiplier the next blow that lands spends (Stored Charge).</summary>
         public float UpgradeDamage = 1f;
         public float NextBlowDamage = 1f;
-        // Until when the next light blow lands as a heavy one (UpgradeAction.NextHeavy); 0 for none.
+        // Until when the next light blow lands as a heavy one (UpgradeAction.NextHeavy); 0 for none. With an enemy named,
+        // only the next blow on that enemy is made heavy, and the window waits for it (Ash on the Brow).
         private float heavyNextUntil;
-        /// <summary>The next light weapon blow within <paramref name="seconds"/> lands as a heavy blow (Gone to Ash's first blow behind the attacker).</summary>
-        public void MakeNextBlowHeavy(float seconds) => heavyNextUntil = Time.time + Mathf.Max(0.05f, seconds);
+        private Component heavyNextOn;
+        /// <summary>
+        /// The next light weapon blow within <paramref name="seconds"/> lands as a heavy blow (Gone to Ash's first blow behind the
+        /// attacker); with <paramref name="on"/>, only the next blow on that enemy (Ash on the Brow's smeared attacker).
+        /// </summary>
+        public void MakeNextBlowHeavy(float seconds, Component on = null)
+        {
+            heavyNextUntil = Time.time + Mathf.Max(0.05f, seconds);
+            heavyNextOn = on;
+        }
         /// <summary>True while the next light blow would land as a heavy one.</summary>
         public bool NextBlowHeavy => MadeHeavy(false, heavyNextUntil, Time.time);
+        /// <summary>The one enemy the next blow made heavy is kept for; null when it is for anyone.</summary>
+        public Component NextHeavyOn => heavyNextOn;
 
         /// <summary>True when a light blow is made heavy: it is not heavy already, and a mark's window for it runs at <paramref name="now"/>.</summary>
         public static bool MadeHeavy(bool stepHeavy, float until, float now) => !stepHeavy && now < until;
+
+        /// <summary>As <see cref="MadeHeavy(bool, float, float)"/>, on <paramref name="target"/>: a window kept for one enemy makes only its blow heavy.</summary>
+        public static bool MadeHeavyOn(bool stepHeavy, float until, float now, object only, object target) =>
+            MadeHeavy(stepHeavy, until, now) && (only == null || ReferenceEquals(only, target));
 
         /// <summary>The stagger a light blow made heavy breaks: the weapon's heavy blow's, never less than its own.</summary>
         public static float HeavyStagger(float light, float heavy) => Mathf.Max(light, heavy);
@@ -112,6 +127,10 @@ namespace Clover.Player
         /// <summary>The chance that a blow of the weapon is critical, and what a critical blow multiplies its damage by.</summary>
         public float CritChance;
         public float CritMultiplier = 1.5f;
+
+        /// <summary>What a critical blow on <paramref name="target"/> multiplies by: the standing multiplier, and what a mark adds against what it carries (Weighed: 0.1 a Mark).</summary>
+        public float CritOn(Clover.Gameplay.IAfflictable target) =>
+            CritMultiplier + (Stats != null && target != null ? Stats.Against(PlayerStat.CritDamage, target.Afflictions) : 0f);
         /// <summary>The affliction every blow of the weapon lays once the element's root is learned, and how deep.</summary>
         public AfflictionKind WeaponAffliction;
         public int WeaponAfflictionStacks;
@@ -130,6 +149,10 @@ namespace Clover.Player
 
         /// <summary>For this many seconds the next heavy blow that lands is a critical one.</summary>
         public void PromiseHeavyCritical(float seconds) => HeavyCriticalLeft = Mathf.Max(HeavyCriticalLeft, seconds);
+
+        /// <summary>Seconds left in which the next weapon blow that lands, light or heavy, is critical (a Shining Herb picked).</summary>
+        public float CriticalLeft { get; private set; }
+        public void PromiseCritical(float seconds) => CriticalLeft = Mathf.Max(CriticalLeft, seconds);
 
         /// <summary>Stagger the next heavy blow that lands carries on top of its own, and the seconds left for it (Mountain Stance's load).</summary>
         public float HeavyStaggerLoaded { get; private set; }
@@ -156,6 +179,25 @@ namespace Clover.Player
         /// the spells' clocks are cut by each (STEEL_AND_ELEMENT.md 3.1). A finisher is told as a finisher only.
         /// </summary>
         public event System.Action<AttackStep> BlowLanded;
+
+        /// <summary>
+        /// Counts a blow struck by something other than a swing as a light weapon blow landed (Edge Guard's cut on a perfect guard):
+        /// the mana of the weapon's first step, and its cut to the spells' waits (BlowLanded). Returns the mana given.
+        /// </summary>
+        public float CountAsBlowLanded()
+        {
+            var combo = Weapon != null ? Weapon.Combo : null;
+            if (combo == null || combo.Steps.Count == 0) return 0f;
+            var step = combo.Steps[0];
+            float earned = step.ManaGain * StatMana;
+            Mana.Gain(earned);
+            BlowLanded?.Invoke(step);
+            BlowsCounted++;
+            return earned;
+        }
+
+        /// <summary>Blows counted as landed without a swing (CountAsBlowLanded): for probes.</summary>
+        public int BlowsCounted { get; private set; }
         public event System.Action Finished;
         /// <summary>A move was swung (struck or not): the charged blade's look draws its trail on it.</summary>
         public event System.Action<AttackStep> Swung;
@@ -593,6 +635,7 @@ namespace Clover.Player
             TickAspect(deltaTime);
             TurnZanshin(deltaTime);
             if (HeavyCriticalLeft > 0f) HeavyCriticalLeft -= deltaTime;
+            if (CriticalLeft > 0f) CriticalLeft -= deltaTime;
             if (heavyLoadLeft > 0f && (heavyLoadLeft -= deltaTime) <= 0f) HeavyStaggerLoaded = 0f;
             if (lightAction == null || heavyAction == null) return;
             // The element's strike follows the carrier's blow once the swing is out (or was cut short).
@@ -1083,8 +1126,15 @@ namespace Clover.Player
         /// </summary>
         public static bool PaysBack(IDamageable target) => !(target is Clover.Gameplay.IPaysNothing nothing && nothing.PaysNothing);
 
+        /// <summary>
+        /// The reaction whose own blow is landing now (its pair plus one; 0: none): read as an enemy dies of it, so a kill can
+        /// be known as that reaction's (The Feast). Set as the blow is made, cleared once it has landed.
+        /// </summary>
+        public int StrikingReaction { get; private set; }
+
         private Hit Make(in SpellBlow blow, IDamageable target, Vector3 direction, Vector3 origin)
         {
+            StrikingReaction = blow.ReactionOf;
             float damage = blow.Damage;
             // Critical by its own word, or because its cast was made critical (Daybreak's Master: loosed as a blow would land).
             bool critical = blow.Critical || (upgrades != null && upgrades.CastCritical(blow.Cast));
@@ -1097,7 +1147,7 @@ namespace Clover.Player
             if (Stats != null && carrier != null) damage *= Mathf.Max(0.1f, 1f + Stats.Against(PlayerStat.SpellDamage, carrier.Afflictions));
             // A reaction's own blow, harder on what carries what a mark asks (Every Crack Rings: the notched), and critical when a mark makes it so.
             if (blow.ReactionOf > 0 && Stats != null && carrier != null) damage *= Mathf.Max(0.1f, 1f + Stats.Against(PlayerStat.ReactionDamageOn, carrier.Afflictions));
-            if (critical) damage *= CritMultiplier;
+            if (critical) damage *= CritOn(carrier);
             if (blow.Affliction == AfflictionKind.Burn)
             {
                 // A burn is given in seconds, with or without depth.
@@ -1171,6 +1221,7 @@ namespace Clover.Player
         // A reaction's own blow tells the upgrades whom that reaction struck (the ledger's reaction-struck).
         private void ReactionStruck(in SpellBlow blow, IDamageable target)
         {
+            StrikingReaction = 0;
             if (blow.ReactionOf > 0 && upgrades != null && target is Component body) upgrades.OnReactionStruck(body, blow.ReactionOf - 1, blow.ReactionCast, blow.Damage);
         }
 
@@ -1204,6 +1255,38 @@ namespace Clover.Player
                 Landed(blow, target, other, transform.forward, wasAfflicted);
             }
             return struck.Count;
+        }
+
+        /// <summary>
+        /// Strikes everything in a cone from a point other than the player (out of an enemy's far side): <paramref name="reach"/>
+        /// long and <paramref name="arcDegrees"/> wide along <paramref name="direction"/>, leaving <paramref name="except"/>
+        /// alone (the enemy it leaves). Returns how many it hit.
+        /// </summary>
+        public int StrikeConeFrom(Vector3 from, Vector3 direction, float reach, float arcDegrees, in SpellBlow blow, IDamageable except = null)
+        {
+            if (upgrades != null) upgrades.SpellFrom = from;
+            spellStruck.Clear();
+            direction.y = 0f;
+            if (direction.sqrMagnitude < 0.0001f) return 0;
+            direction.Normalize();
+            Vector3 origin = from + Vector3.up;
+            int count = Overlap(origin, reach);
+            for (int i = 0; i < count; i++)
+            {
+                var other = overlaps[i];
+                if (other.transform.root == transform.root) continue;
+                var target = other.GetComponentInParent<IDamageable>();
+                if (target == null || target == except || spellStruck.Contains(target)) continue;
+                Vector3 offset = other.ClosestPoint(origin) - origin;
+                offset.y = 0f;
+                if (offset.magnitude < 0.05f || Vector3.Angle(direction, offset) > arcDegrees * 0.5f) continue;
+                bool wasAfflicted = target is IAfflictable afflictable && afflictable.Afflictions.Any;
+                var outcome = target.TakeHit(Make(blow, target, direction, from));
+                if (outcome == HitOutcome.Missed) continue;
+                spellStruck.Add(target);
+                Landed(blow, target, other, direction, wasAfflicted);
+            }
+            return spellStruck.Count;
         }
 
         /// <summary>
@@ -1385,7 +1468,7 @@ namespace Clover.Player
         }
 
         public int AfflictArea(Vector3 centre, float radius, AfflictionKind kind, int stacks, Component except = null, LaySource source = LaySource.Effect,
-            AfflictionKind onlyCarrying = AfflictionKind.None)
+            AfflictionKind onlyCarrying = AfflictionKind.None, HashSet<IDamageable> once = null)
         {
             spellStruck.Clear();
             int count = Overlap(centre + Vector3.up, radius + 0.5f);
@@ -1395,6 +1478,8 @@ namespace Clover.Player
                 if (other.transform.root == transform.root) continue;
                 var target = other.GetComponentInParent<IDamageable>();
                 if (target == null || spellStruck.Contains(target) || ReferenceEquals(target, except) || !(target is IAfflictable afflictable)) continue;
+                // Laid once over several patches of one ground (Low Mist's sheet).
+                if (once != null && !once.Add(target)) continue;
                 // Only those carrying the affliction asked for (Sea Ice's web: the Soaked).
                 if (!Carries(target, onlyCarrying)) continue;
                 Vector3 offset = ((Component)target).transform.position - centre;
@@ -1452,6 +1537,69 @@ namespace Clover.Player
         }
 
         /// <summary>Drags everything in a circle toward its middle, or throws it away from there, by about this many metres. Returns how many it moved.</summary>
+        private readonly HashSet<IDamageable> laneShoved = new HashSet<IDamageable>();
+        private readonly HashSet<IDamageable> starStruck = new HashSet<IDamageable>();
+
+        /// <summary>
+        /// Strikes along <paramref name="rays"/> thin rays fanned across <paramref name="arc"/> degrees about <paramref name="forward"/>,
+        /// each <paramref name="reach"/> long: each ray strikes all it crosses, so one standing where two cross is struck by both
+        /// (Seven Horses' seven rays, Sunstone's five). Returns how many strikes landed.
+        /// </summary>
+        public int StrikeRays(Vector3 from, Vector3 forward, int rays, float arc, float reach, in SpellBlow blow)
+        {
+            int hit = 0;
+            for (int i = 0; i < rays; i++)
+                hit += StrikeLane(from, Clover.Player.Forms.FormRules.RayWay(forward, i, rays, arc), reach, Clover.Player.Forms.FormRules.RayHalf, blow);
+            return hit;
+        }
+
+        /// <summary>
+        /// Strikes what stands on a star of seams, once each: <paramref name="seams"/> lanes out from <paramref name="centre"/>, each
+        /// <paramref name="length"/> long and <paramref name="half"/> either side, the first along <paramref name="first"/> (Earthlight's
+        /// cracks). Returns how many it hit.
+        /// </summary>
+        public int StrikeStar(Vector3 centre, int seams, float length, float half, Vector3 first, in SpellBlow blow, HashSet<IDamageable> once = null)
+        {
+            var taken = once ?? starStruck;
+            if (once == null) starStruck.Clear();
+            int hit = 0;
+            for (int i = 0; i < seams; i++)
+                hit += StrikeLane(centre, Clover.World.GroundRules.SeamWay(first, i, seams), length, half, blow, taken);
+            if (once == null) starStruck.Clear();
+            return hit;
+        }
+
+        /// <summary>
+        /// Shoves everything on a lane the same way, once each, <paramref name="metres"/> along it (Hot Wind's gust carrying all in
+        /// it): the lane runs <paramref name="length"/> from <paramref name="from"/> along <paramref name="way"/>, <paramref name="half"/>
+        /// either side. Returns how many it moved.
+        /// </summary>
+        public int ShoveLane(Vector3 from, Vector3 way, float length, float half, float metres)
+        {
+            way.y = 0f;
+            if (way.sqrMagnitude < 0.0001f || metres <= 0f) return 0;
+            way.Normalize();
+            laneShoved.Clear();
+            int steps = Mathf.Max(1, Mathf.CeilToInt(length / Mathf.Max(0.25f, half)));
+            for (int step = 0; step <= steps; step++)
+            {
+                int count = Overlap(from + way * (length * step / steps) + Vector3.up, half + 0.5f);
+                for (int i = 0; i < count; i++)
+                {
+                    var other = overlaps[i];
+                    if (other.transform.root == transform.root) continue;
+                    var target = other.GetComponentInParent<IDamageable>();
+                    if (target == null || laneShoved.Contains(target) || !(target is IShovable shovable)) continue;
+                    if (!Clover.World.GroundRules.OnLane(((Component)target).transform.position, from, way, length, half)) continue;
+                    laneShoved.Add(target);
+                    shovable.Push(way * (metres * StatPush));
+                }
+            }
+            int moved = laneShoved.Count;
+            laneShoved.Clear();
+            return moved;
+        }
+
         public int Displace(Vector3 centre, float radius, float metres, bool pull, AfflictionKind onlyCarrying = AfflictionKind.None)
         {
             if (!pull) metres *= StatPush;
@@ -1611,6 +1759,8 @@ namespace Clover.Player
                     if (defence != null && PaysBack(target)) defence.DealtDamage(blow.Damage);
                     if (blow.Spell && upgrades != null) upgrades.OnSpellStruck(target, wasAfflicted, blow.Look != null ? blow.Look.Name : null, blow.Cast); ReactionStruck(blow, target);
                     if (blow.Spell && target is Component spellBody) SpellBlowLanded?.Invoke(spellBody, blow.Cast);
+                    // The arc leaves it for the next (Nothing Resists runs it on from a chilled one).
+                    if (upgrades != null && target is Component arcBody) upgrades.OnArcLeft(arcBody, blow.Damage);
                 }
                 from = at.position;
                 at = NextUnstruck(from, leapRange, struck);
@@ -1651,6 +1801,7 @@ namespace Clover.Player
                     hits++;
                     if (defence != null && PaysBack(target)) defence.DealtDamage(blow.Damage);
                     if (blow.Spell && upgrades != null) upgrades.OnSpellStruck(target, wasAfflicted, blow.Look != null ? blow.Look.Name : null, blow.Cast); ReactionStruck(blow, target);
+                    if (upgrades != null && target is Component arcBody) upgrades.OnArcLeft(arcBody, blow.Damage);
                 }
                 at = next.position;
                 // It leaps on only from those carrying what is asked (Mirror to Mirror: Sundered).
@@ -1906,7 +2057,9 @@ namespace Clover.Player
         {
             // Looked for on the press only, not every frame: a staggered enemy in reach turns the heavy into the finisher.
             finisherTarget = FindEnemy(transform.forward, 360f, FinisherRange, true);
-            Combo.PressHeavy(finisherTarget != null);
+            // Pressed as a dodge ends, the roll's own heavy when the weapon has one (Tsuka-ate).
+            bool rolling = player != null && player.Dodge.IsRolling && player.Dodge.Progress >= Combo.DashCutFrom;
+            Combo.PressHeavy(finisherTarget != null, rolling);
         }
 
         // The chord taken: the light in its first moment is dropped and the technique starts in its place.
@@ -2339,9 +2492,12 @@ namespace Clover.Player
             if (fresh) struck.Clear();
             int already = struck.Count;
             // A light blow a mark made heavy (blow-made-heavy): the heavy's stagger, and every mark that answers a heavy blow.
+            // Kept for one enemy (Ash on the Brow), only the blow on that one is heavy; the rest of the swing stays light.
             bool madeHeavy = MadeHeavy(step.Heavy, heavyNextUntil, Time.time);
-            bool heavy = step.Heavy || madeHeavy;
-            float lightStagger = madeHeavy ? HeavyStagger(step.Stagger, Combo.Heavy != null ? Combo.Heavy.Stagger : 0f) : step.Stagger;
+            bool swingHeavy = step.Heavy || (madeHeavy && heavyNextOn == null);
+            float madeStagger = madeHeavy ? HeavyStagger(step.Stagger, Combo.Heavy != null ? Combo.Heavy.Stagger : 0f) : step.Stagger;
+            float swingStagger = swingHeavy && !step.Heavy ? madeStagger : step.Stagger;
+            bool madeHeavyLanded = false;
             if (fresh)
             {
                 // The carried aspect's part in the blow going out: the seventh drum's draw, the hanging cut.
@@ -2437,11 +2593,14 @@ namespace Clover.Player
                 // Something touching the player is hit whatever the angle; otherwise it must be inside the swing's arc.
                 else if (distance > 0.6f && Vector3.Angle(transform.forward, offset) > step.ArcDegrees * 0.5f) continue;
                 var afflictable = target as IAfflictable;
+                bool madeHeavyHere = MadeHeavyOn(step.Heavy, heavyNextUntil, Time.time, heavyNextOn, target);
+                bool heavy = step.Heavy || madeHeavyHere;
+                float lightStagger = madeHeavyHere ? madeStagger : step.Stagger;
                 // A blow is critical by chance, or always on an enemy that is Marked.
                 // Overdrive: while it lasts, the last blow of every chain is critical.
                 bool chainEnds = step == Combo.ChainHeavy || (Combo.Steps.Count > 0 && step == Combo.Steps[Combo.Steps.Count - 1]);
                 bool surgeCrit = chainEnds && element != null && element.SurgeActive && element.SurgeKit != null && element.SurgeKit.SurgeCritsChainEnd;
-                bool promised = (heavy && HeavyCriticalLeft > 0f) || step.Critical || surgeCrit;
+                bool promised = (heavy && HeavyCriticalLeft > 0f) || CriticalLeft > 0f || step.Critical || surgeCrit;
                 float chance = CritChance;
                 if (Stats != null) chance += Stats.Blow(PlayerStat.CritChance, heavy, false) + (afflictable != null ? Stats.Against(PlayerStat.CritChance, afflictable.Afflictions) : 0f);
                 // Counter Cut: a blow that lands on an enemy showing its own attack (winding up or striking) is critical.
@@ -2449,7 +2608,11 @@ namespace Clover.Player
                 if (countered) CounterCuts++;
                 // Turned away (Turned to the Sun, Turned About): a blow on its back is critical.
                 bool onBack = afflictable != null && afflictable.Afflictions.Conditions.Has(ConditionFlags.BackCritical) && target is Component turned && OnItsBack(turned.transform.position, turned.transform.forward, transform.position, BackDot);
-                bool critical = promised || countered || onBack || (afflictable != null && afflictable.Afflictions.MakesBlowsCritical) || (chance > 0f && Random.value < chance);
+                // Struck across a line of your spears (The Drawn Line): critical.
+                bool acrossLine = target is Component across && Clover.World.OwnGrounds.Across(Clover.World.OwnGrounds.SpearLine, transform.position, across.transform.position, Time.time);
+                // The side the blow comes from, for a condition held to a flank (Mock Suns: only blows on its flanks are made critical by its Mark).
+                float side = target is Component sided ? EnemyConditions.SideDegrees(sided.transform.forward, sided.transform.position - transform.position) : -1f;
+                bool critical = promised || countered || onBack || acrossLine || (afflictable != null && afflictable.Afflictions.MakesBlowsCriticalFrom(side)) || (chance > 0f && Random.value < chance);
                 bool counter = step == Combo.Skill && Combo.SkillIsCounter;
                 float damage = (step.Damage + (counter ? counterDamage : 0f)) * scale * step.BandDamage(distance) * DamageMultiplier * UpgradeDamage * NextBlowDamage * StatDamage;
                 float staggerShare = 1f;
@@ -2465,7 +2628,7 @@ namespace Clover.Player
                     staggerShare = Mathf.Max(0.1f, 1f + Stats.Blow(PlayerStat.StaggerDealt, heavy, critical, endsChain) + Stats.Against(PlayerStat.StaggerDealt, carried)
                         + (inAir ? Stats.InAir(PlayerStat.StaggerDealt) + (heavy ? Stats.InAirHeavy(PlayerStat.StaggerDealt) : 0f) : 0f));
                 }
-                if (critical) damage *= CritMultiplier;
+                if (critical) damage *= CritOn(afflictable);
                 // A back is a back: the knives' blows count for more on it. The finisher has its own number.
                 bool fromBehind = false;
                 if (Weapon.BackMultiplier != 1f && !Combo.IsFinishing && target is Component back)
@@ -2547,11 +2710,14 @@ namespace Clover.Player
                 float dealtStagger = (lightStagger + (counter ? counterStagger : 0f) + StaggerOnHit + aspectStagger + loaded) * NextBlowStagger * StatStagger * staggerShare * scale * step.BandStagger(distance);
                 if (fromBehind) dealtStagger *= Weapon.BackMultiplier;
                 if (boundTo != null && ReferenceEquals(target, boundTo)) dealtStagger *= BoundStagger;
+                // A hilt driven through the guard leaves it open a moment (Tsuka-ate).
+                if (step.OpensGuard > 0f && target is Enemy guarded) guarded.GuardOpenFor = Mathf.Max(guarded.GuardOpenFor, step.OpensGuard);
                 var outcome = target.TakeHit(new Hit(damage, dealtStagger, transform.forward, heavy, carries && ElementSteel.PassesGuard(moveElement.Name), transform.position,
                     burn, burnStacks, false, kind, kind != AfflictionKind.None ? stacks : 0, lasts, AfflictionPower, false, critical, second, secondStacks, secondLasts, tint: blowTint,
                     finisher: step.Heavy && Combo.IsFinishing));
                 if (outcome == HitOutcome.Missed) continue;
                 struck.Add(target);
+                madeHeavyLanded |= madeHeavyHere;
                 if (infused && infusedFirst == null && outcome != HitOutcome.Blocked && target is Component firstBody) infusedFirst = firstBody;
                 if (carries && !moveChargeSpent && outcome != HitOutcome.Blocked && target is Component chargedBody)
                 {
@@ -2628,7 +2794,7 @@ namespace Clover.Player
                         if (fed > 0f && defence != null) defence.Heal(fed, false);
                         earned += afflictable.Afflictions.ManaOnBlow;
                         // A mark of light carries a few critical blows and is spent by them.
-                        afflictable.Afflictions.BlowLanded();
+                        afflictable.Afflictions.BlowLanded(side);
                         // A blow that reaches an enemy in the air holds it up a little longer: three times, or more for one who has learned to keep it there.
                         int more = Stats != null ? Mathf.Max(0, Stats.Whole(PlayerStat.AirBlows)) : 0;
                         afflictable.Afflictions.AirBlow(AirBlowSeconds, AirBlowsMost + more, more > 0 ? 0.85f : 1f);
@@ -2639,7 +2805,11 @@ namespace Clover.Player
                 // Spells that wait on the weapon (a brand, a copy of the player, blades at the shoulder) are told; they answer on their own next step.
                 if (outcome != HitOutcome.Blocked && pays)
                 {
-                    if (promised) HeavyCriticalLeft = 0f;
+                    if (promised)
+                    {
+                        HeavyCriticalLeft = 0f;
+                        CriticalLeft = 0f;
+                    }
                     if (loaded > 0f) LoadNextHeavy(0f, 0f);
                     Clover.Player.Forms.SpellWorks.Blow(step, target as Component, damage);
                 }
@@ -2708,7 +2878,7 @@ namespace Clover.Player
                     shadowBodies[s] = null;
                     if (!(body is IDamageable shadowed) || struck.Contains(shadowed) || !PlayerReactions.Alive(body)) continue;
                     float shadowDamage = step.Damage * scale * DamageMultiplier * UpgradeDamage * NextBlowDamage * StatDamage;
-                    var outcome = shadowed.TakeHit(new Hit(shadowDamage, lightStagger * scale * StatStagger, transform.forward, heavy, true, transform.position, tint: blowTint));
+                    var outcome = shadowed.TakeHit(new Hit(shadowDamage, swingStagger * scale * StatStagger, transform.forward, swingHeavy, true, transform.position, tint: blowTint));
                     if (outcome == HitOutcome.Missed) continue;
                     struck.Add(shadowed);
                     ShadowBlows++;
@@ -2724,8 +2894,12 @@ namespace Clover.Player
             }
             if (fresh)
             {
-                // A blow made heavy is spent once it lands on someone.
-                if (MadeHeavy(step.Heavy, heavyNextUntil, Time.time) && struck.Count > already) heavyNextUntil = 0f;
+                // A blow made heavy is spent once it lands on someone (on its one enemy, when it is kept for one).
+                if (madeHeavyLanded)
+                {
+                    heavyNextUntil = 0f;
+                    heavyNextOn = null;
+                }
                 if (upgrades != null) upgrades.OnSwing(step, struck.Count);
                 Clover.Player.Forms.SpellWorks.Swing(step, transform.position, transform.forward);
                 // Before the swing is told of (SwingTrails): the slam's look is the infused landing, never beside another.

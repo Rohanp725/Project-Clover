@@ -214,5 +214,9 @@ namespace Clover.Player
         CooldownPrice,
         /// <summary>Share. The reach of the weapon's blows (Poured on the Edge: 40% longer while it lasts).</summary>
         WeaponReach,
+        /// <summary>Share. Weapon blows that land take this much more off the spells' waits (Need-Fire: twice, between its fires).</summary>
+        BlowCut,
+        /// <summary>Share. What a surge paid in health drains a second (Hunger): No Summer sets it to nothing while an enemy near is Frozen.</summary>
+        SurgeDrain,
     }
 }

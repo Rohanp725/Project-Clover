@@ -31,9 +31,15 @@ namespace Clover.World
                 if (entry.Prefab != null) StandingThings.SetPrefab(entry.Kind, entry.Prefab);
         }
 
-        private void Update()
+        private void Update() => Run(Time.time, Time.frameCount);
+
+        /// <summary>
+        /// The standing things' clock for this frame, run once whoever calls first: the library in the scene, or the player's
+        /// marks (which raise things in scenes that have no library yet). A thing that burst by itself is told to <see cref="Burst"/>.
+        /// </summary>
+        public static void Run(float now, int frame)
         {
-            StandingThings.Tick(Time.time, out int burst);
+            StandingThings.TickOnce(now, frame, out int burst);
             if (burst >= 0) Burst?.Invoke(StandingThings.Get(burst));
         }
     }

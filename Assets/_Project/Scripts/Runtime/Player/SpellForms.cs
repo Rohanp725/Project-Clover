@@ -139,6 +139,12 @@ namespace Clover.Player
         public const string TurningBlade = "turningblade";
         /// <summary>Life's Root Walk: down into the ground and up half a second later at a grown thing of yours.</summary>
         public const string Burrow = "burrow";
+        /// <summary>Fire's Uraeus: a cobra of flame on the shoulder (or set down) that spits at what begins an attack near it.</summary>
+        public const string Cobra = "cobra";
+        /// <summary>Water's River Serpent: out along a lane and back, bringing the first enemy it bites to your feet.</summary>
+        public const string Serpent = "serpent";
+        /// <summary>Overgrowth's Stone Oak: a totem that grows an age for every six blows landed near it.</summary>
+        public const string Oak = "oak";
 
         private static readonly ISpellForm[] all =
         {
@@ -205,6 +211,9 @@ namespace Clover.Player
             new RushForm(),
             new TurningBladeForm(),
             new BurrowForm(),
+            new CobraForm(),
+            new SerpentForm(),
+            new OakForm(),
         };
 
         private static readonly Dictionary<string, ISpellForm> byId = Index();

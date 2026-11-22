@@ -62,14 +62,12 @@ are both carried.
 **Example.** Turn a captain to stone once. It stays shaken and Cursed, so the next Tremor or Curse turns it again once the 6-second wait is over.
 
 ## turnedtostone.underfoot
-**What it does.** You stride to the enemy you face, leaving grey dusty footprints, and step on its shadow. It is Cursed and gets two stacks of Tremor, and stone starts climbing up it.
+**What it does.** You stride to the enemy you face, leaving grey dusty footprints, and step on its shadow. It is Cursed, gets two stacks of Tremor, and turns to stone at once, with no slow climb first.
 
 **When it happens.** Cast it from a spell slot while you carry both Earth and Dark. Press that slot's button (hold L2 and a face button, or press 1 to 4). The first time it lands, it charges your blade with Earth.
 
-**The numbers.** Mix, duo spell, movement, 5 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. It reaches up to 8 metres. It deals 6 damage, 10 stagger, two Tremor and two Curses.
+**The numbers.** Mix, duo spell, movement, 5 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. It reaches up to 8 metres. It deals 6 damage, 10 stagger, two Tremor and two Curses. The stone lasts 1.5 seconds (an elite, half as long): the enemy can't move or start an attack, takes double stagger, and takes half damage from spells. A heavy blow breaks it out early for 50 stagger, doubled by the stone to 100. A god can't be turned to stone: it is slowed 60% for 1.5 seconds instead. Every other enemy within 1.5 metres of your path on the way is slowed 30% for 2 seconds.
 
 **Works with.** Turned to Stone and its shapes, Broken Idol.
 
-**Example.** Step to the captain at the back, and leave it turning to stone.
-
-**Not built yet.** The enemy isn't turned to stone right away yet, skipping the climb. Enemies you pass aren't slowed yet. The heavy blow that breaks it out doesn't deal double stagger yet.
+**Example.** Step through the line of soldiers to the captain at the back. The soldiers you pass are slowed, and the captain turns to stone.

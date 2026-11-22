@@ -15,8 +15,6 @@ both carried.
 
 **Example.** Holding your ground: use Corpse Flowers, and fight on top of the flowers. A pack: use Fig in the Crown, and the roots move from one body to the next.
 
-**Not built yet.** The hollow tree trunk isn't left standing yet, just like with the plain Girdled.
-
 ## girdled.bitterseed
 **What it does.** Your finishers put a Seed and a Curse on every enemy within 3 metres.
 
@@ -33,36 +31,30 @@ both carried.
 
 **When it happens.** A perfect guard against a Cursed enemy, while you carry both Life and Dark, at most once every 6 seconds.
 
-**The numbers.** Mix, 3 Shards. It adds a Seed and sets off Girdled on the enemy right away, even if it would normally have to wait.
+**The numbers.** Mix, 3 Shards. It adds a Seed and sets off Girdled on the enemy right away, even if it would normally have to wait. The roots start at two coils, so two more weapon blows crush it instead of three.
 
 **Works with.** Girdled and its shapes, Bitter Seed.
 
 **Example.** Block the Cursed brute's blow perfectly, and the roots grab its legs.
-
-**Not built yet.** The roots start at one coil, not two.
 
 ## girdled.yew
 **What it does.** When an enemy with a Seed and a Curse dies, it doesn't burst into thorns. Instead, its Seed and its Curse move, whole, to the nearest enemy within 6 metres, and the fig roots start on that enemy at two coils.
 
 **When it happens.** Each time an enemy dies with both a Seed and a Curse on it, while you carry both Life and Dark.
 
-**The numbers.** Mix, keystone, 5 Shards. All its Seeds and all its Curses are put on the nearest other enemy within 6 metres, so Girdled may start there. At most once every 0.3 seconds.
+**The numbers.** Mix, keystone, 5 Shards. All its Seeds and all its Curses are put on the nearest other enemy within 6 metres, so Girdled may start there. If it does, the roots start at two coils, so two more weapon blows crush it. At most once every 0.3 seconds. The thorns don't burst: the Seed passes on whole.
 
 **Works with.** Bitter Seed, Girdled, Fig in the Crown.
 
 **Example.** Kill one enemy in the roots, and the next one is wrapped up right away.
-
-**Not built yet.** The roots start at one coil, not two. (The thorns no longer burst: the Seed passes on whole.)
 
 ## girdled.deathturnedback
 **What it does.** You drop to one knee, and roots spread out around you for 1.2 seconds. The roots take the first blow that would land. They climb up the attacker and hold it for 2 seconds, give it three Seeds and a Curse, and you heal. Each of your blows on the held enemy heals you 3.
 
 **When it happens.** Cast it from a spell slot while you carry both Life and Dark. Press that slot's button (hold L2 and a face button, or press 1 to 4). The first time it lands, it charges your blade with Life.
 
-**The numbers.** Mix, duo spell, counter, 5 Shards. It costs no mana. After you cast it, you must wait 12 seconds to cast it again. Fighting with your weapon makes the wait shorter. When a blow comes, the attacker takes 8 damage, 20 stagger, three Seeds and a Curse, so Girdled starts. It is held for 2 seconds (0.8 for an elite), and you heal 15. For those 2 seconds, each weapon blow on it heals you 3. If no blow comes, the wait is half as long: 6 seconds.
+**The numbers.** Mix, duo spell, counter, 5 Shards. It costs no mana. After you cast it, you must wait 12 seconds to cast it again. Fighting with your weapon makes the wait shorter. When a blow comes, the attacker takes 8 damage, 20 stagger, three Seeds and a Curse, so Girdled starts. It is held for 2 seconds (0.8 for an elite), and you heal as much as the blow would have hurt you, up to 30. For those 2 seconds, each weapon blow on it heals you 3. If no blow comes, the wait is half as long: 6 seconds.
 
 **Works with.** Girdled and its shapes, Held Down, What the Yew Keeps.
 
 **Example.** Kneel as the brute swings, then cut it while it is caught in the roots.
-
-**Not built yet.** You heal 15, instead of the damage the blow would have done (up to 30).

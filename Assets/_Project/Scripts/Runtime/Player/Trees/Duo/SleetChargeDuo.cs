@@ -74,15 +74,14 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.Foot));
 
-            // NEEDS: a shatter's own shards as the strikers (each shard that strikes lays a Static); now a ring of Static
-            // round the shattered enemy, 3 m.
+            // The shatter's own shards are the strikers: six fly out 3 m, and each that strikes lays a Static (UpgradeAction.Pieces).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = ChargedHail, Name = "Charged Hail", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Burst,
                 Description = "Shattering an enemy that carried Static throws its charge into the shards: everything the shards strike within 3 m takes a Static.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.Shatter, Needs = AfflictionKind.Static, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Static, Stacks = 1, Radius = 3f, Cooldown = 0.2f },
+                    new UpgradeEffect { On = UpgradeTrigger.Shatter, Needs = AfflictionKind.Static, Do = UpgradeAction.Pieces, Thrown = PieceAim.Ring, Count = 6, Reach = 3f, Speed = 12f, Radius = 0.5f, Damage = 0f, Affliction = AfflictionKind.Static, Stacks = 1, Cooldown = 0.2f },
                 },
             }, HeartPattern.LeftLow));
 
@@ -99,30 +98,33 @@ namespace Clover.Player.Trees.Duo
             }, HeartPattern.RightLow));
 
             // A discharge on a chilled enemy leaves it as an arc at the discharge's full strength (UpgradeEffect.Amount 1 of the
-            // discharge's damage), running on through every chilled enemy within 5 m of the last, a Static on each. NEEDS: every
-            // other arc leaving a chilled enemy as the moment, not only a discharge (arc-leaves).
+            // discharge's damage), running on through every chilled enemy within 5 m of the last, a Static on each; and so does
+            // every other arc as it leaves a chilled enemy (UpgradeTrigger.ArcLeft, its damage as the power), its own arcs not
+            // answered again.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = NothingResists, Name = "Nothing Resists", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { ChargedHail, ColdSnap }, Icon = UpgradeIcons.Chain,
-                Description = "Cold carries lightning without loss: Static discharged from a chilled enemy runs on at full strength to every chilled enemy within 5 m of the last, 7 and a Static each.",
+                Description = "Cold carries lightning without loss: Static discharged from a chilled enemy, or any arc leaving one, runs on at full strength to every chilled enemy within 5 m of the last, 7 and a Static each.",
                 Effects = new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.SetOff, Spent = AfflictionKind.Static, Needs = AfflictionKind.Chill, Do = UpgradeAction.Arc, FromTarget = true, LeapsTo = AfflictionKind.Chill,
+                        LeapsOnFrom = AfflictionKind.Chill, Count = 24, Reach = 5f, Amount = 1f, Damage = 7f, Stagger = 5f, Affliction = AfflictionKind.Static, Stacks = 1, Cooldown = 0.5f },
+                    new UpgradeEffect { On = UpgradeTrigger.ArcLeft, Needs = AfflictionKind.Chill, Do = UpgradeAction.Arc, FromTarget = true, LeapsTo = AfflictionKind.Chill,
                         LeapsOnFrom = AfflictionKind.Chill, Count = 24, Reach = 5f, Amount = 1f, Damage = 7f, Stagger = 5f, Affliction = AfflictionKind.Static, Stacks = 1, Cooldown = 0.5f },
                 },
             }, HeartPattern.Keystone));
 
             // The duo spell (pairs_d1_d2.md), bought with Shards once both are carried (no god gives it): an opener on a 14 s cooldown (SpellTimings). The Discs form turns the
             // shards; each pass lays the branch's first element's Chill, and every other pass on each enemy a Static.
-            // NEEDS: a weapon blow that flings an orbiting piece (each landed blow flings the nearest shard into the enemy struck,
-            // 8, a Chill and a Static; a heavy blow flings all that are left); hard glassy splinters with threads of lightning
-            // between them, never a glowing ring.
+            // Each weapon blow that lands flings the nearest shard into the enemy struck (SpellSpec.FlingDamage: 8, a Chill and a
+            // Static), a heavy blow all that are left; with none left the storm is spent. NEEDS: hard glassy splinters with threads
+            // of lightning between them, never a glowing ring (looks).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = GlassStorm, Name = "Glass Storm", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Role = SpellRole.Opener, Requires = new[] { ChargedHail, ColdSnap }, Icon = UpgradeIcons.Orb,
                 Description = "Six shards of clear ice turn round you at 2 m for 8 s, threads of lightning jumping between them. Each shard that passes through an enemy cuts it for 4 and lays a Chill, and every other pass a Static.",
                 Form = SpellForms.Discs,
-                Spell = new SpellSpec { Count = 6, Radius = 2f, Seconds = 8f, Interval = 0.5f, Damage = 4f, Stagger = 4f, Stacks = 1 },
+                Spell = new SpellSpec { Count = 6, Radius = 2f, Seconds = 8f, Interval = 0.5f, Damage = 4f, Stagger = 4f, Stacks = 1, FlingDamage = 8f },
                 Effects = new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Static, Stacks = 1, EveryOnEnemy = 2 },

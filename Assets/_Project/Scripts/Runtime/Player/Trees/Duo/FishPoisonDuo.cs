@@ -25,8 +25,8 @@ namespace Clover.Player.Trees.Duo
         {
             const string A = Elements.Poison, B = Elements.Water;
 
-            // NEEDS: ground-states (any enemy in the slick, or along The Ebb Takes It's stream, that comes to the doses floating
-            // up too; now only the reacting enemy is tested as it reacts).
+            // Any other enemy in the slick, or along The Ebb Takes It's stream, that comes to the doses floats up too, once a slick
+            // (UpgradeEffect.InsideDo, Reactions.FloatInside).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Fish Poison: Rock Pool or The Ebb Takes It", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -38,27 +38,28 @@ namespace Clover.Player.Trees.Duo
                         Name = "Rock Pool",
                         Description = "The fouled slick is only 1.5 m across, and it stuns at two doses: dosed two deep, it floats up stunned, held 1.5 s, and your next weapon blow on it is critical and spends two doses for 6 each. One enemy, often.",
                         Effects = Float(RockPool, 2, new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Radius = 0.75f, Seconds = 5f, Interval = 0.5f,
-                            Affliction = AfflictionKind.Soaked, Stacks = 1 }),
+                            Affliction = AfflictionKind.Soaked, Stacks = 1, InsideSpares = true, InsideDo = Reactions.FloatInside(RockPool, 2, 5f) }),
                     },
                     new ShapeDef
                     {
                         Name = "The Ebb Takes It",
                         Description = "The slick runs 6 m away from you as a stream 1.5 m wide over 1 s, soaking all along it, and stuns by the same rule along its length: what carries four doses floats up for your blade.",
                         Effects = Float(Ebb, 4, new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Shape = HazardShape.Downwind, Count = 4, Reach = 3.5f, Amount = 1.5f,
-                            Radius = 0.75f, Seconds = 5f, Interval = 0.5f, Affliction = AfflictionKind.Soaked, Stacks = 1 }),
+                            Radius = 0.75f, Seconds = 5f, Interval = 0.5f, Affliction = AfflictionKind.Soaked, Stacks = 1, InsideSpares = true, InsideDo = Reactions.FloatInside(Ebb, 4, 5f) }),
                     },
                 },
             }, HeartPattern.Foot));
 
-            // NEEDS: Riptide's wave carrying a slick it crosses (ground-states); now any spell of yours striking an enemy both
-            // Soaked and poisoned doses it two more, once in half a second.
+            // Riptide's wave carries the fouled slicks lying on its lane 7 m on with it (UpgradeAction.CarryGround, Hazards.Drift),
+            // and what the wave strikes Soaked and poisoned takes two doses, once in half a second (CastOf Riptide).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = TheTideBringsIt, Name = "The Tide Brings It", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Wave,
                 Description = "Riptide's wave, crossing a fouled slick, carries it: everything the wave carries takes two doses.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, Needs = AfflictionKind.Soaked, Needs2 = AfflictionKind.Poison, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Poison, Stacks = 2, Cooldown = 0.5f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, CastOf = WaterTree.Riptide, At = EffectAt.Self, Do = UpgradeAction.CarryGround, ThroughGround = Reactions.FouledSlick, Reach = 7f, Radius = 1.5f, Speed = 8f, Seconds = 0.8f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, CastOf = WaterTree.Riptide, Needs = AfflictionKind.Soaked, Needs2 = AfflictionKind.Poison, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Poison, Stacks = 2, Cooldown = 0.5f },
                 },
             }, HeartPattern.LeftLow));
 

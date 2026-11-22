@@ -55,10 +55,10 @@ are both carried.
 
 **When it happens.** Cast it from a spell slot while you carry both Poison and Ice. Press that slot's button (hold L2 and a face button, or press 1 to 4). The first time it lands, it charges your blade with Poison.
 
-**The numbers.** Mix, duo spell, opener, 5 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. It bites three times, 0.6 seconds apart, over 4.5 metres. Each bite deals 3 damage, a dose and a Chill, so Venom Rime starts on everything in it.
+**The numbers.** Mix, duo spell, opener, 5 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. The frost grows out in three rings, 0.6 seconds apart: first 1.5 metres round the drop, then 3, then 4.5. Each ring bites everything it reaches for 3 damage, a dose and a Chill, so what stands near the middle is bitten three times and Venom Rime starts on it.
 
 **Works with.** Venom Rime and its shapes, Bitter Frost, Six Levels Down.
 
 **Example.** Drop it in the middle of a pack, and the frost takes them all.
 
-**Not built yet.** The frost doesn't grow outward in rings yet (1.5, 3 and 4.5 metres), and it doesn't stay for 4 seconds afterward. A heavy blow on it doesn't yet shatter every ring at once (for 14 damage, a Chill and two doses to each enemy standing on it).
+**Not built yet.** The frost doesn't stay for 4 seconds afterward yet. A heavy blow on it doesn't yet shatter every ring at once (for 14 damage, a Chill and two doses to each enemy standing on it).

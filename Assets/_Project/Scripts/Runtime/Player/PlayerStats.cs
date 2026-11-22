@@ -14,8 +14,8 @@ namespace Clover.Player
     /// </summary>
     public class PlayerStats
     {
-        public const int Count = (int)PlayerStat.WeaponReach + 1;
-        public const int WhenCount = (int)StatWhen.StoodStill + 1;
+        public const int Count = (int)PlayerStat.SurgeDrain + 1;
+        public const int WhenCount = (int)StatWhen.FrozenNear + 1;
         /// <summary>How many timed boons can run at once; a new one past that takes the place of the one nearest its end.</summary>
         public const int BoonCapacity = 16;
         /// <summary>How many learned changes can be tied to an affliction on the target; more are dropped.</summary>
@@ -130,7 +130,8 @@ namespace Clover.Player
             if (againstCount == 0 || target == null) return 0f;
             float sum = 0f;
             for (int i = 0; i < againstCount; i++)
-                if (against[i].Stat == stat && target.Has(against[i].Against)) sum += against[i].Amount;
+                if (against[i].Stat == stat && target.Has(against[i].Against))
+                    sum += against[i].PerDepth ? against[i].Amount * target.Stacks(against[i].Against) : against[i].Amount;
             return sum;
         }
 

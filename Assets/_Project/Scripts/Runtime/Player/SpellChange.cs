@@ -36,14 +36,24 @@ namespace Clover.Player
         public int Rings;
         /// <summary>The form carries what it strikes before it (<see cref="SpellSpec.Carries"/>).</summary>
         public bool Carries;
+        /// <summary>The blows a parry stance turns in its time (<see cref="SpellSpec.Turns"/>: Circle of Steel's Empower, two).</summary>
+        public int Turns;
         /// <summary>How far the drill reaches to a blade of yours (<see cref="SpellSpec.BladeReach"/>: To the Blade's Empower).</summary>
         public float BladeReach;
+        /// <summary>The wall bursts this long after an enemy first strikes it (<see cref="SpellSpec.BurstAfterStruck"/>: Cracked Wall).</summary>
+        public float BurstAfterStruck;
+        /// <summary>The field draws what stands in it to its middle this fast, metres a second (<see cref="SpellSpec.Pull"/>: Maelstrom).</summary>
+        public float Pull;
+        /// <summary>The field draws nothing in (Rip Current: the foam carries them away instead).</summary>
+        public bool NoPull;
+        /// <summary>The drill rushes straight back, away from the way you face (<see cref="SpellSpec.Backward"/>: Shed Tail).</summary>
+        public bool Backward;
 
         /// <summary>True when it changes nothing.</summary>
         public bool IsEmpty =>
             Cooldown == 0f && Mana == 0f && Damage == 0f && Stagger == 0f && Reach == 0f && Radius == 0f && Arc == 0f && Seconds == 0f
-            && Interval == 0f && Count == 0 && Stacks == 0 && Delay == 0f && Speed == 0f && LingerDamage == 0f && AfflictionSeconds == 0f && ChargeBlows == 0 && Lasts == 0f && Walk == 0f && !Carries && BankStagger == 0f && Rings == 0
-            && BladeReach == 0f;
+            && Interval == 0f && Count == 0 && Stacks == 0 && Delay == 0f && Speed == 0f && LingerDamage == 0f && AfflictionSeconds == 0f && ChargeBlows == 0 && Lasts == 0f && Walk == 0f && !Carries && BankStagger == 0f && Rings == 0 && Turns == 0
+            && BladeReach == 0f && BurstAfterStruck == 0f && Pull == 0f && !NoPull && !Backward;
 
         /// <summary>
         /// Writes what it adds to <paramref name="learn"/>'s numbers onto <paramref name="spec"/>'s (an Empower over a shape that
@@ -120,7 +130,13 @@ namespace Clover.Player
             if (Carries) spec.Carries = true;
             if (BankStagger > 0f) spec.BankStagger = BankStagger;
             if (Rings > 0) spec.Rings = Rings;
+            // Never fewer than a shape turns already (Ringing Plate's four stand under the Empower's two).
+            if (Turns > spec.Turns) spec.Turns = Turns;
             if (BladeReach > 0f) spec.BladeReach = BladeReach;
+            if (BurstAfterStruck > 0f) spec.BurstAfterStruck = BurstAfterStruck;
+            if (Pull > 0f) spec.Pull = Pull;
+            if (NoPull) spec.Pull = 0f;
+            if (Backward) spec.Backward = true;
         }
 
         /// <summary>Copies every number of one spec into another (no allocation): how a spell's own numbers are taken before changes are laid over them.</summary>
@@ -153,6 +169,7 @@ namespace Clover.Player
             into.OnlyCarrying = from.OnlyCarrying;
             into.OnlyCarrying2 = from.OnlyCarrying2;
             into.Seal = from.Seal;
+            into.Swells = from.Swells;
             into.PerDose = from.PerDose;
             into.PassReach = from.PassReach;
             into.StepReach = from.StepReach;
@@ -161,6 +178,10 @@ namespace Clover.Player
             into.HealthShare = from.HealthShare;
             into.Lasts = from.Lasts;
             into.Between = from.Between;
+            into.InLine = from.InLine;
+            into.GrowsOut = from.GrowsOut;
+            into.Rays = from.Rays;
+            into.Backward = from.Backward;
             into.Glow = from.Glow;
             into.Walk = from.Walk;
             into.Quiet = from.Quiet;
@@ -184,9 +205,21 @@ namespace Clover.Player
             into.HomeStagger = from.HomeStagger;
             into.AnswersHeavy = from.AnswersHeavy;
             into.SwapsGrown = from.SwapsGrown;
+            into.WallHealth = from.WallHealth;
+            into.BurstAfterStruck = from.BurstAfterStruck;
+            into.TouchStacks = from.TouchStacks;
+            into.Planted = from.Planted;
+            into.Pull = from.Pull;
+            into.Ground = from.Ground;
+            into.Thrown = from.Thrown;
+            into.SweepTurn = from.SweepTurn;
+            into.Across = from.Across;
+            into.FlingDamage = from.FlingDamage;
             into.Bank = from.Bank;
             into.BankDamage = from.BankDamage;
             into.BankStagger = from.BankStagger;
+            into.Turns = from.Turns;
+            into.TurnGrows = from.TurnGrows;
         }
     }
 

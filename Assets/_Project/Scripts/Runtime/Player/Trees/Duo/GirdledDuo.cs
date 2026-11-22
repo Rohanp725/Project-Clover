@@ -29,7 +29,7 @@ namespace Clover.Player.Trees.Duo
             const string A = Elements.Life, B = Elements.Dark;
 
             // Corpse Flowers' 3 grey health made real for each weapon blow landed within 3 m of one of its flowers, for their 8 s
-            // (UpgradeAction.Regain armed as the flowers stand, with the flowers' Kin). NEEDS: as the plain reaction, the hollow trunk (standing-things).
+            // (UpgradeAction.Regain armed as the flowers stand, with the flowers' Kin). As the plain reaction, the hollow trunk where one dies in the roots.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Girdled: Corpse Flowers or Fig in the Crown", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -73,8 +73,8 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.LeftLow));
 
-            // NEEDS: a reaction started at a count of its own (reaction-start-count): the fig wound at two coils; now a Seed laid
-            // and Girdled forced through its rest, at one coil.
+            // A Seed laid and Girdled forced through its rest, its coils begun one blow along (UpgradeEffect.CountedBlows): the fig
+            // wound at two coils, so two more blows crush it.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = HeldDown, Name = "Held Down", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Shield,
@@ -82,20 +82,22 @@ namespace Clover.Player.Trees.Duo
                 Effects = new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Needs = AfflictionKind.Cursed, Cooldown = 6f, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Seeded, Stacks = 1 },
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Needs = AfflictionKind.Cursed, Cooldown = 6f, Do = UpgradeAction.ForceReaction, Reaction = Reaction },
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Needs = AfflictionKind.Cursed, Cooldown = 6f, Do = UpgradeAction.ForceReaction, Reaction = Reaction, CountedBlows = 1 },
                 },
             }, HeartPattern.RightLow));
 
             // Its seed and curse pass whole to the nearest enemy within 6 m, and the thorns are withheld
-            // (PlayerUpgrades.YewWithholds). The fig may start there at one coil.
+            // (PlayerUpgrades.YewWithholds). The fig that starts there starts at two coils (UpgradeEffect.CountedBlows).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = WhatTheYewKeeps, Name = "What the Yew Keeps", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { BitterSeed, HeldDown }, Icon = UpgradeIcons.Tower,
                 Description = "A Seeded, Cursed enemy that dies does not burst into thorns: its seed and its curse pass whole to the nearest enemy within 6 m, and the fig starts on it at two coils.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Seeded, Needs2 = AfflictionKind.Cursed, Cooldown = 0.3f, Do = UpgradeAction.Pass, Affliction = AfflictionKind.Seeded, CarriesDepth = true, Reach = 6f },
-                    new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Cursed, Needs2 = AfflictionKind.Seeded, Cooldown = 0.3f, Do = UpgradeAction.Pass, Affliction = AfflictionKind.Cursed, CarriesDepth = true, Reach = 6f },
+                    new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Seeded, Needs2 = AfflictionKind.Cursed, Cooldown = 0.3f, Do = UpgradeAction.Pass, Affliction = AfflictionKind.Seeded, CarriesDepth = true, Reach = 6f,
+                        Reaction = Reaction, CountedBlows = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Cursed, Needs2 = AfflictionKind.Seeded, Cooldown = 0.3f, Do = UpgradeAction.Pass, Affliction = AfflictionKind.Cursed, CarriesDepth = true, Reach = 6f,
+                        Reaction = Reaction, CountedBlows = 1 },
                 },
             }, HeartPattern.Keystone));
 
@@ -104,7 +106,7 @@ namespace Clover.Player.Trees.Duo
             // answers); the answer Curses the attacker and holds it 2 s (an elite 0.8 s), and you mend 15. Each of your blows on
             // the held enemy mends you 3.
             // Half the cooldown back when nothing came (SpellSpec.MissedWait).
-            // NEEDS: the mending as what the blow would have dealt, 30 at most (damage-tally).
+            // The mending is what the turned blow would have dealt you, 30 at most (UpgradeEffect.ByTurnedWound).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = DeathTurnedBack, Name = "Death Turned Back", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Role = SpellRole.Counter, Requires = new[] { BitterSeed, HeldDown }, Icon = UpgradeIcons.Heart,
@@ -115,7 +117,7 @@ namespace Clover.Player.Trees.Duo
                 {
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Cursed, Stacks = 1 },
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Hold, Seconds = 2f },
-                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Cooldown = 1f, Do = UpgradeAction.Heal, Amount = 15f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Cooldown = 1f, Do = UpgradeAction.Heal, Amount = 30f, ByTurnedWound = true },
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Held, Seconds = 2f } },
                     new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Held, By = StruckBy.Weapon, Do = UpgradeAction.Heal, Amount = 3f },
                 },
@@ -144,6 +146,8 @@ namespace Clover.Player.Trees.Duo
                 new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = coils, By = StruckBy.Weapon, AtCount = 3, Do = UpgradeAction.Burst, Radius = 0.5f, Damage = 20f, Stagger = 40f,
                     Affliction = AfflictionKind.Cursed },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = coils, By = StruckBy.Weapon, AtCount = 3, Do = UpgradeAction.Heal, Amount = 4f },
+                new UpgradeEffect { On = UpgradeTrigger.ConditionDied, Condition = coils, Do = UpgradeAction.Raise, Raises = Clover.World.StandingKind.HollowTrunk, RaiseAt = Clover.World.StandingPlace.At, Seconds = 8f, Amount = 40f },
+                new UpgradeEffect { On = UpgradeTrigger.ConditionDied, Condition = coils, Do = UpgradeAction.Hazard, Radius = 1.2f, Seconds = 8f, Interval = 1f, Damage = 0f, Affliction = AfflictionKind.Seeded, Stacks = 1, BitesLay = AfflictionKind.Cursed },
             };
             effects.AddRange(more);
             return effects.ToArray();

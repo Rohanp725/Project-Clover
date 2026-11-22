@@ -95,6 +95,8 @@ namespace Clover.Player
         public int PlantsArrows;
         /// <summary>Seconds the nearest enemy this blow lands on is bound to the bearer by the chain; zero binds nothing.</summary>
         public float Binds;
+        /// <summary>Above zero: the blow goes through a raised guard or shield, and leaves it open this many seconds (Tsuka-ate's hilt: 1 s).</summary>
+        public float OpensGuard;
         /// <summary>How the chain goes out with this step, for the line that draws it.</summary>
         public ChainThrow Chain;
         /// <summary>

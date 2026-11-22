@@ -36,11 +36,11 @@ namespace Clover.Player.Trees.Duo
             const string A = Elements.Water, B = Elements.Dark;
 
             // The Pull of Night draws only the Soaked (UpgradeEffect.OnlyCarrying).
-            // NEEDS: pull-to-point (Drawn Under's pool drawing the others in at 1.5 m a second; now a pull of 2 m at once).
+            // Drawn Under's pool of black water draws the others in at 1.5 m a second for 3 s (UpgradeEffect.Pull on its ground).
             var under = new List<UpgradeEffect>(Swell(DrawnUnder, true))
             {
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hold, Seconds = 1.5f },
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Pull, Radius = 3f, Amount = 2f },
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Radius = 3f, Seconds = 3f, Interval = 0.25f, Damage = 0f, Pull = 1.5f, Affliction = AfflictionKind.Soaked, Stacks = 0 },
             };
             var night = new List<UpgradeEffect>(Swell(PullOfNight, false))
             {

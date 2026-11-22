@@ -449,7 +449,7 @@ Title: Flashover (Fire and Lightning)
 Group: Reactions
 **What it is.** Static meets Burn. Flame carries electricity: the fire on the enemy becomes electrified, and its Static goes off through it right away.
 
-**The numbers.** The Static is used up, dealing 7 damage per stack to everyone within 3 metres, and 4 stagger per stack (20 when full). The enemy flinches for 0.4 seconds, which breaks a wind-up (but not a steadfast enemy's). The Burn isn't used up and keeps burning. Then it waits 4 seconds.
+**The numbers.** The Static is used up, dealing 7 damage per stack to everyone within 3 metres, and 4 stagger per stack (20 when full). The enemy flinches for 0.4 seconds, which breaks a wind-up (but not a steadfast enemy's). The Burn isn't used up and keeps burning. For 4 seconds the flame is live: every burst of Static or arc of lightning within 6 metres of it bends into the flame and bursts again there, for 5 damage per Burn stack within 2.5 metres (at most once every 0.8 seconds). Then it waits 4 seconds.
 
 **What sets it off.** Burn landing on a charged enemy, or Static landing on a burning one.
 
@@ -457,7 +457,7 @@ Group: Reactions
 
 **Its shapes.** If you have Plasma's Shape mark (Flashover: Corona or Fulgurite, 3 Shards, in the middle of the chart) and carry both Fire and Lightning, Flashover uses the shape you picked at a rest fire instead. Corona: nothing is used up. Violet flame crawls over the enemy for 4 seconds, and every 0.7 seconds an arc jumps to the nearest enemy within 5 metres for 4 damage, a Burn and a Static. Fulgurite: a scorched patch 2.5 metres across appears under the enemy for 4 seconds, dealing 4 damage, a Burn and a Static every second.
 
-**How it looks.** Its name over the enemy, and a burst of lightning where it stands. Not built yet: the electrified flame pulling in other bursts of Static nearby.
+**How it looks.** Its name over the enemy, and a burst of lightning where it stands. Not built yet: the arcs drawn bending across the floor into the flame.
 
 ## reaction-thunder-gust
 Title: Thunder Gust (Lightning and Wind)
@@ -539,7 +539,7 @@ Title: Anvil Stone (Earth and Metal)
 Group: Reactions
 **What it is.** Tremor meets Sundered. An anvil stone heaves up behind the enemy, and your heavy blow smashes the enemy into it.
 
-**The numbers.** For 5 seconds, your next heavy blow on the enemy breaks its armour all the way (three notches) and sends out a ring of sparks, dealing 10 damage, 15 stagger and a notch to everything within 3 metres. Then it waits 4 seconds.
+**The numbers.** An anvil stone 1.2 metres wide rises 1.1 metres behind the enemy, its iron face toward you, and stands for 5 seconds. It blocks bodies and blows, enemies walk around it, and their blows can break it (40 health). For those 5 seconds, your next heavy blow on the enemy breaks its armour all the way (three notches) and sends out a ring of sparks, dealing 10 damage, 15 stagger and a notch to everything within 3 metres. The stone counts as stone at its back for Hammer and Anvil. Then it waits 4 seconds.
 
 **What sets it off.** Tremor landing on a notched enemy, or a notch landing on a shaken one.
 
@@ -674,13 +674,13 @@ Title: The Ground Gives (Water and Earth)
 Group: Reactions
 **What it is.** Tremor meets Soaked. Shaking wet ground turns to sand, and the enemy sinks to its knees.
 
-**The numbers.** For 4 seconds, it moves and acts at half speed (an elite at three-quarters speed; a god doesn't sink). A heavy blow while it is sunk holds it in place for 0.5 seconds. Then it waits 4 seconds.
+**The numbers.** For 4 seconds, it moves and acts at half speed (an elite at three-quarters speed; a god doesn't sink). A heavy blow while it is sunk holds it in place for 0.5 seconds. The sand stays on the floor 2 metres across for those 4 seconds, and any other enemy that wades into it moves 30% slower while it stands there. Then it waits 4 seconds.
 
 **What sets it off.** Tremor landing on a Soaked enemy, or Water landing on a shaken one.
 
-**Its shapes.** If you have the Shape mark of Water and Earth's duo branch (The Ground Gives: Quicksand or Sand Boil, 3 Shards, in the middle of the chart) and carry both, The Ground Gives uses the shape you picked at a rest fire instead. Quicksand: the enemy sinks for 4 seconds, and once a second everything within 1.5 metres is pulled 1 metre toward it. Sand Boil: the enemy sinks for 1.2 seconds, then is lifted for 1 second, and everything within 3 metres takes 12 damage, a Soaked and a Tremor.
+**Its shapes.** If you have the Shape mark of Water and Earth's duo branch (The Ground Gives: Quicksand or Sand Boil, 3 Shards, in the middle of the chart) and carry both, The Ground Gives uses the shape you picked at a rest fire instead. Quicksand: the enemy sinks for 4 seconds, and a pool of sand 3 metres across pulls everything standing in it toward its middle, 1 metre a second. Sand Boil: the enemy sinks for 1.2 seconds, then is lifted for 1 second, and everything within 3 metres takes 12 damage, a Soaked and a Tremor.
 
-**How to use it.** Sink it, then come in with heavy blows. Each one pins it for a moment. While it is sunk, it can't leap, lunge or step back, so it can't get away from you. Not built yet: other enemies wading into the sand should be slowed too.
+**How to use it.** Sink it, then come in with heavy blows. Each one pins it for a moment. While it is sunk, it can't leap, lunge or step back, so it can't get away from you. Fight the rest at the edge of the sand: they slow down as they wade in.
 
 **How it looks.** Its name over the enemy, and for a moment the floor sinks into a pit around it, wet at the edge. The enemy sinks into the floor up to its knees and rises back up when it's free. Not built yet: the ring of sand staying around its feet.
 
@@ -689,7 +689,7 @@ Title: Iron Thorns (Life and Metal)
 Group: Reactions
 **What it is.** Seeded meets Sundered. Iron thorns grow out through the broken armour and fly off with each blow.
 
-**The numbers.** For 6 seconds, each of your weapon blows on the enemy snaps a thorn off at the nearest other enemy within 6 metres, for 6 damage, a Seeded and a notch. There are three thorns. Then it waits 4 seconds.
+**The numbers.** For 6 seconds, each of your weapon blows on the enemy snaps a thorn off at the nearest other enemy within 6 metres, for 6 damage, a Seeded and a notch. It grows one thorn for each notch it had, up to three. Then it waits 4 seconds.
 
 **What sets it off.** A seed landing on a notched enemy, or a notch landing on a Seeded one.
 
@@ -697,22 +697,22 @@ Group: Reactions
 
 **How to use it.** Fight the enemy with the thorns. The others around it take the thorns.
 
-**How it looks.** Its name over the enemy, and a hit where each thorn lands. Not built yet: one thorn for each notch the enemy had.
+**How it looks.** Its name over the enemy, and a hit where each thorn lands.
 
 ## reaction-earthlight
 Title: Earthlight (Earth and Light)
 Group: Reactions
 **What it is.** Tremor meets Marked. Light breaks up through cracks in the floor under the enemy.
 
-**The numbers.** Its Mark is refreshed (three more critical hits). Half a second later, everyone within 3 metres takes 14 damage, 25 stagger and a Mark. Then it waits 4 seconds.
+**The numbers.** Its Mark is refreshed (three more critical hits). Half a second later, the floor cracks in a star of six seams, each 3 metres long and about a metre wide. Everyone standing on a seam takes 14 damage, 25 stagger and a Mark; enemies between the seams are missed. Then it waits 4 seconds.
 
 **What sets it off.** Tremor landing on a Marked enemy, or a Mark landing on a shaken one.
 
-**Its shapes.** If you have Lit Stone, the Shape mark of Earth and Light's duo branch (Earthlight: Down the Passage or Lit Seam, 3 Shards, in the middle of the chart), and carry both, Earthlight uses the shape you picked at a rest fire instead. Both refresh its Mark. Down the Passage: a line 8 metres long past the enemy deals 12 damage and a Mark to everything on it. Lit Seam: the light breaks out like the plain one, and for 5 seconds each heavy blow on the enemy flashes for 10 damage and 15 stagger on everything within 3 metres.
+**Its shapes.** If you have Lit Stone, the Shape mark of Earth and Light's duo branch (Earthlight: Down the Passage or Lit Seam, 3 Shards, in the middle of the chart), and carry both, Earthlight uses the shape you picked at a rest fire instead. Both refresh its Mark. Down the Passage: a line 8 metres long past the enemy deals 12 damage and a Mark to everything on it. Lit Seam: the light breaks out along the seams like the plain one, and for 5 seconds each heavy blow on the enemy flashes a star of seams around it again for 10 damage and 15 stagger on everything standing on them.
 
-**How to use it.** Shake a Marked enemy in a crowd. They are all Marked for your critical hits, and the first one keeps its three.
+**How to use it.** Shake a Marked enemy in a crowd. The ones on the cracks are all Marked for your critical hits, and the first one keeps its three. Pull them in close first, so more of them stand on the seams.
 
-**How it looks.** Its name over the enemy, then light bursting up around it. Not built yet: only enemies standing on the star-shaped cracks should be hit (for now, it is a circle).
+**How it looks.** Its name over the enemy, then light bursting up around it. Not built yet: the star of cracks drawn on the floor (lk_g_star_seams); for now, a ring of light shows it.
 
 ## reaction-black-chain
 Title: Black Chain (Metal and Dark)
@@ -824,7 +824,7 @@ Title: Frost Heave (Ice and Earth)
 Group: Reactions
 **What it is.** Chill meets Tremor. The cold gets into the ground and heaves the enemy up.
 
-**The numbers.** 0.4 seconds later, the floor heaves up under the enemy, dealing 12 damage and 25 stagger, and it is thrown into the air for 1 second (an elite for less; a god only staggers). Then it waits 6 seconds.
+**The numbers.** 0.4 seconds later, the floor heaves up under the enemy, dealing 12 damage and 25 stagger, and it is thrown into the air for 1 second (an elite for less; a god only staggers). The heaved ground stays as a frozen mound 1.5 metres across, just behind the enemy, for 6 seconds. Nothing walks through it, enemies walk around it, and their blows can break it (30 health). Then it waits 6 seconds.
 
 **What sets it off.** Chill landing on a shaken enemy, or Tremor landing on a chilled one.
 
@@ -852,9 +852,9 @@ Group: Reactions
 ## reaction-shining-herb
 Title: Shining Herb (Life and Light)
 Group: Reactions
-**What it is.** Seeded meets Marked. A shining herb springs up next to the enemy.
+**What it is.** Seeded meets Marked. A shining herb springs up at the enemy's feet, on your side of it.
 
-**The numbers.** The herb stays for 6 seconds. If you leave it alone, it flowers at the end and Marks and Seeds everyone within 3 metres of the enemy. Then it waits 6 seconds.
+**The numbers.** The herb lies on the floor 1 metre in front of the enemy for 6 seconds. Walk over it (within 1 metre) to pick it: you heal 8, and your next weapon blow within 4 seconds is a critical hit. A picked herb doesn't flower. If you leave it alone, it flowers at the end and Marks and Seeds everyone within 3 metres of it. Up to three herbs can lie at once. Then it waits 6 seconds.
 
 **What sets it off.** A seed landing on a Marked enemy, or a Mark landing on a Seeded one.
 
@@ -989,7 +989,7 @@ Title: Cold Short (Ice and Metal)
 Group: Reactions
 **What it is.** Chill meets Sundered. Frost fills the notches, and the armour turns brittle.
 
-**The numbers.** The enemy is brittle for 5 seconds, and its notches don't fade. Your next heavy blow cracks the plates of armour off. For 6 seconds, it takes 25% more damage from your weapon, and its notches stay (for two minutes, for now). Then it waits 5 seconds.
+**The numbers.** The enemy is brittle for 5 seconds, and its notches don't fade. Your next heavy blow cracks the plates of armour off. For 6 seconds, it takes 25% more damage from your weapon, and its notches stay for the rest of the fight. They never fade again; only spending them or setting them off takes them away. Then it waits 5 seconds.
 
 **What sets it off.** Chill landing on a notched enemy, or a notch landing on a chilled one.
 
@@ -1004,7 +1004,7 @@ Title: Caught Light (Water and Light)
 Group: Reactions
 **What it is.** Soaked meets Marked. A net of light falls on the wet floor.
 
-**The numbers.** For 4 seconds, the net covers 3 metres around the enemy. Everyone in it is Marked, and everyone standing in it when it falls moves a quarter slower for the 4 seconds (gods aren't slowed). The Mark that made it isn't used up. Then it waits 6 seconds.
+**The numbers.** For 4 seconds, the net covers 3 metres around the enemy. Everyone in it is Marked. Everyone standing in it when it falls moves a quarter slower for the 4 seconds, and anyone who walks onto it later moves a quarter slower while it stands there (gods aren't slowed). The Mark that made it isn't used up. Then it waits 6 seconds.
 
 **What sets it off.** Water landing on a Marked enemy, or a Mark landing on a Soaked one.
 
@@ -1012,14 +1012,14 @@ Group: Reactions
 
 **How to use it.** Soak the crowd, then Mark one of them. All of them are Marked for your critical hits, and slowed.
 
-**How it looks.** Its name over the enemy, and the net on the floor. Not built yet: enemies who walk onto the net later being slowed too.
+**How it looks.** Its name over the enemy, and the net on the floor.
 
 ## reaction-girdled
 Title: Girdled (Life and Dark)
 Group: Reactions
 **What it is.** Seeded meets Cursed. Black fig roots wrap around the enemy and squeeze tighter with each blow.
 
-**The numbers.** One coil of roots wraps it right away. It moves 25% slower (gods aren't slowed) and takes 6% more damage from your weapon. Each of your weapon blows pulls the roots one coil tighter (6% more damage each time) and heals you 1. At four coils (your third blow), it is girdled: held for 1.5 seconds while the roots crush it (an elite for 0.6 seconds; a god for 0.45 seconds in human form, 0.18 seconds in god form, and not at all while its guard is up). It takes 20 damage and 40 stagger, and you heal 4. The roots wait 8 seconds for your blows. Then it waits 6 seconds.
+**The numbers.** One coil of roots wraps it right away. It moves 25% slower (gods aren't slowed) and takes 6% more damage from your weapon. Each of your weapon blows pulls the roots one coil tighter (6% more damage each time) and heals you 1. At four coils (your third blow), it is girdled: held for 1.5 seconds while the roots crush it (an elite for 0.6 seconds; a god for 0.45 seconds in human form, 0.18 seconds in god form, and not at all while its guard is up). It takes 20 damage and 40 stagger, and you heal 4. The roots wait 8 seconds for your blows. If it dies in the roots, a hollow trunk stands where it fell for 8 seconds: it blocks bodies and blows (40 health), and once a second anything within 1.2 metres of it gets Seeded and Cursed. Then it waits 6 seconds.
 
 **What sets it off.** A seed landing on a Cursed enemy, or a Curse landing on a Seeded one.
 
@@ -1032,9 +1032,9 @@ Group: Reactions
 ## reaction-chokedamp
 Title: Chokedamp (Earth and Poison)
 Group: Reactions
-**What it is.** Tremor meets Poisoned. The cracked ground breathes out a heavy poison gas that flows to the other shaken enemies.
+**What it is.** Tremor meets Poisoned. The cracked ground breathes out a heavy poison gas that pools on the floor under it and under the other shaken enemies.
 
-**The numbers.** The gas pools under the enemy and flows to up to three other shaken enemies within 7 metres. For 5 seconds, each one in it gets a dose every second and moves 20% slower (gods aren't slowed). Then it waits 6 seconds.
+**The numbers.** The gas pools on the floor, 2 metres across, under the enemy and under up to three other shaken enemies within 7 metres. For 5 seconds, anything standing in a pool, even an enemy that walks in later, gets a dose every second and moves 20% slower while it stays (gods aren't slowed). Then it waits 6 seconds.
 
 **What sets it off.** Tremor landing on a poisoned enemy, or poison landing on a shaken one.
 
@@ -1042,7 +1042,7 @@ Group: Reactions
 
 **How to use it.** Shake the crowd first, then poison one of them. The gas finds them all.
 
-**How it looks.** Its name over the enemy. Not built yet: the pools of gas staying on the floor where they settle.
+**How it looks.** Its name over the enemy, and the pools of gas on the floor. Not built yet: the pools' own dark, slowly bubbling look; for now, the plain poison ground shows them.
 
 ## reaction-red-hot
 Title: Red Hot (Metal and Fire)
@@ -1109,7 +1109,7 @@ Title: Firebloom (Fire and Life)
 Group: Reactions
 **What it is.** Burn meets Seeded. The heat splits the seeds open, and they grow into lilies made of flame.
 
-**The numbers.** The Seeded is used up. One lily for each stack (one to three) springs up 2.5 metres around the enemy and stays for 5 seconds, burning anything within 1 metre (3 damage and a Burn every half second). They count as things you grew. The enemy's Burn stays. Then it waits 4 seconds.
+**The numbers.** The Seeded is used up. One lily for each stack (one to three) springs up 2.5 metres around the enemy and stays for 5 seconds, burning anything within 1 metre (3 damage and a Burn every half second). They count as things you grew. The first time you pass within 1 metre of a lily, you take its fire: you heal 3, and your blade carries one blow of Burn. The enemy's Burn stays. Then it waits 4 seconds.
 
 **What sets it off.** Burn landing on a Seeded enemy, or a seed landing on a burning one.
 
@@ -1139,7 +1139,7 @@ Title: Sickle Wind (Wind and Metal)
 Group: Reactions
 **What it is.** Unsteady meets Sundered. The wind tears off the enemy's loose armour plates and whirls them around it.
 
-**The numbers.** For 3 seconds, the plates whirl 1.5 metres around the enemy, cutting everything they pass, including the enemy. They deal 3 damage for each shard (one for each notch, plus one) and 4 stagger every 0.4 seconds. Then it waits 4 seconds.
+**The numbers.** For 3 seconds, the plates whirl 1.5 metres around the enemy, cutting everything they pass, including the enemy. They deal 3 damage and 4 stagger for each shard (one for each notch, plus one) every 0.4 seconds. Then it waits 4 seconds.
 
 **What sets it off.** Unsteady landing on a notched enemy, or a notch landing on an Unsteady one.
 
@@ -1154,15 +1154,15 @@ Title: Mock Suns (Ice and Light)
 Group: Reactions
 **What it is.** Chill meets Marked. Two fake suns appear in the sky next to the enemy, the way they sometimes do on icy days.
 
-**The numbers.** For 4 seconds, your weapon blows on the enemy's left or right side add two Chill. No blow uses up its Mark, so they stay critical hits. Then it waits 4 seconds.
+**The numbers.** For 4 seconds, your weapon blows on the enemy's left or right side add two Chill, are critical hits, and don't use up its Mark. A blow on its face or its back uses up the Mark as usual, and the Mark doesn't make it critical. Then it waits 4 seconds.
 
 **What sets it off.** Chill landing on a Marked enemy, or a Mark landing on a chilled one.
 
 **Its shapes.** If you have the Shape mark of Ice and Light's duo branch (Mock Suns: Prism or Lens of Ice, 3 Shards, in the middle of the chart) and carry both, Mock Suns uses the shape you picked at a rest fire instead. Prism: no suns. Instead, for 4 seconds, its Mark isn't used up, and your next weapon blow on it sends three hits in a line past it, each dealing 8 damage, a Mark and a Chill. Lens of Ice: while the enemy is chilled and Marked, its Mark isn't used up, and a heavy blow on it at full Chill deals 18 more damage and Marks every enemy within 4 metres.
 
-**How to use it.** Get to its side and hit it as often as you can within the 4 seconds. Each blow is a critical hit, and each one on its flank chills it.
+**How to use it.** Get to its side and hit it as often as you can within the 4 seconds. Each blow on its flank is a critical hit that chills it and keeps the Mark.
 
-**How it looks.** Its name over the enemy. Not built yet: the suns turning with the enemy. Blows on its face should not be critical or spare the Mark; for now every blow is critical and none uses the Mark.
+**How it looks.** Its name over the enemy. Not built yet: the suns turning with the enemy.
 
 ## reaction-drowned-weight
 Title: Drowned Weight (Water and Dark)
@@ -1229,7 +1229,7 @@ Title: Golden Feathers (Light and Wind)
 Group: Reactions
 **What it is.** Marked meets Unsteady. The enemy's Mark breaks into golden feathers that ride the wind.
 
-**The numbers.** Three feathers fly 6 metres past the enemy, away from you. Each one Marks whatever it touches and makes it Unsteady. The first enemy keeps its Mark. Then it waits 4 seconds.
+**The numbers.** Three feathers fly 6 metres from the enemy in a fan 40 degrees wide. They ride the way the enemy was last pushed, if that was in the last 3 seconds, or else straight away from you. Each feather stops at the first enemy it touches, Marks it and makes it Unsteady; it never hits the enemy it came from. The first enemy keeps its Mark. Then it waits 4 seconds.
 
 **What sets it off.** A Mark landing on an Unsteady enemy, or Unsteady landing on a Marked one.
 
@@ -1259,7 +1259,7 @@ Title: Fish Poison (Poison and Water)
 Group: Reactions
 **What it is.** Soaked meets Poisoned. The water runs off the enemy poisoned, and enemies with lots of doses float up, stunned, like poisoned fish.
 
-**The numbers.** A poisoned slick 3 metres across stays for 5 seconds and Soaks anyone standing in it. If the enemy has four or more doses when this happens, it floats up stunned: lifted and held for 1.5 seconds (an elite for 0.5 seconds; a god takes 30 stagger instead). Your next weapon blow on it is a critical hit and uses up two doses for 6 damage each. Then it waits 6 seconds.
+**The numbers.** A poisoned slick 3 metres across stays for 5 seconds and Soaks anyone standing in it. If the enemy has four or more doses when this happens, it floats up stunned: lifted and held for 1.5 seconds (an elite for 0.5 seconds; a god takes 30 stagger instead). Your next weapon blow on it is a critical hit and uses up two doses for 6 damage each. Any other enemy in the slick that reaches four doses floats up the same way, once for each slick. Then it waits 6 seconds.
 
 **What sets it off.** Poison landing on a Soaked enemy, or Water landing on a poisoned one.
 
@@ -1267,4 +1267,4 @@ Group: Reactions
 
 **How to use it.** Give it four doses before you soak it, then be ready with your blade.
 
-**How it looks.** Its name over the enemy, and the slick on the floor. Not built yet: other enemies in the slick floating up when they reach four doses.
+**How it looks.** Its name over the enemy, and the slick on the floor.

@@ -1263,6 +1263,8 @@ namespace Clover.Player.Forms
             if (run.Age < run.T1) return true;
             run.T1 += Mathf.Max(0.1f, cast.Spec.Interval);
             cast.Combat.StrikeArea(run.C, radius, cast.Blow(cast.Spec.LingerDamage, 0f));
+            // Where the cloud hangs now, until a little past its next bite (Tasted Every Herb asks who stands in it).
+            Clover.World.OwnGrounds.Lay(Clover.World.OwnGrounds.Cloud, run.C, radius, Time.time + Mathf.Max(0.1f, cast.Spec.Interval) + 0.25f);
             if (run.Flag)
             {
                 // Those inside double over, small puffs of poison popping off them.

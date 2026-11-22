@@ -51,15 +51,13 @@ are both carried.
 ## shiningherb.wholemountain
 **What it does.** Picking a herb pulls every other herb across the floor to you, and each one picked after the first heals you twice as much.
 
-**When it happens.** Each time Shining Herb goes off, while you carry both Life and Light.
+**When it happens.** Each time you pick a shining herb off the floor, while you carry both Life and Light.
 
-**The numbers.** Mix, keystone, 5 Shards. For now: you heal 4 each time a herb springs up.
+**The numbers.** Mix, keystone, 5 Shards. Picking a herb pulls every other herb lying on the floor to you at 9 metres a second. Each pulled herb is picked as it reaches you, and heals 8 more than usual: 16 in all.
 
 **Works with.** Shining Herb, Sixth Moon, Open to the Sun.
 
 **Example.** A fight full of herbs keeps you on your feet.
-
-**Not built yet.** Herbs aren't things you can pick up from the floor yet, so none are pulled to you. For now, you heal each time one springs up instead.
 
 ## shiningherb.turnedtosun
 **What it does.** You plant a glowing herb where you aim. Every 2 seconds, it flashes, and every Seeded or Marked enemy nearby turns to face it, so their backs are open to you.

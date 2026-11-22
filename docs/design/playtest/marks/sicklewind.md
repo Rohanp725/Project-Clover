@@ -22,13 +22,11 @@ are both carried.
 
 **When it happens.** Each dodge that ends, while you carry both Wind and Metal.
 
-**The numbers.** Mix, 3 Shards. For now: one Unsteady on everything within 3 metres of where you stop, at most once every 2 seconds.
+**The numbers.** Mix, 3 Shards. When your dodge ends within 3 metres of the edge of a Sickle Wind whirlwind, the whirlwind gets one more shard: each cut from then on deals 3 more damage and 4 more stagger. Its next cut also adds one Unsteady to everything it reaches. If no whirlwind is that close, nothing happens.
 
-**Works with.** Sickle Wind (an Unsteady added to a notched enemy starts it), Grit, Wind Sickle.
+**Works with.** Sickle Wind (the whirlwind it feeds), Grit, Wind Sickle.
 
-**Example.** Dodge in next to a notched brute, and the wind takes its armour plates.
-
-**Not built yet.** It doesn't feed a shard to a whirlwind yet. For now, it makes everything near where your dodge ends Unsteady, whirlwind or not.
+**Example.** A whirlwind is cutting a notched brute. Dodge in beside it: the whirlwind grows a shard, and its next cut leaves the brute and its friends Unsteady.
 
 ## sicklewind.grit
 **What it does.** Sickle Wind's whirlwind has one more shard and lasts 1 second longer.
@@ -46,13 +44,11 @@ are both carried.
 
 **When it happens.** The last blow of each chain of light blows that lands, while you carry both Wind and Metal.
 
-**The numbers.** Mix, keystone, 5 Shards. A cone 5 metres long and 30 degrees wide. It deals 6 damage, 6 stagger and one Unsteady to everything in it.
+**The numbers.** Mix, keystone, 5 Shards. A cone 5 metres long and 30 degrees wide. It deals 6 damage, 6 stagger and one Unsteady to everything in it. When the chain's last blow lands on a notched (Sundered) enemy and a Sickle Wind whirlwind is within 10 metres of it, one notch is torn off that enemy and joins the nearest whirlwind as a shard: each of its cuts deals 3 more damage and 4 more stagger. With no whirlwind that close, the notch stays.
 
-**Works with.** Sickle Wind (a notched enemy it reaches starts its whirlwind), Bellows, Three Weasels.
+**Works with.** Sickle Wind (a notched enemy it reaches starts its whirlwind, and later notches feed it), Bellows, Three Weasels.
 
 **Example.** End each chain facing the pack, and the sickles keep them off balance.
-
-**Not built yet.** Turning the torn notch into a shard for the nearest whirlwind. For now, it is only the sickle's cut.
 
 ## sicklewind.weasels
 **What it does.** Three presses within 4 seconds, like the three sickle weasels working together. First, a rush of wind to the enemy you face that throws it. Second, a pass straight through it that notches its armour. Third, a step back out of reach that patches up your wounds.

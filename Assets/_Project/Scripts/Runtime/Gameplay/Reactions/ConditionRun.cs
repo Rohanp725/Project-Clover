@@ -12,8 +12,13 @@ namespace Clover.Gameplay
         public float BeatClock;
         /// <summary>Beats come so far.</summary>
         public int Count;
-        /// <summary>Weapon blows taken so far.</summary>
+        /// <summary>Weapon blows taken so far; or, for one that counts its carrier's blows, their points (<see cref="ConditionSpec.TheirBlowPoints"/>).</summary>
         public int Blows;
+        public int TheirBlowPoints;
+        public int TurnedPoints;
+        /// <summary>The side its keeping and the afflictions' critical blows hold for (<see cref="ConditionSpec.FlankLeast"/>); both 0 for every side.</summary>
+        public float FlankLeast;
+        public float FlankMost;
         /// <summary>The place in the catalogue of the mark that set it, or -1.</summary>
         public int Mark;
         public ConditionFlags Flags;
@@ -29,6 +34,8 @@ namespace Clover.Gameplay
         public bool AnswersAttack;
         /// <summary>The afflictions it keeps from fading, and those it lasts only while, as bits at <c>1 &lt;&lt; (int)kind</c>.</summary>
         public int KeepsMask;
+        /// <summary>Its Keeps hold only while its carrier is frozen (<see cref="ConditionSpec.KeepsWhileFrozen"/>).</summary>
+        public bool KeepsWhileFrozen;
         /// <summary>The affliction it lets lie deeper, as a bit, and by how much.</summary>
         public int DeepMask;
         /// <summary>The affliction it makes bite harder, as a bit, by how much, and whether only while frozen.</summary>
@@ -62,6 +69,8 @@ namespace Clover.Gameplay
         public float DriftsTo;
         /// <summary>Metres round its carrier within which another's death is told to it (<see cref="ConditionSpec.DeathsWithin"/>).</summary>
         public float DeathsWithin;
+        /// <summary>Metres round its carrier within which a discharge or arc bends into it (<see cref="ConditionSpec.DischargesWithin"/>).</summary>
+        public float DischargesWithin;
         /// <summary>Metres the body is drawn down while it runs (<see cref="ConditionSpec.Sink"/>).</summary>
         public float Sink;
         /// <summary>The point it is turned to face (<see cref="ConditionFlags.FacesPoint"/>).</summary>

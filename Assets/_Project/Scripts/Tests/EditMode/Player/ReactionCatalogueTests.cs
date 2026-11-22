@@ -74,7 +74,9 @@ namespace Clover.Tests
         [Test]
         public void EveryEffectRidesATriggerAReactionGivesAndNamesWhatExists()
         {
-            var reactionTriggers = new[] { UpgradeTrigger.Reacted, UpgradeTrigger.ConditionBeat, UpgradeTrigger.ConditionStruck, UpgradeTrigger.ConditionEnded, UpgradeTrigger.ConditionDied, UpgradeTrigger.ConditionAttacked };
+            // The pickups a reaction drops give it two moments more: taken, or left to lie (World.Pickups, PlayerUpgrades.AnswerPickup).
+            var reactionTriggers = new[] { UpgradeTrigger.Reacted, UpgradeTrigger.ConditionBeat, UpgradeTrigger.ConditionStruck, UpgradeTrigger.ConditionEnded, UpgradeTrigger.ConditionDied, UpgradeTrigger.ConditionAttacked,
+                UpgradeTrigger.PickedUp, UpgradeTrigger.PickupLeft };
             foreach (var mark in ReactionMarks)
             {
                 var set = new HashSet<string>(mark.Effects.Where(effect => effect.Do == UpgradeAction.Condition).Select(effect => effect.State != null ? effect.State.Id : ""));
@@ -87,7 +89,7 @@ namespace Clover.Tests
                         Assert.IsNotEmpty(effect.State.Id, mark.Id + " sets a condition with no name");
                         Assert.Greater(effect.State.Seconds, 0f, mark.Id);
                     }
-                    if (effect.On != UpgradeTrigger.Reacted)
+                    if (effect.On != UpgradeTrigger.Reacted && effect.On != UpgradeTrigger.PickedUp && effect.On != UpgradeTrigger.PickupLeft)
                         Assert.IsTrue(set.Contains(effect.Condition), $"{mark.Id} answers the condition '{effect.Condition}', which it never sets");
                 }
             }
@@ -151,7 +153,9 @@ namespace Clover.Tests
                     bool blowsTaken = effect.On == UpgradeTrigger.ConditionEnded && effect.SpentAtLeast > 0;
                     // A death near the condition carries the dead one's doses (Shut in the Dark's jar, StruckBy.DeathNear).
                     bool deathNear = effect.On == UpgradeTrigger.ConditionStruck && effect.By == StruckBy.DeathNear;
-                    Assert.IsTrue(spentBefore || (effect.PerStack && (deadDepth || blowsTaken || deathNear)), where + ": counts a depth nothing gave it");
+                    // Or the depth of what it Needs, counted as the moment comes (Flashover's flame bursting by its Burn).
+                    bool countedNeeds = effect.CountsNeeds && effect.Needs != AfflictionKind.None;
+                    Assert.IsTrue(spentBefore || (effect.PerStack && (deadDepth || blowsTaken || deathNear || countedNeeds)), where + ": counts a depth nothing gave it");
                 }
 
                 // A condition spent by a blow answers that same kind of blow, so the blow that spends it is the one answered.

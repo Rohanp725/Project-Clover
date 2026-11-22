@@ -42,26 +42,22 @@ are both carried.
 
 **When it happens.** Always on once you learn it, while you carry both Light and Fire.
 
-**The numbers.** Mix, a minor mark, 1 Shard.
+**The numbers.** Mix, a minor mark, 1 Shard. A Mark that would be used up by a blow on a burning enemy stays for one blow more, once each time it is laid, whether the Mark or the Burn came first.
 
 **Works with.** The Sun Points, which it comes after on the chart, Kindling Point.
 
 **Example.** One more critical hit before the Mark is used up.
 
-**Not built yet.** It does nothing yet.
-
 ## kindlingpoint.feast
 **What it does.** When a Kindling Point burst kills an enemy, every burn within 8 metres gains a stack, and you get mana.
 
-**When it happens.** Each time an enemy with both a Mark and Burn dies, while you carry both Light and Fire.
+**When it happens.** Each time a blow of Kindling Point itself kills an enemy, in whichever shape it goes off, while you carry both Light and Fire. An enemy your weapon or a spell finishes off doesn't count.
 
 **The numbers.** Mix, keystone, 5 Shards. One Burn on everything within 8 metres, and 10 mana, at most twice a second.
 
 **Works with.** Kindling Point, Hands of the Sun, and Daybreak and Meteor Leap to spend the mana.
 
 **Example.** Burn down a Marked pack, and every death feeds the fire.
-
-**Not built yet.** For now, it works on any Marked, burning enemy that dies, not only one killed by the burst.
 
 ## kindlingpoint.hands
 **What it does.** A burning sun rises over you for a moment, and long rays reach down to the four nearest enemies. Each ray ends in a hand of flame that grabs its enemy. Each one is held, gets two stacks of Burn and a Mark, so every one of them has a Kindling Point.

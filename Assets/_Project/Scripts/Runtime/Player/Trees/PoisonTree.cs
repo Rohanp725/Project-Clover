@@ -41,6 +41,19 @@ namespace Clover.Player.Trees
         public const string RedPaper = "poison.needles.redpaper";
         public const string ShedSkin = "poison.coiled.skin";
         public const string WeepingSore = "poison.blister.weeping";
+
+        // Weeping Sore: the sore, the puddle it weeps at each bite, and the heavy blow that bursts every puddle still lying.
+        private static UpgradeEffect[] Weeping()
+        {
+            var puddle = new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = WeepingSore, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Radius = 0.75f, Seconds = 3f, Interval = 1f,
+                Damage = 0f, Stagger = 0f, Affliction = AfflictionKind.Poison, Stacks = 1 };
+            return new[]
+            {
+                new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = WeepingSore, Seconds = 12f, OnBite = true } },
+                puddle,
+                new UpgradeEffect { On = UpgradeTrigger.HeavyHit, Do = UpgradeAction.BurstGround, BurstsGround = puddle, Damage = 12f, Stagger = 0f, Affliction = AfflictionKind.Poison, Stacks = 2, Cooldown = 0.5f },
+            };
+        }
         public const string TheVessel = "poison.blister.vessel";
         public const string BrokenOnTheBeat = "poison.blister.beat";
         public const string EatenInTurn = "poison.onebyone.eaten";
@@ -80,27 +93,21 @@ namespace Clover.Player.Trees
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.HeavyHit, Do = UpgradeAction.SetOff, Needs = P, NeedsFull = true, Affliction = P, Stagger = 4f, Radius = 1f, Cooldown = 0.3f } } },
                 BranchPattern.MiddleFoot));
 
-            // The detonator: the brand form raises the blister on the enemy faced, and the next weapon blow on it breaks it.
-            // NEEDS: the blister swelling at each bite through three sizes, broken by a heavy blow alone (blister-swells). Until
-            // then it breaks at its middle size, 40 in three metres, on any weapon blow.
+            // The detonator: the brand form raises the blister on the enemy faced (SpellSpec.Swells). It swells at each bite of its
+            // poison through three sizes, and only a heavy blow breaks it: 20, 40 or 70 in 2, 3 or 4 m, and 2, 4 or 6 doses on
+            // everyone else it reaches. Left 12 s, it withers.
             SpellBranch.Add(to, E, Blister, "Blister", SpellRole.Detonator, BranchPattern.MiddleA, Rupture, SpellForms.Brand,
-                new SpellSpec { Reach = 8f, Seconds = 12f, Count = 1, Radius = 3f, Damage = 40f, Stagger = 30f, Stacks = 4 },
+                new SpellSpec { Reach = 8f, Seconds = 12f, Count = 1, Radius = 3f, Damage = 40f, Stagger = 30f, Stacks = 4, Swells = true },
                 "You raise a blister on the enemy you face. It swells each time its poison bites, through three sizes. A heavy blow breaks it: 20, 40 or 70 damage in two, three or four metres, and 2, 4 or 6 doses on everyone else it reaches. Left too long, it withers.",
                 UpgradeIcons.Orb,
                 // The roster's numbers alone (the owner's answer of 2026-11-20: an Empower may strengthen without a shorter wait).
                 new Empower { Damage = 50f },
                 "It breaks for 25, 50 or 85.",
-                // The blister set aside, never broken by a blow (SpellSpec.Quiet: the brand raises nothing). NEEDS: a heavy blow
-                // bursting every puddle where it lies (puddles-burst). Until then the sore weeps a puddle at each bite, and a heavy
-                // blow on the sore bursts round it for 12 and two doses.
+                // The blister set aside, never broken by a blow (SpellSpec.Quiet: the brand raises nothing). The sore weeps a puddle
+                // at each bite, and your heavy blow on any enemy bursts every puddle where it lies, all at once (UpgradeAction.BurstGround).
                 new ShapeDef { Name = "Weeping Sore", Spell = new SpellSpec { Reach = 8f, Seconds = 12f, Count = 1, Radius = 3f, Damage = 0f, Stagger = 0f, Stacks = 0, Quiet = true },
                     Description = "It never bursts by itself or by a heavy blow. Each time its poison bites it weeps a bubbling puddle a metre and a half across where the enemy stands, for three seconds, a dose a second, so a walking enemy lays your poison. Your heavy blow bursts every puddle at once: 12 damage and 2 doses to all in each.",
-                    Effects = new[]
-                    {
-                        new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = WeepingSore, Seconds = 12f, OnBite = true } },
-                        new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = WeepingSore, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Radius = 0.75f, Seconds = 3f, Interval = 1f, Damage = 0f, Stagger = 0f, Affliction = P, Stacks = 1 },
-                        new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = WeepingSore, By = StruckBy.Heavy, Do = UpgradeAction.Burst, Radius = 2f, Damage = 12f, Stagger = 0f, Affliction = P, Stacks = 2, Cooldown = 0.5f },
-                    } },
+                    Effects = Weeping() },
                 // The blister set aside (SpellSpec.Quiet: the brand raises nothing). The cloud at a full bite is data, once a cast.
                 new ShapeDef { Name = "The Vessel", Spell = new SpellSpec { Reach = 8f, Seconds = 12f, Count = 1, Radius = 3f, Damage = 0f, Stagger = 0f, Stacks = 0, Quiet = true },
                     Description = "The whole enemy swells. When its poison bites at full depth it bursts by itself into a cloud four metres across that doses everything in it three deep and hangs three seconds. You set it and leave it.",
@@ -111,12 +118,11 @@ namespace Clover.Player.Trees
                         new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = TheVessel, Needs = P, NeedsFull = true, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Radius = 2f, Seconds = 3f, Interval = 1f, Damage = 0f, Stagger = 0f, Affliction = P, Stacks = 1, Cooldown = 12f },
                     } },
                 "Opens two shapes of Blister, chosen at any rest fire: Weeping Sore, a sore that leaves a trail of puddles, or The Vessel, an enemy that bursts by itself when full.",
-                // NEEDS: the blister's own burst doubled (blister-swells). Until then a heavy blow on the blistered enemy within a
-                // fifth of a second of its bite strikes round it with a second burst as large, once a blister.
+                // The blister's own burst doubled when a heavy blow breaks it within a fifth of a second of its poison's bite: the
+                // condition is what the brand form asks for (BrandForm.DoublesOnBeat).
                 new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = BrokenOnTheBeat, Seconds = 12f, EndsWith = ConditionBlow.Heavy } },
-                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = BrokenOnTheBeat, By = StruckBy.Heavy, OnBeat = 0.2f, Do = UpgradeAction.Burst, Radius = 3f, Damage = 40f, Stagger = 30f, Affliction = P, Stacks = 4 },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = BrokenOnTheBeat, Seconds = 12f, Is = Clover.Player.Forms.BrandForm.DoublesOnBeat } },
                 },
                 "Break it with a heavy blow as its poison bites, within a fifth of a second, and the burst doubles.");
 
@@ -134,14 +140,15 @@ namespace Clover.Player.Trees
                 // For eight seconds each enemy on the line that dies poisoned passes twice its doses to the nearest other on the
                 // line (UpgradeEffect.ToState), else the nearest within ten metres; one pushed past eight bursts at once, 6 a dose,
                 // and passes the rest on (UpgradeEffect.Overflow); the snap bursts nothing (ShapeDef.SetsAside: the Learn's set-off).
-                // NEEDS: the next by the line's own order rather than the nearest on it.
+                // The next is the next by the line's own order (ConditionSpec.Numbered, UpgradeEffect.InOrder), the nearest on the
+                // line only when none comes after it.
                 new ShapeDef { Name = "Eaten in Turn", SetsAside = new[] { 0 },
                     Description = "The line is drawn, but nothing bursts. For eight seconds, when an enemy on it dies, all its doses pass to the next on the line, doubled; one pushed past eight bursts at once, 6 a dose, and passes on. The blade chooses the order.",
                     Effects = new[]
                     {
-                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = EatenInTurn, Seconds = 8f } },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = EatenInTurn, Seconds = 8f, Numbered = true } },
                         new UpgradeEffect { On = UpgradeTrigger.ConditionDied, Condition = EatenInTurn, Needs = P, Do = UpgradeAction.Pass, Affliction = P, PerStack = true, Stacks = 2, Reach = 10f,
-                            ToState = EatenInTurn, Overflow = true },
+                            ToState = EatenInTurn, Overflow = true, InOrder = true },
                     } },
                 // The doses of every poisoned enemy within ten metres are gathered as it is cast (UpgradeAction.Gather) and the one
                 // pillar, under the one faced when it is poisoned, bursts with them all, with no limit. NEEDS: the beads of mercury
@@ -265,11 +272,17 @@ namespace Clover.Player.Trees
                 new Empower { Cooldown = 6f },
                 "Miasma waits 6 seconds, not 7, and its cloud is three metres across.",
                 // The cloud set aside: cast through its mark by a quiet form (SpellSpec.Quiet), so the kit's cloud is not laid,
-                // only the sheet. NEEDS: the sheet stopping at walls and a dodge in it costing an enemy a dose (form-pieces,
-                // ground-states). Until then a row of mist eight metres long is laid from your feet, dosing what stands in it each second.
+                // only the sheet, a row of mist eight metres long from your feet dosing what stands in it each second. The sheet is
+                // ground of your own (World.OwnGrounds.LowMist); a dodge you begin in it (StatWhen.InOwnMist) doses every enemy
+                // in it once (Afflict ThroughGround). NEEDS: the sheet stopping at walls (form-pieces).
                 new ShapeDef { Name = "Low Mist", Form = SpellForms.Brand, Spell = new SpellSpec { Reach = 8f, Damage = 0f, Stagger = 0f, Stacks = 0, Quiet = true },
                     Description = "The cloud is heavier than air. It pours out from your feet along the floor the way you face, a low sheet two and a half metres wide and eight long with a hard top edge, and lies five seconds, stopping at walls. Enemies in it are dosed once a second, and a dodge or roll in it costs them a dose. A lane where the plain cloud is a disc.",
-                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Hazard, At = EffectAt.Self, Shape = HazardShape.Line, Reach = 8f, Count = 6, Radius = 1.25f, Seconds = 5f, Interval = 1f, Damage = 0f, Stagger = 0f, Affliction = P, Stacks = 1 } } },
+                    Effects = new[]
+                    {
+                        new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Hazard, At = EffectAt.Self, Shape = HazardShape.Line, Reach = 8f, Count = 6, Radius = 1.25f, Seconds = 5f, Interval = 1f, Damage = 0f, Stagger = 0f, Affliction = P, Stacks = 1,
+                            Ground = Clover.World.OwnGrounds.LowMist },
+                        new UpgradeEffect { On = UpgradeTrigger.DodgeStart, While = StatWhen.InOwnMist, Do = UpgradeAction.Afflict, ThroughGround = Clover.World.OwnGrounds.LowMist, Affliction = P, Stacks = 1, Cooldown = 0.3f },
+                    } },
                 // Swinging Censer, once a spell, folded in here. NEEDS: the smoke left hanging two seconds after each pass
                 // (form-pieces). The censer is the discs form, one disc at three metres.
                 new ShapeDef { Name = "Censer", Form = SpellForms.Discs,
@@ -286,16 +299,17 @@ namespace Clover.Player.Trees
                 },
                 "Cast it on the poison's beat, within a fifth of a second of a bite on any enemy near, and the cloud doses twice a second.");
 
-            // NEEDS: the reaction itself held in the body and landed later at double strength (reaction-held, reaction-stats),
-            // and the closing ring of mist drawn (looks). Until then each reaction poison is in holds a burst of its own on the
-            // enemy for two and a half seconds, or until a heavy blow on it brings it on: 20 damage, 20 stagger, two doses.
+            // Each reaction poison is in is held in the body (UpgradeAction.HoldReaction, PlayerReactions.Hold): it lands two and a
+            // half seconds later, or at once on a heavy blow on that enemy, at double strength, and dosing all within 2.5 m two
+            // deep as it lands. Burning Sap, which holds back its own bites already, only takes the strength. NEEDS: the closing
+            // ring of mist drawn (looks).
             to.Add(BranchPattern.Put(new Upgrade { Id = TheDelayedTouch, Name = "The Delayed Touch", Element = E, Kind = UpgradeKind.Major, Lifts = E, Requires = new[] { Catching }, Icon = UpgradeIcons.Hourglass,
                 Description = "Every reaction poison takes part in is held in the body: a thin ring of mist closes on it, and the reaction lands two and a half seconds later at double strength, dosing all it reaches two deep. A heavy blow on that enemy brings it on at once.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.Reacted, Needs = P, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = HeldInTheBody, Seconds = 2.5f, EndsWith = ConditionBlow.Heavy } },
-                    new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = HeldInTheBody, Do = UpgradeAction.Burst, Radius = 2.5f, Damage = 20f, Stagger = 20f, Affliction = P, Stacks = 2 },
-                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = HeldInTheBody, By = StruckBy.Heavy, Do = UpgradeAction.Burst, Radius = 2.5f, Damage = 20f, Stagger = 20f, Affliction = P, Stacks = 2 },
+                    new UpgradeEffect { On = UpgradeTrigger.Reacted, ReactionWith = P, Do = UpgradeAction.HoldReaction, Seconds = 2.5f, Amount = 2f },
+                    // Told as the held reaction lands (the marks answering a reaction hear it then): all it reaches dosed two deep.
+                    new UpgradeEffect { On = UpgradeTrigger.Reacted, ReactionWith = P, Do = UpgradeAction.Afflict, Radius = 2.5f, Affliction = P, Stacks = 2 },
                 } },
                 BranchPattern.RightMiddle));
 
@@ -313,9 +327,9 @@ namespace Clover.Player.Trees
                 new ShapeDef { Name = "Carried on the Blade",
                     Description = "You rush through as learned, but take the sickest one's depth onto your blade: your next five weapon blows each set what they strike to that depth. The rush loads the weapon.",
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.CoatBlade, Affliction = P, SetsDepth = true, Count = 5 } } },
-                // NEEDS: the rush backward, away from the enemies (form-pieces). Until then you rush forward as learned, and the
-                // tail lashes where you stood.
-                new ShapeDef { Name = "Shed Tail",
+                // The rush runs six metres backward, away from the enemies (SpellChange.Backward on the drill), and the tail lashes
+                // where you stood.
+                new ShapeDef { Name = "Shed Tail", Change = new SpellChange { Backward = true, Reach = 6f },
                     Description = "You rush six metres backward, away. A thrashing tail is left where you stood for two seconds, lashing everything within two metres every half second for three doses. Away from them, and what follows you pays.",
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Hazard, At = EffectAt.Self, Shape = HazardShape.Patch, Radius = 2f, Seconds = 2f, Interval = 0.5f, Damage = 0f, Stagger = 0f, Affliction = P, Stacks = 3 } } },
                 "Opens two shapes of Share Alike, chosen at any rest fire: Carried on the Blade, the sickness loaded on your weapon, or Shed Tail, a rush away that leaves a lashing tail.",
@@ -324,13 +338,13 @@ namespace Clover.Player.Trees
                 "Rush on the poison's beat, within a fifth of a second of a bite on any enemy you pass, and the doses double.",
                 learnEffects: new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.EvenDepth, Affliction = P, Stacks = 2 } });
 
-            // NEEDS: no poison, cloud or mist harming you, the enemy's included (harmless-clouds), and the healing and the
-            // second dose only while you stand in a cloud (in-own-ground). Until then you mend 2 a second whenever an enemy is
-            // near, and every blow doses once more.
+            // No Poison is laid on you (PlayerAfflictions.ImmuneTo), so no cloud of the enemy's harms you; your own never do. While
+            // you stand in a cloud (StatWhen.InCloud: Miasma's own, or any poison ground of yours) you mend 2 a second and your
+            // blows dose twice. NEEDS: clouds of the enemy's to stand in (no enemy lays one yet; the Poison land's court will).
             to.Add(BranchPattern.Put(new Upgrade { Id = TastedEveryHerb, Name = "Tasted Every Herb", Element = E, Kind = UpgradeKind.Devotion, Requires = new[] { TheDelayedTouch }, Icon = UpgradeIcons.Leaf,
                 Description = "All in on Poison only. No poison, cloud or mist harms you, yours or the enemy's. Standing in any cloud heals you 2 a second, and your blows dose twice while you stand in one. Where everyone else leaves the mist, you fight in it.",
-                Stats = new[] { new StatMod(PlayerStat.AfflictionStacks, 1f) },
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.EverySeconds, Every = 1f, Do = UpgradeAction.Heal, Amount = 2f } } },
+                Stats = new[] { new StatMod(PlayerStat.AfflictionStacks, 1f, StatWhen.InCloud) },
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.EverySeconds, Every = 1f, While = StatWhen.InCloud, Do = UpgradeAction.Heal, Amount = 2f } } },
                 BranchPattern.RightCrown));
 
             // BESPOKE (built): CleanBladeForm; the beat is held through Afflictions.PoisonWaits.

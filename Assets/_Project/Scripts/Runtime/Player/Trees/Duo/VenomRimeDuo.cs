@@ -103,15 +103,15 @@ namespace Clover.Player.Trees.Duo
             // The duo spell, bought with 5 Shards once both are carried (no god gives it): an opener on a 10 s cooldown
             // (SpellTimings). The field form lays the rime at the aim point, 4.5 m round, cast in Poison (a dose each bite); it
             // bites three times, 0.6 s apart, and each bite chills, so one that stands in it takes three of each.
-            // NEEDS: rings growing outward 0.6 s apart to 1.5 m, 3 m and 4.5 m, each reaching further, the ground standing 4 s
-            // after, and a heavy blow struck on it shattering every ring at once, 14, a Chill and two doses to each on it
-            // (form-pieces); now one patch biting three times.
+            // The rime grows out in three rings 0.6 s apart, to 1.5 m, 3 m and 4.5 m, each bite reaching further (SpellSpec.GrowsOut).
+            // NEEDS: the ground standing 4 s after, and a heavy blow struck on it shattering every ring at once, 14, a Chill and
+            // two doses to each on it (form-pieces).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = RimeOverRime, Name = "Rime Over Rime", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Role = SpellRole.Opener, Requires = new[] { BitterFrost, SixLevelsDown }, Icon = UpgradeIcons.Ring,
                 Description = "A drop of venom falls on the ground where you aim, within 8 m, and rime grows from it frost over frost, out to 4.5 m. Each time it grows it gives every enemy it reaches a dose and a Chill, three times over.",
                 Form = SpellForms.Field,
-                Spell = new SpellSpec { Reach = 8f, Radius = 4.5f, Seconds = 1.8f, Interval = 0.6f, LingerDamage = 3f, Stacks = 1 },
+                Spell = new SpellSpec { Reach = 8f, Radius = 4.5f, Seconds = 1.8f, Interval = 0.6f, LingerDamage = 3f, Stacks = 1, GrowsOut = 3 },
                 Effects = new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 1 },

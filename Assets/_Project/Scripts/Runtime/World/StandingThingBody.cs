@@ -42,7 +42,8 @@ namespace Clover.World
         public HitOutcome TakeHit(in Hit hit)
         {
             if (slot < 0 || fallingFor >= 0f) return HitOutcome.Blocked;
-            var struck = StandingThings.Strike(slot, hit.Damage, Time.time);
+            // The player's blows come with a point they were struck from; an enemy's blows on it are dealt by the enemy (Enemy.Strike).
+            var struck = StandingThings.Strike(slot, hit.Damage, Time.time, hit.Heavy, true);
             return struck == StandingStruck.None ? HitOutcome.Blocked : HitOutcome.Landed;
         }
 

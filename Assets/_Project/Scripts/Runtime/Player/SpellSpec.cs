@@ -81,6 +81,12 @@ namespace Clover.Player
         /// <see cref="PassReach"/>. If its Seconds run out first, the thunder falls at half.
         /// </summary>
         public bool Seal;
+        /// <summary>
+        /// For the brand form: the blister. It swells a size at each bite of its bearer's poison, three sizes at most, and only a
+        /// heavy blow breaks it (BrandForm.BlisterDamage and its kin: half, the whole and 1.75 times its Damage, its Radius a
+        /// metre less to a metre more, half, the whole and half again its Stacks as doses on everyone else it reaches).
+        /// </summary>
+        public bool Swells;
         public float PerDose;
         public float PassReach;
         /// <summary>Above zero: the caster steps up to the enemy faced, this far at most, before the spell lands on it (Paper Seal's 3 m step).</summary>
@@ -101,6 +107,14 @@ namespace Clover.Player
         public float Lasts;
         /// <summary>Above zero: seconds between a form's pieces landing in turn (In Turn: a quarter second between spears); zero keeps the form's own quick fall.</summary>
         public float Between;
+        /// <summary>For the pillars form: above zero, its pillars stand in a row along the way you face, this many metres apart, the first that far ahead, whoever stands there (String of Bubbles).</summary>
+        public float InLine;
+        /// <summary>For the field form: above zero, it grows out in this many rings, one at each bite, each reaching further, to its full radius (Rime Over Rime).</summary>
+        public int GrowsOut;
+        /// <summary>For the wave and parry forms: above one, the cone is this many thin rays fanned across its Arc, each striking all it crosses on its own (Seven Horses, Sunstone).</summary>
+        public int Rays;
+        /// <summary>For the drill form: the rush runs straight back, away from the way you face (Shed Tail).</summary>
+        public bool Backward;
         /// <summary>Above zero: seconds a form's whole mark glows on the ground before it breaks open (Fissure's crack: 0.9); zero breaks it just behind its running mark.</summary>
         public float Glow;
         /// <summary>Above zero: the share of the run's pace the player may walk at while the form's stance holds (Firewalker: half); zero roots them.</summary>
@@ -177,9 +191,51 @@ namespace Clover.Player
         public bool AnswersHeavy;
         /// <summary>For the burrow form: the grown thing it comes up at goes to where the caster went down (Changeling).</summary>
         public bool SwapsGrown;
+        /// <summary>
+        /// For the wall form: the wall stands as a standing thing (World.StandingThings) that enemy blows strike, with this much
+        /// health (Winter Wall: 60); broken, it bursts. With <see cref="BurstAfterStruck"/> it bursts that long after an enemy
+        /// first strikes it (Cracked Wall: 1.5 s). <see cref="TouchStacks"/>: what stands against either face takes that many
+        /// of the cast's affliction each second (Winter Wall's touch chilling).
+        /// </summary>
+        public float WallHealth;
+        public float BurstAfterStruck;
+        public int TouchStacks;
+        /// <summary>For the cobra form: set down where it was cast, Reach ahead, guarding Radius round itself on its Interval (Uraeus' Set Down).</summary>
+        public bool Planted;
+        /// <summary>For the field form: draws everything standing in it toward its middle, metres a second (The Pit).</summary>
+        public float Pull;
+        /// <summary>
+        /// For the field form: the name of the player's own ground it lies as (World.OwnGrounds), so the stats and marks can ask
+        /// who stands on it (Black Ice's sheet), and how many times as far an enemy shoved on it goes (<see cref="Thrown"/>).
+        /// </summary>
+        public string Ground = "";
+        public float Thrown;
+        /// <summary>
+        /// For the rod form: above zero, the rod is a standing stone that blocks the way, and its strike is a line of its Radius
+        /// turning round it once in this many seconds, striking what it crosses (The Stone Keeps the Hour: 3 s).
+        /// </summary>
+        public float SweepTurn;
+        /// <summary>
+        /// For the field form: a line twice its Radius long across your facing through the aim point, a fire at each end, in place
+        /// of a disc; it bites what stands on the line (Need-Fire's two fires joined by sparks).
+        /// </summary>
+        public bool Across;
+        /// <summary>
+        /// For the discs form: above zero, each weapon blow that lands flings the nearest disc into the enemy struck for this much
+        /// (its stagger <see cref="Stagger"/>, the form's affliction and a Static), and a heavy blow flings all that are left
+        /// (Glass Storm: 8).
+        /// </summary>
+        public float FlingDamage;
         public int Bank;
         public float BankDamage;
         public float BankStagger;
+        /// <summary>
+        /// For the parry form: above one, the stance stands on after turning a blow and turns up to this many in its time, each
+        /// answered (Circle of Steel's Empower: two; Ringing Plate: four). One or zero: the first blow only.
+        /// </summary>
+        public int Turns;
+        /// <summary>For the parry form with <see cref="Turns"/>: each answer after the first reaches this many metres further (Ringing Plate's wider rings).</summary>
+        public float TurnGrows;
 
         /// <summary>The share of a full hold, 0 to 1, held for <paramref name="held"/> seconds of at most <paramref name="most"/>.</summary>
         public static float HeldShare(float held, float most) => most <= 0f ? 0f : UnityEngine.Mathf.Clamp01(held / most);

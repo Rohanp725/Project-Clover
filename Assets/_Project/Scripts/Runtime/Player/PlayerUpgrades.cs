@@ -128,6 +128,13 @@ namespace Clover.Player
         public int Holds { get; private set; }
         /// <summary>How many enemies the Lift action has thrown into the air.</summary>
         public int Lifts { get; private set; }
+        /// <summary>What a blow made harder by <paramref name="each"/> a blow taken is multiplied by, <paramref name="most"/> blows at most.</summary>
+        public static float HarderBy(float each, int blows, int most) => 1f + Mathf.Max(0f, each) * Mathf.Clamp(blows, 0, most > 0 ? most : int.MaxValue);
+
+        /// <summary>Standing things fed a shard (Bellows, Wind Sickle): for probes.</summary>
+        public int Fed { get; private set; }
+        /// <summary>Your own grounds grown (The Burning Lake): for probes.</summary>
+        public int GroundsGrown { get; private set; }
         /// <summary>Goes up whenever a count kept by a mark changes; the HUD writes <see cref="TallyText"/> again then.</summary>
         public int TallyVersion { get; private set; }
         /// <summary>The counts kept by the marks in force, as the HUD shows them: "Plates 2/3".</summary>
@@ -190,6 +197,10 @@ namespace Clover.Player
         /// <summary>True while a gathered spell waits to be loosed, and the rings it holds, for the HUD and probes.</summary>
         public bool Gathering => rings.Active;
         public int RingsHeld => rings.Rings;
+        /// <summary>The spell gathering now (its mark), the most rings it takes, and what adds them: for the HUD's count by its slot.</summary>
+        public Upgrade GatheringMark => rings.Mark;
+        public int RingsMost => rings.Most;
+        public RingSource GatheringBy => rings.By;
         /// <summary>Counts for probes: grey health given back by Return to the Shadow, and wounds undone by Second Shadow's Master.</summary>
         public float WoundsReturned { get; private set; }
         public int WoundsUndone { get; private set; }
@@ -264,6 +275,13 @@ namespace Clover.Player
         private readonly HashSet<IDamageable> fanTaken = new HashSet<IDamageable>();
         // Cherry Red's fan: the enemies already given a blade, or passed over, this throw; and where each blade called home stood.
         private readonly HashSet<IDamageable> plantExcept = new HashSet<IDamageable>();
+        // Thrown pieces: the enemies already aimed at, and the ways a fan or ring leaves.
+        private readonly HashSet<IDamageable> pieceExcept = new HashSet<IDamageable>();
+        private readonly Vector3[] pieceWays = new Vector3[12];
+
+        /// <summary>Pieces thrown out of enemies (feathers, flakes, blades, shards) and far-side cones: for probes.</summary>
+        public int PiecesThrown { get; private set; }
+
         // The enemy a walking helper rose from: it goes to another.
         private readonly HashSet<IDamageable> helperExcept = new HashSet<IDamageable>();
         private readonly Vector3[] bladePlaces = new Vector3[PlantedBlades.Most];
@@ -286,6 +304,8 @@ namespace Clover.Player
                 // The one that just died where it is done (a swollen enemy's burst) is no one to hand it to.
                 if (near is Enemy fallen && fallen.IsDead) continue;
                 if (!PlayerCombat.Carries(near, effect.OnlyCarrying)) continue;
+                // Only those standing in your ground of that name, when it names one (The Burning Lake's flare).
+                if (!string.IsNullOrEmpty(effect.TargetOnGround) && !OwnGrounds.Under(effect.TargetOnGround, near.transform.position, Time.time)) continue;
                 var each = pending;
                 each.Target = near;
                 each.At = near.transform.position;
@@ -479,6 +499,9 @@ namespace Clover.Player
         // The Body's numbers (task 5.4) are added to these, read once as the scene made them.
         private float baseStaminaMost, baseStaminaDelay, baseDodgeRecovery, baseHurtSeconds, baseKnockback, baseGreyDelay;
         private float sinceStruck = 99f, sinceDodge = 99f, sinceMoved;
+        // A dodge begun on wet sand counts as on it until it has run (The Land Was Sea's slide and the sand it leaves).
+        private bool dodgeFromSand;
+        private const float DodgeThroughSeconds = 0.6f;
         private Vector3 lastStill;
         private float attackStamina = 1f;
         // The counts marks keep, by the mark's place in the catalogue, and which of the marks in force keep one.
@@ -560,6 +583,8 @@ namespace Clover.Player
             catalogue = Upgrade.All;
             has = new bool[catalogue.Count];
             readyAt = new float[Upgrade.EffectCount];
+            firedInFight = new int[Upgrade.EffectCount];
+            for (int i = 0; i < firedInFight.Length; i++) firedInFight[i] = -1;
             castAt = new float[catalogue.Count];
             for (int i = 0; i < castAt.Length; i++) castAt[i] = -100f;
             sinceLast = new float[Upgrade.EffectCount];
@@ -928,6 +953,8 @@ namespace Clover.Player
             hasPlasma = On(Upgrade.Plasma);
             hasWhiteHeat = On(Trees.FireTree.WhiteHeat);
             hasIntoFire = On(Trees.FireTree.IntoTheFire);
+            // Clear Sky: a Mark (anything spent by blows) lasts one blow longer on a burning enemy.
+            Afflictions.MoreBlowsBurning = On(Trees.Duo.KindlingPointDuo.ClearSky) ? 1 : 0;
             Afflictions.BurnBiteOff = drinksFire;
             if (combat != null) combat.DrinksBurn = drinksFire ? DrinkDamage : 0f;
             bool tideNow = On(Trees.WaterTree.HighWaterLowWater);
@@ -986,7 +1013,10 @@ namespace Clover.Player
             if (combat != null)
             {
                 combat.CounterCut = On(Trees.MetalTree.CounterCut);
-                combat.HeavyUnbroken = On(Trees.IceTree.Unmoved) || On(Trees.EarthTree.HeavyHand);
+                // Tasted Every Herb: no poison is laid on you, the enemy's clouds' included.
+                if (defence != null) defence.Afflictions.ImmuneTo = On(Trees.PoisonTree.TastedEveryHerb) ? AfflictionKind.Poison : AfflictionKind.None;
+                heavyUnbrokenByMarks = On(Trees.IceTree.Unmoved) || On(Trees.EarthTree.HeavyHand);
+                combat.HeavyUnbroken = heavyUnbrokenByMarks || Time.time < heavyUnbrokenUntil;
                 // Heartwood: no mana. Every price is asked in health and every gain mends.
                 bool heart = On(Trees.LifeTree.Heartwood);
                 if (heart != combat.Mana.Sealed)
@@ -1181,10 +1211,111 @@ namespace Clover.Player
             defence.Health.GreyDelay = Mathf.Max(0f, baseGreyDelay + Stats.Sum(PlayerStat.GreyDelay));
         }
 
+        // The hour kept in a fight (Keeping the Hour) and its dial at your feet: a faint ring, and a disc filling inside it.
+        private readonly Magic.HourClock hour = new Magic.HourClock();
+        private int hourRing = -1, hourDisc = -1;
+        private static readonly Color HourColour = new Color(1f, 0.78f, 0.35f, 1f);
+
+        /// <summary>True while the hour is up: the next heavy blow is on it (for probes and the dial).</summary>
+        public bool OnTheHour => hour.Ready;
+
+        /// <summary>How near an enemy must stand for its being Frozen to count (StatWhen.FrozenNear: No Summer, 8 m).</summary>
+        public const float FrozenNearWithin = 8f;
+        private readonly HashSet<IDamageable> frozenLooked = new HashSet<IDamageable>();
+        private float frozenLookIn;
+        private bool frozenNear;
+
+        // Looked for a few times a second, not every frame: any enemy within reach that is Frozen.
+        private bool FrozenNear()
+        {
+            if (combat == null) return false;
+            frozenLookIn -= Time.deltaTime;
+            if (frozenLookIn > 0f) return frozenNear;
+            frozenLookIn = 0.2f;
+            frozenNear = false;
+            frozenLooked.Clear();
+            for (int guard = 0; guard < 16 && !frozenNear; guard++)
+            {
+                var near = combat.EnemyNear(transform.position, FrozenNearWithin, frozenLooked);
+                if (!(near is IDamageable body)) break;
+                frozenLooked.Add(body);
+                frozenNear = near is IAfflictable cold && cold.Afflictions.IsFrozen;
+            }
+            frozenLooked.Clear();
+            return frozenNear;
+        }
+
+        private float HourEvery()
+        {
+            if (byTrigger == null) return 0f;
+            float every = 0f;
+            var heavy = byTrigger[(int)UpgradeTrigger.HeavyHit];
+            for (int i = 0; i < heavy.Count; i++)
+                if (heavy[i].Hour > 0f && (every <= 0f || heavy[i].Hour < every)) every = heavy[i].Hour;
+            return every;
+        }
+
+        private void KeepHour()
+        {
+            float every = HourEvery();
+            bool fighting = spells != null && spells.Fight.InFight;
+            hour.Tick(Time.deltaTime, every, fighting);
+            // While the hour is up, the next heavy blow is critical.
+            if (hour.Ready && combat != null) combat.PromiseHeavyCritical(0.1f);
+            bool shown = every > 0f && fighting;
+            if (!shown)
+            {
+                if (hourRing >= 0) Forms.FormFx.ReleaseMark(hourRing, 0.2f);
+                if (hourDisc >= 0) Forms.FormFx.ReleaseMark(hourDisc, 0.2f);
+                hourRing = hourDisc = -1;
+                return;
+            }
+            if (hourRing < 0) hourRing = Forms.FormFx.HoldMark(Forms.FormMark.Ring, Forms.FormKit.Lit(HourColour, 0.8f, 0.5f));
+            if (hourDisc < 0) hourDisc = Forms.FormFx.HoldMark(Forms.FormMark.Disc, Forms.FormKit.Lit(HourColour, 1.4f));
+            Vector3 feet = transform.position + Vector3.up * 0.03f;
+            float across = 1.4f;
+            float filled = Mathf.Max(0.05f, hour.Share(every)) * across;
+            if (hourRing >= 0) Forms.FormFx.PlaceMark(hourRing, feet, Quaternion.identity, new Vector3(across, 1f, across));
+            if (hourDisc >= 0)
+            {
+                Forms.FormFx.PlaceMark(hourDisc, feet, Quaternion.identity, new Vector3(filled, 1f, filled));
+                Forms.FormFx.TintMark(hourDisc, Forms.FormKit.Lit(HourColour, hour.Ready ? 3f : 1.2f));
+            }
+        }
+
+        // A grudge held (The Exile's Grudge): who struck you while it was open, and what each dealt; paid when it closes.
+        private readonly Magic.HarmTally harm = new Magic.HarmTally();
+        /// <summary>Grudges paid to an enemy (The Exile's Grudge): for probes.</summary>
+        public int GrudgesPaid { get; private set; }
+
+        /// <summary>What is paid back for <paramref name="dealt"/>: <paramref name="share"/> of it, <paramref name="most"/> at most (0: no cap).</summary>
+        public static float PaidBack(float dealt, float share, float most)
+        {
+            float paid = Mathf.Max(0f, dealt) * Mathf.Max(0f, share);
+            return most > 0f ? Mathf.Min(paid, most) : paid;
+        }
+
+        private void PayGrudges()
+        {
+            if (!harm.Due(Time.time)) return;
+            for (int i = 0; i < harm.Count; i++)
+            {
+                var who = harm.Who(i) as Component;
+                if (who == null || !PlayerReactions.Alive(who)) continue;
+                GrudgesPaid++;
+                Trigger(UpgradeTrigger.HarmPaid, who, who.transform.position, true, 0, null, AfflictionKind.None, "", LaySource.Effect, harm.Dealt(i));
+            }
+            harm.Close();
+        }
+
         private void Update()
         {
+            KeepHour();
+            PayGrudges();
             if (toFinish.Count > 0) FinishBroken();
             if (echoForm != null && Time.time >= echoAt) CastEcho();
+            ReadStandingNews();
+            ReadPickups();
             // A gathered spell nobody loosed goes by itself when its press window is over, or is lost when it lapses (Kept Wind).
             if (rings.Due(Time.time))
             {
@@ -1310,7 +1441,22 @@ namespace Clover.Player
                     }
                 }
             }
-            Stats.SetWhen(StatWhen.Planted, sinceDodge >= Mathf.Max(0.5f, PlantedSeconds - Stats.Sum(PlayerStat.PlantedSooner)));
+            // Inside your own ring of stones you are Rooted however you move (The Closed Ring).
+            Stats.SetWhen(StatWhen.Planted, sinceDodge >= Mathf.Max(0.5f, PlantedSeconds - Stats.Sum(PlayerStat.PlantedSooner))
+                || OwnGrounds.Under(OwnGrounds.StoneRing, transform.position, Time.time));
+            // Ground of your own stood in. A dodge begun on wet sand is a dodge through it to its end (The Land Was Sea).
+            foreach (var (when, ground) in OwnGroundStates)
+            {
+                bool inside = InOwnGround(ground);
+                if (when == StatWhen.OnWetSand)
+                {
+                    if (sinceDodge > DodgeThroughSeconds) dodgeFromSand = false;
+                    inside |= dodgeFromSand;
+                }
+                // Any poison ground of yours is a cloud too (Low Mist's sheet, Chokedamp's pools).
+                if (when == StatWhen.InCloud) inside |= Hazards.OwnGroundUnder(transform.position, AfflictionKind.Poison);
+                Stats.SetWhen(when, inside);
+            }
             // Stood still: not moved more than a hair since the last step, for a second (Cairn's and Stone Rise's Masters).
             Vector3 here = transform.position;
             sinceMoved = StillRules.Next(sinceMoved, (here - lastStill).sqrMagnitude, deltaTime);
@@ -1320,8 +1466,19 @@ namespace Clover.Player
             Stats.SetWhen(StatWhen.HeavySwing, combat != null && combat.InHeavySwing);
             Stats.SetWhen(StatWhen.NearGrown, Hazards.GrownNear(transform.position, 4f));
             Stats.SetWhen(StatWhen.FarFromGrown, !Hazards.GrownNear(transform.position, 7f));
+            Stats.SetWhen(StatWhen.FrozenNear, FrozenNear());
             bool inFire = scorched && Hazards.FireUnder(transform.position);
             Stats.SetWhen(StatWhen.InOwnFire, inFire);
+            Stats.SetWhen(StatWhen.InOwnWater, Hazards.OwnGroundUnder(transform.position, AfflictionKind.Soaked));
+            if (combat != null) combat.HeavyUnbroken = heavyUnbrokenByMarks || Time.time < heavyUnbrokenUntil;
+            // Scattered (Gone to Ash): stand again where you are now, out of the ash.
+            if (scatteredUntil > 0f && Time.time >= scatteredUntil)
+            {
+                scatteredUntil = 0f;
+                if (player != null) player.Hidden = false;
+                var standing = OwnElement(null);
+                for (int i = 0; i < 4; i++) ElementLook.Puff(standing, transform.position + Vector3.up * (0.4f + 0.4f * i), Vector3.down, 0.8f);
+            }
             SurgeHeld = inFire;
             if (hasTideClock)
             {
@@ -1397,7 +1554,20 @@ namespace Clover.Player
                 // A base spell cast through its Learn mark (its shape) is still the base spell.
                 if (effect.BaseSpell && castSource != null && !castSource.IsBaseSpell) continue;
                 if (effect.OwnBranch && !SpellBranches.OwnBranch(effect.Owner, castSource, baseElement)) continue;
+                // Only once this cast has struck so many (Step Into Light's Master).
+                if (effect.StruckAtLeast > 0 && !CastStruckAtLeast(answeringCast, castHitsOf, castHits.Count, effect.StruckAtLeast)) continue;
+                // Only another branch's casts (The Tide Brings It answers Riptide's).
+                if (!string.IsNullOrEmpty(effect.CastOf) && !SpellBranches.CastOf(effect.CastOf, castSource, baseElement)) continue;
                 if (effect.SpentAtLeast > 0 && spent < effect.SpentAtLeast) continue;
+                // A standing thing's moment is its own mark's alone.
+                if ((trigger == UpgradeTrigger.StandingStruck || trigger == UpgradeTrigger.StandingBurst) && !AnswersStanding(effect, standingOwner, standingHeavy)) continue;
+                // A pickup's own mark answers through the effects written beside the one that dropped it (AnswerPickup); here only
+                // the marks that answer any pickup of its kind.
+                if ((trigger == UpgradeTrigger.PickedUp || trigger == UpgradeTrigger.PickupLeft) && !(effect.AnyDrops && effect.Drops == pickupKind)) continue;
+                // Ground told of one standing in it is answered only by the effects that name that ground.
+                if (trigger == UpgradeTrigger.InGround && !AnswersGround(effect, groundTold)) continue;
+                // A death dealt by one reaction's own blow (The Feast), told with that reaction's id.
+                if (trigger == UpgradeTrigger.Kill && !KillAnswers(effect.KilledBy, reaction)) continue;
                 // A mark that deepens one reaction answers that one only.
                 bool reactionMoment = trigger == UpgradeTrigger.Reacted || trigger == UpgradeTrigger.ReactionStruck;
                 if (reactionMoment && !string.IsNullOrEmpty(effect.Reaction) && effect.Reaction != reaction) continue;
@@ -1469,11 +1639,14 @@ namespace Clover.Player
             // A dodge's way against the enemy faced (Into the Fire, Drawn Back to Break).
             if (effect.Way != DodgeWay.Any && effect.Way != lastDodgeWay) return;
             if (effect.WhileSurge && !(element != null && element.SurgeActive)) return;
+            // Blows that take turns (The Yawning Gap): only on this effect's turn.
+            if (!MarkRules.OnTurn(blowTurn, effect.TakesTurns, effect.Turn)) return;
             if (effect.While != StatWhen.Always && !Stats.Holds(effect.While)) return;
             if (effect.WhileOwnStands && !Forms.SpellWorks.StandsOf(effect.Owner, transform.position, effect.WithinOwn)) return;
             if (effect.While2 != StatWhen.Always && !Stats.Holds(effect.While2)) return;
             if (effect.NeedsAirborne && !(target is IAfflictable flying && flying.Afflictions.IsAirborne)) return;
             if (effect.NeedsFrozen && !(target is IAfflictable icy && icy.Afflictions.IsFrozen)) return;
+            if (effect.FrozeWithin > 0f && !(target is IAfflictable froze && froze.Afflictions.FrozeWithin(effect.FrozeWithin))) return;
             if (effect.NeedsWindup > 0f && !InWindup(target as IAfflictable, effect.NeedsWindup)) return;
             // Only for a cast timed to the poison's beat (Miasma's, One by One's and Share Alike's Masters).
             if (effect.OnCastBeat && !castOnBeat) return;
@@ -1501,6 +1674,12 @@ namespace Clover.Player
             if (effect.RedOnly && !RedJustTurned(Time.time, redTurnedAt)) return;
             if (effect.OnBeat > 0f && !(target is IAfflictable beaten && beaten.Afflictions.NearBeat(effect.OnBeat))) return;
             if (effect.HealthBelow > 0f && !(defence != null && !defence.IsDead && defence.Health.Fraction < effect.HealthBelow)) return;
+            // Only the heavy blow on the hour (Keeping the Hour).
+            if (effect.Hour > 0f && !hour.Ready) return;
+            if (effect.StoneAtBack > 0f && (target == null || !StoneBehind(transform.position, target.transform.position, effect.StoneAtBack))) return;
+            if (effect.NearStanding > 0f && !StandingThings.NearKind(transform.position, effect.NearStanding, effect.Raises)) return;
+            // Only on an enemy standing in your own ground of that name (The Hag's Staff: heavy blows on its frozen disc).
+            if (!string.IsNullOrEmpty(effect.TargetOnGround) && !((target != null || hasAt) && OwnGrounds.Under(effect.TargetOnGround, target != null ? target.transform.position : at, Time.time))) return;
             if (effect.Needs != AfflictionKind.None || effect.Needs2 != AfflictionKind.None)
             {
                 // Asked of what the dead one carried, of the trigger's own enemy, or, when the trigger names no one, of the enemy faced.
@@ -1581,6 +1760,13 @@ namespace Clover.Player
                 at = target.transform.position;
                 hasAt = true;
                 target = mate;
+            }
+            // Once a fight (The Burning Tree): not again until the next fight begins.
+            if (effect.OncePerFight)
+            {
+                int fight = spells != null ? spells.Fight.Fights : 0;
+                if (effect.Slot >= firedInFight.Length || !MarkRules.FirstInFight(firedInFight[effect.Slot], fight)) return;
+                firedInFight[effect.Slot] = fight;
             }
             // Things that can set themselves off again are held to a few times a second at most.
             float least = effect.On == UpgradeTrigger.AfflictionFull || effect.On == UpgradeTrigger.Kill ? 0.2f : 0f;
@@ -1704,7 +1890,20 @@ namespace Clover.Player
         {
             switch (effect.Shape)
             {
-                case HazardShape.Line: return self + aim * (reach * (index + 0.5f) / patches);
+                case HazardShape.Line:
+                    if (effect.AcrossFront)
+                    {
+                        // Across your front, Amount metres ahead, from your left to your right (The Drawn Line's spears).
+                        Vector3 right = new Vector3(aim.z, 0f, -aim.x);
+                        return self + aim * Or(effect.Amount, 1.5f) + right * (reach * ((index + 0.5f) / patches - 0.5f));
+                    }
+                    return self + aim * (reach * (index + 0.5f) / patches);
+                case HazardShape.Band:
+                {
+                    // Across your line to the target, centred on it.
+                    Vector3 right = new Vector3(aim.z, 0f, -aim.x);
+                    return centre + right * (reach * ((index + 0.5f) / patches - 0.5f));
+                }
                 case HazardShape.Ring: return centre + Quaternion.Euler(0f, index * 360f / patches, 0f) * Vector3.forward * reach;
                 case HazardShape.Downwind: return centre + aim * (reach + (index - (patches - 1) * 0.5f) * Or(effect.Amount, 1f));
                 default: return centre;
@@ -1724,12 +1923,15 @@ namespace Clover.Player
             layingReaction = pending.ReactionOf;
             layingCast = pending.ReactionCast;
             answeringLaid = pending.Effect != null && pending.Effect.On == UpgradeTrigger.AfflictionLaid;
+            // A mark that runs arcs on as they leave (Nothing Resists) is not answered by its own arcs, whatever set them going.
+            answeringArc = pending.Effect != null && (pending.Effect.On == UpgradeTrigger.ArcLeft || (pending.Effect.Do == UpgradeAction.Arc && AnswersArcs(pending.Effect.Owner)));
             try { Do(pending); }
             finally
             {
                 laying = LaySource.Effect;
                 layingReaction = layingCast = 0;
                 answeringLaid = false;
+                answeringArc = false;
             }
         }
 
@@ -1776,6 +1978,9 @@ namespace Clover.Player
             toward.y = 0f;
             Vector3 aim = toward.sqrMagnitude > 0.04f ? toward.normalized : transform.forward;
 
+            // A creature drawn by a recipe look plays as the effect is done (on its enemy, or where it is done).
+            if (!string.IsNullOrEmpty(effect.Look) && Forms.CreatureLooks.Play(effect.Look, target, centre, aim)) CreatureLooksPlayed++;
+
             // What the trigger carried multiplies what is done: how many are thrown or fall, or how hard it strikes. With
             // nothing carried, what this mark's Spend just took or counted on the same enemy stands in (a reaction's depth).
             int counted = spentBy == effect.Owner && spentOn == pending.Target ? lastSpent : 0;
@@ -1792,10 +1997,13 @@ namespace Clover.Player
             bool byCount = effect.Do == UpgradeAction.Projectile || effect.Do == UpgradeAction.Falling || effect.Do == UpgradeAction.Ward
                 || (effect.Do == UpgradeAction.Hazard && effect.PerStack && effect.Shape != HazardShape.Patch);
             // With no Spend of its own before it, what the trigger carried (a reaction struck again where its enemy fell: Kettle).
-            int spentHere = effect.DamagePerSpent > 0f ? (counted > 0 || !pending.Again ? counted : pending.Spent) : 0;
+            bool bySpent = effect.DamagePerSpent > 0f || effect.StaggerPerSpent > 0f;
+            int spentHere = bySpent ? (counted > 0 || !pending.Again ? counted : pending.Spent) : 0;
             // The depth counted as the moment came (CountsNeeds) is what each point of it adds to (Spoken Sentence: 12 a mark).
-            if (effect.CountsNeeds && effect.DamagePerSpent > 0f) spentHere = pending.Spent;
+            if (effect.CountsNeeds && bySpent) spentHere = pending.Spent;
             float eDamage = (byCount ? effect.Damage : effect.Damage * per) + effect.DamagePerSpent * spentHere;
+            // Harder for each blow its condition took (Fire-Setting's quench: 10% a blow, five at most).
+            if (effect.HarderPerBlow > 0f) eDamage *= HarderBy(effect.HarderPerBlow, pending.Spent, effect.HarderBlowsMost);
             // A reaction's own blows, by the stat ReactionDamage (Fuel to It, Left in Rubble, Every Crack Rings).
             float reactionScale = ReactionScale(effect.Owner);
             eDamage *= reactionScale;
@@ -1803,9 +2011,15 @@ namespace Clover.Player
             float spread = ReactionScale(effect.Owner, PlayerStat.ReactionReach);
             // A condition's kept number as the damage (Collected Twice: the reaction's own damage, repeated).
             if (effect.ByPower && effect.Do != UpgradeAction.Condition) eDamage = pending.Power * Or(effect.Share, 1f);
+            // The trigger's number paid on top (The Exile's Grudge: twice what the attacker dealt, 60 at most).
+            if (effect.PowerShare > 0f) eDamage += PaidBack(pending.Power, effect.PowerShare, effect.PowerMost);
             // A reaction's blow on a ripe seed is stronger, on an unripe one softer (In Its Season).
             if (pending.Ripe > 0f) eDamage *= pending.Ripe;
-            float eStagger = byCount ? effect.Stagger : effect.Stagger * per;
+            // A whirl's cuts stagger by its shards, as they cut by them (Sickle Wind: 4 a shard).
+            float eStagger = (byCount ? effect.Stagger : effect.Stagger * per) + effect.StaggerPerSpent * spentHere;
+            if (effect.HarderPerBlow > 0f) eStagger *= HarderBy(effect.HarderPerBlow, pending.Spent, effect.HarderBlowsMost);
+            // A share of the blow's own stagger, as its damage is shared by ByPower (One Noose for Two).
+            if (effect.StaggerOfBlow > 0f && combat != null) eStagger = combat.LastBlowStagger * effect.StaggerOfBlow;
             float eAmount = effect.Amount * per;
             int eCount = byCount && effect.PerStack ? Or(effect.Count, 1) * per : effect.Count;
             int laid = effect.CarriesDepth ? Mathf.Max(1, pending.Spent) * Or(effect.Stacks, 1) : effect.Stacks;
@@ -1823,7 +2037,29 @@ namespace Clover.Player
                 case UpgradeAction.Afflict:
                 {
                     int stacks = eStacks;
-                    if (effect.Radius > 0f)
+                    if (!string.IsNullOrEmpty(effect.ThroughGround))
+                    {
+                        // Everyone standing in every patch of the named ground, once each (Low Mist: a dodge in it).
+                        int patches = Hazards.AllNamed(effect.ThroughGround, groundBurstAt, groundBurstRadius);
+                        fanTaken.Clear();
+                        for (int i = 0; i < patches; i++)
+                            combat.AfflictArea(groundBurstAt[i], groundBurstRadius[i], kind, stacks, null, laying, effect.OnlyCarrying, fanTaken);
+                        fanTaken.Clear();
+                        if (patches > 0) GroundsDosed++;
+                    }
+                    else if (effect.AlongDodge && effect.Radius > 0f)
+                    {
+                        // Everyone the dodge just passed, once each (Seed on the Wind).
+                        Vector3 path = self - dodgeFrom;
+                        path.y = 0f;
+                        int steps = DodgePathSteps(path.magnitude, effect.Radius);
+                        fanTaken.Clear();
+                        for (int i = 0; i <= steps; i++)
+                            combat.AfflictArea(dodgeFrom + path * (i / (float)steps), effect.Radius * spread, kind, stacks, null, laying, effect.OnlyCarrying, fanTaken);
+                        fanTaken.Clear();
+                        if (!bespoke) ElementLook.Ring(look, self + Vector3.up * 0.2f);
+                    }
+                    else if (effect.Radius > 0f)
                     {
                         // Sparing the trigger's own enemy, or only those carrying an affliction, when the mark says so.
                         combat.AfflictArea(centre, effect.Radius * spread, kind, stacks, effect.SparesTarget ? subject : null, laying, effect.OnlyCarrying);
@@ -1840,12 +2076,26 @@ namespace Clover.Player
                 }
                 case UpgradeAction.Burst:
                 {
+                    // Along the seams where they were first laid, if they still glow near (Lit Seam).
+                    if (!string.IsNullOrEmpty(effect.AtOwnGround) && OwnGrounds.NearestLane(effect.AtOwnGround, centre, Time.time, 6f, out Vector3 laidAt, out Vector3 laidWay))
+                    {
+                        centre = laidAt;
+                        aim = laidWay;
+                    }
+                    // A star laid as your own ground for a while (Earthlight's glowing seams).
+                    if (effect.Seams > 0 && effect.GroundSeconds > 0f && !string.IsNullOrEmpty(effect.Named))
+                        for (int seam = 0; seam < effect.Seams; seam++)
+                            OwnGrounds.LayLane(effect.Named, centre, GroundRules.SeamWay(aim, seam, effect.Seams), Or(effect.Radius, 2.5f) * spread, GroundRules.SeamHalf, Time.time + effect.Delay + effect.GroundSeconds);
                     var burst = new HazardSpec
                     {
                         Kind = ElementLook.Ground(look), Tint = look.Colour, Position = centre, Radius = Or(effect.Radius, 2.5f) * spread, Seconds = 0.12f, BiteEvery = 0.1f,
                         Once = true, Burst = !effect.Unseen && !bespoke, Quiet = bespoke, Delay = effect.Delay, Blow = Unseen(Blow(look, kind, eDamage, eStagger, eStacks), bespoke), FromReaction = laying == LaySource.Reaction,
                         // A burst that starts from the one struck may leave that one alone (Earthed's fern).
                         Spares = effect.SparesTarget ? pending.Target as IDamageable : null,
+                        // A star of cracks: only what stands on its seams (the ledger's seams).
+                        Seams = effect.Seams, SeamWay = aim,
+                        // What it does to each one standing in it as it lands (The Second Wave: thrown down if the first ring caught it).
+                        Acts = effect.ActsAsGround ? effect : null, LaidFor = pending.Target, Source = effect,
                     };
                     // One burst, or one where each patch of a shape would fall.
                     int bursts = effect.Shape == HazardShape.Patch ? 1 : Or(eCount, 3);
@@ -1880,6 +2130,8 @@ namespace Clover.Player
                         // A lane run out of the one struck (Carried Embers' column) may leave that one alone.
                         Spares = effect.SparesTarget ? pending.Target as IDamageable : null,
                     };
+                    // A gust down the lane carries everything on it along it together (Hot Wind).
+                    if (effect.Carry > 0f) LanesShoved += combat.ShoveLane(centre, aim, length, half, effect.Carry);
                     for (int i = 0; i < patches; i++)
                     {
                         run.Position = LanePatch(centre, aim, length, i, patches);
@@ -1899,8 +2151,17 @@ namespace Clover.Player
                 }
                 case UpgradeAction.Cone:
                 {
-                    transform.rotation = Quaternion.LookRotation(aim, Vector3.up);
                     float reach = Or(effect.Reach, 4.5f);
+                    if (effect.Behind)
+                    {
+                        // A half ring behind you flying out (Wings Behind): you keep facing as you were.
+                        Vector3 back = -transform.forward;
+                        back.y = 0f;
+                        combat.StrikeConeFrom(self, back, reach, Or(effect.Arc, 180f), Blow(look, kind, eDamage, eStagger, eStacks));
+                        for (int i = 1; i <= 3; i++) ElementLook.Puff(look, self + Vector3.up * 1.1f + back.normalized * (reach * i / 3.5f), back, 0.7f);
+                        break;
+                    }
+                    transform.rotation = Quaternion.LookRotation(aim, Vector3.up);
                     combat.StrikeCone(reach, Or(effect.Arc, 90f), Blow(look, kind, eDamage, eStagger, eStacks));
                     // Amount: each enemy the cone struck is thrown straight away from the player (Drawn Back to Break's breaker),
                     // that many metres beyond the blow's own shove. A shove dies away as it goes, so it is sized by how far
@@ -1922,16 +2183,39 @@ namespace Clover.Player
                 {
                     int patches = effect.Shape == HazardShape.Patch ? 1 : Or(eCount, 4);
                     float reach = Or(effect.Reach, 4f) * spread;
+                    // Laid along the dodge just taken, from where it began (Wake).
+                    if (effect.AlongDodge && effect.Shape == HazardShape.Line)
+                    {
+                        Vector3 path = self - dodgeFrom;
+                        path.y = 0f;
+                        if (path.sqrMagnitude > 0.04f)
+                        {
+                            reach = path.magnitude;
+                            aim = path / reach;
+                            self = dodgeFrom;
+                        }
+                    }
                     var spec = new HazardSpec
                     {
                         Kind = ElementLook.Ground(look), Tint = look.Colour, Radius = Or(effect.Radius, 1f) * spread * Stats.Multiplier(PlayerStat.GroundSize), Seconds = Or(effect.Seconds, 3f) * Stats.Multiplier(PlayerStat.GroundSeconds), BiteEvery = Or(effect.Interval, 0.5f),
-                        Grown = effect.Grown, Family = FamilyOf(effect), Limit = effect.Grown && effect.Limit > 0 ? effect.Limit + Mathf.Max(0, Stats.Whole(PlayerStat.GrownLimit)) : 0,
+                        // A limit of one effect's own ground (The Sea Comes In's four pools), or of grown things, which the marks may raise.
+                        Grown = effect.Grown, Family = FamilyOf(effect), Limit = effect.Limit > 0 ? effect.Limit + (effect.Grown ? Mathf.Max(0, Stats.Whole(PlayerStat.GrownLimit)) : 0) : 0,
                         Blow = Blow(look, kind, eDamage, eStagger, eStacks), FromReaction = laying == LaySource.Reaction,
                         Spares = effect.SparesTarget ? pending.Target as IDamageable : null,
                         // Unseen ground is drawn by its reaction's look alone (Seized's film: no bolt at each bite).
                         Burst = false, Quiet = effect.Unseen || bespoke,
+                        // A second affliction laid with each bite (the hollow trunk Seeding and Cursing what touches it).
+                        AlsoLays = effect.BitesLay,
+                        // Ground that keeps acting on whoever stands in it (the ledger's ground-states).
+                        Acts = effect.ActsAsGround ? effect : null, Pull = effect.Pull, LaidFor = pending.Target, Source = effect, Name = !string.IsNullOrEmpty(effect.Ground) ? effect.Ground : effect.Named,
+                        // Ground that goes with its enemy (Heavy Silver), and a stone that cracks once when stood at (Fire-Cracked).
+                        Follow = effect.Follows && target != null, Target = effect.Follows ? target : null, CrackReach = effect.CracksAt,
+                        // A lane of foam carries what stands in it away from the player (the ledger's lane-shove).
+                        Carry = effect.Carry > 0f ? aim * GroundRules.PullStep(effect.Carry, Or(effect.Interval, 0.5f)) : Vector3.zero,
                     };
                     spec.Blow.Unseen = effect.Unseen || bespoke;
+                    // A band that runs on away from you as one (Running Water).
+                    if (effect.Shape == HazardShape.Band && effect.Speed > 0f) spec.Velocity = new Vector3(aim.x, 0f, aim.z) * effect.Speed;
                     for (int i = 0; i < patches; i++)
                     {
                         spec.Position = PatchAt(effect, i, patches, centre, self, aim, reach);
@@ -2016,7 +2300,7 @@ namespace Clover.Player
                     break;
                 }
                 case UpgradeAction.Heal:
-                    if (defence != null) defence.Heal(eAmount);
+                    if (defence != null) defence.Heal(effect.ByTurnedWound ? PlayerDefence.TurnedMend(defence.LastTurnedWound, eAmount) : eAmount);
                     break;
                 case UpgradeAction.Mana:
                     combat.Mana.Gain(eAmount);
@@ -2032,7 +2316,14 @@ namespace Clover.Player
                         ElementLook.Sparks(held, self + Vector3.up * 1.2f, Vector3.up, 0.6f);
                         break;
                     }
-                    Stats.AddBoon(effect.Stat, effect.Amount, Or(effect.Seconds, 5f) * Stats.Multiplier(PlayerStat.BoonSeconds));
+                    float boonSeconds = Or(effect.Seconds, 5f);
+                    // By the count before it (Drawn From the Wood: 1.5 s for each grown thing withered, 10 s at most).
+                    if (effect.SecondsEach > 0f)
+                    {
+                        if (counted <= 0) break;
+                        boonSeconds = Mathf.Min(boonSeconds, effect.SecondsEach * counted);
+                    }
+                    Stats.AddBoon(effect.Stat, effect.Amount, boonSeconds * Stats.Multiplier(PlayerStat.BoonSeconds));
                     if (effect.UntilBlow && untilBlowCount < untilBlow.Length) untilBlow[untilBlowCount++] = effect;
                     if (effect.UntilDodge && untilDodgeCount < untilDodge.Length) untilDodge[untilDodgeCount++] = effect;
                     ElementLook.Sparks(held, self + Vector3.up * 1.2f, Vector3.up, 0.6f);
@@ -2088,6 +2379,225 @@ namespace Clover.Player
                     StepsToStanding++;
                     break;
                 }
+                case UpgradeAction.Pieces:
+                {
+                    Vector3 from = target != null ? target.position : centre;
+                    from.y = self.y;
+                    Vector3 away = from - self;
+                    away.y = 0f;
+                    away = away.sqrMagnitude > 0.01f ? away.normalized : transform.forward;
+                    var left = target != null ? target.GetComponentInParent<IDamageable>() : null;
+                    var pieceBlow = Blow(look, kind, eDamage, eStagger, eStacks);
+                    float reach = Or(effect.Reach, 6f);
+                    if (effect.Thrown == PieceAim.FarCone)
+                    {
+                        int crossed = combat.StrikeConeFrom(from, away, reach, Or(effect.Arc, 60f), pieceBlow, left);
+                        // The second affliction it lays, on the same cone (a Mark and a Chill from Prism's rays).
+                        if (effect.BitesLay != AfflictionKind.None && crossed > 0)
+                            combat.StrikeConeFrom(from, away, reach, Or(effect.Arc, 60f), Blow(lookOf[(int)effect.BitesLay] ?? look, effect.BitesLay, 0f, 0f, 1), left);
+                        for (int i = 0; i < 3; i++) ElementLook.Sparks(look, from + Vector3.up, Quaternion.Euler(0f, (i - 1) * Or(effect.Arc, 60f) * 0.35f, 0f) * away, 1f);
+                        PiecesThrown++;
+                        break;
+                    }
+                    float speed = Or(effect.Speed, 12f);
+                    var piece = new HazardSpec
+                    {
+                        Kind = ElementLook.Ground(look), Tint = look.Colour, Radius = Or(effect.Radius, 0.6f), Seconds = reach / speed, BiteEvery = 0.05f, Once = true,
+                        StopsAtFirst = true, Spares = left, Blow = pieceBlow, AlsoLays = effect.BitesLay, FromReaction = laying == LaySource.Reaction,
+                    };
+                    int pieces = Or(eCount, 3);
+                    if (effect.Thrown == PieceAim.AtNearest)
+                    {
+                        pieceExcept.Clear();
+                        if (left != null) pieceExcept.Add(left);
+                        for (int i = 0; i < pieces; i++)
+                        {
+                            var next = combat.EnemyNear(from, reach, pieceExcept);
+                            if (!(next is IDamageable aimed)) break;
+                            pieceExcept.Add(aimed);
+                            Vector3 way = next.transform.position - from;
+                            way.y = 0f;
+                            way = way.sqrMagnitude > 0.01f ? way.normalized : away;
+                            piece.Flight = Flight.Homing;
+                            piece.Target = next.transform;
+                            piece.Seconds = (reach + 2f) / speed;
+                            piece.Position = from + way * 0.6f;
+                            piece.Velocity = way * speed;
+                            Hazards.Lay(piece);
+                            PiecesThrown++;
+                        }
+                        pieceExcept.Clear();
+                        break;
+                    }
+                    // A fan rides the way its enemy was last shoved, if lately (downwind), else away from you.
+                    if (effect.Thrown == PieceAim.Fan && target != null && target.GetComponentInParent<Enemy>() is Enemy shoved)
+                        away = PieceRules.Downwind(away, shoved.LastShoveWay, shoved.LastShovedAt, Time.time);
+                    int made = PieceRules.Ways(effect.Thrown, away, pieces, Or(effect.Arc, 40f), pieceWays);
+                    for (int i = 0; i < made; i++)
+                    {
+                        piece.Position = from + pieceWays[i] * 0.6f;
+                        piece.Velocity = pieceWays[i] * speed;
+                        Hazards.Lay(piece);
+                        PiecesThrown++;
+                    }
+                    break;
+                }
+                case UpgradeAction.DropPickup:
+                {
+                    int dropOwner = effect.Owner != null ? effect.Owner.Index : -1;
+                    int drops = effect.PerStack ? Or(effect.Count, 1) * per : Or(effect.Count, 1);
+                    Vector3 enemyAt = target != null ? target.position : pending.HasAt ? pending.At : centre;
+                    for (int i = 0; i < drops; i++)
+                    {
+                        Vector3 spot = effect.Shape == HazardShape.Patch
+                            ? StandingRules.PlaceFor(effect.RaiseAt, self, transform.forward, enemyAt, Or(effect.Reach, 0f))
+                            : PatchAt(effect, i, drops, new Vector3(enemyAt.x, self.y, enemyAt.z), self, aim, Or(effect.Reach, 2.5f));
+                        spot.y = self.y;
+                        Pickups.Drop(effect.Drops, spot, effect.Seconds, dropOwner, Time.time, effect.Limit, effect.Radius, effect);
+                        PickupsDropped++;
+                    }
+                    break;
+                }
+                case UpgradeAction.DrawPickups:
+                    Pickups.DrawAll(effect.Drops);
+                    break;
+                case UpgradeAction.PlayLook:
+                    break;
+                case UpgradeAction.Scatter:
+                {
+                    float scattered = Or(effect.Seconds, 0.4f);
+                    if (player != null) player.Hidden = true;
+                    if (defence != null) defence.UntouchableUntil = Mathf.Max(defence.UntouchableUntil, Time.time + scattered);
+                    scatteredUntil = Time.time + scattered;
+                    for (int i = 0; i < 4; i++) ElementLook.Puff(held, self + Vector3.up * (0.4f + 0.4f * i), Vector3.up, 0.8f);
+                    Scatters++;
+                    break;
+                }
+                case UpgradeAction.OwnGround:
+                {
+                    // Ground of your own by its name, which bites nothing: the stats and marks ask who stands in it.
+                    float until = Time.time + Or(effect.Seconds, 5f) * Stats.Multiplier(PlayerStat.GroundSeconds);
+                    if (effect.Shape == HazardShape.Line)
+                    {
+                        float length = Or(effect.Reach, 6f) * spread;
+                        Vector3 way = new Vector3(aim.x, 0f, aim.z).normalized;
+                        if (effect.AcrossFront)
+                        {
+                            Vector3 right = new Vector3(way.z, 0f, -way.x);
+                            OwnGrounds.LayLane(effect.Ground, self + way * Or(effect.Amount, 1.5f) - right * (length * 0.5f), right, length, Or(effect.Radius, 0.5f), until);
+                        }
+                        else OwnGrounds.LayLane(effect.Ground, self, way, length, Or(effect.Radius, 1f), until);
+                    }
+                    else OwnGrounds.Lay(effect.Ground, centre, Or(effect.Radius, 1f) * spread, until);
+                    break;
+                }
+                case UpgradeAction.LightCoat:
+                {
+                    // Every coated enemy goes up at once, harder for each blow that spread the coat (the mark's tally, emptied; the
+                    // Learn's for a mark that pays from it: Black Pitch's Master).
+                    var owner = PayerOf(effect);
+                    burningTaken.Clear();
+                    int spreads = 0;
+                    if (owner != null && owner.Tally != null && owner.Index < tally.Length)
+                    {
+                        spreads = tally[owner.Index];
+                        tally[owner.Index] = 0;
+                        tallyDirty = true;
+                    }
+                    float burst = CoatBurst(eDamage, effect.DamagePerSpent, spreads, effect.Amount);
+                    fanTaken.Clear();
+                    coatStruck.Clear();
+                    for (int guard = 0; guard < 32; guard++)
+                    {
+                        var near = combat.EnemyNear(centre, Or(effect.Reach, 30f), fanTaken);
+                        if (!(near is IDamageable one)) break;
+                        fanTaken.Add(one);
+                        if (!(near is IAfflictable coated) || !coated.Afflictions.Conditions.Holds(effect.Condition)) continue;
+                        coated.Afflictions.Conditions.EndNow(effect.Condition);
+                        burningTaken.Add(one);
+                        Vector3 at = near.transform.position;
+                        combat.StrikeArea(at, Or(effect.Radius, 1.2f), Blow(look, kind, burst, eStagger, eStacks), coatStruck);
+                        if (effect.Seconds > 0f) Hazards.Lay(HazardKind.Fire, at, Or(effect.Radius, 1.2f), effect.Seconds, 2f, 0f, 1f);
+                        ElementLook.Puff(look, at + Vector3.up * 0.6f, Vector3.up, 1.4f);
+                        CoatsLit++;
+                    }
+                    // Lit by a finisher (Black Pitch's Master): every other burning enemy near goes up with it, at a share.
+                    if (effect.BurningShare > 0f)
+                    {
+                        if (subject is IDamageable lit) burningTaken.Add(lit);
+                        for (int guard = 0; guard < 32; guard++)
+                        {
+                            var near = combat.EnemyNear(centre, Or(effect.BurningWithin, 10f), burningTaken);
+                            if (!(near is IDamageable one)) break;
+                            burningTaken.Add(one);
+                            if (!(near is IAfflictable burning) || !burning.Afflictions.Has(AfflictionKind.Burn)) continue;
+                            burning.Afflictions.SetOff(AfflictionKind.Burn);
+                            Vector3 at = near.transform.position;
+                            combat.StrikeArea(at, Or(effect.Radius, 1.2f), Blow(look, kind, burst * effect.BurningShare, eStagger * effect.BurningShare, 0), coatStruck);
+                            ElementLook.Puff(look, at + Vector3.up * 0.6f, Vector3.up, 1f);
+                            BurningLit++;
+                        }
+                        burningTaken.Clear();
+                    }
+                    fanTaken.Clear();
+                    coatStruck.Clear();
+                    break;
+                }
+                case UpgradeAction.CarryGround:
+                {
+                    // The named ground lying on the lane ahead rides on with the spell (Riptide's wave carrying the slicks).
+                    Vector3 way = new Vector3(aim.x, 0f, aim.z).normalized;
+                    GroundsCarried += Hazards.Drift(effect.ThroughGround, self, way, Or(effect.Reach, 7f) * spread, Or(effect.Radius, 1.5f), way * Or(effect.Speed, 8f), Or(effect.Seconds, 0.8f));
+                    break;
+                }
+                case UpgradeAction.CountAsBlow:
+                    combat.CountAsBlowLanded();
+                    break;
+                case UpgradeAction.FreeDodge:
+                    player.Stamina.Restore(player.Dodge.StaminaCost);
+                    FreeDodges++;
+                    break;
+                case UpgradeAction.HeavyUnbroken:
+                    heavyUnbrokenUntil = Mathf.Max(heavyUnbrokenUntil, Time.time + Or(effect.Seconds, 1f));
+                    combat.HeavyUnbroken = true;
+                    break;
+                case UpgradeAction.BurstGround:
+                {
+                    // Every patch the named ground still has bursts where it lies, all at once, and is gone.
+                    int burst = Hazards.TakeAllOf(effect.BurstsGround, groundBurstAt, groundBurstRadius);
+                    var blow = Blow(look, kind, eDamage, eStagger, eStacks);
+                    for (int i = 0; i < burst; i++)
+                    {
+                        combat.StrikeArea(groundBurstAt[i], groundBurstRadius[i], blow);
+                        ElementLook.Strike(look, groundBurstAt[i], 0.3f);
+                    }
+                    GroundsBurst += burst;
+                    break;
+                }
+                case UpgradeAction.LengthenOwn:
+                    Forms.SpellWorks.LengthenRunsOf(effect.Owner, Or(effect.Seconds, 1f));
+                    break;
+                case UpgradeAction.CriticalNext:
+                    combat.PromiseCritical(Or(effect.Seconds, 4f));
+                    ElementLook.Sparks(held, self + Vector3.up * 1.2f, Vector3.up, 0.6f);
+                    break;
+                case UpgradeAction.Raise:
+                {
+                    // Of a moment that names an enemy, placed against it; of one that names only a place (a death), there.
+                    Vector3 enemyAt = target != null ? target.position : pending.HasAt ? pending.At : centre;
+                    Vector3 spot = StandingRules.PlaceFor(effect.RaiseAt, self, transform.forward, enemyAt, Or(effect.Reach, effect.RaiseAt == StandingPlace.At ? 0f : 1.2f));
+                    spot.y = self.y;
+                    int owner = effect.Owner != null ? effect.Owner.Index : -1;
+                    if (effect.Limit > 0) StandingThings.KeepAtMost(owner, effect.Limit - 1);
+                    Vector3 front = self - spot;
+                    StandingThings.Raise(effect.Raises, spot, front, effect.Seconds, effect.Amount, Time.time, owner, effect.Delay, effect.Draws);
+                    ElementLook.Puff(look, spot + Vector3.up * 0.4f, Vector3.up, 1.2f);
+                    ThingsRaised++;
+                    break;
+                }
+                case UpgradeAction.BreakStanding:
+                    if (StandingThings.BreakNear(pending.HasAt ? pending.At : centre, Or(effect.Radius, 1f), effect.Owner != null ? effect.Owner.Index : -1)) StandingAnswers++;
+                    break;
                 case UpgradeAction.DriveBlades:
                     if (target != null) PlantedBlades.DriveAllIn(target.GetComponentInParent<IDamageable>() as Component);
                     break;
@@ -2186,8 +2696,33 @@ namespace Clover.Player
                     broughtCount = 0;
                     break;
                 }
+                case UpgradeAction.RestReaction:
+                {
+                    int resting = ReactionTable.PairOf(effect.Reaction);
+                    if (resting >= 0 && subject is IAfflictable rester) rester.Afflictions.RestReaction(resting, Or(effect.Seconds, AfflictionPairs.Rest(resting)));
+                    break;
+                }
+                case UpgradeAction.ShortenRest:
+                {
+                    int shortened = ReactionTable.PairOf(effect.Reaction);
+                    if (shortened >= 0 && subject is IAfflictable quick) quick.Afflictions.ShortenRest(shortened, effect.Seconds);
+                    break;
+                }
+                case UpgradeAction.PayNow:
+                    if (reactionsFound != null && reactionsFound.PayAsEnded(subject, effect.ToState)) PaidNow++;
+                    break;
+                case UpgradeAction.Plate:
+                    if (defence != null) defence.GivePlates(Or(eCount, 1), Or(effect.Amount, PlayerDefence.PlainPlateShare));
+                    Vfx.Play(VfxKind.TintRing, self + Vector3.up * 0.2f, Vector3.up, 1f, new Color(0.62f, 0.55f, 0.45f));
+                    break;
                 case UpgradeAction.Ward:
-                    if (defence != null) defence.GiveWards(Or(eCount, 1));
+                    // Kept for the trigger's enemy alone (Ash on the Brow): only its next blow is turned.
+                    if (effect.OnTarget)
+                    {
+                        if (defence == null || subject == null) break;
+                        defence.KeepWardFor(subject, Time.time + Or(effect.Seconds, 6f));
+                    }
+                    else if (defence != null) defence.GiveWards(Or(eCount, 1));
                     Vfx.Play(VfxKind.TintRing, self + Vector3.up * 0.2f, Vector3.up, 1f, new Color(0.7f, 0.92f, 1f));
                     break;
                 case UpgradeAction.Step:
@@ -2222,8 +2757,10 @@ namespace Clover.Player
                     if (effect.Shape == HazardShape.Downwind)
                     {
                         // The target alone, along the player's line to it: thrown straight away from them, or drawn in.
+                        // Sideways: across your front to your left, along a sweep from your right (Sweep of Wings).
+                        Vector3 along = effect.Sideways ? PushRules.Sideways(aim) : aim;
                         if (subject is IShovable shoved)
-                            shoved.Push((effect.Do == UpgradeAction.Pull ? -aim : aim * combat.StatPush) * Or(eAmount, 3f));
+                            shoved.Push((effect.Do == UpgradeAction.Pull ? -along : along * combat.StatPush) * Or(eAmount, 3f));
                         ElementLook.Ring(look, centre + Vector3.up * 0.2f);
                         break;
                     }
@@ -2305,8 +2842,28 @@ namespace Clover.Player
                         Bites = strikes, Burst = !bespoke, Quiet = bespoke, Follow = target != null, Target = target, Blow = Unseen(Blow(look, kind, eDamage, eStagger, eStacks), bespoke),
                         // Its helpers at once, at most (Nothing Stays Buried: three); one more takes the place of the one nearest its end.
                         Family = effect.Limit > 0 ? FamilyOf(effect) : 0, Limit = effect.Limit,
-                        WalksTo = walk, AlsoLays = effect.BitesLay,
+                        WalksTo = walk, AlsoLays = effect.BitesLay, Name = effect.Named,
                     });
+                    break;
+                }
+                case UpgradeAction.TallyHarm:
+                    harm.Begin(Time.time + Or(effect.Seconds, 3f));
+                    break;
+                case UpgradeAction.Purify:
+                    Purified.Add(effect.Follows ? transform.position : centre, Or(effect.Radius, 2f) * spread, Time.time + Or(effect.Seconds, 0.5f), effect.Follows ? transform : null);
+                    break;
+                case UpgradeAction.GrowGround:
+                    if (OwnGrounds.Grow(effect.Ground, subject != null ? subject.transform.position : centre, effect.Amount, effect.Seconds, Time.time)) GroundsGrown++;
+                    break;
+                case UpgradeAction.Feed:
+                {
+                    // A shard torn from the trigger's enemy goes to the whirl only when a whirl stands near (Wind Sickle).
+                    var torn = effect.TearsNeeds ? subject as IAfflictable : null;
+                    if (effect.TearsNeeds && (torn == null || !torn.Afflictions.Has(effect.Needs))) break;
+                    if (!Hazards.Feed(effect.Named, centre, Or(effect.Reach, 3f), eDamage, eStagger, effect.Affliction, Or(effect.Stacks, 1))) break;
+                    if (torn != null) torn.Afflictions.Spend(effect.Needs, 1);
+                    Fed++;
+                    ElementLook.Sparks(look, centre + Vector3.up * 0.8f, Vector3.up, 0.6f);
                     break;
                 }
                 case UpgradeAction.Pass:
@@ -2331,9 +2888,13 @@ namespace Clover.Player
                     // Pushed past the taker's depth, the rest bursts it and runs on, a few bodies at most (Eaten in Turn).
                     for (int hop = 0; hop < 4 && give > 0; hop++)
                     {
-                        var next = NearestInState(effect.ToState, from, passReach, passExcept) ?? combat.EnemyNear(from, passReach, passExcept);
+                        // By the line's own order when it keeps one (Eaten in Turn), the first hop only; else the nearest in the state.
+                        var next = (effect.InOrder && hop == 0 ? NextOnLine(effect.ToState, pending.Power, from, passReach, passExcept) : null)
+                            ?? NearestInState(effect.ToState, from, passReach, passExcept) ?? combat.EnemyNear(from, passReach, passExcept);
                         if (!(next is IAfflictable taker) || !(next is IDamageable passedTo)) break;
                         passExcept.Add(passedTo);
+                        // The reaction it may set off there starts along its count (What the Yew Keeps: the fig at two coils).
+                        if (effect.CountedBlows > 0) taker.Afflictions.StartCountAt(ReactionTable.PairOf(effect.Reaction), effect.CountedBlows);
                         int over = 0, fits = give;
                         if (effect.Overflow) fits = DepthMoves.Fits(taker.Afflictions, kind, give, out over);
                         if (fits > 0) CombatEvents.Report(next, kind, fits, taker.Afflictions.Lay(kind, fits, 0f, combat.AfflictionPower, laying, next), laying);
@@ -2449,7 +3010,8 @@ namespace Clover.Player
                     if (element != null && element.LightSurgeFree(effect.SurgeOf, Or(effect.Seconds, 4f))) SurgesGiven++;
                     break;
                 case UpgradeAction.NextHeavy:
-                    combat.MakeNextBlowHeavy(Or(effect.Seconds, 1f));
+                    if (effect.OnTarget && subject == null) break;
+                    combat.MakeNextBlowHeavy(Or(effect.Seconds, 1f), effect.OnTarget ? subject : null);
                     ElementLook.Sparks(held, self + Vector3.up * 1.2f, transform.forward, 0.5f);
                     break;
                 case UpgradeAction.ShareStore:
@@ -2511,11 +3073,23 @@ namespace Clover.Player
                     float damage = ((carrier.Afflictions.SetOff(kind) + carriedDamage) * reactionScale + eDamage * depth) * Stats.Multiplier(PlayerStat.BurstDamage) * ripeShare
                         * castBoons.Multiplier(pending.CastTag, PlayerStat.BurstDamage, Time.time);
                     if (ripeSeed) RipeBurstAt(subject, centre, depth);
-                    combat.StrikeArea(centre, Or(effect.Radius, 3f) * Stats.Multiplier(PlayerStat.BurstReach), Blow(look, kind, damage, eStagger * depth * Stats.Multiplier(PlayerStat.BurstStagger), 0),
-                        null, 0f, effect.OnlyCarrying);
+                    var discharge = Blow(look, kind, damage, eStagger * depth * Stats.Multiplier(PlayerStat.BurstStagger), 0);
+                    // Through every patch of a named ground in full (Grounded: all standing in live water), or round its enemy.
+                    int through = string.IsNullOrEmpty(effect.ThroughGround) ? 0 : Hazards.AllNamed(effect.ThroughGround, groundBurstAt, groundBurstRadius);
+                    if (!string.IsNullOrEmpty(effect.ThroughGround))
+                    {
+                        groundStruck.Clear();
+                        for (int i = 0; i < through; i++) combat.StrikeArea(groundBurstAt[i], groundBurstRadius[i], discharge, groundStruck, 0f, effect.OnlyCarrying);
+                        if (through == 0) combat.StrikeArea(centre, 0.5f, discharge, groundStruck, 0f, effect.OnlyCarrying);
+                        groundStruck.Clear();
+                        GroundDischarges += through;
+                    }
+                    else combat.StrikeArea(centre, Or(effect.Radius, 3f) * Stats.Multiplier(PlayerStat.BurstReach), discharge, null, 0f, effect.OnlyCarrying);
                     ElementLook.Strike(look, centre, 0.3f);
                     // Whatever waits on an affliction being spent is told, with how deep it was.
                     Trigger(UpgradeTrigger.SetOff, subject, centre, true, depth, null, kind, "", laying, damage);
+                    // A discharge bends into any live flame near (Flashover).
+                    if (kind == AfflictionKind.Static && reactionsFound != null) reactionsFound.HearDischarge(subject, centre);
                     break;
                 }
                 case UpgradeAction.Hold:
@@ -2523,7 +3097,7 @@ namespace Clover.Player
                     // PerStack: held for each stack counted (Poured Bronze's 0.4 s a notch).
                     float seconds = Or(effect.Seconds, 1.5f) * per;
                     if (effect.Radius > 0f) Holds += combat.HoldArea(centre, effect.Radius * spread, seconds, effect.OnlyCarrying);
-                    else if (subject is IAfflictable gripped && gripped.Afflictions.Hold(seconds)) Holds++;
+                    else if (subject is IAfflictable gripped && gripped.Afflictions.Hold(seconds, effect.Exact)) Holds++;
                     // An unseen hold is drawn by its reaction's look alone: no ring (Seized, the owner's "remove the circles").
                     if (!effect.Unseen)
                     {
@@ -2628,6 +3202,10 @@ namespace Clover.Player
                 {
                     // Only what stands within the effect's reach of you when it names one (Drawn From the Wood: 12 m).
                     int burst = Hazards.BurstGrown(Blow(look, kind, eDamage, eStagger, eStacks), Or(effect.Radius, 3f), self, effect.Reach, grownBursts);
+                    // Counted as a Spend counts, for the effects after it in the mark (Drawn From the Wood's green blood).
+                    lastSpent = burst;
+                    spentBy = effect.Owner;
+                    spentOn = pending.Target;
                     if (burst > 0 && defence != null && eAmount > 0f) defence.Heal(eAmount * burst);
                     // Each burst is a moment of its own, where it was (Second Sowing sows in all it reaches).
                     for (int b = 0; b < burst && b < grownBursts.Length; b++) Trigger(UpgradeTrigger.GrownBurst, null, grownBursts[b]);
@@ -2673,27 +3251,63 @@ namespace Clover.Player
                 case UpgradeAction.ForceReaction:
                 {
                     int pair = ReactionTable.PairOf(effect.Reaction);
-                    if (subject is IAfflictable forced && forced.Afflictions.ForceReaction(pair, subject, effect.Alone)) ForcedReactions++;
+                    if (effect.CountedBlows > 0 && subject is IAfflictable coiled) coiled.Afflictions.StartCountAt(pair, effect.CountedBlows);
+                    if (subject is IAfflictable forced && (effect.AsLaid ? forced.Afflictions.ReactAsLaid(pair, subject) : forced.Afflictions.ForceReaction(pair, subject, effect.Alone)))
+                        ForcedReactions++;
                     break;
                 }
                 case UpgradeAction.Flinch:
                     if (subject is IFlinchable flinching && flinching.Flinch(Or(effect.Seconds, 0.4f))) Flinches++;
                     break;
+                case UpgradeAction.Condition when effect.AlongCast && effect.Radius > 0f:
+                {
+                    // Everyone passed on the way from where the spell was cast, once each, but its own enemy (Stone Underfoot).
+                    Vector3 path = self - castFrom;
+                    path.y = 0f;
+                    int steps = DodgePathSteps(path.magnitude, effect.Radius);
+                    fanTaken.Clear();
+                    if (subject is IDamageable passedTo) fanTaken.Add(passedTo);
+                    for (int i = 0; i <= steps; i++)
+                    {
+                        Vector3 point = castFrom + path * (i / (float)steps);
+                        for (int guard = 0; guard < 12; guard++)
+                        {
+                            var near = combat.EnemyNear(point, effect.Radius * spread, fanTaken);
+                            if (!(near is IDamageable passed)) break;
+                            fanTaken.Add(passed);
+                            if (ConditionCaster.CastOne(effect, near, combat, laying, per)) ConditionsSet++;
+                        }
+                    }
+                    fanTaken.Clear();
+                    break;
+                }
                 case UpgradeAction.Condition:
-                    // It keeps the trigger's number (ByPower), or the depth counted as the moment came (CountsNeeds).
+                    // It keeps the trigger's number (ByPower), or the depth counted as the moment came (CountsNeeds), or its place
+                    // in the cast's line (Numbered).
                     ConditionsSet += ConditionCaster.Cast(effect, subject, centre, combat, laying, conditionScratch, per,
-                        effect.ByPower ? pending.Power : effect.CountsNeeds ? per : -1f, spread, pending.From);
+                        effect.State != null && effect.State.Numbered ? NextNumber(pending.CastTag) : effect.ByPower ? pending.Power : effect.CountsNeeds ? per : -1f,
+                        spread, pending.From, pending.ReactionOf - 1);
                     break;
                 case UpgradeAction.Shatter:
                 {
-                    // The ice breaks as under a heavy blow: what it held takes the breaking, and the shatter is told.
+                    // The ice breaks as under a heavy blow: what it held takes the breaking, and the shatter is told. Counted as Amount
+                    // shatters in all (Hanging Ice: twice; its Master four times over); broken by this very blow already, the
+                    // breaking is struck again for the rest.
                     if (!(subject is IAfflictable icy)) break;
+                    float times = Or(effect.Amount, 1f);
                     float broke = ShatterNow(icy);
+                    bool already = broke <= 0f;
+                    if (already)
+                    {
+                        if (icy.Afflictions.SinceShatter >= AfflictionSet.ShatterMoment || times <= 1f) break;
+                        broke = icy.Afflictions.LastShatterDamage;
+                        times -= 1f;
+                    }
                     if (broke <= 0f) break;
                     ShattersMade++;
-                    CombatEvents.RaiseShattered(subject);
+                    if (!already) CombatEvents.RaiseShattered(subject);
                     var chill = lookOf[(int)AfflictionKind.Chill] ?? look;
-                    combat.StrikeOne(subject, Blow(chill, AfflictionKind.None, broke + eDamage, eStagger, 0), self);
+                    combat.StrikeOne(subject, Blow(chill, AfflictionKind.None, broke * times + eDamage, eStagger, 0), self);
                     if (!bespoke) ElementLook.Strike(chill, centre, 0.3f);
                     break;
                 }
@@ -2856,6 +3470,395 @@ namespace Clover.Player
             BladesDriven++;
             if (host != null) Trigger(UpgradeTrigger.BladeDriven, host, host.transform.position, true, drives);
         }
+
+        // ---- Standing things the marks raise (World.StandingThings): their clock, and blows on them told to the marks that raised them.
+        private int standingOwner = -1;
+        private bool standingHeavy;
+
+        /// <summary>Standing things raised by marks, and blows on them answered: for probes.</summary>
+        public int ThingsRaised { get; private set; }
+        public int StandingAnswers { get; private set; }
+
+        private void ReadStandingNews()
+        {
+            StandingLibrary.Run(Time.time, Time.frameCount);
+            if (!burstHooked)
+            {
+                burstHooked = true;
+                StandingLibrary.Burst += OnStandingBurst;
+                Hazards.GroundActs += OnGroundActs;
+                Hazards.GroundEnds += OnGroundEnds;
+                OwnGrounds.Stopped += OnStoppedAtStones;
+                OwnGrounds.DrivenAcross += OnDrivenAcross;
+            }
+            while (StandingThings.TakeNews(out var item))
+            {
+                if (item.Thing.Owner < 0 || !item.ByPlayer) continue;
+                standingOwner = item.Thing.Owner;
+                standingHeavy = item.Heavy;
+                try { Trigger(UpgradeTrigger.StandingStruck, null, item.Thing.Position, true, item.Struck == StandingStruck.Broken ? 1 : 0); }
+                finally { standingOwner = -1; }
+            }
+        }
+
+        private bool burstHooked;
+
+        // ---- Pickups the marks drop (World.Pickups): taken by walking over them, shown as a glowing sign until then.
+        private PickupKind pickupKind;
+        private readonly int[] pickupSigns = new int[Pickups.Most];
+        private readonly bool[] pickupShown = new bool[Pickups.Most];
+
+        /// <summary>Creature looks played by marks (Forms.CreatureLooks): for probes.</summary>
+        public int CreatureLooksPlayed { get; private set; }
+
+        /// <summary>Pickups dropped, taken and left: for probes.</summary>
+        public int PickupsDropped { get; private set; }
+        public int PickupsTaken { get; private set; }
+        public int PickupsLeft { get; private set; }
+
+        /// <summary>
+        /// The effects that answer a pickup's taking or its being left: those on <paramref name="moment"/> written beside the
+        /// effect that dropped it (in its mark's effects, or its shape's), so a reaction's herb is answered by that reaction.
+        /// </summary>
+        public static int AnswersOf(UpgradeEffect dropped, UpgradeTrigger moment, List<UpgradeEffect> into)
+        {
+            into.Clear();
+            var mark = dropped != null ? dropped.Owner : null;
+            if (mark == null) return 0;
+            var beside = mark.Effects != null && System.Array.IndexOf(mark.Effects, dropped) >= 0 ? mark.Effects : null;
+            if (beside == null && mark.Shapes != null)
+                foreach (var shape in mark.Shapes)
+                    if (shape.Effects != null && System.Array.IndexOf(shape.Effects, dropped) >= 0) beside = shape.Effects;
+            if (beside == null) return 0;
+            foreach (var effect in beside)
+                if (effect.On == moment) into.Add(effect);
+            return into.Count;
+        }
+
+        private readonly List<UpgradeEffect> pickupAnswers = new List<UpgradeEffect>();
+
+        // A pickup's moment: its own effects, done as its mark's (a reaction's lay nothing that starts another), then the marks
+        // that answer any of its kind.
+        private void AnswerPickup(in Pickup item, UpgradeTrigger moment, int drawn)
+        {
+            pickupKind = item.Kind;
+            var dropped = item.Source as UpgradeEffect;
+            var source = dropped != null && dropped.Owner != null && (dropped.Owner.Kind == UpgradeKind.Reaction || ReactionTable.IsReactionShape(dropped.Owner)) ? LaySource.Reaction : LaySource.Effect;
+            AnswersOf(dropped, moment, pickupAnswers);
+            for (int i = 0; i < pickupAnswers.Count; i++) Fire(pickupAnswers[i], null, item.Position, source, 0f, drawn);
+            pickupAnswers.Clear();
+            Trigger(moment, null, item.Position, true, drawn);
+        }
+
+        private void ReadPickups()
+        {
+            Vector3 feet = transform.position;
+            Pickups.StepDrawn(feet, Time.deltaTime);
+            if (defence == null || !defence.IsDead)
+                while (Pickups.TakeAt(feet, out var taken))
+                {
+                    PickupsTaken++;
+                    ElementLook.Sparks(PickupLook(taken.Kind), taken.Position + Vector3.up * 0.4f, Vector3.up, 1f);
+                    AnswerPickup(taken, UpgradeTrigger.PickedUp, taken.Drawn ? 1 : 0);
+                }
+            while (Pickups.TakeLeft(Time.time, out var left))
+            {
+                PickupsLeft++;
+                AnswerPickup(left, UpgradeTrigger.PickupLeft, 0);
+            }
+            // Each lying pickup is a small sign of its element on the floor, bobbing, until it is taken or gone.
+            for (int i = 0; i < Pickups.Most; i++)
+            {
+                var item = Pickups.Get(i);
+                if (item.Active && !pickupShown[i])
+                {
+                    var look = PickupLook(item.Kind);
+                    pickupSigns[i] = Forms.FormFx.HoldMark(Forms.FormMark.Sigil, Forms.FormKit.Lit(look != null ? look.Colour : Color.white, 2.4f));
+                    pickupShown[i] = true;
+                }
+                else if (!item.Active && pickupShown[i])
+                {
+                    Forms.FormFx.ReleaseMark(pickupSigns[i], 0.15f);
+                    pickupShown[i] = false;
+                }
+                if (item.Active) Forms.FormFx.PlaceMarkFacing(pickupSigns[i], item.Position + Vector3.up * (0.35f + 0.08f * Mathf.Sin(Time.time * 4f + i)), 0.7f, Time.time * 60f);
+            }
+        }
+
+        // The element a pickup is seen in: the herb in light, the lily's fire in flame, the seed in ice.
+        private ElementInfo PickupLook(PickupKind kind) =>
+            lookOf[(int)(kind == PickupKind.Herb ? AfflictionKind.Marked : kind == PickupKind.LilyFire ? AfflictionKind.Burn : AfflictionKind.Chill)];
+
+        private void OnStandingBurst(Standing thing)
+        {
+            if (thing.Owner < 0) return;
+            standingOwner = thing.Owner;
+            standingHeavy = false;
+            try { Trigger(UpgradeTrigger.StandingBurst, null, thing.Position, true); }
+            finally { standingOwner = -1; }
+        }
+
+        private void OnDestroy()
+        {
+            if (!burstHooked) return;
+            StandingLibrary.Burst -= OnStandingBurst;
+            Hazards.GroundActs -= OnGroundActs;
+            Hazards.GroundEnds -= OnGroundEnds;
+            OwnGrounds.Stopped -= OnStoppedAtStones;
+            OwnGrounds.DrivenAcross -= OnDrivenAcross;
+        }
+
+        // An enemy shoved across a line of yours (Need-Fire), told to the marks with it as the target, once a moment for each.
+        private void OnDrivenAcross(Component body, string line)
+        {
+            if (body == null) return;
+            DrivenAcrossLines++;
+            Trigger(UpgradeTrigger.DrivenAcross, body, body.transform.position);
+        }
+
+        /// <summary>Enemies shoved across a line of yours (Need-Fire): for probes.</summary>
+        public int DrivenAcrossLines { get; private set; }
+
+        // An enemy driven against the stones of your ring (The Closed Ring), told to the marks with it as the target.
+        private void OnStoppedAtStones(Component body)
+        {
+            if (body == null) return;
+            StoppedAtStones++;
+            Trigger(UpgradeTrigger.StoppedAtStones, body, body.transform.position);
+        }
+
+        /// <summary>True when the cast now answered (<paramref name="cast"/>) is the one counted and has struck at least <paramref name="most"/>.</summary>
+        public static bool CastStruckAtLeast(int cast, int counted, int struck, int most) => cast != 0 && cast == counted && struck >= most;
+
+        /// <summary>A counter's stance ran out with nothing struck at it: told as that counter's own moment (Blown Through's push).</summary>
+        public void OnCounterMissed(Upgrade source)
+        {
+            var was = castSource;
+            castSource = source;
+            try { Trigger(UpgradeTrigger.CounterMissed, null, transform.position, false); }
+            finally { castSource = was; }
+            CountersMissed++;
+        }
+
+        /// <summary>Counters that ran out with nothing struck at them: for probes.</summary>
+        public int CountersMissed { get; private set; }
+
+        /// <summary>How many steps a dodge's path of this length is searched in, for circles of this radius to cover it.</summary>
+        public static int DodgePathSteps(float length, float radius) => Mathf.Clamp(Mathf.CeilToInt(length / Mathf.Max(0.2f, radius)), 1, 12);
+
+        /// <summary>
+        /// A lit coat's burst: <paramref name="first"/> and <paramref name="each"/> more for each blow that spread it, at most
+        /// <paramref name="most"/> (0: no most). Black Pitch: 16, 8 a blow, 70.
+        /// </summary>
+        public static float CoatBurst(float first, float each, int spreads, float most)
+        {
+            float burst = first + each * Mathf.Max(0, spreads);
+            return most > 0f ? Mathf.Min(burst, most) : burst;
+        }
+
+        /// <summary>Coated enemies that went up (UpgradeAction.LightCoat), and grounds whose standers were dosed at once (Low Mist): for probes.</summary>
+        public int CoatsLit { get; private set; }
+        public int GroundsDosed { get; private set; }
+        /// <summary>Patches of ground carried on by a spell (UpgradeAction.CarryGround): for probes.</summary>
+        public int GroundsCarried { get; private set; }
+        private readonly HashSet<IDamageable> coatStruck = new HashSet<IDamageable>();
+        private readonly HashSet<IDamageable> burningTaken = new HashSet<IDamageable>();
+        /// <summary>Burning enemies that went up with a coat lit by a finisher (Black Pitch's Master): for probes.</summary>
+        public int BurningLit { get; private set; }
+
+        /// <summary>Enemies driven against your ring's stones and stopped there (The Closed Ring): for probes.</summary>
+        public int StoppedAtStones { get; private set; }
+
+        /// <summary>
+        /// The states of standing in ground of your own, each with the name of its ground (World.OwnGrounds): drawn by a form or
+        /// laid by a mark as a named patch (Hazards.NamedUnder).
+        /// </summary>
+        public static readonly (StatWhen When, string Ground)[] OwnGroundStates =
+        {
+            (StatWhen.OnOwnIce, OwnGrounds.Sheet),
+            (StatWhen.OnWetSand, OwnGrounds.WetSand),
+            (StatWhen.InOwnMist, OwnGrounds.LowMist),
+            (StatWhen.InOwnGlow, OwnGrounds.Glow),
+            (StatWhen.InOwnBlood, OwnGrounds.Blood),
+            (StatWhen.InCloud, OwnGrounds.Cloud),
+            (StatWhen.BetweenFires, OwnGrounds.NeedFireLine),
+            (StatWhen.OnSeams, OwnGrounds.Seams),
+        };
+
+        /// <summary>True when you stand in ground of your own of this name now.</summary>
+        public bool InOwnGround(string ground) =>
+            OwnGrounds.Under(ground, transform.position, Time.time) || Hazards.NamedUnder(transform.position, ground);
+
+        // Ground of a mark's that keeps acting, at one of its bites: its state on every enemy standing in it now, and the player
+        // mended standing in it.
+        private void OnGroundActs(object source, Vector3 at, float radius, float biteEvery, object laidFor)
+        {
+            if (!(source is UpgradeEffect effect) || combat == null) return;
+            if (effect.InsideDo != null || !string.IsNullOrEmpty(effect.Ground)) ActOnStanding(effect, effect.InsideDo, effect.Ground, at, radius, laidFor);
+            if (effect.Inside != null)
+            {
+                if (!groundStates.TryGetValue(effect, out var inside))
+                {
+                    inside = effect.Twin();
+                    inside.Do = UpgradeAction.Condition;
+                    inside.Count = 0;
+                    inside.State = effect.Inside.Copy();
+                    groundStates[effect] = inside;
+                }
+                inside.Radius = radius;
+                inside.State.Seconds = Mathf.Max(effect.Inside.Seconds, GroundRules.StateSeconds(biteEvery));
+                GroundStatesSet += ConditionCaster.Cast(inside, null, at, combat, LaySource.Effect, conditionScratch);
+            }
+            // What the ground does for you while you stand in it (The Wreck), as its mark's own.
+            if (effect.YouInside != null && defence != null && !defence.IsDead && GroundRules.Within(transform.position, at, radius))
+            {
+                foreach (var inner in effect.YouInside)
+                    if (inner != null) Fire(inner, null, transform.position, GroundSource(effect));
+                GroundStoodByYou++;
+            }
+            if (effect.Mends > 0f && defence != null && !defence.IsDead && GroundRules.Within(transform.position, at, radius))
+            {
+                defence.Heal(GroundRules.MendStep(effect.Mends, biteEvery), false);
+                GroundMended++;
+            }
+        }
+
+        private readonly Dictionary<UpgradeEffect, UpgradeEffect> groundStates = new Dictionary<UpgradeEffect, UpgradeEffect>();
+        private readonly HashSet<IDamageable> standingTaken = new HashSet<IDamageable>();
+        // Where each one standing in ground that bites only the moving was at its last bite.
+        private readonly Dictionary<(UpgradeEffect, Component), Vector3> standingSeen = new Dictionary<(UpgradeEffect, Component), Vector3>();
+        // The ground whose bite is told as InGround now, for the trigger's filter.
+        private string groundTold = "";
+
+        // Ground of a mark's running out of time: what flares at its end is done on each enemy standing in it.
+        private void OnGroundEnds(object source, Vector3 at, float radius, float biteEvery, object laidFor)
+        {
+            if (!(source is UpgradeEffect effect) || combat == null || effect.InsideAtEnd == null) return;
+            ActOnStanding(effect, effect.InsideAtEnd, "", at, radius, laidFor);
+            GroundFlares++;
+        }
+
+        /// <summary>Bites of ground that did something for you as you stood in it (UpgradeEffect.YouInside): for probes.</summary>
+        public int GroundStoodByYou { get; private set; }
+
+        /// <summary>Grounds that flared as they ran out (UpgradeEffect.InsideAtEnd): for probes.</summary>
+        public int GroundFlares { get; private set; }
+
+        // What a ground's own effects lay counts as: a reaction's (or its shape's) starts no reaction.
+        private static LaySource GroundSource(UpgradeEffect effect)
+        {
+            var owner = effect.Owner;
+            return owner != null && (owner.Kind == UpgradeKind.Reaction || ReactionTable.IsReactionShape(owner)) ? LaySource.Reaction : LaySource.Effect;
+        }
+
+        // Each enemy standing in the ground now: the ground's own effects done on it, and the marks that answer the ground told of it.
+        private void ActOnStanding(UpgradeEffect effect, UpgradeEffect[] inside, string ground, Vector3 at, float radius, object laidFor)
+        {
+            var source = GroundSource(effect);
+            standingTaken.Clear();
+            for (int guard = 0; guard < 24; guard++)
+            {
+                var near = combat.EnemyNear(at, radius, standingTaken);
+                if (!(near is IDamageable one)) break;
+                standingTaken.Add(one);
+                if (near is Enemy fallen && fallen.IsDead) continue;
+                if (!GroundRules.Within(near.transform.position, at, radius)) continue;
+                bool moved = true;
+                if (effect.InsideMovingOnly)
+                {
+                    var key = (effect, near);
+                    Vector3 now = near.transform.position;
+                    moved = standingSeen.TryGetValue(key, out Vector3 before) && GroundRules.Moved(before, now);
+                    if (standingSeen.Count > 256) standingSeen.Clear();
+                    standingSeen[key] = now;
+                }
+                if (inside != null && moved && !(effect.InsideSpares && ReferenceEquals(near, laidFor)))
+                    foreach (var inner in inside)
+                        if (inner != null) Fire(inner, near, near.transform.position, source);
+                if (!string.IsNullOrEmpty(ground))
+                {
+                    groundTold = ground;
+                    try { Trigger(UpgradeTrigger.InGround, near, near.transform.position); }
+                    finally { groundTold = ""; }
+                }
+                GroundStood++;
+            }
+            standingTaken.Clear();
+        }
+
+        // The swings landed, counted for blows that take turns (UpgradeEffect.TakesTurns), and the frame the last one landed in.
+        private int blowTurn, blowTurnFrame = -1;
+
+        /// <summary>True when a Kill effect answers a death told with <paramref name="reaction"/>'s id: any death, or only one dealt by the reaction it names.</summary>
+        public static bool KillAnswers(string killedBy, string reaction) => string.IsNullOrEmpty(killedBy) || killedBy == reaction;
+
+        /// <summary>True when an effect answers ground of the given name told of one standing in it (UpgradeTrigger.InGround).</summary>
+        public static bool AnswersGround(UpgradeEffect effect, string ground) =>
+            effect != null && !string.IsNullOrEmpty(ground) && effect.Condition == ground;
+
+        // The fight each once-a-fight effect last went off in, by its slot (-1: never).
+        private int[] firedInFight = new int[0];
+
+        // Until when you are scattered (Gone to Ash): the body comes back then; 0 when not scattered.
+        private float scatteredUntil;
+
+        /// <summary>Times you scattered and stood again (UpgradeAction.Scatter): for probes.</summary>
+        public int Scatters { get; private set; }
+
+        // Heavy blows unbroken by the marks in force, and until when by ground stood in (The Wreck).
+        private bool heavyUnbrokenByMarks;
+        private float heavyUnbrokenUntil = -100f;
+
+        // Each one struck once by a discharge run through several patches of ground.
+        private readonly HashSet<IDamageable> groundStruck = new HashSet<IDamageable>();
+
+        /// <summary>Patches of named ground a discharge ran through (UpgradeEffect.ThroughGround): for probes.</summary>
+        public int GroundDischarges { get; private set; }
+
+        // Where each patch a BurstGround took lay, and how wide.
+        private readonly Vector3[] groundBurstAt = new Vector3[16];
+        private readonly float[] groundBurstRadius = new float[16];
+
+        /// <summary>Patches of ground burst all at once by a mark (UpgradeAction.BurstGround): for probes.</summary>
+        public int GroundsBurst { get; private set; }
+
+        /// <summary>Enemies carried along a lane by a gust (UpgradeEffect.Carry on a Lane): for probes.</summary>
+        public int LanesShoved { get; private set; }
+
+        /// <summary>Enemies found standing in acting ground with effects or answers of its own, counted at each bite: for probes.</summary>
+        public int GroundStood { get; private set; }
+
+        /// <summary>States set by ground on those standing in it, and the times it mended you: for probes.</summary>
+        public int GroundStatesSet { get; private set; }
+        public int GroundMended { get; private set; }
+
+        /// <summary>True when a standing thing's moment is one an effect answers: its own mark raised the thing, and a heavy blow when it asks for one.</summary>
+        public static bool AnswersStanding(UpgradeEffect effect, int owner, bool heavy) =>
+            effect != null && effect.Owner != null && effect.Owner.Index == owner && (effect.By != StruckBy.Heavy || heavy);
+
+        /// <summary>
+        /// True when the enemy at <paramref name="enemy"/> has stone at its back as seen from <paramref name="from"/>: a standing
+        /// thing within <paramref name="reach"/> behind it, or the level's own wall or pillar there.
+        /// </summary>
+        private bool StoneBehind(Vector3 from, Vector3 enemy, float reach)
+        {
+            for (int i = 0; i < StandingThings.Most; i++)
+                if (StandingRules.AtItsBack(StandingThings.Get(i), from, enemy, reach + StandingRules.Reach(StandingThings.Get(i).Kind))) return true;
+            Vector3 back = enemy - from;
+            back.y = 0f;
+            if (back.sqrMagnitude < 0.0001f) return false;
+            // The level's own stone: a wall or pillar the ray from its chest backward meets (never an enemy or the player).
+            int count = Physics.RaycastNonAlloc(enemy + Vector3.up, back.normalized, backHits, reach + 0.5f, ~0, QueryTriggerInteraction.Ignore);
+            for (int i = 0; i < count; i++)
+            {
+                var hit = backHits[i].collider;
+                if (hit == null || hit.attachedRigidbody != null || hit.GetComponentInParent<IDamageable>() != null || hit.GetComponentInParent<CharacterController>() != null) continue;
+                return true;
+            }
+            return false;
+        }
+
+        private readonly RaycastHit[] backHits = new RaycastHit[8];
 
         // ---- Two Suns: a figure of light on the enemy's far side casts the spell again back toward you.
         private bool hasTwoSuns;
@@ -3025,7 +4028,9 @@ namespace Clover.Player
             if (fed > 0f && defence != null) defence.Heal(fed);
             // A ripe seed in the dead bursts ripe (In Its Season): the burst above was made stronger by the set itself.
             if (withheld != AfflictionKind.Seeded && afflictions.IsRipe(AfflictionKind.Seeded)) RipeBurstAt(who, at, afflictions.Stacks(AfflictionKind.Seeded));
-            Trigger(UpgradeTrigger.Kill, null, at, true, 0, afflictions);
+            // Dealt by a reaction's own blow, the death is told with that reaction's id (The Feast).
+            int killer = combat != null ? combat.StrikingReaction - 1 : -1;
+            Trigger(UpgradeTrigger.Kill, null, at, true, 0, afflictions, AfflictionKind.None, killer >= 0 ? AfflictionPairs.Id(killer) : "");
             // Zanshin: the turn to the next enemy (its wider perfect window is the mark's boon).
             if (combat != null && Has(Trees.Ways.KatanaWay.Zanshin)) combat.Zanshin(who);
         }
@@ -3101,6 +4106,12 @@ namespace Clover.Player
             var struck = target as Component;
             Vector3 at = struck != null ? struck.transform.position : transform.position;
             bool finisher = outcome == HitOutcome.Finisher;
+            // A new swing landing is the next turn; the hits of one swing land in one frame and share it.
+            if (Time.frameCount != blowTurnFrame)
+            {
+                blowTurnFrame = Time.frameCount;
+                blowTurn++;
+            }
             // Corpse Flowers: a blow landed beside one of the flowers wins back grey health.
             if (Time.time < regainUntil && defence != null && Hazards.GrownNear(transform.position, regainNear, regainFamily)) GreyWonBeside += defence.Health.Regain(regainAmount);
             // Each blow landed adds a ring of light up the blade to a gathered spell (Daybreak).
@@ -3128,7 +4139,12 @@ namespace Clover.Player
                 Trigger(UpgradeTrigger.FinisherHit, struck, at);
             }
             if (step == combat.Combo.Skill) Trigger(UpgradeTrigger.SkillHit, struck, at);
-            else if (heavy || finisher) Trigger(UpgradeTrigger.HeavyHit, struck, at);
+            else if (heavy || finisher)
+            {
+                Trigger(UpgradeTrigger.HeavyHit, struck, at);
+                // The heavy blow on the hour has landed: the dial empties and fills again.
+                if (hour.Ready) hour.Spend();
+            }
             // Storm Front: the heavy blow or finisher that lands is owed a Gust, thrown in the next step once the swing has been reckoned.
             // The Gust's own short wait must not turn a heavy blow into a light one for the marks.
             if (heavy || finisher)
@@ -3385,6 +4401,47 @@ namespace Clover.Player
 
         // The nearest enemy within reach in the condition named (by its name or what it is), leaving out those given; null
         // when none is, or when no condition is named.
+        // The numbers a numbered condition is set at, counted again for each cast.
+        private int numbered, numberedCast = -1;
+
+        private float NextNumber(int cast)
+        {
+            if (cast != numberedCast)
+            {
+                numberedCast = cast;
+                numbered = 0;
+            }
+            return ++numbered;
+        }
+
+        /// <summary>
+        /// True when an enemy numbered <paramref name="candidate"/> on a line comes after <paramref name="after"/> and before the
+        /// best found so far (<paramref name="best"/>; 0 for none): the next on the line by its order.
+        /// </summary>
+        public static bool NextInLine(float after, float candidate, float best) => candidate > after && (best <= 0f || candidate < best);
+
+        // The next enemy on a numbered line after the number given, within reach of the point; null when none comes after it.
+        private Component NextOnLine(string state, float after, Vector3 from, float reach, HashSet<IDamageable> except)
+        {
+            if (string.IsNullOrEmpty(state) || combat == null || after <= 0f) return null;
+            stateScratch.Clear();
+            foreach (var left in except) stateScratch.Add(left);
+            Component found = null;
+            float best = 0f;
+            for (int guard = 0; guard < 24; guard++)
+            {
+                var near = combat.EnemyNear(from, reach, stateScratch);
+                if (!(near is IDamageable one)) break;
+                stateScratch.Add(one);
+                if (!(near is IAfflictable carrier) || !carrier.Afflictions.Conditions.NewsOf(state, ConditionMoment.Began, out var news)) continue;
+                if (!NextInLine(after, news.Scale, best)) continue;
+                best = news.Scale;
+                found = near;
+            }
+            stateScratch.Clear();
+            return found;
+        }
+
         private Component NearestInState(string state, Vector3 from, float reach, HashSet<IDamageable> except)
         {
             if (string.IsNullOrEmpty(state) || combat == null) return null;
@@ -3407,9 +4464,13 @@ namespace Clover.Player
         }
 
         /// <summary>A blow was caught on the guard; the attacker stands at the given place.</summary>
-        public void OnGuard(Vector3 attacker)
+        public void OnGuard(Vector3 attacker) => OnGuard(attacker, 0f);
+
+        /// <summary>As above, with what the blow would have dealt (a grudge counts it double).</summary>
+        public void OnGuard(Vector3 attacker, float blowDamage)
         {
             NoteGuard(attacker);
+            if (harm.Open && LastGuardEnemy != null) harm.Add(LastGuardEnemy, blowDamage * 2f);
             Trigger(UpgradeTrigger.Guard, LastGuardEnemy, attacker);
             TheirBlow(LastGuardEnemy, attacker);
         }
@@ -3781,6 +4842,7 @@ namespace Clover.Player
             // The attacker is the target, as with a perfect guard; a thrown bolt leaves only the place it came from.
             var dodged = combat != null ? combat.EnemyAt(attacker, 2.5f) : null;
             NoteTurned(dodged);
+            perfectThisDodge = true;
             if (dodged != null) Trigger(UpgradeTrigger.PerfectDodge, dodged, attacker);
             else Trigger(UpgradeTrigger.PerfectDodge, null, transform.position, false);
             if (!hasAfterimage) return;
@@ -3801,11 +4863,15 @@ namespace Clover.Player
             }
             untilDodgeCount = 0;
             dodgeFrom = from;
+            perfectThisDodge = false;
             DodgeCount++;
             LastDodgeFrom = from;
             LastDodgeDirection = direction;
             sinceDodge = 0f;
             lastDodgeWay = WayOf(direction, from, true);
+            // Begun on wet sand of your own, the dodge goes through it, whatever it ends on (The Land Was Sea).
+            dodgeFromSand = InOwnGround(OwnGrounds.WetSand);
+            if (dodgeFromSand) Stats.SetWhen(StatWhen.OnWetSand, true);
             if (hasIntoFire && lastDodgeWay == DodgeWay.Toward)
             {
                 // Into the Fire: the roll is a lunge in flame.
@@ -3857,7 +4923,20 @@ namespace Clover.Player
                 }
             }
             Trigger(UpgradeTrigger.DodgeEnd, null, transform.position, false);
+            if (perfectThisDodge) Trigger(UpgradeTrigger.PerfectDodgeEnd, null, transform.position, false);
+            perfectThisDodge = false;
+            // Carried to the enemy whose sight drew the dodge (Eagle's Sight): told with it as the target.
+            if (carriedTo != null)
+            {
+                var to = carriedTo;
+                carriedTo = null;
+                if (to != null && to.gameObject.activeInHierarchy) Trigger(UpgradeTrigger.CarriedTo, to, to.transform.position);
+            }
         }
+
+        // The dodge under way was perfect (told again at its end), and the enemy it is carrying you to.
+        private bool perfectThisDodge;
+        private Component carriedTo;
 
         /// <summary>
         /// The terms of a dodge about to go this way (Into the Fire): toward or through the enemy faced, safe for its whole
@@ -3866,6 +4945,25 @@ namespace Clover.Player
         public DodgeTerms DodgeTermsFor(Vector3 direction)
         {
             var terms = DodgeTerms.Plain;
+            // Toward an enemy whose condition draws your dodge (Eagle's Sight), within 6 m: carried all the way to it.
+            carriedTo = null;
+            if (combat != null)
+            {
+                fanTaken.Clear();
+                for (int guard = 0; guard < 16; guard++)
+                {
+                    var near = combat.EnemyNear(transform.position, DodgeRules.CarryReach, fanTaken);
+                    if (!(near is IDamageable one)) break;
+                    fanTaken.Add(one);
+                    if (!(near is IAfflictable drawn) || !drawn.Afflictions.Conditions.Has(ConditionFlags.DrawsDodge)) continue;
+                    float reach = DodgeRules.CarryTo(transform.position, direction, near.transform.position);
+                    if (reach <= 0f) continue;
+                    terms.Reach = reach;
+                    carriedTo = near;
+                    break;
+                }
+                fanTaken.Clear();
+            }
             if (!hasIntoFire) return terms;
             switch (WayOf(direction, transform.position))
             {
@@ -3953,6 +5051,33 @@ namespace Clover.Player
         private int reactionPair = -1, reactionCast, layingReaction, layingCast;
         // True while an answer to a laying is being done: what it lays is not answered again.
         private bool answeringLaid;
+        // True while an answer to an arc leaving an enemy is being done: its own arcs are not answered again (Nothing Resists).
+        private bool answeringArc;
+
+        /// <summary>
+        /// An arc struck <paramref name="left"/> and leaves it for the next, carrying <paramref name="damage"/> (the ledger's
+        /// arc-leaves): what answers an arc leaving an enemy is told, unless the arc is such an answer's own.
+        /// </summary>
+        public void OnArcLeft(Component left, float damage)
+        {
+            // An arc bends into any live flame near (Flashover).
+            if (left != null && reactionsFound != null) reactionsFound.HearDischarge(left, left.transform.position);
+            if (left == null || answeringArc || byTrigger == null || byTrigger[(int)UpgradeTrigger.ArcLeft].Count == 0) return;
+            ArcsLeft++;
+            Trigger(UpgradeTrigger.ArcLeft, left, left.transform.position, true, 0, null, AfflictionKind.None, "", LaySource.Effect, damage);
+        }
+
+        /// <summary>True when the mark answers an arc leaving an enemy (UpgradeTrigger.ArcLeft): its own arcs must not be answered by it again.</summary>
+        public static bool AnswersArcs(Upgrade mark)
+        {
+            if (mark == null || mark.Effects == null) return false;
+            foreach (var effect in mark.Effects)
+                if (effect != null && effect.On == UpgradeTrigger.ArcLeft) return true;
+            return false;
+        }
+
+        /// <summary>Arcs told as leaving an enemy (UpgradeTrigger.ArcLeft): for probes.</summary>
+        public int ArcsLeft { get; private set; }
         private readonly StruckOnce struckOnce = new StruckOnce();
 
         /// <summary>
@@ -3972,6 +5097,14 @@ namespace Clover.Player
         /// What the marks in force make of the reaction of <paramref name="pair"/> as it fires on <paramref name="who"/>: its own
         /// damage multiplied, and whether it spends nothing (ReactionRules.Boost).
         /// </summary>
+        /// <summary>The seconds the reaction of <paramref name="pair"/> is held in the body by the marks in force (0: not held), and the strength it lands at (The Delayed Touch).</summary>
+        public float ReactionHold(int pair, out float strength)
+        {
+            strength = 1f;
+            if (byTrigger == null || pair < 0) return 0f;
+            return ReactionRules.Hold(byTrigger[(int)UpgradeTrigger.Reacted], pair, out strength);
+        }
+
         public float ReactionBoost(Component who, int pair, out bool spares)
         {
             spares = false;
@@ -4087,6 +5220,8 @@ namespace Clover.Player
             {
                 this.struckBy = struckBy;
                 struckByAt = Time.time;
+                // A grudge open counts what it dealt (The Exile's Grudge).
+                if (harm.Open && defence != null) harm.Add(struckBy, defence.LastWound);
             }
             Trigger(UpgradeTrigger.Struck, struckBy, attacker);
             TheirBlow(struckBy, attacker);
@@ -4280,7 +5415,21 @@ namespace Clover.Player
             for (int i = 0; i < spec.FlaskCost; i++) defence.Flasks.TryThrow();
             if (mark.Index >= 0 && mark.Index < castAt.Length) castAt[mark.Index] = Time.time;
             WornCasts++;
-            if (spec.Rings > 0)
+            if (spec.Rings > 0 && spec.RingsBy == RingSource.Stopped)
+            {
+                // The shape's own wall stands, and each blow it stops gathers a ring into the Learn's spell, loosed through the
+                // Learn's form by a second press or when the wall falls (Red Before the Sun).
+                var gathered = branches.PlainSpecOf(mark, RunState.Unlocked, plainGathered);
+                if (gathered != null)
+                {
+                    gathered.Rings = spec.Rings;
+                    gathered.RingsFor = spec.RingsFor;
+                    gathered.RingsBy = RingSource.Stopped;
+                    rings.Begin(mark, gathered, cast.Cast, Time.time + Mathf.Max(0.15f, spec.Delay) + Mathf.Max(0.5f, spec.Seconds), mark.Form);
+                    gatheringWall = form as Forms.RunningForm;
+                }
+            }
+            else if (spec.Rings > 0)
             {
                 // Begun, not loosed: the blows landed from now each add a ring, and a second press (or the press window's end)
                 // looses it with what it gathered (LooseRings).
@@ -4358,6 +5507,16 @@ namespace Clover.Player
             return true;
         }
 
+        // The Learn's spell a wall gathers into (Red Before the Sun), and the wall's form, ended when the rings are loosed.
+        private readonly SpellSpec plainGathered = new SpellSpec();
+        private Forms.RunningForm gatheringWall;
+
+        /// <summary>A blow was stopped by a spell's wall standing between it and the player: a ring for a spell that gathers them so.</summary>
+        public void OnStopped()
+        {
+            if (rings.Active && rings.By == RingSource.Stopped) AddRing();
+        }
+
         // One more ring to the spell gathering (a blow landed, a blow turned): shown, and told to its own branch's marks.
         private void AddRing()
         {
@@ -4409,8 +5568,12 @@ namespace Clover.Player
                 rings.End();
                 return;
             }
+            string loosedAs = rings.Form;
             rings.Loose(loosedSpec);
-            var form = SpellForms.Get(SpellBranches.FormOf(mark, RunState.Unlocked, ReadLoadout()));
+            // The shield comes down as its rings are loosed (Red Before the Sun).
+            if (loosedAs != null && gatheringWall != null) Forms.SpellWorks.EndRunsOf(gatheringWall);
+            gatheringWall = null;
+            var form = SpellForms.Get(loosedAs ?? SpellBranches.FormOf(mark, RunState.Unlocked, ReadLoadout()));
             if (form == null) return;
             var cast = element.NewCast(loosedSpec, mark.Name, mark);
             cast.Cast = tag;
@@ -4470,6 +5633,12 @@ namespace Clover.Player
 
         /// <summary>A ward turned a blow and is gone.</summary>
         public void OnWardSpent() => Trigger(UpgradeTrigger.WardSpent, null, transform.position, false);
+
+        /// <summary>Conditions paid out early (UpgradeAction.PayNow): for probes.</summary>
+        public int PaidNow { get; private set; }
+
+        /// <summary>A plate of stone took its share of a blow and broke (Stone Skin).</summary>
+        public void OnPlateBroken() => Trigger(UpgradeTrigger.PlateBroken, null, transform.position, false);
 
         /// <summary>The leap has come down.</summary>
         public void OnLeapLanded()

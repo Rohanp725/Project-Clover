@@ -247,7 +247,7 @@ namespace Clover.Tests
         [Test]
         public void NothingResistsCarriesTheDischargeAtFullStrength()
         {
-            var resists = Upgrade.ById(SleetChargeDuo.NothingResists).Effects.Single();
+            var resists = Upgrade.ById(SleetChargeDuo.NothingResists).Effects.Single(each => each.On == UpgradeTrigger.SetOff);
             Assert.AreEqual(UpgradeAction.Arc, resists.Do);
             Assert.AreEqual(1f, resists.Amount, 1e-5f, "the discharge's whole damage");
             Assert.GreaterOrEqual(resists.Count, 12, "every chilled enemy within 5 m of the last");

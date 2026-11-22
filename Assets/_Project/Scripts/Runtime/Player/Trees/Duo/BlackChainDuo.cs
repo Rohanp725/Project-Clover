@@ -76,13 +76,13 @@ namespace Clover.Player.Trees.Duo
                 Rules = book => book.Afflictions.KeepWhile(AfflictionKind.Sundered, AfflictionKind.Cursed),
             }, HeartPattern.RightLow));
 
-            // The finisher lands on its chain-mate (ToChainMate) at half the blow's damage (ByPower, Share 0.5) and 30 stagger.
-            // NEEDS: the mate's stagger as half the finisher's own (damage-tally); now 30.
+            // The finisher lands on its chain-mate (ToChainMate) at half the blow's damage (ByPower, Share 0.5) and half its stagger
+            // (UpgradeEffect.StaggerOfBlow: the weapon's last blow's stagger as it was dealt).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = OneNooseForTwo, Name = "One Noose for Two", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { DeadWeight, RustInTheCurse }, Icon = UpgradeIcons.Ring,
                 Description = "A finisher on a chained enemy lands on its chain-mate too, at half its damage and stagger.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.FinisherHit, ToChainMate = true, Do = UpgradeAction.Burst, Radius = 0.5f, ByPower = true, Share = 0.5f, Stagger = 30f } },
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.FinisherHit, ToChainMate = true, Do = UpgradeAction.Burst, Radius = 0.5f, ByPower = true, Share = 0.5f, StaggerOfBlow = 0.5f } },
             }, HeartPattern.Keystone));
 
             // The duo spell, bought with Shards once both are carried (no god gives it): an opener on a 16 s cooldown (SpellTimings). The bomb form drops a weight on the aim

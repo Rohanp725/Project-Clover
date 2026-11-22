@@ -8,6 +8,10 @@ namespace Clover.Player.Trees
     public static partial class Reactions
     {
         public const string Cracked = "thermalshock.cracked";
+        /// <summary>Seized's live film by name (UpgradeEffect.Ground): what Grounded's discharge runs through.</summary>
+        public const string LiveWater = "seized.livewater";
+        /// <summary>Fish Poison's fouled slick by name (UpgradeEffect.Ground): what The Tide Brings It's wave carries.</summary>
+        public const string FouledSlick = "fishpoison.slick";
         public const string WindRooted = "windthrow.rooted";
         public const string Bulge = "frostheave.bulge";
         public const string Rusting = "rust.rusting";
@@ -38,14 +42,16 @@ namespace Clover.Player.Trees
             // live film 2.5 m round its feet for 3 s that gives one Static every half second to what stands in it. Its
             // own Static is not spent.
             // A god is held by GodHolds (the man 0.3 s, a godly form 0.12 s, neither again while its guard lasts).
-            // The film spares the seized one it ran from (SparesTarget).
+            // The film spares the seized one it ran from (SparesTarget), and is live water by name (Grounded runs its discharge
+            // through it).
             to.Add(Reaction(AfflictionKind.Static, AfflictionKind.Soaked,
                 "Soaked and two Static or more: the current locks its muscles and holds it 1 s, and the water runs off it into a live film that charges all the others who stand in it for 3 s.",
                 new ReactionDef { DepthOf = AfflictionKind.Static, Depth = 2 },
                 // Unseen: drawn by Seized's own calm crackle, with no ring at the hold and no bolt from the sky at each of the
                 // film's bites (the owner, 2026-11-20: "remove the circles ... make it less flickery").
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hold, Seconds = 1f, Unseen = true },
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Radius = 2.5f, Seconds = 3f, Interval = 0.5f, Affliction = AfflictionKind.Static, Stacks = 1, Unseen = true, SparesTarget = true }));
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Radius = 2.5f, Seconds = 3f, Interval = 0.5f, Affliction = AfflictionKind.Static, Stacks = 1, Unseen = true, SparesTarget = true,
+                    Ground = LiveWater }));
 
             // Wind and Life (25). Rooted 2 s (it can turn and swing). The next heavy blow while rooted tears it out:
             // thrown 6 m (twice Thunder Gust's 3) away from the player, 14 damage, 35 stagger, and a torn pit 1.5 m
@@ -62,10 +68,12 @@ namespace Clover.Player.Trees
 
             // Ice and Earth (26). After 0.4 s the floor heaves up under it: thrown up 1 s, 12 damage, 25 stagger. What
             // cannot be lifted only reels and takes the stagger.
-            // NEEDS: standing things that block: the rimed mound, 1.5 m across, standing 6 s, that nothing walks through.
+            // The heaved ground stays as the rimed mound, 1.5 m across, standing 6 s behind it, that nothing walks through
+            // (UpgradeAction.Raise; it stands a step back so the lifted body comes down beside it, not inside it).
             to.Add(Reaction(AfflictionKind.Chill, AfflictionKind.Tremor,
                 "Chill meets Tremor: the cold gets into the ground and a moment later heaves it up under it, 12 and 25 stagger, thrown into the air for 1 s.",
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Bulge, Seconds = 0.4f } },
+                new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Bulge, Do = UpgradeAction.Raise, Raises = Clover.World.StandingKind.RimedMound, RaiseAt = Clover.World.StandingPlace.Behind, Reach = 1.1f, Seconds = 6f, Amount = 30f },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Bulge, Do = UpgradeAction.Burst, Radius = 0.5f, Damage = 12f, Stagger = 25f, Affliction = AfflictionKind.Tremor },
                 // The burst carries the heave's stagger; the lift's own, for what only reels, is kept to a token.
                 new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Bulge, Do = UpgradeAction.Lift, Seconds = 1f, Stagger = 1f }));
@@ -83,16 +91,16 @@ namespace Clover.Player.Trees
                     State = new ConditionSpec { Id = PlateFallen, Seconds = 6f, Flags = ConditionFlags.WeaponTakenShare, Scale = 1.16f } },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = Rusting, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Sundered, Stacks = 1 }));
 
-            // Life and Light (28). A shining herb stands 6 s; left unpicked it flowers at the end, Marking and Seeding
-            // every enemy within 3 m of the one that reacted.
-            // NEEDS: pickups (the player walking over a thing): the herb on the floor at its feet on the player's side,
-            // picked by walking over it (heal 8, the next weapon blow critical, and then it does not flower); three at
-            // most at once.
+            // Life and Light (28). A shining herb lies 6 s on the floor at its feet, on the player's side, a pickup (World.Pickups,
+            // three at most): walked over, it heals 8 and makes the next weapon blow critical, and does not flower; left
+            // unpicked it flowers at the end, Marking and Seeding every enemy within 3 m of it.
             to.Add(Reaction(AfflictionKind.Seeded, AfflictionKind.Marked,
-                "Seeded meets Marked: a shining herb springs up by it for 6 s. Left alone it flowers, Marking and Seeding all within 3 m.",
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Herb, Seconds = 6f } },
-                new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Herb, Do = UpgradeAction.Afflict, Radius = 3f, Affliction = AfflictionKind.Marked, Stacks = 1 },
-                new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Herb, Do = UpgradeAction.Afflict, Radius = 3f, Affliction = AfflictionKind.Seeded, Stacks = 1 }));
+                "Seeded meets Marked: a shining herb springs up at its feet for 6 s. Walk over it to pick it: you heal 8 and your next blow is critical. Left alone it flowers, Marking and Seeding all within 3 m.",
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.DropPickup, Drops = Clover.World.PickupKind.Herb, RaiseAt = Clover.World.StandingPlace.Before, Reach = 1f, Seconds = 6f, Limit = 3 },
+                new UpgradeEffect { On = UpgradeTrigger.PickedUp, Do = UpgradeAction.Heal, Amount = 8f },
+                new UpgradeEffect { On = UpgradeTrigger.PickedUp, Do = UpgradeAction.CriticalNext, Seconds = 4f },
+                new UpgradeEffect { On = UpgradeTrigger.PickupLeft, Do = UpgradeAction.Afflict, Radius = 3f, Affliction = AfflictionKind.Marked, Stacks = 1 },
+                new UpgradeEffect { On = UpgradeTrigger.PickupLeft, Do = UpgradeAction.Afflict, Radius = 3f, Affliction = AfflictionKind.Seeded, Stacks = 1 }));
 
             // Earth and Dark (29). Stone climbs it over 2 s (30% slower, then 60%), then it stands as stone for 1.5 s:
             // it neither walks nor begins an attack, takes double stagger and half damage from spells. A heavy blow on the

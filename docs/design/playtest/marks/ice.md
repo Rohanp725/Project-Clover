@@ -72,11 +72,9 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). If you aren't facing an enemy, the spell is still used up and you have to wait.
 
-**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 8 seconds, and makes it fall after 2.4 seconds.) It targets an enemy within 7 metres, or 7 metres ahead if there is none. It falls after 3 seconds, following its enemy until a moment before. The fall hits everything within 2 metres for 30 damage, 60 stagger and three stacks of Chill, as a heavy blow. The cracked ground has a 1.5-metre radius. Every half second for 2 seconds, it deals 2 damage and a stack of Chill.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 8 seconds, and makes it fall after 2.4 seconds.) It targets an enemy within 7 metres, or 7 metres ahead if there is none. It falls after 3 seconds, following its enemy until a moment before. The fall hits everything within 2 metres for 30 damage, 60 stagger and three stacks of Chill, as a heavy blow. On a Frozen enemy it shatters it twice over: 90 where a heavy blow shatters for 45. The cracked ground has a 1.5-metre radius. Every half second for 2 seconds, it deals 2 damage and a stack of Chill.
 
 **Works with.** Chill (freeze the enemy while you wait, and the icicle shatters it), Flying Shards, which it comes after on the chart, Eight Points, Brittle, All at Once.
-
-**Not built yet.** Shattering a Frozen enemy for 90. For now, the fall shatters it like any heavy blow does, for 45.
 
 **Example.** Hang it over a brute, and chill it to five with your blade while the icicle waits. The icicle comes down on a frozen body and breaks it.
 
@@ -98,11 +96,9 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** For now, when the fall itself freezes what it hits. Hanging Ice must be in a spell slot.
 
-**The numbers.** 3 Shards. The spell's wait ends right away.
+**The numbers.** 3 Shards. When the icicle lands within 0.3 seconds of its enemy becoming Frozen (by anything, the fall included), the shatter counts four times over (180 where a heavy blow shatters for 45), and the spell's wait ends right away.
 
 **Works with.** Chill and Cold Read, to get the enemy to two stacks before it lands; Eight Points; Rime Guard.
-
-**Not built yet.** The timing (within 0.3 seconds of the enemy becoming Frozen, from anything), and shattering four times over. For now, a fall that brings its enemy to five stacks freezes it and gives the wait back.
 
 **Example.** Give a brute two Chill, then the icicle adds its three. It freezes under the fall, and a second icicle is ready to hang over it.
 
@@ -207,11 +203,11 @@ The blocked blow also counts as a perfect guard for every other mark that answer
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). A heavy blow swung close enough to reach it bursts it early.
 
-**The numbers.** 4 Shards, 35 mana (its Empower makes it 30, and the burst 36). The wall rises 2 metres ahead of you, is 5 metres wide, and stands for 6 seconds. The burst reaches 4 metres around it and deals 30 damage, 50 stagger and three stacks of Chill. If your heavy blow bursts it, it counts as a heavy blow. Only one wall of ice can stand at a time.
+**The numbers.** 4 Shards, 35 mana (its Empower makes it 30, and the burst 36). The wall rises 2 metres ahead of you, is 5 metres wide, and stands for 6 seconds. It has 60 health: enemies' blows on it wear it down, and if they break it, it bursts at once. Once a second, anything standing against either side of it (within 0.9 metres) gets a Chill. The burst reaches 4 metres around it and deals 30 damage, 50 stagger and three stacks of Chill. If your heavy blow bursts it, it counts as a heavy blow. Only one wall of ice can stand at a time.
 
 **Works with.** Splinter Ward, which it comes after on the chart, Sent Sliding, Rime Guard's Freezing Fog shape, Chill.
 
-**Not built yet.** The wall should have 60 health, chill anything that touches it, and throw its burst forward as a 6-metre cone. For now, it only chills when it bursts, all around where it stands.
+**Not built yet.** The burst should be thrown forward as a 6-metre cone. For now, it bursts all around where the wall stands.
 
 **Example.** Archers shoot at you across a yard. Raise the wall, wait behind it for the soldiers to come around, then cut it as they gather.
 
@@ -220,11 +216,11 @@ The blocked blow also counts as a perfect guard for every other mark that answer
 
 **When it happens.** Whenever you cast Winter Wall, using the shape you picked.
 
-**The numbers.** 3 Shards. Shield Wall: 3 metres wide, standing for 4 seconds. Cracked Wall: it bursts on its own 3 seconds after it rises, with the Learn mark's burst.
+**The numbers.** 3 Shards. Shield Wall: 3 metres wide, standing for 4 seconds. Cracked Wall: the wall stands its full 6 seconds, but once an enemy first hits it, it bursts by itself 1.5 seconds later, with the Learn mark's burst.
 
 **Works with.** Rime Guard and Hanging Ice behind a Shield Wall; Flying Shards at a Cracked Wall in a doorway.
 
-**Not built yet.** Shield Wall should move with you (for now, it stands where it rose, just shorter). Cracked Wall should burst 1.5 seconds after an enemy first hits it (for now, it bursts on a timer).
+**Not built yet.** Shield Wall should move with you (for now, it stands where it rose, just shorter).
 
 **Example.** A god charges across the arena. Put a Cracked Wall in its path, and it runs into the burst.
 
@@ -281,11 +277,11 @@ The blocked blow also counts as a perfect guard for every other mark that answer
 
 **When it happens.** Whenever you cast Hoarfrost, using the shape you picked. If you have not bought this, you cast the crystals.
 
-**The numbers.** 3 Shards. Black Ice: a sheet with a 2.3-metre radius, 2.5 metres ahead of you, lasting 5 seconds. Each second, it deals 1 damage and a stack of Chill to whatever stands on it. Frost Line: a line 10 metres long and 1.4 metres wide that spreads out in a moment. It deals 8 damage, 10 stagger and two stacks of Chill.
+**The numbers.** 3 Shards. Black Ice: a sheet with a 2.3-metre radius, 2.5 metres ahead of you, lasting 5 seconds. Each second, it deals 1 damage and a stack of Chill to whatever stands on it. An enemy on it is thrown 50% farther by your blows and shoves. Your dodge that starts on it goes twice as far. Frost Line: a line 10 metres long and 1.4 metres wide that spreads out in a moment. It deals 8 damage, 10 stagger and two stacks of Chill.
 
 **Works with.** Winter Wall and Rime Guard, to keep enemies on the ice (Black Ice); Eight Points and Hanging Ice on the archer it reaches (Frost Line).
 
-**Not built yet.** Black Ice should make enemies on it get thrown 50% farther, and make a dodge on it slide twice as far.
+**Not built yet.** The sheet is still drawn as the plain field of frost spikes, not as clear ice. The long dodge is the plain roll pushed farther, not a slide of its own.
 
 **Example.** Put Black Ice down a hallway. The soldiers who walk in reach you with two or three stacks before you have swung.
 
@@ -320,11 +316,11 @@ The blocked blow also counts as a perfect guard for every other mark that answer
 
 **When it happens.** Whenever you cast Ski Run, using the shape you picked.
 
-**The numbers.** 3 Shards. Thin Ice: each enemy the slide passes is held for 1.2 seconds (less for elites) and has three stacks of Chill. A heavy blow on it within those 1.2 seconds fills its Chill all the way, and it is Frozen. Shooting Run: three shards that chase their target, each dealing 8 damage, 6 stagger and a stack of Chill.
+**The numbers.** 3 Shards. Thin Ice: the path stays as thin ice for 5 seconds. Each enemy on it, one the slide passes or one that steps on it later, cracks through once: it is held for 1.2 seconds (less for elites) and gets a stack of Chill. A god is slowed by 30% for those 1.2 seconds instead of held. A heavy blow on a cracked-through enemy within those 1.2 seconds fills its Chill all the way, and it is Frozen. Shooting Run: three shards that chase their target, each dealing 8 damage, 6 stagger and a stack of Chill.
 
 **Works with.** Brittle and Flying Shards (Thin Ice: a held enemy frozen and broken); Hanging Ice (Shooting Run builds up an archer's Chill).
 
-**Not built yet.** Thin Ice should catch anyone who steps on the path within 5 seconds after (for now, only enemies the slide passes), and a god should be slowed by 30% instead of held. Shooting Run's shards should be shot all through the slide (for now, all three go when it starts).
+**Not built yet.** Shooting Run's shards should be shot all through the slide (for now, all three go when it starts).
 
 **Example.** Slide past two soldiers on Thin Ice and turn around. Both are stuck to the knees, and one heavy blow freezes the first.
 

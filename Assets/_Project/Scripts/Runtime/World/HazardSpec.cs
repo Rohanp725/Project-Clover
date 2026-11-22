@@ -64,5 +64,35 @@ namespace Clover.World
         /// nothing on the way, and then keeps to it and bites (The Drops Quicken's rime creature, risen where an enemy fell).
         /// </summary>
         public float WalksTo;
+        /// <summary>A thrown piece: it ends at the first it strikes (a feather, a flake, a shard), and lays AlsoLays only on what it struck.</summary>
+        public bool StopsAtFirst;
+        /// <summary>
+        /// Ground that acts on whoever stands in it at each bite, not only on what stood there when it formed (the ledger's
+        /// ground-states): the mark's effect (a Player.UpgradeEffect) told to the player's marks with each bite (Hazards.GroundActs).
+        /// </summary>
+        public object Acts;
+        /// <summary>Above zero: draws everything standing in it toward its middle at this many metres a second (the ledger's pull-to-point).</summary>
+        public float Pull;
+        /// <summary>The enemy the ground was laid for (a reaction's own), told with each bite so its marks may leave it out; or null.</summary>
+        public object LaidFor;
+        /// <summary>Nonzero: everything standing in it is shoved this far, this way, at each bite (a lane of foam carrying what is in it).</summary>
+        public Vector3 Carry;
+        /// <summary>Above zero: it strikes only along this many seams out from its middle, a star of cracks, the first along <see cref="SeamWay"/>.</summary>
+        public int Seams;
+        /// <summary>Above zero: it waits for an enemy to stand in it, then strikes once within this many metres and is gone (Fire-Cracked).</summary>
+        public float CrackReach;
+        /// <summary>
+        /// Above zero: it is a line as long as its Radius, turning round its place once in this many seconds like a dial's shadow,
+        /// striking only what it crosses (each one once a turn), <see cref="SweepHalf"/> either side of it (The Stone Keeps the Hour).
+        /// </summary>
+        public float SweepTurn;
+        public float SweepHalf;
+        /// <summary>The way the line points as it begins.</summary>
+        public Vector3 SweepFrom;
+        /// <summary>The name its ground answers to (UpgradeEffect.Ground), so a mark can find every patch of it (Grounded's live water).</summary>
+        public string Name;
+        /// <summary>What laid it (a mark's Player.UpgradeEffect), so a mark can find its own patches again (Weeping Sore's puddles burst).</summary>
+        public object Source;
+        public Vector3 SeamWay;
     }
 }

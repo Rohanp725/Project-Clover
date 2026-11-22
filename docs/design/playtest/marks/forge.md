@@ -9,22 +9,22 @@ carried. Its reaction is Anvil Stone; its Shape mark lets you choose what Anvil 
 
 **When it happens.** Every time Anvil Stone goes off while you carry both Earth and Metal. Anvil Stone goes off when Sundered lands on a shaken enemy, or when Tremor lands on a notched one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Anvil Stone. The plain one puts a stone behind the enemy for 5 seconds, and your next heavy blow smashes the enemy into it.
 
-**The numbers.** Mix, 3 Shards. Ringing Iron: the enemy's Sundered fills all the way right away, and a ring of sparks 3 metres around it deals 10 damage, 15 stagger and a notch to each enemy. Hammer Scale: up to four enemies, each within 6 metres of the last one, take 8 damage, a notch and a Tremor. After Anvil Stone goes off on an enemy, it can't go off on that enemy again for 4 seconds.
+**The numbers.** Mix, 3 Shards. Ringing Iron: the enemy's Sundered fills all the way right away, and a ring of sparks 3 metres around it deals 10 damage, 15 stagger and a notch to each enemy. Hammer Scale: a glowing flake flies at each of the four nearest other enemies within 6 metres, turning after it, and deals 8 damage, a notch and a Tremor to the first enemy it hits. After Anvil Stone goes off on an enemy, it can't go off on that enemy again for 4 seconds.
 
 **Works with.** Buckled (shaken, notched enemies lose their balance sooner), Hammer and Anvil, and Stone Rise and Flung Blade to set it up.
 
 **Example.** No time for a heavy blow: Ringing Iron breaks the enemy's armour the moment the two afflictions meet. A spread-out pack: Hammer Scale notches four at once.
 
-**Not built yet.** Hammer Scale's flakes should jump from one enemy to the next in an arc, instead of flying at each one.
-
 ## forge.hammeranvil
-**What it does.** A heavy blow on a shaken enemy hits twice: once from your weapon, and once more a moment later as the stone answers. Heavy blows also add Tremor and Sundered together, no matter which of the two elements is your first. For now, the second hit needs Tremor on the enemy, not a stone behind it, and it bursts around you instead of behind the enemy.
+**What it does.** A heavy blow on an enemy with stone at its back hits twice: once from your weapon, and once more a moment later as the stone answers. Heavy blows also add Tremor and Sundered together, no matter which of the two elements is your first.
 
-**When it happens.** Every heavy blow that lands. The second hit needs the enemy to already have Tremor.
+**When it happens.** Every heavy blow that lands. The second hit needs stone within 1.5 metres behind the enemy, as you see it: something you raised (Anvil Stone's stone, Raised Stone's pillar, a wall of ice, a mound) or a wall or pillar of the place itself.
 
 **The numbers.** Mix, 3 Shards. The second hit lands 0.15 seconds later, in a 2.3-metre circle around you. It deals 60% of the heavy blow's damage and 20 stagger, at most twice a second. Each heavy blow also adds a stack of Tremor and a notch of Sundered. Your first element's affliction isn't added twice if its root mark already adds it with heavy blows.
 
 **Works with.** Tremor, Heavy Hand, Buckled, Mountain Stance and Quake Step (Tremor to start it), Metal's root mark.
+
+**Not built yet.** The stone's answer still bursts in a circle around you, not out of the stone behind the enemy.
 
 **Example.** Shake a brute with Quake Step, then land two heavy blows. Each one hits again for 60% as the stone answers.
 

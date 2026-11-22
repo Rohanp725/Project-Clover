@@ -77,6 +77,32 @@ namespace Clover.Player
         public string InState = "";
         /// <summary>For ForceReaction: one of the pair on the target is enough; the reaction itself goes off, spending nothing (the ledger's forced-alone).</summary>
         public bool Alone;
+        /// <summary>
+        /// For ForceReaction: the reaction goes off as if its missing partner had just been laid. One of the pair is enough, but
+        /// its rest on that enemy still holds, and the conditions it sets there last without the partner (the ledger's
+        /// laid-as-condition: The Sun Goes Under, every Burn smouldering, curse or no curse).
+        /// </summary>
+        public bool AsLaid;
+        /// <summary>For Heal: the mending is what the blow a counter just turned would have dealt you, Amount at most (Death Turned Back: 30).</summary>
+        public bool ByTurnedWound;
+        /// <summary>For Kill: only a death dealt by this reaction's own blow, by its id (The Feast: a Kindling Point burst that kills).</summary>
+        public string KilledBy = "";
+        /// <summary>
+        /// For a Pass with ToState answering a numbered condition's death (ConditionSpec.Numbered): the next on the line by its
+        /// number after the dead one's, not the nearest in that state (Eaten in Turn).
+        /// </summary>
+        public bool InOrder;
+        /// <summary>
+        /// Above one: weapon blows take turns, and this effect is done only on its <see cref="Turn"/> (0 up to TakesTurns - 1) of
+        /// every TakesTurns swings that land; the hits of one swing share a turn (The Yawning Gap: burning, then chilling).
+        /// </summary>
+        public int TakesTurns;
+        public int Turn;
+        /// <summary>
+        /// For ForceReaction, or a Pass that sets <see cref="Reaction"/> off on the enemy it reaches: the counts of blows the
+        /// reaction's conditions keep there start this many blows along (Held Down, What the Yew Keeps: the fig at two coils).
+        /// </summary>
+        public int CountedBlows;
         /// <summary>For the Reacted and ReactionStruck triggers: only a reaction with this affliction in its pair ("every reaction with Chill in it"). None: any.</summary>
         public AfflictionKind ReactionWith = AfflictionKind.None;
         /// <summary>
@@ -122,6 +148,13 @@ namespace Clover.Player
         public float OnBeat;
         /// <summary>For Boon: it ends with the next swing of the weapon that lands, if that comes before its time is up.</summary>
         public bool UntilBlow;
+        /// <summary>
+        /// For Boon: it lasts this many seconds for each thing the effect before it in the same mark counted (a Spend, or the
+        /// grown things a BurstGrown withered), Seconds at most; nothing when none was (Drawn From the Wood: 1.5 s a withered thing, 10 s at most).
+        /// </summary>
+        public float SecondsEach;
+        /// <summary>For Hold: held the time named as it is, not shortened by how the enemy resists ice; a god's cap still holds (Poured Bronze's quarter on a god or elite).</summary>
+        public bool Exact;
         /// <summary>For Boon: it ends with the player's next dodge, if that comes before its time is up (Second Wind's next dodge free; the ledger's until-dodge).</summary>
         public bool UntilDodge;
         /// <summary>It happens only if its mark's count holds this many, and spends them.</summary>
@@ -133,6 +166,10 @@ namespace Clover.Player
         /// rule). Its mark's <see cref="Upgrade.Branch"/> names the branch.
         /// </summary>
         public bool OwnBranch;
+        /// <summary>For SpellHit: only once the cast has struck at least this many, the one now struck among them (Step Into Light's Master: two in one line).</summary>
+        public int StruckAtLeast;
+        /// <summary>For a spell's moments: only for the casts of this branch (its Learn id), not the mark's own (The Tide Brings It: Riptide's).</summary>
+        public string CastOf = "";
         /// <summary>For CutCooldowns, ResetCooldown and InstantNext: the branch (its Learn id) whose slot it acts on. Empty: its own mark's branch.</summary>
         public string Branch = "";
         /// <summary>For the Reacted trigger: only for this reaction (its id, "react.steam"). For ForceReaction: the reaction forced. Empty: any.</summary>
@@ -243,7 +280,10 @@ namespace Clover.Player
         /// few times at most (Eaten in Turn). Without it, what does not fit is lost.
         /// </summary>
         public bool Overflow;
-        /// <summary>For Pass: not empty, the nearest other enemy in this condition (by its name or what it is) takes the doses before any other (the next on Eaten in Turn's line).</summary>
+        /// <summary>
+        /// For Pass: not empty, the nearest other enemy in this condition (by its name or what it is) takes the doses before any
+        /// other (the next on Eaten in Turn's line). For PayNow: the condition that pays out.
+        /// </summary>
         public string ToState = "";
         /// <summary>For an Arc from the target: each enemy the arc reaches is drawn this many metres toward the target, and no one else (Drawn Iron; the ledger's afflicted-only).</summary>
         public float DrawsIn;
@@ -320,6 +360,152 @@ namespace Clover.Player
         /// <summary>For RingAdded: the last SpentAtLeast rings all came within this many seconds (Bag of Winds' Master: three within three).</summary>
         public float RingsWithin;
         public AfflictionKind CastAfterCarrying = AfflictionKind.None;
+        /// <summary>
+        /// For Raise: the standing thing raised (World.StandingThings), where (RaiseAt, Reach metres off), for Seconds, with
+        /// Amount health (0: no blow breaks it), bursting Delay seconds after it is first struck when above zero, drawing
+        /// enemies within <see cref="Draws"/> onto itself, and Limit of its mark's standing at once.
+        /// </summary>
+        public Clover.World.StandingKind Raises;
+        public Clover.World.StandingPlace RaiseAt;
+        public float Draws;
+        /// <summary>Above zero: only for an enemy with stone at its back, a standing thing or a wall within this many metres behind it as you see it (Hammer and Anvil).</summary>
+        public float StoneAtBack;
+        /// <summary>Above zero: only while you stand within this many metres of a standing thing of the kind <see cref="Raises"/> names (Frozen Footing: a mound).</summary>
+        public float NearStanding;
+        /// <summary>For Pieces: how they leave the enemy (a fan away from you, a ring, each at a nearest other, or a cone out of its far side).</summary>
+        public PieceAim Thrown;
+        /// <summary>For DropPickup: the pickup dropped (World.Pickups). For PickedUp and PickupLeft with AnyMark: the kind answered, whoever dropped it.</summary>
+        public Clover.World.PickupKind Drops;
+        /// <summary>For PickedUp: answers the taking of any pickup of the kind Drops names, whoever dropped it (The Whole Mountain).</summary>
+        public bool AnyDrops;
+        /// <summary>A recipe look played as it is done (Forms.CreatureLooks: an effect-only creature), on its enemy or where it is done.</summary>
+        public string Look = "";
+        /// <summary>
+        /// For a Hazard: ground that keeps acting. <see cref="Inside"/> is set at each bite on every enemy standing in it (for a
+        /// little past the next bite, GroundRules.StateSeconds); <see cref="Pull"/> draws what stands in it to its middle, metres a
+        /// second; <see cref="Mends"/> heals the player standing in it, health a second.
+        /// </summary>
+        public ConditionSpec Inside;
+        public float Pull;
+        public float Mends;
+        /// <summary>
+        /// For a Hazard: effects done at each bite on each enemy standing in the ground, as that enemy's own, so their own tests
+        /// (Needs, Ranks, CooldownPerEnemy) are asked of it: an enemy in the slick dosed four deep floats up (the ledger's
+        /// ground-states). <see cref="InsideSpares"/> leaves out the enemy the ground was laid for, which its mark already answered.
+        /// </summary>
+        public UpgradeEffect[] InsideDo;
+        public bool InsideSpares;
+        /// <summary>
+        /// For a Hazard: effects done on each enemy standing in the ground as its time runs out, as that enemy's own (the ledger's
+        /// ground-flare: Coal Seam flaring every burning enemy on it).
+        /// </summary>
+        public UpgradeEffect[] InsideAtEnd;
+        /// <summary>
+        /// For a Hazard: effects done for you at each bite while you stand in the ground (the ledger's in-own-ground: The Wreck's
+        /// heavy blows unbroken inside it). Done with no enemy named, at your feet.
+        /// </summary>
+        public UpgradeEffect[] YouInside;
+        /// <summary>
+        /// For a Hazard: the name its ground answers to. At each bite every enemy standing in it is told to the marks in force
+        /// as <see cref="UpgradeTrigger.InGround"/>, and those whose <see cref="Condition"/> names this ground answer (Seen in the
+        /// Water on the net of light).
+        /// </summary>
+        public string Ground = "";
+        /// <summary>
+        /// Carries what stands in it along its way, away from the player: for a Hazard, metres a second at each bite (Rip Current's
+        /// foam); for a Lane, metres once, everything on the lane together (Hot Wind's gust). The ledger's lane-shove.
+        /// </summary>
+        public float Carry;
+        /// <summary>
+        /// For a Burst: above zero, it breaks up only along this many seams running out from its middle like the arms of a star,
+        /// each as long as its Radius (GroundRules.SeamHalf either side): only what stands on a seam is struck, not a disc (the
+        /// ledger's seams: Earthlight).
+        /// </summary>
+        public int Seams;
+        /// <summary>For a Hazard: the ground goes with the enemy it was laid on (Heavy Silver's mercury pooling under it as it walks).</summary>
+        public bool Follows;
+        /// <summary>For a Hazard: its <see cref="InsideDo"/> is done only on those that moved since its last bite; one standing still is spared (Step Current).</summary>
+        public bool InsideMovingOnly;
+        /// <summary>
+        /// For a Hazard: above zero, it does nothing until an enemy first stands in it, then cracks once, striking all within this
+        /// many metres with its blow, and is gone (Fire-Cracked's stones).
+        /// </summary>
+        public float CracksAt;
+        /// <summary>
+        /// For SetOff: the discharge runs through every patch of ground of this name (UpgradeEffect.Ground) standing now, striking
+        /// all in each in full, not a circle round its enemy; with none standing, only round its enemy (Grounded: live water).
+        /// </summary>
+        public string ThroughGround = "";
+        /// <summary>For a Cone: it opens behind you, the way you face turned about, and you do not turn (Wings Behind's half ring of feathers).</summary>
+        public bool Behind;
+        /// <summary>For a Push along the line (Shape Downwind): thrown sideways across your front, to your left, along a sweep from your right (Sweep of Wings), not away from you.</summary>
+        public bool Sideways;
+        /// <summary>
+        /// For Afflict with a Radius, or Hazard with Shape Line, on a dodge's end: along the path the dodge just took, from where it
+        /// began to where it ended, not round you (Seed on the Wind, Wake; the ledger's dodge-path).
+        /// </summary>
+        public bool AlongDodge;
+        /// <summary>For OwnGround or Hazard with Shape Line: the lane lies across your front, Amount metres ahead, not ahead of you (The Drawn Line).</summary>
+        public bool AcrossFront;
+        /// <summary>It goes off only once in each fight (the FightClock's), not once in so many seconds (The Burning Tree's first lily).</summary>
+        public bool OncePerFight;
+        /// <summary>For BurstGround: the Hazard effect whose standing patches it bursts.</summary>
+        public UpgradeEffect BurstsGround;
+        /// <summary>
+        /// For NextHeavy: only the next blow on the trigger's own enemy is made heavy, not the next blow on anyone. For Ward: the
+        /// ward turns only that enemy's next blow, kept for it for Seconds (Ash on the Brow's smeared attacker).
+        /// </summary>
+        public bool OnTarget;
+        /// <summary>Only when the trigger's enemy stands in the player's own ground of this name (World.OwnGrounds: The Hag's Staff's frozen disc).</summary>
+        public string TargetOnGround = "";
+        /// <summary>
+        /// For Hazard and Helper: the name what it lays goes by, so Feed can find it, without its acting as ground (Sickle Wind's
+        /// whirl). For Feed: the name of what it feeds.
+        /// </summary>
+        public string Named = "";
+        /// <summary>Stagger added for each stack the Spend effect before it (in the same mark) took (Sickle Wind: 4 a shard).</summary>
+        public float StaggerPerSpent;
+        /// <summary>For Feed: one stack of Needs is torn from the trigger's enemy as what is fed, and only when there is something to feed (Wind Sickle's notch).</summary>
+        public bool TearsNeeds;
+        /// <summary>
+        /// For Condition with a Radius: set on everyone within Radius of the line from where the spell was cast to where you stand
+        /// now, once each, the trigger's own enemy left out, not round its enemy (Stone Underfoot's stride: those passed slowed).
+        /// </summary>
+        public bool AlongCast;
+        /// <summary>
+        /// For LightCoat: above zero, every other burning enemy within <see cref="BurningWithin"/> of the coated one goes up too,
+        /// its Burn spent, at this share of the coat's burst (Black Pitch's Master: half, within 10 m).
+        /// </summary>
+        public float BurningShare;
+        public float BurningWithin;
+        /// <summary>
+        /// For HeavyHit: only the heavy blow on the hour, once in each Hour seconds of fighting (Magic.HourClock); while the hour is up
+        /// the next heavy blow is critical, and a dial at your feet fills toward it (Keeping the Hour: 6 s).
+        /// </summary>
+        public float Hour;
+        /// <summary>
+        /// Its damage and stagger are made this share harder for each weapon blow its condition took (the trigger's count at a
+        /// condition's end), <see cref="HarderBlowsMost"/> blows at most (Fire-Setting's quench: 10% a blow, to 50%).
+        /// </summary>
+        public float HarderPerBlow;
+        /// <summary>Damage added from the trigger's power: this share of it, <see cref="PowerMost"/> at most (The Exile's Grudge: twice what was dealt, 60 at most).</summary>
+        public float PowerShare;
+        public float PowerMost;
+        /// <summary>Above zero: its stagger is this share of the stagger the weapon's last blow dealt (One Noose for Two: half the finisher's).</summary>
+        public float StaggerOfBlow;
+        /// <summary>
+        /// For Burst with Seams: the star is laid as your own ground of the name <see cref="Named"/> for this many seconds after it
+        /// lands (Earthlight's glowing seams, so a guard can be made on them).
+        /// </summary>
+        public float GroundSeconds;
+        /// <summary>For Burst: struck at the star of your own ground of this name nearest the trigger's place, as it was laid, not round the enemy (Lit Seam's flash).</summary>
+        public string AtOwnGround = "";
+        /// <summary>Only when the trigger's enemy froze within this many seconds, frozen still or broken by this blow (AfflictionSet.FrozeWithin: Hanging Ice's Master, 0.3 s).</summary>
+        public float FrozeWithin;
+        public int HarderBlowsMost = 5;
+
+        /// <summary>True when a Hazard effect lays ground that keeps acting, told to the marks at each bite (Hazards.GroundActs).</summary>
+        public bool ActsAsGround => Inside != null || Mends > 0f || InsideDo != null || InsideAtEnd != null || YouInside != null || !string.IsNullOrEmpty(Ground);
 
         /// <summary>A copy with every number, its slot and its mark (an Empower's twin of its Learn's effect).</summary>
         internal UpgradeEffect Twin() => (UpgradeEffect)MemberwiseClone();

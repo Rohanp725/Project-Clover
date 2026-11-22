@@ -61,8 +61,38 @@ namespace Clover.Gameplay
 
         public bool Has(ConditionFlags flag) => (Flags & flag) != 0;
 
+        /// <summary>True while its carrier is frozen, set by the carrier each step: what is kept only while frozen holds then.</summary>
+        public bool CarrierFrozen;
+        /// <summary>What is kept only while the carrier is frozen (<see cref="ConditionSpec.KeepsWhileFrozen"/>), as bits.</summary>
+        public int FrozenKeeps { get; private set; }
+
         /// <summary>True when a running condition keeps this affliction from fading.</summary>
-        public bool KeepsKind(AfflictionKind kind) => (Keeps & (1 << (int)kind)) != 0;
+        public bool KeepsKind(AfflictionKind kind) => ((Keeps | (CarrierFrozen ? FrozenKeeps : 0)) & (1 << (int)kind)) != 0;
+
+        /// <summary>True when a side in degrees lies outside a run's flank (<see cref="ConditionSpec.FlankLeast"/>); an unknown side (-1) or no flank never does.</summary>
+        public static bool OffFlank(float least, float most, float side) => (least > 0f || most > 0f) && side >= 0f && (side < least || side > most);
+
+        /// <summary>
+        /// True when a running condition keeps this affliction from being spent by a weapon blow from <paramref name="side"/>
+        /// (degrees from its face; -1 unknown): one with a flank keeps it only for blows from that flank (Mock Suns).
+        /// </summary>
+        public bool KeepsFrom(AfflictionKind kind, float side)
+        {
+            if (!KeepsKind(kind)) return false;
+            int bit = 1 << (int)kind;
+            for (int i = 0; i < Slots; i++)
+                if (runs[i].Active && (runs[i].KeepsMask & bit) != 0 && (!runs[i].KeepsWhileFrozen || CarrierFrozen) && !OffFlank(runs[i].FlankLeast, runs[i].FlankMost, side)) return true;
+            return false;
+        }
+
+        /// <summary>True when a running condition with a flank bars the afflictions' critical blows from <paramref name="side"/> (Mock Suns: only from its flanks).</summary>
+        public bool BarsCritical(float side)
+        {
+            if (Count == 0) return false;
+            for (int i = 0; i < Slots; i++)
+                if (runs[i].Active && OffFlank(runs[i].FlankLeast, runs[i].FlankMost, side)) return true;
+            return false;
+        }
 
         /// <summary>How hard the kind bites under the conditions running: the product of each one's scale (1 as written).</summary>
         public float BiteScale(AfflictionKind kind, bool frozen)
@@ -113,6 +143,29 @@ namespace Clover.Gameplay
         }
 
         public ConditionRun Run(int slot) => runs[slot];
+
+        /// <summary>
+        /// The news a running condition named <paramref name="id"/> (or that is it, by <see cref="ConditionSpec.Is"/>) would carry
+        /// at <paramref name="moment"/> now, its count as it stands, without that moment coming: a payout made early (Reckoning's
+        /// Master pays the seal's count on a finisher, and the seal pays again as it breaks). False when none runs.
+        /// </summary>
+        public bool NewsOf(string id, ConditionMoment moment, out ConditionNews news)
+        {
+            news = default;
+            if (string.IsNullOrEmpty(id)) return false;
+            for (int i = 0; i < Slots; i++)
+            {
+                ref var run = ref runs[i];
+                if (!run.Active || (run.Id != id && run.Is != id)) continue;
+                news = new ConditionNews
+                {
+                    Moment = moment, Id = run.Id, Mark = run.Mark, Count = run.Count, Blows = run.Blows, Flags = run.Flags, Scale = run.Scale, Link = run.Link,
+                    Is = run.Is, Side = -1f,
+                };
+                return true;
+            }
+            return false;
+        }
 
         /// <summary>True while a condition runs under this name, or is this by what it is (<see cref="ConditionSpec.Is"/>): Hot Shards' crack is a Cracked one.</summary>
         public bool Holds(string id)
@@ -301,10 +354,19 @@ namespace Clover.Gameplay
             return most >= 0f;
         }
 
+        /// <summary>A count of blows begun this many blows along (Held Down: the fig wound at two coils). Never counts back.</summary>
+        public void StartAt(int slot, int blows)
+        {
+            if (slot < 0 || slot >= Slots || !runs[slot].Active || blows <= runs[slot].Blows) return;
+            runs[slot].Blows = blows;
+        }
+
         public void Keep(int slot, float scale)
         {
             if (slot < 0 || slot >= Slots || !runs[slot].Active) return;
             runs[slot].Scale = scale;
+            // The scale may be what it does (a turning slowed by the notch: Seized Joints), so what is summed is summed again.
+            Recount();
         }
 
         public int Set(ConditionSpec spec, Component who, int mark = -1, Component link = null, bool answersStruck = false, bool answersEnd = false, float slowShare = 1f,
@@ -343,6 +405,7 @@ namespace Clover.Gameplay
             run.AnswersDeath = answersDeath;
             run.AnswersAttack = answersAttack;
             run.KeepsMask = Bit(spec.Keeps);
+            run.KeepsWhileFrozen = spec.KeepsWhileFrozen;
             run.DeepMask = Bit(spec.Deepens);
             run.BiteMask = spec.BiteScale > 0f && spec.BiteScale != 1f ? Bit(spec.BitesHarder) : 0;
             run.BiteScale = spec.BiteScale;
@@ -362,10 +425,15 @@ namespace Clover.Gameplay
             run.EndsOnFreeze = spec.EndsOnFreeze;
             run.DriftsTo = Math.Max(0f, spec.DriftsTo);
             run.DeathsWithin = Math.Max(0f, spec.DeathsWithin);
+            run.DischargesWithin = Math.Max(0f, spec.DischargesWithin);
             run.Sink = Math.Max(0f, spec.Sink);
             run.Leash = Math.Max(0f, spec.Leash);
             run.LeashToPlayer = spec.LeashToPlayer;
             run.SharesSpells = spec.SharesSpells;
+            run.FlankLeast = Math.Max(0f, spec.FlankLeast);
+            run.FlankMost = Math.Max(0f, spec.FlankMost);
+            run.TheirBlowPoints = Math.Max(0, spec.TheirBlowPoints);
+            run.TurnedPoints = Math.Max(0, spec.TurnedPoints);
             if (fresh) run.Anchor = who != null ? who.transform.position : Vector3.zero;
             // A chain to another enemy is kept where its other end can find it.
             if ((spec.Flags & ConditionFlags.Chained) != 0 && link != null && who != null) EnemyChains.Note(who);
@@ -453,7 +521,8 @@ namespace Clover.Gameplay
                 ref var run = ref runs[i];
                 // One that hears only critical blows lets every other blow pass as if it were not there (Kindling Point's shapes).
                 if (run.CriticalOnly && (spell || !critical)) continue;
-                if (!spell) run.Blows++;
+                // One that counts its carrier's blows does not count yours (Witnessed).
+                if (!spell && run.TheirBlowPoints == 0) run.Blows++;
                 blowSide = SideDegrees(run.Facing.sqrMagnitude > 0.0001f ? run.Facing : facing, travel);
                 if (run.AnswersStruck) Tell(ConditionMoment.Struck, in run, damage, heavy, spell, shattered, critical, finisher && !spell);
                 blowSide = -1f;
@@ -477,6 +546,7 @@ namespace Clover.Gameplay
             {
                 if (!runs[i].Active) continue;
                 ref var run = ref runs[i];
+                run.Blows += TheirBlowCount(run.TheirBlowPoints, run.TurnedPoints, turned);
                 if (run.AnswersAttack) Tell(ConditionMoment.Attacked, in run, 0f, false, false, turned: turned);
                 if (run.EndsWith != ConditionBlow.TheirBlow) continue;
                 runs[i] = default;
@@ -484,6 +554,12 @@ namespace Clover.Gameplay
             }
             if (spentAny) Recount();
         }
+
+        /// <summary>
+        /// The points one of its carrier's blows on the player adds to a condition that counts them: <paramref name="each"/>, and
+        /// <paramref name="turned"/> more when a perfect guard turned it; nothing for one that does not count them.
+        /// </summary>
+        public static int TheirBlowCount(int each, int turnedPoints, bool turned) => each <= 0 ? 0 : each + (turned ? Math.Max(0, turnedPoints) : 0);
 
         /// <summary>True when a linked condition joins it to <paramref name="host"/>, with the share the link passes on.</summary>
         public bool LinkedTo(Component host, out float share)
@@ -634,7 +710,7 @@ namespace Clover.Gameplay
 
         private void Recount()
         {
-            int count = 0, keeps = 0;
+            int count = 0, keeps = 0, frozenKeeps = 0;
             var flags = ConditionFlags.None;
             float pace = 1f, windup = 1f, taken = 1f, dealt = 1f, weapon = 1f, spellTaken = 1f, stagger = 1f, sight = 0f, heavyTaken = 1f, weaponStagger = 1f, longer = 0f, shatter = 1f, turn = 1f, sink = 0f;
             for (int i = 0; i < Slots; i++)
@@ -643,7 +719,8 @@ namespace Clover.Gameplay
                 ref var run = ref runs[i];
                 count++;
                 flags |= run.Flags;
-                keeps |= run.KeepsMask;
+                if (run.KeepsWhileFrozen) frozenKeeps |= run.KeepsMask;
+                else keeps |= run.KeepsMask;
                 pace *= run.Pace;
                 if ((run.Flags & ConditionFlags.WindupSlowed) != 0) windup *= run.Scale;
                 if ((run.Flags & ConditionFlags.DamageTakenShare) != 0) taken *= run.Scale;
@@ -663,6 +740,7 @@ namespace Clover.Gameplay
             Count = count;
             Flags = flags;
             Keeps = keeps;
+            FrozenKeeps = frozenKeeps;
             Pace = pace;
             WindupPace = Math.Max(0.05f, windup);
             TakenScale = taken;

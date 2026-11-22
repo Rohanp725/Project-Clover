@@ -9,13 +9,11 @@ both carried.
 
 **When it happens.** Every time Smoulder goes off while you carry both Dark and Fire. Smoulder goes off when a Curse lands on a burning enemy, or when Burn lands on a Cursed one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Smoulder.
 
-**The numbers.** Mix, 3 Shards. Night Sun: works like the plain Smoulder (its Burn grows by one stack every 2 seconds while the Curse lasts, and flares up for 10 damage per stack within 3 metres when the Curse ends or the enemy dies). On top of that, each of your blows on it heals you 1 for each Burn on it (3 at three Burns), at most five times a second. Coal Seam: a patch 2.5 metres across that lasts 8 seconds and Curses whatever stands on it every 2 seconds. This is on purpose: that Curse may start Smoulder. After Smoulder goes off on an enemy, it can't go off on that enemy again for 4 seconds.
+**The numbers.** Mix, 3 Shards. Night Sun: works like the plain Smoulder (its Burn grows by one stack every 2 seconds while the Curse lasts, and flares up for 10 damage per stack within 3 metres when the Curse ends or the enemy dies). On top of that, each of your blows on it heals you 1 for each Burn on it (3 at three Burns), at most five times a second. Coal Seam: a patch 2.5 metres across that lasts 8 seconds and Curses whatever stands on it every 2 seconds. This is on purpose: that Curse may start Smoulder. When the 8 seconds end, the seam flares: every burning enemy standing on it flares like a smoulder, using up its Burn for 10 damage per stack and a Burn to everything within 3 metres. After Smoulder goes off on an enemy, it can't go off on that enemy again for 4 seconds.
 
 **Works with.** Grasp and Cinder to set it up, Third Eye, The Sun Goes Under, The Burning Lake.
 
 **Example.** Use Night Sun on a brute you are trading blows with. Use Coal Seam at a doorway, then fight the burning enemies across it.
-
-**Not built yet.** Coal Seam's patch doesn't yet flare up at the end and set off every smoulder on it.
 
 ## smoulder.thirdeye
 **What it does.** A perfect guard against a burning, Cursed enemy opens a line of black-edged fire from you through it.
@@ -31,38 +29,34 @@ both carried.
 ## smoulder.deepcoal
 **What it does.** Burn on a smouldering enemy can stack two higher.
 
-**When it happens.** Always on once you learn it, while you carry both Dark and Fire.
+**When it happens.** Always on once you learn it, while you carry both Dark and Fire. Each time Smoulder goes off, in any shape, it lasts on that enemy for as long as its Curse does.
 
-**The numbers.** Mix, 3 Shards.
+**The numbers.** Mix, 3 Shards. While the enemy smoulders, its Burn can stack 2 higher than usual.
 
 **Works with.** Smoulder (it grows on its own while the Curse lasts), Fire Without End.
 
 **Example.** A smouldering brute reaches seven Burns instead of five before it flares up.
-
-**Not built yet.** It does nothing yet. The game can't yet let an affliction stack higher on one enemy.
 
 ## smoulder.sungoesunder
 **What it does.** While your health is below half, every Burn you add smoulders, Curse or no Curse.
 
 **When it happens.** Always on once you learn it, while you carry both Dark and Fire and your health is below half.
 
-**The numbers.** Mix, keystone, 5 Shards. For now: below half health, each blow that lands on a burning enemy Curses it, at most once a second, so Smoulder starts.
+**The numbers.** Mix, keystone, 5 Shards. Below half health, each Burn you add to an enemy starts Smoulder on it at once, in whichever shape you wear, even with no Curse on it. With no Curse, it smoulders for 30 seconds and then flares. After Smoulder goes off on an enemy, it can't go off on that enemy again for 4 seconds.
 
 **Works with.** Pawned Heart and the Dark marks you pay for with health, Smoulder and its shapes, Third Eye.
 
 **Example.** When you're hurt, every enemy you set on fire starts to smoulder.
-
-**Not built yet.** For now, it Curses the burning enemy, instead of making the Burn itself smoulder.
 
 ## smoulder.lake
 **What it does.** A lake opens where you aim: a still black surface, with flames licking at its edge and embers rising. Every enemy on it is Cursed and gets a Burn each second, so all of them smoulder.
 
 **When it happens.** Cast it from a spell slot while you carry both Dark and Fire. Press that slot's button (hold L2 and a face button, or press 1 to 4). The first time it lands, it charges your blade with Dark.
 
-**The numbers.** Mix, duo spell, 5 Shards. It costs no mana. After you cast it, you must wait 16 seconds to cast it again. Fighting with your weapon makes the wait shorter. It lands up to 8 metres ahead of you, is 4 metres across, and lasts 7 seconds. Once a second, it deals 2 damage, a Curse and a Burn to everything on it.
+**The numbers.** Mix, duo spell, 5 Shards. It costs no mana. After you cast it, you must wait 16 seconds to cast it again. Fighting with your weapon makes the wait shorter. It lands up to 8 metres ahead of you, is 4 metres across, and lasts 7 seconds. Once a second, it deals 2 damage, a Curse and a Burn to everything on it, and enemies on it walk 20% slower. Each enemy killed on it makes the lake half a metre wider and makes it last 1 second longer. A finisher on an enemy on the lake makes every smouldering enemy on the lake flare up at once.
 
 **Works with.** Smoulder and its shapes, The Sun Goes Under, Third Eye.
 
-**Example.** Open it under a pack and let them smoulder while you hold the edge.
+**Example.** Open it under a pack and let them smoulder while you hold the edge. When they are all smouldering, land a finisher on one, and the whole lake flares.
 
-**Not built yet.** It doesn't slow enemies standing on it yet, grow with each enemy killed on it, or make every smoulder flare up at once on a finisher.
+**Not built yet.** Enemies killed on it aren't shown sinking under the surface yet.

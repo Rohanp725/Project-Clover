@@ -31,8 +31,8 @@ namespace Clover.Player.Trees
 
             // The Shape mark: Flashover's two shapes in place of Charged Embers. Corona keeps the live flame and throws arcs
             // from it; Fulgurite sends the crack down into the floor instead. Each runs instead of the plain Flashover.
-            // NEEDS: discharges that bend toward one enemy (Corona's arcs leap from the flame as the plain reaction's would
-            // bend into it); the scorched glassy patch's own look (Fulgurite is drawn as a burning and crackling patch).
+            // Corona's arcs leap from the flame, where the plain reaction's draws discharges into it (ConditionSpec.DischargesWithin).
+            // NEEDS: the scorched glassy patch's own look (Fulgurite is drawn as a burning and crackling patch; looks).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Flashover: Corona or Fulgurite", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,

@@ -17,6 +17,10 @@ namespace Clover.Player.Trees.Duo
         public const string HeavyCurse = "turnedtostone.heavycurse";
         public const string StoneDoesNotForgive = "turnedtostone.forgive";
         public const string StoneUnderfoot = "turnedtostone.underfoot";
+        /// <summary>Stone Underfoot on a god, which no stone holds: slowed 60% for 1.5 s.</summary>
+        public const string UnderfootSlowed = "turnedtostone.underfoot.slowed";
+        /// <summary>Stone Underfoot: those passed on the stride, slowed.</summary>
+        public const string UnderfootPassed = "turnedtostone.underfoot.passed";
         /// <summary>The prefixes of the conditions the two shapes set, each the climb and the stone as the plain reaction's.</summary>
         public const string KingsMen = "turnedtostone.kingsmen";
         public const string GraveMarker = "turnedtostone.gravemarker";
@@ -105,16 +109,30 @@ namespace Clover.Player.Trees.Duo
             }, HeartPattern.Keystone));
 
             // The duo spell, bought with Shards once both are carried (no god gives it): a movement on a 10 s cooldown (SpellTimings). The step form carries you to the enemy
-            // faced; your foot on its shadow shakes it (the branch's first element) and Curses it, so it begins to turn.
-            // NEEDS: turned to stone at once, past its climb; those passed slowed; the heavy blow that breaks it out within
-            // 1.5 s at double stagger.
+            // faced; your foot on its shadow shakes it (the branch's first element) and Curses it, and it is stone at once, past
+            // the climb: Turned to Stone's stone set straight away (rooted, beginning no attack, double stagger, half from spells,
+            // an elite half as long), a god only slowed 60% for 1.5 s; the heavy blow that breaks it out within its 1.5 s strikes
+            // at the stone's double stagger, 50 more. Every other enemy you passed within 1.5 m on the way is slowed 30% for 2 s
+            // (UpgradeEffect.AlongCast: the line from where it was cast to where you stand).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = StoneUnderfoot, Name = "Stone Underfoot", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Role = SpellRole.Movement, Requires = new[] { GraveDirt, BrokenIdol }, Icon = UpgradeIcons.Boot,
                 Description = "You stride to the enemy you face, leaving grey dust footprints, and set your foot on its shadow: it is Cursed and shaken two deep, and stone climbs it.",
                 Form = FormStep,
                 Spell = new SpellSpec { Reach = 8f, Damage = 6f, Stagger = 10f, Stacks = 2, Seconds = 1.5f },
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Cursed, Stacks = 2 } },
+                Effects = new[]
+                {
+                    // First, so the Curse laid next starts no slow climb on top of the stone.
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.RestReaction, Reaction = "react.turnedtostone" },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Cursed, Stacks = 2 },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Ranks = EnemyRank.Plain | EnemyRank.Elite, Do = UpgradeAction.Condition,
+                        State = new ConditionSpec { Id = Reactions.Stone, Seconds = 1.5f, Flags = ConditionFlags.Rooted | ConditionFlags.BeginsNoAttack | ConditionFlags.StaggerTakenShare, Scale = 2f, EndsWith = ConditionBlow.Heavy } },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Ranks = EnemyRank.Plain | EnemyRank.Elite, Do = UpgradeAction.Condition,
+                        State = new ConditionSpec { Id = Reactions.StoneSpellproof, Seconds = 1.5f, Flags = ConditionFlags.SpellTakenShare, Scale = 0.5f, EndsWith = ConditionBlow.Heavy } },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Ranks = EnemyRank.God, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = UnderfootSlowed, Seconds = 1.5f, Pace = 0.4f } },
+                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Reactions.Stone, By = StruckBy.Heavy, Do = UpgradeAction.Burst, Radius = 0.5f, Stagger = 50f, Affliction = AfflictionKind.Tremor },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Condition, AlongCast = true, Radius = 1.5f, Cooldown = 0.2f, State = new ConditionSpec { Id = UnderfootPassed, Seconds = 2f, Pace = 0.7f } },
+                },
             }, HeartPattern.Spell));
         }
 

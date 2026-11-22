@@ -92,7 +92,7 @@ namespace Clover.Tests
         [Test]
         public void AnEmpowerForTheLearnAloneLeavesAShapesOwnSpellAsItIs()
         {
-            // Daybreak's 10 a ring is the beam's; Red Before the Sun's wall keeps its own 48.
+            // Daybreak's 10 a ring is the beam's; Red Before the Sun's wall keeps its own numbers (it strikes nothing: the beam it gathers is the blow).
             var branches = new SpellBranches();
             var daybreak = Upgrade.ById(LightTree.Daybreak);
             var learned = new HashSet<string> { LightTree.Daybreak, SpellBranch.EmpowerId(LightTree.Daybreak), SpellBranch.ShapeId(LightTree.Daybreak) };
@@ -103,7 +103,8 @@ namespace Clover.Tests
             Assert.AreEqual(15f, branches.SpecOf(daybreak, plain, light).Damage, 1e-4f, "the beam: four bites of 15 for six rings of 10");
             light.Shapes.Add(new IdChoice(LightTree.Daybreak, 0));
             var wall = branches.SpecOf(daybreak, learned, light);
-            Assert.AreEqual(48f, wall.Damage, 1e-4f, "the wall keeps its own numbers");
+            Assert.AreEqual(0f, wall.Damage, 1e-4f, "the wall keeps its own numbers");
+            Assert.AreEqual(4f, wall.Seconds, 1e-4f);
             Assert.AreEqual(SpellTimings.For(LightTree.Daybreak).Mana, wall.Cost, 1e-4f);
         }
 

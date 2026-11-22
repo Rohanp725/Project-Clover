@@ -240,14 +240,80 @@ namespace Clover.Player
             if (count > 0) Wards = Mathf.Min(MaximumWards, Wards + count);
         }
 
-        /// <summary>Takes every ward away, as when the element that gave them is put down.</summary>
-        public void ClearWards() => Wards = 0;
+        /// <summary>The share of a blow a plate of stone takes when its mark names none.</summary>
+        public const float PlainPlateShare = 0.6f;
+        /// <summary>Plates of stone held at most (Stone Skin grows two).</summary>
+        public int MaximumPlates = 2;
+        /// <summary>
+        /// Plates of stone held (Stone Skin): each takes its share of one blow that lands and stops its flinch, then breaks.
+        /// Spent after the wards, which turn the whole blow.
+        /// </summary>
+        public int Plates { get; private set; }
+        /// <summary>The share of a blow each plate held takes.</summary>
+        public float PlateShare { get; private set; } = PlainPlateShare;
+        /// <summary>Blows a plate took its share of: for probes.</summary>
+        public int BlowsPlated { get; private set; }
 
-        // A ward is spent on a blow that was about to land: a pale ring, and the blow is gone.
+        public void GivePlates(int count, float share)
+        {
+            if (count <= 0) return;
+            Plates = Mathf.Min(MaximumPlates, Plates + count);
+            PlateShare = Mathf.Clamp01(share);
+        }
+
+        /// <summary>What of a wound gets past a plate that takes <paramref name="share"/> of it.</summary>
+        public static float PlatedWound(float wound, float share) => Mathf.Max(0f, wound) * (1f - Mathf.Clamp01(share));
+
+        // A plate breaks on a blow that was about to land: the blow lands at what the plate let through, and does not stagger.
+        private bool SpendPlate(in Hit hit)
+        {
+            if (Plates <= 0) return false;
+            Plates--;
+            BlowsPlated++;
+            Vfx.Play(VfxKind.Burst, GuardPoint());
+            Callout("Plate broken");
+            Land(hit, 0f, false, PlateShare);
+            if (upgrades != null) upgrades.OnPlateBroken();
+            return true;
+        }
+
+        /// <summary>Takes every ward away, as when the element that gave them is put down.</summary>
+        public void ClearWards()
+        {
+            Wards = 0;
+            wardKeptFor = null;
+        }
+
+        // A ward kept for one enemy's next blow alone (Ash on the Brow), until a time.
+        private Component wardKeptFor;
+        private float wardKeptUntil;
+        /// <summary>The enemy whose next blow a kept ward turns; null when none is kept.</summary>
+        public Component WardKeptFor => wardKeptFor != null && Time.time < wardKeptUntil ? wardKeptFor : null;
+
+        /// <summary>Keeps a ward for <paramref name="one"/>'s next blow alone, until <paramref name="until"/> (Ash on the Brow).</summary>
+        public void KeepWardFor(Component one, float until)
+        {
+            wardKeptFor = one;
+            wardKeptUntil = until;
+        }
+
+        /// <summary>True when a ward kept for <paramref name="keptFor"/> until <paramref name="until"/> turns a blow by <paramref name="attacker"/> at <paramref name="now"/>.</summary>
+        public static bool KeptWardTurns(object keptFor, float until, float now, object attacker) =>
+            keptFor != null && attacker != null && now < until && ReferenceEquals(keptFor, attacker);
+
+        // A ward is spent on a blow that was about to land: a pale ring, and the blow is gone. A ward kept for one enemy is
+        // spent first, and only on that enemy's blow.
         private bool SpendWard(in Hit hit)
         {
-            if (Wards <= 0) return false;
-            Wards--;
+            bool kept = false;
+            if (wardKeptFor != null && combat != null && hit.HasOrigin)
+            {
+                var attacker = combat.EnemyAt(hit.Origin, 2.5f);
+                kept = KeptWardTurns(wardKeptFor, wardKeptUntil, Time.time, attacker);
+            }
+            if (kept) wardKeptFor = null;
+            else if (Wards <= 0) return false;
+            else Wards--;
             BlowsWarded++;
             if (upgrades != null)
             {
@@ -430,6 +496,8 @@ namespace Clover.Player
                 // A red attack turned: the counters' Masters answer only that (the ledger's red-attack).
                 if (hit.Unblockable && upgrades != null) upgrades.RedTurned();
                 player.FormParriedFrom = hit.HasOrigin ? hit.Origin : transform.position - hit.Direction;
+                // What it would have dealt, for a counter that mends by it (Death Turned Back).
+                LastTurnedWound = Mathf.Max(0f, hit.Damage * DamageTaken);
                 // Whose blow it was, for an answer meant only for the attacker (The Golden Chair).
                 if (upgrades != null && combat != null) upgrades.NoteTurned(combat.EnemyAt(player.FormParriedFrom, 2.5f));
                 PerfectGuards++;
@@ -440,7 +508,12 @@ namespace Clover.Player
                 return HitOutcome.PerfectGuard;
             }
             // A wall of the element between the blow and the player takes it.
-            if (hit.HasOrigin && Clover.Player.Forms.SpellWorks.Screens(hit.Origin, transform.position)) return HitOutcome.Dodged;
+            if (hit.HasOrigin && Clover.Player.Forms.SpellWorks.Screens(hit.Origin, transform.position))
+            {
+                // A blow the wall stopped: a ring for a spell gathering them (Red Before the Sun).
+                if (upgrades != null) upgrades.OnStopped();
+                return HitOutcome.Dodged;
+            }
 
             if (player.Dodge.IsInvulnerable)
             {
@@ -514,10 +587,11 @@ namespace Clover.Player
                     if (shaker != null) shaker.Shake(0.07f, 0.12f);
                     Health.Chip(chip);
                     if (hitStop != null) hitStop.Freeze(0.04f);
-                    if (upgrades != null) upgrades.OnGuard(hit.HasOrigin ? hit.Origin : transform.position - hit.Direction);
+                    if (upgrades != null) upgrades.OnGuard(hit.HasOrigin ? hit.Origin : transform.position - hit.Direction, hit.Damage * DamageTaken);
                     return HitOutcome.Blocked;
                 case GuardResult.Broken:
                     if (SpendWard(hit)) return HitOutcome.Blocked;
+                    if (SpendPlate(hit)) return HitOutcome.Landed;
                     Callout("Guard broken");
                     if (guardArc != null) guardArc.Pulse(new Color(5f, 0.4f, 0.3f, 1f), 0.4f, 0.9f);
                     Vfx.Play(VfxKind.Danger, GuardPoint());
@@ -525,6 +599,7 @@ namespace Clover.Player
                     return HitOutcome.Landed;
                 default:
                     if (SpendWard(hit)) return HitOutcome.Blocked;
+                    if (SpendPlate(hit)) return HitOutcome.Landed;
                     Land(hit, HurtSeconds);
                     // The blow that kills teaches nothing.
                     if (!IsDead) Tips.UnguardedBlow();
@@ -532,14 +607,22 @@ namespace Clover.Player
             }
         }
 
+        /// <summary>What the last blow a counter's stance turned would have dealt you (Death Turned Back mends by it).</summary>
+        public float LastTurnedWound { get; private set; }
+
+        /// <summary>The mending a counter gives for a blow it turned: what the blow would have dealt, <paramref name="most"/> at most.</summary>
+        public static float TurnedMend(float wound, float most) => Mathf.Clamp(wound, 0f, Mathf.Max(0f, most));
+
         /// <summary>What the last blow that landed took, and when (Second Shadow's Master gives it back).</summary>
         public float LastWound { get; private set; }
         public float LastWoundAt { get; private set; } = -100f;
 
-        private void Land(in Hit hit, float seconds, bool guardBroken = false)
+        private void Land(in Hit hit, float seconds, bool guardBroken = false, float plated = 0f)
         {
             BlowsTaken++;
             float wound = hit.Damage * DamageTaken;
+            // A plate of stone took its share first (Stone Skin).
+            if (plated > 0f) wound = PlatedWound(wound, plated);
             // Shared Roots: a share of the wound is carried by the Seeded enemies near, as much as they can take of it.
             if (WoundShare > 0f && ShareWound != null && wound > 0f) wound -= Mathf.Clamp(ShareWound(wound * WoundShare), 0f, wound);
             float before = Health.Current;
@@ -551,6 +634,12 @@ namespace Clover.Player
             if (upgrades != null) upgrades.OnStruck(hit.HasOrigin ? hit.Origin : transform.position - hit.Direction);
             Vfx.Play(VfxKind.Wound, transform.position + Vector3.up * 1.1f, hit.Direction);
             ScreenFlash.Flash(new Color(1f, 0.08f, 0.1f, 0.16f), 0.09f);
+            if (!IsDead && plated > 0f)
+            {
+                // The plate stopped its flinch: it hurts, and you stand through it.
+                if (shaker != null) shaker.Shake(0.1f, 0.12f);
+                return;
+            }
             if (!IsDead && combat != null && (!hit.Unblockable || (combat.HeavyUnbroken && combat.InHeavySwing)) && combat.Poised(hit.Damage))
             {
                 // Inside a heavy swing a small blow is taken and walked through: it hurts, the swing goes on.
@@ -618,6 +707,8 @@ namespace Clover.Player
             Flasks.Refill();
             player.Stamina.Fill();
             Wards = 0;
+            wardKeptFor = null;
+            Plates = 0;
         }
 
         private void Revive()

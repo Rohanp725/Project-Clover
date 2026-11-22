@@ -62,11 +62,11 @@ Rise's rocks, a pillar, a heap of rubble.
 
 **When it happens.** For now, every time you cast Under the Mound. It must be in a spell slot.
 
-**The numbers.** 3 Shards. It only counts if you start it in the last 0.3 seconds before an enemy's blow (one within 6 metres) lands on you. Then it is a perfect dodge: you get 12 mana, the game slows for a moment, the blow misses, and every mark that answers a perfect dodge answers this one. For 3 seconds after that, or until your next blow lands, your blows break 50% more balance and each adds one more stack.
+**The numbers.** 3 Shards. It only counts if you start it in the last 0.3 seconds before an enemy's blow (one within 6 metres) lands on you. Then it is a perfect dodge: you get 12 mana, the game slows for a moment, the blow misses, and every mark that answers a perfect dodge answers this one. For 3 seconds after that, or until your next blow lands, your blows break 50% more balance and each adds one more stack. Your next light blow in those 3 seconds lands as a heavy blow, so every mark that answers a heavy blow answers it.
 
 **Works with.** Tremor (the extra stack on the next blow), Heavy Hand and The Slow Hand, Cairn (the mana it gives back).
 
-**Not built yet.** It doesn't yet bring you up behind the attacker, and the next blow doesn't yet count as a heavy blow.
+**Not built yet.** It doesn't yet bring you up behind the attacker.
 
 **Example.** A brute's overhead swing is coming down. Go under it, come up behind it, and your next blow nearly breaks its balance.
 
@@ -97,11 +97,9 @@ Rise's rocks, a pillar, a heap of rubble.
 
 **When it happens.** When you cast it after standing still for one second (not walking, dodging or stepping). Cairn must be in a spell slot.
 
-**The numbers.** 3 Shards. You get 20 mana back. A second fall hits each shaken enemy 0.8 seconds after you cast it, for 24 damage and 30 stagger.
+**The numbers.** 3 Shards. You get 20 mana back. Every stone falls on each shaken enemy a second time, 0.8 seconds after you cast it: one more stone for each depth of Tremor it had, each for 12 damage and 15 stagger.
 
 **Works with.** Rooted, Immovable, Heavy Hand, and Mountain Stance, which keeps you standing still.
-
-**Not built yet.** Every stone should hit twice (for now there is a second fall worth two stones).
 
 **Example.** Hold your ground through a soldier's string of blows, then stamp. You get twice the stones, and half the cost back for the next one.
 
@@ -147,11 +145,11 @@ Rise's rocks, a pillar, a heap of rubble.
 
 **When it happens.** Whenever you cast Quake Step, using the shape you picked. If you have not bought this, you cast the plain ring.
 
-**The numbers.** 3 Shards. Struck From Afar: a ring with a 2.5-metre radius around an enemy up to 8 metres away, 0.45 seconds after you cast it. It deals 16 damage, 30 stagger and two Tremor, and holds the enemy for 0.6 seconds. The Second Wave: first a ring out to 5 metres for 8 damage and one Tremor. Then, 0.7 seconds later, a ring out to 7 metres around where you stamped, for 18 damage and 40 stagger. Enemies the first ring hits are knocked down for 1 second.
+**The numbers.** 3 Shards. Struck From Afar: a ring with a 2.5-metre radius around an enemy up to 8 metres away, 0.45 seconds after you cast it. It deals 16 damage, 30 stagger and two Tremor, and holds the enemy for 0.6 seconds. The Second Wave: first a ring out to 5 metres for 8 damage and one Tremor. Then, 0.7 seconds later, a ring out to 7 metres around where you stamped, for 18 damage and 40 stagger. An enemy that both rings catch is knocked down for 1 second, at the moment the second ring hits it. An enemy only one ring catches stays on its feet.
 
 **Works with.** Struck From Afar: Cairn on the enemy it shook. The Second Wave: Tremor, Unbroken Cairn, and your heavy blows on enemies lying on the ground.
 
-**Not built yet.** Struck From Afar should land on the enemy you face (for now, the nearest within 8 metres). The Second Wave should only knock down enemies the second ring also catches, at that moment (for now, enemies the first ring catches are knocked down right away).
+**Not built yet.** Struck From Afar should land on the enemy you face (for now, the nearest within 8 metres).
 
 **Example.** Use The Second Wave in a crowd. Step back after the first ring, so the second ring catches them all as they come at you.
 
@@ -182,11 +180,11 @@ Rise's rocks, a pillar, a heap of rubble.
 
 **When it happens.** Whenever you cast Mountain Stance, using the shape you picked. If you have not bought this, you cast Grey Stone.
 
-**The numbers.** 3 Shards. Stone Skin: when the stance blocks a blow, it does not hit back. You get two wards instead, up to three. Each one blocks one blow and breaks in a burst 3 metres around you, for 14 damage, 24 stagger and one Tremor. Fist of Rock: you stand for up to 1.5 seconds. The answer is a cone 4 metres long and 90 degrees wide, for 30 damage, 60 stagger and two Tremor.
+**The numbers.** 3 Shards. Stone Skin: when the stance blocks a blow, it does not hit back. You get two plates of stone instead, up to two at a time. Each plate takes 60% of one blow that reaches you, and you don't flinch from it; the other 40% still hurts you. Then the plate breaks in a burst 3 metres around you, for 14 damage, 24 stagger and one Tremor. Fist of Rock: you stand for up to 1.5 seconds. The answer is a cone 4 metres long and 90 degrees wide, for 30 damage, 60 stagger and two Tremor.
 
-**Works with.** Stone Skin: Glaze's ward if you carry Ice, Heavy Hand, Immovable. Fist of Rock: Tremor and Cairn, and Unbroken Cairn's heavy blow after it.
+**Works with.** Stone Skin: Heavy Hand, Immovable. Fist of Rock: Tremor and Cairn, and Unbroken Cairn's heavy blow after it.
 
-**Not built yet.** Stone Skin's plates should take 60% of one blow (for now, a ward takes all of it). Fist of Rock's answer should rise under the enemy that hit you; for now, it is a cone thrown at it.
+**Not built yet.** Fist of Rock's answer should rise under the enemy that hit you; for now, it is a cone thrown at it.
 
 **Example.** Use Stone Skin before a pack closes in. The first two blows that reach you each throw stone back at the whole ring.
 
@@ -243,11 +241,11 @@ Rise's rocks, a pillar, a heap of rubble.
 
 **When it happens.** Whenever you cast Stone Rise, using the shape you picked. If you have not bought this, the plain stone rises.
 
-**The numbers.** 3 Shards. Raised Stone: for 6 seconds, your next heavy blow on the enemy it lifted throws a cone of shards from you through it. The cone is 5 metres long and 70 degrees wide, and deals 18 damage, 20 stagger and one Tremor. Dropped From the Apron: it lands on the nearest enemy within 5 metres, 0.6 seconds after you cast it, in a 1.5-metre circle around it, for 24 damage, 45 stagger and two Tremor. For 6 seconds, a heavy blow on that enemy crushes a path 8 metres long past it, away from you, dealing 16 damage, 30 stagger and one Tremor to each enemy it hits.
+**The numbers.** 3 Shards. Raised Stone: the stone pillar stays standing 1.1 metres beside the enemy it lifted for 6 seconds (only one at a time). It blocks bodies and thrown attacks, enemies walk around it, and their blows can break it (40 health). Your heavy blow on the pillar shatters it into a cone of shards from you through it. The cone is 5 metres long and 70 degrees wide, and deals 18 damage, 20 stagger and one Tremor. Dropped From the Apron: it lands on the nearest enemy within 5 metres, 0.6 seconds after you cast it, in a 1.5-metre circle around it, for 24 damage, 45 stagger and two Tremor. For 6 seconds, a heavy blow on that enemy crushes a path 8 metres long past it, away from you, dealing 16 damage, 30 stagger and one Tremor to each enemy it hits.
 
 **Works with.** Raised Stone: Heavy Hand, The Slow Hand. Dropped From the Apron: a pack in a hallway, Cairn on the path it shook.
 
-**Not built yet.** Raised Stone's pillar should stay standing next to the enemy, block things, and be hit itself (for now, the stones sink back like normal, and the heavy blow lands on the enemy). Dropped From the Apron's boulder should fall from above and lie there as something to hit, breaking on a wall or a large enemy (for now, stone rises under the nearest enemy, and the heavy blow on that enemy sends the path on).
+**Not built yet.** Dropped From the Apron's boulder should fall from above and lie there as something to hit, breaking on a wall or a large enemy (for now, stone rises under the nearest enemy, and the heavy blow on that enemy sends the path on). It has no model yet.
 
 **Example.** Use Dropped From the Apron on the first of three soldiers in a hallway. One heavy blow on it crushes the two behind.
 
@@ -339,14 +337,14 @@ Rise's rocks, a pillar, a heap of rubble.
 **Example.** Light Bedrock and finish a staggered soldier. The hand comes down on that spot and staggers the two soldiers behind it.
 
 ## earth.closedring
-**What it does.** The Closed Ring, a keystone. Lighting Bedrock raises eight stones in a ring around you. For ten seconds, they hit and shake whatever stands among them, and you take a little less damage. Bedrock costs a quarter more.
+**What it does.** The Closed Ring, a keystone. Lighting Bedrock raises a ring of standing stones around you. For ten seconds, nothing can walk or be thrown across the ring, in or out. An enemy knocked hard into a stone is hurt and badly shaken. Inside the ring you are Rooted and take a little less damage. Bedrock costs a quarter more.
 
 **When it happens.** When you light Bedrock, the surge. Always on once you learn it, while you carry Earth.
 
-**The numbers.** 6 Shards. Eight stones in a ring 12 metres across, each a metre wide, for 10 seconds. Once a second, each stone hits whatever stands on it for 8 damage, 20 stagger and one stack of Tremor. You take 8% less damage for the same 10 seconds. Bedrock costs 25% more mana (50 instead of 40).
+**The numbers.** 6 Shards. A ring 12 metres across with eleven stones, for 10 seconds. An enemy driven into a stone takes 20 damage and 35 stagger, at most twice a second. Inside the ring you count as Rooted, however you move. You take 8% less damage for the same 10 seconds. Bedrock costs 25% more mana (50 instead of 40). Gods are not held by the ring.
 
 **Works with.** Cairn, which it comes after on the chart (from its Master mark), Standing Stones and Left in Rubble (more stone around you), Rooted and Immovable (stand inside the ring and let them come), Hand of the Mountain.
 
-**Not built yet.** The ring should act as a wall: nothing can walk, roll or be thrown across it while it stands, an enemy knocked into a stone is hurt and staggered, and you are Rooted inside it. For now, the stones only hit what stands on them, and anything can pass between them.
+**Not built yet.** The stones are shown as puffs of dust and light where they stand. Their own look, eleven rough standing stones, is made and waits to be brought into the game.
 
 **Example.** Light Bedrock with two soldiers on you. The ring rises around all three of you, and every second they stand in it they are shaken closer to a stagger.

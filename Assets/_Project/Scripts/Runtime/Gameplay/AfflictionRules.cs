@@ -12,6 +12,12 @@ namespace Clover.Gameplay
     /// </summary>
     public sealed class AfflictionRules
     {
+        /// <summary>
+        /// True when an affliction spent by blows, its last blow just spent, lasts <paramref name="more"/> blows longer: its enemy
+        /// burns, it is not the Burn itself, and the blow more has not been given since it was laid (Clear Sky).
+        /// </summary>
+        public static bool BurningBlowMore(int more, int burnStacks, bool isBurn, bool given) => more > 0 && burnStacks > 0 && !isBurn && !given;
+
         private int keeps;
         private int unspent;
         private readonly float[] deepensEvery = new float[Afflictions.Count];

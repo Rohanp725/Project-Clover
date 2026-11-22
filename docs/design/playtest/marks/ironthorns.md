@@ -9,13 +9,11 @@ both carried.
 
 **When it happens.** Every time Iron Thorns goes off while you carry both Life and Metal. Iron Thorns goes off when Sundered lands on a seeded enemy, or when Seeded lands on a notched one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Iron Thorns. The plain one grows three thorns, and each weapon blow throws one at the nearest other enemy.
 
-**The numbers.** Mix, 3 Shards. Pruning Hook: the thorns last 6 seconds. Each of your first three weapon blows on the enemy heals you 4. Iron Harvest: when the enemy dies or the 6 seconds end, a ring of blades bursts out to 3 metres, dealing 8 damage, 8 stagger and a notch to each enemy it reaches. After Iron Thorns goes off on an enemy, it can't go off on that enemy again for 4 seconds.
+**The numbers.** Mix, 3 Shards. Pruning Hook: the thorns last 6 seconds. Each of your first three weapon blows on the enemy heals you 4. Iron Harvest: when the enemy dies or the 6 seconds end, five blades fly out of it evenly all around, 3 metres each. Each one deals 8 damage, 8 stagger and a notch to the first enemy it hits, then stops. After Iron Thorns goes off on an enemy, it can't go off on that enemy again for 4 seconds.
 
 **Works with.** Briar Patch and Flung Blade to set it up, Sap of Iron, Grafted Edge, The Sown Men.
 
 **Example.** Low on health against one brute: use Pruning Hook, and three blows heal you 12. A pack: use Iron Harvest on the one in the middle.
-
-**Not built yet.** Iron Harvest's five thorns burst out as one ring instead of five blades.
 
 ## ironthorns.sap
 **What it does.** An enemy that dies with thorns in it gives its iron to the ground, and the ground gives it to you. A quarter of a flask fills up right away, the way plants draw metal up through their roots.

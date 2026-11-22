@@ -53,5 +53,25 @@ namespace Clover.Player
         AirborneHeavyBlow,
         /// <summary>While the player has stood still, not walking, dodging or stepping, for a second (the ledger's stood-still).</summary>
         StoodStill,
+        /// <summary>While the player stands in water they have left on the ground: their own ground that Soaks (the ledger's in-own-water).</summary>
+        InOwnWater,
+        /// <summary>While the player stands on their own sheet of ice (Hoarfrost's Black Ice; World.OwnGrounds.Sheet).</summary>
+        OnOwnIce,
+        /// <summary>While the player stands on wet sand of their own, or dodges from it (World.OwnGrounds.WetSand).</summary>
+        OnWetSand,
+        /// <summary>While the player stands in their own Low Mist (World.OwnGrounds.LowMist).</summary>
+        InOwnMist,
+        /// <summary>While the player stands in their own lamp's glow (Standing Light; World.OwnGrounds.Glow).</summary>
+        InOwnGlow,
+        /// <summary>While the player stands in their own ring of green blood (Blood in the Furrow; World.OwnGrounds.Blood).</summary>
+        InOwnBlood,
+        /// <summary>While the player stands in a cloud: Miasma's own, or any poison ground of theirs (Tasted Every Herb).</summary>
+        InCloud,
+        /// <summary>While the player stands on the line between Need-Fire's two fires (World.OwnGrounds.NeedFireLine).</summary>
+        BetweenFires,
+        /// <summary>While the player stands on Earthlight's glowing seams (World.OwnGrounds.Seams).</summary>
+        OnSeams,
+        /// <summary>While any enemy within 8 m of the player is Frozen (No Summer).</summary>
+        FrozenNear,
     }
 }

@@ -268,5 +268,113 @@ namespace Clover.Player
         /// for Damage, Stagger and the affliction, and each adds Seconds to the surge.
         /// </summary>
         CallBladesHome,
+        /// <summary>
+        /// Raises a standing thing (World.StandingThings): UpgradeEffect.Raises, at UpgradeEffect.RaiseAt Reach metres from the
+        /// enemy named (or ahead of you), for Seconds, with Amount health, bursting Delay seconds after it is first struck when
+        /// set, drawing enemies within Draws onto it, and Limit of its mark's at once (the oldest crumbling).
+        /// </summary>
+        Raise,
+        /// <summary>Breaks the standing thing of its own mark nearest where the moment was (Raised Stone shattered by a heavy blow).</summary>
+        BreakStanding,
+        /// <summary>
+        /// Pieces thrown out of the enemy the moment names, each its own striker that ends at the first it strikes and never
+        /// strikes the enemy it left (UpgradeEffect.Thrown: a fan of Count over Arc, a ring, one at each of the Count nearest
+        /// others within Reach, or a cone Reach long and Arc wide out of its far side). Each lays BitesLay as well.
+        /// </summary>
+        Pieces,
+        /// <summary>
+        /// Drops pickups on the floor (World.Pickups, UpgradeEffect.Drops): one at the place RaiseAt names, Reach metres off, or
+        /// Count of them laid as a ring's patches are (Shape, PerStack); each lies Seconds (0: 8) and is taken by walking over
+        /// it, Radius (0: 1 m); Limit of its mark at once. Its taking and its being left are UpgradeTrigger.PickedUp and PickupLeft.
+        /// </summary>
+        DropPickup,
+        /// <summary>Draws every pickup of the kind Drops names across the floor to you (The Whole Mountain).</summary>
+        DrawPickups,
+        /// <summary>Your next weapon blow within Seconds is critical, light or heavy (a Shining Herb picked).</summary>
+        CriticalNext,
+        /// <summary>The spell of its own branch now standing lasts Seconds longer (Uraeus' Master: the cobra a second longer for each spit on a burning enemy).</summary>
+        LengthenOwn,
+        /// <summary>Does nothing but play its UpgradeEffect.Look (a creature drawn by its recipe look as the spell is cast).</summary>
+        PlayLook,
+        /// <summary>
+        /// Bursts every patch of ground the effect named by UpgradeEffect.BurstsGround has laid and still stands, all at once, each
+        /// where it lies: Damage, Stagger and Stacks of the Affliction to all in each, and the patch is gone (Weeping Sore's
+        /// puddles; the ledger's puddles-burst).
+        /// </summary>
+        BurstGround,
+        /// <summary>For Seconds, nothing interrupts your heavy blow being wound up or swung (The Wreck: struck from inside it).</summary>
+        HeavyUnbroken,
+        /// <summary>
+        /// Lays ground of the player's own by its name (Ground; World.OwnGrounds) for Seconds: Radius round where it is done, or
+        /// with Shape Line a lane Reach long ahead of you, Radius either side (AcrossFront: across your front instead, Amount
+        /// metres ahead). It bites nothing; the stats and marks ask who stands in it (The Closed Ring's stones, The Drawn Line).
+        /// </summary>
+        OwnGround,
+        /// <summary>The dodge just begun costs no stamina: what it took is given back (The Land Was Sea's slide on wet sand).</summary>
+        FreeDodge,
+        /// <summary>
+        /// Every enemy within Reach (30) carrying the condition named (Condition) goes up at once: the condition ends, a burst of
+        /// Damage and DamagePerSpent more for each count of the mark's tally (emptied), Amount at most, strikes Radius round it, and
+        /// the floor under it burns Seconds (Black Pitch's coat lit by any Burn).
+        /// </summary>
+        LightCoat,
+        /// <summary>
+        /// Every settled patch of the named ground (ThroughGround) lying on a lane Reach long and Radius either side ahead of you
+        /// rides on along your aim at Speed for Seconds, then settles (The Tide Brings It: Riptide's wave carrying the slicks).
+        /// </summary>
+        CarryGround,
+        /// <summary>The moment counts as a light weapon blow landed: its mana and its cut to the waits (Edge Guard's cut on each perfect guard).</summary>
+        CountAsBlow,
+        /// <summary>
+        /// You scatter for Seconds: the body is not drawn and nothing can touch you, then you stand again where you are by then
+        /// (Gone to Ash: scattered as ash, standing again 0.4 s later, behind the attacker or where you were).
+        /// </summary>
+        Scatter,
+        /// <summary>
+        /// Plates of stone grow on you, Count of them (2 at most held): each takes Amount of one blow that lands (60% when
+        /// none is named) and stops its flinch, then breaks (UpgradeTrigger.PlateBroken). Unlike a ward, the rest of the blow
+        /// still lands (Stone Skin).
+        /// </summary>
+        Plate,
+        /// <summary>
+        /// The condition named by ToState on the target (or one that is it, by ConditionSpec.Is) pays out now as it would at
+        /// its end, its count as it stands, and runs on to pay again at its end (Reckoning's Master: the count paid on a finisher).
+        /// </summary>
+        PayNow,
+        /// <summary>
+        /// The pair named by Reaction rests on the target for Seconds (its usual rest when none is named), so what is laid next
+        /// does not set it off (Stone Underfoot: the stone is set at once, and the Curse it lays starts no slow climb).
+        /// </summary>
+        RestReaction,
+        /// <summary>The pair named by Reaction rests on the target no longer than Seconds from now (The Yawning Gap: Thermal Shock once every 2 s on each enemy).</summary>
+        ShortenRest,
+        /// <summary>
+        /// Asked as a reaction with ReactionWith in its pair goes off, not done: it is held in the body for Seconds, or until a
+        /// heavy blow on that enemy, and lands then at Amount times its strength (The Delayed Touch: 2.5 s, double). A reaction
+        /// that holds back its own bites already (Burning Sap) is not held again; it only takes the strength.
+        /// </summary>
+        HoldReaction,
+        /// <summary>
+        /// Feeds the nearest standing thing laid under the name Named whose edge is within Reach of the moment's place: each of
+        /// its bites from then on deals Damage and Stagger more, and its next bite lays Affliction (Stacks) on all it reaches
+        /// (Bellows and Wind Sickle: a shard more for Sickle Wind's whirl). With TearsNeeds, a stack of Needs is taken from the
+        /// trigger's enemy as it feeds; nothing is fed or taken when nothing of that name stands near.
+        /// </summary>
+        Feed,
+        /// <summary>
+        /// Your own ground named Ground under the trigger's place grows Amount metres wider and lasts Seconds longer (The Burning
+        /// Lake: 0.5 m and 1 s for each enemy killed on it).
+        /// </summary>
+        GrowGround,
+        /// <summary>
+        /// Ground Radius round you (or the trigger's place, with At) is made clean for Seconds: enemy clouds, flame and frost there
+        /// go out and none bites in it (World.Purified; Circled Lamp's ring goes where you go: Follows; High Noon's column).
+        /// </summary>
+        Purify,
+        /// <summary>
+        /// For Seconds, every enemy whose blow lands on you or on your guard is tied to you and what it deals is counted (a blow on
+        /// the guard counts double what it would have dealt); then each is told as UpgradeTrigger.HarmPaid (The Exile's Grudge).
+        /// </summary>
+        TallyHarm,
     }
 }

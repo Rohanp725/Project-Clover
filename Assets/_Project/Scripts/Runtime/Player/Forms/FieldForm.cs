@@ -16,6 +16,25 @@ namespace Clover.Player.Forms
             if (!begun) return 0;
             run.A = FormKit.AimPoint(cast);
             run.T1 = 0.3f;
+            if (cast.Spec.Across)
+            {
+                // Two fires on either side of the aim point across your facing, joined by a line of sparks (Need-Fire).
+                Vector3 right = Vector3.Cross(Vector3.up, cast.Forward);
+                right.y = 0f;
+                right = right.sqrMagnitude > 0.0001f ? right.normalized : Vector3.right;
+                run.B = right;
+                Vector3 from = run.A - right * cast.Spec.Radius;
+                float until = Time.time + Mathf.Max(0.5f, cast.Spec.Seconds);
+                if (!string.IsNullOrEmpty(cast.Spec.Ground)) Clover.World.OwnGrounds.LayLane(cast.Spec.Ground, from, right, cast.Spec.Radius * 2f, LineHalf, until);
+                SpellWorks.Marks(run)[0] = FormFx.HoldMark(FormMark.Disc, FormKit.Lit(cast.Colour, 2.4f));
+                SpellWorks.Marks(run)[1] = FormFx.HoldMark(FormMark.Disc, FormKit.Lit(cast.Colour, 2.4f));
+                FormFx.Run(FormMark.Streak, from, right, cast.Spec.Radius * 2f, 0.5f, FormKit.Lit(cast.Colour, 2f), Mathf.Max(0.5f, cast.Spec.Seconds), 0.5f);
+                SpellWorks.Gesture(cast, FormKit.Cast, 0.3f);
+                return 0;
+            }
+            // A field that is ground of the player's own (Black Ice's sheet) lies as that ground for its time.
+            if (!string.IsNullOrEmpty(cast.Spec.Ground))
+                Clover.World.OwnGrounds.Lay(cast.Spec.Ground, run.A, cast.Spec.Radius, Time.time + Mathf.Max(0.5f, cast.Spec.Seconds), cast.Spec.Thrown);
             SpellWorks.Marks(run)[0] = FormFx.HoldMark(FormMark.Disc, FormKit.Lit(cast.Colour, 1.9f));
             SpellWorks.Marks(run)[1] = FormFx.HoldMark(FormMark.Sigil, FormKit.Lit(cast.Colour, 1.8f));
             FormFx.Lay(FormMark.Ring, run.A, 0.6f, FormKit.Lit(cast.Colour, 3f), 0.3f, cast.Spec.Radius * 2f);
@@ -23,15 +42,52 @@ namespace Clover.Player.Forms
             return 0;
         }
 
+        /// <summary>How far either side of an Across field's line stands on it.</summary>
+        public const float LineHalf = 0.8f;
+
+        // An Across field: the two fires burn at the line's ends, sparks along it, and each bite strikes what stands on the line.
+        private static bool TickAcross(ref SpellRun run, float deltaTime)
+        {
+            var cast = run.Cast;
+            var marks = SpellWorks.Marks(run);
+            float seconds = Mathf.Max(0.5f, cast.Spec.Seconds);
+            float spread = Mathf.Clamp01(run.Age / 0.25f) * Mathf.Clamp01((seconds - run.Age) / 0.3f);
+            Vector3 left = run.A - run.B * cast.Spec.Radius, right = run.A + run.B * cast.Spec.Radius;
+            FormFx.PlaceMark(marks[0], left, Quaternion.identity, new Vector3(1.4f * spread, 1f, 1.4f * spread));
+            FormFx.PlaceMark(marks[1], right, Quaternion.identity, new Vector3(1.4f * spread, 1f, 1.4f * spread));
+            if (run.Age >= seconds) return false;
+            run.T2 -= deltaTime;
+            if (run.T2 <= 0f)
+            {
+                run.T2 = 0.12f;
+                ElementLook.Puff(cast.Element, (Random.value < 0.5f ? left : right) + Vector3.up * 0.4f, Vector3.up, 0.8f);
+                ElementLook.Sparks(cast.Element, Vector3.Lerp(left, right, Random.value) + Vector3.up * 0.1f, Vector3.up, 0.3f);
+            }
+            if (run.Age < run.T1) return true;
+            run.T1 += Mathf.Max(0.1f, cast.Spec.Interval);
+            cast.Combat.StrikeLane(left, run.B, cast.Spec.Radius * 2f, LineHalf, cast.Blow(cast.Spec.LingerDamage, 0f));
+            return true;
+        }
+
         public override bool Tick(ref SpellRun run, float deltaTime)
         {
+            if (run.Cast.Spec.Across) return TickAcross(ref run, deltaTime);
             var cast = run.Cast;
             var marks = SpellWorks.Marks(run);
             float radius = cast.Spec.Radius;
             float seconds = Mathf.Max(0.5f, cast.Spec.Seconds);
+            // A field that is ground of your own takes its size and time from that ground, so what grows it is seen and bites
+            // (The Burning Lake: wider and longer for each enemy killed on it).
+            if (!string.IsNullOrEmpty(cast.Spec.Ground) && Clover.World.OwnGrounds.Extent(cast.Spec.Ground, run.A, Time.time, out float ownRadius, out float ownUntil))
+            {
+                radius = ownRadius;
+                seconds = Mathf.Max(seconds, run.Age + (ownUntil - Time.time));
+            }
             // It spreads out from its middle in a moment, and draws in again at the end.
             float spread = Mathf.Clamp01(run.Age / 0.25f) * Mathf.Clamp01((seconds - run.Age) / 0.3f);
-            float across = radius * 2f * spread;
+            // A field that grows out ring by ring (Rime Over Rime) shows only as far as it has grown.
+            float grown = cast.Spec.GrowsOut > 0 ? FormRules.GrownRadius(radius, cast.Spec.GrowsOut, Mathf.Max(0, run.Done - 1)) / Mathf.Max(0.01f, radius) : 1f;
+            float across = radius * 2f * spread * grown;
             FormFx.PlaceMark(marks[0], run.A, Quaternion.identity, new Vector3(across, 1f, across));
             FormFx.PlaceMark(marks[1], run.A, Quaternion.Euler(0f, run.Age * 35f, 0f), new Vector3(across * 0.82f, 1f, across * 0.82f));
             if (run.Age >= seconds) return false;
@@ -44,8 +100,12 @@ namespace Clover.Player.Forms
             }
             if (run.Age < run.T1) return true;
             run.T1 += Mathf.Max(0.1f, cast.Spec.Interval);
+            // A field growing out reaches a ring further at each bite.
+            radius = FormRules.GrownRadius(radius, cast.Spec.GrowsOut, run.Done++);
             // The bite: every spike on it stands up at once, and a ring runs to its edge.
             cast.Combat.StrikeArea(run.A, radius, cast.Blow(cast.Spec.LingerDamage, 0f));
+            // A field that draws in (The Pit): what stands in it is dragged toward its middle.
+            if (cast.Spec.Pull > 0f) cast.Combat.Displace(run.A, radius, Clover.World.GroundRules.PullStep(cast.Spec.Pull, cast.Spec.Interval), true);
             FormFx.Lay(FormMark.Ring, run.A, radius * 0.5f, FormKit.Lit(cast.Colour, 2.4f), 0.26f, radius * 2f);
             int stood = Mathf.Clamp(Mathf.RoundToInt(radius * 2.5f), 5, 10);
             for (int i = 0; i < stood; i++) Sprout(cast, run.A, radius, 0.65f, 1.2f + Random.value * 0.7f, 0.2f);

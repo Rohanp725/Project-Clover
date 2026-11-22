@@ -44,6 +44,8 @@ namespace Clover.Player.Trees
         public const string Basalt = "earth.fissure.basalt";
         public const string OnTheFault = "earth.fissure.fault";
         public const string ThrownDown = "earth.quakestep.down";
+        /// <summary>The Second Wave: caught by the first, quick ring, for the heavy one to find.</summary>
+        public const string FirstRing = "earth.quakestep.firstring";
         public const string Jarred = "earth.stance.jarred";
         public const string Heaped = "earth.cairn.heaped";
         public const string Unbroken = "earth.cairn.unbroken";
@@ -90,13 +92,14 @@ namespace Clover.Player.Trees
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Lift, Seconds = 0.6f } } },
                 "Opens two shapes of Under the Mound, chosen at any rest fire: Ditch and Bank, a wall drawn along your path, or Barrow Road, steered under the ground to come up beneath an enemy.",
                 // Started as a blow would land (UpgradeEffect.BlowLanding), it is a perfect dodge (UpgradeAction.PerfectDodgeNow), and the next
-                // blow that lands breaks half again as much balance and lays one Tremor more. NEEDS: coming up behind the attacker, and
-                // that blow landing as a heavy blow (blow-made-heavy).
+                // blow that lands breaks half again as much balance, lays one Tremor more and lands as a heavy blow (UpgradeAction.NextHeavy).
+                // NEEDS: coming up behind the attacker (form-pieces).
                 new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, BlowLanding = 0.3f, Do = UpgradeAction.PerfectDodgeNow },
                     new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, BlowLanding = 0.3f, Do = UpgradeAction.Boon, Stat = PlayerStat.StaggerDealt, Amount = 0.5f, Seconds = 3f, UntilBlow = true },
                     new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, BlowLanding = 0.3f, Do = UpgradeAction.Boon, Stat = PlayerStat.AfflictionStacks, Amount = 1f, Seconds = 3f, UntilBlow = true },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, BlowLanding = 0.3f, Do = UpgradeAction.NextHeavy, Seconds = 3f },
                 },
                 "Go under in the instant a blow would land on you, as a perfect dodge, and you come up at once behind the attacker. Your next blow lands as a heavy blow, with two Tremor, and breaks half again as much balance.");
 
@@ -125,12 +128,12 @@ namespace Clover.Player.Trees
                     Description = "The stones do not stay. Each enemy's heap is flung at once at the nearest other enemy within five metres: 12 damage and Tremor a stone. One shaken enemy shakes the next.",
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = T, CountsNeeds = true, PerStack = true, Do = UpgradeAction.Arc, FromTarget = true, Count = 1, Reach = 5f, Damage = 12f, Stagger = 5f, Affliction = T, Stacks = 1 } } },
                 "Opens two shapes of Cairn, chosen at any rest fire: Unbroken Cairn, heaps your heavy blow bursts, or Thrown Stones, heaps flung on to the next enemy.",
-                // Cast after standing still for a second (StatWhen.StoodStill): half the mana back. NEEDS: every stone striking twice
-                // (count-from-depth); until then a second fall of two stones' worth lands on each.
+                // Cast after standing still for a second (StatWhen.StoodStill): half the mana back, and every stone strikes twice: a
+                // second fall of the same stones, counted by the Tremor as it is cast (CountsNeeds, PerStack), 0.4 s after the first.
                 new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, While = StatWhen.StoodStill, Do = UpgradeAction.Mana, Amount = 20f },
-                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, While = StatWhen.StoodStill, Needs = T, Do = UpgradeAction.Falling, Radius = 0.8f, Delay = 0.8f, Damage = 24f, Stagger = 30f, Stacks = 0 },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, While = StatWhen.StoodStill, Needs = T, CountsNeeds = true, PerStack = true, Do = UpgradeAction.Falling, Radius = 0.8f, Delay = 0.8f, Damage = 12f, Stagger = 15f, Stacks = 0 },
                 },
                 "Cast it after standing still for a second, and every stone strikes twice and half the mana comes back.",
                 learnEffects: new[]
@@ -151,15 +154,18 @@ namespace Clover.Player.Trees
 
             // The third keystone, back under its id (the owner's word of 2026-11-20: trees may keep three). It stands at the
             // top of the trunk, grown from Cairn's Master, the stones' own spell.
-            // NEEDS: the ring as a wall: nothing walks, rolls or is thrown across it while the surge lasts, an enemy driven into
-            // a stone takes 20 damage and 35 stagger, and inside it the player is Rooted (closed-ring). Until then: eight stones
-            // in a ring round the player that strike and shake what stands among them, and less harm taken.
+            // The ring is a wall (World.OwnGrounds.StoneRing, read by Enemy): nothing walks or is thrown across it while the surge
+            // lasts, a god excepted; an enemy driven hard into it is stopped and told (UpgradeTrigger.StoppedAtStones) for 20 and
+            // 35 stagger; inside it you are Rooted (StatWhen.Planted). Its eleven stones are drawn as the ground's puffs until
+            // their look (lk_g_closed_ring) is brought in.
             to.Add(BranchPattern.Put(new Upgrade { Id = TheClosedRing, Name = "The Closed Ring", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { SpellBranch.MasterId(Cairn) }, Icon = UpgradeIcons.Ring,
-                Description = "Bedrock raises eight stones in a ring round you for ten seconds. They strike and shake what stands among them, and you take a little less harm. Bedrock costs a quarter more mana.",
+                Description = "Bedrock raises a ring of standing stones round you, twelve metres across, for ten seconds. Nothing walks or is thrown across it. An enemy driven into a stone takes 20 and is badly shaken. Inside it you are Rooted and take a little less harm. Bedrock costs a quarter more mana.",
                 Stats = new[] { new StatMod(PlayerStat.SurgeCost, 0.25f) },
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.Hazard, At = EffectAt.Self, Shape = HazardShape.Ring, Reach = 6f, Count = 8, Radius = 1f, Seconds = 10f, Interval = 1f, Damage = 8f, Stagger = 20f, Affliction = T, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.OwnGround, At = EffectAt.Self, Ground = Clover.World.OwnGrounds.StoneRing, Radius = 6f, Seconds = 10f },
+                    new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.Hazard, At = EffectAt.Self, Shape = HazardShape.Ring, Reach = 6f, Count = 11, Radius = 0.5f, Seconds = 10f, Interval = 1f, Damage = 0f, Stagger = 0f, Affliction = T, Stacks = 0 },
+                    new UpgradeEffect { On = UpgradeTrigger.StoppedAtStones, Do = UpgradeAction.Burst, Radius = 0.5f, Damage = 20f, Stagger = 35f, Affliction = T, Stacks = 0, CooldownPerEnemy = true, Cooldown = 0.5f },
                     new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.Boon, Stat = PlayerStat.DamageTaken, Amount = -0.08f, Seconds = 10f },
                 } },
                 BranchPattern.TrunkRight));
@@ -185,15 +191,17 @@ namespace Clover.Player.Trees
                     Description = "The stamp lands not round you but on the shadow of the enemy faced, up to eight metres off, as a ring two and a half metres round it. Its attack breaks wherever it stands, and it is held a moment. You break the archer's draw without crossing the room.",
                     Spell = new SpellSpec { Count = 1, Reach = 8f, Radius = 2.5f, Delay = 0.45f, Damage = 16f, Stagger = 30f, Stacks = 2 },
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Hold, Seconds = 0.6f } } },
-                // NEEDS: thrown down only when the second ring catches it too, and at that moment (struck-twice). Until then what
-                // the first ring catches is thrown down for a second.
+                // What the first ring catches is marked for 1.5 s (FirstRing); the heavy ring, as it lands, throws down for a second
+                // each one standing in it that the first caught (its burst's UpgradeEffect.InsideDo, asked by InState).
                 new ShapeDef { Name = "The Second Wave", Form = SpellForms.Nova,
                     Description = "One stamp sends out two rings: a fast thin one of dust to five metres, 8 damage and Tremor, then a moment later a slow heavy one of heaved slabs to seven metres, 18 damage and 40 stagger. An enemy caught by both is thrown off its feet for a second.",
                     Spell = new SpellSpec { Radius = 5f, Delay = 0.45f, Damage = 8f, Stagger = 0f, Stacks = 1 },
                     Effects = new[]
                     {
-                        new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Burst, At = EffectAt.Self, Radius = 7f, Delay = 1.15f, Damage = 18f, Stagger = 40f, Stacks = 0 },
-                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = ThrownDown, Seconds = 1f, Flags = ConditionFlags.Down } },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = FirstRing, Seconds = 1.5f } },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Burst, At = EffectAt.Self, Radius = 7f, Delay = 1.15f, Damage = 18f, Stagger = 40f, Stacks = 0,
+                            InsideDo = new[] { new UpgradeEffect { On = UpgradeTrigger.InGround, InState = FirstRing, Do = UpgradeAction.Condition,
+                                State = new ConditionSpec { Id = ThrownDown, Seconds = 1f, Flags = ConditionFlags.Down } } } },
                     } },
                 "Opens two shapes of Quake Step, chosen at any rest fire: Struck From Afar, the stamp landed on a far enemy, or The Second Wave, a quick ring and then a heavy one.",
                 // An enemy broken out of its wind-up (UpgradeEffect.NeedsWindup) ends the stamp's own wait.
@@ -217,14 +225,14 @@ namespace Clover.Player.Trees
                 new Empower { Seconds = 3f, BankStagger = 25f },
                 "You stand as stone for up to three seconds, and each blow you turn loads 25 stagger.",
                 // Stone Skin, once a major, folded in with Aftershock. The answer set aside: the turned blow is told for nothing
-                // (SpellSpec.Quiet). NEEDS: a plate taking 60% of one blow, not the whole of it (plates). Until then the plates
-                // are wards, given when the stance turns a blow.
+                // (SpellSpec.Quiet). Two plates grow when the stance turns a blow (UpgradeAction.Plate): each takes 60% of one blow
+                // that lands and stops its flinch, then breaks in its burst (UpgradeTrigger.PlateBroken).
                 new ShapeDef { Name = "Stone Skin", Spell = new SpellSpec { Seconds = 2.5f, Reach = 3f, Arc = 120f, Damage = 0f, Stagger = 0f, Stacks = 0, Quiet = true },
                     Description = "The blow is turned but not answered. Two plates of stone grow on your shoulders instead. Each takes most of one blow and stops its flinch, then breaks in a burst three metres round you: 14 damage, 24 stagger and Tremor.",
                     Effects = new[]
                     {
-                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Ward, Count = 2, Cooldown = 1f },
-                        new UpgradeEffect { On = UpgradeTrigger.WardSpent, Do = UpgradeAction.Burst, At = EffectAt.Self, Radius = 3f, Damage = 14f, Stagger = 24f, Affliction = T, Stacks = 1 },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Plate, Count = 2, Amount = 0.6f, Cooldown = 1f },
+                        new UpgradeEffect { On = UpgradeTrigger.PlateBroken, Do = UpgradeAction.Burst, At = EffectAt.Self, Radius = 3f, Damage = 14f, Stagger = 24f, Affliction = T, Stacks = 1 },
                     } },
                 // The stance as it was built; the answer is a cone at the one who struck, not a fist under it.
                 new ShapeDef { Name = "Fist of Rock", Form = SpellForms.Parry,
@@ -273,15 +281,16 @@ namespace Clover.Player.Trees
                 // 18 damage and 36 stagger. The Empower's numbers reach the kit's own cast too (PlayerUpgrades.BaseEmpower, read by PlayerElement).
                 new Empower { Cooldown = 6f, Damage = 18f, Stagger = 36f },
                 "Stone Rise waits 6 seconds, not 7, and strikes for 18 damage and 36 stagger.",
-                // NEEDS: the pillar left beside the enemy for 6 s, blocking bodies and thrown attacks, and
-                // struck itself (standing-things). Until then the stones sink back as usual, and a heavy blow on the lifted enemy within
-                // 6 s shatters the stone as a cone of shards from you through it.
+                // The pillar left beside the enemy for 6 s as a standing thing (UpgradeAction.Raise): it blocks bodies and thrown
+                // attacks and takes enemy blows, and your heavy blow on it (UpgradeTrigger.StandingStruck, By Heavy) shatters it
+                // into a cone of shards from you through it.
                 new ShapeDef { Name = "Raised Stone",
                     Description = "The pillar that lifted the enemy stays beside it for six seconds and blocks bodies and thrown attacks. A heavy blow of yours on it shatters it into a cone of shards away from you, five metres and 70 degrees: 18 damage, 20 stagger and Tremor. Raise it, fight round it, break it through them.",
                     Effects = new[]
                     {
-                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Raised, Seconds = 6f, EndsWith = ConditionBlow.Heavy } },
-                        new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Raised, By = StruckBy.Heavy, Do = UpgradeAction.Cone, Reach = 5f, Arc = 70f, Damage = 18f, Stagger = 20f, Affliction = T, Stacks = 1 },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Raise, Raises = Clover.World.StandingKind.StonePillar, RaiseAt = Clover.World.StandingPlace.Beside, Reach = 1.1f, Seconds = 6f, Amount = 40f, Limit = 1 },
+                        new UpgradeEffect { On = UpgradeTrigger.StandingStruck, By = StruckBy.Heavy, Do = UpgradeAction.Cone, Reach = 5f, Arc = 70f, Damage = 18f, Stagger = 20f, Affliction = T, Stacks = 1 },
+                        new UpgradeEffect { On = UpgradeTrigger.StandingStruck, By = StruckBy.Heavy, Do = UpgradeAction.BreakStanding, Radius = 0.5f },
                     } },
                 // NEEDS: a boulder falling from above with its shadow growing (form-pieces), lying 6 s as a thing struck and
                 // rolled, breaking on a wall or a large enemy (standing-things). Until then stone rises under the nearest enemy

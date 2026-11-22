@@ -74,11 +74,9 @@ draining.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). Then let the enemies hit you.
 
-**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 9 seconds, and it lasts 1.5 seconds.) It lasts 1.2 seconds. The blow you counter does nothing to you. Then every enemy in front of you within 2.5 metres is Cursed, you step 1.5 metres past the attacker, and your first weapon blow within a second lands as a heavy blow and heals you 10. If nothing hits you, the wait is half as long: 5 seconds.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 9 seconds, and it lasts 1.5 seconds.) It lasts 1.2 seconds. The blow you counter does nothing to you. Then every enemy in front of you within 2.5 metres is Cursed, and you scatter into ash: for 0.4 seconds you can't be seen or hurt, and you stand up again 1.5 metres past the attacker. Your first weapon blow within a second lands as a heavy blow and heals you 10. If nothing hits you, the wait is half as long: 5 seconds.
 
 **Works with.** The root mark, Dread, which it comes after on the chart, Devouring Maw (bite the enemy you came out behind), Near the Grave, and a heavy weapon.
-
-**Not built yet.** Scattering into ash and standing up again a moment later; for now, you step right away.
 
 **Example.** A captain swings at you. You scatter, stand up behind it, and your cut lands for double damage and gives you 10 health.
 
@@ -87,11 +85,11 @@ draining.
 
 **When it happens.** Whenever you cast Gone to Ash, using the shape you picked. If you have not bought this, you cast the plain counter.
 
-**The numbers.** 3 Shards. Ash on the Brow: the attacker's Curse doesn't fade for 6 seconds, and you get one ward that blocks the next blow that would land. Ash Hangs: a cloud 3 metres across sits on the attacker for 3 seconds, Cursing whatever stands in it each second. With either shape, you stand up again where you were, not behind the attacker.
+**The numbers.** 3 Shards. Ash on the Brow: the attacker's Curse doesn't fade for 6 seconds. You get one ward kept just for that attacker: for 6 seconds, the next blow it lands on you is blocked, but blows from other enemies are not. Your first weapon blow on that attacker within those 6 seconds counts as a heavy blow (a light blow on anyone else stays light). Ash Hangs: a cloud 3 metres across sits on the attacker for 3 seconds, Cursing whatever stands in it each second. Enemies standing in it can't turn, so an attack they start inside goes the way they were already facing. With either shape, you stand up again where you were, not behind the attacker.
 
 **Works with.** Ash on the Brow: a one-on-one fight with a strong enemy, Dread, Collected Twice. Ash Hangs: a pack, Dread, Debts Called's Collected shape.
 
-**Not built yet.** Ash on the Brow's ward blocks any blow, not only the attacker's, and its grey smear isn't drawn yet. Ash Hangs should stop enemies inside it from turning their attacks; for now, they are only Cursed.
+**Not built yet.** Ash on the Brow's grey smear isn't drawn yet.
 
 **Example.** Use Ash Hangs in a ring of soldiers. The one that hit you and the two next to it come away Cursed.
 
@@ -275,11 +273,11 @@ draining.
 
 **When it happens.** Whenever you cast Grasp, using the shape you picked. If you have not bought this, you cast the plain ball.
 
-**The numbers.** 3 Shards. Tethered: for 4 seconds after Grasp hits an enemy, it can't go more than 5 metres from you; if it is farther, it is dragged back toward you. Your first heavy blow on it in that time drags it 4 metres toward you, gives it 20 stagger, and ends the tether. Gods can't be tied. The Pit: a pool 3 metres across, 6 metres ahead of you, that lasts 4 seconds. Each second, it deals 2 damage and a Curse to whatever stands in it.
+**The numbers.** 3 Shards. Tethered: for 4 seconds after Grasp hits an enemy, it can't go more than 5 metres from you; if it is farther, it is dragged back toward you. Your first heavy blow on it in that time drags it 4 metres toward you, gives it 20 stagger, and ends the tether. Gods can't be tied. The Pit: a pool 3 metres across, 6 metres ahead of you, that lasts 4 seconds. Each second, it deals 2 damage and a Curse to whatever stands in it, and drags it toward the middle at about 1 metre a second.
 
 **Works with.** Tethered: a one-on-one fight, Devouring Maw's From Its Own Shadow shape, a heavy weapon. The Pit: Dread, Debts Called, Ash Hangs, a pack.
 
-**Not built yet.** Tethered should throw a rope instead of the ball; for now, the ball is cast. The Pit should drag everything to its middle; for now, it only deals damage and Curses. If you buy the Empower, The Pit uses its numbers too, and lands 8 metres ahead.
+**Not built yet.** Tethered should throw a rope instead of the ball; for now, the ball is cast. If you buy the Empower, The Pit uses its numbers too, and lands 8 metres ahead.
 
 **Example.** Put The Pit under a pack in a doorway. In four seconds they are all Cursed, and Dread is ready for the first death.
 

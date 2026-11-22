@@ -50,6 +50,8 @@ namespace Clover.Player
         public float DashCutFrom = 0.5f;
         /// <summary>The dodge's cut counts as the chain's next step, and the chain goes on from it (Stepping Water).</summary>
         public bool DashCutInChain;
+        /// <summary>A step started by a heavy press made as a dodge ends (from <see cref="DashCutFrom"/>): the roll's heavy (Tsuka-ate). Null: the press is an ordinary heavy.</summary>
+        public AttackStep DashHeavy;
         /// <summary>A dodge out of a cut's recovery keeps the chain: its grace does not run while rolling (the Stream).</summary>
         public bool ChainKeptThroughDodge;
         /// <summary>A step started by a light press behind a raised guard, which stays up through it. It is no part of the chain. Null: the press is an ordinary light.</summary>
@@ -94,7 +96,7 @@ namespace Clover.Player
         private bool heavyHeld;
         private bool finisherWanted;
         private bool guardWanted;
-        private bool dashWanted;
+        private bool dashWanted, dashHeavyWanted;
         private bool chargeAnnounced;
         private bool skillAnnounced;
         private bool currentIsLight;
@@ -147,6 +149,7 @@ namespace Clover.Player
             finisherWanted = false;
             guardWanted = false;
             dashWanted = false;
+            dashHeavyWanted = false;
             chargeAnnounced = false;
             skillAnnounced = false;
             currentIsLight = false;
@@ -217,12 +220,13 @@ namespace Clover.Player
         /// The heavy button went down. With <paramref name="finisher"/> true (a staggered enemy is in reach) the press
         /// asks for the finisher instead: it starts at once, with no charge, from idle or from any recovery.
         /// </summary>
-        public void PressHeavy(bool finisher = false)
+        public void PressHeavy(bool finisher = false, bool dodging = false)
         {
             if (Heavy == null) return;
             heavyBuffered = BufferTime;
             heavyHeld = true;
             finisherWanted = finisher && Finisher != null;
+            dashHeavyWanted = dodging && DashHeavy != null && !finisherWanted;
         }
 
         public void ReleaseHeavy() => heavyHeld = false;
@@ -283,6 +287,11 @@ namespace Clover.Player
                     if (finisherWanted)
                     {
                         if (StartHeavy(Finisher, stamina)) events |= ComboEvents.Started;
+                    }
+                    else if (dashHeavyWanted)
+                    {
+                        // Out of the dodge: the roll's own heavy, no charge, the end of any chain (Tsuka-ate).
+                        if (StartHeavy(DashHeavy, stamina)) events |= ComboEvents.Started;
                     }
                     else if (nextIndex > 0 || (EnderAlways && ChainHeavy != null))
                     {
@@ -466,6 +475,7 @@ namespace Clover.Player
             finisherWanted = false;
             guardWanted = false;
             dashWanted = false;
+            dashHeavyWanted = false;
             if (step == null || !stamina.TrySpend(step.StaminaCost * StaminaScale)) return false;
             Current = step;
             Phase = AttackPhase.Windup;

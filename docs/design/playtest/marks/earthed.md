@@ -9,13 +9,13 @@ Lightning and Earth are both carried.
 
 **When it happens.** Every time Earthed goes off while you carry both Lightning and Earth. Earthed goes off when Static lands on a shaken enemy, or when Tremor lands on a charged one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Earthed.
 
-**The numbers.** Mix, 3 Shards. Thunderstone: nothing is used up. The enemy's Static is held for 6 seconds; it doesn't fade, and blows don't use it up. The enemy is rooted in place for 1 second. Your first heavy blow on it sets off all of the Static at once, for 7 damage per stack to everything within 6 metres, and puts a Static on each of them. Step Current: the enemy's Static runs out into everything within 6 metres, for 5 damage and 3 stagger per stack, plus a Tremor. The burn mark stays for 3 seconds and deals 4 damage and 6 stagger every half second. The enemy is rooted for 1 second. After Earthed goes off on an enemy, it can't go off on that enemy again for 4 seconds.
+**The numbers.** Mix, 3 Shards. Thunderstone: nothing is used up. The enemy's Static is held for 6 seconds; it doesn't fade, and blows don't use it up. The enemy is rooted in place for 1 second. Your first heavy blow on it sets off all of the Static at once, for 7 damage per stack to everything within 6 metres, and puts a Static on each of them. Step Current: the enemy's Static runs out into everything within 6 metres, for 5 damage and 3 stagger per stack, plus a Tremor. The burn mark stays for 3 seconds. Every half second, each enemy that moved on it since the last half second takes 4 damage and 6 stagger; one that stands still is spared, and so is the enemy it started from. The enemy is rooted for 1 second. After Earthed goes off on an enemy, it can't go off on that enemy again for 4 seconds.
 
 **Works with.** The Watch Kept (charge it again with a perfect guard), Deep Earth, The Ground Answers, The Capstone.
 
 **Example.** A pack around one big enemy: use Thunderstone, build up lots of charge, and choose your moment. A rush of enemies coming at you: use Step Current.
 
-**Not built yet.** Thunderstone's stone doesn't yet stand on its own where the enemy stood. For now, the enemy holds the charge, only your heavy blow throws it, and a burst of Static nearby doesn't. Step Current's burn mark hurts everything on it, standing still or not, but not yet the enemy it started from.
+**Not built yet.** Thunderstone's stone doesn't yet stand on its own where the enemy stood. For now, the enemy holds the charge, only your heavy blow throws it, and a burst of Static nearby doesn't.
 
 ## earthed.watchkept
 **What it does.** A perfect guard against an enemy that has Tremor puts two Static on it.

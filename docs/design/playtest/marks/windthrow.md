@@ -22,13 +22,11 @@ both carried.
 
 **When it happens.** At the end of each dodge, while you carry both Wind and Life.
 
-**The numbers.** Mix, 3 Shards. One Seeded and one Unsteady on everything within 2 metres of where you stop.
+**The numbers.** Mix, 3 Shards. One Seeded and one Unsteady on every enemy within 2 metres of the dodge's path, from where it started to where it stopped. Each enemy gets them once a dodge.
 
 **Works with.** Windthrow (both at once root the enemy), Thistledown, Green Wood.
 
 **Example.** Roll past a soldier, and it is rooted to the floor behind you.
-
-**Not built yet.** For now, it reaches enemies near where the dodge ends, not the ones it passed on the way.
 
 ## windthrow.tornup
 **What it does.** A heavy blow on a rooted enemy counts as a shove: it tears the enemy out, whatever weapon you use.

@@ -77,13 +77,13 @@ namespace Clover.Player.Trees
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Guard, Do = UpgradeAction.Heal, Amount = 2f }, new UpgradeEffect { On = UpgradeTrigger.Guard, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Seeded, Stacks = 1 }, new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Hold, Seconds = 1f }, new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Tremor, Stacks = 2 } },
             }, HeartPattern.Keystone));
 
-            // The duo spell. The rod form is the planted totem. NEEDS: a totem that grows with blows landed near it, heals in
-            // its shade and blocks the way. Here it strikes as the young tree from the start.
+            // The duo spell. The oak form is the planted totem: it grows an age for every six of your blows landed within 8 m of it,
+            // strikes as the young tree and the old oak, heals in its shade and blocks the way (OakForm, OakRules).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = StoneOak, Name = "Stone Oak", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Role = SpellRole.Opener, Requires = new[] { MossOnStone, BriarPatch }, Icon = UpgradeIcons.Tower,
-                Description = "You plant a stone oak a little ahead. For twenty seconds its roots strike everything in a circle round it, every two seconds. 45 mana.",
-                Form = SpellForms.Rod,
+                Description = "You plant a stone sapling a little ahead, and it grows as you land blows near it. Grown, its roots strike what comes near and its shade heals you. It lives twenty seconds. 45 mana.",
+                Form = SpellForms.Oak,
                 Spell = new SpellSpec { Cost = 45f, Reach = 2f, Radius = 5f, Seconds = 20f, Interval = 2f, Damage = 10f, Stagger = 15f, Delay = 0.5f, Stacks = 1 },
             }, HeartPattern.Spell));
 

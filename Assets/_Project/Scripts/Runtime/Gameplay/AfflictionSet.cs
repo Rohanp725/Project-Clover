@@ -59,6 +59,20 @@ namespace Clover.Gameplay
         /// <summary>Seconds since it last froze, while it is frozen (a cast landing within a moment of the freeze).</summary>
         public float FrozenFor => IsFrozen ? frozenFor : float.MaxValue;
         private float frozenFor;
+        /// <summary>Seconds since its ice was last broken, what that breaking dealt, and how long it had been frozen then (Hanging Ice's Master).</summary>
+        public float SinceShatter { get; private set; } = float.MaxValue;
+        public float LastShatterDamage { get; private set; }
+        public float LastShatterFrozenFor { get; private set; } = float.MaxValue;
+
+        /// <summary>
+        /// True when it froze within <paramref name="window"/> seconds: frozen that recently, or broken a moment ago (this very blow)
+        /// after being frozen no longer than that (the ledger's freeze-moment: a cast landing within a moment of the freeze).
+        /// </summary>
+        public bool FrozeWithin(float window) =>
+            (IsFrozen && frozenFor <= window) || (SinceShatter < ShatterMoment && LastShatterFrozenFor <= window);
+
+        /// <summary>How long after a breaking the blow that broke it still counts as breaking it.</summary>
+        public const float ShatterMoment = 0.1f;
         public float FrozenLeft { get; private set; }
         /// <summary>Seconds it stays brittle after a freeze ended (see <see cref="Afflictions.BrittleSeconds"/>).</summary>
         public float BrittleLeft { get; private set; }
@@ -127,6 +141,8 @@ namespace Clover.Gameplay
         private readonly float[] untilTick = new float[Afflictions.Count];
         private readonly float[] strength = new float[Afflictions.Count];
         private readonly int[] blowsLeft = new int[Afflictions.Count];
+        // Whether the blow more a burning enemy keeps it for (Clear Sky) has been given since it was laid.
+        private readonly bool[] burningBlowGiven = new bool[Afflictions.Count];
         // For the player's affliction rules (Afflictions.Rules): seconds since each kind was last laid or deepened, and
         // seconds each kind still rests after fading before it can be laid again, with one bit a resting kind.
         private readonly float[] sinceLaid = new float[Afflictions.Count];
@@ -173,6 +189,13 @@ namespace Clover.Gameplay
 
         /// <summary>Seconds until the pair (numbered as in <see cref="AfflictionPairs"/>) may react on this one again.</summary>
         public float ReactionRest(int pair) => reactionRest[pair];
+
+        /// <summary>The pair rests here no longer than the seconds given (The Yawning Gap: Thermal Shock every 2 s while it burns).</summary>
+        public void ShortenRest(int pair, float seconds)
+        {
+            if (pair < 0 || pair >= reactionRest.Length) return;
+            reactionRest[pair] = Math.Min(reactionRest[pair], Math.Max(0f, seconds));
+        }
 
         /// <summary>Rests a pair here for the seconds given, or for what it has left if that is longer.</summary>
         public void RestReaction(int pair, float seconds)
@@ -239,6 +262,59 @@ namespace Clover.Gameplay
             return (Reactions ?? ReactionEngine.Shared).Force(this, who, pair, second ? AfflictionPairs.Second(pair) : AfflictionPairs.First(pair), alone);
         }
 
+        /// <summary>
+        /// Sets a pair off as if its missing partner had just been laid (The Sun Goes Under: every Burn smoulders, curse or
+        /// no curse): one of the pair is enough, but not while the pair rests here, and for the next second the conditions it
+        /// sets on this enemy last without their partner (<see cref="Unbound"/>). False when it did not go off.
+        /// </summary>
+        public bool ReactAsLaid(int pair, UnityEngine.Component who)
+        {
+            if (pair < 0 || pair >= AfflictionPairs.Count || reactionRest[pair] > 0f) return false;
+            if (!ForceReaction(pair, who, true)) return false;
+            Note(pair);
+            notedUnbound = true;
+            return true;
+        }
+
+        /// <summary>
+        /// The next time the pair goes off here, within a second, the counts of blows its conditions keep start this many blows
+        /// along (Held Down and What the Yew Keeps: the fig wound at two coils, one blow already drawn).
+        /// </summary>
+        public void StartCountAt(int pair, int blows)
+        {
+            if (pair < 0 || pair >= AfflictionPairs.Count || blows <= 0) return;
+            Note(pair);
+            notedBlows = blows;
+        }
+
+        /// <summary>
+        /// True while the conditions a reaction sets here should last without the afflictions they last with: it went off as
+        /// if laid (<see cref="ReactAsLaid"/>) within the last second, the time its effects take to be done.
+        /// </summary>
+        public bool Unbound(int pair) => Noted(pair) && notedUnbound;
+
+        /// <summary>The blows a count the pair's conditions keep here starts at (<see cref="StartCountAt"/>); 0 for none.</summary>
+        public int CountStartsAt(int pair) => Noted(pair) ? notedBlows : 0;
+
+        private bool Noted(int pair) => pair >= 0 && pair == notedPair && notedLeft > 0f;
+
+        // One note at a time, kept a second: the time a reaction's effects take to be done after it goes off.
+        private void Note(int pair)
+        {
+            if (!Noted(pair))
+            {
+                notedUnbound = false;
+                notedBlows = 0;
+            }
+            notedPair = pair;
+            notedLeft = NotedSeconds;
+        }
+
+        private const float NotedSeconds = 1f;
+        private int notedPair = -1, notedBlows;
+        private bool notedUnbound;
+        private float notedLeft;
+
         /// <summary>Takes up to this many stacks of an affliction away, with no burst, and says how many went. A burn with no depth counts as one.</summary>
         public int Spend(AfflictionKind kind, int count)
         {
@@ -275,6 +351,10 @@ namespace Clover.Gameplay
         public void Clear()
         {
             owedSeconds = 0f;
+            notedPair = -1;
+            notedLeft = 0f;
+            notedBlows = 0;
+            notedUnbound = false;
             windingUp = false;
             windupFor = 0f;
             StrikeIn = float.MaxValue;
@@ -406,6 +486,7 @@ namespace Clover.Gameplay
             present |= 1 << index;
             left[index] = seconds > 0f ? seconds : spec.Seconds;
             blowsLeft[index] = spec.Blows > 0 ? spec.Blows + Afflictions.MoreBlows : 0;
+            burningBlowGiven[index] = false;
             if (had == 0) untilTick[index] = spec.TickSeconds;
             bool full = had < deepest && stacks[index] >= deepest;
             // Flash Freeze: what is Soaked freezes sooner, and the water goes into the ice.
@@ -440,18 +521,24 @@ namespace Clover.Gameplay
         /// <see cref="GodHolds"/>: a moment, only when nothing already stops it and its guard is over, and never made
         /// longer while it lasts. False when it did not take.
         /// </summary>
-        public bool Hold(float seconds)
+        public bool Hold(float seconds) => Hold(seconds, false);
+
+        /// <summary>
+        /// As <see cref="Hold(float)"/>; <paramref name="exact"/> holds the time asked as it is, already the share a mark gives
+        /// an elite or a god (Poured Bronze: a quarter), with a god's cap and guard still kept.
+        /// </summary>
+        public bool Hold(float seconds, bool exact)
         {
             if (seconds <= 0f) return false;
             var phase = GodPhase;
             if (phase == GodPhase.None)
             {
-                if (!CanFreeze || HoldsRefused) return false;
-                HeldLeft = Math.Max(HeldLeft, seconds * FreezeScale);
+                if (HoldsRefused || (!CanFreeze && !exact)) return false;
+                HeldLeft = Math.Max(HeldLeft, exact ? seconds : seconds * FreezeScale);
                 return HeldLeft > 0f;
             }
             if (!GodMayStop) return false;
-            HeldLeft = GodHolds.Seconds(seconds, phase);
+            HeldLeft = exact ? Math.Min(seconds, GodHolds.Cap(phase)) : GodHolds.Seconds(seconds, phase);
             return HeldLeft > 0f;
         }
 
@@ -469,14 +556,25 @@ namespace Clover.Gameplay
         public int BlowsLeft(AfflictionKind kind) => kind == AfflictionKind.None || stacks[(int)kind] <= 0 ? 0 : blowsLeft[(int)kind];
 
         /// <summary>A blow of the weapon has landed: what is spent by blows (a mark of light) loses one, and ends with its last.</summary>
-        public void BlowLanded()
+        public void BlowLanded() => BlowLanded(-1f);
+
+        /// <summary>The same for a blow from <paramref name="side"/>, in degrees from its face (-1 unknown): a keeping held to a flank holds only for blows from it (Mock Suns).</summary>
+        public void BlowLanded(float side)
         {
             for (int i = 2; i < stacks.Length; i++)
             {
                 if (stacks[i] <= 0 || blowsLeft[i] <= 0) continue;
                 // A condition that keeps it (Diamond Ring's mark) keeps it from being spent too, and so does a rule (Full Daylight).
-                if (Conditions.KeepsKind((AfflictionKind)i) || Afflictions.Rules.Unspent((AfflictionKind)i)) continue;
-                if (--blowsLeft[i] <= 0) End(i);
+                if (Conditions.KeepsFrom((AfflictionKind)i, side) || Afflictions.Rules.Unspent((AfflictionKind)i)) continue;
+                if (--blowsLeft[i] > 0) continue;
+                // On a burning enemy it lasts a blow longer, once a laying (Clear Sky), whichever came first.
+                if (AfflictionRules.BurningBlowMore(Afflictions.MoreBlowsBurning, stacks[(int)AfflictionKind.Burn], i == (int)AfflictionKind.Burn, burningBlowGiven[i]))
+                {
+                    burningBlowGiven[i] = true;
+                    blowsLeft[i] = Afflictions.MoreBlowsBurning;
+                    continue;
+                }
+                End(i);
             }
         }
 
@@ -540,7 +638,10 @@ namespace Clover.Gameplay
         {
             BitThisTick = false;
             LandedThisTick = false;
+            if (notedLeft > 0f) notedLeft -= deltaTime;
+            Conditions.CarrierFrozen = IsFrozen;
             Conditions.Tick(deltaTime);
+            if (SinceShatter < float.MaxValue) SinceShatter += deltaTime;
             // A condition that lasts only while afflictions are carried ends once one is gone.
             if (Conditions.Any) Conditions.Keep(PresentMask);
             if (sinceBite < float.MaxValue) sinceBite += deltaTime;
@@ -837,6 +938,16 @@ namespace Clover.Gameplay
             }
         }
 
+        /// <summary>
+        /// The same for a weapon blow from <paramref name="side"/>, in degrees from its face (-1 unknown): a condition held to a
+        /// flank bars the afflictions' own critical from elsewhere (Mock Suns), though a condition that makes blows critical still does.
+        /// </summary>
+        public bool MakesBlowsCriticalFrom(float side)
+        {
+            if (Conditions.Has(ConditionFlags.TakesCritical)) return true;
+            return !Conditions.BarsCritical(side) && MakesBlowsCritical;
+        }
+
         public bool MakesBlowsCritical
         {
             get
@@ -911,7 +1022,11 @@ namespace Clover.Gameplay
             float damage = Afflictions.Spec(AfflictionKind.Chill).ShatterDamage * strength[(int)AfflictionKind.Chill] * Afflictions.ShatterDamage
                 * Math.Max(shatterScale, Conditions.ShatterScale);
             shatterScale = 1f;
+            LastShatterFrozenFor = frozenFor;
+            LastShatterDamage = damage;
+            SinceShatter = 0f;
             End((int)AfflictionKind.Chill);
+            Conditions.CarrierFrozen = false;
             return damage;
         }
 

@@ -16,7 +16,7 @@ reaction is Flashover; its Shape mark lets you choose what Flashover does.
 
 **Example.** A pack pushing in: use Corona, and one burning soldier you charge keeps arcing into the two next to it for four seconds. Fighting one brute in a doorway: use Fulgurite, and fight on the patch it leaves.
 
-**Not built yet.** Corona's arcs jump out from the enemy, instead of pulling other bursts of Static into its flame. Fulgurite's patch looks like burning, crackling ground until the glassy look is made.
+**Not built yet.** Fulgurite's patch looks like burning, crackling ground until the glassy look is made.
 
 ## plasma.twin
 **What it does.** A perfect guard sets off Burn and Static together on the enemy that hit you. Set off together, they hit 50% harder, and the blow counts as a heavy blow, so it stops the enemy where it stands. If it only has one of the two, that one is set off alone.

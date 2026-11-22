@@ -28,8 +28,8 @@ namespace Clover.Player.Trees.Duo
         {
             const string A = Elements.Fire, B = Elements.Water;
 
-            // NEEDS: ground that acts on whoever walks in later (ground-states): an enemy that steps into Blind Steam's cloud
-            // after it forms is not blinded; now those within 3 m as it forms are, for its 4 s.
+            // Blind Steam's cloud blinds whoever stands in it, those in it as it forms and those who step in later, while they
+            // stay (UpgradeEffect.Inside); one that walks out sees again.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Steam: Blind Steam or Scald", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -44,9 +44,8 @@ namespace Clover.Player.Trees.Duo
                         {
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Soaked },
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Burn, Share = 0.5f },
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Radius = 3f, Seconds = 4f, Interval = 1f, Damage = 3f, Affliction = AfflictionKind.Soaked },
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, Radius = 3f,
-                                State = new ConditionSpec { Id = Blind, Seconds = 4f, Flags = ConditionFlags.SightShort | ConditionFlags.WindupSlowed, Sight = 2f, Scale = 0.8f } },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Radius = 3f, Seconds = 4f, Interval = 1f, Damage = 3f, Affliction = AfflictionKind.Soaked,
+                                Inside = new ConditionSpec { Id = Blind, Seconds = 0.5f, Flags = ConditionFlags.SightShort | ConditionFlags.WindupSlowed, Sight = 2f, Scale = 0.8f } },
                         },
                     },
                     new ShapeDef

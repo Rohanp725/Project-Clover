@@ -12,6 +12,34 @@ namespace Clover.Player
             || action == UpgradeAction.Projectile || action == UpgradeAction.Cone || action == UpgradeAction.Helper;
 
         /// <summary>
+        /// What the marks' <see cref="UpgradeAction.HoldReaction"/> effects in <paramref name="effects"/> make of the reaction of
+        /// <paramref name="pair"/>: the seconds it is held in the body (0: not held) and the strength it lands at (1: as written).
+        /// </summary>
+        public static float Hold(System.Collections.Generic.IReadOnlyList<UpgradeEffect> effects, int pair, out float strength)
+        {
+            strength = 1f;
+            float seconds = 0f;
+            if (effects == null) return 0f;
+            for (int i = 0; i < effects.Count; i++)
+            {
+                var effect = effects[i];
+                if (effect == null || effect.Do != UpgradeAction.HoldReaction || !PlayerUpgrades.ReactionHas(pair, effect.ReactionWith)) continue;
+                seconds = System.Math.Max(seconds, effect.Seconds);
+                if (effect.Amount > 0f) strength *= effect.Amount;
+            }
+            return seconds;
+        }
+
+        /// <summary>True when a reaction's own effects hold back what bites (a condition with HoldsBites: Burning Sap): it waits already.</summary>
+        public static bool WaitsAlready(UpgradeEffect[] effects)
+        {
+            if (effects == null) return false;
+            foreach (var effect in effects)
+                if (effect != null && effect.On == UpgradeTrigger.Reacted && effect.State != null && effect.State.HoldsBites != Clover.Gameplay.AfflictionKind.None) return true;
+            return false;
+        }
+
+        /// <summary>
         /// What the marks' <see cref="UpgradeAction.BoostReaction"/> effects in <paramref name="effects"/> make of the reaction
         /// <paramref name="reaction"/> as it fires on an enemy carrying <paramref name="on"/>: its own damage multiplied (1:
         /// unchanged), and <paramref name="spares"/> true when it spends nothing (Goes Up: at full depth of poison, Fire

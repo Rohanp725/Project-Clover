@@ -29,6 +29,7 @@ namespace Clover.Player.Trees
         public const string Capsized = "capsize.down";
         public const string Asleep = "winterseed.asleep";
         public const string SunkInSand = "groundgives.sunk";
+        public const string SandPool = "groundgives.pool";
         public const string Thorns = "ironthorns.thorns";
         public const string Chain = "blackchain.chain";
         public const string SapWaits = "burningsap.wait";
@@ -48,14 +49,15 @@ namespace Clover.Player.Trees
             // Fire and Lightning (1). Flame carries current: the Static on it discharges through the fire at once, and
             // none of the Burn is spent. The discharge is Static's own set-off (7 a stack in 3 m) with 4 stagger a stack
             // (20 at full depth), and it flinches.
-            // NEEDS: discharges that bend toward one enemy: for 4 s every discharge or arc within 6 m bends into the live
-            // flame and bursts again (5 a Burn stack in 2.5 m, once every 0.8 s). The live flame is set as a condition so
-            // that piece has something to find.
+            // For 4 s every discharge or arc within 6 m bends into the live flame (ConditionSpec.DischargesWithin, told as
+            // StruckBy.Discharge) and bursts again there: 5 a Burn stack in 2.5 m, once every 0.8 s on each flame.
             to.Add(Reaction(AfflictionKind.Burn, AfflictionKind.Static,
                 "Static meets Burn: the flame on it goes live and the Static discharges through it at once, 7 a stack in 3 m. The Burn is not spent.",
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Static, Radius = 3f, Stagger = 4f },
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Flinch, Seconds = 0.4f },
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = LiveFlame, Seconds = 4f, Flags = ConditionFlags.FlameLive } }));
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = LiveFlame, Seconds = 4f, Flags = ConditionFlags.FlameLive, DischargesWithin = 6f } },
+                new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = LiveFlame, By = StruckBy.Discharge, Needs = AfflictionKind.Burn, CountsNeeds = true, PerStack = true,
+                    Do = UpgradeAction.Burst, Radius = 2.5f, Damage = 5f, Stagger = 0f, Stacks = 0, Cooldown = 0.8f, CooldownPerEnemy = true }));
 
             // Lightning and Wind (2). Carried in the funnel until it has spun out (1.25 s, round 4: "the enemy stays carried
             // until the tornado has fully spun out, then drops back"), then thrown 3 m straight away from the player; where
@@ -116,10 +118,11 @@ namespace Clover.Player.Trees
 
             // Earth and Metal (7). An anvil at its back for 5 s; the next heavy blow drives it on: Sundered to full, and a
             // ring of sparks in 3 m: 10 damage, 15 stagger and a notch on each.
-            // NEEDS: standing things that block: the iron-faced stone itself, which also counts as "stone at its back"
-            // for Hammer and Anvil.
+            // The iron-faced stone stands at its back (UpgradeAction.Raise: a standing thing that blocks, 40 health), and it is
+            // stone at its back for Hammer and Anvil (UpgradeEffect.StoneAtBack).
             to.Add(Reaction(AfflictionKind.Tremor, AfflictionKind.Sundered,
                 "Tremor meets Sundered: an anvil heaves up at its back for 5 s. Your next heavy blow drives it on: its armour breaks to full and sparks ring out, 10 and a notch to all within 3 m.",
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Raise, Raises = Clover.World.StandingKind.AnvilStone, RaiseAt = Clover.World.StandingPlace.Behind, Reach = 1.1f, Seconds = 5f, Amount = 40f },
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Anvil, Seconds = 5f, EndsWith = ConditionBlow.Heavy } },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Anvil, By = StruckBy.Heavy, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Sundered, Stacks = ToFull },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Anvil, By = StruckBy.Heavy, Do = UpgradeAction.Burst, Radius = 3f, Damage = 10f, Stagger = 15f,
@@ -221,29 +224,34 @@ namespace Clover.Player.Trees
             // Water and Earth (16). Shaken wet ground turns to sand: it sinks to the knees for 4 s, slowed by half (an
             // elite by a quarter; a god takes only the Tremor), and a heavy blow on it while sunk holds it 0.5 s.
             // Sunk (ConditionFlags.Mired: no leap, blink, lunge or step back; Sink: the body drawn 0.35 m down into the sand).
-            // NEEDS: the pool itself (2 m across, slowing other enemies that wade in by 30%) (ground-states).
+            // The pool itself lies 2 m across for the 4 s, and the other enemies that wade into it are 30% slower while they
+            // stand in it (UpgradeEffect.InsideDo, sparing the sunk one, which is slowed by half already).
             to.Add(Reaction(AfflictionKind.Soaked, AfflictionKind.Tremor,
-                "Tremor meets Soaked: the wet floor under it turns to sand and it sinks to the knees for 4 s, slowed by half. A heavy blow holds it fast.",
+                "Tremor meets Soaked: the wet floor under it turns to sand and it sinks to the knees for 4 s, slowed by half. A heavy blow holds it fast. Others that wade into the sand are slowed too.",
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = SunkInSand, Seconds = 4f, Pace = 0.5f, Flags = ConditionFlags.Mired, Sink = 0.35f } },
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Radius = 1f, Seconds = 4f, Interval = 0.5f, Damage = 0f, Stacks = 0, Affliction = AfflictionKind.Soaked,
+                    Ground = Clover.World.OwnGrounds.WetSand, InsideSpares = true, InsideDo = new[] { new UpgradeEffect { On = UpgradeTrigger.InGround, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = SandPool, Seconds = 0.75f, Pace = 0.7f } } } },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = SunkInSand, By = StruckBy.Heavy, Do = UpgradeAction.Hold, Seconds = 0.5f }));
 
             // Life and Metal (17). Iron thorns grow out of it for 6 s; each weapon blow snaps one off and it flies at the
-            // nearest other enemy within 6 m: 6 damage, Seeded and a notch. Three thorns.
-            // NEEDS: a count set from depth: one thorn for each notch it carried (three at most); three are built.
+            // nearest other enemy within 6 m: 6 damage, Seeded and a notch. One thorn for each notch it carried, three at most
+            // (the notches counted, not spent: ConditionSpec.BlowsByStacks).
             to.Add(Reaction(AfflictionKind.Seeded, AfflictionKind.Sundered,
                 "Seeded meets Sundered: iron thorns grow through its armour for 6 s. Each of your weapon blows snaps one off at the nearest enemy within 6 m, 6, Seeded and a notch.",
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Thorns, Seconds = 6f, Blows = 3 } },
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Sundered, CountOnly = true },
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, PerStack = true, State = new ConditionSpec { Id = Thorns, Seconds = 6f, Blows = 3, BlowsByStacks = true } },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Thorns, By = StruckBy.Weapon, Do = UpgradeAction.Arc, FromTarget = true, Count = 1, Reach = 6f, Damage = 6f,
                     Affliction = AfflictionKind.Seeded, Stacks = 1 },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Thorns, By = StruckBy.Weapon, Do = UpgradeAction.Pass, Reach = 6f, Affliction = AfflictionKind.Sundered, Stacks = 1 }));
 
             // Earth and Light (18). 0.5 s after it cracks, light breaks up through the floor: 14 damage, 25 stagger and
             // Marked in 3 m; its own Mark is renewed (three more blows).
-            // NEEDS: the seams: only enemies standing on the star of cracks, not a disc, are struck.
+            // Only enemies standing on the star of six cracks, each 3 m long, are struck, not a disc (UpgradeEffect.Seams).
             to.Add(Reaction(AfflictionKind.Tremor, AfflictionKind.Marked,
-                "Tremor meets Marked: the floor under it cracks and light breaks up through the seams, 14 and Marked to all within 3 m. Its own Mark is renewed.",
+                "Tremor meets Marked: the floor under it cracks in a star and light breaks up through the seams, 14 and Marked to all standing on them. Its own Mark is renewed.",
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Marked, Stacks = 1 },
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Burst, Radius = 3f, Delay = 0.5f, Damage = 14f, Stagger = 25f, Affliction = AfflictionKind.Marked, Stacks = 1 }));
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Burst, Radius = 3f, Delay = 0.5f, Damage = 14f, Stagger = 25f, Affliction = AfflictionKind.Marked, Stacks = 1, Seams = 6,
+                    Named = Clover.World.OwnGrounds.Seams, GroundSeconds = 1f }));
 
             // Metal and Dark (19). A chain to the nearest other enemy within 6 m for 5 s, set as a condition on that one,
             // joined to this.

@@ -18,15 +18,13 @@ both carried.
 ## capsize.wake
 **What it does.** A perfect dodge leaves a line of spray behind you for 3 seconds. Anything that crosses it is Soaked and made Unsteady.
 
-**When it happens.** Each perfect dodge (roll right as a blow would land).
+**When it happens.** When a perfect dodge (roll right as a blow would land) ends.
 
-**The numbers.** Mix, 3 Shards. Four patches, each 0.8 metres across, in a line 3 metres long, for 3 seconds. An enemy standing in them gets Soaked every half second and Unsteady every second.
+**The numbers.** Mix, 3 Shards. Four patches, each 0.8 metres across, along the path the dodge took, for 3 seconds. An enemy standing in them gets Soaked every half second and Unsteady every second.
 
 **Works with.** Capsize (crossing it twice is enough to set it off), Rolled In, Ride the Squall.
 
 **Example.** Dodge a charge. The charging enemy runs through your spray and falls down.
-
-**Not built yet.** The line lands in front of where your dodge ends, not along the path of the dodge.
 
 ## capsize.rolledin
 **What it does.** An enemy that capsizes is dragged 2 metres toward you as it falls, so it's in reach.

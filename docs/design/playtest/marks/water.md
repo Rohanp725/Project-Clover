@@ -46,11 +46,9 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Whenever you cast Deep Crack, using the shape you picked. If you have not bought this, you cast the single bubble.
 
-**The numbers.** 3 Shards. Ink: a pool with a 1.5-metre radius that lasts 5 seconds. Once a second, it deals 1 damage and adds Soaked. Whatever it reaches when it bursts can't see farther than 3 metres for 5 seconds. String of Bubbles: a line of water 7 metres long and 2 metres wide, moving at 13 metres a second. It deals 18 damage and 40 stagger to everything it crosses, and the crack spreads from each Soaked enemy, like above.
+**The numbers.** 3 Shards. Ink: a pool with a 1.5-metre radius that lasts 5 seconds. Once a second, it deals 1 damage and adds Soaked. Any enemy standing in the ink can't see farther than 3 metres, and sees again soon after it steps out. String of Bubbles: three bubbles in a row along the way you face, 2, 4 and 6 metres ahead, each cracking 0.15 seconds after the last. Each deals 18 damage and 40 stagger to everything within 1 metre of it, and the crack spreads from each Soaked enemy, like above.
 
 **Works with.** Blowhole and Whirlpool, to hold enemies in the ink; Riptide's Breaking Swell shape, to line them up for the string.
-
-**Not built yet.** Ink's blindness should only last while an enemy stands in the ink (for now, enemies the ink reaches first stay blinded for 5 seconds). String of Bubbles should be three bubbles 2 metres apart (for now, it is one moving line).
 
 **Example.** Use Ink in a doorway. The archers behind it lose track of you, and the soldiers in it stay Soaked for the next crack.
 
@@ -122,11 +120,11 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Only while you carry Water twice (all in). A pool is left each time a spell hits.
 
-**The numbers.** 6 Shards. A pool 4 metres across forms where a spell hits, at most one every 2.5 seconds, and lasts 10 seconds. Once a second, it deals 1 damage and adds Soaked. For now, these work everywhere, not only in water: your dodge goes 50% farther, and every spell's wait counts down 30% faster. Buying this also gives you the deep strike, Thrown on the Reef. Use it with L2 and R2 while you carry Water alone or twice. The lash wraps around the enemy, and a wave throws it 5 metres away from you.
+**The numbers.** 6 Shards. A pool 4 metres across forms where a spell hits, at most one every 2.5 seconds, and lasts 10 seconds. Only four pools stay at once; a fifth takes the place of the oldest. Once a second, a pool deals 1 damage and adds Soaked, and enemies standing in it move 15% slower. While you stand in your own water (any ground of yours that Soaks), your dodge goes 50% farther and every spell's wait counts down 30% faster. Buying this also gives you the deep strike, Thrown on the Reef. Use it with L2 and R2 while you carry Water alone or twice. The lash wraps around the enemy, and a wave throws it 5 metres away from you.
 
 **Works with.** Every spell in the Water tree; Deep Crack and Spreading Water on the soaked crowd; Undertow, to pull enemies onto the water.
 
-**Not built yet.** Four pools at most, enemies in them moving 15% slower, and the faster dodge and spell waits only while you stand in your own water. Thrown on the Reef should deal 30 damage, 50 stagger, and knock the enemy down for 0.8 seconds when it hits a wall, a rock or another enemy.
+**Not built yet.** Thrown on the Reef should deal 30 damage, 50 stagger, and knock the enemy down for 0.8 seconds when it hits a wall, a rock or another enemy.
 
 **Example.** Riptide and Whirlpool leave two pools in the middle of the room. Stand between them and cast again and again, a third faster.
 
@@ -194,11 +192,9 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). If you aren't facing an enemy, it opens 6 metres in front of you.
 
-**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 8 seconds, and makes it last 7 seconds.) It opens on the enemy you face within 6 metres. The whirlpool has a 4-metre radius and lasts 5 seconds. It bites every half second for 3 damage, with no stagger, and adds Soaked with each bite. Each bite makes its enemy take 30% more stagger for 0.7 seconds, and its balance doesn't recover for that time, so while it stands in the water, every blow breaks its balance harder and none of it comes back.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 8 seconds, and makes it last 7 seconds.) It opens on the enemy you face within 6 metres. The whirlpool has a 4-metre radius and lasts 5 seconds. It pulls everything in it toward the middle at 1.2 metres a second. It bites every half second for 3 damage, with no stagger, and adds Soaked with each bite. Each bite makes its enemy take 30% more stagger for 0.7 seconds, and its balance doesn't recover for that time, so while it stands in the water, every blow breaks its balance harder and none of it comes back.
 
 **Works with.** Soaked, Heavy Water, which it comes after on the chart, Undertow, Deep Crack, a second element's Static or Chill, and Steam if you carry Fire.
-
-**Not built yet.** Enemies should be pulled to the middle at 1.2 metres a second.
 
 **Example.** Open it under a pack. For five seconds, every one of them stays Soaked and breaks a third faster under your blade.
 
@@ -207,11 +203,11 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Whenever you cast Whirlpool, using the shape you picked. If you have not bought this, you cast the plain whirlpool.
 
-**The numbers.** 3 Shards. Maelstrom: a 2.5-metre radius. When the bites on an enemy stop (the whirlpool ends, or the enemy leaves the water), it is thrown up for 0.8 seconds and takes 50 stagger. Rip Current: each bite carries its enemy 1.25 metres away from you, two and a half metres a second, and the bites still churn.
+**The numbers.** 3 Shards. Maelstrom: a 2.5-metre radius that pulls hard, 3 metres a second. When the bites on an enemy stop (the whirlpool ends, or the enemy leaves the water), it is thrown up for 0.8 seconds and takes 50 stagger. Rip Current: the whirlpool doesn't pull. A path of foam 2 metres wide runs about 9 metres from it, away from you, for 6 seconds. Everything in the foam is carried down it at 2.5 metres a second, and your blows on an enemy in the foam break its balance 30% harder.
 
 **Works with.** Deep Crack on the bodies Maelstrom throws up; Undertow and your blade on the enemies Rip Current carries past.
 
-**Not built yet.** Maelstrom's strong pull (3 metres a second). Rip Current's path of foam, 2 metres wide and 9 long, lasting 6 seconds, and its rule against dodging. For now, the whirlpool itself carries the enemies it bites away from you.
+**Not built yet.** Rip Current's rule against dodging: enemies in the foam can still dodge against it.
 
 **Example.** Use Maelstrom on two soldiers. They churn around for five seconds, then go up together for your heavy blow.
 
@@ -255,11 +251,11 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Whenever you cast Riptide, using the shape you picked. If you have not bought this, you cast the plain wave.
 
-**The numbers.** 3 Shards. River Serpent: a path 8 metres long and 2.4 metres wide, moving at 16 metres a second. It deals 12 damage, 30 stagger and Soaked. The first enemy it hits is pulled 4 metres back toward you and can't guard for 1 second. Breaking Swell: a wave 6 metres long and 90 degrees wide. It deals 8 damage, 18 stagger and Soaked. Whatever it hits is thrown 3 metres away and knocked down for 0.6 seconds (half as long for elites; gods not at all).
+**The numbers.** 3 Shards. River Serpent: the serpent swims 8 metres out along a path 2.4 metres wide at 16 metres a second. The first enemy its head reaches is bitten for 12 damage, 30 stagger and Soaked, held in its jaws, and carried back with it. The serpent sets it down 1.5 metres in front of you, wherever you are, and it can't guard for 1.5 seconds from the bite. It takes no other enemy. Breaking Swell: a wave 6 metres long and 90 degrees wide. It deals 8 damage, 18 stagger and Soaked. Whatever it hits is thrown 3 metres away and knocked down for 0.6 seconds (half as long for elites; gods not at all).
 
 **Works with.** Blowhole and your blade on the enemy River Serpent brings; Deep Crack's String of Bubbles shape down the line Breaking Swell clears.
 
-**Not built yet.** River Serpent should go out and come back, and drop its enemy 1.5 metres in front of you. For now, the serpent runs its path, and its first enemy is pulled back 4 metres.
+**Not built yet.** The serpent is a run of water drops until its model is brought into the game (it waits in staging for the owner).
 
 **Example.** A shaman stands behind its guards. River Serpent grabs it alone, guard down, and brings it to your blade.
 

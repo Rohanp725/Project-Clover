@@ -28,8 +28,8 @@ namespace Clover.Player.Trees.Duo
         {
             const string A = Elements.Earth, B = Elements.Poison;
 
-            // NEEDS: ground that acts on whoever walks in later (ground-states): Blackdamp's pool slowing those who wade in
-            // after it forms; now those within 1.75 m as it pools are slowed, and the pool doses all who stand in it.
+            // Blackdamp's pool slows those who wade in after it forms while they stand in it (UpgradeEffect.Inside), and is told
+            // as the damp (The Lamp Goes Out); those in it as it pools are slowed for its 7 s.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Chokedamp: Blackdamp or Red Ore", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -42,7 +42,8 @@ namespace Clover.Player.Trees.Duo
                         Description = "The damp does not run: it lies still and deep under the one, a pool 3.5 m wide for 7 s. What stands in it takes a dose each second, and those in it as it pools move a fifth slower. A place to hold, not a spread.",
                         Effects = new[]
                         {
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Radius = 1.75f, Seconds = 7f, Interval = 1f, Affliction = AfflictionKind.Poison, Stacks = 1 },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Radius = 1.75f, Seconds = 7f, Interval = 1f, Affliction = AfflictionKind.Poison, Stacks = 1,
+                                Inside = new ConditionSpec { Id = Black, Seconds = 1f, Pace = 0.8f, Is = Reactions.Damp }, Ground = Reactions.Damp },
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, Radius = 1.75f, State = new ConditionSpec { Id = Black, Seconds = 7f, Pace = 0.8f, Is = Reactions.Damp } },
                         },
                     },
@@ -81,8 +82,8 @@ namespace Clover.Player.Trees.Duo
                 Description = "Your weapon breaks the balance of enemies standing in the damp a quarter harder.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = Reaction, Do = UpgradeAction.Condition, Radius = 7f, Count = 8,
-                        State = new ConditionSpec { Id = LampOut, Seconds = 7f, Flags = ConditionFlags.WeaponStaggerShare, Scale = 1.25f, WhileIn = Reactions.Damp } },
+                    new UpgradeEffect { On = UpgradeTrigger.InGround, Condition = Reactions.Damp, Do = UpgradeAction.Condition,
+                        State = new ConditionSpec { Id = LampOut, Seconds = 1f, Flags = ConditionFlags.WeaponStaggerShare, Scale = 1.25f, WhileIn = Reactions.Damp } },
                 },
             }, HeartPattern.RightLow));
 

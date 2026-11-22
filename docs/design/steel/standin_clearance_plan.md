@@ -472,3 +472,46 @@ default.
     standard, as built.
 
     **Confirmed 2026-11-22.** Their row is closed.
+11. **What The Tide Turns' line of wet sand does** (pass 8, ground-states). The ebb leaves a line of wet sand; nothing says
+    what it does to what stands on it.
+    - a) It Soaks what stands on it each second for 3 s and slows it 15%, like your other water.
+    - b) It Soaks only.
+    - c) It is only a look.
+
+    **Recommended: a.** It reads as water, so it acts as your water does.
+12. **Which way Sweep of Wings throws** (pass 12a). The wave form strikes all at once, so the sweep has no direction of its own.
+    - a) Every enemy struck is thrown to your left, as if the wing swept from your right (built so).
+    - b) Each is thrown outward from your line, to the side it stood on.
+    - c) The way you turned as you cast.
+
+    **Recommended: a.** One clear way reads as one sweep.
+13. **Rip Current's "no dodging against the current"** (pass 8, no-dodge-or-leap).
+    - a) While in the foam an enemy cannot leap, lunge or step back at all (the built Mired rule).
+    - b) Only a dodge against the current is forbidden (a new rule).
+    - c) Drop it.
+
+    **Recommended: a.** The rule exists and the foam is only 6 s.
+14. **Does The Closed Ring hold a god?** (pass 8, closed-ring). The ring is a wall nothing walks or is thrown across for its 10 s.
+    - a) A god walks through it; every other enemy is held (built so).
+    - b) A god is held too.
+    - c) A god is held, but its leaps still cross.
+
+    **Recommended: a.** A god's fight should not stall for ten seconds on one keystone.
+15. **Low Mist's "a dodge or roll in it costs them a dose"** (pass 8, ground-states). Whose dodge?
+    - a) Your own dodge begun in the mist doses every enemy in it once (built so).
+    - b) An enemy's own leap or step back in the mist doses it.
+    - c) Drop it.
+
+    **Recommended: a.** Enemies rarely leap or step back, and your dodge is the thing you choose to do in the mist.
+16. **Eagle's Sight's cut at the end of the carried dodge** (pass 8, dodge-path).
+    - a) A burst of light at arm's length, 10 damage, 10 stagger and a Mark, and your next weapon blow is critical (built so).
+    - b) A real sword cut played as you arrive (a new clip, roll_cut).
+    - c) No cut: the carry alone, and the critical next blow.
+
+    **Recommended: a.** It needs no new clip and reads as the eagle striking.
+17. **Red Before the Sun's presses** (gathered-rings, second-press). The design says the rings "stand before you as a shield" and "press again to loose what is left as the beam".
+    - a) The cast raises the shield at once; each blow it stops adds a ring; a second press, or the shield's fall after 4 s, looses them as the beam (built so).
+    - b) The cast gathers rings by your blows as Daybreak does; a second press raises them as the shield; blows it stops add more; a third press looses the beam.
+    - c) As a, but a heavy blow on your own shield looses it.
+
+    **Recommended: a.** Two presses like every other gathered spell, and the shield is up when you need it.

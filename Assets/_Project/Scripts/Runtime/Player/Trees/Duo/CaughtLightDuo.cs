@@ -29,8 +29,8 @@ namespace Clover.Player.Trees.Duo
         {
             const string A = Elements.Water, B = Elements.Light;
 
-            // NEEDS: ground that acts on whoever walks in later (ground-states), as the plain net: Thrown Wide catches and hauls
-            // those on it as it is cast. A blow passed through its enemy to strike one behind it (cone-from-enemy): The Fish's
+            // Thrown Wide's net catches whoever walks onto it later too, as the plain net (UpgradeEffect.Inside), and is told as the
+            // net for the marks that answer it. A blow passed through its enemy to strike one behind it (cone-from-enemy): The Fish's
             // Eye's blow; now a burst of 12 on the line beyond it.
             to.Add(HeartPattern.Put(new Upgrade
             {
@@ -44,7 +44,8 @@ namespace Clover.Player.Trees.Duo
                         Description = "The net of light is cast 5 m wide for 4 s: all in it are Marked and caught, a quarter slower. When its time ends it is hauled: everything within 2.5 m of the enemy that bore it is dragged 2 m toward it.",
                         Effects = new[]
                         {
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Radius = 2.5f, Seconds = 4f, Interval = 0.5f, Affliction = AfflictionKind.Marked, Stacks = 1 },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Radius = 2.5f, Seconds = 4f, Interval = 0.5f, Affliction = AfflictionKind.Marked, Stacks = 1,
+                                Inside = new ConditionSpec { Id = Hauled, Seconds = 0.5f, Pace = 0.75f, Is = Reactions.LightNet }, Ground = Reactions.LightNet },
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, Radius = 2.5f, State = new ConditionSpec { Id = Hauled, Seconds = 4f, Pace = 0.75f, Is = Reactions.LightNet } },
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Bearer, Seconds = 4f } },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Bearer, Do = UpgradeAction.Pull, Radius = 2.5f, Amount = 2f },
@@ -77,21 +78,21 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.LeftLow));
 
-            // NEEDS: the place a dodge ends (dodge-path); now the spray is round you at the perfect dodge itself.
+            // Where the perfect dodge ends (UpgradeTrigger.PerfectDodgeEnd).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = SunOnTheSpray, Name = "Sun on the Spray", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Boot,
                 Description = "A perfect dodge Soaks and Marks every enemy within 3 m of where it ends.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, At = EffectAt.Self, Cooldown = 0.5f, Do = UpgradeAction.Afflict, Radius = 3f, Affliction = AfflictionKind.Soaked, Stacks = 1 },
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, At = EffectAt.Self, Cooldown = 0.5f, Do = UpgradeAction.Afflict, Radius = 3f, Affliction = AfflictionKind.Marked, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectDodgeEnd, At = EffectAt.Self, Cooldown = 0.5f, Do = UpgradeAction.Afflict, Radius = 3f, Affliction = AfflictionKind.Soaked, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectDodgeEnd, At = EffectAt.Self, Cooldown = 0.5f, Do = UpgradeAction.Afflict, Radius = 3f, Affliction = AfflictionKind.Marked, Stacks = 1 },
                 },
             }, HeartPattern.RightLow));
 
             // While the net lies, every blow on those in it is critical, as a mark of light makes it, and no mark is spent.
             // The net read from each enemy, in whichever shape: the opening lasts only while it is caught in the net
-            // (ConditionSpec.WhileIn). NEEDS: those who walk onto the net later (ground-states); now only those caught as it falls.
+            // (ConditionSpec.WhileIn). Those who walk onto the net later are opened too, at each of its bites (UpgradeTrigger.InGround).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = SeenInTheWater, Name = "Seen in the Water", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { BrightWater, SunOnTheSpray }, Icon = UpgradeIcons.Eye,
@@ -100,6 +101,8 @@ namespace Clover.Player.Trees.Duo
                 {
                     new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = Reaction, Do = UpgradeAction.Condition, Radius = 3f,
                         State = new ConditionSpec { Id = Open, Seconds = 4f, Flags = ConditionFlags.TakesCritical, WhileIn = Reactions.LightNet } },
+                    new UpgradeEffect { On = UpgradeTrigger.InGround, Condition = Reactions.LightNet, Do = UpgradeAction.Condition,
+                        State = new ConditionSpec { Id = Open, Seconds = 1f, Flags = ConditionFlags.TakesCritical, WhileIn = Reactions.LightNet } },
                 },
             }, HeartPattern.Keystone));
 

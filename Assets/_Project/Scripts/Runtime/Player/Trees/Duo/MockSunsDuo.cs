@@ -25,9 +25,9 @@ namespace Clover.Player.Trees.Duo
         {
             const string A = Elements.Ice, B = Elements.Light;
 
-            // NEEDS: cone-from-enemy (Prism's fan of three rays out of its far side, 6 m and 30 degrees; now three bursts on
-            // your line beyond it); freeze-moment (Lens of Ice's Mark kept only while it is Frozen and its shatter 60% harder;
-            // now kept while it is chilled and Marked, and a heavy blow on it at full Chill strikes 18 more and throws its Mark).
+            // Prism's rays leave its far side as a cone 6 m long and 30 degrees wide (UpgradeAction.Pieces, PieceAim.FarCone).
+            // Lens of Ice: its Mark is kept only while it is Frozen (ConditionSpec.KeepsWhileFrozen), a shatter of it is 60% harder
+            // (ShatterHarder), and the shatter throws its Mark on every enemy within 4 m (StruckBy.Shatter).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Mock Suns: Prism or Lens of Ice", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -41,10 +41,8 @@ namespace Clover.Player.Trees.Duo
                         Effects = new[]
                         {
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Prism, Seconds = 4f, Keeps = AfflictionKind.Marked, EndsWith = ConditionBlow.Weapon } },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Prism, By = StruckBy.Weapon, Do = UpgradeAction.Burst, Shape = HazardShape.Downwind, Count = 3, Reach = 3f,
-                                Amount = 1.5f, Radius = 0.8f, Damage = 8f, Affliction = AfflictionKind.Marked, Stacks = 1 },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Prism, By = StruckBy.Weapon, Do = UpgradeAction.Burst, Shape = HazardShape.Downwind, Count = 3, Reach = 3f,
-                                Amount = 1.5f, Radius = 0.8f, Affliction = AfflictionKind.Chill, Stacks = 1 },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Prism, By = StruckBy.Weapon, Do = UpgradeAction.Pieces, Thrown = PieceAim.FarCone, Reach = 6f, Arc = 30f,
+                                Damage = 8f, Affliction = AfflictionKind.Marked, Stacks = 1, BitesLay = AfflictionKind.Chill },
                         },
                     },
                     new ShapeDef
@@ -53,10 +51,9 @@ namespace Clover.Player.Trees.Duo
                         Description = "No rays: the light is gathered into the one body. While it is Frozen its Mark is not spent by blows, and a shatter of it, Marked and frozen, deals 60% more and throws its Mark onto every enemy within 4 m.",
                         Effects = new[]
                         {
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Lens, Seconds = 30f, While = AfflictionKind.Chill, While2 = AfflictionKind.Marked, Keeps = AfflictionKind.Marked } },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Lens, By = StruckBy.Heavy, Needs = AfflictionKind.Chill, NeedsFull = true, Do = UpgradeAction.Burst, Radius = 0.5f, Damage = 18f,
-                                Affliction = AfflictionKind.Marked },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Lens, By = StruckBy.Heavy, Needs = AfflictionKind.Chill, NeedsFull = true, Do = UpgradeAction.Afflict, Radius = 4f,
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Lens, Seconds = 30f, While = AfflictionKind.Chill, While2 = AfflictionKind.Marked,
+                                Keeps = AfflictionKind.Marked, KeepsWhileFrozen = true, ShatterHarder = 1.6f } },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Lens, By = StruckBy.Shatter, Do = UpgradeAction.Afflict, Radius = 4f,
                                 Affliction = AfflictionKind.Marked, Stacks = 1 },
                         },
                     },
@@ -86,8 +83,8 @@ namespace Clover.Player.Trees.Duo
                 {
                     new ReactionChange { Shape = -1, Index = 0, ConditionSeconds = 6f },
                     new ReactionChange { Shape = 0, Index = 0, ConditionSeconds = 6f },
-                    new ReactionChange { Shape = 0, Index = 1, Count = 5, Reach = 4f },
-                    new ReactionChange { Shape = 0, Index = 2, Count = 5, Reach = 4f },
+                    // Prism's cone of rays out of the far side: 8 m long and wide enough for five rays (50 degrees).
+                    new ReactionChange { Shape = 0, Index = 1, Reach = 8f, Arc = 50f },
                 },
             }, HeartPattern.RightLow));
 
@@ -106,14 +103,14 @@ namespace Clover.Player.Trees.Duo
             // form holds up the block of spar: the first blow on it is caught and split into a fan toward the attacker, chilling
             // (the branch's first element) two deep, and each ray Marks.
             // Half the cooldown back when nothing strikes it (SpellSpec.MissedWait).
-            // NEEDS: a perfect guard made through it in its last 0.3 s freezing the attacker outright (spell-windows); five rays,
-            // not one cone (form-pieces).
+            // The caught blow splits into five thin rays across 80 degrees (SpellSpec.Rays on the parry form). NEEDS: a perfect
+            // guard made through it in its last 0.3 s freezing the attacker outright (spell-windows).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Sunstone, Name = "Sunstone", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Role = SpellRole.Counter, Requires = new[] { BentLight, WideFan }, Icon = UpgradeIcons.Gem,
                 Description = "You hold up a block of clear ice spar for 1.2 s. The first blow that lands on it is caught for nothing and split: five rays fan 8 m toward the attacker, 12 and 20 stagger each, a Mark and two Chill.",
                 Form = SpellForms.Parry,
-                Spell = new SpellSpec { Seconds = 1.2f, Reach = 8f, Arc = 80f, Damage = 12f, Stagger = 20f, Stacks = 2, MissedWait = 0.5f },
+                Spell = new SpellSpec { Seconds = 1.2f, Reach = 8f, Arc = 80f, Damage = 12f, Stagger = 20f, Stacks = 2, MissedWait = 0.5f, Rays = 5 },
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Marked, Stacks = 1 } },
             }, HeartPattern.Spell));
         }

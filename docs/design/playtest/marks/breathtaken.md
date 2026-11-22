@@ -55,13 +55,13 @@ both carried.
 
 **When it happens.** Cast it from a spell slot while you carry both Dark and Wind. Press that slot's button (hold L2 and a face button, or press 1 to 4). The first time it lands, it charges your blade with Dark.
 
-**The numbers.** Mix, duo spell, counter, 5 Shards. It costs no mana. After you cast it, you must wait 9 seconds to cast it again. Fighting with your weapon makes the wait shorter. When a blow comes, the attacker takes 6 damage, 15 stagger, a Curse and an Unsteady, so Breath Taken goes off. You step to 2 metres behind it. Your first weapon blow on it within 1 second is a critical hit and gives back half of this spell's wait.
+**The numbers.** Mix, duo spell, counter, 5 Shards. It costs no mana. After you cast it, you must wait 9 seconds to cast it again. Fighting with your weapon makes the wait shorter. When a blow comes, the attacker takes 6 damage, 15 stagger, a Curse and an Unsteady, so Breath Taken goes off. You go through it to 2 metres behind it and turn to face it, and nothing can hurt you for 0.4 seconds as you go. Your first weapon blow on it within 1 second is a critical hit and gives back half of this spell's wait.
 
 **Works with.** Breath Taken and its shapes, Short of Breath, Ill Omen.
 
 **Example.** Wait for the brute's swing, pass through it, and cut its back.
 
-**Not built yet.** The wind doesn't yet carry you through untouchable and set you down facing the enemy; for now, you just step past it. If no blow comes, the gust doesn't yet end in a small push.
+**Not built yet.** The wind doesn't yet carry you through in a glide; for now, you take a quick step past it. If no blow comes in the second, the gust ends in a small push that moves every enemy within 2.5 metres back 1.5 metres.
 
 ## breathtaken.grave
 **What it does.** A duo surge. While it is lit, a black wind blows out from you in the direction you face. It is 9 metres long and 100 degrees wide. Enemies in it are pushed away half a metre each second and made Unsteady each second. A Curse put on any enemy in the wind is carried along with the wind to the enemies behind it.

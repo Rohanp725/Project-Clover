@@ -33,6 +33,8 @@ namespace Clover.Player.Trees
         public const string ReturningEdge = "metal.returningedge";
         public const string PouredBronze = "metal.bronze";
         public const string ToTheBlade = "metal.toblade";
+        /// <summary>To the Blade's Chain: an enemy tripped flat crossing it.</summary>
+        public const string Tripped = "metal.toblade.tripped";
         public const string GraveOfSwords = "metal.graveofswords";
         public const string AllBladesHome = "metal.allbladeshome";
         // The god's gift.
@@ -78,9 +80,8 @@ namespace Clover.Player.Trees
 
             // The detonator: a nova that strikes for nothing; each notched enemy it reaches has bronze poured into its cracks
             // for each notch, is held, and its notches are spent. The count comes first and the spend last, so the pour is
-            // counted before the notches go; the hold is 0.4 s a notch (PerStack). NEEDS: a quarter of the hold on a god or an
-            // elite (count-from-depth; now the enemy's own freeze share), a lip of bronze tipping over each enemy and a crust
-            // cooling on it (form-pieces).
+            // counted before the notches go; the hold is 0.4 s a notch (PerStack), a quarter of that on a god or an elite (Ranks,
+            // UpgradeEffect.Exact). NEEDS: a lip of bronze tipping over each enemy and a crust cooling on it (form-pieces).
             SpellBranch.Add(to, E, PouredBronze, "Poured Bronze", SpellRole.Detonator, BranchPattern.MiddleA, CounterCut, SpellForms.Nova,
                 new SpellSpec { Radius = 8f, Delay = 0.4f, Damage = 0f, Stagger = 0f, Stacks = 0 },
                 "You raise a hand. Over every notched enemy within eight metres a lip of molten bronze tips in the air, then pours into its cracks: 10 damage, and 12 damage and 15 stagger for each notch. The notches are spent. The bronze sets, and the enemy is held under a crust cooling from cherry red to black, longer for each notch it carried.",
@@ -100,7 +101,7 @@ namespace Clover.Player.Trees
                     } },
                 // No hold while it is worn (ShapeDef.SetsAside: the Learn's hold). Only the enemies poured into are molten, and
                 // each keeps the notches the pour spent (CountsNeeds): every weapon blow spits 6 for each (ByPower).
-                new ShapeDef { Name = "Red-Hot", SetsAside = new[] { 3 },
+                new ShapeDef { Name = "Red-Hot", SetsAside = new[] { 3, 4 },
                     Description = "The bronze stays molten in the cracks for four seconds. There is no hold, but every weapon blow on that enemy spits sparks and deals 6 more for each notch that was spent. Pour, then press.",
                     Effects = new[]
                     {
@@ -122,7 +123,8 @@ namespace Clover.Player.Trees
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = S, Do = UpgradeAction.Spend, Affliction = S, CountOnly = true },
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = S, Do = UpgradeAction.Burst, PerStack = true, Radius = 0.6f, Damage = 12f, Stagger = 15f, Stacks = 0 },
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = S, Do = UpgradeAction.Burst, Unseen = true, Radius = 0.6f, Damage = 10f, Stagger = 0f, Stacks = 0 },
-                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = S, Do = UpgradeAction.Hold, PerStack = true, Seconds = 0.4f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = S, Ranks = EnemyRank.Plain, Do = UpgradeAction.Hold, PerStack = true, Seconds = 0.4f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = S, Ranks = EnemyRank.Elite | EnemyRank.God, Do = UpgradeAction.Hold, PerStack = true, Seconds = 0.1f, Exact = true },
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = S, Do = UpgradeAction.Spend, Affliction = S },
                 });
 
@@ -214,13 +216,13 @@ namespace Clover.Player.Trees
                 "Catch it on a perfect guard as it comes home, and Returning Edge is ready again at once.");
 
             // The counter: the parry form turns the first blow and answers with a cut all round; nothing struck, it waits 5 s
-            // (SpellSpec.MissedWait). NEEDS: two blows turned with the Empower (parry-count).
+            // (SpellSpec.MissedWait). With the Empower it stands on after the first and turns a second (SpellSpec.Turns).
             SpellBranch.Add(to, E, CircleOfSteel, "Circle of Steel", SpellRole.Counter, BranchPattern.LeftB, OpenLine, SpellForms.Parry,
                 new SpellSpec { Seconds = 1.2f, Reach = 3f, Arc = 360f, Damage = 14f, Stagger = 20f, Stacks = 1, MissedWait = 0.5f },
                 "You raise the blade for a breath, unable to move. The first blow from any side is turned for nothing and answered with a cut all round you, three metres: 14 damage, 20 stagger and a notch. If nothing strikes, it waits only half as long.",
                 UpgradeIcons.Ring,
                 // The roster's numbers alone (the owner's answer of 2026-11-20: an Empower may strengthen without a shorter wait).
-                new Empower { Damage = 16f },
+                new Empower { Damage = 16f, Turns = 2 },
                 "It turns two blows, and its answer strikes for 16.",
                 // The cut all round kept, and only the attacker bound (UpgradeEffect.NeedsAttacker: the one whose blow was turned);
                 // "passes any guard" is that it cannot raise one.
@@ -233,11 +235,11 @@ namespace Clover.Player.Trees
                         new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, NeedsAttacker = true, Do = UpgradeAction.Afflict, Affliction = S, Stacks = 1 },
                         new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, NeedsAttacker = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = GoldenChair, Seconds = 2f, Flags = ConditionFlags.CannotGuard } },
                     } },
-                // NEEDS: every blow turned in 1.5 s ringing, four at most, each ring wider than the last (parry-count). Until then
-                // the first blow turned rings once.
+                // Every blow turned in its 1.5 s rings, four at most (SpellSpec.Turns), each ring a metre wider than the last
+                // (TurnGrows): 4, 5, 6 and 7 m.
                 new ShapeDef { Name = "Ringing Plate", Form = SpellForms.Parry,
                     Description = "You stand as a struck plate. Every blow turned in a second and a half, four at most, rings: a sharp ripple to four metres, 8 damage, 20 stagger and a notch on all, each ring wider than the last. The more of them strike you, the better.",
-                    Spell = new SpellSpec { Seconds = 1.5f, Reach = 4f, Arc = 360f, Damage = 8f, Stagger = 20f, Stacks = 1 } },
+                    Spell = new SpellSpec { Seconds = 1.5f, Reach = 4f, Arc = 360f, Damage = 8f, Stagger = 20f, Stacks = 1, Turns = 4, TurnGrows = 1f } },
                 "Opens two shapes of Circle of Steel, chosen at any rest fire: The Golden Chair, bands that bind the one who struck, or Ringing Plate, a ring for every blow turned.",
                 // Only a red attack turned (UpgradeEffect.RedOnly): the mana, and its wait ended.
                 new[]
@@ -248,14 +250,18 @@ namespace Clover.Player.Trees
                 "Turn a red attack, and 15 mana comes back to you and Circle of Steel is ready again at once.");
 
             // The RuleBook's edge guard (GuardMode.Edge, read by PlayerDefence and Guard): a held guard blocks nothing; the perfect
-            // window is 0.28 s (0.18 half again) and may be pressed again after 0.2 s; each perfect guard cuts the attacker. NEEDS: the
-            // cut counted as a blow landed (its mana and its cut to the waits). It grows from Circle of Steel's Learn, whose line passes
+            // window is 0.28 s (0.18 half again) and may be pressed again after 0.2 s; each perfect guard cuts the attacker, and the
+            // cut counts as a light weapon blow landed (UpgradeAction.CountAsBlow: its mana and its cut to the waits). It grows from Circle of Steel's Learn, whose line passes
             // clear, as the old tree had it.
             to.Add(BranchPattern.Put(new Upgrade { Id = EdgeGuard, Name = "Edge Guard", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { CircleOfSteel }, Icon = UpgradeIcons.Shield,
                 Description = "Your guard is all edge. Held, it blocks nothing: only the perfect guard turns a blow. Its moment is half again as long and may be pressed again after a fifth of a second, and each one cuts the attacker and notches its armour.",
                 Stats = new[] { new StatMod(PlayerStat.PerfectGuardWindow, 0.55f) },
                 Rules = book => book.Guard = Growth.GuardMode.Edge,
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Burst, Radius = 1.2f, Damage = 12f, Stagger = 10f, Affliction = S, Stacks = 1 } } },
+                Effects = new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Burst, Radius = 1.2f, Damage = 12f, Stagger = 10f, Affliction = S, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.CountAsBlow },
+                } },
                 BranchPattern.LeftCrown));
 
             // ---- The right bough: Arsenal. Steel thrown, planted and called back.
@@ -321,11 +327,13 @@ namespace Clover.Player.Trees
                 UpgradeIcons.Arrow,
                 new Empower { Cooldown = 7f, BladeReach = BladeRules.ToBladeEmpoweredReach },
                 "To the Blade waits 7 seconds, not 8, and reaches a blade fourteen metres off.",
-                // NEEDS: tripped as a fall, a knock-down for each crossing (ground-states). Until then the chain is ground along
-                // your path that notches and staggers what stands on it.
+                // The chain is ground along your path that notches and staggers what stands on it, and trips each one that crosses
+                // it flat for 0.6 s, once in 1.5 s each (UpgradeEffect.InsideDo).
                 new ShapeDef { Name = "Chain",
                     Description = "A bronze chain stays stretched along the line you flew for three seconds. An enemy that crosses it is notched and tripped, 20 stagger. Your path becomes a tripwire.",
-                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Hazard, At = EffectAt.Self, Shape = HazardShape.Line, Reach = 6f, Count = 5, Radius = 0.6f, Seconds = 3f, Interval = 1f, Damage = 0f, Stagger = 20f, Affliction = S, Stacks = 1 } } },
+                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Hazard, At = EffectAt.Self, Shape = HazardShape.Line, Reach = 6f, Count = 5, Radius = 0.6f, Seconds = 3f, Interval = 0.5f, Damage = 0f, Stagger = 10f, Affliction = S, Stacks = 1,
+                        InsideDo = new[] { new UpgradeEffect { On = UpgradeTrigger.InGround, Do = UpgradeAction.Condition, CooldownPerEnemy = true, Cooldown = 1.5f,
+                            State = new ConditionSpec { Id = Tripped, Seconds = 0.6f, Flags = ConditionFlags.Down } } } } } },
                 // The flight back as a second press within 2 s of arriving (ShapeDef.Presses, UpgradeAction.ReturnToCast), cutting the
                 // line a second time as the flight did: 10 damage, 15 stagger and a notch.
                 new ShapeDef { Name = "There and Back", PressWindow = 2f,
