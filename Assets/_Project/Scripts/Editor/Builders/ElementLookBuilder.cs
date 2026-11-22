@@ -1345,6 +1345,8 @@ namespace Clover.EditorTools
                     foreach (Dictionary<string, object> body in (List<object>)look["bodies"]) bodyAt.Add(Vec(body["position"], Vector3.zero));
                     BuildLook(look, tweak, key, 0, bodyAt, 0f, lists, elementArt, glow);
                 }
+            // Hunger's jaws round each near enemy's feet (round 4).
+            if (elementLooks) BuildHungerJaws(lists, elementArt, glow);
             lists.Flat = false;
             // Each element's own moments drawn by the elements 3 pass: the blades' blows, the spells, the strikes, Tailwind.
             if (elementLooks) BuildElements3(lists, elementArt, glow);
@@ -2313,11 +2315,19 @@ namespace Clover.EditorTools
                 int ring = ReactionDesigns.RingIndex(owner);
                 wears = ring >= 0 && ring < elementArt.Solids.Length ? elementArt.Solids[ring] : elementArt.Solids[0];
             }
+            // Round 4's see-through cards (the soft fog, the gold glow, the heat shimmer) in their own materials, UVs laid across them.
+            var soft = RdSoftMaterial(bare);
+            if (soft != null)
+            {
+                kind = ElementLookSet.Flat;
+                wears = soft;
+            }
             var mesh = new Mesh { name = PartName(slug, index, filter.name, piece) };
             mesh.SetVertices(vertices);
             mesh.SetNormals(normals);
             mesh.SetColors(colours);
             mesh.SetTriangles(triangles, 0);
+            if (soft != null) mesh.SetUVs(0, CardUVs(vertices));
             mesh.SetUVs(1, ElementArtBuilder.SmoothNormals(vertices, normals));
             mesh.RecalculateBounds();
             AssetDatabase.AddObjectToAsset(mesh, into);

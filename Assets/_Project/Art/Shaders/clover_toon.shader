@@ -42,6 +42,9 @@ Shader "Clover/Toon"
         _WetReveal ("Wet down from the top to this share of the body's height", Range(0, 1)) = 1
         _RevealBase ("The body's feet, world height (the reveals count up from here)", Float) = 0
         _RevealHeight ("The body's height, metres (0: no reveal, all of it at once)", Float) = 0
+        _Fever ("Fever's flush (set by the game)", Range(0, 1)) = 0
+        _FeverReveal ("Flushed up to this share of the body's height", Range(0, 1)) = 1
+        _Charge ("Overdrive's charge: a cyan rim and the hair lifting (set by the game)", Range(0, 1)) = 0
     }
 
     SubShader
@@ -90,6 +93,9 @@ Shader "Clover/Toon"
             float _RevealHeight;
             half _Wet;
             half _WetReveal;
+            half _Fever;
+            half _FeverReveal;
+            half _Charge;
         CBUFFER_END
 
         // A body the water has run down (Soaked, the coordinator's check of 2026-11-20: "a thin wet sheen on the body
@@ -237,6 +243,15 @@ Shader "Clover/Toon"
         // own time by where it stands. Nothing moves when _Sway is 0, the default, so every other material is as it was.
         float3 SwayWS(float3 positionWS)
         {
+            // Overdrive's charge lifts the hair (round 4's Overdrive: "hair and cloth lift"): the top of the body, the
+            // hair over the crown, stands up a few centimetres and crackles, from nothing at the brow to most at the top.
+            // The rig has no hair bones, so the nudge is here; the body's reveal height says where its top is.
+            if (_Charge > 0.001 && _RevealHeight > 0.001)
+            {
+                float top = saturate(((positionWS.y - _RevealBase) / _RevealHeight - 0.9) / 0.1);
+                float crackle = 0.75 + 0.25 * sin(_Time.y * 41.0 + dot(positionWS, float3(37.0, 11.0, 53.0)));
+                positionWS.y += _Charge * top * top * 0.07 * crackle;
+            }
             if (_Sway == 0) return positionWS;
             float3 origin = float3(UNITY_MATRIX_M._m03, UNITY_MATRIX_M._m13, UNITY_MATRIX_M._m23);
             float rise = _Sway > 0 ? max(0.0, positionWS.y - origin.y) : max(0.0, origin.y - positionWS.y);
@@ -373,6 +388,20 @@ Shader "Clover/Toon"
                 // Wet from the head down as the water runs off it.
                 if (_Wet > 0.001) colour = lerp(colour, WetSheen(colour, normalWS, viewWS, light.direction), _Wet * step(1.0 - _WetReveal - 0.0001, share));
                 if (_Ice > 0.001) colour = lerp(colour, IceShell(albedo, normalWS, viewWS, light.direction, lit, input.positionWS), _Ice * step(share, _IceReveal + 0.0001));
+                // Fever's flush (round 4): the skin turns a strong sickly green-grey from the feet up, 76% of the way (the
+                // Blender worker's rd_fever_skin), its light and shade kept; the clothes take only a little of it. A
+                // material is skin when its own colour is (a warm tan: red over green over blue by the skin's shares).
+                if (_Fever > 0.001)
+                {
+                    half3 own = _BaseColor.rgb;
+                    half redOverGreen = own.r / max(own.g, 0.01), greenOverBlue = own.g / max(own.b, 0.01);
+                    half skin = step(0.4, own.r) * step(own.r, 0.98) * step(1.25, redOverGreen) * step(redOverGreen, 2.0) * step(1.1, greenOverBlue);
+                    half value = dot(colour, half3(0.3, 0.59, 0.11));
+                    half3 flush = half3(0.3, 0.42, 0.15) * (0.55 + 1.15 * value);
+                    colour = lerp(colour, flush, _Fever * lerp(0.3, 0.76, skin) * step(share, _FeverReveal + 0.0001));
+                }
+                // Overdrive's charge: a faint cyan rim round the body while it lasts.
+                if (_Charge > 0.001) colour += half3(0.18, 0.62, 0.9) * _Charge * smoothstep(0.55, 0.78, rim);
 
                 colour += _EmissionColor.rgb;
                 colour = MixFog(colour, input.fogFactor);

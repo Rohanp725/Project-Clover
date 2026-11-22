@@ -174,6 +174,8 @@ namespace Clover.EditorTools
         {
             set.ArmourPlate = null;
             set.ArmourMaterial = null;
+            // Round 4's chunkier slab when its kit is in (ElementLookBuilder.Redesigns).
+            if (BakeRdArmourPlate(set, lists, elementArt)) return;
             if (!TryKitPiece(E4Kit, "vfxe4_rock_b", lists.Kits, out var filter, out bool comboTurn)) return;
             var vertices = KitVertices(filter, comboTurn);
             var bounds = new Bounds(vertices[0], Vector3.zero);

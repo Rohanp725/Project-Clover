@@ -47,7 +47,113 @@ namespace Clover.Player.Forms
             look = -1;
             wearer = null;
             OverdriveStyle = DefaultOverdriveStyle;
+            for (int i = 0; i < MostJaws; i++)
+            {
+                jaws[i] = -1;
+                jawOn[i] = null;
+            }
+            nextJawLook = 0f;
         }
+
+        /// <summary>
+        /// Hunger's jaws (round 4): the player's shadow stretches to each near enemy and two rows of black fangs rise round
+        /// its feet and gnash, for as long as Hunger lasts. Up to this many enemies, this near, looked for this often.
+        /// </summary>
+        public const int MostJaws = 2;
+        public const float JawReach = 3.5f, JawLookEvery = 0.25f;
+        private static readonly int[] jaws = { -1, -1 };
+        private static readonly Transform[] jawOn = new Transform[MostJaws];
+        private static readonly Transform[] jawFound = new Transform[MostJaws];
+        private static readonly Collider[] nearJaws = new Collider[32];
+        private static float nextJawLook;
+
+        /// <summary>How many enemies Hunger's jaws are round now, for probes.</summary>
+        public static int JawsShown
+        {
+            get
+            {
+                int count = 0;
+                for (int i = 0; i < MostJaws; i++)
+                    if (jaws[i] >= 0 && jawOn[i] != null) count++;
+                return count;
+            }
+        }
+
+        // The near enemies (and dummies) standing nearest the player's feet, nearest first, the dead left out.
+        private static int FindJawBodies(Vector3 feet)
+        {
+            for (int i = 0; i < MostJaws; i++) jawFound[i] = null;
+            int count = Physics.OverlapSphereNonAlloc(feet + Vector3.up, JawReach + 0.6f, nearJaws, ~0, QueryTriggerInteraction.Ignore);
+            float first = float.MaxValue, second = float.MaxValue;
+            for (int i = 0; i < count; i++)
+            {
+                var enemy = nearJaws[i].GetComponentInParent<Clover.Gameplay.Enemy>();
+                Transform at = enemy != null && !enemy.IsDead ? enemy.transform : null;
+                if (at == null && enemy == null)
+                {
+                    var dummy = nearJaws[i].GetComponentInParent<Clover.Gameplay.TrainingDummy>();
+                    at = dummy != null ? dummy.transform : null;
+                }
+                if (at == null || ReferenceEquals(at, jawFound[0]) || ReferenceEquals(at, jawFound[1])) continue;
+                Vector3 flat = at.position - feet;
+                flat.y = 0f;
+                float distance = flat.magnitude;
+                if (distance > JawReach) continue;
+                if (distance < first)
+                {
+                    jawFound[1] = jawFound[0];
+                    second = first;
+                    jawFound[0] = at;
+                    first = distance;
+                }
+                else if (distance < second)
+                {
+                    jawFound[1] = at;
+                    second = distance;
+                }
+            }
+            return (jawFound[0] != null ? 1 : 0) + (jawFound[1] != null ? 1 : 0);
+        }
+
+        private static void PlaceJaws(Vector3 feet, float time)
+        {
+            int key = ElementLooks.Find(HungerJawsKey);
+            if (key < 0) return;
+            if (time >= nextJawLook)
+            {
+                nextJawLook = time + JawLookEvery;
+                FindJawBodies(feet);
+                // Jaws round an enemy no longer near close; a newly near one has jaws opened round it.
+                for (int i = 0; i < MostJaws; i++)
+                    if (jaws[i] >= 0 && !ReferenceEquals(jawOn[i], jawFound[0]) && !ReferenceEquals(jawOn[i], jawFound[1])) EndJaw(i);
+                for (int f = 0; f < MostJaws; f++)
+                {
+                    var body = jawFound[f];
+                    if (body == null || ReferenceEquals(jawOn[0], body) || ReferenceEquals(jawOn[1], body)) continue;
+                    int slot = jaws[0] < 0 ? 0 : jaws[1] < 0 ? 1 : -1;
+                    if (slot < 0) break;
+                    Vector3 toward = body.position - feet;
+                    toward.y = 0f;
+                    float yaw = toward.sqrMagnitude > 0.0001f ? Mathf.Atan2(toward.x, toward.z) * Mathf.Rad2Deg : 0f;
+                    jaws[slot] = ElementLooks.Held(key, body.position, yaw, 1f, JawsHeld);
+                    jawOn[slot] = jaws[slot] >= 0 ? body : null;
+                }
+            }
+            for (int i = 0; i < MostJaws; i++)
+                if (jaws[i] >= 0 && jawOn[i] != null) ElementLooks.MoveHeld(jaws[i], jawOn[i].position);
+        }
+
+        private static void EndJaw(int i)
+        {
+            if (jaws[i] >= 0) ElementLooks.EndHeld(jaws[i]);
+            jaws[i] = -1;
+            jawOn[i] = null;
+        }
+
+        /// <summary>The key Hunger's jaws round one enemy are built under (ElementLookBuilder.Redesigns).</summary>
+        public const string HungerJawsKey = "dark_hunger@b";
+        // A jaw is held at most this long (Hunger lasts less); it is taken off when Hunger ends or the enemy leaves.
+        private const float JawsHeld = 60f;
 
         /// <summary>
         /// True for the elements whose built surge pieces (hanging blades, a crown of rays, smoke, bubbles, Wind's
@@ -67,6 +173,8 @@ namespace Clover.Player.Forms
             switch (element)
             {
                 case ElementSubstance.Lightning: return OverdriveStyle != AfflictionArt.CodeLook ? "lightning_overdrive" : null;
+                // Kindle: you catch fire, flame running up the arms and streaming off the shoulders (round 4, approved).
+                case ElementSubstance.Fire: return "fire_kindle";
                 // Clarity: the Blender worker's gold lotus of light replaces the kolam (the owner, 2026-11-20).
                 case ElementSubstance.Light: return "light_clarity";
                 case ElementSubstance.Water: return "water_wellspring";
@@ -270,6 +378,7 @@ namespace Clover.Player.Forms
                 floors[i] = -1;
                 floorPieces[i] = -1;
             }
+            for (int i = 0; i < MostJaws; i++) EndJaw(i);
             element = -1;
             look = -1;
         }
@@ -281,6 +390,7 @@ namespace Clover.Player.Forms
             if (look >= 0)
             {
                 if (wearer != null) ElementLooks.Keep(look, wearer);
+                if (element == ElementSubstance.Dark) PlaceJaws(feet, time);
                 if (element == ElementSubstance.Lightning && OverdriveStyle == AfflictionArt.BothLooks) ThrowArcs(feet, time);
                 return;
             }

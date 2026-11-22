@@ -1,6 +1,6 @@
 # Element looks (batches 1 and 2)
 
-342 looks, 8221 parts (3044 ribbons), 48861 keys, from Assets/_Project/Art/VFX/Combos/elements2_recipe.json.
+343 looks, 8210 parts (3044 ribbons), 48707 keys, from Assets/_Project/Art/VFX/Combos/elements2_recipe.json.
 
 | Look | Length | On | Parts | Ribbons | Repeats from | Shell |
 |---|---|---|---|---|---|---|
@@ -271,7 +271,7 @@
 | life_seeded | 2.2 s | body | 12 | 0 | 2.20 s | - |
 | life_regrowth | 1.5 s | player | 63 | 2 | 0.66 s | - |
 | dark_cursed | 2.2 s | body | 50 | 43 | 0.27 s | - |
-| dark_hunger | 1.5 s | player | 70 | 48 | 0.55 s | - |
+| dark_hunger | 1.5 s | player | 48 | 48 | 0.55 s | - |
 | ice_chill | 2.2 s | body | 4 | 0 | 0.85 s | 5 bands from 0.10 s, every 0.10 s, 0.09 s each |
 | ice_rime | 2.4 s | body | 15 | 0 | 2.40 s | 5 bands from 0.05 s, every 0.30 s, 0.45 s each |
 | earth_tremor | 2.4 s | body | 28 | 0 | 0.10 s | - |
@@ -286,6 +286,7 @@
 | light_marked | 1.5 s | body | 15 | 0 | 1.50 s | - |
 | earth_bedrock | 1.5 s | player | 35 | 0 | 1.50 s | - |
 | fire_kindle | 1.5 s | player | 53 | 0 | 1.50 s | - |
+| dark_hunger@b | 1.5 s | body | 11 | 0 | 1.50 s | - |
 | e3_fire_blade_hit1 | 0.6 s | body | 7 | 0 | 0.60 s | - |
 | e3_fire_blade_hit2 | 0.6 s | body | 7 | 0 | 0.60 s | - |
 | e3_fire_blade_hit3 | 0.6 s | body | 28 | 0 | 0.33 s | - |

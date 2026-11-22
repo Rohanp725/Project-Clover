@@ -19,8 +19,9 @@ namespace Clover.Player.Forms
         private static readonly string[] Blades =
             { "fire_blade", null, "wind_blade", "ice_blade", "water_blade", "life_blade", "earth_blade", "metal_blade", "light_blade", "dark_blade", "poison_blade" };
         // Gust and Stone Rise are elements 4's (the third review): fronts of curls parting round the enemies, and massive
-        // stones bursting up under the one faced.
-        private static readonly string[] Spells = { "flame_wave", null, "gust", null, "riptide", "briar_patch", "stone_rise", null, null, null, "miasma" };
+        // stones bursting up under the one faced. Gust, Glare and Flung Blade are round 4's (the fourth review): curls only,
+        // a blinding gold flash at each face struck, and a small forged blade flung end over end into the chest.
+        private static readonly string[] Spells = { "flame_wave", null, "gust", null, "riptide", "briar_patch", "stone_rise", "flung_blade", "glare", null, "miasma" };
         private static readonly string[] Strikes = { null, null, "cutting_wind", "frost_bite", null, "grown_into_it", "broken_ground", null, null, "taken", null };
         // The strikes the Blender worker redrew from the owner's swing comments (2026-11-21), growing out of the cut: played
         // in place of the element's earlier strike once built (Clover > Build > Element Looks builds the approved ones).
@@ -120,6 +121,17 @@ namespace Clover.Player.Forms
 
         /// <summary>Metres ahead of its caster the recipe's spell is about (the recipe's origin): an area spell's middle.</summary>
         public const float SpellAhead = 3f;
+
+        /// <summary>
+        /// The spell's look on a body held at its feet (<paramref name="feet"/>, the look's way <paramref name="forward"/>) for
+        /// up to <paramref name="keep"/> seconds, moved with it by <see cref="ElementLooks.MoveHeld"/> and taken off by
+        /// <see cref="ElementLooks.EndHeld"/>: Flung Blade's blade standing in the chest while it stands there. -1 for none.
+        /// </summary>
+        public static int HoldSpellOnBody(int element, Vector3 feet, Vector3 forward, float keep)
+        {
+            string key = SpellKey(element, true);
+            return key != null ? ElementLooks.Held(ElementLooks.Find(key), feet, Yaw(forward), 1f, keep) : -1;
+        }
 
         /// <summary>The spell reaches a body: its look on that body, once while it plays (a cloud's bites do not begin it again).</summary>
         public static void SpellReached(int element, Transform body, Vector3 forward) => OnBody(SpellKey(element, true), body, forward);

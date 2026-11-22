@@ -121,6 +121,8 @@ namespace Clover.Player
             sheen = new MetalSheen();
             glaze = new GlazeIce();
             armour = new StoneArmour();
+            fever = new SurgeSkin(SurgeSkin.Kind.Fever);
+            charge = new SurgeSkin(SurgeSkin.Kind.Charge);
             if (Elements.StartsEmpty(StartsWithNone, RunState.Element)) TakeNone();
             else
             {
@@ -554,7 +556,13 @@ namespace Clover.Player
         private GlazeIce glaze;
         // Bedrock grows earthen armour over the body (plates on its bones, its material closed over in stone).
         private StoneArmour armour;
+        // Fever flushes the skin and Overdrive charges the body (a cyan rim, the hair lifting), each drawn by its material.
+        private SurgeSkin fever, charge;
         private PlayerOutfit outfit;
+
+        /// <summary>How strongly Fever's flush and Overdrive's charge are drawn on the body now, 0 to 1, for probes.</summary>
+        public float FeverLevel => fever != null ? fever.Level : 0f;
+        public float ChargeLevel => charge != null ? charge.Level : 0f;
 
         /// <summary>How far the body is turned to steel now (Temper), 0 to 1, for probes.</summary>
         public float SteelLevel => sheen != null ? sheen.Level : 0f;
@@ -578,6 +586,8 @@ namespace Clover.Player
             sheen?.Clear();
             glaze?.Clear();
             armour?.Clear();
+            fever?.Clear();
+            charge?.Clear();
         }
 
         private void LateUpdate()
@@ -601,6 +611,10 @@ namespace Clover.Player
             glaze?.Tick(surging && SurgeInfo != null && SurgeInfo.Name == Elements.Ice && Forms.ElementArt.Ready, Time.deltaTime, transform.position.y);
             if (outfit != null && armour != null) armour.Watch(outfit.Body, transform);
             armour?.Tick(surging && SurgeInfo != null && SurgeInfo.Name == Elements.Earth && Forms.ElementArt.Ready, Time.deltaTime, transform.position.y);
+            if (outfit != null && fever != null) fever.Watch(outfit.Body);
+            fever?.Tick(surging && SurgeInfo != null && SurgeInfo.Name == Elements.Poison && Forms.ElementArt.Ready, Time.deltaTime, transform.position.y);
+            if (outfit != null && charge != null) charge.Watch(outfit.Body);
+            charge?.Tick(surging && SurgeInfo != null && SurgeInfo.Name == Elements.Lightning && Forms.ElementArt.Ready, Time.deltaTime, transform.position.y);
             if (glow == null) return;
             float resting = surging ? GlowWhenSurging * Forms.SurgeArt.Glow(SurgeInfo) * (0.85f + 0.15f * Mathf.Sin(Time.time * 17f)) : 0f;
             glowLevel = Mathf.MoveTowards(glowLevel, resting, Time.deltaTime * 30f);

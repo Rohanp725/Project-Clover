@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Clover.Player.Forms;
 using UnityEditor;
 using UnityEngine;
 
@@ -198,7 +199,170 @@ namespace Clover.EditorTools
             ["rd_fogcard"] = "m_element_fogcard", ["rd_damp"] = "m_element_fogcard", ["rd_glowgold"] = "m_element_glowcard", ["rd_heatshimmer"] = "m_element_heathaze",
         };
 
-        /// <summary>Pieces of a round-4 element look the player's own body draws, by "tweak name|kit object": Bedrock's plates (StoneArmour).</summary>
-        public static readonly HashSet<string> RdBodyDrawn = new HashSet<string> { "rd_earth_bedrock|vfxrd_plate" };
+        /// <summary>
+        /// Pieces of a round-4 element look not drawn about the player, by "tweak name|kit object": Bedrock's plates, which
+        /// the player's own body grows (StoneArmour), and Hunger's shadow and jaws, drawn round each near enemy's real feet
+        /// (<see cref="HungerJawsKey"/>) rather than where the stand-ins stood.
+        /// </summary>
+        public static readonly HashSet<string> RdBodyDrawn = new HashSet<string>
+        {
+            "rd_earth_bedrock|vfxrd_plate", "rd_dark_hunger|vfxrd_shadow", "rd_dark_hunger|vfxrd_fang",
+        };
+
+        /// <summary>
+        /// The material a round-4 see-through piece is drawn in (<see cref="RdSoftMaterials"/>), made once a build; null for
+        /// any other. The damp is laid over what is behind it, a little denser than the Blender worker's (the honest read:
+        /// "faint at the game camera"); the gold glow is added; the shimmer bends the scene.
+        /// </summary>
+        private static Material RdSoftMaterial(string material)
+        {
+            if (material == null || !RdSoftMaterials.TryGetValue(material, out var name)) return null;
+            bool haze = material == "rd_heatshimmer", added = material == "rd_glowgold";
+            var made = BuildKit.MaterialAt(ElementArtBuilder.Folder, name, haze ? "Clover/HeatHaze" : "Clover/SoftCard");
+            if (!haze)
+            {
+                made.SetFloat("_SrcBlend", added ? (float)UnityEngine.Rendering.BlendMode.One : (float)UnityEngine.Rendering.BlendMode.SrcAlpha);
+                made.SetFloat("_DstBlend", added ? (float)UnityEngine.Rendering.BlendMode.One : (float)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+                made.SetFloat("_Density", added ? 1f : 1.5f);
+                made.SetFloat("_Softness", added ? 0.25f : 0.6f);
+                made.SetFloat("_Breathe", added ? 0.2f : 0.45f);
+            }
+            made.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
+            EditorUtility.SetDirty(made);
+            return made;
+        }
+
+        /// <summary>A card's UVs, -1 to 1 across its two widest ways about its middle: what the soft card and the haze fade by.</summary>
+        private static List<Vector2> CardUVs(Vector3[] vertices)
+        {
+            var uvs = new List<Vector2>(vertices.Length);
+            if (vertices.Length == 0) return uvs;
+            var bounds = new Bounds(vertices[0], Vector3.zero);
+            foreach (var v in vertices) bounds.Encapsulate(v);
+            var size = bounds.size;
+            int thin = size.x <= size.y && size.x <= size.z ? 0 : size.y <= size.z ? 1 : 2;
+            int a = thin == 0 ? 1 : 0, b = thin == 2 ? 1 : 2;
+            // The haze sheet stands up: its rows climb along y.
+            if (thin == 2) (a, b) = (0, 1);
+            foreach (var v in vertices)
+                uvs.Add(new Vector2((v[a] - bounds.center[a]) / Mathf.Max(0.0001f, size[a] * 0.5f), (v[b] - bounds.center[b]) / Mathf.Max(0.0001f, size[b] * 0.5f)));
+            return uvs;
+        }
+
+        /// <summary>Hunger's jaws about one near enemy: the shadow stretched to it and the two rows of fangs round its feet.</summary>
+        public const string HungerJawsKey = "dark_hunger@b";
+        private static readonly HashSet<string> JawPieces = new HashSet<string> { "vfxrd_shadow", "vfxrd_fang" };
+
+        /// <summary>
+        /// Hunger's jaws cut out of its look: the pieces about the recipe's main near enemy (body 0), moved into its frame.
+        /// The recipe draws them about the player, the fangs round each near stand-in's feet and the shadow stretched from
+        /// the player toward it; a fang is the main one's by where it stands, a shadow by the way it stretches. Their names
+        /// carry "@b" so no check takes them for the player's look's pieces.
+        /// </summary>
+        private static void BuildHungerJaws(Lists lists, ElementArtSet elementArt, Material glow)
+        {
+            var look = RedesignFor("dark_hunger");
+            if (look == null) return;
+            var bodies = new List<Vector3>();
+            foreach (Dictionary<string, object> body in (List<object>)look["bodies"]) bodies.Add(Vec(body["position"], Vector3.zero));
+            if (bodies.Count == 0) return;
+            Vector3 player = Vec(((Dictionary<string, object>)look["player"])["position"], Vector3.zero);
+            Vector3 main = bodies[0];
+            var groups = new List<object>();
+            foreach (Dictionary<string, object> group in (List<object>)look["groups"])
+            {
+                if (!JawPieces.Contains(Text(group, "kit_object"))) continue;
+                bool shadow = Text(group, "kit_object") == "vfxrd_shadow";
+                var instances = new List<object>();
+                var motions = new List<object>();
+                var groupInstances = (List<object>)group["instances"];
+                var groupMotions = (List<object>)group["motion"];
+                for (int n = 0; n < groupInstances.Count; n++)
+                {
+                    var instance = (List<object>)groupInstances[n];
+                    Vector3 world = player + Vec(instance[1], Vector3.zero);
+                    int nearest = 0;
+                    float best = float.MinValue;
+                    for (int b = 0; b < bodies.Count; b++)
+                    {
+                        // A shadow lies along its own +x from its back edge at the player: it is the body it points at.
+                        Vector3 to = bodies[b] - world;
+                        to.y = 0f;
+                        float score = shadow ? Vector3.Dot(to.normalized, Quaternion.Euler(Vec(instance[2], Vector3.zero)) * Vector3.right) : -to.magnitude;
+                        if (score > best)
+                        {
+                            best = score;
+                            nearest = b;
+                        }
+                    }
+                    if (nearest != 0) continue;
+                    var copy = new List<object>(instance)
+                    {
+                        [0] = (instance[0] as string ?? "") + "@b",
+                        [1] = ToList(world - main),
+                    };
+                    if (copy.Count > 4) copy[4] = shadow ? "g" : "b";
+                    var motion = new Dictionary<string, object>((Dictionary<string, object>)groupMotions[n]);
+                    motion.Remove("on_player");
+                    motion["body"] = 0.0;
+                    instances.Add(copy);
+                    motions.Add(motion);
+                }
+                if (instances.Count > 0) groups.Add(new Dictionary<string, object>(group) { ["instances"] = instances, ["motion"] = motions });
+            }
+            var jaws = new Dictionary<string, object>(look)
+            {
+                ["groups"] = groups,
+                ["ribbons"] = new List<object>(),
+                ["bodies"] = new List<object> { new Dictionary<string, object> { ["position"] = ToList(Vector3.zero) } },
+                ["player"] = new Dictionary<string, object> { ["position"] = ToList(player - main) },
+            };
+            lists.Flat = true;
+            BuildLook(jaws, RdPrefix + HungerJawsKey, HungerJawsKey, 0, new List<Vector3> { Vector3.zero }, 0f, lists, elementArt, glow);
+        }
+
+        /// <summary>
+        /// Bedrock's plate from round 4 (rdk_plate: an irregular seven-sided slab 15 cm thick, chamfered and domed, a dark
+        /// stone top and deep-brown sides), laid with its thickness up and its base at its origin, each face painted by its
+        /// slot, for StoneArmour to grow on the player's bones. False when the kit has no plate (elements 4's is used).
+        /// </summary>
+        private static bool BakeRdArmourPlate(ElementLookSet set, Lists lists, ElementArtSet elementArt)
+        {
+            if (!TryKitPiece(RdKit, "vfxrd_plate", lists.Kits, out var filter, out bool comboTurn)) return false;
+            var vertices = KitVertices(filter, comboTurn);
+            var bounds = new Bounds(vertices[0], Vector3.zero);
+            foreach (var v in vertices) bounds.Encapsulate(v);
+            // The slab's thinnest way is its thickness: turned to stand up along y.
+            var size = bounds.size;
+            int thin = size.x <= size.y && size.x <= size.z ? 0 : size.y <= size.z ? 1 : 2;
+            var turn = thin == 0 ? Quaternion.Euler(0f, 0f, 90f) : thin == 2 ? Quaternion.Euler(-90f, 0f, 0f) : Quaternion.identity;
+            for (int i = 0; i < vertices.Length; i++) vertices[i] = turn * (vertices[i] - bounds.center);
+            var turned = new Bounds(vertices[0], Vector3.zero);
+            foreach (var v in vertices) turned.Encapsulate(v);
+            var slots = filter.GetComponent<MeshRenderer>() != null ? filter.GetComponent<MeshRenderer>().sharedMaterials : new Material[0];
+            var colours = new Color[vertices.Length];
+            var triangles = new List<int>();
+            var source = filter.sharedMesh;
+            for (int s = 0; s < source.subMeshCount; s++)
+            {
+                var paint = PaintOf(s < slots.Length && slots[s] != null ? slots[s].name : "rd_stone_deep");
+                foreach (int v in source.GetTriangles(s)) colours[v] = new Color(paint.Colour.r, paint.Colour.g, paint.Colour.b, 1f);
+                triangles.AddRange(source.GetTriangles(s));
+            }
+            // Its base at its origin, so it grows out from where it is rooted.
+            for (int i = 0; i < vertices.Length; i++) vertices[i].y -= turned.min.y;
+            var mesh = new Mesh { name = "armour_plate_rd" };
+            mesh.SetVertices(vertices);
+            mesh.SetColors(colours);
+            mesh.SetTriangles(triangles, 0);
+            mesh.RecalculateNormals();
+            mesh.SetUVs(1, ElementArtBuilder.SmoothNormals(vertices, mesh.normals));
+            mesh.RecalculateBounds();
+            AssetDatabase.AddObjectToAsset(mesh, set);
+            set.ArmourPlate = mesh;
+            int ring = ReactionDesigns.RingIndex("earth");
+            set.ArmourMaterial = ring >= 0 && ring < elementArt.Solids.Length ? ReactionSolid(elementArt.Solids[ring]) : null;
+            return true;
+        }
     }
 }

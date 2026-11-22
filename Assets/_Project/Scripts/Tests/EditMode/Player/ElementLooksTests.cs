@@ -86,7 +86,8 @@ namespace Clover.Tests
                 for (int blow = 1; blow <= 3; blow++) Assert.GreaterOrEqual(set.Find(ElementMoves.HitKey(element, blow)), 0, $"{blade}, blow {blow}");
                 Assert.Less(set.FindSheath(element), 0, $"{blade} wears a sheath on the blade");
                 string spell = ElementMoves.SpellKey(element, false), strike = ElementMoves.StrikeKey(element, false);
-                if (spell != null) Assert.GreaterOrEqual(set.Find(spell), 0, spell);
+                // Flung Blade is all on the one it strikes: nothing about its caster.
+                if (spell != null) Assert.IsTrue(set.Find(spell) >= 0 || set.Find(ElementMoves.SpellKey(element, true)) >= 0, spell);
                 if (strike != null) Assert.IsTrue(set.Find(strike) >= 0 || set.Find(ElementMoves.StrikeKey(element, true)) >= 0, strike);
             }
             Assert.GreaterOrEqual(set.Find(ElementMoves.Tailwind), 0, "Tailwind");
@@ -135,7 +136,11 @@ namespace Clover.Tests
                 StringAssert.DoesNotContain("ring", set.Parts[temper.FirstPart + k].Mesh.name, "no rings round the player: the shader draws the front");
             Assert.AreEqual(L.Ice, set.Looks[set.Find("ice_chill")].Shell);
             Assert.AreEqual(L.Rime, set.Looks[set.Find("ice_rime")].Shell);
-            Assert.IsTrue(set.Looks.Where(look => look.Key.StartsWith("water_wellspring") || look.Key.StartsWith("poison_fever") || look.Key.StartsWith("life_regrowth") || look.Key.StartsWith("dark_hunger")).All(look => look.OnPlayer), "the surges are on the player");
+            Assert.IsTrue(set.Looks.Where(look => look.Key.StartsWith("water_wellspring") || look.Key.StartsWith("poison_fever") || look.Key.StartsWith("life_regrowth") || look.Key.StartsWith("dark_hunger")).Where(look => look.Key != ElementLookBuilder.HungerJawsKey).All(look => look.OnPlayer), "the surges are on the player");
+            // Hunger's jaws are round each near enemy's feet (round 4), not on the player.
+            Assert.GreaterOrEqual(set.Find(ElementLookBuilder.HungerJawsKey), 0, "Hunger's jaws");
+            Assert.IsFalse(set.Looks[set.Find(ElementLookBuilder.HungerJawsKey)].OnPlayer, "Hunger's jaws are about an enemy");
+            Assert.AreEqual(Clover.Player.Forms.SurgeArt.HungerJawsKey, ElementLookBuilder.HungerJawsKey);
             Assert.IsTrue(set.Looks.Where(look => look.Key == "lightning_overdrive" || look.Key == "light_clarity" || look.Key == "wind_strike").All(look => look.OnPlayer), "Overdrive, Clarity and the wind strike are the player's");
         }
 

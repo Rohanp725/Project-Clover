@@ -733,6 +733,19 @@ namespace Clover.Player.Forms
             SpellWorks.Marks(run)[0] = xiphos >= 0 ? -1 : FormFx.HoldMark(FormMark.Cross, FormKit.Lit(cast.Colour, 3f));
             run.C = run.Victim != null ? run.Victim.transform.position + Vector3.up * 1.1f : run.A + run.B * Mathf.Min(cast.Reach, 5f) + Vector3.up * 0.3f;
             run.T0 = Mathf.Clamp((run.C - Hand(run)).magnitude / 32f, 0.07f, 0.2f);
+            // Round 4's Flung Blade (approved): the forged blade flies end over end on its arc and sticks point first in the
+            // chest, a dark wound where it went in, drawn by its look and held there while it stands in them; it bites as
+            // it sticks. The xiphos is drawn only once it is called back.
+            run.Look = -1;
+            run.T2 = 0f;
+            if (ElementArt.Ready && run.Victim != null && ElementMoves.HasSpellOnBody(ElementSubstance.Metal))
+            {
+                Vector3 toward = run.Victim.transform.position - cast.Player.transform.position;
+                run.T0 = FlungSticks;
+                run.Look = ElementMoves.HoldSpellOnBody(ElementSubstance.Metal, run.Victim.transform.position, toward, run.T0 + Mathf.Max(0.5f, cast.Spec.Seconds) + 0.5f);
+                // T2 marks a blade that stood in the chest: it tears out from there, never dropped from over the head.
+                if (run.Look >= 0) run.T2 = 1f;
+            }
             TickMetal(ref run);
             return 0;
         }
@@ -753,13 +766,20 @@ namespace Clover.Player.Forms
                 Vector3 over = run.Victim != null ? run.C + Vector3.up * BladeHover : run.C;
                 Vector3 way = (over - hand).normalized;
                 Quaternion flying = Quaternion.Slerp(Quaternion.LookRotation(way), Quaternion.LookRotation(Vector3.down, way), t * t);
-                FormFx.Place(blade, Vector3.Lerp(hand, over, t), Blade(run, flying), Vector3.one * BladeSize(run, 1.5f));
+                if (run.Look >= 0)
+                {
+                    if (alive) ElementLooks.MoveHeld(run.Look, run.Victim.transform.position);
+                    FormFx.Place(blade, hand, Quaternion.identity, Vector3.zero);
+                }
+                else FormFx.Place(blade, Vector3.Lerp(hand, over, t), Blade(run, flying), Vector3.one * BladeSize(run, 1.5f));
                 FormFx.PlaceMarkFacing(sign, run.C, 0.01f);
                 if (t < 1f) return true;
                 run.Phase = 1;
                 run.T1 = run.Age;
                 // It bites as it lands, lightly: the weight of it comes when it is driven in.
                 if (alive) cast.Combat.StrikeOne(run.Victim, cast.Blow(cast.Damage * 0.25f, 0f, 0), run.A);
+                // The look's own sparks spit off it as it sticks.
+                if (run.Look >= 0) return true;
                 if (run.Flag2)
                 {
                     // It rings: the clang, and sparks off it in a forward fan that fork as they go.
@@ -783,7 +803,8 @@ namespace Clover.Player.Forms
                     // It hangs over them point down, bobbing and turning slowly, shivering a moment as it stops.
                     float shiver = Mathf.Sin(stuck * 60f) * 9f * Mathf.Exp(-stuck * 6f);
                     Vector3 over = run.C + Vector3.up * (BladeHover + 0.06f * Mathf.Sin(stuck * 3.2f));
-                    FormFx.Place(blade, over, Blade(run, Quaternion.LookRotation(Vector3.down, way) * Quaternion.Euler(shiver, 0f, stuck * 50f)), Vector3.one * BladeSize(run, 1.9f));
+                    if (run.Look >= 0) ElementLooks.MoveHeld(run.Look, run.Victim.transform.position);
+                    else FormFx.Place(blade, over, Blade(run, Quaternion.LookRotation(Vector3.down, way) * Quaternion.Euler(shiver, 0f, stuck * 50f)), Vector3.one * BladeSize(run, 1.9f));
                     FormFx.PlaceMarkFacing(sign, run.C + Vector3.up * 1.7f, 0.8f * (1f + 0.12f * Mathf.Sin(run.Age * 9f)));
                     if (run.Flag)
                     {
@@ -803,6 +824,9 @@ namespace Clover.Player.Forms
                 }
                 run.Phase = 2;
                 run.T1 = run.Age;
+                // Torn free: the blade standing in them goes as the xiphos flies home.
+                if (run.Look >= 0) ElementLooks.EndHeld(run.Look);
+                run.Look = -1;
                 FormFx.ReleaseMark(sign, 0.1f);
                 SpellWorks.Marks(run)[0] = -1;
                 // Called back: it cuts everything on the line home.
@@ -815,7 +839,7 @@ namespace Clover.Player.Forms
                 return true;
             }
             float sinceCalled = run.Age - run.T1;
-            if (run.Flag && sinceCalled < BladeDrop)
+            if (run.Flag && run.T2 < 0.5f && sinceCalled < BladeDrop)
             {
                 // Driven in: it falls point first from over the head into the body before it tears free.
                 float drop = sinceCalled / BladeDrop;
@@ -825,11 +849,11 @@ namespace Clover.Player.Forms
                     Blade(run, Quaternion.LookRotation(Vector3.down, downWay.sqrMagnitude > 0.01f ? downWay.normalized : run.B)), Vector3.one * BladeSize(run, 1.9f));
                 return true;
             }
-            float back = Mathf.Clamp01((sinceCalled - (run.Flag ? BladeDrop : 0f)) / 0.2f);
+            float back = Mathf.Clamp01((sinceCalled - (run.Flag && run.T2 < 0.5f ? BladeDrop : 0f)) / 0.2f);
             Vector3 to = cast.Player.transform.position + Vector3.up * 1.1f;
             Vector3 flight = to - run.C;
             // End over end all the way home, from the body it was driven into or from over the head it hung over.
-            Vector3 leaves = !run.Flag && run.Victim != null ? run.C + Vector3.up * BladeHover : run.C;
+            Vector3 leaves = !run.Flag && run.Victim != null && run.T2 < 0.5f ? run.C + Vector3.up * BladeHover : run.C;
             FormFx.Place(blade, Vector3.Lerp(leaves, to, back * back), Blade(run, Quaternion.LookRotation(flight.sqrMagnitude > 0.01f ? flight.normalized : run.B) * Quaternion.Euler(run.Age * 1800f, 0f, 0f)), Vector3.one * BladeSize(run, 1.5f));
             if (back < 1f) return true;
             Vfx.Play(VfxKind.GuardSpark, to, Vector3.up, 0.6f);
@@ -844,6 +868,9 @@ namespace Clover.Player.Forms
 
         // Flung Blade hangs this far over the body's middle (about half a metre over the head), and is driven down into it over this long.
         private const float BladeHover = 1.45f, BladeDrop = 0.1f;
+
+        /// <summary>Seconds round 4's flung blade flies before it sticks in the chest (its look's flight, 0.12 to 0.5 s in the recipe).</summary>
+        public const float FlungSticks = 0.38f;
 
         // ---- Light: Glare. A ray from the hand, narrow and straight, with a flare where it starts and on everything it crosses; what it crosses is marked, and the mark is seen.
 
@@ -863,6 +890,18 @@ namespace Clover.Player.Forms
             run.Done = n;
             Vector3 hand = Hand(run);
             Color light = FormKit.Lit(cast.Colour, 3.4f);
+            if (ElementArt.Ready && ElementMoves.HasSpellOnBody(ElementSubstance.Light))
+            {
+                // Round 4 (the owner: "Not really a fan of the ground effects"): nothing on the floor. A hard warm-gold flash
+                // at the raised hand, and a blinding gold flash with short rays at each face it reaches, each reeling back.
+                ElementMoves.PlaySpell(ElementSubstance.Light, run.A, run.B);
+                for (int i = 0; i < n; i++) ElementMoves.SpellReached(ElementSubstance.Light, things[i].transform, run.B);
+                Color warm = Color.Lerp(new Color(1f, 0.72f, 0.3f), cast.Colour, 0.3f);
+                warm.a = 0.12f;
+                ScreenFlash.Flash(warm, 0.07f);
+                run.Done = 0;
+                return hits;
+            }
             if (ElementArt.Ready)
             {
                 // A beam from a glint at the hand, a jali star lattice printed along its footprint, and the shadow of
