@@ -26,10 +26,10 @@ Material:
     m_Ints: []
     m_Floats:
     - _Breathe: 0.45
-    - _Density: 2.2
+    - _Density: 2.6
     - _Drift: 0.25
     - _DstBlend: 10
-    - _Softness: 0.6
+    - _Softness: 0.15
     - _SrcBlend: 5
     m_Colors: []
   m_BuildTextureStacks: []

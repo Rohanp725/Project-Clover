@@ -223,8 +223,8 @@ namespace Clover.EditorTools
             {
                 made.SetFloat("_SrcBlend", added ? (float)UnityEngine.Rendering.BlendMode.One : (float)UnityEngine.Rendering.BlendMode.SrcAlpha);
                 made.SetFloat("_DstBlend", added ? (float)UnityEngine.Rendering.BlendMode.One : (float)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-                made.SetFloat("_Density", added ? 1f : 2.2f);
-                made.SetFloat("_Softness", added ? 0.25f : 0.6f);
+                made.SetFloat("_Density", added ? 1f : 2.6f);
+                made.SetFloat("_Softness", added ? 0.25f : 0.15f);
                 made.SetFloat("_Breathe", added ? 0.2f : 0.45f);
             }
             made.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
@@ -247,6 +247,36 @@ namespace Clover.EditorTools
             foreach (var v in vertices)
                 uvs.Add(new Vector2((v[a] - bounds.center[a]) / Mathf.Max(0.0001f, size[a] * 0.5f), (v[b] - bounds.center[b]) / Mathf.Max(0.0001f, size[b] * 0.5f)));
             return uvs;
+        }
+
+        /// <summary>
+        /// Round-4 parts on a body drawn this far toward the game camera, by "tweak name|material" (<see cref="RibbonFacing"/>):
+        /// Static's crawling arcs and Marked's brand, its smoke and motes sat inside a castle soldier's armour at the slim
+        /// stand-in's girth (the day stills of 2026-11-22: a cyan speck at the feet, no brand at all).
+        /// </summary>
+        public static readonly Dictionary<string, float> RdFacing = new Dictionary<string, float>
+        {
+            ["rd_lightning_static|rd_bolt_cyan"] = 0.35f, ["rd_lightning_static|rd_bolt_violet"] = 0.35f,
+            ["rd_light_marked|rd_sigil_gold"] = 0.4f, ["rd_light_marked|rd_brand_hot"] = 0.4f,
+            ["rd_light_marked|r4_smoke_soft"] = 0.35f, ["rd_light_marked|e3_gold_mote"] = 0.35f,
+        };
+
+        /// <summary>Flat round-4 pieces turned to face the recipe's camera, by "tweak name|kit object": Marked's brand on the chest.</summary>
+        public static readonly HashSet<string> CameraFacedPieces = new HashSet<string> { "rd_light_marked|vfxrd_sigil" };
+
+        /// <summary>
+        /// The turn that lays a flat kit piece (its face up its own y once baked) square to the recipe's game camera: from the main body
+        /// toward the recipe's player (the camera's side), 55 degrees up.
+        /// </summary>
+        private static Quaternion FacingTheCamera(Dictionary<string, object> look, List<Vector3> bodyAt)
+        {
+            Vector3 player = look.TryGetValue("player", out var value) && value is Dictionary<string, object> p ? Vec(p["position"], Vector3.zero) : new Vector3(1.93f, 0f, 2.3f);
+            Vector3 toward = player - (bodyAt.Count > 0 ? bodyAt[0] : Vector3.zero);
+            toward.y = 0f;
+            toward = toward.sqrMagnitude > 0.0001f ? toward.normalized : Vector3.back;
+            Vector3 normal = toward * Mathf.Cos(55f * Mathf.Deg2Rad) + Vector3.up * Mathf.Sin(55f * Mathf.Deg2Rad);
+            // The baked piece lies flat in its own x and z, its face up its y.
+            return Quaternion.FromToRotation(Vector3.up, normal);
         }
 
         /// <summary>Hunger's jaws about one near enemy: the shadow stretched to it and the two rows of fangs round its feet.</summary>

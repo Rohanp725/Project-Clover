@@ -92,7 +92,12 @@ namespace Clover.EditorTools
         /// back with its point out of the chest toward the camera (the owner, 2026-11-20). Kept as the recipe stood, its
         /// hilt was toward the camera and the dagger read as stuck in the front.
         /// </summary>
-        public static readonly HashSet<string> CameraFacing = new HashSet<string> { "metal_sundered" };
+        public static readonly HashSet<string> CameraFacing = new HashSet<string>
+        {
+            "metal_sundered",
+            // Round 4: Marked's brand on the chest and Static's arcs on the side the recipe's camera saw.
+            "light_marked", "lightning_static",
+        };
 
         private static List<Dictionary<string, object>> RecipeLooks(string path)
         {

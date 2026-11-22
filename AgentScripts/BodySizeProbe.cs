@@ -88,6 +88,9 @@ public class BodySizeProbeRunner : MonoBehaviour
         new Effect { Name = "r4_flung_blade", How = How.Strike, Slug = "e3_flung_blade@b", Moments = new[] { 0.7f } },
         new Effect { Name = "r4_glare", How = How.Strike, Slug = "e3_glare@b", Moments = new[] { 0.2f } },
         new Effect { Name = "r4_hunger_jaws", How = How.Strike, Slug = "dark_hunger@b", Moments = new[] { 0.8f } },
+        // Marked's and Static's looks played straight on the bodies, beside the afflictions laid (r4_marked, r4_static).
+        new Effect { Name = "r4_marked_look", How = How.Strike, Slug = "light_marked", Moments = new[] { 0.8f } },
+        new Effect { Name = "r4_static_look", How = How.Strike, Slug = "lightning_static", Moments = new[] { 0.9f } },
     };
 
     private const string Folder = "review/shots/current/size";

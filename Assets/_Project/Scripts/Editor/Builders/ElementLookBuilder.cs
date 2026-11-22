@@ -676,6 +676,8 @@ namespace Clover.EditorTools
             ["ice_chill|m_vfx_ice_fog"] = new ReactionArtBuilder.Paint(0.35f, 0.55f, 0.85f, 0.3f, 1f, true),
             // Winter Seed's and Supercooled's frost rosette on the floor: a see-through mid blue (it lay as a pale 5 m star).
             ["winter_seed|r4_frost_bed"] = new ReactionArtBuilder.Paint(0.12f, 0.36f, 0.8f, 0.45f, 1f, true),
+            // Round 4's Winter Seed keeps the frost bed see-through blue, never a pale near-white disc.
+            ["rd_winter_seed|r4_frost_bed"] = new ReactionArtBuilder.Paint(0.12f, 0.36f, 0.8f, 0.45f, 1f, true),
             ["supercooled|r4_frost_bed"] = new ReactionArtBuilder.Paint(0.12f, 0.36f, 0.8f, 0.45f, 1f, true),
             // Frost Heave's frost flower and Mock Suns' frosted sun-wheel lay as a pale near-white star 3 m across in
             // their films (2026-11-20): the same see-through mid blue.
@@ -885,6 +887,8 @@ namespace Clover.EditorTools
             ["wind_strike|m3_wind_ribbon"] = 1.2f,
             ["wind_strike|m3_wind_comb"] = 2f,
             ["lightning_static|m3_bolt"] = 1.3f,
+            // Round 4's crawling arcs on a castle soldier: half again as thick, so a crawl reads round the armour.
+            ["rd_lightning_static|rd_bolt_cyan"] = 1.5f, ["rd_lightning_static|rd_bolt_violet"] = 1.5f,
             ["lightning_overdrive|m3_bolt"] = 1.3f,
             // The brazier's crackling ball: its arcs thicker, so the storm reads at the game camera (notes.md: "the arcs ...
             // are thin at 12 m").
@@ -1455,6 +1459,8 @@ namespace Clover.EditorTools
                     Vector3 position = Vec(instance[1], Vector3.zero);
                     Vector3 turned = Vec(instance[2], Vector3.zero);
                     string pieceName = instance[0] as string ?? "";
+                    // Round 4's flat brand faces the camera the recipe's was drawn for, wherever its own turn left it.
+                    if (CameraFacedPieces.Contains(slug + "|" + kitObject)) turned = FacingTheCamera(look, bodyAt).eulerAngles;
                     if (LeftOut.Contains(slug + "|" + kitObject) || LeftOutByName(slug, pieceName)) continue;
                     if (E4BodyDrawn.Contains(slug + "|" + kitObject) || RdBodyDrawn.Contains(slug + "|" + kitObject)) continue;
                     // Glaze's ice, Bedrock's stone skin and Fever's flush are the player's own material (GlazeIce, StoneArmour, FeverFlush).
@@ -1556,7 +1562,7 @@ namespace Clover.EditorTools
                         RunsOn = held && TurningWords.Any(word => verb.Contains(word)),
                         Redraw = motion.ContainsKey("redraw") || verb.StartsWith("flicker ("),
                         Position = position, Rotation = rotation, Scale = scale, Show = show, Hide = hide,
-                        Facing = RibbonFacing.TryGetValue(slug + "|" + Text(group, "material"), out float pieceFacing) ? pieceFacing : 0f,
+                        Facing = RibbonFacing.TryGetValue(slug + "|" + Text(group, "material"), out float pieceFacing) || RdFacing.TryGetValue(slug + "|" + Text(group, "material"), out pieceFacing) ? pieceFacing : 0f,
                     };
                     part.PathFirst = lists.Keys.Count;
                     part.PathCount = AddKeys(motion, "path", lists.Keys, false, shift);
@@ -1621,7 +1627,9 @@ namespace Clover.EditorTools
                     if (material == "m3_wind_ribbon" && note.Contains("comes in from the blow")) material = "e3_wind";
                     var points = new List<Vector3>();
                     foreach (var point in (List<object>)ribbon["points"]) points.Add(Vec(point, Vector3.zero));
-                    if (lists.Reactions) Reshape(ribbonKey, points);
+                    // A round-4 look's ribbons round a body are laid out round a castle soldier too (Static's crawling arcs
+                    // were inside the armour at the slim stand-in's girth).
+                    if (lists.Reactions || look.ContainsKey("round") && centre != "player") Reshape(ribbonKey, points);
                     if (RibbonLifts.TryGetValue(slug, out var stretch) && points.Count > 1)
                     {
                         float low = float.MaxValue, high = float.MinValue;
@@ -1662,7 +1670,7 @@ namespace Clover.EditorTools
                         Position = ribbon.TryGetValue("offset", out var offset) ? Vec(offset, Vector3.zero) : Vector3.zero,
                         Rotation = Quaternion.identity, Scale = Vector3.one, Show = show, Hide = hide,
                         InkColour = inkColour, InkWidth = inkWidth, Thin = thin,
-                        Facing = RibbonFacing.TryGetValue(ribbonKey, out float facing) ? facing : 0f,
+                        Facing = RibbonFacing.TryGetValue(ribbonKey, out float facing) || RdFacing.TryGetValue(ribbonKey, out facing) ? facing : 0f,
                     };
                     part.PathFirst = lists.Keys.Count;
                     part.PathCount = AddKeys(motion, "path", lists.Keys, false, shift);
@@ -2339,6 +2347,14 @@ namespace Clover.EditorTools
             mesh.SetColors(colours);
             mesh.SetTriangles(triangles, 0);
             if (soft != null) mesh.SetUVs(0, CardUVs(vertices));
+            // A round-4 flat solid (Marked's brand, the tear and its edges, the leaf) is seen from both sides, as the
+            // Blender worker's render drew it, whichever way the kit's axis turn left its face.
+            if (RdNoAliases && soft == null && kind == ElementLookSet.Solid && bounds.size.x * bounds.size.y * bounds.size.z < 1e-6f)
+            {
+                int count = triangles.Count;
+                for (int i = 0; i < count; i += 3) triangles.AddRange(new[] { triangles[i], triangles[i + 2], triangles[i + 1] });
+                mesh.SetTriangles(triangles, 0);
+            }
             mesh.SetUVs(1, ElementArtBuilder.SmoothNormals(vertices, normals));
             mesh.RecalculateBounds();
             AssetDatabase.AddObjectToAsset(mesh, into);
