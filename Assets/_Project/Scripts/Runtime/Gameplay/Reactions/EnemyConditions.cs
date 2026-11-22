@@ -234,6 +234,7 @@ namespace Clover.Gameplay
             run.BlowLimit = Math.Max(0, spec.Blows);
             run.Is = spec.Is;
             run.WhileIn = spec.WhileIn;
+            run.CriticalOnly = spec.CriticalOnly;
             Recount();
             if (fresh) Tell(ConditionMoment.Began, in run, 0f, false, false);
             return slot;
@@ -306,6 +307,8 @@ namespace Clover.Gameplay
             {
                 if (!runs[i].Active) continue;
                 ref var run = ref runs[i];
+                // One that hears only critical blows lets every other blow pass as if it were not there (Kindling Point's shapes).
+                if (run.CriticalOnly && (spell || !critical)) continue;
                 if (!spell) run.Blows++;
                 if (run.AnswersStruck) Tell(ConditionMoment.Struck, in run, damage, heavy, spell, shattered, critical, finisher && !spell);
                 if (!SpentBy(in run, heavy, spell, finisher)) continue;

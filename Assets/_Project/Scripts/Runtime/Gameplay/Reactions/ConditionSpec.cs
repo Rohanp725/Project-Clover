@@ -66,5 +66,10 @@ namespace Clover.Gameplay
         public string Is = "";
         /// <summary>It lasts only while the enemy is in this condition (by name or by what it is): once that ends, so does this, and its end is told.</summary>
         public string WhileIn = "";
+        /// <summary>
+        /// Only critical weapon blows count toward it, are answered, and spend it; any other blow passes as if it were not
+        /// there (Kindling Point's shapes count only critical blows; Shining Herb's leaf is picked only by one).
+        /// </summary>
+        public bool CriticalOnly;
     }
 }

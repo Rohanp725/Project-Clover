@@ -20,14 +20,16 @@ namespace Clover.Player.Trees.Duo
         /// <summary>The conditions the two shapes set: the herb on the enemy, and the seed of light waiting for a blow.</summary>
         public const string BitterLeaf = "shiningherb.bitter";
         public const string SeedOfLight = "shiningherb.seedoflight";
+        /// <summary>Bitter Leaf's opening after the picking: the next weapon blow is critical.</summary>
+        public const string Picked = "shiningherb.picked";
         private const string Reaction = "react.shiningherb";
 
         public static void Add(List<Upgrade> to)
         {
             const string A = Elements.Life, B = Elements.Light;
 
-            // NEEDS: a blow answered only when it is critical (now the next weapon blow), and the next weapon blow made
-            // critical after the picking (blow-made-critical).
+            // The leaf is picked and the seed burst only by a critical blow (ConditionSpec.CriticalOnly); after the picking
+            // the next weapon blow on it is critical (ConditionFlags.TakesCritical).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Shining Herb: Bitter Leaf or Seed of Light", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -37,22 +39,24 @@ namespace Clover.Player.Trees.Duo
                     new ShapeDef
                     {
                         Name = "Bitter Leaf",
-                        Description = "The herb grows on the enemy, not on the floor, for 6 s: your next weapon blow on it picks it, and you heal 8.",
+                        Description = "The herb grows on the enemy, not on the floor, for 6 s: your next critical blow on it picks it: you heal 8, and your next blow on it is critical.",
                         Effects = new[]
                         {
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = BitterLeaf, Seconds = 6f, EndsWith = ConditionBlow.Weapon } },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = BitterLeaf, By = StruckBy.Weapon, Do = UpgradeAction.Heal, Amount = 8f },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = BitterLeaf, Seconds = 6f, EndsWith = ConditionBlow.Weapon, CriticalOnly = true } },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = BitterLeaf, By = StruckBy.Critical, Do = UpgradeAction.Heal, Amount = 8f },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = BitterLeaf, By = StruckBy.Critical, Do = UpgradeAction.Condition,
+                                State = new ConditionSpec { Id = Picked, Seconds = 4f, Flags = ConditionFlags.TakesCritical, EndsWith = ConditionBlow.Weapon } },
                         },
                     },
                     new ShapeDef
                     {
                         Name = "Seed of Light",
-                        Description = "No herb: for 6 s the seed waits, and your next weapon blow on it bursts it as a flare that Marks and Seeds every enemy within 4 m.",
+                        Description = "No herb: for 6 s the seed waits, and your next critical blow on it bursts it as a flare that Marks and Seeds every enemy within 4 m.",
                         Effects = new[]
                         {
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = SeedOfLight, Seconds = 6f, EndsWith = ConditionBlow.Weapon } },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = SeedOfLight, By = StruckBy.Weapon, Do = UpgradeAction.Afflict, Radius = 4f, Affliction = AfflictionKind.Marked, Stacks = 1 },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = SeedOfLight, By = StruckBy.Weapon, Do = UpgradeAction.Afflict, Radius = 4f, Affliction = AfflictionKind.Seeded, Stacks = 1 },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = SeedOfLight, Seconds = 6f, EndsWith = ConditionBlow.Weapon, CriticalOnly = true } },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = SeedOfLight, By = StruckBy.Critical, Do = UpgradeAction.Afflict, Radius = 4f, Affliction = AfflictionKind.Marked, Stacks = 1 },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = SeedOfLight, By = StruckBy.Critical, Do = UpgradeAction.Afflict, Radius = 4f, Affliction = AfflictionKind.Seeded, Stacks = 1 },
                         },
                     },
                 },

@@ -169,6 +169,39 @@ namespace Clover.Tests
             Assert.IsFalse(core.NeedsFull, "asks for frozen, not a full Chill");
         }
 
+        [Test]
+        public void ACriticalOnlyConditionLetsEveryOtherBlowPass()
+        {
+            var heard = new List<ConditionNews>();
+            var enemy = NewEnemy(heard);
+            enemy.Conditions.Set(new ConditionSpec { Id = "test.leaf", Seconds = 6f, EndsWith = ConditionBlow.Weapon, Blows = 3, CriticalOnly = true }, null, 1, null, true);
+            enemy.Conditions.Struck(10f, false, false);
+            enemy.Conditions.Struck(10f, true, true, false, true);
+            Assert.IsTrue(enemy.Conditions.Holds("test.leaf"), "a plain blow and a spell pass it by");
+            Assert.AreEqual(0, heard.Count(news => news.Moment == ConditionMoment.Struck));
+            enemy.Conditions.Struck(10f, false, false, false, true);
+            Assert.AreEqual(1, heard.Count(news => news.Moment == ConditionMoment.Struck && news.Critical && news.Blows == 1), "the critical is counted and told");
+            Assert.IsFalse(enemy.Conditions.Holds("test.leaf"), "and it spends it");
+        }
+
+        [Test]
+        public void TheMarksThatMakeABlowCriticalSayHow()
+        {
+            var mirror = Upgrade.ById(HaloTree.Shape).Shapes.First(shape => shape.Name == "Burning Mirror").Effects;
+            Assert.IsTrue(mirror.Any(effect => effect.State != null && (effect.State.Flags & ConditionFlags.TakesCritical) != 0), "the white-hot point makes the blow critical");
+            Assert.IsFalse(mirror.Any(effect => effect.Do == UpgradeAction.Burst), "no stand-in burst of 10");
+            var kindling = Upgrade.ById(KindlingPointDuo.Shape).Shapes.SelectMany(shape => shape.Effects).Where(effect => effect.Do == UpgradeAction.Condition && effect.On == UpgradeTrigger.Reacted).ToList();
+            Assert.AreEqual(2, kindling.Count(effect => effect.State.Blows == 3 && effect.State.CriticalOnly), "both shapes count criticals alone");
+            var hands = EffectsOf(KindlingPointDuo.HandsOfTheSun);
+            var hand = hands.Single(effect => effect.Do == UpgradeAction.Condition).State;
+            Assert.IsTrue((hand.Flags & ConditionFlags.TakesCritical) != 0);
+            Assert.AreEqual(ConditionBlow.Weapon, hand.EndsWith, "it lets go at the first blow");
+            Assert.IsTrue(hands.Any(effect => effect.On == UpgradeTrigger.ConditionStruck && effect.Condition == KindlingPointDuo.Hand && effect.Stacks == 2));
+            var herb = Upgrade.ById(ShiningHerbDuo.Shape).Shapes.SelectMany(shape => shape.Effects).ToList();
+            Assert.IsTrue(herb.Where(effect => effect.On == UpgradeTrigger.Reacted && effect.State != null).All(effect => effect.State.CriticalOnly), "picked or burst by a critical alone");
+            Assert.IsTrue(herb.Any(effect => effect.State != null && effect.State.Id == ShiningHerbDuo.Picked && (effect.State.Flags & ConditionFlags.TakesCritical) != 0), "the next blow after the picking");
+        }
+
         private sealed class Afflicted : IAfflictable
         {
             public AfflictionSet Afflictions { get; } = new AfflictionSet { Reactions = new ReactionEngine((who, pair, laid) => { }, () => 0) };

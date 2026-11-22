@@ -9,13 +9,11 @@ are both carried.
 
 **When it happens.** Every time Shining Herb goes off while you carry both Life and Light. Shining Herb goes off when a Mark lands on a seeded enemy, or when Seeded lands on a Marked one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Shining Herb.
 
-**The numbers.** Mix, 3 Shards. Bitter Leaf: for 6 seconds, your next weapon blow on the enemy heals you 8. Seed of Light: for 6 seconds, your next weapon blow on the enemy Marks and Seeds everything within 4 metres. After Shining Herb goes off on an enemy, it can't go off on that enemy again for 6 seconds.
+**The numbers.** Mix, 3 Shards. Bitter Leaf: for 6 seconds, your next critical hit on the enemy picks the herb. It heals you 8, and your next blow on that enemy within 4 seconds is a critical hit too. Seed of Light: for 6 seconds, your next critical hit on the enemy Marks and Seeds everything within 4 metres. Blows that aren't critical leave the herb and the seed alone. After Shining Herb goes off on an enemy, it can't go off on that enemy again for 6 seconds.
 
 **Works with.** Briar Patch and Glare to set it up, Sixth Moon, Open to the Sun, Turned to the Sun.
 
 **Example.** A long one-on-one fight: Bitter Leaf heals you as you fight. A pack: Seed of Light spreads both afflictions through it.
-
-**Not built yet.** For now, any weapon blow picks or bursts it, not only a critical hit. The next blow after picking the herb isn't a critical hit yet.
 
 ## shiningherb.sixthmoon
 **What it does.** The blow that ends a chain of blows on a Seeded enemy Marks it.

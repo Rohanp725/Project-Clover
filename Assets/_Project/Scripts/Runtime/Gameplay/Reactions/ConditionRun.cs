@@ -49,5 +49,7 @@ namespace Clover.Gameplay
         /// <summary>What it is beyond its own name (<see cref="ConditionSpec.Is"/>), and the condition it lasts only while (<see cref="ConditionSpec.WhileIn"/>).</summary>
         public string Is;
         public string WhileIn;
+        /// <summary>Only critical weapon blows are counted, told and spend it (<see cref="ConditionSpec.CriticalOnly"/>).</summary>
+        public bool CriticalOnly;
     }
 }

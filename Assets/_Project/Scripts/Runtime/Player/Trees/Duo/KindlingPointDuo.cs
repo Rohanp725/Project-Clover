@@ -21,12 +21,14 @@ namespace Clover.Player.Trees.Duo
         public const string Glass = "kindlingpoint.glass";
         public const string Lens = "kindlingpoint.lens";
         public const string Hungry = "kindlingpoint.hungry";
+        /// <summary>Hands of the Sun's grip, let go at the first weapon blow.</summary>
+        public const string Hand = "kindlingpoint.hand";
 
         public static void Add(List<Upgrade> to)
         {
             const string A = Elements.Light, B = Elements.Fire;
 
-            // NEEDS: blows counted only when critical (now each weapon blow, as the plain reaction).
+            // The shapes count only critical blows (ConditionSpec.CriticalOnly): any other blow passes the point by.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Kindling Point: Burning Glass or The Fire Is Hungry", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -98,29 +100,32 @@ namespace Clover.Player.Trees.Duo
 
             // The duo spell, bought with Shards once both are carried (no god gives it): an opener on a 12 s cooldown (SpellTimings). The bolt form reaches four enemies; each
             // is Marked (the branch's first element), burned two deep and held, so each carries a Kindling Point.
-            // NEEDS: the four rays from one sun, and the hand letting go at your first blow, that blow critical and deepening
-            // the Burn by two.
+            // The hand lets go at your first weapon blow on what it grips: that blow is critical (ConditionFlags.TakesCritical)
+            // and deepens the Burn by two. NEEDS: the four rays from one sun (form-pieces; now the bolt form's own reach).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = HandsOfTheSun, Name = "Hands of the Sun", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Role = SpellRole.Opener, Requires = new[] { TheSunPoints, NoonGuard }, Icon = UpgradeIcons.Fist,
-                Description = "A burning sun rises over you for a breath, and long rays reach down to the four nearest enemies. Each ray ends in a hand of flame that grips: held, burned two deep and Marked.",
+                Description = "A burning sun rises over you for a breath, and long rays reach down to the four nearest enemies. Each ray ends in a hand of flame that grips: held, burned two deep and Marked. The hand lets go at your first blow, which is critical and burns two deeper.",
                 Form = SpellForms.Bolt,
                 Spell = new SpellSpec { Reach = 9f, Count = 3, Radius = 9f, Damage = 6f, Stagger = 10f, Stacks = 1 },
                 Effects = new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Burn, Stacks = 2 },
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Hold, Seconds = 1f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Condition,
+                        State = new ConditionSpec { Id = Hand, Seconds = 4f, Flags = ConditionFlags.TakesCritical, EndsWith = ConditionBlow.Weapon } },
+                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Hand, By = StruckBy.Weapon, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Burn, Stacks = 2 },
                 },
             }, HeartPattern.Spell));
         }
 
-        // The burning point as the plain Kindling Point's: for the Mark's three blows (8 s at most) each weapon blow deepens
+        // The burning point as the plain Kindling Point's: for the Mark's three critical blows (8 s at most) each deepens
         // its Burn, and the third spends it, counting it for the shape's own burst. Then the shape's own answers.
         private static UpgradeEffect[] Point(string id, UpgradeEffect[] more)
         {
             var effects = new List<UpgradeEffect>
             {
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = id, Seconds = 8f, Blows = 3 } },
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = id, Seconds = 8f, Blows = 3, CriticalOnly = true } },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = id, By = StruckBy.Weapon, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Burn, Stacks = 1 },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = id, By = StruckBy.Weapon, AtCount = 3, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Burn },
             };
