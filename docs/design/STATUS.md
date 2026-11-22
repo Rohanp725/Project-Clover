@@ -100,3 +100,68 @@ The tracks run side by side. One Unity worker and one Blender worker at a time; 
 - SLAM: Great Hammer.
 - LASH: Chain Sickle.
 - SHOT: Great Bow.
+
+## The full timeline (2026-11-22)
+
+The day counts are estimates at the current pace: days with the owner answering, nights spent filming. Stages A and B run side by side; C, D and E follow in order. Tick items off in the run plan above as they land.
+
+**Stage A: finish the effects (about 3 days).**
+- **Unity:**
+  - filming rig v2;
+  - the round-4 Unity fixes (about 25), plus the finish-mark star and the tinted cut line;
+  - building the strike shapes: spin, thrust, dash, lash, shot;
+  - building the round-4 Blender redesigns as they're approved.
+- **Blender:** SHOT, the Dark hand fix, then the 26 round-4 redesigns (strips to the owner in batches).
+- **Nights:**
+  - the Way pieces and hammer slam films;
+  - re-filming every reaction on rig v2;
+  - every weapon's strike for all 11 elements;
+  - the round-4 looks;
+  - swapping it all into the docs.
+- **Mornings:** the owner reviews, and a small round 5 mops up what's left.
+
+**Stage B: clear the stand-ins (about 6 to 9 days, alongside A and C).** 524 NEEDS lines now; the plan is `steel/standin_clearance_plan.md`.
+- **Code-only passes, offline, then merged in Unity (about 3 to 4 days):**
+  - the rest of 2 and 3;
+  - 4, combat moments, including elites and gods laying their afflictions on the player;
+  - 5, shape and Empower order;
+  - 6, presses and cast windows;
+  - 7, player rules and the blade;
+  - 9, enemy states;
+  - 10, the player's own things;
+  - 13, duo surges in the surge slot.
+- **Passes that need art (about 3 to 5 days, Blender-heavy):**
+  - 8, ground that keeps acting (looks);
+  - 11, standing things and thrown pieces (5 props);
+  - 12, spell forms (the cobra, serpent and totem as models, the rest as effects);
+  - 14, looks (folded into the effects rounds);
+  - hands with finger bones and a grip pose (`hands-grip`);
+  - the new animation clips (`way-clips`: 27 Katana clips plus the others).
+- **Pass 15:** stand-ins that wait on a later phase, rechecked as each phase lands.
+- **Target:** NEEDS goes to zero, except stand-ins that truly wait on an unbuilt phase, each ledgered.
+
+**Stage C: finish the Way (about 2 weeks).**
+- **The Katana's Way, done and approved first:**
+  - the owner plays it;
+  - Blender makes its 27 new clips;
+  - the remaining looks (the answer window's weapon highlight, the scabbard drums, Chiburi's drops and the others);
+  - the Loadout screen's editor step;
+  - 5.5, the Way chart.
+- **5.7, the other nine Ways,** one at a time, each with the same routine: a spec, then questions, then the build, then the clips, then a detail check before the owner sees it.
+
+**Stage D: freeze new combat; finish the Fire land as a slice (about 1 to 2 weeks).**
+- the levels walked and signed off;
+- the Khepharu relook (the audit and the Blender sun, scarab, falcon and paving are ready);
+- the enemies played;
+- basic sound;
+- the Water enemies' outfits and the ronin_gen verdict as they come up.
+
+**Stage E: the lands, one at a time, Water first (about 1 to 2 weeks each).**
+- Each land: its levels, its enemies with real mechanics, its boss, its effects, and the walk-through.
+
+**Later:**
+- Phase 6: Bond, pair strikes, Heresies, Evolutions.
+- Track L: the save, Take/Consume, the death rule, the hub armoury.
+- The friend doc's owed sections.
+- GUIDE section 7's tables in plain words.
+- Sound beyond the basics.
