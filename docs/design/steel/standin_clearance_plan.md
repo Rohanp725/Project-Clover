@@ -447,3 +447,14 @@ default.
    arrives.
 
    **Default kept (2026-11-21).**
+6. **Plasma's Flashover on an enemy with no Static** (pass 3, forced-alone). Flashover's burst is a discharge of
+   Static, so forced on a burning enemy that carries none it would strike nothing.
+
+   **Decided 2026-11-22:** the forced Flashover lays one Static on the enemy just before, so the discharge always fires.
+7. **What the afflictions laid on the player do** (pass 4, afflictions-on-player, after question 1).
+
+   **Decided 2026-11-22:** their full effects plus a HUD mark. Each affliction on the player does its own thing,
+   mirroring the enemies where it makes sense for a player: Chill slows, Burn burns, Soaked makes you slower to dodge,
+   and so on. Each shows as a small icon with a timer by the health bar, with a light look on the body. The rules and the
+   HUD component are built offline with tests; the body look stays a stand-in in the ledger's `looks` row until a look
+   pass.
