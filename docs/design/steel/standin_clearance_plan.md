@@ -472,3 +472,22 @@ default.
     standard, as built.
 
     **Confirmed 2026-11-22.** Their row is closed.
+11. **What The Tide Turns' line of wet sand does** (pass 8, ground-states). The ebb leaves a line of wet sand; nothing says
+    what it does to what stands on it.
+    - a) It Soaks what stands on it each second for 3 s and slows it 15%, like your other water.
+    - b) It Soaks only.
+    - c) It is only a look.
+
+    **Recommended: a.** It reads as water, so it acts as your water does.
+12. **Which way Sweep of Wings throws** (pass 12a). The wave form strikes all at once, so the sweep has no direction of its own.
+    - a) Every enemy struck is thrown to your left, as if the wing swept from your right (built so).
+    - b) Each is thrown outward from your line, to the side it stood on.
+    - c) The way you turned as you cast.
+
+    **Recommended: a.** One clear way reads as one sweep.
+13. **Rip Current's "no dodging against the current"** (pass 8, no-dodge-or-leap).
+    - a) While in the foam an enemy cannot leap, lunge or step back at all (the built Mired rule).
+    - b) Only a dodge against the current is forbidden (a new rule).
+    - c) Drop it.
+
+    **Recommended: a.** The rule exists and the foam is only 6 s.
