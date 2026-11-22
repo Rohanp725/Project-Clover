@@ -206,15 +206,15 @@ the steel you throw and plant: Flung Blade, the blades of Grave of Swords.
 **Example.** A god's red sweep comes. Raise the circle, block it, and raise it again for the next one.
 
 ## metal.edgeguard
-**What it does.** The perfect guard timing window is 50% longer, and every perfect guard cuts the attacker and notches its armour. The cost: dodging and every blow blocked with a normal guard cost 50% more stamina.
+**What it does.** Your guard is all edge. Held, it blocks nothing: only a perfect guard turns a blow. In return, the perfect guard timing window is 50% longer, you can press guard again sooner, and every perfect guard cuts the attacker and notches its armour.
 
-**When it happens.** Always on once you learn it. The cut comes with every perfect guard. The cost comes with every dodge and every blocked blow.
+**When it happens.** Always on once you learn it. The cut comes with every perfect guard.
 
-**The numbers.** 6 Shards. The perfect timing window grows by 55%, from 0.18 seconds to about 0.28. Each perfect guard hits everything within 1.2 metres of the attacker for 12 damage, 10 stagger and one notch of Sundered. A dodge costs 37.5 stamina instead of 25. A blocked blow costs 1.35 stamina per point of damage instead of 0.9. For now, holding your guard still blocks like normal.
+**The numbers.** 6 Shards. The perfect timing window grows by 55%, from 0.18 seconds to about 0.28. Each perfect guard hits everything within 1.2 metres of the attacker for 12 damage, 10 stagger and one notch of Sundered. A held guard lets every blow through (and costs no stamina). You can press guard again 0.2 seconds after the last press and still get a perfect window, instead of 0.4.
 
 **Works with.** Circle of Steel, which it comes after on the chart, Sunder (two notches from one guard), Forged Answer, Open Line, Master's Answer, every Master mark that works on a perfect guard, Hanging Swords, and Bright Steel and Halo of Blades on the Halo branch.
 
-**Not built yet.** Only the perfect guard should block a blow (for now, holding your guard still blocks), and you should have to press guard again after 0.2 seconds.
+**Not built yet.** The cut doesn't yet count as a blow landed (its mana and the time it takes off your waits).
 
 **Example.** Fight a fast duellist with just the guard button. Each of its blows you meet at the right moment is blocked, cut and notched.
 

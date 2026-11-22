@@ -251,16 +251,14 @@ namespace Clover.Player.Trees
                 },
                 "Turn a red attack, and 15 mana comes back to you and Circle of Steel is ready again at once.");
 
-            // BESPOKE: a held guard blocks nothing; the perfect window is 0.28 s and may be pressed again after 0.2 s; each perfect guard deals a light blow to the attacker
-            // and counts as a blow landed. Until then: the longer window, a dearer plain guard, and a cut on the attacker with each perfect guard. It grows from
-            // Circle of Steel's Learn, whose line passes clear, as the old tree had it.
+            // The RuleBook's edge guard (GuardMode.Edge, read by PlayerDefence and Guard): a held guard blocks nothing; the perfect
+            // window is 0.28 s (0.18 half again) and may be pressed again after 0.2 s; each perfect guard cuts the attacker. NEEDS: the
+            // cut counted as a blow landed (its mana and its cut to the waits). It grows from Circle of Steel's Learn, whose line passes
+            // clear, as the old tree had it.
             to.Add(BranchPattern.Put(new Upgrade { Id = EdgeGuard, Name = "Edge Guard", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { CircleOfSteel }, Icon = UpgradeIcons.Shield,
-                Description = "The perfect guard's moment is half again as long, and each one cuts the attacker and notches its armour. The dodge and a blow held on a plain guard cost half again as much stamina.",
-                Stats = new[]
-                {
-                    new StatMod(PlayerStat.PerfectGuardWindow, 0.55f),
-                    new StatMod(PlayerStat.StaminaCost, 0.5f),
-                },
+                Description = "Your guard is all edge. Held, it blocks nothing: only the perfect guard turns a blow. Its moment is half again as long and may be pressed again after a fifth of a second, and each one cuts the attacker and notches its armour.",
+                Stats = new[] { new StatMod(PlayerStat.PerfectGuardWindow, 0.55f) },
+                Rules = book => book.Guard = Growth.GuardMode.Edge,
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Burst, Radius = 1.2f, Damage = 12f, Stagger = 10f, Affliction = S, Stacks = 1 } } },
                 BranchPattern.LeftCrown));
 

@@ -137,6 +137,32 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void AnEdgeGuardBlocksNothingHeldAndRisesAgainSooner()
+        {
+            var guard = new Guard { PerfectWindow = 0.28f, StaminaPerDamage = 1f, ChipFraction = 0.25f, Edge = true };
+            var stamina = new StaminaPool { Maximum = 100f, RegenerationPerSecond = 0f };
+            stamina.Fill();
+            guard.SetRaised(true);
+            guard.Press();
+            Assert.AreEqual(GuardResult.Perfect, guard.Resolve(20f, false, stamina, out _, false, false, true), "the perfect moment turns it");
+            guard.Tick(0.5f);
+            Assert.AreEqual(GuardResult.NotGuarded, guard.Resolve(20f, false, stamina, out _, false, false, true), "held, it blocks nothing");
+            Assert.AreEqual(100f, stamina.Current, 1e-5f, "and costs nothing");
+            guard.Press();
+            guard.Tick(0.25f);
+            guard.Press();
+            Assert.IsTrue(guard.IsPerfect, "pressed again after 0.25 s, the edge is perfect again");
+            guard.Edge = false;
+            guard.Tick(0.25f);
+            guard.Press();
+            Assert.IsFalse(guard.IsPerfect, "a plain guard pressed that soon is not");
+            var book = new Clover.Player.Growth.RuleBook();
+            Upgrade.ById(MetalTree.EdgeGuard).Rules(book);
+            Assert.AreEqual(Clover.Player.Growth.GuardMode.Edge, book.Guard);
+            Assert.IsFalse(Upgrade.ById(MetalTree.EdgeGuard).Stats.Any(mod => mod.Stat == PlayerStat.StaminaCost), "no stand-in dearer guard");
+        }
+
+        [Test]
         public void GoesUpIsAskedOfTheEnemyAsFireMedicineFires()
         {
             var goesUp = Upgrade.ById(PyreTree.GoesUp).Effects;

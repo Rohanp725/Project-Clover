@@ -16,6 +16,10 @@ namespace Clover.Player
         public float PerfectFrom;
         /// <summary>A press this soon after the last one has no perfect window.</summary>
         public float SpamLockout = 0.4f;
+        /// <summary>The same under an edge guard, which may be pressed again sooner (Edge Guard: 0.2 s).</summary>
+        public float EdgeLockout = 0.2f;
+        /// <summary>True while the guard is an edge guard (the RuleBook's GuardMode.Edge): pressed again sooner, and blocking nothing held.</summary>
+        public bool Edge;
         /// <summary>Stamina a block costs for each point of the blow's damage.</summary>
         public float StaminaPerDamage = 0.9f;
         /// <summary>Share of a blocked blow's damage that still comes through, as grey health.</summary>
@@ -46,7 +50,7 @@ namespace Clover.Player
         /// </summary>
         public void Press(bool canBePerfect = true)
         {
-            perfectArmed = canBePerfect && sincePress >= SpamLockout;
+            perfectArmed = canBePerfect && sincePress >= (Edge ? EdgeLockout : SpamLockout);
             sincePress = 0f;
         }
 
@@ -66,7 +70,7 @@ namespace Clover.Player
         /// stamina cannot pay for: what stamina there is goes, and the share of the blow it could not pay comes through
         /// whole, as grey health, on top of the usual chip. A blow that cannot be blocked still lands.
         /// </summary>
-        public GuardResult Resolve(float damage, bool unblockable, StaminaPool stamina, out float chip, bool unbreakable = false, bool madePerfect = false)
+        public GuardResult Resolve(float damage, bool unblockable, StaminaPool stamina, out float chip, bool unbreakable = false, bool madePerfect = false, bool edge = false)
         {
             chip = 0f;
             if (!IsRaised) return GuardResult.NotGuarded;
@@ -76,6 +80,8 @@ namespace Clover.Player
             // A plain guard against an attacker in a condition that makes it so counts as perfect (Snapped Blade's brittle
             // weapon snapping on the guard; the ledger's guard-made-perfect): nothing is paid and nothing comes through.
             if (madePerfect) return GuardResult.Perfect;
+            // An edge guard blocks nothing held: only its perfect moment turns a blow (Edge Guard).
+            if (edge) return GuardResult.NotGuarded;
             float cost = damage * StaminaPerDamage;
             if (!stamina.TrySpend(cost))
             {

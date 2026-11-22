@@ -277,6 +277,7 @@ namespace Clover.Player
             guardHeld = guardAction.IsPressed();
             if (guardAction.WasPressedThisFrame())
             {
+                Guard.Edge = upgrades != null && upgrades.Rules.Guard == Growth.GuardMode.Edge;
                 Guard.Press(!IsHelpless && !IsDrinking);
                 guardPressBuffered = PressBufferTime;
             }
@@ -482,7 +483,8 @@ namespace Clover.Player
             bool unbreakable = upgrades != null && upgrades.Rules.Guard == Growth.GuardMode.Unbreakable;
             // A plain guard against an attacker whose condition makes it perfect (Snapped Blade).
             bool madePerfect = covered && combat != null && GuardMadePerfect(combat.EnemyAt(hit.HasOrigin ? hit.Origin : transform.position - hit.Direction, 2.5f));
-            switch (covered ? Guard.Resolve(hit.Damage, hit.Unblockable, player.Stamina, out chip, unbreakable, madePerfect) : GuardResult.NotGuarded)
+            bool edge = upgrades != null && upgrades.Rules.Guard == Growth.GuardMode.Edge;
+            switch (covered ? Guard.Resolve(hit.Damage, hit.Unblockable, player.Stamina, out chip, unbreakable, madePerfect, edge) : GuardResult.NotGuarded)
             {
                 case GuardResult.Perfect:
                     PerfectGuards++;
