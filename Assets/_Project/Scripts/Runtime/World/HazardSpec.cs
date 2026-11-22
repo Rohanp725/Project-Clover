@@ -81,6 +81,14 @@ namespace Clover.World
         public int Seams;
         /// <summary>Above zero: it waits for an enemy to stand in it, then strikes once within this many metres and is gone (Fire-Cracked).</summary>
         public float CrackReach;
+        /// <summary>
+        /// Above zero: it is a line as long as its Radius, turning round its place once in this many seconds like a dial's shadow,
+        /// striking only what it crosses (each one once a turn), <see cref="SweepHalf"/> either side of it (The Stone Keeps the Hour).
+        /// </summary>
+        public float SweepTurn;
+        public float SweepHalf;
+        /// <summary>The way the line points as it begins.</summary>
+        public Vector3 SweepFrom;
         /// <summary>The name its ground answers to (UpgradeEffect.Ground), so a mark can find every patch of it (Grounded's live water).</summary>
         public string Name;
         /// <summary>What laid it (a mark's Player.UpgradeEffect), so a mark can find its own patches again (Weeping Sore's puddles burst).</summary>

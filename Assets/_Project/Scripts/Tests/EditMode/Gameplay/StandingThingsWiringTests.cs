@@ -1615,5 +1615,27 @@ namespace Clover.Tests
             Assert.AreEqual(2, hour.Stacks);
             Assert.AreEqual(0f, hour.Cooldown, 1e-5f, "the hour, not a cooldown");
         }
+
+        [Test]
+        public void TheStoneKeepsTheHoursLineTurnsRoundItAndMakesTheMomentCritical()
+        {
+            Vector3 way = Hazards.SweepWay(Vector3.forward, 3f, 0.75f, out int turn);
+            Assert.AreEqual(0, turn);
+            Assert.AreEqual(1f, way.x, 1e-4f, "a quarter turn in three quarters of a second");
+            Hazards.SweepWay(Vector3.forward, 3f, 7f, out turn);
+            Assert.AreEqual(2, turn, "the third turn at seven seconds");
+
+            var stone = Upgrade.ById(Clover.Player.Trees.Duo.EarthlightDuo.TheStoneKeepsTheHour);
+            Assert.AreEqual(3f, stone.Spell.SweepTurn, 1e-5f, "one turn every three seconds");
+            Assert.AreEqual(6f, stone.Spell.Radius, 1e-5f, "a line six metres long");
+            var spec = new SpellSpec();
+            SpellChange.Copy(stone.Spell, spec);
+            Assert.AreEqual(3f, spec.SweepTurn, 1e-5f, "copied with the rest");
+            var moment = stone.Effects.Single(each => each.State != null && each.State.Id == Clover.Player.Trees.Duo.EarthlightDuo.OnTheLine).State;
+            Assert.AreEqual(ConditionFlags.TakesCritical, moment.Flags & ConditionFlags.TakesCritical, "a blow as the line crosses is critical");
+            Assert.AreEqual(ConditionFlags.StaggerTakenShare, moment.Flags & ConditionFlags.StaggerTakenShare);
+            Assert.AreEqual(2f, moment.Scale, 1e-5f, "and staggers double");
+            Assert.Less(moment.Seconds, 0.5f, "only the moment");
+        }
     }
 }

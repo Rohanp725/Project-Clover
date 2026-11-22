@@ -19,6 +19,16 @@ namespace Clover.Player.Forms
             storm.Delay = cast.Spec.Delay;
             // A lamp's glow is ground of the player's own by name (Standing Light: World.OwnGrounds.Glow).
             if (!string.IsNullOrEmpty(cast.Spec.Ground)) storm.Name = cast.Spec.Ground;
+            // A gnomon: a stone that blocks the way and counts as stone at an enemy's back, and a line of light turning round it,
+            // striking what it crosses (The Stone Keeps the Hour). It bites often, so the line is never past an enemy unseen.
+            if (cast.Spec.SweepTurn > 0f)
+            {
+                storm.SweepTurn = cast.Spec.SweepTurn;
+                storm.SweepHalf = 0.6f;
+                storm.SweepFrom = cast.Forward;
+                storm.BiteEvery = 0.05f;
+                StandingThings.Raise(StandingKind.StonePillar, at, cast.Forward, cast.Spec.Delay + cast.Spec.Seconds, 0f, Time.time);
+            }
             // One group, so the step to the rod can spend it whole; the rod is told to the marks as the thing the spell left standing.
             storm.Group = Hazards.NewGroup();
             Hazards.Lay(storm);

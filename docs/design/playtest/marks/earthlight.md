@@ -57,10 +57,8 @@ are both carried.
 
 **When it happens.** Cast it from a spell slot while you carry both Earth and Light. Press that slot's button (hold L2 and a face button, or press 1 to 4). The first time it lands, it charges your blade with Earth.
 
-**The numbers.** Mix, duo spell, opener, 5 Shards. It costs no mana. After you cast it, you must wait 16 seconds to cast it again. Fighting with your weapon makes the wait shorter. The stone stands 3 metres ahead of you for 9 seconds. Once a second, everything within 6 metres takes 10 damage, 15 stagger, a Tremor and a Mark.
+**The numbers.** Mix, duo spell, opener, 5 Shards. It costs no mana. After you cast it, you must wait 16 seconds to cast it again. Fighting with your weapon makes the wait shorter. The stone stands 3 metres ahead of you for 9 seconds. Enemies walk around it, and it counts as stone behind an enemy. A line of sunlight 6 metres long turns around it, once every 3 seconds. Each enemy it crosses takes 10 damage, 15 stagger, a Tremor and a Mark, once a turn. For a moment after the line crosses an enemy (about a third of a second), your blow on it is a critical hit and breaks double its balance.
 
 **Works with.** Earthlight (every enemy it hits gets both afflictions), Keeping the Hour, Hammer and Anvil.
 
-**Example.** Plant it in a doorway and fight around it.
-
-**Not built yet.** The light doesn't sweep around the stone as a line yet. The stone doesn't block the way, and it doesn't count as stone behind an enemy. A blow timed to the line isn't made a critical hit yet.
+**Example.** Plant it in a doorway and fight around it. Swing just as the line of light sweeps across your enemy.

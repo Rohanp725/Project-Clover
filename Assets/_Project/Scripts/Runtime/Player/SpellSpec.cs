@@ -210,6 +210,11 @@ namespace Clover.Player
         /// </summary>
         public string Ground = "";
         public float Thrown;
+        /// <summary>
+        /// For the rod form: above zero, the rod is a standing stone that blocks the way, and its strike is a line of its Radius
+        /// turning round it once in this many seconds, striking what it crosses (The Stone Keeps the Hour: 3 s).
+        /// </summary>
+        public float SweepTurn;
         public int Bank;
         public float BankDamage;
         public float BankStagger;

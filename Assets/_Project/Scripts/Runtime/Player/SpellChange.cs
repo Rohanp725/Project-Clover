@@ -212,6 +212,7 @@ namespace Clover.Player
             into.Pull = from.Pull;
             into.Ground = from.Ground;
             into.Thrown = from.Thrown;
+            into.SweepTurn = from.SweepTurn;
             into.Bank = from.Bank;
             into.BankDamage = from.BankDamage;
             into.BankStagger = from.BankStagger;

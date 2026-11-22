@@ -43,6 +43,8 @@ namespace Clover.World
             public float Delay, Left, UntilBite, UntilShow;
             // Seconds it rides on before it settles again (a slick carried by a wave).
             public float DriftLeft;
+            // The turn a sweeping line is on, so each one is struck once a turn.
+            public int Turn;
             // What its next bite lays on all it reaches, once (a whirl fed by a dodge: Bellows).
             public AfflictionKind NextLays;
             public int NextLaysStacks;
@@ -274,6 +276,34 @@ namespace Clover.World
                 carried++;
             }
             return carried;
+        }
+
+        /// <summary>The way a line turning once in <paramref name="turn"/> seconds from <paramref name="from"/> points after <paramref name="seconds"/>, and which turn it is on.</summary>
+        public static Vector3 SweepWay(Vector3 from, float turn, float seconds, out int turnNumber)
+        {
+            from.y = 0f;
+            if (from.sqrMagnitude < 0.0001f) from = Vector3.forward;
+            float turns = turn > 0f ? Mathf.Max(0f, seconds) / turn : 0f;
+            turnNumber = Mathf.FloorToInt(turns);
+            // Turned clockwise seen from above, as a yaw is, worked by hand so it is plain arithmetic.
+            from.Normalize();
+            float angle = (turns - turnNumber) * 2f * Mathf.PI;
+            float sin = Mathf.Sin(angle), cos = Mathf.Cos(angle);
+            return new Vector3(from.x * cos + from.z * sin, 0f, from.z * cos - from.x * sin);
+        }
+
+        // A line turning round its place: what it crosses now, each once a turn.
+        private int StrikeSweep(int index, ref Zone zone)
+        {
+            float stood = zone.Spec.Seconds - zone.Left;
+            Vector3 way = SweepWay(zone.Spec.SweepFrom, zone.Spec.SweepTurn, stood, out int turn);
+            if (turn != zone.Turn)
+            {
+                zone.Turn = turn;
+                bitten[index].Clear();
+            }
+            if (!zone.Spec.Quiet) Vfx.Play(VfxKind.TintSpark, zone.Position + way * (zone.Spec.Radius * Random.value) + Vector3.up * 0.2f, Vector3.up, 0.5f, zone.Spec.Tint);
+            return owner.StrikeLane(zone.Position, way, zone.Spec.Radius, Mathf.Max(0.2f, zone.Spec.SweepHalf), zone.Spec.Blow, bitten[index]);
         }
 
         /// <summary>True when a place <paramref name="at"/> is within <paramref name="within"/> of the edge of a thing at <paramref name="thing"/> <paramref name="radius"/> round.</summary>
@@ -734,7 +764,9 @@ namespace Clover.World
                         if (zone.Left <= 0f) zone.Active = false;
                         continue;
                     }
-                    int hits = zone.Spec.Seams > 0
+                    int hits = zone.Spec.SweepTurn > 0f
+                        ? StrikeSweep(i, ref zone)
+                        : zone.Spec.Seams > 0
                         ? owner.StrikeStar(zone.Position, zone.Spec.Seams, zone.Spec.Radius, GroundRules.SeamHalf, zone.Spec.SeamWay, zone.Spec.Blow, LeftAlone(i, zone))
                         : owner.StrikeArea(zone.Position, zone.Spec.Radius, zone.Spec.Blow, LeftAlone(i, zone));
                     if (zone.Spec.AlsoLays != AfflictionKind.None && (!zone.Spec.StopsAtFirst || hits > 0)) owner.AfflictArea(zone.Position, zone.Spec.Radius, zone.Spec.AlsoLays, 1);

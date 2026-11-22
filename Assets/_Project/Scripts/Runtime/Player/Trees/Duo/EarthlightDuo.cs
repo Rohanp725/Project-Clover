@@ -16,6 +16,8 @@ namespace Clover.Player.Trees.Duo
         public const string KeepingTheHour = "earthlight.hour";
         public const string DawnThroughTheDoor = "earthlight.dawn";
         public const string QuartzVein = "earthlight.quartz";
+        /// <summary>The Stone Keeps the Hour: the moment its line crosses an enemy, when a blow on it is critical and staggers double.</summary>
+        public const string OnTheLine = "earthlight.stone.line";
         public const string TheStoneKeepsTheHour = "earthlight.stone";
         /// <summary>The condition Lit Seam sets: the seams staying lit for heavy blows to flash again.</summary>
         public const string LitSeam = "earthlight.seam";
@@ -100,16 +102,21 @@ namespace Clover.Player.Trees.Duo
 
             // The duo spell, bought with Shards once both are carried (no god gives it): an opener on a 16 s cooldown (SpellTimings). The rod form plants a stone that strikes
             // round it on a beat.
-            // NEEDS: a line of sunlight sweeping round the stone like a dial's shadow, the stone blocking the way and counting
-            // as stone at an enemy's back, and a weapon blow timed to the line critical (now the stone strikes all within 6 m
-            // each second).
+            // The stone is a standing stone (it blocks the way and counts as stone at an enemy's back), and a line of sunlight 6 m long
+            // turns round it once in 3 s (SpellSpec.SweepTurn): each enemy it crosses is struck once a turn, Marked, and for the
+            // moment after (0.35 s) a blow on it is critical and staggers double (ConditionFlags.TakesCritical, StaggerTakenShare).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = TheStoneKeepsTheHour, Name = "The Stone Keeps the Hour", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Role = SpellRole.Opener, Requires = new[] { KeepingTheHour, DawnThroughTheDoor }, Icon = UpgradeIcons.Tower,
                 Description = "A standing stone rises 3 m ahead for 9 s, and sunlight wheels round it like a dial's shadow: every enemy it crosses is struck, shaken and Marked. It never harms you.",
                 Form = SpellForms.Rod,
-                Spell = new SpellSpec { Reach = 3f, Radius = 6f, Seconds = 9f, Interval = 1f, Damage = 10f, Stagger = 15f, Delay = 0.3f, Stacks = 1 },
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Marked, Stacks = 1 } },
+                Spell = new SpellSpec { Reach = 3f, Radius = 6f, Seconds = 9f, Interval = 1f, Damage = 10f, Stagger = 15f, Delay = 0.3f, Stacks = 1, SweepTurn = 3f },
+                Effects = new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Marked, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Condition,
+                        State = new ConditionSpec { Id = OnTheLine, Seconds = 0.35f, Flags = ConditionFlags.TakesCritical | ConditionFlags.StaggerTakenShare, Scale = 2f } },
+                },
             }, HeartPattern.Spell));
         }
     }
