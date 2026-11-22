@@ -229,6 +229,12 @@ namespace Clover.Player
         /// Master), within the effect's CastWindow (1 s when none is named); nothing when there is none that recent.
         /// </summary>
         public bool ToStruckBy;
+        /// <summary>
+        /// In force only while a cast of its own branch still stands (the tree, the blades), and, with <see cref="WithinOwn"/>
+        /// above zero, only while you stand that near where it was cast (the ledger's while-spell-stands).
+        /// </summary>
+        public bool WhileOwnStands;
+        public float WithinOwn;
         public bool ToTurnedBy;
         /// <summary>For Tend: what the tended grown thing lays with every bite from then on (The Host: a dose of poison).</summary>
         public AfflictionKind BitesLay = AfflictionKind.None;

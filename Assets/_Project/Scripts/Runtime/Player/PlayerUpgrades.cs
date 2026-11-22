@@ -1438,6 +1438,7 @@ namespace Clover.Player
             if (effect.Way != DodgeWay.Any && effect.Way != lastDodgeWay) return;
             if (effect.WhileSurge && !(element != null && element.SurgeActive)) return;
             if (effect.While != StatWhen.Always && !Stats.Holds(effect.While)) return;
+            if (effect.WhileOwnStands && !Forms.SpellWorks.StandsOf(effect.Owner, transform.position, effect.WithinOwn)) return;
             if (effect.While2 != StatWhen.Always && !Stats.Holds(effect.While2)) return;
             if (effect.NeedsAirborne && !(target is IAfflictable flying && flying.Afflictions.IsAirborne)) return;
             if (effect.NeedsFrozen && !(target is IAfflictable icy && icy.Afflictions.IsFrozen)) return;

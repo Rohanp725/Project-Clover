@@ -151,11 +151,11 @@ namespace Clover.Player.Trees
                     Spell = new SpellSpec { Count = 3, Seconds = 6f, Interval = 0.5f, Damage = 9f, Stagger = 6f, Stacks = 1 } },
                 "Opens two shapes of Grave of Swords, chosen at any rest fire: Clashing Bronze, blades that ring under every blow, or The Tripods, bronze helpers that cut for you.",
                 // A finisher (StruckBy.Finisher) on an enemy that was within eight metres as it was cast gives the mana, once a
-                // cast. NEEDS: only while the blades stand, and every blade left loosed (while-spell-stands).
+                // cast, only while the blades stand (WhileOwnStands). NEEDS: every blade left loosed by it (form-pieces).
                 new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Condition, Radius = 8f, State = new ConditionSpec { Id = InTheGrave, Seconds = 12f } },
-                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = InTheGrave, By = StruckBy.Finisher, Do = UpgradeAction.Mana, Amount = 20f, Cooldown = 12f },
+                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = InTheGrave, By = StruckBy.Finisher, WhileOwnStands = true, Do = UpgradeAction.Mana, Amount = 20f, Cooldown = 12f },
                 },
                 "A finisher looses every blade left, and 20 mana comes back to you.");
 

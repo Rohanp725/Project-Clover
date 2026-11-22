@@ -198,6 +198,22 @@ namespace Clover.Player.Forms
                 if (instance.runs[i].Active && instance.runs[i].Form == form) instance.Finish(i);
         }
 
+        /// <summary>
+        /// True while a cast of <paramref name="owner"/>'s branch still stands in the world (its run in progress: the tree,
+        /// the blades), and, when <paramref name="within"/> is above zero, <paramref name="at"/> is that near where it was cast
+        /// (the ledger's while-spell-stands).
+        /// </summary>
+        public static bool StandsOf(Upgrade owner, Vector3 at, float within)
+        {
+            if (instance == null || owner == null) return false;
+            for (int i = 0; i < instance.runs.Length; i++)
+            {
+                if (!instance.runs[i].Active || !SpellBranches.OwnBranch(owner, instance.runs[i].Cast.Source)) continue;
+                if (within <= 0f || Clover.World.GrownRules.Within(instance.runs[i].Cast.Origin, at, within)) return true;
+            }
+            return false;
+        }
+
         /// <summary>How many runs of the form of this name are in progress.</summary>
         public static int RunningOf(string id)
         {

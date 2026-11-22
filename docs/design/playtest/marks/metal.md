@@ -93,13 +93,11 @@ the steel you throw and plant: Flung Blade, the blades of Grave of Swords.
 ## metal.graveofswords.master
 **What it does.** A finisher sends every blade that's left, and you get 20 mana back.
 
-**When it happens.** Your first finisher that lands on an enemy that was within 8 metres when you cast Grave of Swords, during its 12 seconds; once per cast. Other heavy blows don't count. Grave of Swords must be in a spell slot.
+**When it happens.** Your first finisher that lands on an enemy that was within 8 metres when you cast Grave of Swords, while its blades still stand; once per cast. Other heavy blows don't count. Grave of Swords must be in a spell slot.
 
 **The numbers.** 3 Shards. 20 mana back. The heavy blow already sends every blade that's left.
 
 **Works with.** Sunder (the finisher adds three notches), Counter Cut, Forged Answer, Temper (the mana for it).
-
-**Not built yet.** It should work only while the blades still stand. For now, it works for the spell's full 12 seconds.
 
 **Example.** Cast it, stagger the brute, and finish it. The last blades go in, and you get 20 mana back.
 

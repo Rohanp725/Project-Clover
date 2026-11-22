@@ -108,9 +108,9 @@ namespace Clover.Player.Trees
                 });
 
             // The larger spell: the rod is the tree, planted at your feet. Its ring under the crown keeps what is inside Seeded,
-            // and a count of fifteen mends you 3 a second while you fight. NEEDS: the tree's 40 health while it grows and the
-            // enemies turning on it (standing-things), each root under one enemy, a staggered one first (it strikes all in the
-            // ring), and the mending only inside the ring while it stands (while-spell-stands).
+            // and a count of fifteen mends you 3 a second while you fight, only inside its ring while it stands (WhileOwnStands,
+            // WithinOwn). NEEDS: the tree's 40 health while it grows and the enemies turning on it (standing-things), each root
+            // under one enemy, a staggered one first (it strikes all in the ring).
             SpellBranch.Add(to, E, ElderTree, "Elder Tree", SpellRole.Breaker, BranchPattern.MiddleB, FallenSeeds, SpellForms.Rod,
                 new SpellSpec { Reach = 0.5f, Radius = 3f, Seconds = 15f, Interval = 3f, Damage = 16f, Stagger = 45f, Delay = 3f, Stacks = 1 },
                 "A tree grows where you stand, shoot, sapling and oak, in three seconds; while it grows enemies turn on it. Grown, for fifteen seconds a ring six metres across lies under its crown. Enemies inside stay Seeded, you mend 3 a second inside, and every three seconds a root comes up under an enemy inside, a staggered one first: 16 damage and 45 stagger. 40 mana.",
@@ -134,7 +134,7 @@ namespace Clover.Player.Trees
                 {
                     new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Hazard, At = EffectAt.Self, Shape = HazardShape.Patch, Radius = 3f, Seconds = 18f, Interval = 1f, Damage = 1f, Affliction = AfflictionKind.Seeded, Stacks = 1 },
                     new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Bank, Count = 15 },
-                    new UpgradeEffect { On = UpgradeTrigger.EverySeconds, Every = 1f, Spends = 1, Do = UpgradeAction.Heal, Amount = 3f },
+                    new UpgradeEffect { On = UpgradeTrigger.EverySeconds, Every = 1f, Spends = 1, WhileOwnStands = true, WithinOwn = 3f, Do = UpgradeAction.Heal, Amount = 3f },
                 });
 
             // A seed sown in everything the reaction struck: the enemy it went off on and each its blows reached

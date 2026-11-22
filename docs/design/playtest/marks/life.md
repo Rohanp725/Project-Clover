@@ -69,11 +69,11 @@ ground: Briar Patch's bed, a thornbush, a sapling, a thicket, a tuft of briar.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4).
 
-**The numbers.** 4 Shards, 40 mana (its Empower makes it 32, and makes it grow in 2 seconds). The ring has a 3-metre radius and lasts 18 seconds from when you cast it. Once a second, it deals 1 damage and adds Seeded. The roots first hit 3 seconds after planting, then every 3 seconds for 15 seconds, for 16 damage, 45 stagger and one Seeded. Each cast holds 15 seconds of shade: each second you spend in a fight uses one up and heals you 3. The tree doesn't count as something you grew, so Reap What Is Sown and Drawn From the Wood leave it alone.
+**The numbers.** 4 Shards, 40 mana (its Empower makes it 32, and makes it grow in 2 seconds). The ring has a 3-metre radius and lasts 18 seconds from when you cast it. Once a second, it deals 1 damage and adds Seeded. The roots first hit 3 seconds after planting, then every 3 seconds for 15 seconds, for 16 damage, 45 stagger and one Seeded. Each cast holds 15 seconds of shade: each second you spend fighting inside the ring while the tree stands uses one up and heals you 3. The tree doesn't count as something you grew, so Reap What Is Sown and Drawn From the Wood leave it alone.
 
 **Works with.** Seeded, Ripening (heavy blows on what it Seeded), Fallen Seeds, which it comes after on the chart, Sapling's Master mark (a small tree of the same kind), and the charged blade: its first hit charges your weapon with Life.
 
-**Not built yet.** The tree should have 40 health while it grows, and enemies should turn and attack it. Each root should come up under one enemy, staggered ones first (for now, the roots hit everything in the ring). The healing should only happen inside the ring while the tree stands (for now, it is 3 a second for 15 seconds of fighting, anywhere).
+**Not built yet.** The tree should have 40 health while it grows, and enemies should turn and attack it. Each root should come up under one enemy, staggered ones first (for now, the roots hit everything in the ring).
 
 **Example.** Plant it where a pack has to come to you, and fight at its foot. Every three seconds, the roots stagger and Seed them while you heal.
 

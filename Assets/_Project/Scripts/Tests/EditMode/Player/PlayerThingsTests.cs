@@ -86,6 +86,18 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void TheTreeMendsOnlyInItsRingAndTheGraveOnlyWhileItsBladesStand()
+        {
+            var mend = Upgrade.ById(LifeTree.ElderTree).Effects.Single(each => each.Do == UpgradeAction.Heal);
+            Assert.IsTrue(mend.WhileOwnStands, "only while the tree stands");
+            Assert.AreEqual(3f, mend.WithinOwn, 1e-5f, "and only inside its ring");
+            var grave = Upgrade.ById(SpellBranch.MasterId(MetalTree.GraveOfSwords)).Effects.Single(each => each.Do == UpgradeAction.Mana);
+            Assert.IsTrue(grave.WhileOwnStands, "only while the blades stand");
+            Assert.AreEqual(0f, grave.WithinOwn, 1e-5f, "wherever you stand");
+            Assert.IsFalse(Clover.Player.Forms.SpellWorks.StandsOf(Upgrade.ById(LifeTree.ElderTree), Vector3.zero, 3f), "nothing cast, nothing stands");
+        }
+
+        [Test]
         public void ReapReachesTheWholeFightAndSecondSowingAnswersEachBurst()
         {
             var learn = Upgrade.ById(LifeTree.ReapWhatIsSown);
