@@ -130,6 +130,13 @@ namespace Clover.Player.Forms
             /// walking down its lane. Otherwise its path is turned with it, which flung the whirl's curls wide.
             /// </summary>
             public bool TurnsInPlace;
+            /// <summary>
+            /// The player's bone the part is carried by (PlayerBones' index plus one; 0: none), its share along that bone
+            /// and its offset off it in the player's own axes, as it sat on the stand-in (round 4's Kindle, Overdrive, Fever).
+            /// </summary>
+            public byte Bone;
+            public float BoneShare;
+            public Vector3 BoneOffset;
             /// <summary>A ribbon's keys: the share of it drawn on from its tail (x), and the share wiped off from its tail (x).</summary>
             public int DrawFirst, DrawCount, EraseFirst, EraseCount;
             /// <summary>A ribbon's ink: its colour and width in metres (none: no ink), and how much of it is stippled away (dust).</summary>

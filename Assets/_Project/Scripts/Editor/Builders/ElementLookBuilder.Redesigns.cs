@@ -279,6 +279,29 @@ namespace Clover.EditorTools
             return Quaternion.FromToRotation(Vector3.up, normal);
         }
 
+        /// <summary>
+        /// The surges whose pieces on the player are carried by its bones (PlayerBones): Kindle's flames up the arms and off
+        /// the shoulders, Overdrive's arcs over the limbs, Fever's sweat, veins and shimmer. Drawn on the stand-in's pose,
+        /// they stood off the real body's arms in any other pose (the owner's rule: what is on the body sits on the body).
+        /// </summary>
+        public static readonly HashSet<string> RdBoneBound = new HashSet<string> { "rd_fire_kindle", "rd_lightning_overdrive", "rd_poison_fever" };
+
+        /// <summary>A piece further than this off its nearest stand-in bone stays in the look's own frame (a step's crackle on the floor).</summary>
+        public const float BoneReach = 0.45f;
+
+        // Binds a piece of a bound surge to the stand-in bone it sat on, by where it sat (a ribbon by its middle).
+        private static void BindToBone(string slug, ElementLookSet.Look made, ref ElementLookSet.Part part)
+        {
+            if (!RdBoneBound.Contains(slug) || part.Kind == ElementLookSet.Flat) return;
+            Vector3 at = part.Position + (part.Kind == ElementLookSet.Ribbon && part.Mesh != null ? part.Mesh.bounds.center : Vector3.zero);
+            Vector3 local = Quaternion.Euler(0f, -made.FacingYaw, 0f) * at;
+            int bone = PlayerBones.Nearest(local, out float share, out Vector3 offset);
+            if (offset.magnitude > BoneReach) return;
+            part.Bone = (byte)(bone + 1);
+            part.BoneShare = share;
+            part.BoneOffset = offset;
+        }
+
         /// <summary>Hunger's jaws about one near enemy: the shadow stretched to it and the two rows of fangs round its feet.</summary>
         public const string HungerJawsKey = "dark_hunger@b";
         private static readonly HashSet<string> JawPieces = new HashSet<string> { "vfxrd_shadow", "vfxrd_fang" };

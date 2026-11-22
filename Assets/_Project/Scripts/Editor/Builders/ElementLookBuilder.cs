@@ -1564,6 +1564,7 @@ namespace Clover.EditorTools
                         Position = position, Rotation = rotation, Scale = scale, Show = show, Hide = hide,
                         Facing = RibbonFacing.TryGetValue(slug + "|" + Text(group, "material"), out float pieceFacing) || RdFacing.TryGetValue(slug + "|" + Text(group, "material"), out pieceFacing) ? pieceFacing : 0f,
                     };
+                    BindToBone(slug, made, ref part);
                     part.PathFirst = lists.Keys.Count;
                     part.PathCount = AddKeys(motion, "path", lists.Keys, false, shift);
                     part.ScaleFirst = lists.Keys.Count;
@@ -1672,6 +1673,7 @@ namespace Clover.EditorTools
                         InkColour = inkColour, InkWidth = inkWidth, Thin = thin,
                         Facing = RibbonFacing.TryGetValue(ribbonKey, out float facing) || RdFacing.TryGetValue(ribbonKey, out facing) ? facing : 0f,
                     };
+                    BindToBone(slug, made, ref part);
                     part.PathFirst = lists.Keys.Count;
                     part.PathCount = AddKeys(motion, "path", lists.Keys, false, shift);
                     part.DrawFirst = lists.Keys.Count;

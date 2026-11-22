@@ -925,6 +925,8 @@ namespace Clover.Player.Forms
                     // (Not what rises under it from the floor: the anvil and the ice are what lift it.)
                     // (An enemy placed by its joints already rides up with them.)
                     Vector3 anchor = !part.Follows ? one.Ground : raised > 0f && !one.Anchored && onBody[look.FirstPart + k] && part.Position.y > RaisedFrom ? feet + Vector3.up * raised : feet;
+                    posingBody = one.Body;
+                    posingFacing = look.FacingYaw;
                     Pose(part, look.FirstPart + k, flamesGoneBy[one.Look], t, angleTime, anchor, one.Turn, one.Size, one.Mirror, one.Tall, one.Girth, one.Anchored, shrink, blow, slot, at[pooled]);
                     if (part.Kind == ElementLookSet.Ribbon) Draw(part, t, pooled);
                     if (!shown[pooled].enabled) shown[pooled].enabled = true;
@@ -957,6 +959,7 @@ namespace Clover.Player.Forms
                 position.z += along.z;
             }
             if (flameParts[index]) Die(part, index, goneBy, t, shrink, ref position, ref scale);
+            if (part.Bone > 0 && OnBone(part, position, rotation, scale, shrink * size, frame)) return;
             if (blow > 0f && part.Kind != ElementLookSet.Flat)
             {
                 // Blowing out: the band widens about its own axis, spins on faster and lifts as it is wiped away.
@@ -992,6 +995,40 @@ namespace Clover.Player.Forms
             if (part.Facing != 0f) placed += towardCamera * part.Facing;
             frame.SetPositionAndRotation(placed, turn * rotation);
             frame.localScale = Vector3.Scale(scale, stretch) * (shrink * size);
+        }
+
+        // The body being posed and its look's way (set before each Pose), and the player whose bones carry bound parts.
+        private Transform posingBody, boneHolder;
+        private float posingFacing;
+        private Clover.Player.PlayerOutfit boneOutfit;
+
+        // A part carried by one of the player's bones (round 4: Kindle, Overdrive, Fever): set on the real bone at the share
+        // and offset it had on the stand-in's, its offset turned as the bone is turned from the stand-in's way, its own keyed
+        // motion added in the player's frame; a ribbon (an arc along a limb) turns with the bone too. False when the body
+        // has no such bone, and the part is placed as before.
+        private bool OnBone(in ElementLookSet.Part part, Vector3 position, Quaternion rotation, Vector3 scale, float sized, Transform frame)
+        {
+            if (posingBody == null) return false;
+            if (!ReferenceEquals(boneHolder, posingBody))
+            {
+                boneHolder = posingBody;
+                boneOutfit = posingBody.GetComponent<Clover.Player.PlayerOutfit>();
+            }
+            if (boneOutfit == null || !PlayerBones.Resolve(posingBody, boneOutfit.Body)) return false;
+            int index = part.Bone - 1;
+            if (!PlayerBones.Segment(index, out var head, out var tail)) return false;
+            var playerTurn = Quaternion.Euler(0f, posingBody.eulerAngles.y, 0f);
+            var lookToWorld = playerTurn * Quaternion.Euler(0f, -posingFacing, 0f);
+            var stand = PlayerBones.StandIn[index];
+            var bend = Quaternion.FromToRotation(playerTurn * (stand.tail - stand.head), tail - head);
+            Vector3 target = Vector3.Lerp(head, tail, part.BoneShare) + bend * (playerTurn * part.BoneOffset) + lookToWorld * (position - part.Position);
+            bool ribbon = part.Kind == ElementLookSet.Ribbon && part.Mesh != null;
+            Quaternion turned = ribbon ? bend * lookToWorld * rotation : lookToWorld * rotation;
+            // A ribbon's points lie about the player's feet: it is set so its middle lands where it is carried.
+            if (ribbon) target -= turned * Vector3.Scale(part.Mesh.bounds.center, scale * sized);
+            frame.SetPositionAndRotation(target, turned);
+            frame.localScale = scale * sized;
+            return true;
         }
 
         // A flame tongue dying: over the last moments of its own window, and as its look goes, it shrinks and thins as it
