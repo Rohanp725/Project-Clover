@@ -43,6 +43,15 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void ThreeShadesAtMostCountedTogether()
+        {
+            var shades = Upgrade.ById(DarkTree.NothingStaysBuried).Effects.Where(each => each.Do == UpgradeAction.Helper).ToArray();
+            Assert.AreEqual(2, shades.Length, "a Cursed death, and any death while Risen");
+            Assert.IsTrue(shades.All(each => each.Limit == 3), "three at most");
+            Assert.AreEqual(PlayerUpgrades.FamilyOf(shades[0]), PlayerUpgrades.FamilyOf(shades[1]), "both rules count against the same three");
+        }
+
+        [Test]
         public void ReapReachesTheWholeFightAndSecondSowingAnswersEachBurst()
         {
             var learn = Upgrade.ById(LifeTree.ReapWhatIsSown);

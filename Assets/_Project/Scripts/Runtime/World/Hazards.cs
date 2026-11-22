@@ -298,13 +298,13 @@ namespace Clover.World
         {
             if (instance == null) return;
             bool grown = spec.Grown || Growing;
-            if (grown && spec.Limit > 0)
+            if (spec.Limit > 0)
             {
-                // Things of one kind share a limit: one more takes the place of the one nearest its end.
+                // Things of one kind share a limit (grown things, a mark's helpers): one more takes the place of the one nearest its end.
                 int standing = 0, oldest = -1;
                 for (int slot = 0; slot < instance.zones.Length; slot++)
                 {
-                    if (!instance.zones[slot].Active || !instance.zones[slot].Spec.Grown || instance.zones[slot].Spec.Family != spec.Family) continue;
+                    if (!instance.zones[slot].Active || instance.zones[slot].Spec.Grown != grown || instance.zones[slot].Spec.Family != spec.Family) continue;
                     standing++;
                     if (oldest < 0 || instance.zones[slot].Left < instance.zones[oldest].Left) oldest = slot;
                 }

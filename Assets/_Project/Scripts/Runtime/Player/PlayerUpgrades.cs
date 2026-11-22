@@ -190,6 +190,10 @@ namespace Clover.Player
         public int DosesStored { get; private set; }
         private readonly HashSet<IDamageable> gatherTaken = new HashSet<IDamageable>();
         private readonly HashSet<IDamageable> stateScratch = new HashSet<IDamageable>();
+        // The death a helper was last raised for, in which frame and by which mark: one death raises one.
+        private Transform helperFor;
+        private int helperFrame = -1;
+        private Upgrade helperOwner;
         // Where each grown thing a call burst stood, for the moments they are.
         private readonly Vector3[] grownBursts = new Vector3[16];
         /// <summary>What the edge carries for its next few weapon blows (Carried on the Blade, Dust on the Blade).</summary>
@@ -2028,12 +2032,19 @@ namespace Clover.Player
                 }
                 case UpgradeAction.Helper:
                 {
+                    // One death raises one helper, however many of the mark's rules it meets (Nothing Stays Buried's Cursed death while Risen).
+                    if (target != null && helperFor == target && helperFrame == Time.frameCount && effect.Owner == helperOwner) break;
+                    helperFor = target;
+                    helperFrame = Time.frameCount;
+                    helperOwner = effect.Owner;
                     int strikes = Or(eCount, 3);
                     float interval = Or(effect.Interval, 0.6f);
                     Hazards.Lay(new HazardSpec
                     {
                         Kind = ElementLook.Ground(look), Tint = look.Colour, Position = centre, Radius = Or(effect.Radius, 2f), Seconds = strikes * interval + 0.2f, BiteEvery = interval,
                         Bites = strikes, Burst = !bespoke, Quiet = bespoke, Follow = target != null, Target = target, Blow = Unseen(Blow(look, kind, eDamage, eStagger, eStacks), bespoke),
+                        // Its helpers at once, at most (Nothing Stays Buried: three); one more takes the place of the one nearest its end.
+                        Family = effect.Limit > 0 ? FamilyOf(effect) : 0, Limit = effect.Limit,
                     });
                     break;
                 }

@@ -135,11 +135,11 @@ draining.
 
 **When it happens.** Only while you carry Dark twice (all in). Each Cursed death, and each death while you are Risen.
 
-**The numbers.** 6 Shards. Each shade stands where its body fell for 6 seconds. Every 0.8 seconds, it hits whatever is within 2.5 metres of it for 12 damage, 12 stagger and a Curse. Buying this also gives you the deep strike, Yama's Noose. Use it with L2 and R2 while you carry Dark alone or twice.
+**The numbers.** 6 Shards. Each shade stands where its body fell for 6 seconds. Every 0.8 seconds, it hits whatever is within 2.5 metres of it for 12 damage, 12 stagger and a Curse. Three shades can stand at once; a new one takes the place of the one closest to fading. Each death raises one shade, even a Cursed death while you are Risen. Buying this also gives you the deep strike, Yama's Noose. Use it with L2 and R2 while you carry Dark alone or twice.
 
 **Works with.** The root mark and every Dark spell (Curse enemies before they die), Dread, Collected Twice, which it comes after on the chart, Dead Already (you are always Risen, so every death stands up), A Life for a Life.
 
-**Not built yet.** There should be three shades at most; for now, there is one for every enemy that dies. Each shade should walk to its own enemy; for now, it fights where it fell. A Cursed death while you are Risen should raise two shades, not one.
+**Not built yet.** Each shade should walk to its own enemy; for now, it fights where it fell.
 
 **Example.** Kill three Cursed soldiers in a group. Three grey shades stand up among the rest and keep cutting while you turn to the captain.
 

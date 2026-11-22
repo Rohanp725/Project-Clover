@@ -175,16 +175,16 @@ namespace Clover.Player.Trees
                 } },
                 BranchPattern.TrunkLeft));
 
-            // The Dead Stand, once a spell, folded in here. NEEDS: three shades at most (helpers-most), each walking to its
-            // own enemy (form-pieces), and the Risen's dead raised only when they were not Cursed (a Cursed
-            // death while Risen raises two for now). The shade is a helper that stands where the dead fell and strikes what
-            // is near it, a blow every 0.8 s for six seconds.
+            // The Dead Stand, once a spell, folded in here. Three shades at most (Limit, shared by both rules: Kin), and one death
+            // raises one shade, Cursed and Risen alike (PlayerUpgrades' Helper). The shade is a helper that stands where the
+            // dead fell and strikes what is near it, a blow every 0.8 s for six seconds.
+            // NEEDS: each shade walking to its own enemy (form-pieces).
             to.Add(BranchPattern.Put(new Upgrade { Id = NothingStaysBuried, Name = "Nothing Stays Buried", Element = E, Kind = UpgradeKind.Devotion, Requires = new[] { CollectedTwice }, Icon = UpgradeIcons.Tower,
                 Description = "All in on Dark only. Every enemy that dies Cursed stands up again as your shade, ash-grey with violet eyes, and fights for you for six seconds, three at most. While you are Risen, every enemy that dies stands up, Cursed or not.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = C, Do = UpgradeAction.Helper, Count = 7, Interval = 0.8f, Radius = 2.5f, Damage = 12f, Stagger = 12f, Affliction = C, Stacks = 1 },
-                    new UpgradeEffect { On = UpgradeTrigger.Kill, While = StatWhen.Risen, Do = UpgradeAction.Helper, Count = 7, Interval = 0.8f, Radius = 2.5f, Damage = 12f, Stagger = 12f, Affliction = C, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = C, Do = UpgradeAction.Helper, Count = 7, Interval = 0.8f, Radius = 2.5f, Damage = 12f, Stagger = 12f, Affliction = C, Stacks = 1, Limit = 3, Kin = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.Kill, While = StatWhen.Risen, Do = UpgradeAction.Helper, Count = 7, Interval = 0.8f, Radius = 2.5f, Damage = 12f, Stagger = 12f, Affliction = C, Stacks = 1, Limit = 3, Kin = 1 },
                 } },
                 BranchPattern.TrunkRight));
 
