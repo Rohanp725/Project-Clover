@@ -26,6 +26,10 @@ namespace Clover.Player.Trees
         public const string BriarCoat = "life.coat";
         public const string RootAndBranch = "life.lift";
         public const string WoodGrowsBack = "life.devotion";
+        /// <summary>Seconds after it is spent that a grown thing grows back with Wood Grows Back.</summary>
+        public const float GrowsBackSeconds = 6f;
+        /// <summary>Metres round you that count as the whole fight (Reap What Is Sown: every Seeded enemy in it bursts).</summary>
+        public const float FightReach = 30f;
         // The two keystones the owner picked on 2026-11-20 (keystones_fire_water_life.md). Shared Roots comes back under a
         // new id, since life.roots was retired with its refund and a retired id is never used again.
         public const string SharedRoots = "life.sharedroots";
@@ -70,8 +74,8 @@ namespace Clover.Player.Trees
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Seeded, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Grown = true, Limit = 4, Radius = 2f, Seconds = 8f, Interval = 0.5f, Damage = 4f, Affliction = AfflictionKind.Seeded, Stacks = 1 } } },
                 BranchPattern.MiddleFoot));
 
-            // The detonator: the nova is the call, every grown thing bursts and mends, and the seeds it reaches burst now.
-            // NEEDS: every Seeded enemy in the fight bursting, not only those within the call's six metres (grown-bursts).
+            // The detonator: the nova is the call, every grown thing bursts and mends, and every Seeded enemy in the fight bursts
+            // now wherever it stands (UpgradeEffect.EachWithin the fight's reach, OnlyCarrying Seeded).
             SpellBranch.Add(to, E, ReapWhatIsSown, "Reap What Is Sown", SpellRole.Detonator, BranchPattern.MiddleA, FallenSeeds, SpellForms.Nova,
                 new SpellSpec { Radius = 6f, Delay = 0.2f, Damage = 16f, Stagger = 25f, Stacks = 0 },
                 "You call in the harvest. Everything you have grown bursts where it stands, 16 damage and 25 stagger three metres round, and every Seeded enemy's thorns burst now and its seed is spent. You mend 5 for each burst.",
@@ -83,11 +87,14 @@ namespace Clover.Player.Trees
                 new ShapeDef { Name = "Golden Sickle", Form = SpellForms.Wave, SetsAside = new[] { 0 },
                     Description = "Only the Seeded within eight metres are reaped, each cut once by one sweep of gold, and the garden is kept standing.",
                     Spell = new SpellSpec { Reach = 8f, Arc = 360f, Damage = 16f, Stagger = 25f, Stacks = 0 } },
-                // NEEDS: each grown thing's burst sowing too (grown-bursts). Until then each seed set off sows a
-                // seed in every enemy within three metres of it.
+                // Each burst sows a seed in all it reaches: a seed set off (SetOff) and each grown thing's burst (GrownBurst), 3 m.
                 new ShapeDef { Name = "Second Sowing",
                     Description = "Everything bursts as before, and each burst sows a new seed in all it reaches. The loop keeps going.",
-                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SetOff, Spent = AfflictionKind.Seeded, Do = UpgradeAction.Afflict, Radius = 3f, Affliction = AfflictionKind.Seeded, Stacks = 1 } } },
+                    Effects = new[]
+                    {
+                        new UpgradeEffect { On = UpgradeTrigger.SetOff, Spent = AfflictionKind.Seeded, Do = UpgradeAction.Afflict, Radius = 3f, Affliction = AfflictionKind.Seeded, Stacks = 1 },
+                        new UpgradeEffect { On = UpgradeTrigger.GrownBurst, Do = UpgradeAction.Afflict, Radius = 3f, Affliction = AfflictionKind.Seeded, Stacks = 1 },
+                    } },
                 "Opens two shapes of Reap What Is Sown, chosen at any rest fire: Golden Sickle, the Seeded reaped and the garden kept, or Second Sowing, every burst sowing again.",
                 // Cast within 0.5 s of a Seeded enemy dying (UpgradeEffect.CastAfter), the cast's own seed bursts count twice (a boon
                 // held by the cast). NEEDS: the garden's bursts and the mending counted twice too.
@@ -96,8 +103,8 @@ namespace Clover.Player.Trees
                 learnEffects: new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.BurstGrown, Damage = 16f, Stagger = 25f, Radius = 3f, Amount = 5f },
-                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = AfflictionKind.Seeded, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Seeded, Damage = 11f, Stagger = 5f, Radius = 3f },
-                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = AfflictionKind.Seeded, Do = UpgradeAction.Heal, Amount = 5f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, EachWithin = FightReach, OnlyCarrying = AfflictionKind.Seeded, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Seeded, Damage = 11f, Stagger = 5f, Radius = 3f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, EachWithin = FightReach, OnlyCarrying = AfflictionKind.Seeded, Do = UpgradeAction.Heal, Amount = 5f },
                 });
 
             // The larger spell: the rod is the tree, planted at your feet. Its ring under the crown keeps what is inside Seeded,
@@ -158,8 +165,9 @@ namespace Clover.Player.Trees
                     new UpgradeEffect { On = UpgradeTrigger.EverySeconds, Every = 1f, While = StatWhen.NearGrown, Do = UpgradeAction.Stamina, Amount = 5f },
                 } },
                 BranchPattern.TrunkTop));
-            // NEEDS: whatever you grow growing back where it stood 6 s after it is spent, burst or cut down (grows-back).
-            // Until then every spell that strikes sows a sapling where it lands, once in two seconds.
+            // Whatever you grow grows back where it stood 6 s after it is spent or burst (Hazards.GrowsBackAfter, set by
+            // PlayerUpgrades while this is owned), and every spell that strikes sows a sapling where it lands, once in two seconds.
+            // NEEDS: a grown thing cut down by an enemy (standing-things: nothing of yours can be cut down yet).
             to.Add(BranchPattern.Put(new Upgrade { Id = WoodGrowsBack, Name = "Wood Grows Back", Element = E, Kind = UpgradeKind.Devotion, Requires = new[] { RootAndBranch }, Icon = UpgradeIcons.Moon,
                 Description = "All in on Life only. Whatever you grow grows back where it stood six seconds after it is spent, burst or cut down. Every spell you cast sows a sapling where it lands. The garden never runs out: spend it freely, and every fight becomes a forest.",
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Grown = true, Limit = 4, Radius = 3.5f, Seconds = 12f, Interval = 1.5f, Damage = 6f, Stagger = 8f, Affliction = AfflictionKind.Seeded, Stacks = 1, Cooldown = 2f } } },
@@ -177,9 +185,9 @@ namespace Clover.Player.Trees
                 BranchPattern.LeftFoot));
 
             // Red Harvest rebuilt (its id kept): the garden is the price, not health. The kneel is a still nova; every grown
-            // thing bursts in thorns as it withers, and the green blood is two timed boons. NEEDS: the window as 1.5 s for each
-            // grown thing withered, 10 s at most (count-from-depth), only those within 12 m (grown-bursts), and the 0.5 s kneel. Until then,
-            // cast within four metres of something you grew, the window is six seconds.
+            // thing within 12 m bursts in thorns as it withers (BurstGrown's Reach), and the green blood is two timed boons.
+            // NEEDS: the window as 1.5 s for each grown thing withered, 10 s at most (count-from-depth), and the 0.5 s kneel.
+            // Until then, cast within four metres of something you grew, the window is six seconds.
             SpellBranch.Add(to, E, DrawnFromTheWood, "Drawn From the Wood", SpellRole.Breaker, BranchPattern.LeftA, Ripening, SpellForms.Nova,
                 new SpellSpec { Radius = 1f, Damage = 0f, Stagger = 0f, Stacks = 0 },
                 "You kneel, and every grown thing of yours within twelve metres withers into you. As each withers it bursts in thorns, 12 damage and Seeded, and gives a second and a half of green blood, ten seconds at most: every weapon blow is critical and mends a fifth of its damage. The garden you grew is the price.",
@@ -207,7 +215,7 @@ namespace Clover.Player.Trees
                 {
                     new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, While = StatWhen.NearGrown, Do = UpgradeAction.Boon, Stat = PlayerStat.CritChance, Amount = 1f, Seconds = 6f },
                     new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, While = StatWhen.NearGrown, Do = UpgradeAction.Boon, Stat = PlayerStat.Leech, Amount = 0.2f, Seconds = 6f },
-                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.BurstGrown, Damage = 12f, Stagger = 0f, Radius = 2f, Affliction = AfflictionKind.Seeded, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.BurstGrown, Reach = 12f, Damage = 12f, Stagger = 0f, Radius = 2f, Affliction = AfflictionKind.Seeded, Stacks = 1 },
                 });
 
             // Within 4 m of something you grew you are unshaken (PlayerStat.Unshaken while StatWhen.NearGrown): never thrown or

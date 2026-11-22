@@ -119,6 +119,30 @@ namespace Clover.World
             GrownSecondsScale = 1f;
             GrownDamageScale = 1f;
             FireSecondsScale = 1f;
+            GrowsBackAfter = 0f;
+            Regrowing.Clear();
+        }
+
+        /// <summary>
+        /// Above zero: seconds after a grown thing is spent (burst, or its bites used up) that it grows back where it stood
+        /// (Wood Grows Back: 6; the ledger's grows-back). Set from the player's marks.
+        /// </summary>
+        public static float GrowsBackAfter;
+        /// <summary>The grown things waiting to grow back, each with its time.</summary>
+        public static readonly RegrowQueue Regrowing = new RegrowQueue();
+        /// <summary>Grown things grown back, counted for probes.</summary>
+        public static int GrownBack { get; private set; }
+
+        // A grown thing is spent: with Wood Grows Back it is put in line to grow back where it stood, as it was laid.
+        private static void Spent(in Zone zone)
+        {
+            if (GrowsBackAfter <= 0f || !zone.Spec.Grown) return;
+            var spec = zone.Spec;
+            spec.Position = zone.Position;
+            spec.Delay = 0f;
+            // Laid again, its damage is scaled once more by the player's numbers: take the scaling off it first.
+            if (GrownDamageScale > 0f) spec.Blow.Damage /= GrownDamageScale;
+            Regrowing.Add(spec, Time.time + GrowsBackAfter);
         }
 
         /// <summary>Whose blows these are: the damage is dealt through the player's own weapon code, so it earns what a blow earns.</summary>
@@ -199,16 +223,26 @@ namespace Clover.World
         }
 
         /// <summary>Bursts everything the player has grown, each where it stands, and it is gone. Returns how many burst.</summary>
-        public static int BurstGrown(in SpellBlow blow, float radius)
+        public static int BurstGrown(in SpellBlow blow, float radius) => BurstGrown(blow, radius, Vector3.zero, 0f, null);
+
+        /// <summary>
+        /// Bursts what the player has grown within <paramref name="reach"/> of <paramref name="from"/> (everything when the reach
+        /// is 0), each where it stands, and it is gone; where each burst is written into <paramref name="burstAt"/> as far as
+        /// it holds (the ledger's grown-bursts: the moment each burst is). Returns how many burst.
+        /// </summary>
+        public static int BurstGrown(in SpellBlow blow, float radius, Vector3 from, float reach, Vector3[] burstAt)
         {
             if (instance == null || owner == null) return 0;
             int count = 0;
             for (int i = 0; i < instance.zones.Length; i++)
             {
                 if (!instance.zones[i].Active || !instance.zones[i].Spec.Grown) continue;
+                if (!GrownRules.Within(instance.zones[i].Position, from, reach)) continue;
                 instance.zones[i].Active = false;
+                Spent(instance.zones[i]);
                 owner.StrikeArea(instance.zones[i].Position, radius, blow);
                 Puff(instance.zones[i].Spec, instance.zones[i].Position, 3f);
+                if (burstAt != null && count < burstAt.Length) burstAt[count] = instance.zones[i].Position;
                 count++;
             }
             return count;
@@ -333,6 +367,12 @@ namespace Clover.World
         private void Update()
         {
             float deltaTime = Time.deltaTime;
+            // What grows back comes up where it stood (Wood Grows Back).
+            while (Regrowing.TakeDue(Time.time, out HazardSpec again))
+            {
+                Lay(again);
+                GrownBack++;
+            }
             for (int i = 0; i < zones.Length; i++)
             {
                 if (!zones[i].Active) continue;
@@ -404,7 +444,11 @@ namespace Clover.World
                     {
                         Vfx.Play(VfxKind.TintSpark, zone.Position + Vector3.up * 0.6f, Vector3.up, 0.8f, zone.Spec.Tint);
                     }
-                    if (zone.Spec.Bites > 0 && zone.Bitten >= zone.Spec.Bites) zone.Active = false;
+                    if (zone.Spec.Bites > 0 && zone.Bitten >= zone.Spec.Bites)
+                    {
+                        zone.Active = false;
+                        Spent(zone);
+                    }
                 }
                 if (zone.Left <= 0f) zone.Active = false;
             }

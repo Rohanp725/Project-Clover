@@ -104,5 +104,7 @@ namespace Clover.Player
         AfflictionLaid,
         /// <summary>A dance whose every cut was struck in time has ended its cuts (Sky Dance's five rings all met). Target: none; asked of the spell's own branch.</summary>
         DanceInTime,
+        /// <summary>A grown thing of the player's burst where it stood (a call, a withering: the ledger's grown-bursts). Target: none; the point is where it stood.</summary>
+        GrownBurst,
     }
 }

@@ -190,6 +190,8 @@ namespace Clover.Player
         public int DosesStored { get; private set; }
         private readonly HashSet<IDamageable> gatherTaken = new HashSet<IDamageable>();
         private readonly HashSet<IDamageable> stateScratch = new HashSet<IDamageable>();
+        // Where each grown thing a call burst stood, for the moments they are.
+        private readonly Vector3[] grownBursts = new Vector3[16];
         /// <summary>What the edge carries for its next few weapon blows (Carried on the Blade, Dust on the Blade).</summary>
         public BladeCoat Coat { get; } = new BladeCoat();
         private readonly AfflictionKind[] coatKinds = new AfflictionKind[BladeCoat.Most];
@@ -1091,6 +1093,8 @@ namespace Clover.Player
             scorched = Has(Trees.FireTree.ScorchedEarth);
             Hazards.FireSecondsScale = scorched ? 2f : 1f;
             Hazards.GrownDamageScale = Stats.Multiplier(PlayerStat.GrownDamage);
+            // Wood Grows Back: what you grow grows back six seconds after it is spent.
+            Hazards.GrowsBackAfter = Has(Trees.LifeTree.WoodGrowsBack) ? Trees.LifeTree.GrowsBackSeconds : 0f;
             // Heat as the marks make it: sooner, slower to cool, higher.
             Heat.BlowsPerLevel = Mathf.Max(1, baseHeatBlows - Stats.Whole(PlayerStat.HeatBlows));
             Heat.CoolAfter = baseHeatCool * Stats.Multiplier(PlayerStat.HeatCooling);
@@ -2350,8 +2354,11 @@ namespace Clover.Player
                     break;
                 case UpgradeAction.BurstGrown:
                 {
-                    int burst = Hazards.BurstGrown(Blow(look, kind, eDamage, eStagger, eStacks), Or(effect.Radius, 3f));
+                    // Only what stands within the effect's reach of you when it names one (Drawn From the Wood: 12 m).
+                    int burst = Hazards.BurstGrown(Blow(look, kind, eDamage, eStagger, eStacks), Or(effect.Radius, 3f), self, effect.Reach, grownBursts);
                     if (burst > 0 && defence != null && eAmount > 0f) defence.Heal(eAmount * burst);
+                    // Each burst is a moment of its own, where it was (Second Sowing sows in all it reaches).
+                    for (int b = 0; b < burst && b < grownBursts.Length; b++) Trigger(UpgradeTrigger.GrownBurst, null, grownBursts[b]);
                     break;
                 }
                 case UpgradeAction.Bank:

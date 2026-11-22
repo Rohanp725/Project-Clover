@@ -30,15 +30,13 @@ ground: Briar Patch's bed, a thornbush, a sapling, a thicket, a tuft of briar.
 **Example.** Kill a seeded soldier in a doorway. The bush where it fell Seeds everyone who follows it through.
 
 ## life.reap
-**What it does.** Reap What Is Sown, the detonator of the Life tree. You call in the harvest. Everything you've grown bursts where it stands, the seeds in nearby enemies burst right away and are used up, and you heal for each burst.
+**What it does.** Reap What Is Sown, the detonator of the Life tree. You call in the harvest. Everything you've grown bursts where it stands, the seed in every Seeded enemy in the fight bursts right away and is used up, and you heal for each burst.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4).
 
-**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 12 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 10 seconds.) Each thing you grew, wherever it stands, bursts in a 3-metre circle for 16 damage and 25 stagger, then disappears, and heals you 5. A call reaches 6 metres around you 0.2 seconds after you cast it, dealing 16 damage and 25 stagger. Every Seeded enemy it hits has its seed burst right away, for 11 damage and 5 stagger per stack to everyone within 3 metres, and heals you 5.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 12 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 10 seconds.) Each thing you grew, wherever it stands, bursts in a 3-metre circle for 16 damage and 25 stagger, then disappears, and heals you 5. A call reaches 6 metres around you 0.2 seconds after you cast it, dealing 16 damage and 25 stagger. Every Seeded enemy within 30 metres, wherever it stands, has its seed burst right away, for 11 damage and 5 stagger per stack to everyone within 3 metres, and heals you 5.
 
 **Works with.** Fallen Seeds and Sapling (the things it bursts), Briar Patch, Seeded and Ripening, Wood Grows Back (the garden comes back), Wildwood (more to burst), and the charged blade: it charges your weapon with Life when it lands.
-
-**Not built yet.** Every Seeded enemy in the fight should burst, not only those within the call's 6 metres.
 
 **Example.** Three saplings stand around you and a pack closes in. Reap, and four bursts go off at once while you heal 20.
 
@@ -47,11 +45,9 @@ ground: Briar Patch's bed, a thornbush, a sapling, a thicket, a tuft of briar.
 
 **When it happens.** Whenever you cast Reap What Is Sown, using the shape you picked. If you have not bought this, you cast the plain call.
 
-**The numbers.** 3 Shards. Golden Sickle: one sweep 8 metres all around you, for 16 damage and 25 stagger. Each Seeded enemy it cuts has its seed burst, like the Learn mark's, and the things you grew are kept standing. Second Sowing: each seed that goes off (from Reap, Ripening or anything else) puts one Seeded on every enemy within 3 metres of it.
+**The numbers.** 3 Shards. Golden Sickle: one sweep 8 metres all around you, for 16 damage and 25 stagger. Each Seeded enemy it cuts has its seed burst, like the Learn mark's, and the things you grew are kept standing. Second Sowing: each seed that goes off (from Reap, Ripening or anything else) and each thing you grew that bursts puts one Seeded on every enemy within 3 metres of it.
 
 **Works with.** Ripening (its bursts plant seeds too, while you use Second Sowing); Fallen Seeds and Sapling, for the garden Golden Sickle should keep.
-
-**Not built yet.** In Second Sowing, the things you grew should plant seeds as they burst; for now, only seeds that go off plant new ones.
 
 **Example.** Use Second Sowing in a crowd. Reap once to Seed the whole pack again, cut, then reap again.
 
@@ -123,11 +119,11 @@ ground: Briar Patch's bed, a thornbush, a sapling, a thicket, a tuft of briar.
 
 **When it happens.** Only while you carry Life twice (all in). A sapling is planted each time a spell hits.
 
-**The numbers.** 6 Shards. A sapling grows where a spell hits, at most one every 2 seconds. It reaches 3.5 metres and stays for 12 seconds. Every 1.5 seconds, it hits for 6 damage, 8 stagger and Seeded. Up to four can stand at once. Buying this also gives you the deep strike, Briar Root. Use it with L2 and R2 while you carry Life alone or twice. The cutting grows into a briar around the enemy's feet and roots it in place for a second.
+**The numbers.** 6 Shards. Whatever you grew grows back where it stood 6 seconds after it bursts or uses up its bites, as it was. A sapling grows where a spell hits, at most one every 2 seconds. It reaches 3.5 metres and stays for 12 seconds. Every 1.5 seconds, it hits for 6 damage, 8 stagger and Seeded. Up to four can stand at once. Buying this also gives you the deep strike, Briar Root. Use it with L2 and R2 while you carry Life alone or twice. The cutting grows into a briar around the enemy's feet and roots it in place for a second.
 
 **Works with.** Every spell in the Life tree; Reap What Is Sown and Drawn From the Wood, which use up the garden; Root Walk, which travels to it.
 
-**Not built yet.** Whatever is used up should grow back where it stood 6 seconds later; for now, there are only the saplings each spell plants. Briar Root's briar should stay as something you grew.
+**Not built yet.** Enemies can't cut down what you grew yet, so nothing grows back from that. Briar Root's briar should stay as something you grew.
 
 **Example.** Briar Patch, Reap What Is Sown, then Briar Patch again. Every cast leaves a sapling, so the reaping always has something to burst.
 
@@ -147,11 +143,11 @@ ground: Briar Patch's bed, a thornbush, a sapling, a thicket, a tuft of briar.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). It needs something you grew nearby.
 
-**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 12 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 10 seconds.) Each thing you grew, wherever it stands, bursts in a 2-metre circle for 12 damage and Seeded, then disappears. For now, if you cast it within 4 metres of something you grew, the window lasts 6 seconds: every weapon blow is a critical hit, and you get 20% of its damage back as health.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 12 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 10 seconds.) Each thing you grew within 12 metres of you bursts in a 2-metre circle for 12 damage and Seeded, then disappears; things farther away are left standing. For now, if you cast it within 4 metres of something you grew, the window lasts 6 seconds: every weapon blow is a critical hit, and you get 20% of its damage back as health.
 
 **Works with.** Fallen Seeds, Sapling, Briar Patch and Root Walk, for the garden it uses up; Wood Grows Back, to have the garden again; Ripening, which it comes after on the chart; and Seeded's healing on top.
 
-**Not built yet.** The window should last a second and a half for each thing that withered, up to ten seconds, and only count things within 12 metres. The half-second kneel.
+**Not built yet.** The window should last a second and a half for each thing that withered, up to ten seconds. The half-second kneel.
 
 **Example.** Three bushes stand around a brute. Draw them in, and cut the brute with six seconds of critical, healing blows.
 
