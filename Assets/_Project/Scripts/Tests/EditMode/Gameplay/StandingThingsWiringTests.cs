@@ -382,6 +382,20 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void CoalSeamFlaresEveryBurningEnemyOnItAsItEnds()
+        {
+            var seam = ShapeOf(Clover.Player.Trees.Duo.SmoulderDuo.Shape, "Coal Seam").Single(each => each.Do == UpgradeAction.Hazard);
+            Assert.IsTrue(seam.ActsAsGround, "it is told as it runs out");
+            Assert.AreEqual(3, seam.InsideAtEnd.Length);
+            Assert.IsTrue(seam.InsideAtEnd.All(each => each.Needs == AfflictionKind.Burn), "only the burning flare");
+            Assert.AreEqual(UpgradeAction.Spend, seam.InsideAtEnd[0].Do, "the Burn spent first, so the burst counts it");
+            var burst = seam.InsideAtEnd[1];
+            Assert.IsTrue(burst.Do == UpgradeAction.Burst && burst.PerStack && burst.Damage == 10f && burst.Radius == 3f);
+            Assert.IsTrue(seam.InsideAtEnd.All(each => each.Slot >= 0 && each.Owner == Upgrade.ById(Clover.Player.Trees.Duo.SmoulderDuo.Shape)));
+            Assert.IsTrue(new UpgradeEffect { InsideAtEnd = new UpgradeEffect[0] }.ActsAsGround);
+        }
+
+        [Test]
         public void TheSeaComesInQuickensYouOnlyInYourOwnWater()
         {
             var sea = Upgrade.ById(WaterTree.TheSeaComesIn);

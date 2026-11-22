@@ -9,13 +9,11 @@ both carried.
 
 **When it happens.** Every time Smoulder goes off while you carry both Dark and Fire. Smoulder goes off when a Curse lands on a burning enemy, or when Burn lands on a Cursed one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Smoulder.
 
-**The numbers.** Mix, 3 Shards. Night Sun: works like the plain Smoulder (its Burn grows by one stack every 2 seconds while the Curse lasts, and flares up for 10 damage per stack within 3 metres when the Curse ends or the enemy dies). On top of that, each of your blows on it heals you 1 for each Burn on it (3 at three Burns), at most five times a second. Coal Seam: a patch 2.5 metres across that lasts 8 seconds and Curses whatever stands on it every 2 seconds. This is on purpose: that Curse may start Smoulder. After Smoulder goes off on an enemy, it can't go off on that enemy again for 4 seconds.
+**The numbers.** Mix, 3 Shards. Night Sun: works like the plain Smoulder (its Burn grows by one stack every 2 seconds while the Curse lasts, and flares up for 10 damage per stack within 3 metres when the Curse ends or the enemy dies). On top of that, each of your blows on it heals you 1 for each Burn on it (3 at three Burns), at most five times a second. Coal Seam: a patch 2.5 metres across that lasts 8 seconds and Curses whatever stands on it every 2 seconds. This is on purpose: that Curse may start Smoulder. When the 8 seconds end, the seam flares: every burning enemy standing on it flares like a smoulder, using up its Burn for 10 damage per stack and a Burn to everything within 3 metres. After Smoulder goes off on an enemy, it can't go off on that enemy again for 4 seconds.
 
 **Works with.** Grasp and Cinder to set it up, Third Eye, The Sun Goes Under, The Burning Lake.
 
 **Example.** Use Night Sun on a brute you are trading blows with. Use Coal Seam at a doorway, then fight the burning enemies across it.
-
-**Not built yet.** Coal Seam's patch doesn't yet flare up at the end and set off every smoulder on it.
 
 ## smoulder.thirdeye
 **What it does.** A perfect guard against a burning, Cursed enemy opens a line of black-edged fire from you through it.

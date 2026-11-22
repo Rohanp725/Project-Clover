@@ -632,7 +632,12 @@ namespace Clover.World
                         Spent(zone);
                     }
                 }
-                if (zone.Left <= 0f) zone.Active = false;
+                if (zone.Left <= 0f)
+                {
+                    zone.Active = false;
+                    // Ground that keeps acting is told as its time runs out, for what flares at its end.
+                    if (zone.Spec.Acts != null && owner != null) GroundEnds?.Invoke(zone.Spec.Acts, zone.Position, zone.Spec.Radius, zone.Spec.BiteEvery, zone.Spec.LaidFor);
+                }
             }
         }
 
@@ -645,7 +650,14 @@ namespace Clover.World
 
         // Domain reload is off: a listener from the last play must not be told in this one.
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        private static void ResetGroundActs() => GroundActs = null;
+        private static void ResetGroundActs()
+        {
+            GroundActs = null;
+            GroundEnds = null;
+        }
+
+        /// <summary>Told as ground that keeps acting runs out of time, with the same news as <see cref="GroundActs"/>.</summary>
+        public static event System.Action<object, Vector3, float, float, object> GroundEnds;
 
         /// <summary>
         /// One step of a helper walking to its enemy: moves <paramref name="at"/> up to <paramref name="step"/> toward

@@ -3018,6 +3018,7 @@ namespace Clover.Player
                 burstHooked = true;
                 StandingLibrary.Burst += OnStandingBurst;
                 Hazards.GroundActs += OnGroundActs;
+                Hazards.GroundEnds += OnGroundEnds;
             }
             while (StandingThings.TakeNews(out var item))
             {
@@ -3131,6 +3132,7 @@ namespace Clover.Player
             if (!burstHooked) return;
             StandingLibrary.Burst -= OnStandingBurst;
             Hazards.GroundActs -= OnGroundActs;
+            Hazards.GroundEnds -= OnGroundEnds;
         }
 
         // Ground of a mark's that keeps acting, at one of its bites: its state on every enemy standing in it now, and the player
@@ -3138,7 +3140,7 @@ namespace Clover.Player
         private void OnGroundActs(object source, Vector3 at, float radius, float biteEvery, object laidFor)
         {
             if (!(source is UpgradeEffect effect) || combat == null) return;
-            if (effect.InsideDo != null || !string.IsNullOrEmpty(effect.Ground)) ActOnStanding(effect, at, radius, laidFor);
+            if (effect.InsideDo != null || !string.IsNullOrEmpty(effect.Ground)) ActOnStanding(effect, effect.InsideDo, effect.Ground, at, radius, laidFor);
             if (effect.Inside != null)
             {
                 if (!groundStates.TryGetValue(effect, out var inside))
@@ -3165,8 +3167,19 @@ namespace Clover.Player
         // The ground whose bite is told as InGround now, for the trigger's filter.
         private string groundTold = "";
 
-        // Each enemy standing in the ground now: its own effects done on it, and the marks that answer the ground told of it.
-        private void ActOnStanding(UpgradeEffect effect, Vector3 at, float radius, object laidFor)
+        // Ground of a mark's running out of time: what flares at its end is done on each enemy standing in it.
+        private void OnGroundEnds(object source, Vector3 at, float radius, float biteEvery, object laidFor)
+        {
+            if (!(source is UpgradeEffect effect) || combat == null || effect.InsideAtEnd == null) return;
+            ActOnStanding(effect, effect.InsideAtEnd, "", at, radius, laidFor);
+            GroundFlares++;
+        }
+
+        /// <summary>Grounds that flared as they ran out (UpgradeEffect.InsideAtEnd): for probes.</summary>
+        public int GroundFlares { get; private set; }
+
+        // Each enemy standing in the ground now: the ground's own effects done on it, and the marks that answer the ground told of it.
+        private void ActOnStanding(UpgradeEffect effect, UpgradeEffect[] inside, string ground, Vector3 at, float radius, object laidFor)
         {
             var owner = effect.Owner;
             var source = owner != null && (owner.Kind == UpgradeKind.Reaction || ReactionTable.IsReactionShape(owner)) ? LaySource.Reaction : LaySource.Effect;
@@ -3178,12 +3191,12 @@ namespace Clover.Player
                 standingTaken.Add(one);
                 if (near is Enemy fallen && fallen.IsDead) continue;
                 if (!GroundRules.Within(near.transform.position, at, radius)) continue;
-                if (effect.InsideDo != null && !(effect.InsideSpares && ReferenceEquals(near, laidFor)))
-                    foreach (var inner in effect.InsideDo)
+                if (inside != null && !(effect.InsideSpares && ReferenceEquals(near, laidFor)))
+                    foreach (var inner in inside)
                         if (inner != null) Fire(inner, near, near.transform.position, source);
-                if (!string.IsNullOrEmpty(effect.Ground))
+                if (!string.IsNullOrEmpty(ground))
                 {
-                    groundTold = effect.Ground;
+                    groundTold = ground;
                     try { Trigger(UpgradeTrigger.InGround, near, near.transform.position); }
                     finally { groundTold = ""; }
                 }

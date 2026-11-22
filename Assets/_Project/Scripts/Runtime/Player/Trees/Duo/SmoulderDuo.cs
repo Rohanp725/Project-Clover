@@ -24,8 +24,9 @@ namespace Clover.Player.Trees.Duo
             const string A = Elements.Dark, B = Elements.Fire;
 
             // Night Sun heals 1 for each Burn on the enemy struck (UpgradeEffect.PerDepthOf).
-            // NEEDS: the coal seam flaring at its end and setting off every smoulder on it (Coal Seam; now a patch that curses
-            // what stands on it, on purpose able to react).
+            // Coal Seam's patch curses what stands on it, on purpose able to react, and flares as it ends: every burning enemy
+            // standing on it then flares as a smoulder does, its Burn spent for 10 a stack in 3 m and a Burn to all there
+            // (UpgradeEffect.InsideAtEnd).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Smoulder: Night Sun or Coal Seam", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -44,7 +45,8 @@ namespace Clover.Player.Trees.Duo
                         Description = "The fire goes down into the floor where it reacted: a patch of smouldering ground 2.5 m across for 8 s, almost dark. Any burning enemy that stands on it is Cursed, and so smoulders.",
                         Effects = new[]
                         {
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Radius = 1.25f, Seconds = 8f, Interval = 2f, Damage = 0f, Affliction = AfflictionKind.Cursed, Stacks = 1, Cascades = true },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Radius = 1.25f, Seconds = 8f, Interval = 2f, Damage = 0f, Affliction = AfflictionKind.Cursed, Stacks = 1, Cascades = true,
+                                InsideAtEnd = Flare() },
                         },
                     },
                 },
@@ -91,6 +93,14 @@ namespace Clover.Player.Trees.Duo
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Burn, Stacks = 1 } },
             }, HeartPattern.Spell));
         }
+
+        // A smoulder's flare on one burning enemy, as the plain Smoulder's end: its Burn spent for 10 a stack in 3 m, and a Burn to all there.
+        private static UpgradeEffect[] Flare() => new[]
+        {
+            new UpgradeEffect { On = UpgradeTrigger.InGround, Needs = AfflictionKind.Burn, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Burn },
+            new UpgradeEffect { On = UpgradeTrigger.InGround, Needs = AfflictionKind.Burn, Do = UpgradeAction.Burst, Radius = 3f, Damage = 10f, PerStack = true, Affliction = AfflictionKind.Burn },
+            new UpgradeEffect { On = UpgradeTrigger.InGround, Needs = AfflictionKind.Burn, Do = UpgradeAction.Afflict, Radius = 3f, Affliction = AfflictionKind.Burn, Stacks = 1 },
+        };
 
         // The fire sunk in as the plain Smoulder's: deepening every 2 s (a god's every 3 s) while the curse lasts, and flaring
         // when it ends or the enemy dies; then the shape's own answers.
