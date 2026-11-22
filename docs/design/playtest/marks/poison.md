@@ -264,17 +264,17 @@ a blow or a cast "on the beat" comes within a fifth of a second of it.
 **Example.** Cast it as a poisoned soldier's poison bites, and the cloud gives it two doses a second while it stands there.
 
 ## poison.lift
-**What it does.** The Delayed Touch, Poison's reaction lift, from the legend of the touch that kills later. Every reaction that poison is part of is held inside the body. A thin ring of mist closes in on it, and the reaction lands again later at double strength, poisoning everything it reaches. A heavy blow on that enemy makes it happen right away. Poison makes them pay later, and your heavy blow chooses the moment.
+**What it does.** The Delayed Touch, Poison's reaction lift, from the legend of the touch that kills later. Every reaction that poison is part of is held inside the body. It doesn't happen right away: it lands later, at double strength, poisoning everything it reaches. A heavy blow on that enemy makes it happen right away. Poison makes them pay later, and your heavy blow chooses the moment.
 
 **When it happens.** Whenever a reaction with Poisoned in it happens, on any enemy. It lands two and a half seconds later, or at your first heavy blow on that enemy before then.
 
-**The numbers.** 3 Shards. A burst with a 2.5-metre radius around the enemy. It deals 20 damage, 20 stagger and two doses to everything it reaches.
+**The numbers.** 3 Shards. The reaction waits 2.5 seconds, then goes off as usual, but its blows deal double damage. As it lands, everything within 2.5 metres of the enemy gets two doses. Burning Sap already waits on its own, so it isn't held again; it just deals double damage. If the enemy dies while the reaction is held, the reaction is lost.
 
 **Works with.** Every reaction with Poisoned in it (Fire Medicine, Nerve Fire, Quicksilver, Venom Rime, Rot Roots, and the rest), Catching, which it comes after on the chart, Share Alike and Tasted Every Herb, which come after it, and a heavy weapon.
 
-**Not built yet.** The reaction itself should be held and land again at double strength. For now, a burst of its own lands when the hold ends. Burning Sap, which already waits, should only get the double strength. The closing ring of mist.
+**Not built yet.** The thin ring of mist closing in on the enemy while the reaction is held isn't drawn yet.
 
-**Example.** Quicksilver goes off on a soldier. Two and a half seconds later, or when your heavy blow lands, it bursts again and poisons the two soldiers next to it.
+**Example.** Quicksilver goes off on a soldier. Two and a half seconds later, or when your heavy blow lands, it goes off at double strength and poisons the two soldiers next to it.
 
 ## poison.sharealike
 **What it does.** Share Alike, the movement spell. You rush straight through everything in front of you, untouchable, and come out the far side facing back. Every enemy you pass is hit and poisoned, and then every one of them is raised to the same number of doses as the sickest one.

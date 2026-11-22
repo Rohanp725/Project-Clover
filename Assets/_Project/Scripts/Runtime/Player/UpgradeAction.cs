@@ -348,5 +348,11 @@ namespace Clover.Player
         RestReaction,
         /// <summary>The pair named by Reaction rests on the target no longer than Seconds from now (The Yawning Gap: Thermal Shock once every 2 s on each enemy).</summary>
         ShortenRest,
+        /// <summary>
+        /// Asked as a reaction with ReactionWith in its pair goes off, not done: it is held in the body for Seconds, or until a
+        /// heavy blow on that enemy, and lands then at Amount times its strength (The Delayed Touch: 2.5 s, double). A reaction
+        /// that holds back its own bites already (Burning Sap) is not held again; it only takes the strength.
+        /// </summary>
+        HoldReaction,
     }
 }

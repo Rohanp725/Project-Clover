@@ -941,6 +941,29 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void TheDelayedTouchHoldsPoisonsReactionsAndLandsThemDoubled()
+        {
+            var touch = Upgrade.ById(PoisonTree.TheDelayedTouch).Effects;
+            int jar = AfflictionPairs.Index(AfflictionKind.Cursed, AfflictionKind.Poison);
+            int smoulder = AfflictionPairs.Index(AfflictionKind.Cursed, AfflictionKind.Burn);
+            Assert.AreEqual(2.5f, ReactionRules.Hold(touch, jar, out float strength), 1e-5f, "held two and a half seconds");
+            Assert.AreEqual(2f, strength, 1e-5f, "landing at double strength");
+            Assert.AreEqual(0f, ReactionRules.Hold(touch, smoulder, out float none), 1e-5f, "no poison in it: not held");
+            Assert.AreEqual(1f, none, 1e-5f);
+            var dose = touch.Single(each => each.Do == UpgradeAction.Afflict);
+            Assert.AreEqual(UpgradeTrigger.Reacted, dose.On, "as it lands");
+            Assert.AreEqual(2, dose.Stacks, "two deep on all it reaches");
+            Assert.IsFalse(touch.Any(each => each.Do == UpgradeAction.Burst), "no burst of its own: the reaction itself lands");
+
+            int sap = AfflictionPairs.Index(AfflictionKind.Marked, AfflictionKind.Poison);
+            Assert.IsTrue(ReactionRules.WaitsAlready(ReactionTable.MarkFor(sap).Effects), "Burning Sap holds back its own bites already");
+            Assert.IsFalse(ReactionRules.WaitsAlready(ReactionTable.MarkFor(jar).Effects));
+            Assert.IsTrue(PlayerReactions.StaysHeld(1f, 2.5f, true));
+            Assert.IsFalse(PlayerReactions.StaysHeld(1f, 2.5f, false), "a heavy blow ended the hold");
+            Assert.IsFalse(PlayerReactions.StaysHeld(2.6f, 2.5f, true), "its time is out");
+        }
+
+        [Test]
         public void MockSunsCriticalAndSparingOnlyFromTheFlanks()
         {
             Assert.IsFalse(EnemyConditions.OffFlank(0f, 0f, 10f), "no flank: every side");

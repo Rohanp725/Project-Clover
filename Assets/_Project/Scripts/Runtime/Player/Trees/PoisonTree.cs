@@ -300,16 +300,17 @@ namespace Clover.Player.Trees
                 },
                 "Cast it on the poison's beat, within a fifth of a second of a bite on any enemy near, and the cloud doses twice a second.");
 
-            // NEEDS: the reaction itself held in the body and landed later at double strength (reaction-held, reaction-stats),
-            // and the closing ring of mist drawn (looks). Until then each reaction poison is in holds a burst of its own on the
-            // enemy for two and a half seconds, or until a heavy blow on it brings it on: 20 damage, 20 stagger, two doses.
+            // Each reaction poison is in is held in the body (UpgradeAction.HoldReaction, PlayerReactions.Hold): it lands two and a
+            // half seconds later, or at once on a heavy blow on that enemy, at double strength, and dosing all within 2.5 m two
+            // deep as it lands. Burning Sap, which holds back its own bites already, only takes the strength. NEEDS: the closing
+            // ring of mist drawn (looks).
             to.Add(BranchPattern.Put(new Upgrade { Id = TheDelayedTouch, Name = "The Delayed Touch", Element = E, Kind = UpgradeKind.Major, Lifts = E, Requires = new[] { Catching }, Icon = UpgradeIcons.Hourglass,
                 Description = "Every reaction poison takes part in is held in the body: a thin ring of mist closes on it, and the reaction lands two and a half seconds later at double strength, dosing all it reaches two deep. A heavy blow on that enemy brings it on at once.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.Reacted, Needs = P, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = HeldInTheBody, Seconds = 2.5f, EndsWith = ConditionBlow.Heavy } },
-                    new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = HeldInTheBody, Do = UpgradeAction.Burst, Radius = 2.5f, Damage = 20f, Stagger = 20f, Affliction = P, Stacks = 2 },
-                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = HeldInTheBody, By = StruckBy.Heavy, Do = UpgradeAction.Burst, Radius = 2.5f, Damage = 20f, Stagger = 20f, Affliction = P, Stacks = 2 },
+                    new UpgradeEffect { On = UpgradeTrigger.Reacted, ReactionWith = P, Do = UpgradeAction.HoldReaction, Seconds = 2.5f, Amount = 2f },
+                    // Told as the held reaction lands (the marks answering a reaction hear it then): all it reaches dosed two deep.
+                    new UpgradeEffect { On = UpgradeTrigger.Reacted, ReactionWith = P, Do = UpgradeAction.Afflict, Radius = 2.5f, Affliction = P, Stacks = 2 },
                 } },
                 BranchPattern.RightMiddle));
 

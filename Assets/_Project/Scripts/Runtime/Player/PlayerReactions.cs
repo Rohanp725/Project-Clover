@@ -287,6 +287,8 @@ namespace Clover.Player
                 bitHost[i] = null;
             }
             bitCount = 0;
+            // The reactions held in the body whose time has come, or that a heavy blow brought on.
+            acted |= LandHeld();
             // The reactions owed a second strike whose time has come.
             for (int i = 0; i < echoCount; i++)
             {
@@ -363,6 +365,72 @@ namespace Clover.Player
             return true;
         }
 
+        // ---- Reactions held in the body and landed later (The Delayed Touch; the ledger's reaction-held).
+        private const int MostHeld = 12;
+        private readonly Component[] heldWho = new Component[MostHeld];
+        private readonly int[] heldPair = new int[MostHeld];
+        private readonly float[] heldUntil = new float[MostHeld];
+        private readonly float[] heldStrength = new float[MostHeld];
+        private int heldCount;
+        // The strength the reaction now acted on lands at (1 as written): a held one's on landing, or one that waits already.
+        private float actStrength = 1f;
+        /// <summary>Reactions held in the body, and landed later, counted for probes.</summary>
+        public int HeldReactions { get; private set; }
+        public int HeldLanded { get; private set; }
+
+        /// <summary>
+        /// True while a held reaction stays held: its time is not out and the enemy still carries the hold (a heavy blow ends it,
+        /// <see cref="ConditionBlow.Heavy"/>), and it lives.
+        /// </summary>
+        public static bool StaysHeld(float now, float until, bool stillHeld) => now < until && stillHeld;
+
+        // A reaction a mark holds is put off: the hold is set on the enemy so a heavy blow can end it, and it lands later.
+        private bool Hold(Component who, int pair, float seconds, float strength)
+        {
+            if (heldCount >= MostHeld || !(who is IAfflictable held)) return false;
+            held.Afflictions.Conditions.Set(new ConditionSpec { Id = Trees.PoisonTree.HeldInTheBody, Seconds = seconds, EndsWith = ConditionBlow.Heavy }, who);
+            heldWho[heldCount] = who;
+            heldPair[heldCount] = pair;
+            heldUntil[heldCount] = Time.time + seconds;
+            heldStrength[heldCount] = strength;
+            heldCount++;
+            HeldReactions++;
+            return true;
+        }
+
+        private bool LandHeld()
+        {
+            bool acted = false;
+            for (int i = 0; i < heldCount; i++)
+            {
+                var who = heldWho[i];
+                bool alive = Alive(who);
+                if (alive && StaysHeld(Time.time, heldUntil[i], ((IAfflictable)who).Afflictions.Conditions.Holds(Trees.PoisonTree.HeldInTheBody))) continue;
+                if (alive)
+                {
+                    actStrength = heldStrength[i];
+                    landingHeld = true;
+                    try { acted |= Act(who, heldPair[i]); }
+                    finally
+                    {
+                        actStrength = 1f;
+                        landingHeld = false;
+                    }
+                    HeldLanded++;
+                }
+                heldCount--;
+                heldWho[i] = heldWho[heldCount];
+                heldPair[i] = heldPair[heldCount];
+                heldUntil[i] = heldUntil[heldCount];
+                heldStrength[i] = heldStrength[heldCount];
+                heldWho[heldCount] = null;
+                i--;
+            }
+            return acted;
+        }
+
+        private bool landingHeld;
+
         private bool Act(Component who, int pair)
         {
             if (!Alive(who) || pair < 0 || pair >= AfflictionPairs.Count) return false;
@@ -371,6 +439,18 @@ namespace Clover.Player
             {
                 Unbuilt++;
                 return false;
+            }
+            // Held in the body by a mark (The Delayed Touch): put off, to land later at its strength; one that holds back its own
+            // bites already (Burning Sap) is not held again, and only takes the strength.
+            float holdStrength = 1f;
+            float holdFor = !landingHeld && upgrades != null ? upgrades.ReactionHold(pair, out holdStrength) : 0f;
+            if (holdFor > 0f)
+            {
+                if (!ReactionRules.WaitsAlready(upgrades.ReactionEffects(pair, -1)))
+                {
+                    if (Hold(who, pair, holdFor, holdStrength)) return true;
+                }
+                else actStrength = holdStrength;
             }
             Vector3 at = who.transform.position;
             // Its look rides on the enemy, and one with a way to it lies along the way from the player through the enemy.
@@ -393,6 +473,9 @@ namespace Clover.Player
             // A ripe seed in the pair makes the reaction's blows stronger, an unripe one softer (In Its Season).
             upgrades.ReactingOn(who, pair);
             if (boost != 1f) upgrades.ScaleReaction(boost);
+            // A held reaction lands at its strength (The Delayed Touch: double).
+            if (actStrength != 1f) upgrades.ScaleReaction(actStrength);
+            actStrength = 1f;
             for (int i = 0; i < effects.Length; i++)
                 if (effects[i].On == UpgradeTrigger.Reacted && !(spares && effects[i].Do == UpgradeAction.Spend)) upgrades.Fire(effects[i], who, at, LaySource.Reaction);
             upgrades.ReactedOn();

@@ -4842,6 +4842,14 @@ namespace Clover.Player
         /// What the marks in force make of the reaction of <paramref name="pair"/> as it fires on <paramref name="who"/>: its own
         /// damage multiplied, and whether it spends nothing (ReactionRules.Boost).
         /// </summary>
+        /// <summary>The seconds the reaction of <paramref name="pair"/> is held in the body by the marks in force (0: not held), and the strength it lands at (The Delayed Touch).</summary>
+        public float ReactionHold(int pair, out float strength)
+        {
+            strength = 1f;
+            if (byTrigger == null || pair < 0) return 0f;
+            return ReactionRules.Hold(byTrigger[(int)UpgradeTrigger.Reacted], pair, out strength);
+        }
+
         public float ReactionBoost(Component who, int pair, out bool spares)
         {
             spares = false;
