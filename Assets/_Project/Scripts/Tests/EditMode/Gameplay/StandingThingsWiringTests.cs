@@ -1308,5 +1308,60 @@ namespace Clover.Tests
                 Assert.AreEqual(1, pass.CountedBlows, "the fig on the one it passes to: two coils");
             }
         }
+
+        [Test]
+        public void AshOnTheBrowKeepsTheHeavyBlowAndTheWardForTheAttacker()
+        {
+            var smeared = new object();
+            var other = new object();
+            Assert.IsTrue(PlayerCombat.MadeHeavyOn(false, 6f, 2f, smeared, smeared), "the blow on the smeared attacker is heavy");
+            Assert.IsFalse(PlayerCombat.MadeHeavyOn(false, 6f, 2f, smeared, other), "a blow on anyone else stays light");
+            Assert.IsTrue(PlayerCombat.MadeHeavyOn(false, 6f, 2f, null, other), "a window kept for no one makes any blow heavy");
+            Assert.IsFalse(PlayerCombat.MadeHeavyOn(false, 6f, 6.5f, smeared, smeared), "six seconds, then gone");
+            Assert.IsFalse(PlayerCombat.MadeHeavyOn(true, 6f, 2f, smeared, smeared), "a heavy blow is heavy already");
+
+            Assert.IsTrue(PlayerDefence.KeptWardTurns(smeared, 6f, 2f, smeared), "its blow is turned");
+            Assert.IsFalse(PlayerDefence.KeptWardTurns(smeared, 6f, 2f, other), "another's blow is not");
+            Assert.IsFalse(PlayerDefence.KeptWardTurns(smeared, 6f, 2f, null), "a blow from no one found is not");
+            Assert.IsFalse(PlayerDefence.KeptWardTurns(smeared, 6f, 7f, smeared), "kept six seconds");
+
+            var shape = Upgrade.ById(SpellBranch.ShapeId(DarkTree.GoneToAsh)).Shapes.Single(each => each.Name == "Ash on the Brow");
+            var ward = shape.Effects.Single(each => each.Do == UpgradeAction.Ward);
+            Assert.IsTrue(ward.OnTarget, "the ward is the attacker's alone");
+            Assert.AreEqual(6f, ward.Seconds, 1e-5f);
+            var heavy = shape.Effects.Single(each => each.Do == UpgradeAction.NextHeavy);
+            Assert.IsTrue(heavy.OnTarget, "only the first blow on it");
+            Assert.AreEqual(6f, heavy.Seconds, 1e-5f, "waiting while the smear lasts");
+            var learn = Upgrade.ById(DarkTree.GoneToAsh).Effects;
+            int learnHeavy = System.Array.FindIndex(learn, each => each.Do == UpgradeAction.NextHeavy);
+            Assert.IsTrue(ShapeDef.SetAside(shape, learnHeavy), "the Learn's blow on anyone is set aside");
+            Assert.IsTrue(ShapeDef.SetAside(shape, 0), "you stand again where you were");
+        }
+
+        [Test]
+        public void TheHagsStaffDrivesFrostUnderWhatAHeavyBlowStrikesOnItsDisc()
+        {
+            var staff = Upgrade.ById(Clover.Player.Trees.Duo.FrostHeaveDuo.TheHagsStaff);
+            Assert.AreEqual(Clover.Player.Trees.Duo.FrostHeaveDuo.HagsGround, staff.Spell.Ground, "the disc is your own ground");
+            var driven = staff.Effects.Where(each => each.On == UpgradeTrigger.HeavyHit).ToArray();
+            Assert.AreEqual(2, driven.Length);
+            Assert.IsTrue(driven.All(each => each.TargetOnGround == Clover.Player.Trees.Duo.FrostHeaveDuo.HagsGround), "only on the disc");
+            Assert.AreEqual(25f, driven.Single(each => each.Do == UpgradeAction.Burst).Stagger, 1e-5f, "25 more stagger");
+            Assert.AreEqual(0.5f, driven.Single(each => each.Do == UpgradeAction.Lift).Seconds, 1e-5f, "thrown up half a second");
+
+            OwnGrounds.Lay(Clover.Player.Trees.Duo.FrostHeaveDuo.HagsGround, Vector3.zero, 6f, 6f);
+            Assert.IsTrue(OwnGrounds.Under(Clover.Player.Trees.Duo.FrostHeaveDuo.HagsGround, new Vector3(4f, 0f, 3f), 1f), "five metres out is on it");
+            Assert.IsFalse(OwnGrounds.Under(Clover.Player.Trees.Duo.FrostHeaveDuo.HagsGround, new Vector3(5f, 0f, 5f), 1f), "seven metres out is not");
+            Assert.IsFalse(OwnGrounds.Under(Clover.Player.Trees.Duo.FrostHeaveDuo.HagsGround, Vector3.zero, 6.5f), "gone after six seconds");
+        }
+
+        [Test]
+        public void UnderTheMoundsMasterMakesTheNextBlowHeavy()
+        {
+            var master = Upgrade.ById(SpellBranch.MasterId(EarthTree.UnderTheMound)).Effects;
+            var heavy = master.Single(each => each.Do == UpgradeAction.NextHeavy);
+            Assert.AreEqual(0.3f, heavy.BlowLanding, 1e-5f, "only when gone under as a blow would land");
+            Assert.IsFalse(heavy.OnTarget);
+        }
     }
 }

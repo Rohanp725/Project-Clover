@@ -444,6 +444,13 @@ namespace Clover.Player
         public bool OncePerFight;
         /// <summary>For BurstGround: the Hazard effect whose standing patches it bursts.</summary>
         public UpgradeEffect BurstsGround;
+        /// <summary>
+        /// For NextHeavy: only the next blow on the trigger's own enemy is made heavy, not the next blow on anyone. For Ward: the
+        /// ward turns only that enemy's next blow, kept for it for Seconds (Ash on the Brow's smeared attacker).
+        /// </summary>
+        public bool OnTarget;
+        /// <summary>Only when the trigger's enemy stands in the player's own ground of this name (World.OwnGrounds: The Hag's Staff's frozen disc).</summary>
+        public string TargetOnGround = "";
 
         /// <summary>True when a Hazard effect lays ground that keeps acting, told to the marks at each bite (Hazards.GroundActs).</summary>
         public bool ActsAsGround => Inside != null || Mends > 0f || InsideDo != null || InsideAtEnd != null || YouInside != null || !string.IsNullOrEmpty(Ground);

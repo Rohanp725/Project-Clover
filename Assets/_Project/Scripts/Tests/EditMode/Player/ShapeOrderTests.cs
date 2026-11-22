@@ -180,7 +180,7 @@ namespace Clover.Tests
         [Test]
         public void AShapeSetsAsideWhatItsLearnWouldDo()
         {
-            CollectionAssert.AreEqual(new[] { UpgradeAction.Step }, AsideOf(DarkTree.GoneToAsh, "Ash on the Brow"), "you stand again where you were");
+            CollectionAssert.AreEqual(new[] { UpgradeAction.Step, UpgradeAction.NextHeavy }, AsideOf(DarkTree.GoneToAsh, "Ash on the Brow"), "you stand again where you were, and only the blow on the smeared one is heavy");
             CollectionAssert.AreEqual(new[] { UpgradeAction.Step }, AsideOf(DarkTree.GoneToAsh, "Ash Hangs"));
             CollectionAssert.AreEqual(new[] { UpgradeAction.Hold, UpgradeAction.Burst }, AsideOf(PoisonTree.FiveNeedles, "Spread"), "no pin");
             CollectionAssert.AreEqual(new[] { UpgradeAction.Falling, UpgradeAction.Burst }, AsideOf(EarthTree.Cairn, "Unbroken Cairn"), "nothing falls at the cast");

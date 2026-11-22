@@ -17,6 +17,8 @@ namespace Clover.Player.Trees.Duo
         public const string Permafrost = "frostheave.permafrost";
         public const string WinterInTheBones = "frostheave.bones";
         public const string TheHagsStaff = "frostheave.hagsstaff";
+        /// <summary>The Hag's Staff's disc of frozen ground, your own while it lasts.</summary>
+        public const string HagsGround = "frostheave.hagsground";
         /// <summary>The conditions the two shapes set: each heave, and Pingo's mound with its core of ice.</summary>
         public const string Sorted = "frostheave.sorted";
         public const string PingoHeave = "frostheave.pingoheave";
@@ -108,15 +110,21 @@ namespace Clover.Player.Trees.Duo
             }, HeartPattern.Keystone));
 
             // The duo spell, bought with Shards once both are carried (no god gives it): a breaker on a 12 s cooldown (SpellTimings). The field form hardens the ground round
-            // you; each second it chills (the branch's first element) and shakes what stands on it, so it heaves.
-            // NEEDS: heavy blows on the frozen ground driving frost under the one struck (25 more stagger and a small heave).
+            // you; each second it chills (the branch's first element) and shakes what stands on it, so it heaves. The disc is your own
+            // ground (SpellSpec.Ground): a heavy blow on an enemy standing on it drives frost under it (UpgradeEffect.TargetOnGround),
+            // 25 more stagger and a heave of half a second.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = TheHagsStaff, Name = "The Hag's Staff", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Role = SpellRole.Breaker, Requires = new[] { HardFrost, FrozenFooting }, Icon = UpgradeIcons.Snowflake,
                 Description = "You strike the ground and hammer the frost into it. A disc 6 m round you goes hard and white for 6 s; each second every enemy on it is chilled and shaken, so it heaves when the two meet.",
                 Form = SpellForms.Field,
-                Spell = new SpellSpec { Reach = 0f, Radius = 6f, Seconds = 6f, Interval = 1f, LingerDamage = 2f, Stacks = 1 },
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Tremor, Stacks = 1 } },
+                Spell = new SpellSpec { Reach = 0f, Radius = 6f, Seconds = 6f, Interval = 1f, LingerDamage = 2f, Stacks = 1, Ground = HagsGround },
+                Effects = new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Tremor, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.HeavyHit, TargetOnGround = HagsGround, Do = UpgradeAction.Burst, Radius = 0.5f, Damage = 0f, Stagger = 25f, Stacks = 0, Cooldown = 0.2f },
+                    new UpgradeEffect { On = UpgradeTrigger.HeavyHit, TargetOnGround = HagsGround, Do = UpgradeAction.Lift, Seconds = 0.5f, Stagger = 1f, Cooldown = 0.2f },
+                },
             }, HeartPattern.Spell));
         }
     }

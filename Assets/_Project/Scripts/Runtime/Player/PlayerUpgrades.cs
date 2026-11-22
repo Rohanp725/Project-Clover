@@ -1566,6 +1566,8 @@ namespace Clover.Player
             if (effect.HealthBelow > 0f && !(defence != null && !defence.IsDead && defence.Health.Fraction < effect.HealthBelow)) return;
             if (effect.StoneAtBack > 0f && (target == null || !StoneBehind(transform.position, target.transform.position, effect.StoneAtBack))) return;
             if (effect.NearStanding > 0f && !StandingThings.NearKind(transform.position, effect.NearStanding, effect.Raises)) return;
+            // Only on an enemy standing in your own ground of that name (The Hag's Staff: heavy blows on its frozen disc).
+            if (!string.IsNullOrEmpty(effect.TargetOnGround) && !(target != null && OwnGrounds.Under(effect.TargetOnGround, target.transform.position, Time.time))) return;
             if (effect.Needs != AfflictionKind.None || effect.Needs2 != AfflictionKind.None)
             {
                 // Asked of what the dead one carried, of the trigger's own enemy, or, when the trigger names no one, of the enemy faced.
@@ -2555,7 +2557,13 @@ namespace Clover.Player
                     Vfx.Play(VfxKind.TintRing, self + Vector3.up * 0.2f, Vector3.up, 1f, new Color(0.62f, 0.55f, 0.45f));
                     break;
                 case UpgradeAction.Ward:
-                    if (defence != null) defence.GiveWards(Or(eCount, 1));
+                    // Kept for the trigger's enemy alone (Ash on the Brow): only its next blow is turned.
+                    if (effect.OnTarget)
+                    {
+                        if (defence == null || subject == null) break;
+                        defence.KeepWardFor(subject, Time.time + Or(effect.Seconds, 6f));
+                    }
+                    else if (defence != null) defence.GiveWards(Or(eCount, 1));
                     Vfx.Play(VfxKind.TintRing, self + Vector3.up * 0.2f, Vector3.up, 1f, new Color(0.7f, 0.92f, 1f));
                     break;
                 case UpgradeAction.Step:
@@ -2823,7 +2831,8 @@ namespace Clover.Player
                     if (element != null && element.LightSurgeFree(effect.SurgeOf, Or(effect.Seconds, 4f))) SurgesGiven++;
                     break;
                 case UpgradeAction.NextHeavy:
-                    combat.MakeNextBlowHeavy(Or(effect.Seconds, 1f));
+                    if (effect.OnTarget && subject == null) break;
+                    combat.MakeNextBlowHeavy(Or(effect.Seconds, 1f), effect.OnTarget ? subject : null);
                     ElementLook.Sparks(held, self + Vector3.up * 1.2f, transform.forward, 0.5f);
                     break;
                 case UpgradeAction.ShareStore:

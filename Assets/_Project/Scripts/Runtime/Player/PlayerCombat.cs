@@ -68,15 +68,30 @@ namespace Clover.Player
         /// <summary>What the element's upgrades add: a standing share of damage (Heat), and a one-off multiplier the next blow that lands spends (Stored Charge).</summary>
         public float UpgradeDamage = 1f;
         public float NextBlowDamage = 1f;
-        // Until when the next light blow lands as a heavy one (UpgradeAction.NextHeavy); 0 for none.
+        // Until when the next light blow lands as a heavy one (UpgradeAction.NextHeavy); 0 for none. With an enemy named,
+        // only the next blow on that enemy is made heavy, and the window waits for it (Ash on the Brow).
         private float heavyNextUntil;
-        /// <summary>The next light weapon blow within <paramref name="seconds"/> lands as a heavy blow (Gone to Ash's first blow behind the attacker).</summary>
-        public void MakeNextBlowHeavy(float seconds) => heavyNextUntil = Time.time + Mathf.Max(0.05f, seconds);
+        private Component heavyNextOn;
+        /// <summary>
+        /// The next light weapon blow within <paramref name="seconds"/> lands as a heavy blow (Gone to Ash's first blow behind the
+        /// attacker); with <paramref name="on"/>, only the next blow on that enemy (Ash on the Brow's smeared attacker).
+        /// </summary>
+        public void MakeNextBlowHeavy(float seconds, Component on = null)
+        {
+            heavyNextUntil = Time.time + Mathf.Max(0.05f, seconds);
+            heavyNextOn = on;
+        }
         /// <summary>True while the next light blow would land as a heavy one.</summary>
         public bool NextBlowHeavy => MadeHeavy(false, heavyNextUntil, Time.time);
+        /// <summary>The one enemy the next blow made heavy is kept for; null when it is for anyone.</summary>
+        public Component NextHeavyOn => heavyNextOn;
 
         /// <summary>True when a light blow is made heavy: it is not heavy already, and a mark's window for it runs at <paramref name="now"/>.</summary>
         public static bool MadeHeavy(bool stepHeavy, float until, float now) => !stepHeavy && now < until;
+
+        /// <summary>As <see cref="MadeHeavy(bool, float, float)"/>, on <paramref name="target"/>: a window kept for one enemy makes only its blow heavy.</summary>
+        public static bool MadeHeavyOn(bool stepHeavy, float until, float now, object only, object target) =>
+            MadeHeavy(stepHeavy, until, now) && (only == null || ReferenceEquals(only, target));
 
         /// <summary>The stagger a light blow made heavy breaks: the weapon's heavy blow's, never less than its own.</summary>
         public static float HeavyStagger(float light, float heavy) => Mathf.Max(light, heavy);
@@ -2253,9 +2268,12 @@ namespace Clover.Player
             if (fresh) struck.Clear();
             int already = struck.Count;
             // A light blow a mark made heavy (blow-made-heavy): the heavy's stagger, and every mark that answers a heavy blow.
+            // Kept for one enemy (Ash on the Brow), only the blow on that one is heavy; the rest of the swing stays light.
             bool madeHeavy = MadeHeavy(step.Heavy, heavyNextUntil, Time.time);
-            bool heavy = step.Heavy || madeHeavy;
-            float lightStagger = madeHeavy ? HeavyStagger(step.Stagger, Combo.Heavy != null ? Combo.Heavy.Stagger : 0f) : step.Stagger;
+            bool swingHeavy = step.Heavy || (madeHeavy && heavyNextOn == null);
+            float madeStagger = madeHeavy ? HeavyStagger(step.Stagger, Combo.Heavy != null ? Combo.Heavy.Stagger : 0f) : step.Stagger;
+            float swingStagger = swingHeavy && !step.Heavy ? madeStagger : step.Stagger;
+            bool madeHeavyLanded = false;
             if (fresh)
             {
                 // The carried aspect's part in the blow going out: the seventh drum's draw, the hanging cut.
@@ -2344,6 +2362,9 @@ namespace Clover.Player
                 // Something touching the player is hit whatever the angle; otherwise it must be inside the swing's arc.
                 else if (distance > 0.6f && Vector3.Angle(transform.forward, offset) > step.ArcDegrees * 0.5f) continue;
                 var afflictable = target as IAfflictable;
+                bool madeHeavyHere = MadeHeavyOn(step.Heavy, heavyNextUntil, Time.time, heavyNextOn, target);
+                bool heavy = step.Heavy || madeHeavyHere;
+                float lightStagger = madeHeavyHere ? madeStagger : step.Stagger;
                 // A blow is critical by chance, or always on an enemy that is Marked.
                 // Overdrive: while it lasts, the last blow of every chain is critical.
                 bool chainEnds = step == Combo.ChainHeavy || (Combo.Steps.Count > 0 && step == Combo.Steps[Combo.Steps.Count - 1]);
@@ -2463,6 +2484,7 @@ namespace Clover.Player
                     finisher: step.Heavy && Combo.IsFinishing));
                 if (outcome == HitOutcome.Missed) continue;
                 struck.Add(target);
+                madeHeavyLanded |= madeHeavyHere;
                 if (infused && infusedFirst == null && outcome != HitOutcome.Blocked && target is Component firstBody) infusedFirst = firstBody;
                 if (carries && !moveChargeSpent && outcome != HitOutcome.Blocked && target is Component chargedBody)
                 {
@@ -2618,7 +2640,7 @@ namespace Clover.Player
                     shadowBodies[s] = null;
                     if (!(body is IDamageable shadowed) || struck.Contains(shadowed) || !PlayerReactions.Alive(body)) continue;
                     float shadowDamage = step.Damage * scale * DamageMultiplier * UpgradeDamage * NextBlowDamage * StatDamage;
-                    var outcome = shadowed.TakeHit(new Hit(shadowDamage, lightStagger * scale * StatStagger, transform.forward, heavy, true, transform.position, tint: struckTint));
+                    var outcome = shadowed.TakeHit(new Hit(shadowDamage, swingStagger * scale * StatStagger, transform.forward, swingHeavy, true, transform.position, tint: struckTint));
                     if (outcome == HitOutcome.Missed) continue;
                     struck.Add(shadowed);
                     ShadowBlows++;
@@ -2634,8 +2656,12 @@ namespace Clover.Player
             }
             if (fresh)
             {
-                // A blow made heavy is spent once it lands on someone.
-                if (MadeHeavy(step.Heavy, heavyNextUntil, Time.time) && struck.Count > already) heavyNextUntil = 0f;
+                // A blow made heavy is spent once it lands on someone (on its one enemy, when it is kept for one).
+                if (madeHeavyLanded)
+                {
+                    heavyNextUntil = 0f;
+                    heavyNextOn = null;
+                }
                 if (upgrades != null) upgrades.OnSwing(step, struck.Count);
                 Clover.Player.Forms.SpellWorks.Swing(step, transform.position, transform.forward);
                 Swung?.Invoke(step);

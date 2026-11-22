@@ -92,13 +92,14 @@ namespace Clover.Player.Trees
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Lift, Seconds = 0.6f } } },
                 "Opens two shapes of Under the Mound, chosen at any rest fire: Ditch and Bank, a wall drawn along your path, or Barrow Road, steered under the ground to come up beneath an enemy.",
                 // Started as a blow would land (UpgradeEffect.BlowLanding), it is a perfect dodge (UpgradeAction.PerfectDodgeNow), and the next
-                // blow that lands breaks half again as much balance and lays one Tremor more. NEEDS: coming up behind the attacker, and
-                // that blow landing as a heavy blow (blow-made-heavy).
+                // blow that lands breaks half again as much balance, lays one Tremor more and lands as a heavy blow (UpgradeAction.NextHeavy).
+                // NEEDS: coming up behind the attacker (form-pieces).
                 new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, BlowLanding = 0.3f, Do = UpgradeAction.PerfectDodgeNow },
                     new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, BlowLanding = 0.3f, Do = UpgradeAction.Boon, Stat = PlayerStat.StaggerDealt, Amount = 0.5f, Seconds = 3f, UntilBlow = true },
                     new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, BlowLanding = 0.3f, Do = UpgradeAction.Boon, Stat = PlayerStat.AfflictionStacks, Amount = 1f, Seconds = 3f, UntilBlow = true },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, BlowLanding = 0.3f, Do = UpgradeAction.NextHeavy, Seconds = 3f },
                 },
                 "Go under in the instant a blow would land on you, as a perfect dodge, and you come up at once behind the attacker. Your next blow lands as a heavy blow, with two Tremor, and breaks half again as much balance.");
 

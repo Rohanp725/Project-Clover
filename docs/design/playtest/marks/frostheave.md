@@ -66,7 +66,7 @@ both carried.
 
 **When it happens.** Cast it from a spell slot while you carry both Ice and Earth. Press that slot's button (hold L2 and a face button, or press 1 to 4). The first time it lands, it charges your blade with Ice.
 
-**The numbers.** Mix, duo spell, breaker, 5 Shards. It costs no mana. After you cast it, you must wait 12 seconds to cast it again. Fighting with your weapon makes the wait shorter. It covers 6 metres around you for 6 seconds. Each second, it deals 2 damage, a Chill and a Tremor.
+**The numbers.** Mix, duo spell, breaker, 5 Shards. It costs no mana. After you cast it, you must wait 12 seconds to cast it again. Fighting with your weapon makes the wait shorter. It covers 6 metres around you for 6 seconds. Each second, it deals 2 damage, a Chill and a Tremor. While it lasts, each heavy blow you land on an enemy standing on the frozen circle drives frost under it: 25 more stagger, and it is thrown up for half a second.
 
 **Works with.** Frost Heave and its shapes, Hard Frost, Winter in the Bones.
 

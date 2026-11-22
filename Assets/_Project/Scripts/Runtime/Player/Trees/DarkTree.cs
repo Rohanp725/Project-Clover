@@ -127,15 +127,16 @@ namespace Clover.Player.Trees
                 // The heal of 15 is the Learn's own heal, set by the Empower (empower-effects).
                 new Empower { Cooldown = 9f, Seconds = 1.5f, Effects = new[] { new EffectChange { Index = 3, Amount = 15f } } },
                 "Gone to Ash waits 9 seconds, not 10, holds for a second and a half, and its blow heals you 15.",
-                // Standing again where you were: the Learn's step behind set aside (ShapeDef.SetsAside). NEEDS: the ward kept for
-                // that attacker's blow alone, and the grey stripe across its head (looks). The Curse held six seconds and one blow
-                // turned are data.
-                new ShapeDef { Name = "Ash on the Brow", SetsAside = new[] { 0 },
+                // Standing again where you were: the Learn's step behind and its next blow heavy on anyone set aside (ShapeDef.SetsAside). The ward is kept for that
+                // attacker's next blow alone (UpgradeEffect.OnTarget), and the first blow on it within the six seconds is heavy
+                // (NextHeavy OnTarget, waiting for it). The Curse held six seconds is data. NEEDS: the grey stripe across its head (looks).
+                new ShapeDef { Name = "Ash on the Brow", SetsAside = new[] { 0, 1 },
                     Description = "You stand again where you were. The ash settles on the attacker's brow as a grey smear: for six seconds it is Cursed, the next blow it lands on you scatters you for nothing once more, and your first blow on it is a heavy. The ash marks the one who struck.",
                     Effects = new[]
                     {
                         new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = AshOnTheBrow, Seconds = 6f, Keeps = C } },
-                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Ward, Count = 1, Cooldown = 1f },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Ward, Count = 1, OnTarget = true, Seconds = 6f, Cooldown = 1f },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.NextHeavy, OnTarget = true, Seconds = 6f, Cooldown = 0.5f },
                     } },
                 // Standing again where you were: the Learn's step behind set aside (ShapeDef.SetsAside). The cloud that Curses is
                 // data, laid on the attacker; whoever stands in it cannot turn (UpgradeEffect.Inside, ConditionFlags.CannotTurn), so

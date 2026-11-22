@@ -278,13 +278,42 @@ namespace Clover.Player
         }
 
         /// <summary>Takes every ward away, as when the element that gave them is put down.</summary>
-        public void ClearWards() => Wards = 0;
+        public void ClearWards()
+        {
+            Wards = 0;
+            wardKeptFor = null;
+        }
 
-        // A ward is spent on a blow that was about to land: a pale ring, and the blow is gone.
+        // A ward kept for one enemy's next blow alone (Ash on the Brow), until a time.
+        private Component wardKeptFor;
+        private float wardKeptUntil;
+        /// <summary>The enemy whose next blow a kept ward turns; null when none is kept.</summary>
+        public Component WardKeptFor => wardKeptFor != null && Time.time < wardKeptUntil ? wardKeptFor : null;
+
+        /// <summary>Keeps a ward for <paramref name="one"/>'s next blow alone, until <paramref name="until"/> (Ash on the Brow).</summary>
+        public void KeepWardFor(Component one, float until)
+        {
+            wardKeptFor = one;
+            wardKeptUntil = until;
+        }
+
+        /// <summary>True when a ward kept for <paramref name="keptFor"/> until <paramref name="until"/> turns a blow by <paramref name="attacker"/> at <paramref name="now"/>.</summary>
+        public static bool KeptWardTurns(object keptFor, float until, float now, object attacker) =>
+            keptFor != null && attacker != null && now < until && ReferenceEquals(keptFor, attacker);
+
+        // A ward is spent on a blow that was about to land: a pale ring, and the blow is gone. A ward kept for one enemy is
+        // spent first, and only on that enemy's blow.
         private bool SpendWard(in Hit hit)
         {
-            if (Wards <= 0) return false;
-            Wards--;
+            bool kept = false;
+            if (wardKeptFor != null && combat != null && hit.HasOrigin)
+            {
+                var attacker = combat.EnemyAt(hit.Origin, 2.5f);
+                kept = KeptWardTurns(wardKeptFor, wardKeptUntil, Time.time, attacker);
+            }
+            if (kept) wardKeptFor = null;
+            else if (Wards <= 0) return false;
+            else Wards--;
             BlowsWarded++;
             if (upgrades != null)
             {
@@ -673,6 +702,7 @@ namespace Clover.Player
             Flasks.Refill();
             player.Stamina.Fill();
             Wards = 0;
+            wardKeptFor = null;
             Plates = 0;
         }
 
