@@ -1771,5 +1771,19 @@ namespace Clover.Tests
             Assert.AreEqual(5f, at.z, 1e-4f);
             Assert.IsFalse(OwnGrounds.NearestLane(OwnGrounds.Seams, new Vector3(20f, 0f, 5f), 1f, 6f, out _, out _), "too far");
         }
+
+        [Test]
+        public void GlassStormsShardsAreFlungByWeaponBlows()
+        {
+            var storm = Upgrade.ById(Clover.Player.Trees.Duo.SleetChargeDuo.GlassStorm);
+            Assert.AreEqual(8f, storm.Spell.FlingDamage, 1e-5f, "a flung shard strikes for 8");
+            Assert.AreEqual(1, DiscsForm.FlingsFor(false), "a blow flings one");
+            Assert.GreaterOrEqual(DiscsForm.FlingsFor(true), storm.Spell.Count, "a heavy blow flings all that are left");
+            var at = new[] { new Vector3(2f, 0f, 0f), new Vector3(0f, 0f, 2f), new Vector3(-2f, 0f, 0f) };
+            Assert.AreEqual(1, DiscsForm.Nearest(0b111, at, 3, new Vector3(0f, 0f, 5f)), "the nearest shard");
+            Assert.AreEqual(0, DiscsForm.Nearest(0b101, at, 3, new Vector3(0f, 0f, 5f)), "of those still turning");
+            Assert.AreEqual(-1, DiscsForm.Nearest(0, at, 3, Vector3.zero), "none left");
+            Assert.IsTrue(storm.Effects.Single().EveryOnEnemy == 2, "a Static every other pass, counted on each enemy");
+        }
     }
 }

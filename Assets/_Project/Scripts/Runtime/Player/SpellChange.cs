@@ -214,6 +214,7 @@ namespace Clover.Player
             into.Thrown = from.Thrown;
             into.SweepTurn = from.SweepTurn;
             into.Across = from.Across;
+            into.FlingDamage = from.FlingDamage;
             into.Bank = from.Bank;
             into.BankDamage = from.BankDamage;
             into.BankStagger = from.BankStagger;

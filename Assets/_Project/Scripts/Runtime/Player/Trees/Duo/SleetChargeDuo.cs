@@ -116,15 +116,15 @@ namespace Clover.Player.Trees.Duo
 
             // The duo spell (pairs_d1_d2.md), bought with Shards once both are carried (no god gives it): an opener on a 14 s cooldown (SpellTimings). The Discs form turns the
             // shards; each pass lays the branch's first element's Chill, and every other pass on each enemy a Static.
-            // NEEDS: a weapon blow that flings an orbiting piece (each landed blow flings the nearest shard into the enemy struck,
-            // 8, a Chill and a Static; a heavy blow flings all that are left); hard glassy splinters with threads of lightning
-            // between them, never a glowing ring.
+            // Each weapon blow that lands flings the nearest shard into the enemy struck (SpellSpec.FlingDamage: 8, a Chill and a
+            // Static), a heavy blow all that are left; with none left the storm is spent. NEEDS: hard glassy splinters with threads
+            // of lightning between them, never a glowing ring (looks).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = GlassStorm, Name = "Glass Storm", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Role = SpellRole.Opener, Requires = new[] { ChargedHail, ColdSnap }, Icon = UpgradeIcons.Orb,
                 Description = "Six shards of clear ice turn round you at 2 m for 8 s, threads of lightning jumping between them. Each shard that passes through an enemy cuts it for 4 and lays a Chill, and every other pass a Static.",
                 Form = SpellForms.Discs,
-                Spell = new SpellSpec { Count = 6, Radius = 2f, Seconds = 8f, Interval = 0.5f, Damage = 4f, Stagger = 4f, Stacks = 1 },
+                Spell = new SpellSpec { Count = 6, Radius = 2f, Seconds = 8f, Interval = 0.5f, Damage = 4f, Stagger = 4f, Stacks = 1, FlingDamage = 8f },
                 Effects = new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Static, Stacks = 1, EveryOnEnemy = 2 },

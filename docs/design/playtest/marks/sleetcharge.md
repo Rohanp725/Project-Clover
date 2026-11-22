@@ -56,10 +56,10 @@ both are carried (in the playtest, whenever you pick Ice beside Lightning or Lig
 
 **When it happens.** Cast it from a spell slot while you carry both Ice and Lightning. Press that slot's button (hold L2 and a face button, or press 1 to 4). The first time it lands, it charges your blade with Ice, this branch's first element.
 
-**The numbers.** Mix, duo spell, opener, 5 Shards. It costs no mana. After you cast it, you must wait 14 seconds to cast it again. Fighting with your weapon makes the wait shorter. Six shards spin for 8 seconds. Each one that passes through an enemy hits it at most once every half second, for 4 damage, 4 stagger and a Chill. Every other pass on an enemy adds a Static as well. Each enemy keeps its own count.
+**The numbers.** Mix, duo spell, opener, 5 Shards. It costs no mana. After you cast it, you must wait 14 seconds to cast it again. Fighting with your weapon makes the wait shorter. Six shards spin for 8 seconds. Each one that passes through an enemy hits it at most once every half second, for 4 damage, 4 stagger and a Chill. Every other pass on an enemy adds a Static as well. Each enemy keeps its own count. Each weapon blow that lands throws the nearest shard into the enemy you hit, for 8 damage, 4 stagger, a Chill and a Static. A heavy blow throws all the shards that are left. Once every shard is thrown, the storm is over.
 
 **Works with.** Sleet Charge and its shapes, Charged Hail, Nothing Resists, Cold Snap, and any heavy blow on a chilled, charged enemy.
 
 **Example.** Cast it as a pack closes in. Every enemy the ring cuts is chilled, the ones it cuts twice are charged, and Sleet Charge starts going off all around you.
 
-**Not built yet.** Your weapon blows don't throw the shards yet (each blow that lands should throw the nearest shard into the enemy you hit, for 8 damage, a Chill and a Static, and a heavy blow should throw all that are left). The shards look like toothed discs until their glassy look is made.
+**Not built yet.** The shards look like toothed discs until their glassy look is made.

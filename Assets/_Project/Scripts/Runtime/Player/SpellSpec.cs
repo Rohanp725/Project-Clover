@@ -220,6 +220,12 @@ namespace Clover.Player
         /// of a disc; it bites what stands on the line (Need-Fire's two fires joined by sparks).
         /// </summary>
         public bool Across;
+        /// <summary>
+        /// For the discs form: above zero, each weapon blow that lands flings the nearest disc into the enemy struck for this much
+        /// (its stagger <see cref="Stagger"/>, the form's affliction and a Static), and a heavy blow flings all that are left
+        /// (Glass Storm: 8).
+        /// </summary>
+        public float FlingDamage;
         public int Bank;
         public float BankDamage;
         public float BankStagger;
