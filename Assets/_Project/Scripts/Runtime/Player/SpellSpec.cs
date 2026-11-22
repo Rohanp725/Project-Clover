@@ -81,6 +81,11 @@ namespace Clover.Player
         /// health (Debts Called: 2, 18 at full and 36 at one point; the ledger's health-scaled).
         /// </summary>
         public float HealthScaled;
+        /// <summary>Above zero: the cast also takes this share of the caster's present health, left grey (Feed the Ground: a quarter; the ledger's health-share).</summary>
+        public float HealthShare;
+
+        /// <summary>The health a cast takes: its fixed price and its share of the present health.</summary>
+        public static float HealthPrice(float fixedCost, float share, float present) => System.Math.Max(0f, fixedCost) + System.Math.Max(0f, share) * System.Math.Max(0f, present);
 
         /// <summary>What a spell rising to <paramref name="most"/> times at one point multiplies its damage by at <paramref name="fraction"/> of full health.</summary>
         public static float HealthScale(float most, float fraction) =>

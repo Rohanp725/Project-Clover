@@ -3391,7 +3391,7 @@ namespace Clover.Player
             var form = SpellForms.Get(SpellBranches.FormOf(mark, RunState.Unlocked, loadout));
             if (form == null) return false;
             // A spell may ask health in place of mana, or as well: it is left grey, to be won back.
-            float blood = spec.HealthCost * Stats.Multiplier(PlayerStat.HealthPrices);
+            float blood = SpellSpec.HealthPrice(spec.HealthCost, spec.HealthShare, defence != null ? defence.Health.Current : 0f) * Stats.Multiplier(PlayerStat.HealthPrices);
             var cast = element.NewCast(spec, mark.Name, mark);
             // A form that can do nothing just now says so before anything is paid.
             if (form is ISpellGate gate && !gate.CanCast(cast)) return false;

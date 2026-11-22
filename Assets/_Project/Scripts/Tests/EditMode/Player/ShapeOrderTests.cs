@@ -107,6 +107,17 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void FeedTheGroundTakesAQuarterOfYourPresentHealth()
+        {
+            Assert.AreEqual(25f, SpellSpec.HealthPrice(0f, 0.25f, 100f), 1e-5f);
+            Assert.AreEqual(10f, SpellSpec.HealthPrice(0f, 0.25f, 40f), 1e-5f, "a quarter of what is left");
+            Assert.AreEqual(25f, SpellSpec.HealthPrice(25f, 0f, 40f), 1e-5f, "a fixed price as before");
+            var feed = Upgrade.ById(SpellBranch.ShapeId(LifeTree.DrawnFromTheWood)).Shapes.First(shape => shape.Name == "Feed the Ground").Spell;
+            Assert.AreEqual(0.25f, feed.HealthShare, 1e-5f);
+            Assert.AreEqual(0f, feed.HealthCost, 1e-5f, "no fixed 25");
+        }
+
+        [Test]
         public void EveryShapesSetAsideNamesARealEffect()
         {
             foreach (var mark in Upgrade.All.Where(mark => mark.Part == BranchPart.Shape && mark.Shapes != null))

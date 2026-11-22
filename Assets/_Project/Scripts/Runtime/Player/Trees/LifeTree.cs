@@ -192,11 +192,11 @@ namespace Clover.Player.Trees
                 new ShapeDef { Name = "Blood in the Furrow",
                     Description = "The green blood soaks into the ground where you knelt, a ring eight metres across for as long as it lasts, and everything in it is Seeded each second. Fight in a place, not round yourself.",
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Hazard, At = EffectAt.Self, Shape = HazardShape.Patch, Radius = 4f, Seconds = 6f, Interval = 1f, Damage = 1f, Affliction = AfflictionKind.Seeded, Stacks = 1 } } },
-                // Nothing withers (ShapeDef.SetsAside: the Learn's withering burst). NEEDS: a quarter of your present health, not a fixed
-                // 25 (health-share). What you grow in the next eight seconds strikes twice as hard.
+                // Nothing withers (ShapeDef.SetsAside: the Learn's withering burst), and it takes a quarter of your present health
+                // (SpellSpec.HealthShare). What you grow in the next eight seconds strikes twice as hard.
                 new ShapeDef { Name = "Feed the Ground", Form = SpellForms.Nova, SetsAside = new[] { 2 },
                     Description = "The one place Life pays in blood. Nothing withers: you give a quarter of your present health to your garden, and for eight seconds everything you have grown within twelve metres strikes twice as hard and twice as often.",
-                    Spell = new SpellSpec { Radius = 1f, Damage = 0f, Stagger = 0f, Stacks = 0, HealthCost = 25f },
+                    Spell = new SpellSpec { Radius = 1f, Damage = 0f, Stagger = 0f, Stacks = 0, HealthShare = 0.25f },
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Boon, Stat = PlayerStat.GrownDamage, Amount = 1f, Seconds = 8f } } },
                 "Opens two shapes of Drawn From the Wood, chosen at any rest fire: Blood in the Furrow, a ring of green blood to fight in, or Feed the Ground, health given so the garden strikes harder.",
                 // NEEDS: the price taken from the grey the blow left and nothing withering (spell-windows, shape-sets-aside).
