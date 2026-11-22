@@ -205,10 +205,17 @@ namespace Clover.Player
             get
             {
                 if (Weapon == null) return default;
-                Color slash = element != null && element.HasElement && element.Info != null ? element.Info.Colour : Weapon.SlashColour;
-                float most = Mathf.Max(slash.r, Mathf.Max(slash.g, slash.b));
-                return most > 0.001f ? new Color(slash.r / most, slash.g / most, slash.b / most, 1f) : default;
+                return CutTintOf(Weapon, element != null && element.HasElement ? element.Info : null);
             }
+        }
+
+        /// <summary>The cut and flash tint for a weapon with <paramref name="carried"/> (or none): its hue at full strength.</summary>
+        public static Color CutTintOf(Weapon weapon, ElementInfo carried)
+        {
+            if (weapon == null) return default;
+            Color slash = carried != null ? carried.Colour : weapon.SlashColour;
+            float most = Mathf.Max(slash.r, Mathf.Max(slash.g, slash.b));
+            return most > 0.001f ? new Color(slash.r / most, slash.g / most, slash.b / most, 1f) : default;
         }
 
         /// <summary>True when the move in progress is an infused strike's carrier.</summary>
@@ -1700,9 +1707,9 @@ namespace Clover.Player
                 return false;
             }
             var step = Weapon.CarrierStep.Clone();
-            // The Great Hammer's strike is a slam where the head lands (ElementLookBuilder.Slams): it keeps its own shape,
-            // so Lightning's is the hammer as conductor, not Flash Cut's 5 m lunge.
-            bool inPlace = Weapon.Name == Weapons.GreatHammerName && step.Effect == StepEffect.GroundSlam && Clover.Player.Forms.ElementMoves.HasSlam(info.Index);
+            // The shape weapons strike where they stand (ElementLookBuilder.Strikes), so Lightning's is the weapon as
+            // conductor, not Flash Cut's 5 m lunge; the arc weapons keep the lunge (the owner's answer, 2026-11-22).
+            bool inPlace = StrikesInPlace(Weapon, step, info.Index);
             ElementSteel.Bend(step, info.Name, deep, inPlace);
             // The Way's family mark for the element bends the copy too (task 5.3, Way/Infusion.cs).
             if (upgrades == null) upgrades = GetComponent<PlayerUpgrades>();
@@ -1880,6 +1887,19 @@ namespace Clover.Player
                 case Weapons.ChainSickleName: return Clover.Player.Forms.ElementMoves.Lash;
                 default: return -1;
             }
+        }
+
+        /// <summary>
+        /// True when the weapon's infused strike keeps its carrier's own shape rather than Lightning's Flash Cut lunge: the
+        /// Great Hammer's slam where the head lands, and the Scythe, Great Spear, Twin Knives and Chain Sickle where the
+        /// player stands. The arc weapons lunge.
+        /// </summary>
+        public static bool StrikesInPlace(Weapon weapon, AttackStep step, int elementIndex)
+        {
+            int shape = ShapeOf(weapon);
+            if (shape < 0 || step == null) return false;
+            if (shape == Clover.Player.Forms.ElementMoves.Slam) return step.Effect == StepEffect.GroundSlam && Clover.Player.Forms.ElementMoves.HasSlam(elementIndex);
+            return true;
         }
 
         private bool SlamsHere(AttackStep step)
@@ -2075,6 +2095,9 @@ namespace Clover.Player
             Component nearest = null;
             float nearestAt = float.MaxValue;
             Color struckTint = StruckTint;
+            // A plain blow lands in the weapon's own slash colour, held below white, never a white flash (the owner,
+            // 2026-11-22: a plain Katana blow lit the soldier's shield as a white disc). Under an element, its colour.
+            Color blowTint = StruckLook.Tinted(struckTint) ? struckTint : WeaponCutTint;
             // Wind's blows go round the body: no cut streak through it.
             var struckLook = Clover.Player.Swings.SwingLooks.For(SwingElement);
             bool cutsRound = struckLook != null && struckLook.CutsRound;
@@ -2215,7 +2238,7 @@ namespace Clover.Player
                 if (fromBehind) dealtStagger *= Weapon.BackMultiplier;
                 if (boundTo != null && ReferenceEquals(target, boundTo)) dealtStagger *= BoundStagger;
                 var outcome = target.TakeHit(new Hit(damage, dealtStagger, transform.forward, step.Heavy, carries && ElementSteel.PassesGuard(moveElement.Name), transform.position,
-                    burn, burnStacks, false, kind, kind != AfflictionKind.None ? stacks : 0, lasts, AfflictionPower, false, critical, second, secondStacks, secondLasts, tint: struckTint));
+                    burn, burnStacks, false, kind, kind != AfflictionKind.None ? stacks : 0, lasts, AfflictionPower, false, critical, second, secondStacks, secondLasts, tint: blowTint));
                 if (outcome == HitOutcome.Missed) continue;
                 struck.Add(target);
                 if (infused && infusedFirst == null && outcome != HitOutcome.Blocked && target is Component firstBody) infusedFirst = firstBody;
@@ -2317,7 +2340,10 @@ namespace Clover.Player
                     var landing = SwingElement;
                     bool drawnByLook = landing != null && Clover.Player.Forms.ElementArt.Ready
                         && (SwingInfused ? Clover.Player.Forms.ElementMoves.HasStrike(landing.Index) : Clover.Player.Forms.ElementMoves.HasBlade(landing.Index));
-                    if (!drawnByLook) Vfx.Play(step.Heavy ? VfxKind.HeavySpark : VfxKind.HitSpark, contact, transform.forward);
+                    // The sparks in the blow's own colour below white (round 4: no white where a blow lands); a weapon
+                    // with no colour at all keeps the warm steel sparks.
+                    if (!drawnByLook && StruckLook.Tinted(blowTint)) Vfx.Play(VfxKind.TintSpark, contact, transform.forward, step.Heavy ? 1.2f : 0.8f, StruckLook.Glow(blowTint, ImpactGlow));
+                    else if (!drawnByLook) Vfx.Play(step.Heavy ? VfxKind.HeavySpark : VfxKind.HitSpark, contact, transform.forward);
                     BladeMet?.Invoke(contact, transform.forward);
                 }
                 else
@@ -2335,23 +2361,22 @@ namespace Clover.Player
                     Vector3 through = CutDirection(step);
                     // The cut across the body in the element's colour, or with none carried the weapon's own slash colour
                     // (round 4: the plain cut was a white line).
-                    Color cutTint = StruckLook.Tinted(struckTint) ? struckTint : WeaponCutTint;
-                    if (outcome == HitOutcome.Finisher) CutMarks.Finisher(other.bounds.center, through, cutTint);
-                    else if (step.Heavy) CutMarks.Heavy(other.bounds.center, through, cutTint);
-                    else CutMarks.Light(other.bounds.center, through, cutTint);
+                    if (outcome == HitOutcome.Finisher) CutMarks.Finisher(other.bounds.center, through, blowTint);
+                    else if (step.Heavy) CutMarks.Heavy(other.bounds.center, through, blowTint);
+                    else CutMarks.Light(other.bounds.center, through, blowTint);
                 }
-                if (reticle != null && target is Component struckThing) reticle.Struck(struckThing.transform);
-                // A finisher's flash: white for a plain weapon, the element's hue under one, as the heavy blow's star.
+                if (reticle != null && target is Component struckThing) reticle.Struck(struckThing.transform, blowTint);
+                // A finisher's flash: the element's hue, or the weapon's for a plain one, as the heavy blow's star.
                 if (outcome == HitOutcome.Finisher)
                 {
-                    if (StruckLook.Tinted(struckTint)) Vfx.Play(VfxKind.Burst, other.bounds.center, Vector3.up, 1f, StruckLook.Glow(struckTint, ImpactGlow));
+                    if (StruckLook.Tinted(blowTint)) Vfx.Play(VfxKind.Burst, other.bounds.center, Vector3.up, 1f, StruckLook.Glow(blowTint, ImpactGlow));
                     else Vfx.Play(VfxKind.Burst, other.bounds.center);
                 }
-                // A heavy blow's star: white for a plain weapon, the element's hue at a moderate brightness under one (the
-                // swing films of 2026-11-20: a white starburst on every element's infused strike).
+                // A heavy blow's star: the element's hue at a moderate brightness, or the weapon's for a plain one (the
+                // swing films of 2026-11-20: a white starburst on every element's infused strike; round 4: none white).
                 if (step.Heavy && outcome != HitOutcome.Blocked)
                 {
-                    if (StruckLook.Tinted(struckTint)) Vfx.Play(VfxKind.Impact, other.bounds.center, Vector3.up, 1f, StruckLook.Glow(struckTint, ImpactGlow));
+                    if (StruckLook.Tinted(blowTint)) Vfx.Play(VfxKind.Impact, other.bounds.center, Vector3.up, 1f, StruckLook.Glow(blowTint, ImpactGlow));
                     else Vfx.Play(VfxKind.Impact, other.bounds.center);
                 }
                 Mana.Gain(earned);

@@ -114,5 +114,15 @@ namespace Clover.Tests
             Assert.IsFalse(inPlace.PassThrough);
             Assert.AreEqual(carrier.Damage * 1.5f, inPlace.Damage, 1e-4f, "still one and a half times the blow");
         }
+
+        [Test]
+        public void TheShapeWeaponsStrikeInPlaceWithLightningAndTheArcWeaponsLunge()
+        {
+            // The owner's answer, 2026-11-22: Scythe, Great Spear, Twin Knives and Chain Sickle strike where they stand, like the hammer.
+            foreach (var weapon in new[] { Weapons.Scythe(), Weapons.GreatSpear(), Weapons.TwinKnives(), Weapons.ChainSickle() })
+                Assert.IsTrue(PlayerCombat.StrikesInPlace(weapon, weapon.CarrierStep, LightningIndex), weapon.Name + " strikes in place");
+            foreach (var weapon in new[] { Weapons.Katana(), Weapons.MassiveSword() })
+                Assert.IsFalse(PlayerCombat.StrikesInPlace(weapon, weapon.CarrierStep, LightningIndex), weapon.Name + " keeps Flash Cut's lunge");
+        }
     }
 }

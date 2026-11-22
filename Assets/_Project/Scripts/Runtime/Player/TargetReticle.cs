@@ -54,14 +54,31 @@ namespace Clover.Player
         }
 
         /// <summary>A blow has landed on this enemy: if it is the one marked, the brackets flare.</summary>
-        public void Struck(Transform enemy)
+        public void Struck(Transform enemy) => Struck(enemy, default);
+
+        /// <summary>
+        /// The same, flaring in the blow's <paramref name="tint"/> (the weapon's or the element's), held below white (the
+        /// owner, 2026-11-22: no white flash where a blow lands). A clear tint flares as before.
+        /// </summary>
+        public void Struck(Transform enemy, Color tint)
         {
             if (enemy == null || enemy != Target) return;
             flareLeft = FlareSeconds;
-            if (flaring) return;
             flaring = true;
-            Paint(Flare);
+            Paint(FlareOf(tint));
         }
+
+        /// <summary>The flare for a blow of this tint: its hue, no channel past the brackets' flare, the palest well under it.</summary>
+        public Color FlareOf(Color tint)
+        {
+            if (!Clover.Core.StruckLook.Tinted(tint)) return Flare;
+            Color lit = Clover.Core.StruckLook.Glow(tint, FlareBrightness);
+            lit.a = Flare.a;
+            return lit;
+        }
+
+        /// <summary>How bright a tinted flare is at its strongest channel.</summary>
+        public float FlareBrightness = 0.95f;
 
         private void LateUpdate()
         {

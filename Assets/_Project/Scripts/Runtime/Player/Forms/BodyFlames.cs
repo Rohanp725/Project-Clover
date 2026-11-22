@@ -63,6 +63,14 @@ namespace Clover.Player.Forms
         // Until when a body's fire stays black after the curse last kept it: the flare it ends in burns black too.
         private float[] blackUntil;
         private bool[] hiddenNow;
+        // Until when a body's newly caught fire waits before it catches (HoldBack): a Fire strike's hero flame plays first.
+        private float[] startAt;
+        private readonly Transform[] heldBodies = new Transform[MostHeld];
+        private readonly float[] heldUntil = new float[MostHeld];
+        private int nextHeld;
+        private const int MostHeld = 8;
+        /// <summary>Seconds a Fire infused strike's body flames wait after the blow, so its hero flame plays first (the owner's answer, 2026-11-22).</summary>
+        public const float AfterStrike = 0.4f;
         /// <summary>Seconds a fire the curse kept stays black after it is no longer kept so (Smoulder's flare).</summary>
         public const float BlackLingers = 1.4f;
         private int burning;
@@ -92,6 +100,7 @@ namespace Clover.Player.Forms
             blackness = new float[Most];
             blackUntil = new float[Most];
             hiddenNow = new bool[Most];
+            startAt = new float[Most];
             for (int i = 0; i < Most; i++)
             {
                 var part = new GameObject("Body Flames");
@@ -117,8 +126,10 @@ namespace Clover.Player.Forms
             {
                 bodies[i] = null;
                 heat[i] = 0f;
+                startAt[i] = 0f;
                 if (shown[i] != null) shown[i].enabled = false;
             }
+            for (int i = 0; i < MostHeld; i++) heldBodies[i] = null;
             burning = 0;
         }
 
@@ -147,6 +158,53 @@ namespace Clover.Player.Forms
             return instance.KeepBody(body, depth, black);
         }
 
+        /// <summary>
+        /// The next fire this body catches waits <paramref name="seconds"/> before it starts to catch: the Burn is on it
+        /// already (and bites), only its flames wait for the strike's own flame to play. A body already alight keeps burning.
+        /// </summary>
+        public static void HoldBack(Transform body, float seconds)
+        {
+            if (instance == null || instance.shown == null || body == null) return;
+            instance.Hold(body, Time.time + seconds);
+        }
+
+        /// <summary>True while this body's fire is kept but still waiting (HoldBack), for probes and tests.</summary>
+        public static bool Waiting(Transform body)
+        {
+            if (instance == null || instance.shown == null || body == null) return false;
+            for (int i = 0; i < Most; i++)
+                if (ReferenceEquals(instance.bodies[i], body)) return Time.time < instance.startAt[i];
+            return false;
+        }
+
+        private void Hold(Transform body, float until)
+        {
+            for (int i = 0; i < Most; i++)
+            {
+                if (!ReferenceEquals(bodies[i], body)) continue;
+                // Alight already: nothing waits. Kept but not yet showing: it waits with the others.
+                if (heat[i] <= 0.001f) startAt[i] = Mathf.Max(startAt[i], until);
+                return;
+            }
+            for (int i = 0; i < MostHeld; i++)
+                if (ReferenceEquals(heldBodies[i], body)) { heldUntil[i] = Mathf.Max(heldUntil[i], until); return; }
+            heldBodies[nextHeld] = body;
+            heldUntil[nextHeld] = until;
+            nextHeld = (nextHeld + 1) % MostHeld;
+        }
+
+        // When a body's fire newly caught may start: a hold still waiting for it, else at once.
+        private float TakeHold(Transform body)
+        {
+            for (int i = 0; i < MostHeld; i++)
+            {
+                if (!ReferenceEquals(heldBodies[i], body)) continue;
+                heldBodies[i] = null;
+                return heldUntil[i];
+            }
+            return 0f;
+        }
+
         private bool KeepBody(Transform body, int depth, bool black)
         {
             int slot = -1, free = -1, dimmest = -1;
@@ -166,6 +224,7 @@ namespace Clover.Player.Forms
                 heat[slot] = 0f;
                 FitTo(body, out tall[slot], out wide[slot]);
                 blackness[slot] = black ? 1f : 0f;
+                startAt[slot] = TakeHold(body);
             }
             wanted[slot] = HeatOf(depth);
             // Black when any keeper this frame wants it black: a reaction's look keeping the curse's fire (Smoulder) is
@@ -210,10 +269,11 @@ namespace Clover.Player.Forms
                     continue;
                 }
                 bool kept = now - keptAt[i] <= Linger && body.gameObject.activeInHierarchy;
-                float target = kept ? wanted[i] : 0f;
+                bool waiting = now < startAt[i];
+                float target = kept && !waiting ? wanted[i] : 0f;
                 float rate = (kept ? wanted[i] / Catch : wanted[i] / DieDown) * deltaTime;
                 heat[i] = Mathf.MoveTowards(heat[i], target, Mathf.Max(rate, 0.0001f));
-                if (!kept && heat[i] <= 0.001f)
+                if (!kept && !waiting && heat[i] <= 0.001f)
                 {
                     bodies[i] = null;
                     shown[i].enabled = false;
@@ -236,7 +296,8 @@ namespace Clover.Player.Forms
                 blackness[i] = Mathf.MoveTowards(blackness[i], stillBlack ? 1f : 0f, deltaTime / Blackens);
                 block.SetFloat(BlackId, blackness[i]);
                 shown[i].SetPropertyBlock(block);
-                if (shown[i].enabled == hiddenNow[i]) shown[i].enabled = !hiddenNow[i];
+                bool show = !hiddenNow[i] && !(waiting && heat[i] <= 0.001f);
+                if (shown[i].enabled != show) shown[i].enabled = show;
             }
         }
     }

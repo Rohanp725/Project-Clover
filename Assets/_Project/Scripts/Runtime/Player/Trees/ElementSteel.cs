@@ -204,6 +204,10 @@ namespace Clover.Player
                     // Burning Edge: a sheet of flame along the arc and 3 m beyond, 2 Burn on all it reaches, and the ground along
                     // the cut burning for about a second (the owner's review, 2026-11-21: three seconds read as flame out of nothing).
                     Cover(combat, print, Blow(element, blowDamage * 0.25f, 8f, 2), 3f);
+                    // The Burn bites at once, but the bodies' own flames wait for the strike's hero flame to play out
+                    // (the owner's answer, 2026-11-22), then fade in.
+                    foreach (var one in combat.LastStruck)
+                        if (one is Component body && body != null) BodyFlames.HoldBack(body.transform, BodyFlames.AfterStrike);
                     if (!art) Show(combat, element, print, 3f);
                     Burn(print);
                     if (deep)

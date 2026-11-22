@@ -97,5 +97,20 @@ namespace Clover.Tests
             foreach (var look in SwingLooks.All)
                 Assert.AreEqual(look.Name == Elements.Wind, look.CutsRound, look.Name);
         }
+
+        [Test]
+        public void APlainBlowFlashesInTheWeaponsColourBelowWhite()
+        {
+            // The owner, 2026-11-22: a plain Katana blow lit the soldier's shield as a white disc. Every weapon's plain
+            // blow now carries its slash colour, and the flash it gives is that hue, held below white.
+            foreach (var weapon in new[] { Weapons.Katana(), Weapons.MassiveSword(), Weapons.Scythe(), Weapons.GreatSpear(), Weapons.GreatHammer(), Weapons.TwinKnives(), Weapons.ChainSickle(), Weapons.Fists() })
+            {
+                Color tint = PlayerCombat.CutTintOf(weapon, null);
+                Assert.IsTrue(StruckLook.Tinted(tint), weapon.Name + " tints its blow");
+                Color flash = Enemy.FlashColour(tint);
+                Assert.LessOrEqual(Mathf.Min(flash.r, Mathf.Min(flash.g, flash.b)), StruckLook.PalestFlash + 1e-4f, weapon.Name + " flash is not white");
+                Assert.Less(flash.maxColorComponent, 1f, weapon.Name + " flash stays below white");
+            }
+        }
     }
 }
