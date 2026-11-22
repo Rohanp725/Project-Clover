@@ -83,6 +83,24 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void EveryShapeIsBuiltForAllElevenAndPlayedByItsWeapon()
+        {
+            var set = Built();
+            for (int shape = 0; shape < ElementMoves.Shapes.Length; shape++)
+                for (int i = 0; i < Ring.Length; i++)
+                    Assert.GreaterOrEqual(set.Find(ElementMoves.ShapeKey(shape, i, false)), 0, $"{ElementMoves.Shapes[shape]} {Ring[i]}");
+            Assert.AreEqual(ElementMoves.Slam, PlayerCombat.ShapeOf(Weapons.GreatHammer()));
+            Assert.AreEqual(ElementMoves.Spin, PlayerCombat.ShapeOf(Weapons.Scythe()));
+            Assert.AreEqual(ElementMoves.Thrust, PlayerCombat.ShapeOf(Weapons.GreatSpear()));
+            Assert.AreEqual(ElementMoves.Dash, PlayerCombat.ShapeOf(Weapons.TwinKnives()));
+            Assert.AreEqual(ElementMoves.Lash, PlayerCombat.ShapeOf(Weapons.ChainSickle()));
+            Assert.AreEqual(-1, PlayerCombat.ShapeOf(Weapons.Katana()), "an arc weapon keeps the arc strikes");
+            // Dash and lash draw Dark's open hands beside each one struck.
+            Assert.GreaterOrEqual(set.Find(ElementMoves.ShapeKey(ElementMoves.Dash, DarkIndex, true)), 0);
+            Assert.GreaterOrEqual(set.Find(ElementMoves.ShapeKey(ElementMoves.Lash, DarkIndex, true)), 0);
+        }
+
+        [Test]
         public void TheHammersLightningIsASlamInPlaceNotFlashCutsLunge()
         {
             var carrier = Weapons.GreatHammer().CarrierStep;

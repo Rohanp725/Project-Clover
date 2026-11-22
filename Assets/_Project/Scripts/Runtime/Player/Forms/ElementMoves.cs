@@ -165,37 +165,56 @@ namespace Clover.Player.Forms
             return true;
         }
 
-        // The Great Hammer's slams, by the element's place on the ring (ElementLookBuilder.Slams): about where the head
-        // lands, and on each body the slam reaches.
-        private static readonly string[] Slams =
-            { "slam_fire", "slam_lightning", "slam_wind", "slam_ice", "slam_water", "slam_life", "slam_earth", "slam_metal", "slam_light", "slam_dark", "slam_poison" };
-        private static readonly string[] SlamKeys = Keys(Slams, "", "@b");
+        // The strike shapes the Blender worker drew for the weapons whose infused strike is not an arc (ElementLookBuilder.Slams):
+        // each element's look about the shape's origin and on each body it reaches, by the element's place on the ring.
+        /// <summary>The strike shapes, in order: the Great Hammer's slam, the Scythe's spin, the Great Spear's thrust, the Twin Knives' dash-through, the Chain Sickle's lash.</summary>
+        public static readonly string[] Shapes = { "slam", "spin", "thrust", "dash", "lash" };
+        public const int Slam = 0, Spin = 1, Thrust = 2, Dash = 3, Lash = 4;
+        private static readonly string[] RingWords = { "fire", "lightning", "wind", "ice", "water", "life", "earth", "metal", "light", "dark", "poison" };
+        private static readonly string[][] ShapeKeys = MakeShapeKeys();
 
-        /// <summary>The key a slam's look is built under, about the impact or on a body; null for none.</summary>
-        public static string SlamKey(int element, bool onBody) => Key(SlamKeys, 2, element, onBody ? 1 : 0);
+        private static string[][] MakeShapeKeys()
+        {
+            var made = new string[Shapes.Length][];
+            for (int s = 0; s < Shapes.Length; s++)
+            {
+                var slugs = new string[RingWords.Length];
+                for (int e = 0; e < RingWords.Length; e++) slugs[e] = Shapes[s] + "_" + RingWords[e];
+                made[s] = Keys(slugs, "", "@b");
+            }
+            return made;
+        }
 
-        /// <summary>True when the element's slam is built (the Great Hammer's infused strike plays it in place of the arc's).</summary>
-        public static bool HasSlam(int element) => SlamKey(element, false) != null && ElementLooks.Find(SlamKey(element, false)) >= 0;
+        /// <summary>The key a shape's look is built under, about its origin or on a body; null for none.</summary>
+        public static string ShapeKey(int shape, int element, bool onBody) =>
+            shape >= 0 && shape < Shapes.Length ? Key(ShapeKeys[shape], 2, element, onBody ? 1 : 0) : null;
 
-        /// <summary>Seconds before the head lands that the element's slam look begins (Lightning's bolt on the raised head); 0 for none.</summary>
-        public static float SlamLead(int element) =>
-            ElementLooks.TryLook(ElementLooks.Find(SlamKey(element, false)), out var look) ? look.Lead : 0f;
+        /// <summary>True when the element's look in that shape is built (the weapon's infused strike plays it in place of the arc's).</summary>
+        public static bool HasShape(int shape, int element) => ShapeKey(shape, element, false) != null && ElementLooks.Find(ShapeKey(shape, element, false)) >= 0;
 
-        /// <summary>
-        /// The slam's look about <paramref name="impact"/>, where the head lands, turned to the blow's way; begun now, its
-        /// lead before the head lands. False when there is none.
-        /// </summary>
-        public static bool PlaySlam(int element, Vector3 impact, Vector3 forward) =>
-            ElementArt.Ready && ElementLooks.PlayAt(ElementLooks.Find(SlamKey(element, false)), impact, Yaw(forward));
+        /// <summary>Seconds before the blow that the look begins (Lightning's bolt on the hammer's raised head); 0 for none.</summary>
+        public static float ShapeLead(int shape, int element) =>
+            ElementLooks.TryLook(ElementLooks.Find(ShapeKey(shape, element, false)), out var look) ? look.Lead : 0f;
 
-        /// <summary>The slam's look on each body it reached (the first <paramref name="count"/> of <paramref name="struck"/>), as the head lands.</summary>
-        public static void SlamStruck(int element, Component[] struck, int count, Vector3 forward)
+        /// <summary>The look about <paramref name="at"/> (the slam's impact, else where the player stands), turned to the blow's way. False when there is none.</summary>
+        public static bool PlayShape(int shape, int element, Vector3 at, Vector3 forward) =>
+            ElementArt.Ready && ElementLooks.PlayAt(ElementLooks.Find(ShapeKey(shape, element, false)), at, Yaw(forward));
+
+        /// <summary>The look on each body the strike reached (the first <paramref name="count"/> of <paramref name="struck"/>).</summary>
+        public static void ShapeStruck(int shape, int element, Component[] struck, int count, Vector3 forward)
         {
             if (!ElementArt.Ready) return;
-            string key = SlamKey(element, true);
+            string key = ShapeKey(shape, element, true);
             for (int i = 0; struck != null && i < count && i < struck.Length; i++)
                 if (struck[i] != null) OnBody(key, struck[i].transform, forward);
         }
+
+        /// <summary>The slam's (the Great Hammer's) keys and plays, as <see cref="ShapeKey"/> and its fellows.</summary>
+        public static string SlamKey(int element, bool onBody) => ShapeKey(Slam, element, onBody);
+        public static bool HasSlam(int element) => HasShape(Slam, element);
+        public static float SlamLead(int element) => ShapeLead(Slam, element);
+        public static bool PlaySlam(int element, Vector3 impact, Vector3 forward) => PlayShape(Slam, element, impact, forward);
+        public static void SlamStruck(int element, Component[] struck, int count, Vector3 forward) => ShapeStruck(Slam, element, struck, count, forward);
 
         private static void OnBody(string key, Transform body, Vector3 forward, bool mirror = false)
         {

@@ -1733,6 +1733,7 @@ namespace Clover.Player
         private void FireInfused()
         {
             infusedPending = false;
+            if (shapeBodiesPending) ShapeStruckNow();
             ElementSteel.Strike(this, infusedElement, LastFootprint, infusedDeep, infusedDamage, infusedFirst);
             infusedFirst = null;
             // The Way's family mark: the cut lying on the floor, the charged path, and Dragging Draw's return cut to come.
@@ -1855,47 +1856,91 @@ namespace Clover.Player
             ZanshinTurns++;
         }
 
-        // The Great Hammer's infused strike drawn as a slam (ElementMoves.PlaySlam): its look about where the head lands,
-        // begun its lead before the head lands (Lightning's bolt on the raised head), and its look on each body it reaches.
-        private bool slamDrawn;
+        // The infused strike drawn in its weapon's strike shape (ElementMoves.PlayShape): the Great Hammer's slam about
+        // where the head lands, the Scythe's spin, the Great Spear's thrust, the Twin Knives' dash-through and the Chain
+        // Sickle's lash about where the player stands as the blow goes out; begun its lead before (Lightning's bolt on the
+        // hammer's raised head, the lash's weight on its way out), and its look on each body it reaches.
+        private bool slamDrawn, shapeBodiesPending;
+        private int drawnShape = -1;
         private readonly Component[] slamStruck = new Component[16];
 
-        /// <summary>True once the current infused strike's slam look is drawn, so the element's arc look is not drawn as well.</summary>
+        /// <summary>True once the current infused strike's shape look is drawn, so the element's arc look is not drawn as well.</summary>
         public bool SlamDrawn => slamDrawn;
 
-        private bool SlamsHere(AttackStep step) =>
-            step != null && step == infusedStep && infusedElement != null && Weapon != null && Weapon.Name == Weapons.GreatHammerName
-            && step.Effect == StepEffect.GroundSlam && Clover.Player.Forms.ElementMoves.HasSlam(infusedElement.Index);
+        /// <summary>The strike shape a weapon's infused strike is drawn in (<see cref="Clover.Player.Forms.ElementMoves.Shapes"/>), or -1 for an arc.</summary>
+        public static int ShapeOf(Weapon weapon)
+        {
+            if (weapon == null) return -1;
+            switch (weapon.Name)
+            {
+                case Weapons.GreatHammerName: return Clover.Player.Forms.ElementMoves.Slam;
+                case Weapons.ScytheName: return Clover.Player.Forms.ElementMoves.Spin;
+                case Weapons.GreatSpearName: return Clover.Player.Forms.ElementMoves.Thrust;
+                case Weapons.TwinKnivesName: return Clover.Player.Forms.ElementMoves.Dash;
+                case Weapons.ChainSickleName: return Clover.Player.Forms.ElementMoves.Lash;
+                default: return -1;
+            }
+        }
 
-        // In the wind-up: a slam that begins before the head lands is started its lead early, where the head will land.
+        private bool SlamsHere(AttackStep step)
+        {
+            if (step == null || step != infusedStep || infusedElement == null) return false;
+            int shape = ShapeOf(Weapon);
+            if (shape < 0 || (shape == Clover.Player.Forms.ElementMoves.Slam && step.Effect != StepEffect.GroundSlam)) return false;
+            return Clover.Player.Forms.ElementMoves.HasShape(shape, infusedElement.Index);
+        }
+
+        // Where the shape's look is drawn about: the slam where the head lands, the others where the player stands, each
+        // carried on by the lunge still to come in the wind-up.
+        private Vector3 ShapeSpot(AttackStep step, int shape, bool inWindup)
+        {
+            float still = 0f;
+            if (inWindup)
+            {
+                float over = step.LungeSeconds > 0f ? Mathf.Min(step.LungeSeconds, step.Windup) : step.Windup;
+                still = over > 0f ? lunge * Mathf.Clamp01((over - Combo.Elapsed) / over) : 0f;
+            }
+            float ahead = (shape == Clover.Player.Forms.ElementMoves.Slam ? step.Reach : 0f) + still;
+            return transform.position + transform.forward * ahead;
+        }
+
+        // In the wind-up: a shape that begins before the blow is started its lead early.
         private void SlamEarly(AttackStep step)
         {
             if (slamDrawn || !SlamsHere(step)) return;
-            float lead = Clover.Player.Forms.ElementMoves.SlamLead(infusedElement.Index);
+            int shape = ShapeOf(Weapon);
+            float lead = Clover.Player.Forms.ElementMoves.ShapeLead(shape, infusedElement.Index);
             float left = step.Windup - Combo.Elapsed;
             if (lead <= 0f || left > lead) return;
-            // The lunge still to come in the wind-up carries the head that much further.
-            float over = step.LungeSeconds > 0f ? Mathf.Min(step.LungeSeconds, step.Windup) : step.Windup;
-            float still = over > 0f ? lunge * Mathf.Clamp01((over - Combo.Elapsed) / over) : 0f;
-            Vector3 forward = transform.forward;
-            Clover.Player.Forms.ElementMoves.PlaySlam(infusedElement.Index, transform.position + forward * (step.Reach + still), forward);
+            Clover.Player.Forms.ElementMoves.PlayShape(shape, infusedElement.Index, ShapeSpot(step, shape, true), transform.forward);
             slamDrawn = true;
+            drawnShape = shape;
         }
 
-        // The head lands: the slam about the spot (unless begun early), and on each body the blow reached.
+        // The blow goes out: the shape about its spot (unless begun early), and the slam's on each body its head reached;
+        // a carried blow (the dash, the thrust) reaches its bodies through its swing, so theirs wait for it to end.
         private void SlamLands(AttackStep step)
         {
-            Vector3 forward = transform.forward;
-            if (!slamDrawn) Clover.Player.Forms.ElementMoves.PlaySlam(infusedElement.Index, transform.position + forward * step.Reach, forward);
+            int shape = ShapeOf(Weapon);
+            if (!slamDrawn) Clover.Player.Forms.ElementMoves.PlayShape(shape, infusedElement.Index, ShapeSpot(step, shape, false), transform.forward);
             slamDrawn = true;
+            drawnShape = shape;
+            Clover.Player.Forms.StrikeArt.Drawn();
+            if (shape == Clover.Player.Forms.ElementMoves.Slam) ShapeStruckNow();
+            else shapeBodiesPending = true;
+        }
+
+        private void ShapeStruckNow()
+        {
+            shapeBodiesPending = false;
+            if (infusedElement == null || drawnShape < 0) return;
             int count = 0;
             foreach (var one in struck)
             {
                 if (count >= slamStruck.Length) break;
                 if (one is Component body && body != null) slamStruck[count++] = body;
             }
-            Clover.Player.Forms.ElementMoves.SlamStruck(infusedElement.Index, slamStruck, count, forward);
-            Clover.Player.Forms.StrikeArt.Drawn();
+            Clover.Player.Forms.ElementMoves.ShapeStruck(drawnShape, infusedElement.Index, slamStruck, count, transform.forward);
         }
 
         // Dragging Draw's return cut, waiting its moment after the draw; and the finisher's held pose.
@@ -2009,7 +2054,9 @@ namespace Clover.Player
                 Color plain = Weapon.SlashColour;
                 arcColour = new Color(plain.r * 0.35f, plain.g * 0.35f, plain.b * 0.35f, plain.a * 0.2f);
             }
-            if (fresh && arcs != null)
+            // A strike drawn in its weapon's shape draws no reach arc: the shape's look replaces it (a pale half-disc over
+            // the spear's and the scythe's strikes in the stills of 2026-11-22).
+            if (fresh && arcs != null && !(infused && SlamsHere(step)))
             {
                 if (step.Radius > 0f) Vfx.Play(VfxKind.TintRing, transform.position + transform.forward * step.Reach + Vector3.up * 0.15f, Vector3.up, step.Radius * 0.6f, arcColour);
                 else if (step.LineWidth > 0f) arcs.Show(transform.position, transform.forward, step.Reach, 20f, 0f, arcColour);

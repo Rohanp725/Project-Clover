@@ -34,6 +34,42 @@ public static class SlamProbe
 public class SlamProbeRunner : MonoBehaviour
 {
     public const string Folder = "review/shots/current/slam";
+    // AgentScripts/slam_shape.txt may name another strike shape (spin, thrust, dash, lash): its weapon is taken, the
+    // enemies held where its recipe stood them (turned to the player's way), and each still taken at the recipe's third
+    // beat (its strip's), into review/shots/current/<shape>/<shape>_<element>.png.
+    private string shape = "slam";
+    private string folder = Folder;
+    private Dictionary<string, float> beats = new Dictionary<string, float>();
+    private List<Vector3> recipeBodies;
+
+    private static string WeaponOf(string shape) =>
+        shape == "spin" ? Weapons.ScytheName : shape == "thrust" ? Weapons.GreatSpearName : shape == "dash" ? Weapons.TwinKnivesName
+        : shape == "lash" ? Weapons.ChainSickleName : Weapons.GreatHammerName;
+
+    // The recipe's bodies about its player, turned so the player faces north, and each look's third strip beat.
+    private void ReadRecipe()
+    {
+        var text = UnityEditor.AssetDatabase.LoadAssetAtPath<TextAsset>($"Assets/_Project/Art/VFX/Combos/{shape}_recipe.json");
+        if (text == null) return;
+        var looks = (List<object>)((Dictionary<string, object>)Clover.EditorTools.ReactionRecipe.ReadJson(text.text))["looks"];
+        foreach (Dictionary<string, object> look in looks)
+        {
+            string element = (string)look["element"];
+            if (look.TryGetValue("strip", out var stripValue) && stripValue is List<object> strip && strip.Count > 2)
+                beats[element] = System.Convert.ToSingle(((List<object>)strip[2])[0]);
+            if (recipeBodies != null) continue;
+            Vector3 way = look.TryGetValue("lane_direction", out var lane) ? V(lane) : look.TryGetValue("dash_direction", out var dash) ? V(dash) : new Vector3(-0.643f, 0f, -0.766f);
+            var turn = Quaternion.Euler(0f, -Mathf.Atan2(way.x, way.z) * Mathf.Rad2Deg, 0f);
+            recipeBodies = new List<Vector3>();
+            foreach (Dictionary<string, object> body in (List<object>)look["bodies"]) recipeBodies.Add(turn * V(body["position"]));
+        }
+    }
+
+    private static Vector3 V(object value)
+    {
+        var list = (List<object>)value;
+        return new Vector3(System.Convert.ToSingle(list[0]), System.Convert.ToSingle(list[1]), System.Convert.ToSingle(list[2]));
+    }
     // The Blender sheet's peak beat of each, seconds after the head lands.
     private static readonly (string element, float peak)[] Peaks =
     {
@@ -93,7 +129,7 @@ public class SlamProbeRunner : MonoBehaviour
         float scale = Time.timeScale;
         Time.timeScale = 0f;
         yield return null;
-        ScreenCapture.CaptureScreenshot($"{Folder}/{name}.png");
+        ScreenCapture.CaptureScreenshot($"{folder}/{name}.png");
         yield return null;
         yield return null;
         Time.timeScale = scale > 0f ? scale : 1f;
@@ -122,7 +158,11 @@ public class SlamProbeRunner : MonoBehaviour
         spells = player.GetComponent<PlayerSpells>();
         element = player.GetComponent<PlayerElement>();
         defence = player.GetComponent<PlayerDefence>();
-        Directory.CreateDirectory(Folder);
+        if (File.Exists("AgentScripts/slam_shape.txt")) shape = File.ReadAllText("AgentScripts/slam_shape.txt").Trim().ToLowerInvariant();
+        if (shape.Length == 0) shape = "slam";
+        folder = shape == "slam" ? Folder : $"review/shots/current/{shape}";
+        if (shape != "slam") ReadRecipe();
+        Directory.CreateDirectory(folder);
         var only = File.Exists("AgentScripts/slam_only.txt")
             ? new HashSet<string>(File.ReadAllText("AgentScripts/slam_only.txt").Split(',').Select(s => s.Trim().ToLowerInvariant()).Where(s => s.Length > 0))
             : new HashSet<string>();
@@ -147,20 +187,26 @@ public class SlamProbeRunner : MonoBehaviour
         // The swing steps in 0.6 m before the head lands 2.5 m ahead.
         Vector3 impact = stand + Vector3.forward * 3.1f;
         held.AddRange(which.Select(i => castle.Enemies[i]));
-        spots.Add(impact + new Vector3(-1.05f, 0f, 0.57f));
-        spots.Add(impact + new Vector3(1.15f, 0f, 0.47f));
-        spots.Add(impact + new Vector3(-2.6f, 0f, 3.22f));
+        if (shape == "slam")
+        {
+            spots.Add(impact + new Vector3(-1.05f, 0f, 0.57f));
+            spots.Add(impact + new Vector3(1.15f, 0f, 0.47f));
+            spots.Add(impact + new Vector3(-2.6f, 0f, 3.22f));
+        }
+        else if (recipeBodies != null)
+            for (int i = 0; i < recipeBodies.Count && i < held.Count; i++) spots.Add(stand + (shape == "spin" ? Quaternion.identity : Quaternion.Euler(0f, 60f, 0f)) * recipeBodies[i]);
+        while (held.Count > spots.Count) held.RemoveAt(held.Count - 1);
         foreach (var enemy in held)
         {
             enemy.Health.Maximum = 100000f;
             enemy.Health.Fill();
         }
 
-        combat.Arm(Weapons.GreatHammerName);
+        combat.Arm(WeaponOf(shape));
         yield return null;
         // Straight ahead, as the recipe's player struck: no turn toward the nearer of the two.
         combat.Weapon.AimConeDegrees = 0.5f;
-        Judge("the Great Hammer is held", combat.Weapon != null && combat.Weapon.Name == Weapons.GreatHammerName);
+        Judge($"the {WeaponOf(shape)} is held", combat.Weapon != null && combat.Weapon.Name == WeaponOf(shape));
 
         foreach (var (name, peak) in Peaks)
         {
@@ -169,8 +215,11 @@ public class SlamProbeRunner : MonoBehaviour
             yield return Real(0.6f);
             combat.Weapon.AimConeDegrees = 0.5f;
             int index = element.Info.Index;
-            Judge($"{name}: its slam is built", ElementMoves.HasSlam(index), $"lead {ElementMoves.SlamLead(index):0.00} s");
-            player.Teleport(stand, Quaternion.identity);
+            int built = System.Array.IndexOf(ElementMoves.Shapes, shape);
+            Judge($"{name}: its {shape} is built", ElementMoves.HasShape(built, index), $"lead {ElementMoves.ShapeLead(built, index):0.00} s");
+            // A lane or a dash is turned across the screen, as the strips turned it, so what runs down it is not hidden behind the bodies.
+            var facingWay = shape == "thrust" || shape == "dash" || shape == "lash" ? Quaternion.Euler(0f, 60f, 0f) : Quaternion.identity;
+            player.Teleport(stand, facingWay);
             // Fresh each time: nothing carried over from the last element (no reaction between two strikes), and none
             // staggered, so no finish mark is drawn over the look.
             castle.Release(which.ToArray());
@@ -205,7 +254,7 @@ public class SlamProbeRunner : MonoBehaviour
             if (lightning)
             {
                 yield return Until(() => combat.InfusedNow && combat.Combo.Phase == AttackPhase.Windup && combat.Combo.Current.Windup - combat.Combo.Elapsed <= 0.10f, 1.5f);
-                yield return Still($"slam_{name.ToLowerInvariant()}_before{tag}");
+                if (shape == "slam") yield return Still($"slam_{name.ToLowerInvariant()}_before{tag}");
             }
             yield return Until(() => combat.InfusedNow && combat.Combo.Phase == AttackPhase.Active, 1.5f);
             if (!combat.InfusedNow)
@@ -214,13 +263,15 @@ public class SlamProbeRunner : MonoBehaviour
                 continue;
             }
             Vector3 landed = player.transform.position + player.transform.forward * combat.Combo.Current.Reach;
-            yield return Game(peak);
-            yield return Still($"slam_{name.ToLowerInvariant()}{tag}");
-            int[] reached = held.Select(enemy => ElementLooks.IsPlaying(ElementLooks.Find(ElementMoves.SlamKey(index, true)), enemy.transform) ? 1 : 0).ToArray();
+            yield return Game(shape == "slam" ? peak : beats.TryGetValue(name.ToLowerInvariant(), out float beat) ? Mathf.Max(0.02f, beat) : 0.2f);
+            yield return Still($"{shape}_{name.ToLowerInvariant()}{tag}");
+            yield return Real(0.2f);
+            int shapeIndex = System.Array.IndexOf(ElementMoves.Shapes, shape);
+            int[] reached = held.Select(enemy => ElementLooks.IsPlaying(ElementLooks.Find(ElementMoves.ShapeKey(shapeIndex, index, true)), enemy.transform) ? 1 : 0).ToArray();
             yield return Real(1.6f);
             Judge($"{name}: the slam is drawn where the head landed, not the arc's look", combat.SlamDrawn || StrikeArt.Played > drawn,
                 $"strikes +{combat.InfusedStrikes - strikes}, landed {Vector3.Distance(landed, impact):0.00} m from the planned spot, per-enemy look on {string.Join("/", reached)} (near, near, far)");
-            if (!alone) Judge($"{name}: nothing per enemy on the one outside the disc", reached.Length < 3 || reached[2] == 0);
+            if (!alone && shape == "slam") Judge($"{name}: nothing per enemy on the one outside the disc", reached.Length < 3 || reached[2] == 0);
             yield return Until(() => !combat.IsAttacking, 2f);
         }
         castle.Clear();

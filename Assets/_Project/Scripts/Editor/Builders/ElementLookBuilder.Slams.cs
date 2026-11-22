@@ -57,6 +57,10 @@ namespace Clover.EditorTools
             ["st_sl_thorn"] = new ReactionArtBuilder.Paint(0.08f, 0.17f, 0.03f),
             ["st_sl_shadow_smoke"] = new ReactionArtBuilder.Paint(0.018f, 0.004f, 0.033f),
             ["st_sl_venom"] = new ReactionArtBuilder.Paint(0.014f, 0.053f, 0.021f),
+            // The spin's own (spin/tools/spin_specs.py) and the dash's vein web: dark at a vessel's middle with a sickly-green
+            // rim, drawn as one mid green so the web reads at the game camera (dash/notes.md, Poison).
+            ["st_sp_dust"] = Flat(0.26f, 0.2f, 0.13f), ["st_sp_fire"] = Flat(0.95f, 0.32f, 0.03f), ["st_sp_char"] = Flat(0.035f, 0.028f, 0.025f),
+            ["st_sp_vein_rim"] = new ReactionArtBuilder.Paint(0.06f, 0.2f, 0.06f),
         };
 
         private static ReactionArtBuilder.Paint Flat(float r, float g, float b) => new ReactionArtBuilder.Paint(r, g, b, 1f, 1f, true);
@@ -65,7 +69,8 @@ namespace Clover.EditorTools
         private static List<Dictionary<string, object>> SlamLooks()
         {
             var looks = new List<Dictionary<string, object>>();
-            foreach (var look in RecipeLooks(SlamRecipePath))
+            foreach (string path in ShapeRecipes)
+            foreach (var look in RecipeLooks(path))
             {
                 var copy = new Dictionary<string, object>(look);
                 copy.Remove("revision_of");
@@ -111,7 +116,32 @@ namespace Clover.EditorTools
             }
         }
 
-        // Each slam: its look about the impact point, begun its lead before the head lands, and its look on each body struck.
+        /// <summary>
+        /// The strike shapes' recipes (staging/blender/2026-11-21_strikes/&lt;shape&gt;/): the Great Hammer's slam about where
+        /// its head lands, and the Scythe's spin, the Great Spear's thrust, the Twin Knives' dash-through and the Chain
+        /// Sickle's lash about the player's ground point. All eleven of each approved by the owner.
+        /// </summary>
+        public static readonly string[] ShapeRecipes =
+        {
+            SlamRecipePath, ReactionArtBuilder.CombosFolder + "/spin_recipe.json", ReactionArtBuilder.CombosFolder + "/thrust_recipe.json",
+            ReactionArtBuilder.CombosFolder + "/dash_recipe.json", ReactionArtBuilder.CombosFolder + "/lash_recipe.json",
+        };
+
+        /// <summary>The way the spin recipe's player faced (its conventions: the station's forward axis).</summary>
+        private static readonly Vector3 SpinFacing = new Vector3(-0.643f, 0f, -0.766f);
+
+        // The way a shape's recipe player faced: down its lane or dash, the spin's station forward, or the slam's impact.
+        private static float FacingOf(Dictionary<string, object> look, string slug, Vector3 player)
+        {
+            Vector3 way = look.TryGetValue("lane_direction", out var lane) ? Vec(lane, Vector3.zero)
+                : look.TryGetValue("dash_direction", out var dash) ? Vec(dash, Vector3.zero)
+                : slug.StartsWith("spin_") ? SpinFacing
+                : -player;
+            return Mathf.Atan2(way.x, way.z) * Mathf.Rad2Deg;
+        }
+
+        // Each shape: its look about its origin (the slam's impact, the player's ground point), begun its lead before its
+        // moment, and its look on each body struck.
         private static void BuildSlams(Lists lists, ElementArtSet elementArt, Material glow)
         {
             foreach (var look in SlamLooks())
@@ -120,8 +150,7 @@ namespace Clover.EditorTools
                 var bodies = new List<Vector3>();
                 foreach (Dictionary<string, object> body in (List<object>)look["bodies"]) bodies.Add(Vec(body["position"], Vector3.zero));
                 Vector3 player = Vec(((Dictionary<string, object>)look["player"])["position"], Vector3.zero);
-                // The recipe's player faced the impact point (its origin), 2.5 m ahead.
-                float facing = Mathf.Atan2(-player.x, -player.z) * Mathf.Rad2Deg;
+                float facing = FacingOf(look, slug, player);
                 float seconds = Number(look, "duration_s", 1.4f);
                 string key = ElementMoves.Prefix + slug;
                 var about = Slice(look, Cut.AboutPlayer, bodies, player, -99f, 99f, seconds, Vector3.zero);
