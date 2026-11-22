@@ -135,6 +135,11 @@ namespace Clover.Player.Forms
             /// and its offset off it in the player's own axes, as it sat on the stand-in (round 4's Kindle, Overdrive, Fever).
             /// </summary>
             public byte Bone;
+            /// <summary>
+            /// Its <see cref="Facing"/> is taken along the camera's own line, not across the floor, so it is drawn in front of
+            /// the armour without moving on the screen (round 4's Marked brand stayed on the chest, not sliding to the waist).
+            /// </summary>
+            public bool FacingAlongView;
             public float BoneShare;
             public Vector3 BoneOffset;
             /// <summary>A ribbon's keys: the share of it drawn on from its tail (x), and the share wiped off from its tail (x).</summary>

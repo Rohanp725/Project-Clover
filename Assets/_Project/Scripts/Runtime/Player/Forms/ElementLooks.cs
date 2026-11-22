@@ -239,7 +239,7 @@ namespace Clover.Player.Forms
         private int used, playing;
         // Each look begun takes the next stamp, so a handle to one that has ended does not move the one in its place.
         private int stamps;
-        private Vector3 towardCamera = Vector3.back;
+        private Vector3 towardCamera = Vector3.back, towardEye = Vector3.back;
         // Where the search for a free pooled renderer starts: just past the last one taken, so a burst of new pieces does
         // not walk the taken ones from the start each time.
         private int searchFrom;
@@ -859,6 +859,7 @@ namespace Clover.Player.Forms
             if (view != null)
             {
                 Vector3 back = -view.transform.forward;
+                towardEye = back.normalized;
                 back.y = 0f;
                 towardCamera = back.sqrMagnitude > 0.0001f ? back.normalized : Vector3.back;
             }
@@ -992,7 +993,7 @@ namespace Clover.Player.Forms
                 stretch.x = -stretch.x;
             }
             Vector3 placed = anchor + lean + turn * (position * size);
-            if (part.Facing != 0f) placed += towardCamera * part.Facing;
+            if (part.Facing != 0f) placed += (part.FacingAlongView ? towardEye : towardCamera) * part.Facing;
             frame.SetPositionAndRotation(placed, turn * rotation);
             frame.localScale = Vector3.Scale(scale, stretch) * (shrink * size);
         }

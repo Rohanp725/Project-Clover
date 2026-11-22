@@ -1460,7 +1460,13 @@ namespace Clover.EditorTools
                     Vector3 turned = Vec(instance[2], Vector3.zero);
                     string pieceName = instance[0] as string ?? "";
                     // Round 4's flat brand faces the camera the recipe's was drawn for, wherever its own turn left it.
-                    if (CameraFacedPieces.Contains(slug + "|" + kitObject)) turned = FacingTheCamera(look, bodyAt).eulerAngles;
+                    if (CameraFacedPieces.Contains(slug + "|" + kitObject))
+                    {
+                        turned = FacingTheCamera(look, bodyAt).eulerAngles;
+                        // On the chest anchor, so a soldier of any height wears it on its chest (FitOnEnemy carries the
+                        // stand-in's chest to the body's).
+                        position.y = BodyAnchors.StandIn.Chest;
+                    }
                     if (LeftOut.Contains(slug + "|" + kitObject) || LeftOutByName(slug, pieceName)) continue;
                     if (E4BodyDrawn.Contains(slug + "|" + kitObject) || RdBodyDrawn.Contains(slug + "|" + kitObject)) continue;
                     // Glaze's ice, Bedrock's stone skin and Fever's flush are the player's own material (GlazeIce, StoneArmour, FeverFlush).
@@ -1563,6 +1569,7 @@ namespace Clover.EditorTools
                         Redraw = motion.ContainsKey("redraw") || verb.StartsWith("flicker ("),
                         Position = position, Rotation = rotation, Scale = scale, Show = show, Hide = hide,
                         Facing = RibbonFacing.TryGetValue(slug + "|" + Text(group, "material"), out float pieceFacing) || RdFacing.TryGetValue(slug + "|" + Text(group, "material"), out pieceFacing) ? pieceFacing : 0f,
+                        FacingAlongView = RdFacing.ContainsKey(slug + "|" + Text(group, "material")),
                     };
                     BindToBone(slug, made, ref part);
                     part.PathFirst = lists.Keys.Count;
@@ -1672,6 +1679,7 @@ namespace Clover.EditorTools
                         Rotation = Quaternion.identity, Scale = Vector3.one, Show = show, Hide = hide,
                         InkColour = inkColour, InkWidth = inkWidth, Thin = thin,
                         Facing = RibbonFacing.TryGetValue(ribbonKey, out float facing) || RdFacing.TryGetValue(ribbonKey, out facing) ? facing : 0f,
+                        FacingAlongView = RdFacing.ContainsKey(ribbonKey),
                     };
                     BindToBone(slug, made, ref part);
                     part.PathFirst = lists.Keys.Count;
