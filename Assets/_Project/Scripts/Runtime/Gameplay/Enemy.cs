@@ -930,6 +930,8 @@ namespace Clover.Gameplay
             if (sinceLightHit > 1.6f) lightHits = 0;
             bool mayAttack = turns == null || turns.MayAttack(this);
             bool struck = Brain.Tick(deltaTime * pace, brainDistance, Random.value, mayAttack, TargetOnGround);
+            // Whether it shows an attack now, for what answers an enemy in its wind-up (Quake Step, Devouring Maw).
+            Afflictions.NoteWindup(Brain.State == EnemyState.Telegraph, deltaTime);
             // Knocked flat, the back meets the floor near the end of the fall: dust there, once each fall.
             if (Brain.IsDown && !Brain.IsGettingUp)
             {

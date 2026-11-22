@@ -173,7 +173,8 @@ namespace Clover.Player.Trees
                 BranchPattern.LeftFoot));
 
             // The nova is the stamp, and everything it strikes flinches: what it had begun is broken unless it is steadfast.
-            // NEEDS: the double stagger on an enemy showing an attack, and its attack broken only then (enemy-begins-attack).
+            // An enemy showing an attack takes double stagger and its attack is broken (UpgradeEffect.NeedsWindup); a god or an elite
+            // only the stagger, as a flinch does not break theirs.
             SpellBranch.Add(to, E, QuakeStep, "Quake Step", SpellRole.Breaker, BranchPattern.LeftA, Rooted, SpellForms.Nova,
                 new SpellSpec { Radius = 5f, Delay = 0.45f, Damage = 16f, Stagger = 30f, Stacks = 2 },
                 "You raise a foot and bring it down. The ground heaves in a ring five metres round you: 16 damage, 30 stagger and two Tremor. An enemy showing an attack takes double stagger and its attack is broken; a god or an elite takes only the stagger.",
@@ -196,11 +197,14 @@ namespace Clover.Player.Trees
                         new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = ThrownDown, Seconds = 1f, Flags = ConditionFlags.Down } },
                     } },
                 "Opens two shapes of Quake Step, chosen at any rest fire: Struck From Afar, the stamp landed on a far enemy, or The Second Wave, a quick ring and then a heavy one.",
-                // NEEDS: an enemy broken out of its wind-up as the moment (enemy-begins-attack). Until then a Quake Step that
-                // strikes anything ends its own wait, once in eighteen seconds.
-                new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.ResetCooldown, Cooldown = 18f } },
+                // An enemy broken out of its wind-up (UpgradeEffect.NeedsWindup) ends the stamp's own wait.
+                new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, NeedsWindup = 99f, Ranks = EnemyRank.Plain, Do = UpgradeAction.ResetCooldown, Cooldown = 0.5f } },
                 "Break an enemy out of its wind-up, and Quake Step is ready again at once.",
-                learnEffects: new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Flinch, Seconds = 0.4f } });
+                learnEffects: new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, NeedsWindup = 99f, Do = UpgradeAction.Burst, Radius = 0.6f, Damage = 0f, Stagger = 30f, Stacks = 0 },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, NeedsWindup = 99f, Do = UpgradeAction.Flinch, Seconds = 0.4f },
+                });
 
             // Grey Stone, re-aimed as the Learn: the parry form stands up to 2.5 s and turns the first blow, answering with a
             // light jar of stone that shakes, slows the attacker's next wind-up and loads the next heavy blow. NEEDS: every blow

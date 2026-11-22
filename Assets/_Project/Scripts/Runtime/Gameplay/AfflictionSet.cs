@@ -35,6 +35,23 @@ namespace Clover.Gameplay
 
         public BurnStatus Burn { get; } = new BurnStatus();
         public bool IsFrozen { get; private set; }
+        /// <summary>
+        /// Seconds since it began showing the attack it shows now (its wind-up), or float.MaxValue when it shows none (the
+        /// ledger's enemy-begins-attack). Its body says so each step (<see cref="NoteWindup"/>).
+        /// </summary>
+        public float WindupFor => windingUp ? windupFor : float.MaxValue;
+        public bool WindingUp => windingUp;
+        private bool windingUp;
+        private float windupFor;
+
+        /// <summary>Its body tells it each step whether it is showing an attack: the time it has shown it is counted from its start.</summary>
+        public void NoteWindup(bool showing, float deltaTime)
+        {
+            if (showing && !windingUp) windupFor = 0f;
+            else if (showing) windupFor += deltaTime;
+            windingUp = showing;
+        }
+
         /// <summary>Seconds since it last froze, while it is frozen (a cast landing within a moment of the freeze).</summary>
         public float FrozenFor => IsFrozen ? frozenFor : float.MaxValue;
         private float frozenFor;
@@ -252,6 +269,9 @@ namespace Clover.Gameplay
         public void Clear()
         {
             owedSeconds = 0f;
+            windingUp = false;
+            windupFor = 0f;
+            frozenFor = 0f;
             present = 0;
             keptForGood = 0;
             heldBite = 0f;

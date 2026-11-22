@@ -235,6 +235,11 @@ namespace Clover.Player
         public bool NeedsFrozen;
         /// <summary>Only just after a red attack was turned, by a perfect guard or a counter (the ledger's red-attack).</summary>
         public bool RedOnly;
+        /// <summary>
+        /// Above zero: the target must be showing an attack (its wind-up), begun no more than this many seconds before (the
+        /// ledger's enemy-begins-attack; 99: anywhere in its wind-up; 0.3: in the instant its attack mark shows).
+        /// </summary>
+        public float NeedsWindup;
 
         /// <summary>A copy with every number, its slot and its mark (an Empower's twin of its Learn's effect).</summary>
         internal UpgradeEffect Twin() => (UpgradeEffect)MemberwiseClone();

@@ -278,9 +278,9 @@ namespace Clover.Player.Trees
                     Description = "No pull to the middle. A lane of churning foam two metres wide and nine long runs from the whirlpool's point away from you for six seconds. Enemies in it are carried down it and cannot dodge against it, and your blows on a carried enemy break balance 30% harder. Cut them as the current drags them past.",
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Push, Shape = HazardShape.Downwind, Amount = 1.25f } } },
                 "Opens two shapes of Whirlpool, chosen at any rest fire: Maelstrom, a hard pull that ends in a spout, or Rip Current, a lane that carries them past you.",
-                // NEEDS: in the instant its enemy's attack mark shows (enemy-begins-attack), and its own cooldown halved
-                // (own-clock-share). Until then the first enemy it bites on a cast flinches out of what it had begun.
-                new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Flinch, Seconds = 0.4f, Cooldown = 5f } },
+                // In the instant its enemy's attack mark shows (UpgradeEffect.NeedsWindup, 0.3 s), the attack is lost. NEEDS: its own
+                // cooldown halved (own-clock-share).
+                new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, NeedsWindup = 0.3f, Do = UpgradeAction.Flinch, Seconds = 0.4f } },
                 "Open it under an enemy in the instant its attack mark shows, and the attack is lost as it goes in to the knees. Its cooldown is halved.",
                 learnEffects: new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Churned, Seconds = 0.7f, Flags = ConditionFlags.StaggerTakenShare, Scale = 1.3f } } });
 

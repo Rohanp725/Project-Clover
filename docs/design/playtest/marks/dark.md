@@ -63,11 +63,9 @@ draining.
 
 **When it happens.** Each bite, while Devouring Maw is in a spell slot.
 
-**The numbers.** 3 Shards. For now, every enemy bitten has whatever it started broken off (as a flinch, 0.4 seconds). Once every 16 seconds, a bite ends Devouring Maw's wait.
+**The numbers.** 3 Shards. Only a bite on an enemy in its wind-up counts. Its attack is broken off (as a flinch, 0.4 seconds), and Devouring Maw's wait ends.
 
 **Works with.** Watching for the enemies' wind-ups, Gone to Ash (another way to answer an attack), Dread.
-
-**Not built yet.** It should only work during the enemy's wind-up; for now, every bite breaks whatever the enemy started, and the reset comes once every 16 seconds, no matter what it bit.
 
 **Example.** A brute raises its club. The jaw takes it in the middle of its swing, the blow never lands, and the jaw is ready to go again.
 

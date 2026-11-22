@@ -138,11 +138,9 @@ Rise's rocks, a pillar, a heap of rubble.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4).
 
-**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 9 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 8 seconds and the reach 6 metres.) It lands 0.45 seconds after you cast it and reaches 5 metres around you. Each enemy takes 16 damage, 30 stagger and two stacks of Tremor, and flinches for 0.4 seconds.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 9 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 8 seconds and the reach 6 metres.) It lands 0.45 seconds after you cast it and reaches 5 metres around you. Each enemy takes 16 damage, 30 stagger and two stacks of Tremor. An enemy that is starting an attack (its wind-up is showing) takes 30 more stagger, double in all, and its attack is broken off (a 0.4-second flinch; a god or an elite only takes the stagger).
 
 **Works with.** Tremor and Cairn (two stacks on everything around you), Rooted, Standing Stones (a pillar on what it hits), Buckled on the Forge branch. When it lands, it charges your blade with Earth.
-
-**Not built yet.** Double stagger on an enemy that is starting an attack, and breaking only that enemy's attack. For now, every enemy it hits flinches, and the stagger is the same for all.
 
 **Example.** Four soldiers close in around you. Stamp, and all four have two stacks of Tremor, with their balance bars stuck.
 
@@ -164,11 +162,9 @@ Rise's rocks, a pillar, a heap of rubble.
 
 **When it happens.** For now, whenever Quake Step hits an enemy, at most once every 18 seconds. Quake Step must be in a spell slot.
 
-**The numbers.** 3 Shards. Its wait ends.
+**The numbers.** 3 Shards. When the stamp breaks an ordinary enemy out of its wind-up, Quake Step's wait ends.
 
 **Works with.** The Second Wave (two stamps in a row), Cairn after two stamps.
-
-**Not built yet.** It should only work when you break an enemy out of its wind-up. The game can't tell yet when an enemy starts an attack, so any stamp that lands counts, once every 18 seconds.
 
 **Example.** Stamp a soldier out of its swing, then stamp again as its friend comes in.
 

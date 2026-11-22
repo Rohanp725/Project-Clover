@@ -1336,6 +1336,7 @@ namespace Clover.Player
             if (effect.While != StatWhen.Always && !Stats.Holds(effect.While)) return;
             if (effect.NeedsAirborne && !(target is IAfflictable flying && flying.Afflictions.IsAirborne)) return;
             if (effect.NeedsFrozen && !(target is IAfflictable icy && icy.Afflictions.IsFrozen)) return;
+            if (effect.NeedsWindup > 0f && !InWindup(target as IAfflictable, effect.NeedsWindup)) return;
             // Only in the moment after a red attack was turned (Mountain Stance's, Circle of Steel's and Gone to Ash's Masters).
             if (effect.RedOnly && !RedJustTurned(Time.time, redTurnedAt)) return;
             if (effect.OnBeat > 0f && !(target is IAfflictable beaten && beaten.Afflictions.NearBeat(effect.OnBeat))) return;
@@ -2591,6 +2592,9 @@ namespace Clover.Player
             redTurnedAt = Time.time;
             RedsTurned++;
         }
+
+        /// <summary>True when the enemy shows an attack begun no more than <paramref name="within"/> seconds ago.</summary>
+        public static bool InWindup(IAfflictable enemy, float within) => enemy != null && enemy.Afflictions.WindingUp && enemy.Afflictions.WindupFor <= within;
 
         /// <summary>True within <see cref="RedWindow"/> of a red attack being turned at <paramref name="at"/>.</summary>
         public static bool RedJustTurned(float now, float at) => now >= at && now - at <= RedWindow;

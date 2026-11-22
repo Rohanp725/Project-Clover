@@ -99,12 +99,11 @@ namespace Clover.Player.Trees
                     Description = "The jaw rises out of the enemy's own shadow instead, up to nine metres away, and closes on it from below. No lane: it reaches the one far off.",
                     Spell = new SpellSpec { Count = 1, Reach = 9f, Radius = 1.6f, Delay = 0.4f, Damage = 24f, Stagger = 30f, Stacks = 0 } },
                 "Opens two shapes of Devouring Maw, chosen at any rest fire: Rahu, a jaw that swallows an enemy and lets it fall out of the throat, or From Its Own Shadow, a jaw that rises under one far off.",
-                // NEEDS: an enemy's wind-up as the moment (enemy-begins-attack). Until then every bite breaks what its enemy had
-                // begun, and a bite ends Devouring Maw's own wait once in sixteen seconds.
+                // Only a bite on an enemy in its wind-up (UpgradeEffect.NeedsWindup): its attack swallowed and broken, and the wait ended.
                 new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Flinch, Seconds = 0.4f },
-                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.ResetCooldown, Cooldown = 16f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, NeedsWindup = 99f, Do = UpgradeAction.Flinch, Seconds = 0.4f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, NeedsWindup = 99f, Do = UpgradeAction.ResetCooldown, Cooldown = 0.5f },
                 },
                 "Bite an enemy in its wind-up, and its attack is swallowed and broken, and Devouring Maw is ready again.",
                 learnEffects: new[]

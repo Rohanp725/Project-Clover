@@ -95,6 +95,35 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void AnEnemyInItsWindupIsKnownFromItsStart()
+        {
+            var set = Quiet();
+            var enemy = new Afflicted(set);
+            Assert.IsFalse(PlayerUpgrades.InWindup(enemy, 99f), "showing nothing");
+            set.NoteWindup(true, 0.1f);
+            Assert.AreEqual(0f, set.WindupFor, 1e-5f, "counted from its start");
+            set.NoteWindup(true, 0.2f);
+            Assert.IsTrue(PlayerUpgrades.InWindup(enemy, 0.3f), "in the instant its attack mark shows");
+            set.NoteWindup(true, 0.2f);
+            Assert.IsFalse(PlayerUpgrades.InWindup(enemy, 0.3f), "past that instant");
+            Assert.IsTrue(PlayerUpgrades.InWindup(enemy, 99f), "still in its wind-up");
+            set.NoteWindup(false, 0.1f);
+            Assert.IsFalse(PlayerUpgrades.InWindup(enemy, 99f), "the blow has come");
+            var quake = Upgrade.ById(EarthTree.QuakeStep).Effects;
+            Assert.IsTrue(quake.All(effect => effect.NeedsWindup > 0f), "only an enemy showing an attack is broken and staggered twice");
+            Assert.IsTrue(quake.Any(effect => effect.Do == UpgradeAction.Burst && effect.Stagger == 30f), "double stagger");
+            Assert.IsTrue(Upgrade.ById(SpellBranch.MasterId(EarthTree.QuakeStep)).Effects.All(effect => effect.NeedsWindup > 0f && effect.Cooldown < 18f));
+            Assert.IsTrue(Upgrade.ById(SpellBranch.MasterId(DarkTree.DevouringMaw)).Effects.All(effect => effect.NeedsWindup > 0f));
+            Assert.AreEqual(0.3f, Upgrade.ById(SpellBranch.MasterId(WaterTree.Whirlpool)).Effects.Single().NeedsWindup, 1e-5f, "in the instant its attack mark shows");
+        }
+
+        private sealed class Afflicted : IAfflictable
+        {
+            public Afflicted(AfflictionSet set) => Afflictions = set;
+            public AfflictionSet Afflictions { get; }
+        }
+
+        [Test]
         public void TheCountersMastersAnswerOnlyARedAttackTurned()
         {
             Assert.IsTrue(PlayerUpgrades.RedJustTurned(10.5f, 10f));
