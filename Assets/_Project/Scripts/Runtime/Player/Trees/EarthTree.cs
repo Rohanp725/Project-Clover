@@ -44,6 +44,8 @@ namespace Clover.Player.Trees
         public const string Basalt = "earth.fissure.basalt";
         public const string OnTheFault = "earth.fissure.fault";
         public const string ThrownDown = "earth.quakestep.down";
+        /// <summary>The Second Wave: caught by the first, quick ring, for the heavy one to find.</summary>
+        public const string FirstRing = "earth.quakestep.firstring";
         public const string Jarred = "earth.stance.jarred";
         public const string Heaped = "earth.cairn.heaped";
         public const string Unbroken = "earth.cairn.unbroken";
@@ -188,15 +190,17 @@ namespace Clover.Player.Trees
                     Description = "The stamp lands not round you but on the shadow of the enemy faced, up to eight metres off, as a ring two and a half metres round it. Its attack breaks wherever it stands, and it is held a moment. You break the archer's draw without crossing the room.",
                     Spell = new SpellSpec { Count = 1, Reach = 8f, Radius = 2.5f, Delay = 0.45f, Damage = 16f, Stagger = 30f, Stacks = 2 },
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Hold, Seconds = 0.6f } } },
-                // NEEDS: thrown down only when the second ring catches it too, and at that moment (struck-twice). Until then what
-                // the first ring catches is thrown down for a second.
+                // What the first ring catches is marked for 1.5 s (FirstRing); the heavy ring, as it lands, throws down for a second
+                // each one standing in it that the first caught (its burst's UpgradeEffect.InsideDo, asked by InState).
                 new ShapeDef { Name = "The Second Wave", Form = SpellForms.Nova,
                     Description = "One stamp sends out two rings: a fast thin one of dust to five metres, 8 damage and Tremor, then a moment later a slow heavy one of heaved slabs to seven metres, 18 damage and 40 stagger. An enemy caught by both is thrown off its feet for a second.",
                     Spell = new SpellSpec { Radius = 5f, Delay = 0.45f, Damage = 8f, Stagger = 0f, Stacks = 1 },
                     Effects = new[]
                     {
-                        new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Burst, At = EffectAt.Self, Radius = 7f, Delay = 1.15f, Damage = 18f, Stagger = 40f, Stacks = 0 },
-                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = ThrownDown, Seconds = 1f, Flags = ConditionFlags.Down } },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = FirstRing, Seconds = 1.5f } },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Burst, At = EffectAt.Self, Radius = 7f, Delay = 1.15f, Damage = 18f, Stagger = 40f, Stacks = 0,
+                            InsideDo = new[] { new UpgradeEffect { On = UpgradeTrigger.InGround, InState = FirstRing, Do = UpgradeAction.Condition,
+                                State = new ConditionSpec { Id = ThrownDown, Seconds = 1f, Flags = ConditionFlags.Down } } } },
                     } },
                 "Opens two shapes of Quake Step, chosen at any rest fire: Struck From Afar, the stamp landed on a far enemy, or The Second Wave, a quick ring and then a heavy one.",
                 // An enemy broken out of its wind-up (UpgradeEffect.NeedsWindup) ends the stamp's own wait.

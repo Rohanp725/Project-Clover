@@ -147,11 +147,11 @@ Rise's rocks, a pillar, a heap of rubble.
 
 **When it happens.** Whenever you cast Quake Step, using the shape you picked. If you have not bought this, you cast the plain ring.
 
-**The numbers.** 3 Shards. Struck From Afar: a ring with a 2.5-metre radius around an enemy up to 8 metres away, 0.45 seconds after you cast it. It deals 16 damage, 30 stagger and two Tremor, and holds the enemy for 0.6 seconds. The Second Wave: first a ring out to 5 metres for 8 damage and one Tremor. Then, 0.7 seconds later, a ring out to 7 metres around where you stamped, for 18 damage and 40 stagger. Enemies the first ring hits are knocked down for 1 second.
+**The numbers.** 3 Shards. Struck From Afar: a ring with a 2.5-metre radius around an enemy up to 8 metres away, 0.45 seconds after you cast it. It deals 16 damage, 30 stagger and two Tremor, and holds the enemy for 0.6 seconds. The Second Wave: first a ring out to 5 metres for 8 damage and one Tremor. Then, 0.7 seconds later, a ring out to 7 metres around where you stamped, for 18 damage and 40 stagger. An enemy that both rings catch is knocked down for 1 second, at the moment the second ring hits it. An enemy only one ring catches stays on its feet.
 
 **Works with.** Struck From Afar: Cairn on the enemy it shook. The Second Wave: Tremor, Unbroken Cairn, and your heavy blows on enemies lying on the ground.
 
-**Not built yet.** Struck From Afar should land on the enemy you face (for now, the nearest within 8 metres). The Second Wave should only knock down enemies the second ring also catches, at that moment (for now, enemies the first ring catches are knocked down right away).
+**Not built yet.** Struck From Afar should land on the enemy you face (for now, the nearest within 8 metres).
 
 **Example.** Use The Second Wave in a crowd. Step back after the first ring, so the second ring catches them all as they come at you.
 

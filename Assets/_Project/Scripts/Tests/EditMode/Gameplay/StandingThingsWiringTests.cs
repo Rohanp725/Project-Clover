@@ -941,6 +941,24 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void TheSecondWaveThrowsDownOnlyWhatBothRingsCatch()
+        {
+            var wave = Upgrade.ById(SpellBranch.ShapeId(EarthTree.QuakeStep)).Shapes.Single(each => each.Name == "The Second Wave").Effects;
+            var first = wave.Single(each => each.On == UpgradeTrigger.SpellHit);
+            Assert.AreEqual(EarthTree.FirstRing, first.State.Id, "the first ring only marks what it catches");
+            Assert.AreEqual(ConditionFlags.None, first.State.Flags, "not thrown down by the first ring");
+            Assert.GreaterOrEqual(first.State.Seconds, 1.15f, "kept until the heavy ring lands");
+            var heavy = wave.Single(each => each.Do == UpgradeAction.Burst);
+            Assert.AreEqual(1.15f, heavy.Delay, 1e-5f);
+            Assert.IsTrue(heavy.ActsAsGround, "it acts on each one standing in it as it lands");
+            var down = heavy.InsideDo.Single();
+            Assert.AreEqual(EarthTree.FirstRing, down.InState, "only what the first ring caught");
+            Assert.AreEqual(ConditionFlags.Down, down.State.Flags & ConditionFlags.Down);
+            Assert.AreEqual(1f, down.State.Seconds, 1e-5f, "thrown off its feet for a second");
+            Assert.GreaterOrEqual(down.Slot, 0, "slotted, so it can be done");
+        }
+
+        [Test]
         public void HeldDownAndTheYewStartTheFigAtTwoCoils()
         {
             int girdled = AfflictionPairs.Index(AfflictionKind.Seeded, AfflictionKind.Cursed);

@@ -1954,6 +1954,8 @@ namespace Clover.Player
                         Spares = effect.SparesTarget ? pending.Target as IDamageable : null,
                         // A star of cracks: only what stands on its seams (the ledger's seams).
                         Seams = effect.Seams, SeamWay = aim,
+                        // What it does to each one standing in it as it lands (The Second Wave: thrown down if the first ring caught it).
+                        Acts = effect.ActsAsGround ? effect : null, LaidFor = pending.Target, Source = effect,
                     };
                     // One burst, or one where each patch of a shape would fall.
                     int bursts = effect.Shape == HazardShape.Patch ? 1 : Or(eCount, 3);
