@@ -125,12 +125,12 @@ namespace Clover.Player.Trees
                     Description = "The stones do not stay. Each enemy's heap is flung at once at the nearest other enemy within five metres: 12 damage and Tremor a stone. One shaken enemy shakes the next.",
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = T, Do = UpgradeAction.Arc, FromTarget = true, Count = 1, Reach = 5f, Damage = 24f, Stagger = 10f, Affliction = T, Stacks = 2 } } },
                 "Opens two shapes of Cairn, chosen at any rest fire: Unbroken Cairn, heaps your heavy blow bursts, or Thrown Stones, heaps flung on to the next enemy.",
-                // NEEDS: still for 1 s, not only Rooted (stood-still), and every stone striking twice (count-from-depth). Until
-                // then, cast while Rooted, half the mana comes back and a second fall of two stones' worth lands on each.
+                // Cast after standing still for a second (StatWhen.StoodStill): half the mana back. NEEDS: every stone striking twice
+                // (count-from-depth); until then a second fall of two stones' worth lands on each.
                 new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, While = StatWhen.Planted, Do = UpgradeAction.Mana, Amount = 20f },
-                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, While = StatWhen.Planted, Needs = T, Do = UpgradeAction.Falling, Radius = 0.8f, Delay = 0.8f, Damage = 24f, Stagger = 30f, Stacks = 0 },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, While = StatWhen.StoodStill, Do = UpgradeAction.Mana, Amount = 20f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, While = StatWhen.StoodStill, Needs = T, Do = UpgradeAction.Falling, Radius = 0.8f, Delay = 0.8f, Damage = 24f, Stagger = 30f, Stacks = 0 },
                 },
                 "Cast it after standing still for a second, and every stone strikes twice and half the mana comes back.",
                 learnEffects: new[]
@@ -297,12 +297,12 @@ namespace Clover.Player.Trees
                         new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Boulder, By = StruckBy.Heavy, Do = UpgradeAction.Lane, Reach = 8f, Radius = 0.8f, Interval = 0.04f, Damage = 16f, Stagger = 30f, Affliction = T, Stacks = 1 },
                     } },
                 "Opens two shapes of Stone Rise, chosen at any rest fire: Raised Stone, a pillar to fight round and break, or Dropped From the Apron, a boulder to roll through them.",
-                // NEEDS: still for 1 s as well as Rooted (stood-still), and the throw before the stones sink. Until then, cast
-                // while Rooted, what it strikes is thrown three metres away from you and shaken once more.
+                // Cast still for a second as well as Rooted (StatWhen.StoodStill and Planted): what it strikes is thrown three metres
+                // away from you and shaken once more. NEEDS: the throw before the stones sink (form-pieces).
                 new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, While = StatWhen.Planted, Do = UpgradeAction.Push, Shape = HazardShape.Downwind, Amount = 3f },
-                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, While = StatWhen.Planted, Do = UpgradeAction.Afflict, Affliction = T, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, While = StatWhen.Planted, While2 = StatWhen.StoodStill, Do = UpgradeAction.Push, Shape = HazardShape.Downwind, Amount = 3f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, While = StatWhen.Planted, While2 = StatWhen.StoodStill, Do = UpgradeAction.Afflict, Affliction = T, Stacks = 1 },
                 },
                 "Cast it while you stand your ground, Rooted or still for a second, and the stone rises under the enemy's own feet and throws it three metres away from you, two deep in Tremor, before it stands.");
 

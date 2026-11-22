@@ -118,6 +118,20 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void StandingStillIsASecondWithoutMoving()
+        {
+            float still = 0f;
+            for (int i = 0; i < 12; i++) still = StillRules.Next(still, 0f, 0.1f);
+            Assert.GreaterOrEqual(still, StillRules.Seconds, "a second unmoved");
+            Assert.AreEqual(0f, StillRules.Next(still, 0.2f * 0.2f, 0.1f), 1e-5f, "a step starts it over");
+            Assert.Greater(StillRules.Next(0.5f, 0.01f * 0.01f, 0.1f), 0.5f, "a turn on the spot is still standing");
+            var cairn = Upgrade.ById(SpellBranch.MasterId(EarthTree.Cairn)).Effects;
+            Assert.IsTrue(cairn.All(effect => effect.While == StatWhen.StoodStill), "Cairn's Master: still for a second");
+            var rise = Upgrade.ById(SpellBranch.MasterId(EarthTree.StoneRise)).Effects;
+            Assert.IsTrue(rise.All(effect => effect.While == StatWhen.Planted && effect.While2 == StatWhen.StoodStill), "Stone Rise's Master: still as well as rooted");
+        }
+
+        [Test]
         public void EveryShapesSetAsideNamesARealEffect()
         {
             foreach (var mark in Upgrade.All.Where(mark => mark.Part == BranchPart.Shape && mark.Shapes != null))

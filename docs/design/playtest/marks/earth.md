@@ -97,13 +97,13 @@ Rise's rocks, a pillar, a heap of rubble.
 ## earth.cairn.master
 **What it does.** Cast it after standing still for a second, and every stone hits twice and you get half the mana back.
 
-**When it happens.** For now, when you cast it while Rooted (you haven't started a dodge for 3 seconds). Cairn must be in a spell slot.
+**When it happens.** When you cast it after standing still for one second (not walking, dodging or stepping). Cairn must be in a spell slot.
 
 **The numbers.** 3 Shards. You get 20 mana back. A second fall hits each shaken enemy 0.8 seconds after you cast it, for 24 damage and 30 stagger.
 
 **Works with.** Rooted, Immovable, Heavy Hand, and Mountain Stance, which keeps you standing still.
 
-**Not built yet.** It should work after standing still for one second (for now it needs Rooted, which is three seconds without a dodge), and every stone should hit twice (for now there is a second fall worth two stones).
+**Not built yet.** Every stone should hit twice (for now there is a second fall worth two stones).
 
 **Example.** Hold your ground through a soldier's string of blows, then stamp. You get twice the stones, and half the cost back for the next one.
 
@@ -258,13 +258,13 @@ Rise's rocks, a pillar, a heap of rubble.
 ## earth.base.master
 **What it does.** Cast it while you hold your ground, Rooted or standing still for a second, and the stone rises under the enemy's own feet. It throws the enemy three metres away from you with two stacks of Tremor, before the enemy can stand.
 
-**When it happens.** For now, when you cast it while Rooted (you haven't started a dodge for 3 seconds). Stone Rise must be in a spell slot.
+**When it happens.** When you cast it while Rooted (you haven't started a dodge for 3 seconds) and after standing still for one second. Stone Rise must be in a spell slot.
 
 **The numbers.** 3 Shards. The enemy it hits is thrown 3 metres straight away from you and takes one more stack of Tremor (two, with the stone's own).
 
 **Works with.** Rooted, Immovable, Mountain Stance, and Cairn on the two stacks it leaves.
 
-**Not built yet.** It should also work after standing still for one second (for now, only Rooted counts), and the throw should happen before the stones sink back.
+**Not built yet.** The throw should happen before the stones sink back.
 
 **Example.** Hold your ground, and raise the stone under a brute that got too close. It is thrown off you with two stacks.
 

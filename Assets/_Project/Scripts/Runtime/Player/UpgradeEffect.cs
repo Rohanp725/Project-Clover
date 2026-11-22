@@ -105,6 +105,8 @@ namespace Clover.Player
         public bool CarriesDepth;
         /// <summary>Only while this state of the player holds.</summary>
         public StatWhen While = StatWhen.Always;
+        /// <summary>And while this one holds too (Stone Rise's Master: still for a second as well as rooted).</summary>
+        public StatWhen While2 = StatWhen.Always;
         /// <summary>For the SetOff trigger: only when this was the affliction spent. None: any.</summary>
         public AfflictionKind Spent = AfflictionKind.None;
         /// <summary>For the SetOff trigger: only when at least this many stacks were spent.</summary>

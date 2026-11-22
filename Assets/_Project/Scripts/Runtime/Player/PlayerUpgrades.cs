@@ -424,7 +424,8 @@ namespace Clover.Player
         private int baseFlasks;
         // The Body's numbers (task 5.4) are added to these, read once as the scene made them.
         private float baseStaminaMost, baseStaminaDelay, baseDodgeRecovery, baseHurtSeconds, baseKnockback, baseGreyDelay;
-        private float sinceStruck = 99f, sinceDodge = 99f;
+        private float sinceStruck = 99f, sinceDodge = 99f, sinceMoved;
+        private Vector3 lastStill;
         private float attackStamina = 1f;
         // The counts marks keep, by the mark's place in the catalogue, and which of the marks in force keep one.
         private int[] tally = new int[0];
@@ -1217,6 +1218,11 @@ namespace Clover.Player
                 }
             }
             Stats.SetWhen(StatWhen.Planted, sinceDodge >= Mathf.Max(0.5f, PlantedSeconds - Stats.Sum(PlayerStat.PlantedSooner)));
+            // Stood still: not moved more than a hair since the last step, for a second (Cairn's and Stone Rise's Masters).
+            Vector3 here = transform.position;
+            sinceMoved = StillRules.Next(sinceMoved, (here - lastStill).sqrMagnitude, deltaTime);
+            lastStill = here;
+            Stats.SetWhen(StatWhen.StoodStill, sinceMoved >= StillRules.Seconds);
             Stats.SetWhen(StatWhen.ManaFull, combat != null && !combat.Mana.Sealed && combat.Mana.Current >= combat.Mana.Maximum - 0.001f);
             Stats.SetWhen(StatWhen.HeavySwing, combat != null && combat.InHeavySwing);
             Stats.SetWhen(StatWhen.NearGrown, Hazards.GrownNear(transform.position, 4f));
@@ -1371,6 +1377,7 @@ namespace Clover.Player
             if (effect.Way != DodgeWay.Any && effect.Way != lastDodgeWay) return;
             if (effect.WhileSurge && !(element != null && element.SurgeActive)) return;
             if (effect.While != StatWhen.Always && !Stats.Holds(effect.While)) return;
+            if (effect.While2 != StatWhen.Always && !Stats.Holds(effect.While2)) return;
             if (effect.NeedsAirborne && !(target is IAfflictable flying && flying.Afflictions.IsAirborne)) return;
             if (effect.NeedsFrozen && !(target is IAfflictable icy && icy.Afflictions.IsFrozen)) return;
             if (effect.NeedsWindup > 0f && !InWindup(target as IAfflictable, effect.NeedsWindup)) return;
