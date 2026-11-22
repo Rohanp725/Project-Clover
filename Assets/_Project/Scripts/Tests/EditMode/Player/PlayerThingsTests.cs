@@ -109,5 +109,27 @@ namespace Clover.Tests
             Assert.IsTrue(sowing.Any(each => each.On == UpgradeTrigger.GrownBurst && each.Do == UpgradeAction.Afflict && each.Affliction == AfflictionKind.Seeded), "each grown thing's burst sows");
             Assert.AreNotEqual("its moment comes", TriggerWords.Of(UpgradeTrigger.GrownBurst), "the moment has words of its own");
         }
+
+        [Test]
+        public void PawnedHeartsShapesSetTheHeartUnderYouOrOverTheEnemy()
+        {
+            var shapes = Upgrade.ById(SpellBranch.ShapeId(DarkTree.PawnedHeart)).Shapes;
+            var buried = shapes.Single(each => each.Name == "Buried Heart").Spell;
+            var hung = shapes.Single(each => each.Name == "Hung From the Tree").Spell;
+            Assert.AreEqual(HeartPlace.Buried, buried.HeartAt);
+            Assert.AreEqual(HeartPlace.Hung, hung.HeartAt);
+            Assert.AreEqual(HeartPlace.Behind, Upgrade.ById(DarkTree.PawnedHeart).Spell.HeartAt, "the Learn's heart is behind you");
+            Assert.IsTrue(Clover.Player.Forms.HeartForm.Strong(HeartPlace.Buried, 2.9f, 3f), "within three metres of it");
+            Assert.IsFalse(Clover.Player.Forms.HeartForm.Strong(HeartPlace.Buried, 3.2f, 3f), "its strength only near it");
+            Assert.IsTrue(Clover.Player.Forms.HeartForm.Strong(HeartPlace.Behind, 9f, 3f));
+            Assert.IsFalse(Clover.Player.Forms.HeartForm.Touched(HeartPlace.Buried, true, 0.2f), "it rises by itself");
+            Assert.IsTrue(Clover.Player.Forms.HeartForm.RisesWhenClosed(HeartPlace.Buried), "whole, when the ring closes");
+            Assert.IsFalse(Clover.Player.Forms.HeartForm.RisesWhenClosed(HeartPlace.Behind));
+            Assert.IsTrue(Clover.Player.Forms.HeartForm.Touched(HeartPlace.Hung, false, 1.4f), "in under the enemy, no leaving first");
+            Assert.IsFalse(Clover.Player.Forms.HeartForm.Touched(HeartPlace.Hung, true, 2f));
+            Assert.IsFalse(Clover.Player.Forms.HeartForm.Touched(HeartPlace.Behind, false, 0.5f), "behind: leave it first");
+            Assert.IsTrue(Clover.Player.Forms.HeartForm.Touched(HeartPlace.Behind, true, 0.5f));
+            Assert.IsTrue(shapes.All(each => each.Effects == null || each.Effects.Length == 0), "the stand-in ash ring and kept Curse are gone");
+        }
     }
 }

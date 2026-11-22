@@ -1,5 +1,16 @@
 namespace Clover.Player
 {
+    /// <summary>Where Pawned Heart's heart is set.</summary>
+    public enum HeartPlace
+    {
+        /// <summary>Behind the player: walk away and back onto it to redeem it.</summary>
+        Behind,
+        /// <summary>Under where the player stands (Buried Heart): its strength only within the ring, and it rises whole, redeemed, when the ring closes.</summary>
+        Buried,
+        /// <summary>Over the enemy faced, following it (Hung From the Tree): fight in under it to touch it.</summary>
+        Hung,
+    }
+
     /// <summary>
     /// The numbers of a spell, as its form reads them. Each form says which of these it uses; the rest are ignored.
     /// Distances are in metres, times in seconds.
@@ -144,6 +155,8 @@ namespace Clover.Player
         public bool HeldStance;
         /// <summary>For the clone form: the copy is left standing where the spell was cast, and repeats each blow on the nearest enemy within a sword's reach of it (Second Shadow).</summary>
         public bool StaysPut;
+        /// <summary>For the heart form: where the pawned heart is set (Pawned Heart's shapes; the ledger's heart-places).</summary>
+        public HeartPlace HeartAt;
         public int Bank;
         public float BankDamage;
         public float BankStagger;

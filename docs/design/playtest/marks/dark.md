@@ -220,13 +220,11 @@ draining.
 
 **When it happens.** Whenever you cast Pawned Heart, using the shape you picked. If you have not bought this, the plain heart is set down behind you.
 
-**The numbers.** 3 Shards. For now, both shapes still set the heart behind you, like the plain one. Buried Heart: a ring of ash 3 metres across appears where you cast it and stays for 10 seconds, Cursing whatever stands in it each second. Hung From the Tree: the enemy you face keeps its Curse for the 10 seconds.
+**The numbers.** 3 Shards. Buried Heart: the heart lies under the spot where you cast it for 10 seconds. Your weapon deals 60% more only while you stand within 3 metres of it. When the ring closes, the heart rises whole: you get back all the health you pawned, plus 30% of the damage you dealt meanwhile. Hung From the Tree: the heart hangs over the enemy you face and follows it. Come within 1.6 metres of that enemy to touch the heart and get back all you pawned, plus 30% of the damage you dealt. If that enemy dies, the heart stays where it hung. You don't need to walk away first.
 
 **Works with.** Buried Heart: holding your ground against a pack that comes to you, Gone to Ash. Hung From the Tree: a one-on-one fight with a strong enemy, Grasp's Tethered shape.
 
-**Not built yet.** Buried Heart's heart under your feet, its power only working within 3 metres, and the heart rising whole with 30% of the damage dealt when the ring closes. Hung From the Tree's heart hanging over the enemy and following it. Both are waiting until the heart can be placed somewhere other than behind you.
-
-**Example.** Use Buried Heart in a doorway. The soldiers that come through stand in your ring of ash and come away Cursed.
+**Example.** Use Buried Heart in a doorway and hold it. Cut everything that comes through, and when the ring closes your health comes back with interest.
 
 ## dark.pawnedheart.master
 **What it does.** Touch the heart during a perfect dodge, and you get back 60% of the damage you dealt instead of 30%.

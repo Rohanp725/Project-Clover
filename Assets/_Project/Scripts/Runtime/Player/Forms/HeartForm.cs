@@ -24,6 +24,29 @@ namespace Clover.Player.Forms
         /// <summary>Seconds after a perfect dodge in which touching the heart counts as touching it during the dodge.</summary>
         public const float TouchWindow = 0.6f;
 
+        /// <summary>How near the hung heart's enemy the player must come to touch it, fighting in under it.</summary>
+        public const float UnderHung = 1.6f;
+
+        /// <summary>True while the heart's strength is the weapon's: always, except a buried heart's, only within its ring's radius of it.</summary>
+        public static bool Strong(HeartPlace place, float distance, float radius) => place != HeartPlace.Buried || distance <= Mathf.Max(0.5f, radius);
+
+        /// <summary>
+        /// True when the player touches the heart now: behind them, only after leaving it (2.6 m) and coming back within a metre;
+        /// hung over an enemy, by coming within <see cref="UnderHung"/> of it; buried, never (it rises by itself as the ring closes).
+        /// </summary>
+        public static bool Touched(HeartPlace place, bool left, float distance)
+        {
+            switch (place)
+            {
+                case HeartPlace.Buried: return false;
+                case HeartPlace.Hung: return distance <= UnderHung;
+                default: return left && distance < Touch;
+            }
+        }
+
+        /// <summary>True when the ring's closing redeems the heart whole (buried), rather than stopping it (half pawned left grey).</summary>
+        public static bool RisesWhenClosed(HeartPlace place) => place == HeartPlace.Buried;
+
         /// <summary>The share of the damage dealt the heart returns, in percent: its own, and more when touched during a perfect dodge (the ledger's heart-touch).</summary>
         public static float TouchPercent(float percent, bool inPerfectDodge, float more) => percent + (inPerfectDodge ? Mathf.Max(0f, more) : 0f);
 
@@ -34,7 +57,10 @@ namespace Clover.Player.Forms
             var health = cast.Defence.Health;
             run.T0 = Mathf.Max(0f, health.Current - 1f);
             health.Damage(run.T0);
-            run.A = cast.Origin - cast.Forward * Behind;
+            // Behind the player, under their feet, or over the enemy faced (followed in Tick).
+            run.Victim = cast.Spec.HeartAt == HeartPlace.Hung ? FormKit.Victim(cast) : null;
+            run.A = cast.Spec.HeartAt == HeartPlace.Buried ? cast.Origin
+                : run.Victim != null ? run.Victim.transform.position : cast.Origin - cast.Forward * Behind;
             SpellWorks.Solids(run)[0] = FormFx.Hold(FormMesh.Orb, new Color(0.16f, 0.02f, 0.2f), 0.07f);
             var marks = SpellWorks.Marks(run);
             marks[0] = FormFx.HoldMark(FormMark.Ring, FormKit.Lit(cast.Colour, 3f));
@@ -58,6 +84,10 @@ namespace Clover.Player.Forms
             float seconds = Mathf.Max(1f, cast.Spec.Seconds);
             float left = 1f - run.Age / seconds;
             Vector3 here = cast.Player.transform.position;
+            var place = cast.Spec.HeartAt;
+            // Hung over its enemy, it follows it; if that one falls, it stays where it hung.
+            if (place == HeartPlace.Hung && FormKit.Alive(run.Victim)) run.A = run.Victim.transform.position;
+            float lift = place == HeartPlace.Hung ? 2.6f : place == HeartPlace.Buried ? 0.1f : 0.75f;
             // It beats: quicker as the ring closes, and each beat throws a pulse that is wider the more has been dealt.
             float rate = Mathf.Lerp(3.2f, 1.2f, left);
             float beat = Mathf.Repeat(run.Age * rate, 1f);
@@ -69,20 +99,20 @@ namespace Clover.Player.Forms
             }
             run.T2 = beat;
             float swell = 0.62f * (1f + 0.3f * Mathf.Max(0f, 1f - beat * 4f));
-            FormFx.Place(solids[0], run.A + Vector3.up * 0.75f, Quaternion.Euler(0f, run.Age * 25f, 12f), new Vector3(swell, swell * 1.15f, swell));
+            FormFx.Place(solids[0], run.A + Vector3.up * lift, Quaternion.Euler(0f, run.Age * 25f, 12f), new Vector3(swell, swell * 1.15f, swell));
             FormFx.Heat(solids[0], beat < 0.08f ? 0.6f : 0f);
             float ring = Mathf.Max(0.3f, cast.Spec.Radius * 2f * left);
             FormFx.PlaceMark(marks[0], run.A, Quaternion.identity, new Vector3(ring, 1f, ring));
             FormFx.PlaceMark(marks[1], run.A, Quaternion.Euler(0f, -run.Age * 40f, 0f), new Vector3(2.2f, 1f, 2.2f));
-            if (cast.Upgrades != null)
+            Vector3 gap = here - run.A;
+            gap.y = 0f;
+            if (cast.Upgrades != null && Strong(place, gap.magnitude, cast.Spec.Radius))
             {
                 cast.Upgrades.Stats.AddBoon(PlayerStat.WeaponDamage, cast.Spec.Damage / 100f, 0.25f);
                 cast.Upgrades.Stats.AddBoon(PlayerStat.AttackStamina, -1f, 0.25f);
             }
-            Vector3 gap = here - run.A;
-            gap.y = 0f;
             if (gap.magnitude > Left) run.Flag = true;
-            if (run.Flag && gap.magnitude < Touch)
+            if (Touched(place, run.Flag, gap.magnitude))
             {
                 // Redeemed: for more, when the heart is touched in a perfect dodge and a mark says so (Pawned Heart's Master).
                 bool inDodge = cast.Defence != null && Time.time - cast.Defence.LastPerfectDodgeAt <= TouchWindow;
@@ -98,6 +128,17 @@ namespace Clover.Player.Forms
                 return false;
             }
             if (run.Age < seconds) return true;
+            if (RisesWhenClosed(place))
+            {
+                // Buried: it rises whole where it lay, with its share of what was dealt.
+                float risen = Redeemed(run.T0, run.T1, cast.Spec.Count);
+                cast.Defence.Health.Heal(risen);
+                LastReturned = risen;
+                cast.Defence.Callout("The heart rises");
+                SigKit.Column(run.A, FormKit.Lit(cast.Colour, 3.4f), 1.8f, 0.3f);
+                FormFx.Lay(FormMark.Ring, run.A, 1f, FormKit.Lit(cast.Colour, 4f), 0.45f, 8f);
+                return false;
+            }
             // The ring closed: the heart stops, and half of what was pawned is only owed.
             float half = run.T0 * 0.5f;
             cast.Defence.Health.Heal(half);

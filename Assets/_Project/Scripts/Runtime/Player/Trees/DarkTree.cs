@@ -236,17 +236,15 @@ namespace Clover.Player.Trees
                 // The roster's numbers alone (the owner's answer of 2026-11-20: an Empower may strengthen without a shorter wait).
                 new Empower { Damage = 70f, Seconds = 12f },
                 "While the heart beats, your weapon deals 70% more, and the ring closes over twelve seconds.",
-                // NEEDS: the heart sunk under where you stand, its strength only within three metres, rising whole when the ring
-                // closes (heart-places). Until then the heart is set behind you as learned, and a ring of ash three metres
-                // round where you cast Curses what stands in it.
+                // The heart sunk under where you stand (HeartPlace.Buried): its strength only within three metres of it, rising whole
+                // when the ring closes, with 30% of the damage dealt.
                 new ShapeDef { Name = "Buried Heart",
                     Description = "The heart sinks into the floor where you stand and beats under it, a dark pulse in a ring of ash. For ten seconds your weapon deals 60% more only while you stand within three metres of it; when the ring closes it rises whole, with 30% of the damage dealt. Stand your ground and cut.",
-                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Hazard, At = EffectAt.Self, Shape = HazardShape.Patch, Radius = 3f, Seconds = 10f, Interval = 1f, Damage = 0f, Stagger = 0f, Affliction = C, Stacks = 1 } } },
-                // NEEDS: the heart hung over the enemy faced, following it, to be touched under it (heart-places). Until then the
-                // heart is set behind you as learned, and the enemy faced keeps its Curse while the heart beats.
+                    Spell = new SpellSpec { Cost = 0f, HealthCost = 1f, Seconds = 10f, Damage = 60f, Count = 30, Radius = 3f, Stacks = 0, HeartAt = HeartPlace.Buried } },
+                // The heart hung over the enemy faced, following it (HeartPlace.Hung), touched by coming in under it.
                 new ShapeDef { Name = "Hung From the Tree",
                     Description = "The heart hangs in the air over the enemy you face instead, and follows it, as the vetala hangs from its tree. You must fight your way in under it to touch it. You go in, not out.",
-                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = HungHeart, Seconds = 10f, Keeps = C } } } },
+                    Spell = new SpellSpec { Cost = 0f, HealthCost = 1f, Seconds = 10f, Damage = 60f, Count = 30, Radius = 3f, Stacks = 0, HeartAt = HeartPlace.Hung } },
                 "Opens two shapes of Pawned Heart, chosen at any rest fire: Buried Heart, a heart under your feet to stand over, or Hung From the Tree, a heart over the enemy to fight your way to.",
                 // The heart touched within a moment of a perfect dodge returns 30 more of each hundred dealt (PlayerStat.HeartTouchMore, read by HeartForm).
                 System.Array.Empty<UpgradeEffect>(),
