@@ -18,15 +18,16 @@ namespace Clover.EditorTools
     public static partial class ElementLookBuilder
     {
         /// <summary>Uniform scale of a blade run through a body: on the castle soldier its point comes out a hand's width behind.</summary>
-        public const float ImpaleScale = 2.1f;
+        public const float ImpaleScale = 2.9f;
 
         /// <summary>How far out from the stand-in's upright a blade's guard stands: just past its reach (BodyAnchors.StandInChest).</summary>
-        public const float ImpaleGuard = 0.47f;
+        public const float ImpaleGuard = 0.72f;
 
         /// <summary>Where blades go through a body, in order: height on the stand-in, turn round it from the side they enter, tilt down.</summary>
         private static readonly (float height, float turn, float tilt)[] ImpaleSpots =
         {
-            (1.36f, 0f, 15f), (1.02f, 70f, 6f), (1.58f, -55f, 32f),
+            // In from the side the camera sees across, so the hilt stands out of one flank and the point out of the other.
+            (1.36f, 90f, 12f), (1.02f, -80f, 6f), (1.58f, 125f, 28f),
         };
 
         /// <summary>The looks whose blades go through the body, and whether they enter from behind (Sundered: the point out of the chest toward the camera).</summary>

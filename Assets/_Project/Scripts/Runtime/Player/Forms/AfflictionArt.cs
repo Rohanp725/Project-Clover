@@ -104,15 +104,24 @@ namespace Clover.Player.Forms
             {
                 var kind = Looked[i];
                 int depth = afflictions.Stacks(kind);
-                if (depth <= 0) continue;
+                if (depth <= 0)
+                {
+                    if (owned > 0) Disown(body, kind);
+                    continue;
+                }
                 if (kind == AfflictionKind.Soaked && (afflictions.Stacks(AfflictionKind.Static) >= SeizedStatic || afflictions.Stacks(AfflictionKind.Sundered) > 0)) continue;
                 // A reaction's own look is playing on it and shows what became of this one: still carried, it is kept
                 // unseen and ageing, so it is simply there when that look is over, not cast again from its start.
                 if (ElementLooks.Hides(body, (int)kind))
                 {
-                    ElementLooks.KeepVeiled(ElementLooks.Find(LookOf(kind, depth)), body);
+                    // Laid by the reaction itself while its look plays (Golden Feathers' Unsteady): the reaction's look is
+                    // its look, and it is not cast again on top when that look ends (the owner: "a second cast of the
+                    // afflictions after the reaction"). One carried from before goes on unseen and ageing.
+                    if (Owns(body, kind) || !ShowingAny(kind, body)) Own(body, kind);
+                    else ElementLooks.KeepVeiled(ElementLooks.Find(LookOf(kind, depth)), body);
                     continue;
                 }
+                if (owned > 0 && Owns(body, kind)) continue;
                 // Under ice that bursts through the body (Frost Bite's spike, the charged ice blade's crystals) Chill's
                 // shell does not cover it (the owner: "that white spiderweb thing is really covering everything up").
                 if (kind == AfflictionKind.Chill && ElementLooks.Thawed(body)) continue;
@@ -122,6 +131,62 @@ namespace Clover.Player.Forms
                 if (kind == AfflictionKind.Marked && FlareNear(body.position) >= 0) continue;
                 ElementLooks.Keep(ElementLooks.Find(LookOf(kind, depth)), body);
             }
+        }
+
+        // What a reaction laid on a body under its own look: drawn by that look, never again by the affliction's own while
+        // the body carries it. A fixed table, reused; a body gone or a kind no longer carried frees its place.
+        private const int MostOwned = 48;
+        private static readonly Transform[] ownedBody = new Transform[MostOwned];
+        private static readonly int[] ownedKinds = new int[MostOwned];
+        private static int owned;
+
+        /// <summary>True when the affliction's look on this body is the reaction's that laid it, for probes and tests.</summary>
+        public static bool Owns(Transform body, AfflictionKind kind)
+        {
+            for (int i = 0; i < MostOwned; i++)
+                if (ReferenceEquals(ownedBody[i], body)) return (ownedKinds[i] & (1 << (int)kind)) != 0;
+            return false;
+        }
+
+        private static void Own(Transform body, AfflictionKind kind)
+        {
+            int free = -1;
+            for (int i = 0; i < MostOwned; i++)
+            {
+                if (ReferenceEquals(ownedBody[i], body))
+                {
+                    ownedKinds[i] |= 1 << (int)kind;
+                    return;
+                }
+                if (free < 0 && (ownedBody[i] == null || ownedKinds[i] == 0)) free = i;
+            }
+            if (free < 0) return;
+            if (ReferenceEquals(ownedBody[free], null) || ownedKinds[free] == 0) owned++;
+            ownedBody[free] = body;
+            ownedKinds[free] = 1 << (int)kind;
+        }
+
+        private static void Disown(Transform body, AfflictionKind kind)
+        {
+            for (int i = 0; i < MostOwned; i++)
+            {
+                if (!ReferenceEquals(ownedBody[i], body)) continue;
+                ownedKinds[i] &= ~(1 << (int)kind);
+                if (ownedKinds[i] == 0)
+                {
+                    ownedBody[i] = null;
+                    owned = Mathf.Max(0, owned - 1);
+                }
+                return;
+            }
+        }
+
+        // The affliction's own look of any depth is playing on the body (it was carried before the reaction's look began).
+        private static bool ShowingAny(AfflictionKind kind, Transform body)
+        {
+            for (int depth = 1; depth <= 5; depth++)
+                if (ElementLooks.IsPlaying(ElementLooks.Find(LookOf(kind, depth)), body)) return true;
+            return false;
         }
 
         /// <summary>Seconds Marked's sun-wheel takes to come in, so it fades back after a reaction's look instead of popping in.</summary>
@@ -260,6 +325,9 @@ namespace Clover.Player.Forms
             swingQuietAt = Vector3.zero;
             BurnStyle = DefaultBurnStyle;
             StaticStyle = DefaultStaticStyle;
+            System.Array.Clear(ownedBody, 0, MostOwned);
+            System.Array.Clear(ownedKinds, 0, MostOwned);
+            owned = 0;
         }
 
         /// <summary>Puts down one beat of an affliction's look. False when the new effects are off or the scene has no art.</summary>
