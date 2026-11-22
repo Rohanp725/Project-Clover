@@ -59,5 +59,10 @@ namespace Clover.World
         public bool Quiet;
         /// <summary>Laid besides its own blow, a dose a bite on all it bites (The Host: a grown thing fed on the poisoned doses too).</summary>
         public AfflictionKind AlsoLays;
+        /// <summary>
+        /// Above zero, a helper that walks at this many metres a second from where it rose to <see cref="Target"/>, biting
+        /// nothing on the way, and then keeps to it and bites (The Drops Quicken's rime creature, risen where an enemy fell).
+        /// </summary>
+        public float WalksTo;
     }
 }

@@ -470,6 +470,20 @@ namespace Clover.World
             {
                 if (!zones[i].Active) continue;
                 ref var zone = ref zones[i];
+                // A helper walking to its enemy bites nothing on the way, and keeps to it once there.
+                if (zone.Spec.WalksTo > 0f && zone.Delay <= 0f && zone.Spec.Target != null && zone.Spec.Target.gameObject.activeInHierarchy
+                    && !WalkedTo(ref zone.Position, zone.Spec.Target.position, zone.Spec.Radius, zone.Spec.WalksTo * deltaTime))
+                {
+                    zone.Left -= deltaTime;
+                    zone.UntilShow -= deltaTime;
+                    if (zone.UntilShow <= 0f && !zone.Spec.Quiet)
+                    {
+                        zone.UntilShow = ShowMovingEvery;
+                        Puff(zone.Spec, zone.Position + Vector3.up * 0.3f, 1.5f);
+                    }
+                    if (zone.Left <= 0f) zone.Active = false;
+                    continue;
+                }
                 if (zone.Spec.Follow && zone.Spec.Target != null) zone.Position = zone.Spec.Target.position;
                 if (zone.Delay > 0f)
                 {
@@ -550,6 +564,20 @@ namespace Clover.World
                 }
                 if (zone.Left <= 0f) zone.Active = false;
             }
+        }
+
+        /// <summary>
+        /// One step of a helper walking to its enemy: moves <paramref name="at"/> up to <paramref name="step"/> toward
+        /// <paramref name="target"/>, and is true once it stands within reach of it (a little inside its own bite).
+        /// </summary>
+        public static bool WalkedTo(ref Vector3 at, Vector3 target, float radius, float step)
+        {
+            Vector3 gap = target - at;
+            gap.y = 0f;
+            float reach = Mathf.Max(0.5f, radius * 0.6f);
+            if (gap.magnitude <= reach) return true;
+            at += Vector3.ClampMagnitude(gap, Mathf.Min(step, gap.magnitude - reach * 0.9f));
+            return false;
         }
 
         // A thing in flight: it may turn toward the enemy it was thrown at, or come home to the hand that threw it.

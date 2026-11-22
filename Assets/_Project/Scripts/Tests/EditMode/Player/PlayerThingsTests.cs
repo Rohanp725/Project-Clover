@@ -233,5 +233,27 @@ namespace Clover.Tests
             var suns = Upgrade.ById(LightTree.TwoSuns);
             Assert.IsEmpty(suns.Effects, "no stand-in burst of light on each enemy struck");
         }
+
+        [Test]
+        public void TheDropsQuickenWalksToTheNearestAndTheSownMenAnswerYourHeavyBlow()
+        {
+            Vector3 at = Vector3.zero;
+            Assert.IsFalse(Hazards.WalkedTo(ref at, new Vector3(0f, 0f, 6f), 1.5f, 1f), "six metres off: still walking");
+            Assert.AreEqual(1f, at.z, 1e-4f, "a step of its walk");
+            for (int i = 0; i < 10 && !Hazards.WalkedTo(ref at, new Vector3(0f, 0f, 6f), 1.5f, 1f); i++) { }
+            Assert.IsTrue(Hazards.WalkedTo(ref at, new Vector3(0f, 0f, 6f), 1.5f, 1f), "there, it stops and strikes");
+            Assert.Less(6f - at.z, 1f, "within reach of it");
+            var drops = Upgrade.ById(Clover.Player.Trees.Duo.VenomRimeDuo.TheDropsQuicken).Effects;
+            var helper = drops.Single();
+            Assert.AreEqual(UpgradeAction.Helper, helper.Do);
+            Assert.AreEqual(4f, helper.Speed, 1e-5f, "it walks");
+            Assert.AreEqual(AfflictionKind.Poison, helper.Affliction);
+            Assert.AreEqual(AfflictionKind.Chill, helper.BitesLay, "a dose and a Chill each strike");
+            Assert.AreEqual(3, helper.Count);
+            Assert.IsTrue(Upgrade.ById(Clover.Player.Trees.Duo.IronThornsDuo.TheSownMen).Spell.AnswersHeavy);
+            Assert.IsTrue(Clover.Player.Forms.MinionRules.Answers(true, true, Vector3.zero, new Vector3(1.2f, 0f, 0f)));
+            Assert.IsFalse(Clover.Player.Forms.MinionRules.Answers(false, true, Vector3.zero, Vector3.right), "only on that same enemy");
+            Assert.IsFalse(Clover.Player.Forms.MinionRules.Answers(true, true, Vector3.zero, new Vector3(3f, 0f, 0f)), "and close enough to strike it");
+        }
     }
 }

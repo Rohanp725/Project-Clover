@@ -87,18 +87,16 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.RightLow));
 
-            // NEEDS: a helper rising where an enemy fell and going to the nearest, laying two afflictions (helpers-answer); now a
-            // helper from the drop strikes three times, 6 and a dose each, and the rime it rises from chills all within 3 m.
+            // A helper rising where the rimed enemy fell and walking to the nearest other within 10 m (UpgradeEffect.Speed on a
+            // Helper: HazardSpec.WalksTo), then striking it three times, each a dose and a Chill (BitesLay: HazardSpec.AlsoLays).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = TheDropsQuicken, Name = "The Drops Quicken", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { BitterFrost, SixLevelsDown }, Icon = UpgradeIcons.Claw,
-                Description = "A rimed enemy that dies leaves a drop of venom rime that rises as a small rime creature and strikes the nearest enemy three times, 6 each, a dose and a Chill, then melts.",
+                Description = "A rimed enemy that dies leaves a drop of venom rime that rises as a small rime creature, walks to the nearest enemy and strikes it three times, 6 each, a dose and a Chill, then melts.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Poison, Needs2 = AfflictionKind.Chill, Cooldown = 0.5f, Do = UpgradeAction.Helper, Count = 3, Interval = 0.6f, Radius = 2f,
-                        Damage = 6f, Stagger = 6f, Affliction = AfflictionKind.Poison, Stacks = 1 },
-                    new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Poison, Needs2 = AfflictionKind.Chill, Cooldown = 0.5f, Do = UpgradeAction.Afflict, Radius = 3f,
-                        Affliction = AfflictionKind.Chill, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Poison, Needs2 = AfflictionKind.Chill, Cooldown = 0.5f, Do = UpgradeAction.Helper, Count = 3, Interval = 0.6f, Radius = 1.5f,
+                        Speed = 4f, Reach = 10f, Damage = 6f, Stagger = 6f, Affliction = AfflictionKind.Poison, Stacks = 1, BitesLay = AfflictionKind.Chill },
                 },
             }, HeartPattern.Keystone));
 

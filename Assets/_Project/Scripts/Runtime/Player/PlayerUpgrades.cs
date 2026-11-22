@@ -264,6 +264,8 @@ namespace Clover.Player
         private readonly HashSet<IDamageable> fanTaken = new HashSet<IDamageable>();
         // Cherry Red's fan: the enemies already given a blade, or passed over, this throw; and where each blade called home stood.
         private readonly HashSet<IDamageable> plantExcept = new HashSet<IDamageable>();
+        // The enemy a walking helper rose from: it goes to another.
+        private readonly HashSet<IDamageable> helperExcept = new HashSet<IDamageable>();
         private readonly Vector3[] bladePlaces = new Vector3[PlantedBlades.Most];
 
         // One copy of the effect for each enemy near the target carrying what it asks, nearest first.
@@ -2282,12 +2284,28 @@ namespace Clover.Player
                     helperOwner = effect.Owner;
                     int strikes = Or(eCount, 3);
                     float interval = Or(effect.Interval, 0.6f);
+                    float walk = 0f;
+                    // A helper that walks (Speed): it rises where its moment was and goes to the nearest other enemy, then strikes it
+                    // (The Drops Quicken: from where the rimed enemy fell).
+                    if (effect.Speed > 0f)
+                    {
+                        helperExcept.Clear();
+                        if (target != null && target.GetComponentInParent<IDamageable>() is IDamageable fell) helperExcept.Add(fell);
+                        var nearest = combat.EnemyNear(centre, Or(effect.Reach, 10f), helperExcept);
+                        helperExcept.Clear();
+                        if (nearest == null) break;
+                        target = nearest.transform;
+                        walk = effect.Speed;
+                    }
                     Hazards.Lay(new HazardSpec
                     {
-                        Kind = ElementLook.Ground(look), Tint = look.Colour, Position = centre, Radius = Or(effect.Radius, 2f), Seconds = strikes * interval + 0.2f, BiteEvery = interval,
+                        Kind = ElementLook.Ground(look), Tint = look.Colour, Position = centre, Radius = Or(effect.Radius, 2f), BiteEvery = interval,
+                        // A walker's time to get there is its own: as long as the walk at most, then its strikes.
+                        Seconds = strikes * interval + 0.2f + (walk > 0f ? Or(effect.Reach, 10f) / walk : 0f),
                         Bites = strikes, Burst = !bespoke, Quiet = bespoke, Follow = target != null, Target = target, Blow = Unseen(Blow(look, kind, eDamage, eStagger, eStacks), bespoke),
                         // Its helpers at once, at most (Nothing Stays Buried: three); one more takes the place of the one nearest its end.
                         Family = effect.Limit > 0 ? FamilyOf(effect) : 0, Limit = effect.Limit,
+                        WalksTo = walk, AlsoLays = effect.BitesLay,
                     });
                     break;
                 }

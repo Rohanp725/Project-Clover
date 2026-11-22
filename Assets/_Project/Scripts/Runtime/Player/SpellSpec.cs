@@ -173,6 +173,8 @@ namespace Clover.Player
         public bool WaitsOut;
         public float HomeDamage;
         public float HomeStagger;
+        /// <summary>For the minions form: each heavy blow you land is answered at once by every helper on that same enemy (The Sown Men).</summary>
+        public bool AnswersHeavy;
         public int Bank;
         public float BankDamage;
         public float BankStagger;
