@@ -172,3 +172,5 @@ The owner noticed that the infused strike plays the same arc look on every weapo
 - **Light, light from the cracks:** gold light bleeds out of the cracks, then a short column bursts up from the ground and fades into motes.
 - **Poison, a venom geyser:** a liquid eruption of dark green venom, raining round drops that pool and bubble.
 - **Unity note:** the slam lands 2.5 m ahead (`PlayerCombat.cs:1475`). Remove the hammer's white glow ring (`PlayerCombat.cs:1476-1477`).
+
+- **Slam round 2 (the owner):** "All of them are good in concept, but the visuals in unity need to be well implemented." Polish five before the build: Water gets a crown splash wall, Metal a blade with a hilt and guard, Poison a brighter sickly rim, Light smooth beams with no flame-like spikes, and Wind fewer, fatter curls. Unity must then match the strips closely; check the frames against them before showing the owner.
