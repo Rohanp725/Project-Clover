@@ -50,11 +50,11 @@ draining.
 
 **When it happens.** Whenever you cast Devouring Maw, using the shape you picked. If you have not bought this, you cast the plain jaw.
 
-**The numbers.** 3 Shards. Rahu: each normal Cursed enemy bitten is held still for 1.5 seconds and can't attack or guard. An enemy with no Curse is only bitten. Then it is dragged 5 metres toward you and takes 60 stagger. From Its Own Shadow: one jaw bites from below on the nearest enemy within 9 metres, a moment after you cast it. It covers a circle 1.6 metres across and deals 24 damage and 30 stagger.
+**The numbers.** 3 Shards. Rahu: each normal Cursed enemy bitten is swallowed for 1.5 seconds. In that time it is gone from the fight: you can't see it, hit it or bump into it, and it can't do anything. Then it rolls out in front of your feet and takes 60 stagger. An enemy with no Curse is only bitten. From Its Own Shadow: one jaw bites from below on the nearest enemy within 9 metres, a moment after you cast it. It covers a circle 1.6 metres across and deals 24 damage and 30 stagger.
 
 **Works with.** Rahu: a heavy weapon (the swallowed enemy comes out staggered at your feet, ready for a finisher), Near the Grave. From Its Own Shadow: archers and spellcasters at the back, Grasp's Tethered shape.
 
-**Not built yet.** The enemy should be hidden inside the throat; for now, it is held where it was bitten. From Its Own Shadow should look like it rises out of the enemy's shadow, and aim at the enemy you face; for now, it rises under the nearest enemy.
+**Not built yet.** The jaw doesn't yet show the enemy going down its throat and rolling back out; for now, the enemy just vanishes and comes back. From Its Own Shadow should look like it rises out of the enemy's shadow, and aim at the enemy you face; for now, it rises under the nearest enemy.
 
 **Example.** Use Rahu on a Cursed soldier. It disappears into the jaw and drops at your feet, staggered, and your heavy blow finishes it.
 

@@ -298,6 +298,25 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void RahuSwallowsWholeAndRollsItOutAtYourFeet()
+        {
+            var rahu = Upgrade.ById(SpellBranch.ShapeId(DarkTree.DevouringMaw)).Shapes.Single(each => each.Name == "Rahu").Effects;
+            var swallow = rahu.Single(each => each.Do == UpgradeAction.Condition);
+            Assert.AreEqual(EnemyRank.Plain, swallow.Ranks, "only an ordinary enemy");
+            Assert.IsTrue((swallow.State.Flags & ConditionFlags.Swallowed) != 0, "taken out of the fight");
+            Assert.AreEqual(1.5f, swallow.State.Seconds, 1e-5f);
+            Assert.IsFalse(rahu.Any(each => each.Do == UpgradeAction.Pull), "not dragged: put down");
+            Assert.IsTrue(rahu.Any(each => each.On == UpgradeTrigger.ConditionEnded && each.Do == UpgradeAction.Burst && each.Stagger >= 60f), "and staggered as it comes out");
+            var enemy = NewEnemy();
+            enemy.Conditions.Set(swallow.State, null);
+            Assert.IsTrue(enemy.Conditions.Has(ConditionFlags.Swallowed));
+            enemy.Conditions.Tick(1.6f);
+            Assert.IsFalse(enemy.Conditions.Has(ConditionFlags.Swallowed), "a second and a half later it is out");
+            var at = Enemy.PutDownAt(new Vector3(3f, 0f, 3f), Vector3.right);
+            Assert.AreEqual(new Vector3(3f + Enemy.RolledOutAt, 0f, 3f), at, "at your feet, in front of you");
+        }
+
+        [Test]
         public void WhirlpoolAndAshFallHoldTheBalance()
         {
             var churn = Upgrade.ById(WaterTree.Whirlpool).Effects.Single(each => each.Do == UpgradeAction.Condition);

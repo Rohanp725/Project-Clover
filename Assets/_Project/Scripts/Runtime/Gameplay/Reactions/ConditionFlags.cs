@@ -79,5 +79,10 @@ namespace Clover.Gameplay
         Chained = 1 << 24,
         /// <summary>Its shadow is cut loose and lies apart from it at the run's point; a weapon blow on the shadow strikes the body (<see cref="LooseShadows"/>).</summary>
         ShadowLoose = 1 << 25,
+        /// <summary>
+        /// It is swallowed: out of the fight and unseen while this lasts (no body to strike or bump, nothing drawn), and put
+        /// down at the player's feet when it ends (Devouring Maw's Rahu; the ledger's swallowed).
+        /// </summary>
+        Swallowed = 1 << 26,
     }
 }

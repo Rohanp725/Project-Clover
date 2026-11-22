@@ -82,15 +82,14 @@ namespace Clover.Player.Trees
                 // The heal of 18 is the Learn's own heal, set by the Empower (empower-effects).
                 new Empower { Cooldown = 10f, Effects = new[] { new EffectChange { Index = 1, Amount = 18f } } },
                 "Devouring Maw waits 10 seconds, not 11, and a Cursed enemy bitten heals you 18.",
-                // Only an ordinary Cursed enemy is swallowed (Needs, asked before the Learn spends the Curse). NEEDS: the enemy
-                // taken out of the fight unseen and rolled out of the throat (swallowed). Until then it is held still a second
-                // and a half, then dragged to your feet and staggered.
+                // Only an ordinary Cursed enemy is swallowed (Needs, asked before the Learn spends the Curse): out of the fight and
+                // unseen for a second and a half (ConditionFlags.Swallowed: no body, nothing drawn), then rolled out at your feet
+                // (Enemy.PutDownAt) and staggered.
                 new ShapeDef { Name = "Rahu",
                     Description = "An ordinary Cursed enemy is swallowed whole, and a second and a half later rolls out of the open throat at your feet, staggered, because there is nothing to hold it. A god or an elite is only bitten.",
                     Effects = new[]
                     {
-                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Ranks = EnemyRank.Plain, Needs = C, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Swallowed, Seconds = 1.5f, Flags = ConditionFlags.Rooted | ConditionFlags.BeginsNoAttack | ConditionFlags.CannotGuard } },
-                        new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Swallowed, Do = UpgradeAction.Pull, Shape = HazardShape.Downwind, Amount = 5f },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Ranks = EnemyRank.Plain, Needs = C, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Swallowed, Seconds = 1.5f, Flags = ConditionFlags.Swallowed | ConditionFlags.Rooted | ConditionFlags.BeginsNoAttack | ConditionFlags.CannotGuard } },
                         new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Swallowed, Do = UpgradeAction.Burst, Radius = 1f, Damage = 0f, Stagger = 60f, Stacks = 0 },
                     } },
                 // NEEDS: the jaw drawn rising out of the enemy's own shadow, on the enemy faced rather than the nearest

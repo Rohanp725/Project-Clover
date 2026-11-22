@@ -798,6 +798,40 @@ namespace Clover.Gameplay
 
         private float lastShoveMoment = -100f;
 
+        // Swallowed (Rahu): gone from the fight, unseen and with no body, until the condition ends; then rolled out at the
+        // player's feet. The renderers are gathered once, the first time it is swallowed.
+        private bool swallowedNow;
+        private Renderer[] swallowedHides;
+
+        /// <summary>Metres in front of the player a swallowed enemy is put down.</summary>
+        public const float RolledOutAt = 1.2f;
+
+        /// <summary>Where a swallowed enemy is put down: at the player's feet, a little in front of them, at their height.</summary>
+        public static Vector3 PutDownAt(Vector3 player, Vector3 facing)
+        {
+            facing.y = 0f;
+            return player + (facing.sqrMagnitude > 0.0001f ? facing.normalized : Vector3.forward) * RolledOutAt;
+        }
+
+        private void KeepSwallowed()
+        {
+            bool swallowed = !IsDead && Afflictions.Conditions.Has(ConditionFlags.Swallowed);
+            if (swallowed == swallowedNow) return;
+            swallowedNow = swallowed;
+            if (swallowedHides == null) swallowedHides = GetComponentsInChildren<Renderer>(true);
+            for (int i = 0; i < swallowedHides.Length; i++)
+                if (swallowedHides[i] != null) swallowedHides[i].enabled = !swallowed;
+            if (bars != null && swallowed) bars.gameObject.SetActive(false);
+            if (!swallowed && target != null)
+            {
+                // Rolled out of the throat at the player's feet.
+                Vector3 at = PutDownAt(target.position, target.forward);
+                transform.position = new Vector3(at.x, target.position.y, at.z);
+                shove = Vector3.zero;
+            }
+            body.enabled = !swallowed;
+        }
+
         // Thrown down at the end of a carry: knocked flat a moment (the knocked-down clip's fall, lie and getting up).
         private static readonly ConditionSpec CarriedDown = new ConditionSpec { Id = "carried.down", Seconds = 0.8f, Flags = ConditionFlags.Down };
 
@@ -940,6 +974,7 @@ namespace Clover.Gameplay
                 }
             }
 
+            KeepSwallowed();
             Stagger.Tick(deltaTime, Afflictions.BalanceRecovers);
             if (IsStaggered && !Stagger.IsStaggered) Brain.EndStagger();
 
@@ -1019,7 +1054,7 @@ namespace Clover.Gameplay
                 if (sinceHurt < BarsLingerSeconds) sinceHurt += deltaTime;
                 bool fighting = IsAware || sinceHurt < BarsLingerSeconds;
                 if (!fighting) barsCalled = false;
-                bool show = fighting && (Kind.IsElite || barsCalled) && distance <= BarsDistance;
+                bool show = fighting && (Kind.IsElite || barsCalled) && distance <= BarsDistance && !swallowedNow;
                 if (bars.gameObject.activeSelf != show) bars.gameObject.SetActive(show);
             }
 
