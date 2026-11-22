@@ -458,3 +458,17 @@ default.
    and so on. Each shows as a small icon with a timer by the health bar, with a light look on the body. The rules and the
    HUD component are built offline with tests; the body look stays a stand-in in the ledger's `looks` row until a look
    pass.
+8. **How The Yellow Gale shares its store** (pass 2, depth-moved). The gale drinks clouds, trails and half of each
+   poisoned enemy's doses near it into a store "shared among those the gale strikes".
+
+   **Decided 2026-11-22:** the store is split evenly among the enemies the gale strikes, rounded up. One lone enemy gets
+   it all; the more it strikes, the thinner it spreads.
+9. **What One by One's Master makes stronger** (pass 4, cast-on-beat). Its snap on the poison's beat makes bursts half
+   again as hard: every burst for 1.5 s, or only One by One's own?
+
+   **Decided 2026-11-22:** only One by One's own bursts. Reactions' bursts and Volatile's in the same moment are not
+   made stronger.
+10. **Totality and The Ground Wakes as duo surges** (pass 13, duo-surge-slot): 40 mana and 10 s each, the house
+    standard, as built.
+
+    **Confirmed 2026-11-22.** Their row is closed.
