@@ -196,11 +196,11 @@ namespace Clover.Player.Trees
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.HeavyHit, Do = UpgradeAction.Pull, At = EffectAt.Self, Radius = 6f, Amount = 1.5f, Cooldown = 0.5f } } },
                 BranchPattern.LeftFoot));
 
-            // The drill carries the flood, and nothing can touch you while it runs. NEEDS: the ebb first, drawing you 5 m
-            // straight back in 0.3 s and leaving a line of wet sand, and the flood as the second press within 3 s back along
-            // that line (second-press); pressed once, the ebb alone. Until then one press is the flood, run eight metres ahead.
-            SpellBranch.Add(to, E, TheTideTurns, "The Tide Turns", SpellRole.Movement, BranchPattern.LeftA, Undertow, SpellForms.Drill,
-                new SpellSpec { Reach = 8f, Radius = 1f, Count = 1, Damage = 10f, Stagger = 10f, Stacks = 1, Speed = 20f },
+            // The ebb first (SpellSpec.Ebb): drawn 5 m straight back in a moment, untouchable. The flood is the second press within
+            // 3 s (UpgradeAction.Flood): the drill carries you back along the line and 3 m past where you began, and nothing can
+            // touch you while it runs. Pressed once, the ebb alone. (The ebb's wet sand as ground: ground-states, in Cast.)
+            var tideTurns = SpellBranch.Add(to, E, TheTideTurns, "The Tide Turns", SpellRole.Movement, BranchPattern.LeftA, Undertow, SpellForms.Drill,
+                new SpellSpec { Reach = 8f, Radius = 1f, Count = 1, Damage = 10f, Stagger = 10f, Stacks = 1, Speed = 20f, Ebb = 5f },
                 "Press, and the ebb draws you five metres straight back in a moment, out of reach, and nothing can touch you. It leaves a line of wet sand where you went. Press again within three seconds, and the flood brings you back along the line and three metres past where you began as a breaking wave. Everything on the line takes 10 damage, is Soaked and is carried two metres ahead of you.",
                 UpgradeIcons.Boot,
                 new Empower { Cooldown = 6f, Reach = 10f },
@@ -210,26 +210,29 @@ namespace Clover.Player.Trees
                     Description = "The flood comes in four metres wide and throws what it carries down for a moment, but it stops where you began. For a crowd.",
                     Change = new SpellChange { Radius = 2f, Reach = 5f },
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = KingTideDown, Seconds = 0.6f, Flags = ConditionFlags.Down } } } },
-                // NEEDS: you drawn the 5 m back with it (the ebb). Until then the enemy faced is drawn five metres to you, Soaked.
-                new ShapeDef { Name = "Out to Sea", Form = SpellForms.Nova,
+                // The ebb draws you the 5 m back (its own Ebb), and the enemy faced is drawn after you to your feet, Soaked. There is
+                // no flood: its one press does nothing (a press with no effects is no press, and the slot casts again).
+                new ShapeDef { Name = "Out to Sea", Form = SpellForms.Nova, Presses = new[] { new UpgradeEffect[0] },
                     Description = "There is no flood. The ebb takes the enemy faced with you: it is drawn the five metres out with you, Soaked, and dropped at your feet, away from its friends. A pull, not a return.",
-                    Spell = new SpellSpec { Radius = 1f, Damage = 0f, Stagger = 0f, Stacks = 0 },
+                    Spell = new SpellSpec { Radius = 1f, Damage = 0f, Stagger = 0f, Stacks = 0, Ebb = 5f },
                     Effects = new[]
                     {
                         new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Pull, Shape = HazardShape.Downwind, Amount = 5f },
                         new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Soaked, Stacks = 1 },
                     } },
                 "Opens two shapes of The Tide Turns, chosen at any rest fire: King Tide, a wide flood that throws a crowd down, or Out to Sea, an enemy drawn away with you.",
-                // Started as a blow would land (UpgradeEffect.BlowLanding), it is a perfect dodge (UpgradeAction.PerfectDodgeNow). NEEDS: the
-                // flood pressed as a blow would land starting no cooldown (the flood's own press, second-press); until then the next
-                // cast within a second of a perfect dodge starts no clock.
+                // Started as a blow would land (UpgradeEffect.BlowLanding), it is a perfect dodge (UpgradeAction.PerfectDodgeNow); the flood
+                // loosed as a blow would land (the SpellLoosed moment) ends the wait its first press started.
                 new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, BlowLanding = 0.3f, Do = UpgradeAction.PerfectDodgeNow },
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, Do = UpgradeAction.InstantNext, Seconds = 1f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellLoosed, OwnBranch = true, BlowLanding = 0.3f, Do = UpgradeAction.ResetCooldown },
                 },
                 "Started in the instant a blow would land on you, it counts as a perfect dodge, and a flood pressed in the instant a blow would land starts no cooldown.",
                 learnEffects: new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Push, Shape = HazardShape.Downwind, Amount = 2f } });
+            // The flood is the second press, within three seconds of the ebb.
+            tideTurns.PressWindow = 3f;
+            tideTurns.Presses = new[] { new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, Do = UpgradeAction.Flood } } };
 
             // NEAREST: an enemy's recovery cannot be changed, so blows on a Soaked enemy break its balance sooner for a while.
             to.Add(BranchPattern.Put(new Upgrade { Id = HeavyWater, Name = "Heavy Water", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Undertow }, Icon = UpgradeIcons.Hammer,

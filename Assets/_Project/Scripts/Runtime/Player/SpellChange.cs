@@ -161,6 +161,7 @@ namespace Clover.Player
             into.HeldStagger = from.HeldStagger;
             into.Rings = from.Rings;
             into.RingsFor = from.RingsFor;
+            into.Ebb = from.Ebb;
         }
     }
 

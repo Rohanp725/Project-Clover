@@ -148,5 +148,29 @@ namespace Clover.Tests
             PlayerUpgrades.PressesOf(riptide, shaped, master, out float shapeWindow);
             Assert.AreEqual(3f, shapeWindow, 1e-5f, "a shape's own presses come first");
         }
+
+        [Test]
+        public void TheTideTurnsEbbsFirstAndFloodsOnTheSecondPress()
+        {
+            var tide = Upgrade.ById(WaterTree.TheTideTurns);
+            Assert.AreEqual(5f, tide.Spell.Ebb, 1e-5f, "drawn five metres back first");
+            var presses = PlayerUpgrades.PressesOf(tide, null, out float window);
+            Assert.AreEqual(3f, window, 1e-5f, "the flood within three seconds");
+            Assert.AreEqual(UpgradeAction.Flood, presses[0].Single().Do);
+            var from = new UnityEngine.Vector3(0f, 0f, 0f);
+            Assert.AreEqual(8f, PlayerUpgrades.FloodReach(new UnityEngine.Vector3(0f, 0f, -5f), from, 8f, 5f), 1e-4f, "back along the line and three past");
+            Assert.AreEqual(5f, PlayerUpgrades.FloodReach(new UnityEngine.Vector3(0f, 0.4f, -2f), from, 8f, 5f), 1e-4f, "from wherever you stand, level");
+            Assert.AreEqual(5f, PlayerUpgrades.FloodReach(new UnityEngine.Vector3(0f, 0f, -5f), from, 5f, 5f), 1e-4f, "King Tide's flood stops where you began");
+            var shapes = Upgrade.ById(SpellBranch.ShapeId(WaterTree.TheTideTurns)).Shapes;
+            var sea = shapes.Single(each => each.Name == "Out to Sea");
+            Assert.AreEqual(5f, sea.Spell.Ebb, 1e-5f, "Out to Sea ebbs you too");
+            Assert.AreEqual(0, PlayerUpgrades.PressesOf(tide, sea, out _)[0].Length, "and has no flood");
+            var king = shapes.Single(each => each.Name == "King Tide");
+            Assert.AreEqual(5f, king.Change.Reach, 1e-5f);
+            var master = Upgrade.ById(SpellBranch.MasterId(WaterTree.TheTideTurns)).Effects;
+            Assert.IsTrue(master.Any(each => each.On == UpgradeTrigger.SpellLoosed && each.BlowLanding == 0.3f && each.Do == UpgradeAction.ResetCooldown),
+                "a flood loosed as a blow would land starts no wait");
+            Assert.IsFalse(master.Any(each => each.On == UpgradeTrigger.PerfectDodge), "the stand-in is gone");
+        }
     }
 }

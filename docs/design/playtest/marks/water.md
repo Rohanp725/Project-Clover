@@ -146,39 +146,35 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4).
 
-**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 8 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 6 seconds and the wave 10 metres long.) For now, one press is just the incoming wave: you rush 8 metres ahead at 20 metres a second, and nothing can touch you on the way. Everything on the line, 2 metres wide, takes 10 damage, 10 stagger and Soaked, and is carried 2 metres ahead of you.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 8 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 6 seconds and the wave run 5 metres past where you started.) The first press pulls you 5 metres straight back, away from the enemy you face, and nothing can touch you for 0.3 seconds. Press again within 3 seconds: you rush back along the line at 20 metres a second to 3 metres past where you started, and nothing can touch you on the way. Everything on the line, 2 metres wide, takes 10 damage, 10 stagger and Soaked, and is carried 2 metres ahead of you. If you don't press again, you only get the pull back.
 
 **Works with.** Undertow, which it comes after on the chart; Riptide, to pull enemies in before the wave; Deep Crack on the line it soaks; Heavy Water.
 
-**Not built yet.** The tide going out (pulling you 5 metres straight back in 0.3 seconds, untouchable, leaving wet sand behind) and the incoming wave as the second press back along that line. For now, one press is the wave, rushing ahead.
+**Not built yet.** The line of wet sand is only a look for now. It doesn't do anything to what stands on it yet.
 
-**Example.** A pack closes in on you. Rush through it as a wave and out the far side. Every one of them is Soaked and stumbling.
+**Example.** A pack closes in on you. Pull back out of reach, wait for them to bunch up, then press again and rush through them as a wave. Every one of them is Soaked and stumbling.
 
 ## water.tide.shape
 **What it does.** Unlocks two shapes for The Tide Turns. You pick one at any rest fire. **King Tide**: the wave comes in four metres wide and knocks down what it carries for a moment, but it stops where you started. It's the shape for a crowd. **Out to Sea**: there's no incoming wave. The outgoing tide takes the enemy you face along with you, pulling it 5 metres, Soaked, and dropping it at your feet, away from its friends. It's a pull, not a return.
 
 **When it happens.** Whenever you cast The Tide Turns, using the shape you picked. If you have not bought this, you cast the plain tide.
 
-**The numbers.** 3 Shards. King Tide: the wave is 4 metres wide and 5 metres long. Whatever it hits is knocked down for 0.6 seconds (half as long for elites; gods not at all). Out to Sea: the enemy you face is pulled 5 metres toward you and Soaked.
+**The numbers.** 3 Shards. King Tide: the wave is 4 metres wide and stops where you started. Whatever it hits is knocked down for 0.6 seconds (half as long for elites; gods not at all). Out to Sea: you are pulled 5 metres back, and the enemy you face is pulled after you to your feet and Soaked. It has no second press.
 
 **Works with.** Deep Crack and Heavy Water on the crowd King Tide knocks down; Blowhole and your blade on the one Out to Sea brings to you.
-
-**Not built yet.** Out to Sea should pull you back along with the enemy.
 
 **Example.** An archer stands behind three shields. Out to Sea brings it to your feet, alone.
 
 ## water.tide.master
 **What it does.** If you start The Tide Turns right as a blow would land on you, it counts as a perfect dodge. A wave started right as a blow would land doesn't start a wait.
 
-**When it happens.** For now, every time you cast The Tide Turns, and when you cast it within a second after a perfect dodge. The Tide Turns must be in a spell slot.
+**When it happens.** When you start The Tide Turns right as a blow would land, and when you press again for the wave right as a blow would land. The Tide Turns must be in a spell slot.
 
-**The numbers.** 3 Shards. It only counts if you start it in the last 0.3 seconds before an enemy's blow (one within 6 metres) lands on you. Then it is a perfect dodge: you get 12 mana, the game slows for a moment, the blow misses, and every mark that answers a perfect dodge answers this one. If you cast it within 1 second after a perfect dodge, while the spell is ready, it doesn't start a wait.
+**The numbers.** 3 Shards. Each only counts in the last 0.3 seconds before an enemy's blow (one within 6 metres) lands on you. Started then, it is a perfect dodge: you get 12 mana, the game slows for a moment, the blow misses, and every mark that answers a perfect dodge answers this one. The wave pressed then ends the wait the first press started.
 
 **Works with.** The dodge; Ebb and Flood; every spell whose wait this shortens.
 
-**Not built yet.** The wave's own press. For now, a perfect dodge makes your next cast skip its wait.
-
-**Example.** Dodge a brute's swing perfectly, and rush through it right away. The spell is ready again before the brute turns around.
+**Example.** Pull back from a brute's swing just as it lands, then rush back through it as its next blow comes. The spell is ready again before the brute turns around.
 
 ## water.heavy
 **What it does.** Hitting a Soaked enemy makes your weapon break balance faster for a few seconds.

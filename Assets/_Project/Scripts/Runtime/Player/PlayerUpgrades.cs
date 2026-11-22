@@ -2012,6 +2012,9 @@ namespace Clover.Player
                 case UpgradeAction.Loose:
                     if (rings.Active) LooseRings();
                     break;
+                case UpgradeAction.Flood:
+                    if (Ebbing) LooseFlood();
+                    break;
                 case UpgradeAction.CarryOn:
                 {
                     // The wave goes out again the way it came, through the player's place, and sets what it brought down beyond.
@@ -2577,8 +2580,9 @@ namespace Clover.Player
             int before = queued;
             foreach (var effect in presses[index])
             {
-                // Nothing gathered to loose: the press is no press, and the slot casts again.
+                // Nothing gathered to loose, or no ebb to flood: the press is no press, and the slot casts again.
                 if (effect.Do == UpgradeAction.Loose && !rings.Active) continue;
+                if (effect.Do == UpgradeAction.Flood && !Ebbing) continue;
                 Consider(effect, null, transform.position, false);
             }
             castSource = null;
@@ -2627,6 +2631,30 @@ namespace Clover.Player
             }
             window = mark != null ? mark.PressWindow : 0f;
             return null;
+        }
+
+        // An ebb waiting for its flood (The Tide Turns): the mark, its numbers, where it began, its cast's number and until when.
+        private Upgrade ebbMark;
+        private readonly SpellSpec ebbSpec = new SpellSpec();
+        private Vector3 ebbFrom;
+        private int ebbTag;
+        private float ebbUntil;
+
+        /// <summary>True while an ebb waits for its flood, for probes.</summary>
+        public bool Ebbing => ebbMark != null && Time.time < ebbUntil;
+        /// <summary>Counts for probes: ebbs drawn back and floods loosed.</summary>
+        public int Ebbs { get; private set; }
+        public int Floods { get; private set; }
+
+        /// <summary>
+        /// The flood's reach from where the player stands at <paramref name="here"/>: back to where the ebb began at
+        /// <paramref name="from"/> and on past it by <paramref name="reach"/> less <paramref name="ebb"/>. Level.
+        /// </summary>
+        public static float FloodReach(Vector3 here, Vector3 from, float reach, float ebb)
+        {
+            Vector3 back = from - here;
+            back.y = 0f;
+            return back.magnitude + Mathf.Max(0f, reach - ebb);
         }
 
         // What the last wave brought in to the player's feet (Riptide), and the way it was rolling.
@@ -3964,6 +3992,34 @@ namespace Clover.Player
                     cast.Forward = transform.forward;
                 }
             }
+            if (spec.Ebb > 0f)
+            {
+                // The ebb: drawn straight back from the enemy faced in a moment, untouchable, and the form waits for the flood.
+                ebbMark = mark;
+                SpellChange.Copy(spec, ebbSpec);
+                ebbFrom = transform.position;
+                ebbTag = cast.Cast;
+                PressesOf(mark, out float ebbWindow);
+                ebbUntil = Time.time + (ebbWindow > 0f ? ebbWindow : 3f);
+                castSource = mark;
+                castOrigin = transform.position;
+                castFrom = transform.position;
+                BeginCast();
+                if (defence != null) defence.UntouchableUntil = Mathf.Max(defence.UntouchableUntil, Time.time + 0.3f);
+                if (afterimage != null) afterimage.Leave(0.35f);
+                Vector3 back = -cast.Forward;
+                back.y = 0f;
+                ElementLook.Sparks(OwnElement(mark), transform.position + Vector3.up, back, 1f);
+                player.StepTo(transform.position + back.normalized * spec.Ebb);
+                // NEEDS: the line of wet sand it leaves as ground (ground-states); now only its look.
+                Forms.FormFx.Run(Forms.FormMark.Lane, ebbFrom, back.normalized, spec.Ebb, 1.2f, Forms.FormKit.Stain(cast.Colour, 0.4f), 3f);
+                Ebbs++;
+                answeringCast = cast.Cast;
+                try { Trigger(UpgradeTrigger.SpellCast, null, transform.position, false); }
+                finally { answeringCast = 0; }
+                castSource = null;
+                return true;
+            }
             castSource = mark;
             castOrigin = transform.position;
             castFrom = transform.position;
@@ -3976,6 +4032,34 @@ namespace Clover.Player
             finally { answeringCast = 0; }
             castSource = null;
             return true;
+        }
+
+        // Looses an ebb's flood: its form cast from here back along the line toward where the ebb began and on past it.
+        private void LooseFlood()
+        {
+            var mark = ebbMark;
+            ebbMark = null;
+            if (mark == null || element == null || combat == null) return;
+            var form = SpellForms.Get(SpellBranches.FormOf(mark, RunState.Unlocked, ReadLoadout()));
+            if (form == null) return;
+            SpellChange.Copy(ebbSpec, loosedSpec);
+            loosedSpec.Ebb = 0f;
+            loosedSpec.Reach = FloodReach(transform.position, ebbFrom, ebbSpec.Reach, ebbSpec.Ebb);
+            Vector3 way = ebbFrom - transform.position;
+            way.y = 0f;
+            if (way.sqrMagnitude > 0.09f) transform.rotation = Quaternion.LookRotation(way.normalized, Vector3.up);
+            var cast = element.NewCast(loosedSpec, mark.Name, mark);
+            cast.Cast = ebbTag;
+            cast.Forward = transform.forward;
+            castSource = mark;
+            answeringCast = ebbTag;
+            try { Trigger(UpgradeTrigger.SpellLoosed, null, transform.position, false); }
+            finally { answeringCast = 0; }
+            castSource = mark;
+            castOrigin = transform.position;
+            form.Cast(cast);
+            castSource = null;
+            Floods++;
         }
 
         // Looses the gathered spell now with the rings it holds, facing the enemy faced: its own branch's SpellLoosed moment is

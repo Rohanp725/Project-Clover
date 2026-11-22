@@ -225,5 +225,10 @@ namespace Clover.Player
         /// wave's way, to Reach metres beyond them (4), and given the effect's State (backs turned): Riptide's Master, pressed again.
         /// </summary>
         CarryOn,
+        /// <summary>
+        /// Looses the flood of its own branch's ebb (SpellSpec.Ebb) now: the spell's form cast from where the player stands back
+        /// toward where they began the ebb, reaching on past it by the spell's Reach less the ebb (The Tide Turns' second press).
+        /// </summary>
+        Flood,
     }
 }

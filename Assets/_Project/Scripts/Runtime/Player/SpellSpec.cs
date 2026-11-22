@@ -123,6 +123,13 @@ namespace Clover.Player
         /// </summary>
         public int Rings;
         public int RingsFor = 6;
+        /// <summary>
+        /// Above zero: the first press draws the player this many metres straight back from the enemy faced, untouchable for
+        /// the moment, and the spell's form is loosed only by its second press (UpgradeAction.Flood), from wherever they stand
+        /// back toward where they began and on past it to the rest of the spell's Reach (The Tide Turns: the ebb 5 m, the flood
+        /// 3 m past). Pressed once, the ebb alone.
+        /// </summary>
+        public float Ebb;
 
         /// <summary>The share of a full hold, 0 to 1, held for <paramref name="held"/> seconds of at most <paramref name="most"/>.</summary>
         public static float HeldShare(float held, float most) => most <= 0f ? 0f : UnityEngine.Mathf.Clamp01(held / most);
