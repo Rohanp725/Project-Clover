@@ -1335,6 +1335,7 @@ namespace Clover.Player
             Stats.SetWhen(StatWhen.FarFromGrown, !Hazards.GrownNear(transform.position, 7f));
             bool inFire = scorched && Hazards.FireUnder(transform.position);
             Stats.SetWhen(StatWhen.InOwnFire, inFire);
+            Stats.SetWhen(StatWhen.InOwnWater, Hazards.OwnGroundUnder(transform.position, AfflictionKind.Soaked));
             SurgeHeld = inFire;
             if (hasTideClock)
             {
@@ -1952,7 +1953,8 @@ namespace Clover.Player
                     var spec = new HazardSpec
                     {
                         Kind = ElementLook.Ground(look), Tint = look.Colour, Radius = Or(effect.Radius, 1f) * spread * Stats.Multiplier(PlayerStat.GroundSize), Seconds = Or(effect.Seconds, 3f) * Stats.Multiplier(PlayerStat.GroundSeconds), BiteEvery = Or(effect.Interval, 0.5f),
-                        Grown = effect.Grown, Family = FamilyOf(effect), Limit = effect.Grown && effect.Limit > 0 ? effect.Limit + Mathf.Max(0, Stats.Whole(PlayerStat.GrownLimit)) : 0,
+                        // A limit of one effect's own ground (The Sea Comes In's four pools), or of grown things, which the marks may raise.
+                        Grown = effect.Grown, Family = FamilyOf(effect), Limit = effect.Limit > 0 ? effect.Limit + (effect.Grown ? Mathf.Max(0, Stats.Whole(PlayerStat.GrownLimit)) : 0) : 0,
                         Blow = Blow(look, kind, eDamage, eStagger, eStacks), FromReaction = laying == LaySource.Reaction,
                         Spares = effect.SparesTarget ? pending.Target as IDamageable : null,
                         // Unseen ground is drawn by its reaction's look alone (Seized's film: no bolt at each bite).

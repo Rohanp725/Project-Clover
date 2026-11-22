@@ -53,5 +53,7 @@ namespace Clover.Player
         AirborneHeavyBlow,
         /// <summary>While the player has stood still, not walking, dodging or stepping, for a second (the ledger's stood-still).</summary>
         StoodStill,
+        /// <summary>While the player stands in water they have left on the ground: their own ground that Soaks (the ledger's in-own-water).</summary>
+        InOwnWater,
     }
 }

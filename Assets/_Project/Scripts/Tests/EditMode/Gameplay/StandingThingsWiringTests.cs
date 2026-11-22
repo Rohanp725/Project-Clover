@@ -361,5 +361,23 @@ namespace Clover.Tests
             Assert.AreEqual(2f, hot.Single(each => each.Do == UpgradeAction.Lane).Carry, 1e-5f);
             Assert.IsFalse(hot.Any(each => each.Do == UpgradeAction.Push), "not the enemy alone");
         }
+
+        [Test]
+        public void TheSeaComesInQuickensYouOnlyInYourOwnWater()
+        {
+            var sea = Upgrade.ById(WaterTree.TheSeaComesIn);
+            Assert.IsTrue(sea.Stats.All(each => each.When == StatWhen.InOwnWater), "the dodge and the clocks only in your water");
+            var pool = sea.Effects.Single(each => each.Do == UpgradeAction.Hazard);
+            Assert.AreEqual(4, pool.Limit, "four pools at most");
+            Assert.AreEqual(0.85f, pool.Inside.Pace, 1e-5f, "enemies in them 15% slower");
+            Assert.AreEqual(AfflictionKind.Soaked, pool.Affliction, "it is water: it Soaks");
+            Assert.Greater(PlayerStats.WhenCount, (int)StatWhen.InOwnWater);
+            var stats = new PlayerStats();
+            stats.AddLearned(new StatMod(PlayerStat.DodgeDistance, 0.5f, StatWhen.InOwnWater));
+            Assert.AreEqual(1f, stats.Multiplier(PlayerStat.DodgeDistance), 1e-5f, "dry ground");
+            stats.SetWhen(StatWhen.InOwnWater, true);
+            Assert.AreEqual(1.5f, stats.Multiplier(PlayerStat.DodgeDistance), 1e-5f, "in your own water");
+            Assert.IsFalse(Hazards.OwnGroundUnder(Vector3.zero, AfflictionKind.Soaked), "no ground with no hazards in the scene");
+        }
     }
 }

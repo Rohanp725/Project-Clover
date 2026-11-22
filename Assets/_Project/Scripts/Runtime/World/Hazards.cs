@@ -212,6 +212,22 @@ namespace Clover.World
             return false;
         }
 
+        /// <summary>
+        /// True when <paramref name="at"/> stands in ground of the player's that lays <paramref name="kind"/> with its bites (their own
+        /// water: ground that Soaks), settled and not moving.
+        /// </summary>
+        public static bool OwnGroundUnder(Vector3 at, AfflictionKind kind)
+        {
+            if (instance == null || kind == AfflictionKind.None) return false;
+            for (int i = 0; i < instance.zones.Length; i++)
+            {
+                ref var zone = ref instance.zones[i];
+                if (!zone.Active || zone.Spec.Blow.Affliction != kind || zone.Delay > 0f || zone.Velocity.sqrMagnitude > 0.01f || zone.Spec.Once) continue;
+                if (GroundRules.Within(at, zone.Position, zone.Spec.Radius + 0.35f)) return true;
+            }
+            return false;
+        }
+
         /// <summary>How many things the player has grown stand now.</summary>
         public static int GrownCount
         {

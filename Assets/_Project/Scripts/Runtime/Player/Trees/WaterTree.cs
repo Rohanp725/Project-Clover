@@ -51,6 +51,7 @@ namespace Clover.Player.Trees
         public const string SpoutRising = "water.whirlpool.spout";
         public const string InInk = "water.crack.ink";
         public const string InTheCurrent = "water.whirlpool.current";
+        public const string InTheSea = "water.sea.in";
         public const string Snapped = "water.crack.snap";
 
         // Retired in Phase 4 (RetiredMarks): kept as names because code still asks for them.
@@ -180,13 +181,14 @@ namespace Clover.Player.Trees
                     new UpgradeEffect { On = UpgradeTrigger.FlaskDrunk, Do = UpgradeAction.Push, At = EffectAt.Self, Radius = 3.5f, Amount = 2.5f },
                 } },
                 BranchPattern.TrunkTop));
-            // NEEDS: the pools four at most, enemies in them 15% slower, and the dodge and the clocks quicker only while you
-            // stand in your own water (in-own-water, ground-states). Until then every spell that strikes leaves
-            // a soaking pool where it lands, and the dodge and the clocks are quicker everywhere.
+            // Every spell that strikes leaves a soaking pool where it lands, four at most (the oldest gives way), enemies in them
+            // 15% slower while they stand there (UpgradeEffect.Inside), and the dodge and the clocks quicker only while you stand
+            // in your own water (StatWhen.InOwnWater).
             to.Add(BranchPattern.Put(new Upgrade { Id = TheSeaComesIn, Name = "The Sea Comes In", Element = E, Kind = UpgradeKind.Devotion, Requires = new[] { SpreadingWater }, Icon = UpgradeIcons.Moon,
                 Description = "All in on Water only. Every spell leaves standing water where it lands, a pool four metres across, for ten seconds, four at most. Enemies in water are always Soaked and slower. In water your dodge slides half again as far and your cooldowns run 30% faster. Draw the fight onto your own water and stay there.",
-                Stats = new[] { new StatMod(PlayerStat.DodgeDistance, 0.5f), new StatMod(PlayerStat.SpellCooldown, 0.3f) },
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Radius = 2f, Seconds = 10f, Interval = 1f, Damage = 1f, Affliction = AfflictionKind.Soaked, Stacks = 1, Cooldown = 2.5f } } },
+                Stats = new[] { new StatMod(PlayerStat.DodgeDistance, 0.5f, StatWhen.InOwnWater), new StatMod(PlayerStat.SpellCooldown, 0.3f, StatWhen.InOwnWater) },
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Radius = 2f, Seconds = 10f, Interval = 1f, Damage = 1f, Affliction = AfflictionKind.Soaked, Stacks = 1, Cooldown = 2.5f,
+                    Limit = 4, Inside = new ConditionSpec { Id = InTheSea, Seconds = 1f, Pace = 0.85f } } } },
                 BranchPattern.TrunkRight));
 
             // ---- The left bough: Tide. Pulling and placing.

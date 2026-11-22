@@ -122,11 +122,11 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Only while you carry Water twice (all in). A pool is left each time a spell hits.
 
-**The numbers.** 6 Shards. A pool 4 metres across forms where a spell hits, at most one every 2.5 seconds, and lasts 10 seconds. Once a second, it deals 1 damage and adds Soaked. For now, these work everywhere, not only in water: your dodge goes 50% farther, and every spell's wait counts down 30% faster. Buying this also gives you the deep strike, Thrown on the Reef. Use it with L2 and R2 while you carry Water alone or twice. The lash wraps around the enemy, and a wave throws it 5 metres away from you.
+**The numbers.** 6 Shards. A pool 4 metres across forms where a spell hits, at most one every 2.5 seconds, and lasts 10 seconds. Only four pools stay at once; a fifth takes the place of the oldest. Once a second, a pool deals 1 damage and adds Soaked, and enemies standing in it move 15% slower. While you stand in your own water (any ground of yours that Soaks), your dodge goes 50% farther and every spell's wait counts down 30% faster. Buying this also gives you the deep strike, Thrown on the Reef. Use it with L2 and R2 while you carry Water alone or twice. The lash wraps around the enemy, and a wave throws it 5 metres away from you.
 
 **Works with.** Every spell in the Water tree; Deep Crack and Spreading Water on the soaked crowd; Undertow, to pull enemies onto the water.
 
-**Not built yet.** Four pools at most, enemies in them moving 15% slower, and the faster dodge and spell waits only while you stand in your own water. Thrown on the Reef should deal 30 damage, 50 stagger, and knock the enemy down for 0.8 seconds when it hits a wall, a rock or another enemy.
+**Not built yet.** Thrown on the Reef should deal 30 damage, 50 stagger, and knock the enemy down for 0.8 seconds when it hits a wall, a rock or another enemy.
 
 **Example.** Riptide and Whirlpool leave two pools in the middle of the room. Stand between them and cast again and again, a third faster.
 
