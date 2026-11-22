@@ -338,6 +338,8 @@ namespace Clover.Player
         public Clover.World.PickupKind Drops;
         /// <summary>For PickedUp: answers the taking of any pickup of the kind Drops names, whoever dropped it (The Whole Mountain).</summary>
         public bool AnyDrops;
+        /// <summary>A recipe look played as it is done (Forms.CreatureLooks: an effect-only creature), on its enemy or where it is done.</summary>
+        public string Look = "";
 
         /// <summary>A copy with every number, its slot and its mark (an Empower's twin of its Learn's effect).</summary>
         internal UpgradeEffect Twin() => (UpgradeEffect)MemberwiseClone();

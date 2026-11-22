@@ -294,5 +294,7 @@ namespace Clover.Player
         CriticalNext,
         /// <summary>The spell of its own branch now standing lasts Seconds longer (Uraeus' Master: the cobra a second longer for each spit on a burning enemy).</summary>
         LengthenOwn,
+        /// <summary>Does nothing but play its UpgradeEffect.Look (a creature drawn by its recipe look as the spell is cast).</summary>
+        PlayLook,
     }
 }

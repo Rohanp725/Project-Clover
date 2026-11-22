@@ -1792,6 +1792,9 @@ namespace Clover.Player
             toward.y = 0f;
             Vector3 aim = toward.sqrMagnitude > 0.04f ? toward.normalized : transform.forward;
 
+            // A creature drawn by a recipe look plays as the effect is done (on its enemy, or where it is done).
+            if (!string.IsNullOrEmpty(effect.Look) && Forms.CreatureLooks.Play(effect.Look, target, centre, aim)) CreatureLooksPlayed++;
+
             // What the trigger carried multiplies what is done: how many are thrown or fall, or how hard it strikes. With
             // nothing carried, what this mark's Spend just took or counted on the same enemy stands in (a reaction's depth).
             int counted = spentBy == effect.Owner && spentOn == pending.Target ? lastSpent : 0;
@@ -2187,6 +2190,8 @@ namespace Clover.Player
                 }
                 case UpgradeAction.DrawPickups:
                     Pickups.DrawAll(effect.Drops);
+                    break;
+                case UpgradeAction.PlayLook:
                     break;
                 case UpgradeAction.LengthenOwn:
                     Forms.SpellWorks.LengthenRunsOf(effect.Owner, Or(effect.Seconds, 1f));
@@ -3013,6 +3018,9 @@ namespace Clover.Player
         private PickupKind pickupKind;
         private readonly int[] pickupSigns = new int[Pickups.Most];
         private readonly bool[] pickupShown = new bool[Pickups.Most];
+
+        /// <summary>Creature looks played by marks (Forms.CreatureLooks): for probes.</summary>
+        public int CreatureLooksPlayed { get; private set; }
 
         /// <summary>Pickups dropped, taken and left: for probes.</summary>
         public int PickupsDropped { get; private set; }

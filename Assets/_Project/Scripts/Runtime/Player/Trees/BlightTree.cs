@@ -31,7 +31,8 @@ namespace Clover.Player.Trees
             const string A = Elements.Dark, B = Elements.Poison;
             const AfflictionKind Cursed = AfflictionKind.Cursed, Poisoned = AfflictionKind.Poison;
 
-            // NEEDS: a swarm that crawls to the nearest enemy and seals a new jar there (Swarm; now the breaking jar throws its
+            // Swarm's crawl is played as its recipe look (CreatureLooks.Swarm). NEEDS: the swarm crawling to the nearest enemy and
+            // sealing a new jar there (Swarm; now the breaking jar throws its
             // doses and a Curse at the nearest enemy within 8 m, on purpose able to react); bites that fill the stagger meter by
             // the dose and a meter that does not recover while sealed (Rot to the Bone; now 9 stagger each second).
             to.Add(HeartPattern.Put(new Upgrade
@@ -48,6 +49,8 @@ namespace Clover.Player.Trees
                         {
                             new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = SwarmJar, Do = UpgradeAction.Arc, FromTarget = true, Count = 1, Reach = 8f, Affliction = Poisoned, Stacks = 2, Cascades = true },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = SwarmJar, Do = UpgradeAction.Arc, FromTarget = true, Count = 1, Reach = 8f, Affliction = Cursed, Stacks = 1, Cascades = true },
+                            // The swarm crawling out of the broken jar (the recipe look).
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = SwarmJar, Do = UpgradeAction.PlayLook, Look = Forms.CreatureLooks.Swarm },
                         }),
                     },
                     new ShapeDef

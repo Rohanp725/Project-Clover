@@ -108,6 +108,8 @@ namespace Clover.Player.Trees
                 learnEffects: new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = C, Do = UpgradeAction.Burst, Radius = 0.6f, Damage = 20f, Stagger = 0f, Stacks = 0 },
+                    // The jaw of smoke rising out of your shadow (the recipe look; the dragon form draws it until that is in).
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.PlayLook, Look = Forms.CreatureLooks.Jaw },
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = C, Do = UpgradeAction.Heal, Amount = 12f },
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = C, Do = UpgradeAction.Spend, Affliction = C },
                 });
@@ -178,12 +180,12 @@ namespace Clover.Player.Trees
             // The Dead Stand, once a spell, folded in here. Three shades at most (Limit, shared by both rules: Kin), and one death
             // raises one shade, Cursed and Risen alike (PlayerUpgrades' Helper). The shade is a helper that stands where the
             // dead fell and strikes what is near it, a blow every 0.8 s for six seconds.
-            // NEEDS: each shade walking to its own enemy (form-pieces).
+            // Each shade stands up in its recipe look (CreatureLooks.Shades). NEEDS: each shade walking to its own enemy (form-pieces).
             to.Add(BranchPattern.Put(new Upgrade { Id = NothingStaysBuried, Name = "Nothing Stays Buried", Element = E, Kind = UpgradeKind.Devotion, Requires = new[] { CollectedTwice }, Icon = UpgradeIcons.Tower,
                 Description = "All in on Dark only. Every enemy that dies Cursed stands up again as your shade, ash-grey with violet eyes, and fights for you for six seconds, three at most. While you are Risen, every enemy that dies stands up, Cursed or not.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = C, Do = UpgradeAction.Helper, Count = 7, Interval = 0.8f, Radius = 2.5f, Damage = 12f, Stagger = 12f, Affliction = C, Stacks = 1, Limit = 3, Kin = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = C, Do = UpgradeAction.Helper, Count = 7, Interval = 0.8f, Radius = 2.5f, Damage = 12f, Stagger = 12f, Affliction = C, Stacks = 1, Limit = 3, Kin = 1, Look = Forms.CreatureLooks.Shades },
                     new UpgradeEffect { On = UpgradeTrigger.Kill, While = StatWhen.Risen, Do = UpgradeAction.Helper, Count = 7, Interval = 0.8f, Radius = 2.5f, Damage = 12f, Stagger = 12f, Affliction = C, Stacks = 1, Limit = 3, Kin = 1 },
                 } },
                 BranchPattern.TrunkRight));
@@ -207,10 +209,13 @@ namespace Clover.Player.Trees
                 new Empower { Cooldown = 9f, Radius = 8f, LearnOnly = true },
                 "Debts Called waits 9 seconds, not 10, and calls from eight metres.",
                 // Only the Cursed are carried on the horns and thrown down at the far end (SpellSpec.Carries with OnlyCarrying).
-                // NEEDS: a buffalo of smoke rather than the dragon's head (form-pieces).
+                // NEEDS: the dragon's head not drawn once the buffalo's recipe look (CreatureLooks.Horns, played on the cast) is in
+                // the game (form-pieces).
                 new ShapeDef { Name = "The Black Buffalo", Form = SpellForms.Dragon,
                     Description = "No pull. A buffalo of sinking black smoke charges eight metres through the point before you, carrying everything Cursed on its horns to the far end and throwing it down: 18 damage, rising to 36 at one point of your health, and 35 stagger. Follow the lane and cut what it threw. Dark's one push.",
-                    Spell = new SpellSpec { Reach = 8f, Radius = 1.2f, Damage = 18f, Stagger = 35f, Stacks = 1, Speed = 16f, HealthScaled = 2f, Carries = true, OnlyCarrying = AfflictionKind.Cursed } },
+                    Spell = new SpellSpec { Reach = 8f, Radius = 1.2f, Damage = 18f, Stagger = 35f, Stacks = 1, Speed = 16f, HealthScaled = 2f, Carries = true, OnlyCarrying = AfflictionKind.Cursed },
+                    // The buffalo of smoke (the recipe look; the dragon's head carries the Cursed until that is in).
+                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.PlayLook, Look = Forms.CreatureLooks.Horns } } },
                 // Only the Cursed called (SpellSpec.OnlyCarrying), from ten metres, with no burst; each Cursed one it reaches heals 4.
                 new ShapeDef { Name = "Collected",
                     Description = "Only the Cursed are called, from up to ten metres, and each one that reaches you gives back 4 health. There is no burst; the pull does 20 stagger.",

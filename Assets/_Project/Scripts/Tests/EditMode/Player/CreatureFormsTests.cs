@@ -63,5 +63,18 @@ namespace Clover.Tests
             Assert.AreEqual(20f, oak.Spell.Seconds, 1e-5f);
             Assert.AreEqual(2f, oak.Spell.Interval, 1e-5f);
         }
+
+        [Test]
+        public void EachEffectOnlyCreatureIsPlayedByItsRecipeSlug()
+        {
+            Assert.AreEqual(new[] { "cr_jaw", "cr_horns", "cr_swarm", "cr_copy", "cr_shades", "cr_sapling" }, CreatureLooks.All, "the slugs of creatures_recipe.json");
+            var named = Upgrade.All.SelectMany(mark => mark.Effects.Concat(mark.Shapes != null ? mark.Shapes.SelectMany(shape => shape.Effects ?? new UpgradeEffect[0]) : new UpgradeEffect[0]))
+                .Where(effect => !string.IsNullOrEmpty(effect.Look)).Select(effect => effect.Look).Distinct().ToArray();
+            foreach (string slug in new[] { CreatureLooks.Jaw, CreatureLooks.Horns, CreatureLooks.Swarm, CreatureLooks.Shades, CreatureLooks.Sapling })
+                CollectionAssert.Contains(named, slug, slug + " is played by its mark");
+            Assert.IsTrue(named.All(slug => CreatureLooks.All.Contains(slug)), "no mark names a look the recipe does not have");
+            Assert.AreEqual(90f, CreatureLooks.YawOf(Vector3.right), 1e-4f);
+            Assert.AreEqual(0f, CreatureLooks.YawOf(Vector3.forward), 1e-4f);
+        }
     }
 }
