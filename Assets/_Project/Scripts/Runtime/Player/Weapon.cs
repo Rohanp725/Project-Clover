@@ -14,6 +14,8 @@ namespace Clover.Player
         /// <summary>What the screen calls it; empty means <see cref="Name"/>. The Armament's is its element's name and "Armament".</summary>
         public string HudName = "";
         public WeaponCombo Combo;
+        /// <summary>The technique the chord plays (R1 and R2 together), set by the armoury from the Way's marks in force; null: none, the chord is a heavy.</summary>
+        [System.NonSerialized] public AttackStep Technique;
         /// <summary>
         /// The move an infused strike plays with the element on it (steel/weapons.md 0.4): the Katana's drawing cut, the
         /// Hammer's drop. Null: the first light. Its shape (<see cref="Footprint"/>) is what each element's strike acts on.

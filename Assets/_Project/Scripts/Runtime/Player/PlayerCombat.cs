@@ -354,6 +354,8 @@ namespace Clover.Player
             Arm(Weapon.Name, Weapon.ElementColoured && element != null && element.Info != null ? element.Info.Name : null);
         }
 
+        /// <summary>What the Way's family mark did to the last infused strike, for probes and the engine pieces still to come.</summary>
+        public Way.InfusionBend LastInfusion { get; private set; }
         /// <summary>True while a re-arm waits for the swing in progress to end.</summary>
         public bool RearmPending => rearmPending;
         /// <summary>Re-arms done, for probes.</summary>
@@ -366,6 +368,8 @@ namespace Clover.Player
         public void Equip(Weapon weapon)
         {
             Weapon = weapon;
+            // The chord plays the technique the armoury found in force on this weapon; none, and the chord stays a heavy.
+            TechniqueStep = weapon.Technique;
             RunState.Weapon = weapon.Name;
             Weapon.Combo.Reset();
             // The skill is on its own button (Triangle, Y, Q); a held heavy is the charged heavy.
@@ -1611,6 +1615,9 @@ namespace Clover.Player
             }
             var step = Weapon.CarrierStep.Clone();
             ElementSteel.Bend(step, info.Name, deep);
+            // The Way's family mark for the element bends the copy too (task 5.3, Way/Infusion.cs).
+            if (upgrades == null) upgrades = GetComponent<PlayerUpgrades>();
+            LastInfusion = Way.Infusion.Bend(step, Weapon, info.Name, deep, element.AllIn, upgrades);
             player.FacePointer();
             if (!Combo.Follow(step, player.Stamina))
             {

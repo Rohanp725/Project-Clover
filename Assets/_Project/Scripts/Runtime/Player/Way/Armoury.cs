@@ -111,6 +111,8 @@ namespace Clover.Player.Way
                 built = weapon == Weapons.ArmamentName && !string.IsNullOrEmpty(armamentElement) ? Weapons.Armament(armamentElement) : Weapons.ByName(weapon);
             TrunkOf(kind)?.Patch(built, marks);
             aspect?.Patch(built, marks);
+            // The technique works in every aspect (steel/weapons.md 0.5): the chord's step, or none.
+            built.Technique = Techniques.StepFor(kind, marks);
             return built;
         }
     }

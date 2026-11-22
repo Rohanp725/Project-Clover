@@ -38,7 +38,12 @@ namespace Clover.Player.Way.Aspects
                 if (steps.Count > 0) steps[0].Reach += TemperThreeReach;
                 if (weapon.Carrier != null) weapon.Carrier.Reach += TemperThreeReach;
             }
-            if (marks.Has(KatanaWay.Temper5) && weapon.Combo.Finisher != null) weapon.Combo.Finisher.Damage *= TemperFiveFinisher;
+            if (marks.Has(KatanaWay.Temper5) && weapon.Combo.Finisher != null)
+            {
+                weapon.Combo.Finisher.Damage *= TemperFiveFinisher;
+                // The pose behind the enemy holds twice as long (way_build_plan.md question 5).
+                weapon.Combo.Finisher.HoldSeconds = Temper.FinisherHoldAtFive;
+            }
         }
     }
 }

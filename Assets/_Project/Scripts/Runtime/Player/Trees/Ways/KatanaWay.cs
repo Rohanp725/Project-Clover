@@ -133,35 +133,38 @@ namespace Clover.Player.Trees.Ways
             // climb (depth_weapons.md 6: I and II in the Fire land, III at the third god, IV the fifth, V the seventh).
             string[] tempers = { Temper1, Temper2, Temper3, Temper4, Temper5 };
             string[] numerals = { "I", "II", "III", "IV", "V" };
-            int[] prices = { 1, 1, 2, 2, 3 };
-            string[] gates = { "", "", MarkRules.GodsGate + "3", MarkRules.GodsGate + "5", MarkRules.GodsGate + "7" };
+            // The player's words (way_build_plan.md 2.1): one shared line, and what ranks III and V add.
             string[] own =
             {
                 "", "",
                 " The drawing cut reaches a little further.",
                 "",
-                " The finishing blow lands harder.",
+                " The finishing blow hits harder, and you hold your last pose a moment longer.",
             };
             for (int i = 0; i < tempers.Length; i++)
             {
                 var temper = Mark(to, tempers[i], "Katana Temper " + numerals[i], UpgradeKind.Temper, "", i == 0 ? "" : tempers[i - 1], UpgradeIcons.Anvil,
-                    "The blade is folded and hardened once more. Every blow of the Katana hits harder and breaks balance sooner." + own[i]);
-                temper.Cost = prices[i];
-                temper.Gate = gates[i];
-                temper.Stats = new[] { new StatMod(PlayerStat.WeaponDamage, 0.06f), new StatMod(PlayerStat.StaggerDealt, 0.05f) };
+                    "Every Katana hit does a little more damage and breaks balance a little sooner." + own[i]);
+                temper.Cost = Temper.PriceOf(i + 1);
+                temper.Gate = Temper.GateOf(i + 1);
+                temper.Stats = new[] { new StatMod(PlayerStat.WeaponDamage, Temper.DamagePerRank), new StatMod(PlayerStat.StaggerDealt, Temper.StaggerPerRank) };
             }
-            // Temper V's held pose: NEEDS: the finisher's hold, 0.2 s longer (the Katana's finisher has no held pose to lengthen); its +15% is patched.
+            // Temper V's longer hold and harder blow are the trunk's patch (KatanaTrunk). NEEDS: the held pose in play (time
+            // slowed while the pose holds, way-finisher-hold) and the finisher's clip with the pose in it.
 
             // The infusion families (steel/weapons.md 1, "Infusion", on the drawing cut): opened once an element is owned.
-            // NEEDS: the infused strike reading the family marks (task 5.3, Way/Infusion.cs); until then they change nothing.
+            // The infused strike reads them through Way/Infusion.cs (task 5.3): Running Draw's dash and Settling Draw's slow,
+            // unbroken, harder draw are in play. NEEDS (way-infusion-families): the arc lying on the floor, the cut stopping
+            // in the first enemy with the element set in it, the return cut that follows and drags, and Settling Draw's clip.
+            // The player's words are way_build_plan.md 2.2's; the rules are Way/Infusion.cs.
             var ground = Mark(to, InfuseGround, "Lying Draw", UpgradeKind.Major, "", "", UpgradeIcons.Flame,
-                "An infused strike of Fire, Poison or Life leaves the drawing cut's arc lying on the floor, alight with the element, for three seconds.");
+                "Your infused draw with Fire, Poison or Life leaves its cut burning on the floor for a few seconds.");
             var line = Mark(to, InfuseLine, "Running Draw", UpgradeKind.Major, "", "", UpgradeIcons.Bolt,
-                "An infused strike of Lightning, Wind or Light turns the drawing cut into a dash of five metres through every enemy on its lane.");
+                "Your infused draw with Lightning, Wind or Light becomes a dash. You cut everyone in a line.");
             var weight = Mark(to, InfuseWeight, "Settling Draw", UpgradeKind.Major, "", "", UpgradeIcons.Rock,
-                "An infused strike of Earth, Metal or Ice draws slower and cannot be broken. It stops in the first enemy, sets the element in it and staggers far harder.");
+                "Your infused draw with Earth, Metal or Ice is slower, but nothing can stop it. It sticks in the first enemy and staggers it hard.");
             var draw = Mark(to, InfuseDraw, "Dragging Draw", UpgradeKind.Major, "", "", UpgradeIcons.Drop,
-                "An infused strike of Water or Dark is followed by the return cut by itself, which drags everything the draw struck onto the point.");
+                "Your infused draw with Water or Dark is followed by a second cut on its own. It pulls back everything the draw hit.");
             foreach (var family in new[] { ground, line, weight, draw }) family.Gate = MarkRules.GodsGate + "1";
 
             // The five weapon basics (way_plan.md 0.2 and 1, "Trunk basics"), in any order once the Katana is owned.
@@ -183,9 +186,10 @@ namespace Clover.Player.Trees.Ways
             zanshin.Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Kill, Do = UpgradeAction.Boon, At = EffectAt.Self, Stat = PlayerStat.PerfectGuardWindow, Amount = 0.28f, Seconds = 1f } };
 
             // The gated technique (steel/weapons.md 0.5 and 1): sealed until the Last Retainer falls, on light and heavy together.
-            // NEEDS: the chord's step (task 5.3, PlayerCombat.TechniqueStep) and a draw that breaks a wind-up, with its clip.
+            // The chord plays it once bought (Way/Techniques.cs). NEEDS (way-technique): the broken wind-up (50 stagger, the
+            // shorter recovery) and its own clip, attack_katana_before_thunder; the drawing cut's clip plays at its timings.
             var technique = Mark(to, BeforeTheThunder, "Before the Thunder", UpgradeKind.Technique, "", "", UpgradeIcons.Bolt,
-                "Light and heavy together: the quickest draw there is. If it strikes an enemy winding up an attack, red ones too, the attack is broken. If it strikes nothing in a wind-up it leaves you open.");
+                "Press light and heavy attack together. You draw faster than anything. Hit an enemy as it winds up an attack, even a red one, and the attack is broken. Miss the timing and you are left open.");
             technique.Gate = LastRetainerFlag;
 
             // The element infusion marks: the built tree marks that need the Katana, moved here with their ids and their rules
