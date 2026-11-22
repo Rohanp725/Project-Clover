@@ -200,5 +200,7 @@ namespace Clover.Player
         ReactionDamageOn,
         /// <summary>Flat, above zero: a blow turned by a ward counts as a perfect guard for every mark that answers one (Splinter Ward; the ledger's ward-as-guard).</summary>
         WardTurnsPerfect,
+        /// <summary>Flat, percent: what Pawned Heart's heart returns of the damage dealt rises by this when it is touched during a perfect dodge (its Master: 30, so 60 in all; the ledger's heart-touch).</summary>
+        HeartTouchMore,
     }
 }

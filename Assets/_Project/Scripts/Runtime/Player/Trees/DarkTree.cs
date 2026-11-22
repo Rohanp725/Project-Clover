@@ -251,10 +251,10 @@ namespace Clover.Player.Trees
                     Description = "The heart hangs in the air over the enemy you face instead, and follows it, as the vetala hangs from its tree. You must fight your way in under it to touch it. You go in, not out.",
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = HungHeart, Seconds = 10f, Keeps = C } } } },
                 "Opens two shapes of Pawned Heart, chosen at any rest fire: Buried Heart, a heart under your feet to stand over, or Hung From the Tree, a heart over the enemy to fight your way to.",
-                // NEEDS: the heart touched during a perfect dodge as the moment, returning 60% of the damage dealt (heart-touch).
-                // Until then a perfect dodge heals 10, once in three seconds.
-                new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, Do = UpgradeAction.Heal, Amount = 10f, Cooldown = 3f } },
-                "Touch the heart during a perfect dodge, and it returns 60% of the damage dealt, not 30%.");
+                // The heart touched within a moment of a perfect dodge returns 30 more of each hundred dealt (PlayerStat.HeartTouchMore, read by HeartForm).
+                System.Array.Empty<UpgradeEffect>(),
+                "Touch the heart during a perfect dodge, and it returns 60% of the damage dealt, not 30%.",
+                masterStats: new[] { new StatMod(PlayerStat.HeartTouchMore, 30f) });
 
             // Built in PlayerUpgrades: Risen for good (StatWhen.Risen always holds), two points of health a second while an enemy is within twelve metres, never the last point, and Rise() refuses.
             to.Add(BranchPattern.Put(new Upgrade { Id = DeadAlready, Name = "Dead Already", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { NearTheGrave }, Icon = UpgradeIcons.Skull,

@@ -233,15 +233,13 @@ draining.
 ## dark.pawnedheart.master
 **What it does.** Touch the heart during a perfect dodge, and you get back 60% of the damage you dealt instead of 30%.
 
-**When it happens.** For now, each perfect dodge, while Pawned Heart is in a spell slot.
+**When it happens.** When you step onto the heart within 0.6 seconds of a perfect dodge (dodge onto it at the last moment), while Pawned Heart is in a spell slot.
 
-**The numbers.** 3 Shards. For now, a perfect dodge heals you 10, once every 3 seconds.
+**The numbers.** 3 Shards. The heart gives back everything you pawned, plus 60% of the damage you dealt while it beat, instead of 30%.
 
 **Works with.** Clean dodging, Near the Grave (low health, when a heal matters most), Gone to Ash.
 
-**Not built yet.** It should only work when you touch the heart during a perfect dodge, and give back 60%; for now, any perfect dodge heals you 10, whether you touch the heart or not.
-
-**Example.** You are at one point of health with the heart beating. Roll through a soldier's thrust at the last moment, and get 10 health back while you work your way back to the heart.
+**Example.** You are at one point of health with the heart beating, and you dealt 200 damage. Roll through a soldier's thrust at the last moment and onto the heart: you get back all you pawned and 120 more.
 
 ## dark.deadalready
 **What it does.** You don't wait to die: from now on, you are always Risen. In every fight, your health drains toward its last point, and your blows heal you. You hit much harder. You don't get a second Rise.

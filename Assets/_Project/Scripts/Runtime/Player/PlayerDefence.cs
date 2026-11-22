@@ -223,6 +223,7 @@ namespace Clover.Player
         public void CountAsPerfectDodge(Vector3 attacker, float strikeIn)
         {
             PerfectDodges++;
+            LastPerfectDodgeAt = Time.time;
             if (combat != null) combat.Mana.Gain(PerfectDodgeMana);
             if (hitStop != null) hitStop.Slow(PerfectDodgeSlowSeconds, PerfectDodgeSlowScale);
             Callout("Perfect dodge");
@@ -230,6 +231,9 @@ namespace Clover.Player
             if (upgrades != null) upgrades.OnPerfectDodge(attacker);
             PerfectDodged?.Invoke();
         }
+
+        /// <summary>When the last perfect dodge was made (Time.time); far in the past when none was.</summary>
+        public float LastPerfectDodgeAt { get; private set; } = -100f;
 
         public void GiveWards(int count)
         {
@@ -441,6 +445,7 @@ namespace Clover.Player
                 if (player.Dodge.Elapsed <= PerfectDodgeWindow && !player.Dodge.NoPerfect)
                 {
                     PerfectDodges++;
+                    LastPerfectDodgeAt = Time.time;
                     if (combat != null) combat.Mana.Gain(PerfectDodgeMana);
                     if (hitStop != null) hitStop.Slow(PerfectDodgeSlowSeconds, PerfectDodgeSlowScale);
                     Callout("Perfect dodge");

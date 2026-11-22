@@ -215,6 +215,17 @@ namespace Clover.Tests
             Assert.AreEqual(AfflictionKind.Chill, resists.LeapsTo);
         }
 
+        [Test]
+        public void TheHeartTouchedInAPerfectDodgeReturnsMore()
+        {
+            Assert.AreEqual(30f, Clover.Player.Forms.HeartForm.TouchPercent(30f, false, 30f), 1e-5f, "a plain touch");
+            Assert.AreEqual(60f, Clover.Player.Forms.HeartForm.TouchPercent(30f, true, 30f), 1e-5f, "in a perfect dodge, with the Master");
+            Assert.AreEqual(30f, Clover.Player.Forms.HeartForm.TouchPercent(30f, true, 0f), 1e-5f, "without the Master");
+            var master = Upgrade.ById(SpellBranch.MasterId(DarkTree.PawnedHeart));
+            Assert.IsEmpty(master.Effects, "no stand-in heal on every perfect dodge");
+            Assert.IsTrue(master.Stats.Any(mod => mod.Stat == PlayerStat.HeartTouchMore && mod.Amount == 30f));
+        }
+
         private sealed class Afflicted : IAfflictable
         {
             public Afflicted(AfflictionSet set) => Afflictions = set;
