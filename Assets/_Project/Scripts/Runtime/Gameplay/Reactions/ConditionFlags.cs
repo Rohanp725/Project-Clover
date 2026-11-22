@@ -58,5 +58,12 @@ namespace Clover.Gameplay
         CannotTurn = 1 << 18,
         /// <summary>It turns at the run's Scale of its usual pace (The Sea Takes It's seized joints: 0.6, turning 40% slower).</summary>
         TurnSlowed = 1 << 19,
+        /// <summary>
+        /// Its feet are caught (sunk in sand, coiled in roots): it begins no leap or blink, its lunges drive it nowhere, and it
+        /// never steps back; it still walks on, turns and strikes where it stands (the ledger's no-dodge-or-leap).
+        /// </summary>
+        Mired = 1 << 20,
+        /// <summary>Heavy blows pass its guard while this lasts (Driven Down, on a sunk enemy); light ones are still turned.</summary>
+        HeavyPassesGuard = 1 << 21,
     }
 }

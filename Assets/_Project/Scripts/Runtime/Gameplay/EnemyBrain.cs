@@ -73,6 +73,8 @@ namespace Clover.Gameplay
         private float busyFor;
         private float flinchFor;
         private float[] cooldowns = new float[0];
+        // Its feet caught this step (ConditionFlags.Mired): no leap or blink is chosen.
+        private bool mired;
 
         /// <summary>How far through whatever it is busy with, from 0 to 1; 0 when the time was left open.</summary>
         public float BusyProgress => State == EnemyState.Busy && busyFor > 0f && busyFor < float.MaxValue ? Math.Min(1f, stateElapsed / busyFor) : 0f;
@@ -155,8 +157,11 @@ namespace Clover.Gameplay
                 counter = false;
                 Enter(EnemyState.Down);
             }
+            mired = (held & ConditionFlags.Mired) != 0;
             bool struck = Step(deltaTime, distance, roll, mayAttack, targetOnGround, windup, unseen, noAttack || unseen, down);
             if (rooted || unseen) MoveWish = 0;
+            // Its feet caught, it does not step back: it holds where it is and lets the target come.
+            if (mired && MoveWish < 0) MoveWish = 0;
             return struck;
         }
 
@@ -407,6 +412,7 @@ namespace Clover.Gameplay
             if (attack.MinPhase > Phase) return false;
             if (attack.OnlyLit && !TargetLit) return false;
             if (attack.NeedsFlasks > TargetFlasks) return false;
+            if (mired && (attack.Leap || attack.BlinkTo > 0f)) return false;
             return distance >= attack.MinRange && distance <= attack.MaxRange;
         }
     }

@@ -95,5 +95,7 @@ namespace Clover.Gameplay
         /// carrying the dead one's doses (StruckBy.DeathNear; the ledger's jar-deaths: Shut in the Dark's ring, 4 m across).
         /// </summary>
         public float DeathsWithin;
+        /// <summary>Metres its body is drawn down into the floor while it runs, for the look (The Ground Gives' sand: to the knees).</summary>
+        public float Sink;
     }
 }

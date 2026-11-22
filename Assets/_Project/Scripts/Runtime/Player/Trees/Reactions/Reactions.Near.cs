@@ -205,11 +205,11 @@ namespace Clover.Player.Trees
 
             // Water and Earth (16). Shaken wet ground turns to sand: it sinks to the knees for 4 s, slowed by half (an
             // elite by a quarter; a god takes only the Tremor), and a heavy blow on it while sunk holds it 0.5 s.
-            // NEEDS: sinking (no dodge, leap or step back, the body drawn lower) and the pool itself (2 m across, slowing
-            // other enemies that wade in by 30%).
+            // Sunk (ConditionFlags.Mired: no leap, blink, lunge or step back; Sink: the body drawn 0.35 m down into the sand).
+            // NEEDS: the pool itself (2 m across, slowing other enemies that wade in by 30%) (ground-states).
             to.Add(Reaction(AfflictionKind.Soaked, AfflictionKind.Tremor,
                 "Tremor meets Soaked: the wet floor under it turns to sand and it sinks to the knees for 4 s, slowed by half. A heavy blow holds it fast.",
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = SunkInSand, Seconds = 4f, Pace = 0.5f } },
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = SunkInSand, Seconds = 4f, Pace = 0.5f, Flags = ConditionFlags.Mired, Sink = 0.35f } },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = SunkInSand, By = StruckBy.Heavy, Do = UpgradeAction.Hold, Seconds = 0.5f }));
 
             // Life and Metal (17). Iron thorns grow out of it for 6 s; each weapon blow snaps one off and it flies at the

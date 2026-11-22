@@ -54,6 +54,8 @@ namespace Clover.Gameplay
         public float ShatterScale { get; private set; } = 1f;
         /// <summary>How far it sees while its sight is cut short; 0 when it is not.</summary>
         public float Sight { get; private set; }
+        /// <summary>Metres its body is drawn down into the floor: the deepest any running condition asks (<see cref="ConditionSpec.Sink"/>).</summary>
+        public float SinkDepth { get; private set; }
         /// <summary>The afflictions kept from fading and from being spent by blows, as bits at <c>1 &lt;&lt; (int)kind</c>.</summary>
         public int Keeps { get; private set; }
 
@@ -266,6 +268,7 @@ namespace Clover.Gameplay
             run.EndsOnFreeze = spec.EndsOnFreeze;
             run.DriftsTo = Math.Max(0f, spec.DriftsTo);
             run.DeathsWithin = Math.Max(0f, spec.DeathsWithin);
+            run.Sink = Math.Max(0f, spec.Sink);
             run.FreezeLonger = Math.Max(0f, spec.FreezeLonger);
             run.ShatterHarder = Math.Max(1f, spec.ShatterHarder);
             // The way it faced as it was set, for a condition whose side is the side it showed then (Rime's crust).
@@ -533,7 +536,7 @@ namespace Clover.Gameplay
         {
             int count = 0, keeps = 0;
             var flags = ConditionFlags.None;
-            float pace = 1f, windup = 1f, taken = 1f, dealt = 1f, weapon = 1f, spellTaken = 1f, stagger = 1f, sight = 0f, heavyTaken = 1f, weaponStagger = 1f, longer = 0f, shatter = 1f, turn = 1f;
+            float pace = 1f, windup = 1f, taken = 1f, dealt = 1f, weapon = 1f, spellTaken = 1f, stagger = 1f, sight = 0f, heavyTaken = 1f, weaponStagger = 1f, longer = 0f, shatter = 1f, turn = 1f, sink = 0f;
             for (int i = 0; i < Slots; i++)
             {
                 if (!runs[i].Active) continue;
@@ -553,6 +556,7 @@ namespace Clover.Gameplay
                 if ((run.Flags & ConditionFlags.TurnSlowed) != 0) turn *= run.Scale;
                 if ((run.Flags & ConditionFlags.CannotTurn) != 0) turn = 0f;
                 longer = Math.Max(longer, run.FreezeLonger);
+                sink = Math.Max(sink, run.Sink);
                 shatter = Math.Max(shatter, run.ShatterHarder);
                 if ((run.Flags & ConditionFlags.SightShort) != 0) sight = sight > 0f ? Math.Min(sight, run.Sight) : run.Sight;
             }
@@ -572,6 +576,7 @@ namespace Clover.Gameplay
             FreezeLonger = longer;
             ShatterScale = shatter;
             Sight = sight;
+            SinkDepth = sink;
         }
 
         private void Tell(ConditionMoment moment, in ConditionRun run, float damage, bool heavy, bool spell, bool shattered = false, bool critical = false, bool finisher = false,

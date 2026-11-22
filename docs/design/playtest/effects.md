@@ -680,9 +680,9 @@ Group: Reactions
 
 **Its shapes.** If you have the Shape mark of Water and Earth's duo branch (The Ground Gives: Quicksand or Sand Boil, 3 Shards, in the middle of the chart) and carry both, The Ground Gives uses the shape you picked at a rest fire instead. Quicksand: the enemy sinks for 4 seconds, and once a second everything within 1.5 metres is pulled 1 metre toward it. Sand Boil: the enemy sinks for 1.2 seconds, then is lifted for 1 second, and everything within 3 metres takes 12 damage, a Soaked and a Tremor.
 
-**How to use it.** Sink it, then come in with heavy blows. Each one pins it for a moment. Not built yet: a sunken enemy should be unable to dodge, leap or step back, and other enemies wading in should be slowed too.
+**How to use it.** Sink it, then come in with heavy blows. Each one pins it for a moment. While it is sunk, it can't leap, lunge or step back, so it can't get away from you. Not built yet: other enemies wading into the sand should be slowed too.
 
-**How it looks.** Its name over the enemy, and for a moment the floor sinks into a pit around it, wet at the edge. Not built yet: the ring of sand staying around its feet.
+**How it looks.** Its name over the enemy, and for a moment the floor sinks into a pit around it, wet at the edge. The enemy sinks into the floor up to its knees and rises back up when it's free. Not built yet: the ring of sand staying around its feet.
 
 ## reaction-iron-thorns
 Title: Iron Thorns (Life and Metal)
@@ -1025,9 +1025,9 @@ Group: Reactions
 
 **Its shapes.** If you have the Shape mark of Life and Dark's duo branch (Flowers or Fig: Corpse Flowers or Fig in the Crown, 3 Shards, in the middle of the chart) and carry both, Girdled uses the shape you picked at a rest fire instead. Both wrap and crush like the plain one. Corpse Flowers: when the roots let go, three pale flowers grow where the enemy stood for 8 seconds, and count as things you grew. Fig in the Crown: an enemy that dies in the roots Seeds and Curses the nearest enemy within 5 metres, which may start getting wrapped up too.
 
-**How to use it.** Three blows: each one weakens it more and heals you, and the third one crushes it.
+**How to use it.** Three blows: each one weakens it more and heals you, and the third one crushes it. While the roots hold it, it can't leap, lunge or step back.
 
-**How it looks.** Its name over the enemy, then the crush. Not built yet: the enemy being unable to dodge or leap while it's wrapped up, and the hollow tree trunk left where it dies.
+**How it looks.** Its name over the enemy, then the crush. Not built yet: the hollow tree trunk left where it dies.
 
 ## reaction-chokedamp
 Title: Chokedamp (Earth and Poison)

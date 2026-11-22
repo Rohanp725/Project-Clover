@@ -62,5 +62,7 @@ namespace Clover.Gameplay
         public float DriftsTo;
         /// <summary>Metres round its carrier within which another's death is told to it (<see cref="ConditionSpec.DeathsWithin"/>).</summary>
         public float DeathsWithin;
+        /// <summary>Metres the body is drawn down while it runs (<see cref="ConditionSpec.Sink"/>).</summary>
+        public float Sink;
     }
 }

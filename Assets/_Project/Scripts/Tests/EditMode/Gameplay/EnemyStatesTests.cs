@@ -83,6 +83,55 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void SunkItNeitherLeapsNorStepsBack()
+        {
+            var enemy = NewEnemy();
+            var brain = new EnemyBrain { RetreatRange = 4f, PreferredRange = 2f, Conditions = enemy.Conditions };
+            brain.Attacks.Add(new EnemyAttack { Name = "leap", Telegraph = 0.5f, Strike = 0.1f, Recovery = 0.5f, MinRange = 0f, MaxRange = 10f, Leap = true });
+            brain.Reset();
+            var sand = ReactionOf(AfflictionKind.Soaked, AfflictionKind.Tremor).Effects.First(each => each.Do == UpgradeAction.Condition).State;
+            Assert.IsTrue((sand.Flags & ConditionFlags.Mired) != 0, "The Ground Gives sinks it");
+            enemy.Conditions.Set(sand, null, 1);
+            Assert.AreEqual(sand.Sink, enemy.Conditions.SinkDepth, 1e-5f, "drawn down into the sand");
+            Assert.That(sand.Sink, Is.GreaterThan(0f));
+            brain.Tick(0.1f, 3f, 0f);
+            brain.Tick(0.1f, 3f, 0f);
+            Assert.AreEqual(EnemyState.Stalk, brain.State, "no leap begun while sunk");
+            Assert.AreEqual(0, brain.MoveWish, "and it does not back away though the target is inside its retreat range");
+            enemy.Conditions.Tick(sand.Seconds + 0.1f);
+            Assert.AreEqual(0f, enemy.Conditions.SinkDepth, 1e-5f);
+            brain.Tick(0.1f, 3f, 0f);
+            Assert.AreEqual(EnemyState.Telegraph, brain.State, "free of the sand, it leaps");
+            var girdled = ReactionOf(AfflictionKind.Seeded, AfflictionKind.Cursed).Effects.Where(each => each.Do == UpgradeAction.Condition && each.On == UpgradeTrigger.Reacted);
+            Assert.IsTrue(girdled.Any(each => (each.State.Flags & ConditionFlags.Mired) != 0), "the coils hold its feet too");
+        }
+
+        [Test]
+        public void TheBogAndDrivenDownAnswerTheSunk()
+        {
+            var shapes = Upgrade.ById(Clover.Player.Trees.Duo.TheGroundGivesDuo.Shape).Shapes;
+            foreach (var shape in shapes)
+            {
+                var state = shape.Effects.First(each => each.Do == UpgradeAction.Condition).State;
+                Assert.AreEqual(Reactions.SunkInSand, state.Is, shape.Name + " sinks as the plain sand does");
+                Assert.IsTrue((state.Flags & ConditionFlags.Mired) != 0, shape.Name);
+            }
+            var bog = Upgrade.ById(Clover.Player.Trees.Duo.TheGroundGivesDuo.GivenToTheBog).Effects.Single();
+            Assert.AreEqual(UpgradeTrigger.Kill, bog.On);
+            Assert.AreEqual(Reactions.SunkInSand, bog.InState, "one that dies sunk");
+            var driven = Upgrade.ById(Clover.Player.Trees.Duo.TheGroundGivesDuo.DrivenDown).Effects;
+            var open = driven.Single(each => each.Do == UpgradeAction.Condition).State;
+            var enemy = NewEnemy();
+            var light = new Hit(10f, 5f, Vector3.back);
+            var heavy = new Hit(20f, 10f, Vector3.back, heavy: true);
+            enemy.Conditions.Set(ReactionOf(AfflictionKind.Soaked, AfflictionKind.Tremor).Effects.First(each => each.Do == UpgradeAction.Condition).State, null, 1);
+            enemy.Conditions.Set(open, null, 2);
+            Assert.IsFalse(Enemy.TurnsAside(true, 0f, enemy.Conditions, heavy, 0.5f, false, EnemyState.Stalk, 0f), "a heavy blow passes the sunk one's guard");
+            Assert.IsTrue(Enemy.TurnsAside(true, 0f, enemy.Conditions, light, 0.5f, false, EnemyState.Stalk, 0f), "a light one is still turned");
+            Assert.IsTrue(driven.Any(each => each.On == UpgradeTrigger.HeavyHit && each.InState == Reactions.SunkInSand && each.Do == UpgradeAction.Hold));
+        }
+
+        [Test]
         public void WhirlpoolAndAshFallHoldTheBalance()
         {
             var churn = Upgrade.ById(WaterTree.Whirlpool).Effects.Single(each => each.Do == UpgradeAction.Condition);

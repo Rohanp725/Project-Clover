@@ -90,13 +90,14 @@ namespace Clover.Player.Trees
             // Each weapon blow draws one coil tighter and mends the player 1; at four coils (the third blow) it is
             // girdled: held 1.5 s while the roots crush, 20 damage and 40 stagger, and a fifth of that (4) heals the
             // player. The roots hold 8 s for the blows to come.
-            // NEEDS: no dodge or leap while coiled; standing things that block: the hollow trunk left for 8 s where it
-            // dies girdled, blocking and Seeding and Cursing what touches it.
+            // Coiled, it neither leaps nor steps back (ConditionFlags.Mired on the binding roots).
+            // NEEDS: standing things that block: the hollow trunk left for 8 s where it dies girdled, blocking and Seeding and
+            // Cursing what touches it.
             to.Add(Reaction(AfflictionKind.Seeded, AfflictionKind.Cursed,
                 "Seeded meets Cursed: black fig roots coil round it, slowing it. Each weapon blow draws them tighter, mends you 1 and opens it to your weapon; at four coils they crush it, 20, held 1.5 s.",
                 6f,
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Coils, Seconds = 8f, Blows = 3 } },
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Bound, Seconds = 8f, Pace = 0.75f } },
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Bound, Seconds = 8f, Pace = 0.75f, Flags = ConditionFlags.Mired } },
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Tight, Seconds = 8f, Flags = ConditionFlags.WeaponTakenShare, Scale = 1.06f } },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Coils, By = StruckBy.Weapon, Do = UpgradeAction.Heal, Amount = 1f },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Coils, By = StruckBy.Weapon, AtCount = 1, Do = UpgradeAction.Condition,

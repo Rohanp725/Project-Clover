@@ -117,7 +117,7 @@ namespace Clover.Gameplay
         {
             if (!guards || guardOpenFor > 0f || hit.Unblockable || staggered) return false;
             if (conditions != null && conditions.Has(ConditionFlags.CannotGuard)) return false;
-            if (hit.Heavy && heavyGuardedDamage >= 1f) return false;
+            if (hit.Heavy && (heavyGuardedDamage >= 1f || (conditions != null && conditions.Has(ConditionFlags.HeavyPassesGuard)))) return false;
             if (state != EnemyState.Stalk && state != EnemyState.Idle) return false;
             return angleFromFront < 75f;
         }
@@ -431,8 +431,11 @@ namespace Clover.Gameplay
         {
             if (animator == null || animator.transform == transform) return;
             int tremor = IsDead ? 0 : Afflictions.Stacks(AfflictionKind.Tremor);
-            float raise = IsDead ? 0f : Clover.Player.Forms.ElementLooks.RaiseOf(transform);
-            if (tremor <= 0 && raise <= 0f)
+            // Sunk (The Ground Gives' sand), the model is drawn down into the floor and eased back up as it comes free.
+            float sinkTo = IsDead ? 0f : Afflictions.Conditions.SinkDepth;
+            sunk = Mathf.MoveTowards(sunk, sinkTo, SinkRate * Time.deltaTime);
+            float raise = (IsDead ? 0f : Clover.Player.Forms.ElementLooks.RaiseOf(transform)) - sunk;
+            if (tremor <= 0 && Mathf.Abs(raise) <= 0.0001f)
             {
                 if (shaking) animator.transform.localPosition = modelRest;
                 shaking = false;
@@ -448,6 +451,10 @@ namespace Clover.Gameplay
             }
             animator.transform.localPosition = modelRest + offset;
         }
+
+        // Metres a second a sunk body goes down and comes back up, and how far down it is now.
+        private const float SinkRate = 1.6f;
+        private float sunk;
 
         private void Awake()
         {
@@ -1092,7 +1099,8 @@ namespace Clover.Gameplay
                     lungeForward = transform.forward;
                 }
                 lunging = driving;
-                if (driving) step += transform.forward * (attack.Lunge * deltaTime * pace / (until - from));
+                // Its feet caught (Mired), the lunge is struck where it stands.
+                if (driving && !Afflictions.Conditions.Has(ConditionFlags.Mired)) step += transform.forward * (attack.Lunge * deltaTime * pace / (until - from));
             }
             // Rooted, its feet go nowhere, by its own will, a lunge or a shove; it still turns and strikes.
             bool rooted = Afflictions.Conditions.Has(ConditionFlags.Rooted);
