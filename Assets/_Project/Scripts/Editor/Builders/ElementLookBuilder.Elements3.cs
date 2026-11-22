@@ -310,7 +310,7 @@ namespace Clover.EditorTools
                 float first = FirstShown(onBody);
                 onBody["duration_s"] = (double)seconds;
                 AddElements3(onBody, key + "@b", first, facing, lists, elementArt, glow);
-                if (MarksStruck(look)) AddStrikeRaise(look, key + "@b", first, facing, lists);
+                if (MarksStruck(look) || RaisedMoments.Contains(slug)) AddStrikeRaise(look, key + "@b", first, facing, lists);
             }
             // Red Hot's blast of fire through the enemy, as the Flame Wave's front.
             BuildBlasts(Elements3Looks(), lists, elementArt, glow);

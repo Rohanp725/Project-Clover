@@ -59,6 +59,12 @@ public class BodySizeProbeRunner : MonoBehaviour
         new Effect { Name = "poison_strike", How = How.Strike, Slug = "e3_strike_poison@b", Moments = new[] { 0.45f, 1.0f } },
         new Effect { Name = "rime", How = How.Reaction, Slug = "rime", Moments = new[] { 0.6f, 1.4f } },
         new Effect { Name = "anvil_stone", How = How.Reaction, Slug = "anvil_stone", Moments = new[] { 0.6f, 1.3f } },
+        new Effect { Name = "live_iron", How = How.Reaction, Slug = "live_iron", Moments = new[] { 1.0f } },
+        new Effect { Name = "iron_thorns", How = How.Reaction, Slug = "iron_thorns", Moments = new[] { 0.5f, 1.45f } },
+        new Effect { Name = "golden_feathers", How = How.Reaction, Slug = "golden_feathers", Moments = new[] { 1.55f } },
+        new Effect { Name = "frost_heave", How = How.Reaction, Slug = "frost_heave", Moments = new[] { 0.8f } },
+        new Effect { Name = "stone_rise", How = How.Strike, Slug = "e3_stone_rise@b", Moments = new[] { 0.6f } },
+        new Effect { Name = "briar_patch", How = How.Strike, Slug = "e3_briar_patch", Moments = new[] { 1.0f } },
     };
 
     private const string Folder = "review/shots/current/size";

@@ -155,7 +155,8 @@ namespace Clover.EditorTools
             // seed lumps and sprouts on the enemies' backs from Life's charged blows and Grown Into It; Miasma's pool (the
             // cloud only); Chill's crystals (the base look is the frost on the body); Sundered's drops.
             "ill_wind|vfxe3_disc",
-            "e3_briar_patch|vfx3c_vfx_life_thorn", "e3_briar_patch@b|vfx3c_vfx_life_thorn",
+            // Briar Patch's own thorns now stand on its plants (ElementLookBuilder.Round4); those at the enemies' feet stay out.
+            "e3_briar_patch@b|vfx3c_vfx_life_thorn",
             "e3_life_blade_hit1|vfx3c_vfx_life_thorn", "e3_life_blade_hit2|vfx3c_vfx_life_thorn", "e3_life_blade_hit3|vfx3c_vfx_life_thorn",
             "e3_life_blade_hit1|vfxe2_seed", "e3_life_blade_hit2|vfxe2_seed", "e3_life_blade_hit3|vfxe2_seed",
             "e3_life_blade_hit1|vfx3c_vfx_life_briar", "e3_life_blade_hit2|vfx3c_vfx_life_briar", "e3_life_blade_hit3|vfx3c_vfx_life_briar",
@@ -651,6 +652,11 @@ namespace Clover.EditorTools
             ["dark_hunger|m_vfx_combo_violetedge"] = new ReactionArtBuilder.Paint(0.09f, 0.02f, 0.22f, 1f, 1f, true),
             ["poison_fever|m3_fever"] = new ReactionArtBuilder.Paint(0.4f, 0.52f, 0.06f),
             ["life_seeded|m3_spore"] = new ReactionArtBuilder.Paint(0.36f, 0.44f, 0.16f),
+            // Round 4: Seeded's seeds warm golden-brown with spring-green sprout tips, nothing in Poison's green.
+            ["life_seeded|e4_seedpod"] = new ReactionArtBuilder.Paint(0.46f, 0.27f, 0.08f),
+            ["e4_seed_sprout"] = new ReactionArtBuilder.Paint(0.1f, 0.72f, 0.36f),
+            // Iron Thorns's seeds are Seeded's, in the same colour.
+            ["iron_thorns|e4_seedpod"] = new ReactionArtBuilder.Paint(0.46f, 0.27f, 0.08f),
             // Poisoned's stain lay as a flat teal square under the body after Miasma's cloud (its film of 2026-11-20; the
             // audit: "a flat teal square pool"): a dark sick green, see-through.
             ["poison_poisoned|m2_poison_stain"] = new ReactionArtBuilder.Paint(0.12f, 0.2f, 0.03f, 0.5f, 1f, true),
@@ -1045,7 +1051,7 @@ namespace Clover.EditorTools
             ["e4_beam"] = "fire", ["e4_beamcore"] = "fire", ["e4_sun"] = "fire", ["e4_ray"] = "fire", ["e4_ray_deep"] = "fire",
             ["e4_net"] = "fire", ["e4_lotus_pale"] = "fire", ["e4_gold_glow"] = "fire",
             ["e4_fang"] = "dark", ["e4_hand"] = "dark", ["e4_maw"] = "dark", ["e4_blackbolt"] = "dark", ["e4_drain"] = "dark", ["e4_well"] = "dark",
-            ["e4_seedpod"] = "life", ["e4_rg_leaf"] = "life", ["e4_rg_petal"] = "life", ["e4_rg_root"] = "life",
+            ["e4_seedpod"] = "life", ["e4_seed_sprout"] = "life", ["e4_rg_leaf"] = "life", ["e4_rg_petal"] = "life", ["e4_rg_root"] = "life",
             // The slam's sword in earth's matte solid, so its steel blade, bronze guard and leather grip keep their own
             // colours and the blade never catches the metal solid's chrome glint as a white flash.
             ["st_sl_blade"] = "earth", ["st_sl_guard"] = "earth", ["st_sl_grip"] = "earth",
@@ -1268,6 +1274,8 @@ namespace Clover.EditorTools
                         // A reaction the Blender worker redrew for the third review (reactions 5) is built from that recipe,
                         // else one it redesigned in elements 3 from that one.
                         var look = redrawn.TryGetValue(slug, out var third) ? third : revised.TryGetValue(slug, out var revision) ? revision : combos4Look;
+                        // Round 4's placements (ElementLookBuilder.Round4): blades through the body, thorns shrinking, feathers settling.
+                        look = Round4Placement(look, slug);
                         var bodyAt = new List<Vector3>();
                         foreach (Dictionary<string, object> body in (List<object>)look["bodies"]) bodyAt.Add(Vec(body["position"], Vector3.zero));
                         for (int b = -1; b < Mathf.Max(1, bodyAt.Count); b++)
@@ -1290,6 +1298,7 @@ namespace Clover.EditorTools
                 // and so are thirteen of the element looks (the third review's asks).
                 if (!elementLooks && Elements3Brazier(slug) is Dictionary<string, object> caged) look = caged;
                 if (elementLooks && Elements4For(slug) is Dictionary<string, object> redrawnLook) look = redrawnLook;
+                if (elementLooks) look = Round4Placement(look, slug);
                 // Drawn as the Blender worker's flat bands, without the solid's sheen (its dark storm lit grey on film).
                 lists.Flat = look != recipeLook;
                 var bodies = (List<object>)look["bodies"];

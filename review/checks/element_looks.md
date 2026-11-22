@@ -1,6 +1,6 @@
 # Element looks (batches 1 and 2)
 
-339 looks, 7621 parts (2908 ribbons), 45492 keys, from Assets/_Project/Art/VFX/Combos/elements2_recipe.json.
+339 looks, 7646 parts (2908 ribbons), 45619 keys, from Assets/_Project/Art/VFX/Combos/elements2_recipe.json.
 
 | Look | Length | On | Parts | Ribbons | Repeats from | Shell |
 |---|---|---|---|---|---|---|
@@ -251,9 +251,9 @@
 | live_iron@3 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | golden_feathers@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
 | golden_feathers | 1.6 s | body | 8 | 4 | -0.05 s | - |
-| golden_feathers@1 | 1.6 s | body | 6 | 3 | 1.10 s | - |
-| golden_feathers@2 | 1.6 s | body | 6 | 3 | 1.18 s | - |
-| golden_feathers@3 | 1.6 s | body | 6 | 3 | 1.26 s | - |
+| golden_feathers@1 | 1.6 s | body | 7 | 3 | 1.10 s | - |
+| golden_feathers@2 | 1.6 s | body | 7 | 3 | 1.18 s | - |
+| golden_feathers@3 | 1.6 s | body | 7 | 3 | 1.26 s | - |
 | stolen_warmth@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
 | stolen_warmth | 1.6 s | body | 17 | 4 | 0.33 s | 5 bands from -0.30 s, every 0.36 s, 0.10 s each |
 | stolen_warmth@1 | 1.6 s | body | 0 | 0 | 1.60 s | - |
@@ -265,13 +265,13 @@
 | fish_poison@3 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | water_soaked | 2.2 s | body | 13 | 0 | 1.02 s | 1 bands from 0.50 s, every 0.10 s, 0.45 s each |
 | water_wellspring | 2.0 s | player | 116 | 24 | 0.05 s | - |
-| metal_sundered | 2.0 s | body | 6 | 0 | 0.60 s | - |
+| metal_sundered | 2.0 s | body | 8 | 0 | 0.60 s | - |
 | metal_sword | 1.6 s | body | 4 | 0 | 1.60 s | - |
 | metal_temper | 1.8 s | player | 3 | 0 | 0.90 s | 5 bands from 0.25 s, every 0.11 s, 0.09 s each |
 | metal_rust | 2.2 s | body | 18 | 0 | 1.15 s | - |
 | poison_poisoned | 2.2 s | body | 11 | 0 | 0.55 s | - |
 | poison_fever | 2.0 s | player | 14 | 0 | 0.60 s | - |
-| life_seeded | 2.2 s | body | 6 | 0 | 2.20 s | - |
+| life_seeded | 2.2 s | body | 12 | 0 | 2.20 s | - |
 | life_regrowth | 2.0 s | player | 44 | 9 | 2.00 s | - |
 | dark_cursed | 2.2 s | body | 50 | 43 | 0.27 s | - |
 | dark_hunger | 2.2 s | player | 25 | 3 | 0.15 s | - |
@@ -339,8 +339,8 @@
 | e3_stone_rise@b | 1.6 s | body | 40 | 0 | 0.03 s | - |
 | e3_broken_ground | 1.5 s | body | 31 | 1 | 0.15 s | - |
 | e3_broken_ground@b | 1.5 s | body | 0 | 0 | 1.50 s | - |
-| e3_briar_patch | 1.5 s | body | 13 | 0 | 1.50 s | - |
-| e3_briar_patch@b | 1.2 s | body | 4 | 1 | 1.20 s | - |
+| e3_briar_patch | 1.5 s | body | 27 | 0 | 1.50 s | - |
+| e3_briar_patch@b | 1.4 s | body | 4 | 1 | 1.38 s | - |
 | e3_strike_earth | 1.4 s | body | 42 | 0 | 1.40 s | - |
 | e3_strike_earth@b | 1.4 s | body | 0 | 0 | 1.40 s | - |
 | e3_strike_earth@b | 1.4 s | body | 0 | 0 | - | lifts the body 0.55 m |

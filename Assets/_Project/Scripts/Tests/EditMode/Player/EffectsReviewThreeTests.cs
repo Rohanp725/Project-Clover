@@ -56,8 +56,9 @@ namespace Clover.Tests
             Assert.IsFalse(marked.Any(name => name.Contains("shaft_surge")), "no slatted shaft");
             // Glaze's shoulder crystals and Bedrock's plates are on the bones (GlazeIce, StoneArmour), never in the look.
             Assert.IsFalse(PieceNames(set, "earth_bedrock").Any(name => name.Contains("vfxe4_rock")));
-            // Seeded is the circling seeds alone.
-            Assert.IsTrue(PieceNames(set, "life_seeded").All(name => name.Contains("vfxe2_spore")), "Seeded: only the circling seeds");
+            // Seeded is the circling seeds alone, each with its spring-green sprout tip (round 4).
+            Assert.IsTrue(PieceNames(set, "life_seeded").All(name => name.Contains("vfxe2_spore") || name.Contains("vfxe2_sprout")), "Seeded: only the circling seeds and their tips");
+            Assert.IsTrue(PieceNames(set, "life_seeded").Any(name => name.Contains("vfxe2_sprout")), "Seeded: the sprout tips");
         }
 
         [Test]

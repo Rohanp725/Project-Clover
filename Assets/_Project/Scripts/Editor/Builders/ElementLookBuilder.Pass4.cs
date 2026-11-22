@@ -138,7 +138,7 @@ namespace Clover.EditorTools
                 if (!E4Moments.Contains(Text(look, "slug"))) continue;
                 var copy = new Dictionary<string, object>(look);
                 copy.Remove("revision_of");
-                looks.Add(copy);
+                looks.Add(Round4Placement(copy, Text(copy, "slug")));
             }
             // The infused strikes redrawn from the owner's swing comments (ElementLookBuilder.Strikes), under their own keys.
             looks.AddRange(StrikeLooks());
