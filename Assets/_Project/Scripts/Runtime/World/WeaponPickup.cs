@@ -33,7 +33,7 @@ namespace Clover.World
         {
             if (Taken || who.Combat == null) return;
             Taken = true;
-            who.Combat.Equip(Weapons.ByName(WeaponName));
+            who.Combat.Arm(WeaponName);
             // Once drawn, a later run may begin with it.
             Progress.Unlock(Progress.WeaponKey(WeaponName));
             if (shown != null) shown.SetActive(false);

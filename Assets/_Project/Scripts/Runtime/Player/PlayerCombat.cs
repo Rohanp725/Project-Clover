@@ -302,7 +302,7 @@ namespace Clover.Player
             spikes = GetComponent<WeaponSpikes>();
             arrows = GetComponent<PlantedArrows>();
             // A weapon carried over from the last scene of the run takes the place of the scene's own.
-            Equip(Weapons.ByName(string.IsNullOrEmpty(RunState.Weapon) ? StartingWeapon : RunState.Weapon));
+            Arm(string.IsNullOrEmpty(RunState.Weapon) ? StartingWeapon : RunState.Weapon);
             // Every scene starts at half: mana now pays only for the big moves, and the player never starts a fight empty.
             Mana.Empty();
             Mana.AtLeast(Mana.SettleLevel);
@@ -315,8 +315,52 @@ namespace Clover.Player
             moveAction = player.FindAction("Move");
             spells = GetComponent<PlayerSpells>();
             // The Armament wears whatever element is held, which is known only once the element has woken too.
-            if (Weapon != null && Weapon.ElementColoured && element != null && element.Info != null) Equip(Weapons.Armament(element.Info.Name));
+            if (Weapon != null && Weapon.ElementColoured && element != null && element.Info != null) Arm(Weapons.ArmamentName, element.Info.Name);
         }
+
+        /// <summary>
+        /// Takes a weapon in hand by name, built by the armoury (way_build_plan.md 2.0): in the aspect the Way's choices
+        /// give its kind, with the learned marks of its Way that are in force once it is carried. Every place that hands
+        /// the player a weapon comes here; with no mark of the Way learned it is the plain weapon, as before.
+        /// </summary>
+        public void Arm(string weaponName) => Arm(weaponName, null);
+
+        /// <summary>As <see cref="Arm(string)"/>, with the element an Armament is made in (null: the run's).</summary>
+        public void Arm(string weaponName, string armamentElement) => Equip(Resolved(weaponName, armamentElement));
+
+        /// <summary>The weapon <see cref="Arm(string, string)"/> would put in hand, without taking it.</summary>
+        public Weapon Resolved(string weaponName, string armamentElement)
+        {
+            if (spells == null) spells = GetComponent<PlayerSpells>();
+            if (element == null) element = GetComponent<PlayerElement>();
+            PlayerBuild.Fill(armedWith, element, spells, this);
+            return Way.Armoury.Arm(weaponName, armedWith, RunState.Unlocked, armamentElement);
+        }
+
+        /// <summary>
+        /// Builds the weapon in hand again from the armoury, after a mark of the Way is bought or its aspect or keystone is
+        /// chosen. Never mid-swing: while an attack is on it waits for the attack to end.
+        /// </summary>
+        public void Rearm()
+        {
+            if (Weapon == null) return;
+            if (IsAttacking)
+            {
+                rearmPending = true;
+                return;
+            }
+            rearmPending = false;
+            Rearms++;
+            Arm(Weapon.Name, Weapon.ElementColoured && element != null && element.Info != null ? element.Info.Name : null);
+        }
+
+        /// <summary>True while a re-arm waits for the swing in progress to end.</summary>
+        public bool RearmPending => rearmPending;
+        /// <summary>Re-arms done, for probes.</summary>
+        public int Rearms { get; private set; }
+        private bool rearmPending;
+        // What the armoury is asked with: the player's attunements and the Way's choices, the weapon swapped in.
+        private readonly Build.Loadout armedWith = new Build.Loadout();
 
         /// <summary>Takes a weapon in hand, dropping whatever attack was in progress.</summary>
         public void Equip(Weapon weapon)
@@ -459,6 +503,7 @@ namespace Clover.Player
         {
             Step = Vector3.zero;
             PassingThrough = false;
+            if (rearmPending && !IsAttacking) Rearm();
             if (HeavyCriticalLeft > 0f) HeavyCriticalLeft -= deltaTime;
             if (lightAction == null || heavyAction == null) return;
             // The element's strike follows the carrier's blow once the swing is out (or was cut short).

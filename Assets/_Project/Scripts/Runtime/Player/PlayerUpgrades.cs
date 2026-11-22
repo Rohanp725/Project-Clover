@@ -555,11 +555,14 @@ namespace Clover.Player
                 if (!Progress.Data.Wallet.Pay(upgrade)) return false;
             }
             else RunState.Points -= upgrade.Cost;
-            // Learned; a first aspect or keystone switches on in the live loadout at once.
-            MarkRules.Learn(upgrade, RunState.Unlocked, ReadLoadout());
+            // Learned; a first aspect or keystone switches on in the live loadout at once, and is kept for the run.
+            var loadout = ReadLoadout();
+            if (MarkRules.Learn(upgrade, RunState.Unlocked, loadout)) RunState.WayChoices.CopyWayFrom(loadout);
             Bought++;
             // A spell learned goes into an empty slot, if there is one, when the slots next look (PlayerSpells).
             Refresh(true);
+            // A mark of the Way changes the weapon itself: it is built again from the armoury once the swing is over.
+            if (upgrade.IsWay && combat != null) combat.Rearm();
             return true;
         }
 
@@ -572,6 +575,7 @@ namespace Clover.Player
             if (gift == null || RunState.Unlocked.Contains(gift.Id)) return false;
             RunState.Unlocked.Add(gift.Id);
             Refresh(true);
+            if (gift.IsWay && combat != null) combat.Rearm();
             // A gift that is a spell is put in a slot at once: the first empty one, else the North slot.
             if (gift.IsSpell && spells != null) spells.Place(gift.Id);
             return true;

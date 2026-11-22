@@ -127,6 +127,20 @@ namespace Clover.Player.Build
             CopyTexts(other.Keystones, Keystones);
         }
 
+        /// <summary>
+        /// Copies only the Way's choices (each weapon kind's aspect, each bough's keystone, the Fists' technique) from
+        /// another loadout. Allocates nothing when they already match, so the player's build can take them on every read.
+        /// </summary>
+        public void CopyWayFrom(Loadout other)
+        {
+            if (other == null || ReferenceEquals(other, this)) return;
+            Technique = other.Technique ?? "";
+            Aspects ??= new List<IdText>();
+            Keystones ??= new List<IdText>();
+            if (!SameTexts(other.Aspects, Aspects)) CopyTexts(other.Aspects, Aspects);
+            if (!SameTexts(other.Keystones, Keystones)) CopyTexts(other.Keystones, Keystones);
+        }
+
         /// <summary>A copy that shares nothing with this one: for a saved Hand.</summary>
         public Loadout Clone()
         {
@@ -163,6 +177,18 @@ namespace Clover.Player.Build
             if (from == null) return;
             foreach (var pair in from)
                 if (pair != null) into.Add(new IdText(pair.Id, pair.Text));
+        }
+
+        private static bool SameTexts(List<IdText> a, List<IdText> b)
+        {
+            int countA = a != null ? a.Count : 0, countB = b != null ? b.Count : 0;
+            if (countA != countB) return false;
+            for (int i = 0; i < countA; i++)
+            {
+                if (a[i] == null || b[i] == null) return false;
+                if (a[i].Id != b[i].Id || a[i].Text != b[i].Text) return false;
+            }
+            return true;
         }
 
         private static void CopyChoices(List<IdChoice> from, List<IdChoice> into)

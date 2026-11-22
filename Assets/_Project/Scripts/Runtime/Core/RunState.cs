@@ -38,6 +38,11 @@ namespace Clover.Core
         public static readonly string[] SpellSlots = { "", "", "", "" }; // moves in Phase 5: SaveData.Current.Slots
         /// <summary>Which shape each spell wears (by its branch's Learn id), chosen at a rest fire.</summary>
         public static readonly List<Clover.Player.Build.IdChoice> Shapes = new List<Clover.Player.Build.IdChoice>(); // moves in Phase 5: SaveData.Current.Shapes
+        /// <summary>
+        /// The Way's choices: each weapon kind's active aspect, each bough's set keystone and the Body's bearing, the
+        /// Fists' technique. Only those fields of this loadout are used; the player's build reads them on every read.
+        /// </summary>
+        public static readonly Clover.Player.Build.Loadout WayChoices = new Clover.Player.Build.Loadout(); // moves in Phase 5: SaveData.Current.Aspects, Keystones, Technique
         /// <summary>Counts some marks keep for the whole run (folds of a blade), by the mark's id.</summary>
         public static readonly Dictionary<string, int> Tallies = new Dictionary<string, int>(); // moves in Phase 5: SaveData.Tallies
         /// <summary>How many runs have ended in this play session.</summary>
@@ -83,6 +88,9 @@ namespace Clover.Core
             ElementsConsumed.Clear();
             for (int i = 0; i < SpellSlots.Length; i++) SpellSlots[i] = "";
             Shapes.Clear();
+            WayChoices.Aspects.Clear();
+            WayChoices.Keystones.Clear();
+            WayChoices.Technique = "";
             Tallies.Clear();
         }
     }
