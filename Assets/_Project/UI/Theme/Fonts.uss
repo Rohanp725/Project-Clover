@@ -1,0 +1,18 @@
+/*
+ * The menus' two faces (docs/design/ui_rest_fire_plan.md 4.1, the owner's Q3): Atkinson Hyperlegible for every word a
+ * player reads, Spectral SemiBold for titles and headers. Both are TextCore font assets made by the editor step's
+ * builder (Editor/Builders/UiToolkitBuilder.cs, 5.0) under these stable names, from the .ttf files brought in through
+ * staging and the asset intake. Bold reading text is Atkinson Hyperlegible Bold, set as the Regular asset's bold weight
+ * in its font weight table, so -unity-font-style: bold picks it. Until the builder has run, these two lines point at
+ * nothing and Unity draws its default face.
+ */
+
+.screen {
+    -unity-font-definition: url("/Assets/_Project/Generated/UI/Fonts/AtkinsonHyperlegible_SDF.asset");
+}
+
+.t-title,
+.t-header,
+.serif {
+    -unity-font-definition: url("/Assets/_Project/Generated/UI/Fonts/SpectralSemiBold_SDF.asset");
+}

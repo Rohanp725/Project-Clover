@@ -6,7 +6,7 @@ namespace Clover.UI.Toolkit
     /// <summary>
     /// An icon of <see cref="IconShapes"/> drawn with Painter2D in the element's own box, in its USS <c>color</c>; cut
     /// lines are drawn in <c>--icon-cut</c> (the ink). Sharp at every scale, as no texture is involved. Added in code onto
-    /// the empty <c>.icon</c> elements of a screen's tree.
+    /// the empty <c>.icon</c> elements of a screen's tree, whose colour it inherits.
     /// </summary>
     public class PaintedIcon : VisualElement
     {
@@ -17,7 +17,7 @@ namespace Clover.UI.Toolkit
 
         public PaintedIcon()
         {
-            AddToClassList("icon");
+            AddToClassList("painted");
             pickingMode = PickingMode.Ignore;
             generateVisualContent += Paint;
             RegisterCallback<CustomStyleResolvedEvent>(OnStyle);

@@ -1,0 +1,397 @@
+/*
+ * The menus' kit (docs/design/ui_rest_fire_plan.md 4 and 5.0): the parts every screen is built from. Colours and sizes
+ * come only from Tokens.uss. The default theme's own focus looks are overridden: focus is the .is-focus class the screen
+ * puts on the focused place, drawn as its Focus fill and the Gold frame child, so set and focused never look alike.
+ */
+
+/* ---- The screen and its board. */
+
+.screen {
+    flex-grow: 1;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-dim);
+    color: var(--color-text);
+    font-size: var(--size-body);
+}
+
+.board {
+    position: relative;
+    width: 1920px;
+    height: 1080px;
+    flex-shrink: 0;
+    background-color: var(--color-panel);
+}
+
+.hidden {
+    display: none;
+}
+
+/* ---- Type (4.1). Labels wrap unless told not to. */
+
+Label {
+    padding: 0;
+    margin: 0;
+    white-space: normal;
+}
+
+.t-title {
+    font-size: var(--size-title);
+    color: var(--color-gold);
+    -unity-font-style: bold;
+}
+
+.t-header {
+    font-size: var(--size-header);
+    color: var(--color-text);
+    -unity-font-style: bold;
+}
+
+.t-name {
+    font-size: var(--size-name);
+    color: var(--color-text);
+    -unity-font-style: bold;
+}
+
+.t-name-small {
+    font-size: var(--size-name-small);
+    color: var(--color-text);
+    -unity-font-style: bold;
+}
+
+.t-body {
+    font-size: var(--size-body);
+    color: var(--color-text);
+}
+
+.t-row {
+    font-size: var(--size-row);
+    color: var(--color-text);
+}
+
+.t-meta {
+    font-size: var(--size-meta);
+    color: var(--color-text-2);
+}
+
+.t-small {
+    font-size: var(--size-small);
+    color: var(--color-text-2);
+}
+
+.t-label {
+    font-size: var(--size-small);
+    color: var(--color-text-2);
+    -unity-font-style: bold;
+    letter-spacing: 0.5px;
+}
+
+.t-bold {
+    -unity-font-style: bold;
+}
+
+.t-nowrap {
+    white-space: nowrap;
+}
+
+.t-plain {
+    color: var(--color-text);
+}
+
+.t-off {
+    color: var(--color-text-off);
+}
+
+.t-loss {
+    color: var(--color-loss);
+}
+
+.t-memories {
+    color: var(--color-memories);
+}
+
+.t-shards {
+    color: var(--color-shards);
+}
+
+.t-gold {
+    color: var(--color-gold);
+}
+
+/* ---- Cards and places. */
+
+.card {
+    background-color: var(--color-raised);
+    border-width: 2px;
+    border-color: var(--color-rim);
+    border-radius: 8px;
+}
+
+.place {
+    position: relative;
+    transition-property: background-color;
+    transition-duration: 0.12s;
+}
+
+.place.is-focus {
+    background-color: var(--color-focus-fill);
+}
+
+.place.is-focus .t-off {
+    color: var(--color-text-off-focus);
+}
+
+.focus-frame {
+    position: absolute;
+    left: -8px;
+    top: -8px;
+    right: -8px;
+    bottom: -8px;
+    border-width: var(--focus-frame);
+    border-color: var(--color-gold);
+    border-radius: 12px;
+    display: none;
+}
+
+.place.is-focus > .focus-frame {
+    display: flex;
+}
+
+/* A place that is not focused but being chosen for (the slot a list fills) pulses Gold. */
+.place.is-choosing > .focus-frame {
+    display: flex;
+    opacity: 0.6;
+}
+
+.rule {
+    height: 2px;
+    flex-shrink: 0;
+    background-color: var(--color-rule);
+    margin-top: 18px;
+    margin-bottom: 18px;
+}
+
+.row {
+    flex-direction: row;
+    align-items: center;
+}
+
+.column {
+    flex-direction: column;
+}
+
+/* ---- The set mark of a pair (3.5.2): a lamp and a tag on the top border. Gold is kept for focus. */
+
+.lamp {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    border-radius: 7px;
+    border-width: 2px;
+    border-color: var(--color-lamp-off);
+}
+
+.lamp.lit {
+    background-color: var(--color-text);
+    border-color: var(--color-text);
+}
+
+.set-tag {
+    position: absolute;
+    top: -15px;
+    right: 16px;
+    height: 28px;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: var(--size-small);
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    color: var(--color-text);
+    background-color: var(--color-tag);
+    border-width: 1px;
+    border-color: var(--color-tag-rim);
+    border-radius: 6px;
+    white-space: nowrap;
+}
+
+/* ---- Painted icons. Their colour is their USS color. */
+
+.icon {
+    flex-shrink: 0;
+    color: var(--color-text);
+}
+
+/* The painted shape inside an .icon box fills it and takes the box's colour. */
+.painted {
+    flex-grow: 1;
+    --icon-cut: var(--color-cut);
+}
+
+.icon-64 {
+    width: 64px;
+    height: 64px;
+}
+
+.icon-56 {
+    width: 56px;
+    height: 56px;
+}
+
+.icon-48 {
+    width: 48px;
+    height: 48px;
+}
+
+.icon-32 {
+    width: 32px;
+    height: 32px;
+}
+
+.icon-list {
+    width: var(--size-icon-list);
+    height: var(--size-icon-list);
+}
+
+.icon-inline {
+    width: var(--size-icon-inline);
+    height: var(--size-icon-inline);
+}
+
+.icon-role {
+    width: var(--size-icon-role);
+    height: var(--size-icon-role);
+    margin-right: 6px;
+}
+
+.icon-dim {
+    color: var(--color-text-2);
+}
+
+.icon-off {
+    color: var(--color-text-off);
+}
+
+/* ---- Button glyphs: a coloured face with a dark letter, after Kenney's Input Prompts, until the pack's pictures replace them (5.2). */
+
+.glyph {
+    width: var(--size-glyph);
+    height: var(--size-glyph);
+    flex-shrink: 0;
+    border-radius: var(--glyph-radius);
+    font-size: var(--size-glyph-text);
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    color: var(--color-glyph-ink);
+    background-color: var(--color-glyph-plain);
+    white-space: nowrap;
+}
+
+.glyph-small {
+    width: var(--size-glyph-small);
+    height: var(--size-glyph-small);
+}
+
+.glyph-a {
+    background-color: var(--color-glyph-a);
+}
+
+.glyph-b {
+    background-color: var(--color-glyph-b);
+}
+
+.glyph-x {
+    background-color: var(--color-glyph-x);
+}
+
+.glyph-y {
+    background-color: var(--color-glyph-y);
+}
+
+/* Shoulders, triggers and keys are rounded boxes as wide as their word. */
+.glyph-wide {
+    width: auto;
+    min-width: var(--size-glyph);
+    padding-left: 8px;
+    padding-right: 8px;
+    border-radius: 8px;
+}
+
+/* Space between a glyph and the words beside it; USS has no sibling selectors, so the code adds this class. */
+.gap-left {
+    margin-left: 8px;
+}
+
+/* The ring that fills round X while it is held to replace a kept Hand. */
+.hold-ring {
+    position: absolute;
+    left: -4px;
+    top: -4px;
+    right: -4px;
+    bottom: -4px;
+    border-radius: var(--glyph-ring-radius);
+    border-width: 3px;
+    border-color: var(--color-gold);
+    opacity: 0;
+}
+
+/* ---- The details pane (4.4). */
+
+.pane {
+    padding-top: 28px;
+    padding-bottom: 28px;
+    padding-left: 32px;
+    padding-right: 32px;
+    border-radius: 10px;
+}
+
+.pane-line {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-top: 6px;
+}
+
+.pane-line > Label {
+    flex-shrink: 1;
+}
+
+/* ---- Element colours: rims, icons, and text tints. */
+
+.el-fire { color: var(--el-fire); }
+.el-lightning { color: var(--el-lightning); }
+.el-wind { color: var(--el-wind); }
+.el-ice { color: var(--el-ice); }
+.el-water { color: var(--el-water); }
+.el-life { color: var(--el-life); }
+.el-earth { color: var(--el-earth); }
+.el-metal { color: var(--el-metal); }
+.el-light { color: var(--el-light); }
+.el-dark { color: var(--el-dark); }
+.el-poison { color: var(--el-poison); }
+.el-both { color: var(--el-both); }
+
+.text-fire { color: var(--el-fire-text); }
+.text-lightning { color: var(--el-lightning-text); }
+.text-wind { color: var(--el-wind-text); }
+.text-ice { color: var(--el-ice-text); }
+.text-water { color: var(--el-water-text); }
+.text-life { color: var(--el-life-text); }
+.text-earth { color: var(--el-earth-text); }
+.text-metal { color: var(--el-metal-text); }
+.text-light { color: var(--el-light-text); }
+.text-dark { color: var(--el-dark-text); }
+.text-poison { color: var(--el-poison-text); }
+.text-both { color: var(--el-both-text); }
+
+.rim-fire { border-color: var(--el-fire); }
+.rim-lightning { border-color: var(--el-lightning); }
+.rim-wind { border-color: var(--el-wind); }
+.rim-ice { border-color: var(--el-ice); }
+.rim-water { border-color: var(--el-water); }
+.rim-life { border-color: var(--el-life); }
+.rim-earth { border-color: var(--el-earth); }
+.rim-metal { border-color: var(--el-metal); }
+.rim-light { border-color: var(--el-light); }
+.rim-dark { border-color: var(--el-dark); }
+.rim-poison { border-color: var(--el-poison); }
+.rim-both { border-color: var(--el-both); }

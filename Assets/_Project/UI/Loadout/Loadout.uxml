@@ -1,0 +1,291 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <!--
+      The rest fire's Loadout, layout C (docs/design/ui_rest_fire_plan.md 3.5; the approved mockup is
+      docs/design/mockups/loadout_c.png). Every place that takes focus has class "place", focusable="true" and the name
+      LoadoutPlaces.Names gives it; nothing else is focusable. Parts inside a place are found by class, so the four slots,
+      the pairs and the Hands share their code. Lists, the pane's lines, glyphs and icons are filled in by LoadoutScreen.
+    -->
+    <ui:Style src="../Theme/Tokens.uss" />
+    <ui:Style src="../Theme/Base.uss" />
+    <ui:Style src="../Theme/Fonts.uss" />
+    <ui:Style src="Loadout.uss" />
+    <ui:VisualElement name="loadout" class="screen">
+        <ui:VisualElement name="board" class="board">
+            <ui:Label name="title" text="Loadout" class="t-title" />
+            <ui:VisualElement name="wallet" class="row">
+                <ui:VisualElement name="wallet-memories-icon" class="icon icon-inline t-memories" />
+                <ui:Label name="wallet-memories" text="12 Memories" class="t-meta t-memories t-nowrap gap-left" />
+                <ui:VisualElement name="wallet-shards-icon" class="icon icon-inline t-shards wallet-gap" />
+                <ui:Label name="wallet-shards" text="340 Shards" class="t-meta t-shards t-nowrap gap-left" />
+            </ui:VisualElement>
+
+            <!-- ===== The Steel half: the Way's choices round the weapon (columns 1 to 8, y 128 to 536). ===== -->
+            <ui:VisualElement name="steel-half" class="half">
+                <ui:VisualElement name="steel-row" class="row steel-row">
+                    <ui:VisualElement name="steel-left" class="column way-column">
+                        <ui:Label text="Aspect" class="t-label" />
+                        <ui:VisualElement name="aspect" focusable="true" class="place card aspect-card row">
+                            <ui:VisualElement class="icon icon-64 card-icon" />
+                            <ui:VisualElement class="column card-words">
+                                <ui:Label class="t-name card-name" />
+                                <ui:Label class="t-small card-line" />
+                            </ui:VisualElement>
+                            <ui:VisualElement class="focus-frame" picking-mode="Ignore" />
+                        </ui:VisualElement>
+                        <ui:Label text="Keystone" class="t-label way-label" />
+                        <ui:VisualElement name="keystone-1" focusable="true" class="place card pair-cell row">
+                            <ui:VisualElement class="lamp" />
+                            <ui:VisualElement class="icon icon-48 card-icon" />
+                            <ui:VisualElement class="column card-words">
+                                <ui:Label class="t-name-small card-name" />
+                                <ui:Label class="t-small card-line" />
+                            </ui:VisualElement>
+                            <ui:Label text="Set" class="set-tag" />
+                            <ui:VisualElement class="focus-frame" picking-mode="Ignore" />
+                        </ui:VisualElement>
+                        <ui:VisualElement name="keystone-2" focusable="true" class="place card pair-cell row pair-second">
+                            <ui:VisualElement class="lamp" />
+                            <ui:VisualElement class="icon icon-48 card-icon" />
+                            <ui:VisualElement class="column card-words">
+                                <ui:Label class="t-name-small card-name" />
+                                <ui:Label class="t-small card-line" />
+                            </ui:VisualElement>
+                            <ui:Label text="Set" class="set-tag" />
+                            <ui:VisualElement class="focus-frame" picking-mode="Ignore" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+
+                    <ui:VisualElement name="weapon" class="column weapon-column" picking-mode="Ignore">
+                        <ui:Label name="weapon-name" text="Katana" class="t-header weapon-name" />
+                        <ui:VisualElement name="weapon-picture" class="weapon-picture" picking-mode="Ignore" />
+                    </ui:VisualElement>
+
+                    <ui:VisualElement name="steel-right" class="column way-column">
+                        <ui:Label text="Weapon" class="t-label" />
+                        <ui:VisualElement name="temper" focusable="true" class="place card line-card row">
+                            <ui:Label class="t-name-small card-name t-nowrap" />
+                            <ui:VisualElement name="temper-pips" class="row pips" />
+                            <ui:VisualElement class="focus-frame" picking-mode="Ignore" />
+                        </ui:VisualElement>
+                        <ui:VisualElement name="technique" focusable="true" class="place card line-card row technique">
+                            <ui:Label class="t-name-small card-name t-nowrap" />
+                            <ui:VisualElement name="technique-seal" class="row">
+                                <ui:VisualElement name="technique-lock" class="icon icon-role icon-off" />
+                                <ui:Label text="Sealed" class="t-meta t-off" />
+                            </ui:VisualElement>
+                            <ui:VisualElement class="focus-frame" picking-mode="Ignore" />
+                        </ui:VisualElement>
+                        <ui:Label text="Bearing" class="t-label way-label" />
+                        <ui:VisualElement name="bearing-1" focusable="true" class="place card pair-cell row">
+                            <ui:VisualElement class="lamp" />
+                            <ui:VisualElement class="icon icon-48 card-icon" />
+                            <ui:VisualElement class="column card-words">
+                                <ui:Label class="t-name-small card-name" />
+                                <ui:Label class="t-small card-line" />
+                            </ui:VisualElement>
+                            <ui:Label text="Set" class="set-tag" />
+                            <ui:VisualElement class="focus-frame" picking-mode="Ignore" />
+                        </ui:VisualElement>
+                        <ui:VisualElement name="bearing-2" focusable="true" class="place card pair-cell row pair-second">
+                            <ui:VisualElement class="lamp" />
+                            <ui:VisualElement class="icon icon-48 card-icon" />
+                            <ui:VisualElement class="column card-words">
+                                <ui:Label class="t-name-small card-name" />
+                                <ui:Label class="t-small card-line" />
+                            </ui:VisualElement>
+                            <ui:Label text="Set" class="set-tag" />
+                            <ui:VisualElement class="focus-frame" picking-mode="Ignore" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+
+                <!-- The tie between steel and element: an ink line from the weapon, the infused strikes, a line on to North. -->
+                <ui:VisualElement class="ink-line ink-line-top" picking-mode="Ignore" />
+                <ui:VisualElement name="infused" focusable="true" class="place card infused row">
+                    <ui:Label text="Infused strikes" class="t-label infused-label" />
+                    <ui:VisualElement name="infused-line" class="row" />
+                    <ui:VisualElement class="focus-frame" picking-mode="Ignore" />
+                </ui:VisualElement>
+                <ui:VisualElement class="ink-line ink-line-bottom" picking-mode="Ignore" />
+            </ui:VisualElement>
+
+            <!-- At 125% and 150% text, the half without focus folds to one line (3.5.8). -->
+            <ui:VisualElement name="steel-folded" class="card folded row hidden">
+                <ui:VisualElement name="steel-folded-icon" class="icon icon-inline" />
+                <ui:Label name="steel-summary" class="t-row t-nowrap gap-left" />
+            </ui:VisualElement>
+
+            <!-- ===== The Element half: the diamond, the surge, the elements and roles at its corners, the Hands under it. ===== -->
+            <ui:VisualElement name="element-half" class="half">
+                <ui:VisualElement class="row element-top">
+                    <ui:VisualElement name="element-header" focusable="true" class="place element-header column">
+                        <ui:VisualElement class="row element-words">
+                            <ui:Label text="Element" class="t-label" />
+                            <ui:Label name="element-first" class="t-header t-nowrap element-name" />
+                            <ui:Label name="element-plus" text="+" class="t-header t-nowrap element-name" />
+                            <ui:Label name="element-second" class="t-header t-nowrap element-name" />
+                        </ui:VisualElement>
+                        <ui:Label name="element-carried" text="Carried from the hub" class="t-small" />
+                        <ui:Label name="element-devotion" class="t-small hidden" />
+                        <ui:VisualElement class="focus-frame" picking-mode="Ignore" />
+                    </ui:VisualElement>
+                    <ui:VisualElement name="slot-north" focusable="true" class="place card slot row">
+                        <ui:VisualElement class="icon icon-56 slot-icon" />
+                        <ui:VisualElement class="column slot-words">
+                            <ui:Label class="t-name-small t-nowrap slot-name" />
+                            <ui:VisualElement class="row slot-role-line">
+                                <ui:VisualElement class="icon icon-role icon-dim slot-role-icon" />
+                                <ui:Label class="t-small t-nowrap slot-role" />
+                            </ui:VisualElement>
+                            <ui:Label class="t-small t-nowrap slot-shape" />
+                        </ui:VisualElement>
+                        <ui:Label class="glyph glyph-y slot-glyph" text="Y" />
+                        <ui:VisualElement class="focus-frame" picking-mode="Ignore" />
+                    </ui:VisualElement>
+                    <ui:VisualElement name="role-strip" focusable="true" class="place role-strip column">
+                        <ui:VisualElement class="row">
+                            <ui:Label text="Roles" class="t-label" />
+                            <ui:Label name="roles-missing" class="t-small t-loss t-nowrap gap-left" />
+                        </ui:VisualElement>
+                        <ui:VisualElement name="role-cells" class="row role-cells" />
+                        <ui:VisualElement class="focus-frame" picking-mode="Ignore" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+
+                <ui:VisualElement class="row element-middle">
+                    <ui:VisualElement name="slot-west" focusable="true" class="place card slot row">
+                        <ui:VisualElement class="icon icon-56 slot-icon" />
+                        <ui:VisualElement class="column slot-words">
+                            <ui:Label class="t-name-small t-nowrap slot-name" />
+                            <ui:VisualElement class="row slot-role-line">
+                                <ui:VisualElement class="icon icon-role icon-dim slot-role-icon" />
+                                <ui:Label class="t-small t-nowrap slot-role" />
+                            </ui:VisualElement>
+                            <ui:Label class="t-small t-nowrap slot-shape" />
+                        </ui:VisualElement>
+                        <ui:Label class="glyph glyph-x slot-glyph" text="X" />
+                        <ui:VisualElement class="focus-frame" picking-mode="Ignore" />
+                    </ui:VisualElement>
+                    <ui:VisualElement class="surge-room">
+                        <ui:VisualElement name="surge" focusable="true" class="place surge">
+                            <ui:Label name="surge-glyph" class="glyph glyph-small glyph-wide surge-glyph" text="LT" />
+                            <ui:VisualElement name="surge-ring" class="surge-ring">
+                                <ui:VisualElement class="icon icon-48 slot-icon" />
+                            </ui:VisualElement>
+                            <ui:Label class="t-small t-plain t-bold t-nowrap slot-name surge-name" />
+                            <ui:VisualElement class="focus-frame" picking-mode="Ignore" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="slot-east" focusable="true" class="place card slot row">
+                        <ui:VisualElement class="icon icon-56 slot-icon" />
+                        <ui:VisualElement class="column slot-words">
+                            <ui:Label class="t-name-small t-nowrap slot-name" />
+                            <ui:VisualElement class="row slot-role-line">
+                                <ui:VisualElement class="icon icon-role icon-dim slot-role-icon" />
+                                <ui:Label class="t-small t-nowrap slot-role" />
+                            </ui:VisualElement>
+                            <ui:Label class="t-small t-nowrap slot-shape" />
+                        </ui:VisualElement>
+                        <ui:Label class="glyph glyph-b slot-glyph" text="B" />
+                        <ui:VisualElement class="focus-frame" picking-mode="Ignore" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+
+                <ui:VisualElement class="row element-bottom">
+                    <ui:VisualElement name="slot-south" focusable="true" class="place card slot row">
+                        <ui:VisualElement class="icon icon-56 slot-icon" />
+                        <ui:VisualElement class="column slot-words">
+                            <ui:Label class="t-name-small t-nowrap slot-name" />
+                            <ui:VisualElement class="row slot-role-line">
+                                <ui:VisualElement class="icon icon-role icon-dim slot-role-icon" />
+                                <ui:Label class="t-small t-nowrap slot-role" />
+                            </ui:VisualElement>
+                            <ui:Label class="t-small t-nowrap slot-shape" />
+                        </ui:VisualElement>
+                        <ui:Label class="glyph glyph-a slot-glyph" text="A" />
+                        <ui:VisualElement class="focus-frame" picking-mode="Ignore" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+
+                <ui:Label name="hands-label" text="Hands" class="t-label" />
+                <ui:VisualElement name="hands" class="row">
+                    <ui:VisualElement name="hand-starter" focusable="true" class="place card hand row">
+                        <ui:Label text="Starter" class="t-small t-plain t-bold t-nowrap hand-name" />
+                        <ui:VisualElement class="row hand-minis" />
+                        <ui:Label text="Empty" class="t-small t-off hand-empty hidden" />
+                        <ui:Label text="Worn" class="set-tag hand-tag hidden" />
+                        <ui:VisualElement class="focus-frame" picking-mode="Ignore" />
+                    </ui:VisualElement>
+                    <ui:VisualElement name="hand-1" focusable="true" class="place card hand row">
+                        <ui:Label text="Hand 1" class="t-small t-plain t-bold t-nowrap hand-name" />
+                        <ui:VisualElement class="row hand-minis" />
+                        <ui:Label text="Empty" class="t-small t-off hand-empty hidden" />
+                        <ui:Label text="Worn" class="set-tag hand-tag hidden" />
+                        <ui:Label class="glyph glyph-x glyph-small hand-keep hidden" text="X">
+                            <ui:VisualElement class="hold-ring" picking-mode="Ignore" />
+                        </ui:Label>
+                        <ui:VisualElement class="focus-frame" picking-mode="Ignore" />
+                    </ui:VisualElement>
+                    <ui:VisualElement name="hand-2" focusable="true" class="place card hand row">
+                        <ui:Label text="Hand 2" class="t-small t-plain t-bold t-nowrap hand-name" />
+                        <ui:VisualElement class="row hand-minis" />
+                        <ui:Label text="Empty" class="t-small t-off hand-empty hidden" />
+                        <ui:Label text="Worn" class="set-tag hand-tag hidden" />
+                        <ui:Label class="glyph glyph-x glyph-small hand-keep hidden" text="X">
+                            <ui:VisualElement class="hold-ring" picking-mode="Ignore" />
+                        </ui:Label>
+                        <ui:VisualElement class="focus-frame" picking-mode="Ignore" />
+                    </ui:VisualElement>
+                    <ui:VisualElement name="hand-3" focusable="true" class="place card hand row">
+                        <ui:Label text="Hand 3" class="t-small t-plain t-bold t-nowrap hand-name" />
+                        <ui:VisualElement class="row hand-minis" />
+                        <ui:Label text="Empty" class="t-small t-off hand-empty hidden" />
+                        <ui:Label text="Worn" class="set-tag hand-tag hidden" />
+                        <ui:Label class="glyph glyph-x glyph-small hand-keep hidden" text="X">
+                            <ui:VisualElement class="hold-ring" picking-mode="Ignore" />
+                        </ui:Label>
+                        <ui:VisualElement class="focus-frame" picking-mode="Ignore" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:VisualElement>
+
+            <ui:VisualElement name="element-folded" class="card folded row hidden">
+                <ui:Label name="element-summary" class="t-row t-nowrap" />
+                <ui:VisualElement name="element-summary-icons" class="row gap-left" />
+                <ui:Label name="element-summary-roles" class="t-row t-nowrap gap-left" />
+            </ui:VisualElement>
+
+            <!-- A spell list opens over the Steel half, so the slot it fills stays in view (3.5.5). -->
+            <ui:VisualElement name="spell-list" class="card overlay spell-list column hidden">
+                <ui:VisualElement name="list-title" class="row list-title" />
+                <ui:VisualElement name="list-columns" class="row list-columns" />
+            </ui:VisualElement>
+
+            <!-- The aspect cards rise over the Element half, so the weapon and the keystones stay in view (3.5.5). -->
+            <ui:VisualElement name="aspect-cards" class="card overlay aspect-cards row hidden" />
+
+            <!-- ===== The pane: always on, describing the focused thing (4.4). ===== -->
+            <ui:VisualElement name="pane" class="card pane" picking-mode="Position">
+                <ui:ScrollView name="pane-scroll" mode="Vertical" horizontal-scroller-visibility="Hidden" vertical-scroller-visibility="Hidden" class="pane-scroll">
+                    <ui:VisualElement class="row pane-head">
+                        <ui:VisualElement name="pane-icon" class="icon icon-64 pane-icon" />
+                        <ui:VisualElement class="column pane-head-words">
+                            <ui:Label name="pane-title" class="t-name" />
+                            <ui:Label name="pane-kind" class="t-meta" />
+                            <ui:Label name="pane-price" class="t-meta t-memories" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="pane-lines" class="column" />
+                </ui:ScrollView>
+                <ui:VisualElement name="pane-more" class="row pane-more hidden" picking-mode="Ignore">
+                    <ui:Label text="More below" class="t-small" />
+                    <ui:VisualElement name="pane-more-glyph" class="row gap-left" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+
+            <!-- The footer: Back on the left; the screen-wide presses on the right (4.5). -->
+            <ui:VisualElement name="footer-left" class="row footer footer-left" />
+            <ui:VisualElement name="footer-right" class="row footer footer-right" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
