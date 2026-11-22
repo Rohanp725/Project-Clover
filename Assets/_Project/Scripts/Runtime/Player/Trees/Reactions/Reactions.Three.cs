@@ -8,6 +8,8 @@ namespace Clover.Player.Trees
     public static partial class Reactions
     {
         public const string Cracked = "thermalshock.cracked";
+        /// <summary>Seized's live film by name (UpgradeEffect.Ground): what Grounded's discharge runs through.</summary>
+        public const string LiveWater = "seized.livewater";
         public const string WindRooted = "windthrow.rooted";
         public const string Bulge = "frostheave.bulge";
         public const string Rusting = "rust.rusting";
@@ -38,14 +40,16 @@ namespace Clover.Player.Trees
             // live film 2.5 m round its feet for 3 s that gives one Static every half second to what stands in it. Its
             // own Static is not spent.
             // A god is held by GodHolds (the man 0.3 s, a godly form 0.12 s, neither again while its guard lasts).
-            // The film spares the seized one it ran from (SparesTarget).
+            // The film spares the seized one it ran from (SparesTarget), and is live water by name (Grounded runs its discharge
+            // through it).
             to.Add(Reaction(AfflictionKind.Static, AfflictionKind.Soaked,
                 "Soaked and two Static or more: the current locks its muscles and holds it 1 s, and the water runs off it into a live film that charges all the others who stand in it for 3 s.",
                 new ReactionDef { DepthOf = AfflictionKind.Static, Depth = 2 },
                 // Unseen: drawn by Seized's own calm crackle, with no ring at the hold and no bolt from the sky at each of the
                 // film's bites (the owner, 2026-11-20: "remove the circles ... make it less flickery").
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hold, Seconds = 1f, Unseen = true },
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Radius = 2.5f, Seconds = 3f, Interval = 0.5f, Affliction = AfflictionKind.Static, Stacks = 1, Unseen = true, SparesTarget = true }));
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Radius = 2.5f, Seconds = 3f, Interval = 0.5f, Affliction = AfflictionKind.Static, Stacks = 1, Unseen = true, SparesTarget = true,
+                    Ground = LiveWater }));
 
             // Wind and Life (25). Rooted 2 s (it can turn and swing). The next heavy blow while rooted tears it out:
             // thrown 6 m (twice Thunder Gust's 3) away from the player, 14 damage, 35 stagger, and a torn pit 1.5 m

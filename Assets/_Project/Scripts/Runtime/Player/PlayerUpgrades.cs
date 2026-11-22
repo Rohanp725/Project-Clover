@@ -1966,7 +1966,7 @@ namespace Clover.Player
                         // A second affliction laid with each bite (the hollow trunk Seeding and Cursing what touches it).
                         AlsoLays = effect.BitesLay,
                         // Ground that keeps acting on whoever stands in it (the ledger's ground-states).
-                        Acts = effect.ActsAsGround ? effect : null, Pull = effect.Pull, LaidFor = pending.Target, Source = effect,
+                        Acts = effect.ActsAsGround ? effect : null, Pull = effect.Pull, LaidFor = pending.Target, Source = effect, Name = effect.Ground,
                         // Ground that goes with its enemy (Heavy Silver), and a stone that cracks once when stood at (Fire-Cracked).
                         Follow = effect.Follows && target != null, Target = effect.Follows ? target : null, CrackReach = effect.CracksAt,
                         // A lane of foam carries what stands in it away from the player (the ledger's lane-shove).
@@ -2677,8 +2677,18 @@ namespace Clover.Player
                     float damage = ((carrier.Afflictions.SetOff(kind) + carriedDamage) * reactionScale + eDamage * depth) * Stats.Multiplier(PlayerStat.BurstDamage) * ripeShare
                         * castBoons.Multiplier(pending.CastTag, PlayerStat.BurstDamage, Time.time);
                     if (ripeSeed) RipeBurstAt(subject, centre, depth);
-                    combat.StrikeArea(centre, Or(effect.Radius, 3f) * Stats.Multiplier(PlayerStat.BurstReach), Blow(look, kind, damage, eStagger * depth * Stats.Multiplier(PlayerStat.BurstStagger), 0),
-                        null, 0f, effect.OnlyCarrying);
+                    var discharge = Blow(look, kind, damage, eStagger * depth * Stats.Multiplier(PlayerStat.BurstStagger), 0);
+                    // Through every patch of a named ground in full (Grounded: all standing in live water), or round its enemy.
+                    int through = string.IsNullOrEmpty(effect.ThroughGround) ? 0 : Hazards.AllNamed(effect.ThroughGround, groundBurstAt, groundBurstRadius);
+                    if (!string.IsNullOrEmpty(effect.ThroughGround))
+                    {
+                        groundStruck.Clear();
+                        for (int i = 0; i < through; i++) combat.StrikeArea(groundBurstAt[i], groundBurstRadius[i], discharge, groundStruck, 0f, effect.OnlyCarrying);
+                        if (through == 0) combat.StrikeArea(centre, 0.5f, discharge, groundStruck, 0f, effect.OnlyCarrying);
+                        groundStruck.Clear();
+                        GroundDischarges += through;
+                    }
+                    else combat.StrikeArea(centre, Or(effect.Radius, 3f) * Stats.Multiplier(PlayerStat.BurstReach), discharge, null, 0f, effect.OnlyCarrying);
                     ElementLook.Strike(look, centre, 0.3f);
                     // Whatever waits on an affliction being spent is told, with how deep it was.
                     Trigger(UpgradeTrigger.SetOff, subject, centre, true, depth, null, kind, "", laying, damage);
@@ -3260,6 +3270,12 @@ namespace Clover.Player
         // Heavy blows unbroken by the marks in force, and until when by ground stood in (The Wreck).
         private bool heavyUnbrokenByMarks;
         private float heavyUnbrokenUntil = -100f;
+
+        // Each one struck once by a discharge run through several patches of ground.
+        private readonly HashSet<IDamageable> groundStruck = new HashSet<IDamageable>();
+
+        /// <summary>Patches of named ground a discharge ran through (UpgradeEffect.ThroughGround): for probes.</summary>
+        public int GroundDischarges { get; private set; }
 
         // Where each patch a BurstGround took lay, and how wide.
         private readonly Vector3[] groundBurstAt = new Vector3[16];

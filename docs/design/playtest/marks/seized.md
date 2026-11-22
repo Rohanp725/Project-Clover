@@ -33,13 +33,11 @@ Lightning and Water are both carried.
 
 **When it happens.** Every heavy blow or finisher that lands on an enemy that has both Soaked and Static.
 
-**The numbers.** Mix, 3 Shards. Its Static goes off, dealing 7 damage and 5 stagger per stack to everything within 4 metres.
+**The numbers.** Mix, 3 Shards. Its Static goes off, dealing 7 damage and 5 stagger per stack to everything standing in electrified water (every live film of Seized's on the floor), each enemy hit once. With no live water on the floor, only the enemy itself is hit.
 
 **Works with.** Seized, Wet Thread, The Sea Finds Land.
 
 **Example.** A soaked pack surrounds a locked-up enemy. One heavy blow, and the floor bursts with lightning.
-
-**Not built yet.** For now, it reaches everything within 4 metres, instead of everything standing in electrified water.
 
 ## seized.saltwater
 **What it does.** The film of electrified water stays 2 seconds longer.

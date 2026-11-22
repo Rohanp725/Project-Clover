@@ -391,6 +391,11 @@ namespace Clover.Player
         /// many metres with its blow, and is gone (Fire-Cracked's stones).
         /// </summary>
         public float CracksAt;
+        /// <summary>
+        /// For SetOff: the discharge runs through every patch of ground of this name (UpgradeEffect.Ground) standing now, striking
+        /// all in each in full, not a circle round its enemy; with none standing, only round its enemy (Grounded: live water).
+        /// </summary>
+        public string ThroughGround = "";
         /// <summary>For BurstGround: the Hazard effect whose standing patches it bursts.</summary>
         public UpgradeEffect BurstsGround;
 

@@ -445,6 +445,18 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void GroundedDischargesThroughTheLiveWater()
+        {
+            var film = ReactionOf(AfflictionKind.Static, AfflictionKind.Soaked).Single(each => each.Do == UpgradeAction.Hazard);
+            Assert.AreEqual(Reactions.LiveWater, film.Ground, "the film is live water by name");
+            var grounded = Upgrade.ById(Clover.Player.Trees.Duo.SeizedDuo.Grounded).Effects.Single();
+            Assert.AreEqual(UpgradeAction.SetOff, grounded.Do);
+            Assert.AreEqual(Reactions.LiveWater, grounded.ThroughGround, "all standing in live water");
+            Assert.AreEqual(0f, grounded.Radius, 1e-5f, "not a circle round its enemy");
+            Assert.AreEqual(0, Hazards.AllNamed(Reactions.LiveWater, new Vector3[4], new float[4]), "no water with no hazards in the scene");
+        }
+
+        [Test]
         public void TheSeaComesInQuickensYouOnlyInYourOwnWater()
         {
             var sea = Upgrade.ById(WaterTree.TheSeaComesIn);

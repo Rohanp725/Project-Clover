@@ -64,12 +64,13 @@ namespace Clover.Player.Trees.Duo
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.LightHit, Needs = AfflictionKind.Soaked, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Static, Stacks = 1 } },
             }, HeartPattern.LeftLow));
 
-            // NEEDS: live water as a place (ground-states): the discharge reaching all standing in it; now all within 4 m.
+            // The discharge runs through every patch of live water standing (UpgradeEffect.ThroughGround), all in it struck in full;
+            // with no live water, only round the seized enemy.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Grounded, Name = "Grounded", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Hammer,
                 Description = "A heavy blow on a seized enemy discharges its Static into the floor: everything standing in live water takes the discharge in full.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.HeavyHit, Needs = AfflictionKind.Soaked, Needs2 = AfflictionKind.Static, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Static, Radius = 4f, Stagger = 5f, Cooldown = 0.3f } },
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.HeavyHit, Needs = AfflictionKind.Soaked, Needs2 = AfflictionKind.Static, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Static, ThroughGround = Reactions.LiveWater, Stagger = 5f, Cooldown = 0.3f } },
             }, HeartPattern.RightLow));
 
             // Changes its reaction's own numbers while it is in force (reaction-numbers, ReactionNumbers):

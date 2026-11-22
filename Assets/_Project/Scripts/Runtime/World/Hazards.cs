@@ -248,6 +248,22 @@ namespace Clover.World
             return taken;
         }
 
+        /// <summary>Writes where each settled patch of ground of the given name lies and how wide it is, as many as fit; returns how many.</summary>
+        public static int AllNamed(string name, Vector3[] at, float[] radius)
+        {
+            if (instance == null || string.IsNullOrEmpty(name)) return 0;
+            int found = 0;
+            for (int i = 0; i < instance.zones.Length && found < at.Length && found < radius.Length; i++)
+            {
+                ref var zone = ref instance.zones[i];
+                if (!zone.Active || zone.Delay > 0f || zone.Spec.Name != name) continue;
+                at[found] = zone.Position;
+                radius[found] = zone.Spec.Radius;
+                found++;
+            }
+            return found;
+        }
+
         /// <summary>How many things the player has grown stand now.</summary>
         public static int GrownCount
         {
