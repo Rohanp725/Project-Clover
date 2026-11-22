@@ -258,6 +258,13 @@ namespace Clover.Player
         /// are made stronger (One by One's Master: its own bursts, not a reaction's or Volatile's in the same moment).
         /// </summary>
         public bool ThisCast;
+        /// <summary>
+        /// With Needs: how deep the target carries it as the moment comes is the trigger's count (PerStack reads it), and a
+        /// Condition keeps that count as its run's number. Every effect of a moment is asked before any of them is done, so a
+        /// shape counts what its Learn spends in the same moment (Red-Hot: 6 more a notch the pour spent; the ledger's
+        /// shape-before-learn).
+        /// </summary>
+        public bool CountsNeeds;
 
         /// <summary>A copy with every number, its slot and its mark (an Empower's twin of its Learn's effect).</summary>
         internal UpgradeEffect Twin() => (UpgradeEffect)MemberwiseClone();

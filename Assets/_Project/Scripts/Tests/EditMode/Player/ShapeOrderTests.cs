@@ -144,6 +144,32 @@ namespace Clover.Tests
             }
         }
 
+        // The shape's effect that asks for what its Learn spends in the same moment: every effect of a moment is asked before
+        // any of them is done (PlayerUpgrades.Trigger considers all, the line does them after), so the ask sees it unspent.
+        private static UpgradeEffect AsksBeforeTheLearnSpends(string branch, string shapeName, Clover.Gameplay.AfflictionKind spent)
+        {
+            var shape = Upgrade.ById(SpellBranch.ShapeId(branch)).Shapes.First(each => each.Name == shapeName);
+            var learn = Upgrade.ById(branch).Effects;
+            Assert.IsTrue(learn.Any(each => each.On == UpgradeTrigger.SpellHit && each.Do == UpgradeAction.Spend && each.Affliction == spent), branch + "'s Learn spends it as it strikes");
+            var asks = shape.Effects.Single(each => each.On == UpgradeTrigger.SpellHit && each.Do == UpgradeAction.Condition);
+            Assert.AreEqual(spent, asks.Needs, shapeName + " is set only on those carrying what the Learn spends");
+            return asks;
+        }
+
+        [Test]
+        public void AShapeAsksWhatItsLearnSpendsBeforeItIsSpent()
+        {
+            AsksBeforeTheLearnSpends(MetalTree.PouredBronze, "Set", Clover.Gameplay.AfflictionKind.Sundered);
+            var molten = AsksBeforeTheLearnSpends(MetalTree.PouredBronze, "Red-Hot", Clover.Gameplay.AfflictionKind.Sundered);
+            Assert.IsTrue(molten.CountsNeeds && molten.PerStack, "Red-Hot keeps the notches the pour spent");
+            var spit = Upgrade.ById(SpellBranch.ShapeId(MetalTree.PouredBronze)).Shapes.First(each => each.Name == "Red-Hot").Effects
+                .Single(each => each.On == UpgradeTrigger.ConditionStruck);
+            Assert.IsTrue(spit.ByPower, "each blow's sparks are by the notches kept");
+            Assert.AreEqual(6f, spit.Share, 1e-5f, "6 more for each notch spent");
+            var swallow = AsksBeforeTheLearnSpends(DarkTree.DevouringMaw, "Rahu", Clover.Gameplay.AfflictionKind.Cursed);
+            Assert.AreEqual(Clover.Gameplay.EnemyRank.Plain, swallow.Ranks, "an elite or a god is only bitten");
+        }
+
         [Test]
         public void EveryShapesSetAsideNamesARealEffect()
         {

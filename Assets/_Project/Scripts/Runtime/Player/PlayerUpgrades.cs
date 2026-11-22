@@ -1420,6 +1420,8 @@ namespace Clover.Player
                     if (effect.NeedsFull && carried.Stacks(effect.Needs) < carried.DepthOf(effect.Needs)) return;
                     if (effect.NeedsAtLeast > 0 && carried.Stacks(effect.Needs) < effect.NeedsAtLeast) return;
                     if (dead != null) spent = carried.Stacks(effect.Needs);
+                    // Counted now, before any effect of this moment is done: a shape counts what its Learn will spend.
+                    else if (effect.CountsNeeds) spent = carried.Stacks(effect.Needs);
                 }
                 if (effect.Needs2 != AfflictionKind.None && !carried.Has(effect.Needs2)) return;
             }
@@ -2314,7 +2316,9 @@ namespace Clover.Player
                     if (subject is IFlinchable flinching && flinching.Flinch(Or(effect.Seconds, 0.4f))) Flinches++;
                     break;
                 case UpgradeAction.Condition:
-                    ConditionsSet += ConditionCaster.Cast(effect, subject, centre, combat, laying, conditionScratch, per, effect.ByPower ? pending.Power : -1f, spread);
+                    // It keeps the trigger's number (ByPower), or the depth counted as the moment came (CountsNeeds).
+                    ConditionsSet += ConditionCaster.Cast(effect, subject, centre, combat, laying, conditionScratch, per,
+                        effect.ByPower ? pending.Power : effect.CountsNeeds ? per : -1f, spread);
                     break;
                 case UpgradeAction.Shatter:
                 {

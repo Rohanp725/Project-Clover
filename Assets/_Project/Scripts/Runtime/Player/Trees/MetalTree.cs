@@ -86,24 +86,24 @@ namespace Clover.Player.Trees
                 // The roster's numbers alone (the owner's answer of 2026-11-20): 15 a notch, set on the Learn's own pour.
                 new Empower { Effects = new[] { new EffectChange { Index = 1, Damage = 15f } } },
                 "It pours 15 damage for each notch, not 12.",
-                // NEEDS: only the enemies poured into crusted (shape-before-learn: the shape answers after the Learn has
-                // spent the notches it would test). Until then every enemy the pour's reach takes is crusted.
+                // Only the enemies poured into are crusted (Needs: every effect of the moment is asked before the Learn spends
+                // the notches it tests).
                 new ShapeDef { Name = "Set",
                     Description = "The crust stays four seconds. A heavy blow on a crusted enemy shatters it for 20 more and throws bronze splinters three metres out behind it, notching what they hit. Pour, then break.",
                     Effects = new[]
                     {
-                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Crusted, Seconds = 4f, EndsWith = ConditionBlow.Heavy } },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = S, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Crusted, Seconds = 4f, EndsWith = ConditionBlow.Heavy } },
                         new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Crusted, By = StruckBy.Heavy, Do = UpgradeAction.Burst, Radius = 1f, Damage = 20f, Stagger = 15f, Stacks = 0 },
                         new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Crusted, By = StruckBy.Heavy, Do = UpgradeAction.Lane, Reach = 3f, Radius = 0.8f, Damage = 8f, Stagger = 8f, Affliction = S, Stacks = 1 },
                     } },
-                // No hold while it is worn (ShapeDef.SetsAside: the Learn's hold). NEEDS: 6 more a notch spent (count-from-depth), and
-                // only the enemies poured into (shape-before-learn). Until then each blow spits two notches' worth.
+                // No hold while it is worn (ShapeDef.SetsAside: the Learn's hold). Only the enemies poured into are molten, and
+                // each keeps the notches the pour spent (CountsNeeds): every weapon blow spits 6 for each (ByPower).
                 new ShapeDef { Name = "Red-Hot", SetsAside = new[] { 3 },
                     Description = "The bronze stays molten in the cracks for four seconds. There is no hold, but every weapon blow on that enemy spits sparks and deals 6 more for each notch that was spent. Pour, then press.",
                     Effects = new[]
                     {
-                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Molten, Seconds = 4f } },
-                        new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Molten, By = StruckBy.Weapon, Do = UpgradeAction.Burst, Radius = 0.5f, Damage = 12f, Stagger = 0f, Stacks = 0 },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = S, CountsNeeds = true, PerStack = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Molten, Seconds = 4f } },
+                        new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Molten, By = StruckBy.Weapon, Do = UpgradeAction.Burst, ByPower = true, Share = 6f, Radius = 0.5f, Stagger = 0f, Stacks = 0 },
                     } },
                 "Opens two shapes of Poured Bronze, chosen at any rest fire: Set, a crust your heavy blow shatters, or Red-Hot, bronze that burns under every blow.",
                 // NEEDS: the attacker's pour doubled (spell-windows). The reset is data: a pour cast within a second of a
