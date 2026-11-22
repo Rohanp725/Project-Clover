@@ -215,5 +215,23 @@ namespace Clover.Tests
             Assert.IsTrue(Clover.Player.Forms.HeartForm.Touched(HeartPlace.Behind, true, 0.5f));
             Assert.IsTrue(shapes.All(each => each.Effects == null || each.Effects.Length == 0), "the stand-in ash ring and kept Curse are gone");
         }
+
+        [Test]
+        public void TwoSunsFigureStandsOnTheFarSideAndCastsBackWeaker()
+        {
+            Vector3 at = TwoSunsRules.FarSide(Vector3.zero, new Vector3(0f, 0f, 4f), out Vector3 facing);
+            Assert.AreEqual(new Vector3(0f, 0f, 8f), at, "as far beyond the enemy as you stand before it");
+            Assert.AreEqual(Vector3.back, facing, "casting back toward you");
+            Assert.AreEqual(16f, TwoSunsRules.FarSide(Vector3.zero, new Vector3(0f, 0f, 10f), out _).z, 1e-4f, "six metres beyond at most");
+            Assert.AreEqual(0.4f, TwoSunsRules.Delay, 1e-5f);
+            Assert.AreEqual(0.6f, TwoSunsRules.Share, 1e-5f);
+            Assert.IsTrue(TwoSunsRules.Echoes(SpellForms.Tap, new SpellSpec()));
+            Assert.IsTrue(TwoSunsRules.Echoes(SpellForms.Wave, new SpellSpec()));
+            Assert.IsFalse(TwoSunsRules.Echoes(SpellForms.Drill, new SpellSpec()), "a figure cannot fly your own body");
+            Assert.IsFalse(TwoSunsRules.Echoes(SpellForms.Parry, new SpellSpec { HeldStance = true }), "nor hold your stance");
+            Assert.IsFalse(TwoSunsRules.Echoes(SpellForms.Wave, new SpellSpec { Rings = 8 }), "nor a gathered spell");
+            var suns = Upgrade.ById(LightTree.TwoSuns);
+            Assert.IsEmpty(suns.Effects, "no stand-in burst of light on each enemy struck");
+        }
     }
 }

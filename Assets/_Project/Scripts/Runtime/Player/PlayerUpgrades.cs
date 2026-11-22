@@ -952,6 +952,8 @@ namespace Clover.Player
             // Flash Freeze is retired (task 4.15): Supercooled freezes a soaked enemy now, so no mark lowers the freeze.
             Afflictions.FlashFreezeAt = 0;
             hasAnswer = On(Trees.MetalTree.MastersAnswer);
+            hasTwoSuns = On(Trees.LightTree.TwoSuns);
+            if (!hasTwoSuns) echoForm = null;
             bool wellNow = On(Trees.WaterTree.DeepWell);
             if (wellNow != hasWell)
             {
@@ -1180,6 +1182,7 @@ namespace Clover.Player
         private void Update()
         {
             if (toFinish.Count > 0) FinishBroken();
+            if (echoForm != null && Time.time >= echoAt) CastEcho();
             // A gathered spell nobody loosed goes by itself when its press window is over, or is lost when it lapses (Kept Wind).
             if (rings.Due(Time.time))
             {
@@ -2836,6 +2839,50 @@ namespace Clover.Player
             if (host != null) Trigger(UpgradeTrigger.BladeDriven, host, host.transform.position, true, drives);
         }
 
+        // ---- Two Suns: a figure of light on the enemy's far side casts the spell again back toward you.
+        private bool hasTwoSuns;
+        private ISpellForm echoForm;
+        private SpellCast echoCast;
+        private float echoAt;
+
+        /// <summary>Two Suns' figures of light that have cast: for probes.</summary>
+        public int SunsEchoed { get; private set; }
+
+        /// <summary>
+        /// A spell has just been cast by <paramref name="form"/> at an enemy: with Two Suns, a figure of light stands now on
+        /// the enemy's far side and casts the same spell back toward you a moment later, at a share of its damage. A spell
+        /// that moves your own body, or is held or gathered, has no figure (TwoSunsRules.Echoes).
+        /// </summary>
+        public void EchoLater(ISpellForm form, in SpellCast cast)
+        {
+            if (!hasTwoSuns || form == null || cast.Target == null || !TwoSunsRules.Echoes(form.Id, cast.Spec)) return;
+            Vector3 at = TwoSunsRules.FarSide(transform.position, cast.Target.position, out Vector3 facing);
+            echoForm = form;
+            echoCast = cast;
+            echoCast.Origin = at;
+            echoCast.Forward = facing;
+            echoCast.Aim = transform.position;
+            echoCast.Damage *= TwoSunsRules.Share;
+            echoCast.Stagger *= TwoSunsRules.Share;
+            // The figure's spell is no slot cast: its blows never charge the blade, nor are counted as the cast's own.
+            echoCast.Cast = 0;
+            echoAt = Time.time + TwoSunsRules.Delay;
+            if (afterimage != null) afterimage.LeaveAt(TwoSunsRules.Delay + 0.5f, SunFigure, at, facing);
+            ElementLook.Sparks(lookOf[(int)AfflictionKind.Marked] ?? OwnElement(null), at + Vector3.up, facing, 0.8f);
+        }
+
+        // Light the colour of the sun at noon, strong enough to glow.
+        private static readonly Color SunFigure = new Color(2.2f, 1.8f, 0.9f, 0.85f);
+
+        private void CastEcho()
+        {
+            var form = echoForm;
+            echoForm = null;
+            if (form == null || combat == null) return;
+            SunsEchoed++;
+            form.Cast(echoCast);
+        }
+
         /// <summary>A turning blade of yours was met by a perfect guard as it came home to the hand.</summary>
         public void OnBladeCaught(Vector3 at)
         {
@@ -4275,6 +4322,7 @@ namespace Clover.Player
             castOrigin = transform.position;
             castFrom = transform.position;
             BeginCast();
+            EchoLater(form, cast);
             form.Cast(cast);
             castSource = mark;
             // Its own moment knows its number, for what only this cast is given (UpgradeEffect.ThisCast, ShareStore).

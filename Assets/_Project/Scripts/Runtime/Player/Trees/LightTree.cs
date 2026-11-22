@@ -173,12 +173,11 @@ namespace Clover.Player.Trees
             // top of the trunk, grown from Ring of Spears' Master, the spell that comes at the enemy from every side. Its old
             // price, spells costing a quarter more, means nothing now that spells wait on clocks: they wait a fifth longer
             // instead (phase4_questions.md, Light 1).
-            // NEEDS: a figure of light that casts the spell again from the far side of the enemy faced, at a share of its
-            // damage (two-suns). Until then: each enemy a spell strikes is struck again by light a moment later, and Marked.
+            // A figure of light on the far side of the enemy faced casts the spell again back toward you, 0.4 s later at 60% of
+            // its damage (PlayerUpgrades.EchoLater, TwoSunsRules): read by the player's own systems, so it has no effects.
             to.Add(BranchPattern.Put(new Upgrade { Id = TwoSuns, Name = "Two Suns", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { SpellBranch.MasterId(RingOfSpears) }, Icon = UpgradeIcons.Sun,
-                Description = "Each enemy your spell strikes is struck again by a burst of light a moment later, and Marked. Your spells wait a fifth longer.",
-                Stats = new[] { new StatMod(PlayerStat.SpellCooldown, -1f / 6f) },
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, Do = UpgradeAction.Burst, Radius = 2.5f, Delay = 0.4f, Damage = 12f, Stagger = 10f, Affliction = M, Stacks = 1, Cooldown = 0.2f } } },
+                Description = "When you cast a spell at an enemy, a figure of light stands on its far side and casts the same spell back toward you a moment later, weaker. Your spells wait a fifth longer.",
+                Stats = new[] { new StatMod(PlayerStat.SpellCooldown, -1f / 6f) } },
                 BranchPattern.TrunkRight));
 
             // ---- The left bough: Sight. The exact moment, and the fight without a wound.
