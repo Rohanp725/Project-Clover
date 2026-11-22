@@ -16788,6 +16788,7 @@ GameObject:
   - component: {fileID: 46009265}
   - component: {fileID: 46009266}
   - component: {fileID: 46009264}
+  - component: {fileID: 46009267}
   m_Layer: 0
   m_Name: The Thirsting
   m_TagString: Untagged
@@ -16961,6 +16962,66 @@ MonoBehaviour:
   LeapFrom: 0.62
   FrozenGlow: {r: 0.22, g: 0.5, b: 0.85, a: 1}
   LandingStagger: 20
+--- !u!114 &46009267
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 46009262}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f78a6757d915a934ea7781e7af1f611b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Forms.BodyMeasurement
+  anchors:
+    Waist: 0.93099993
+    Chest: 1.3204999
+    Head: 1.6529996
+    Crown: 1.9156178
+    Width: 0.13125218
+    Front: 0.10128278
+    Back: 0.10538647
+  widths:
+  - 0.13252483
+  - 0.132519
+  - 0.14100373
+  - 0.19000009
+  - 0.15132989
+  - 0.106528506
+  - 0.13125218
+  - 0.04568462
+  - 0.08303267
+  - 0.11770665
+  fronts:
+  - 0.26886085
+  - 0.05224891
+  - 0.05937389
+  - 0.12824887
+  - 0.08471195
+  - 0.07895554
+  - 0.10128278
+  - 0.060669392
+  - 0.1623983
+  - 0.1797067
+  backs:
+  - 0.06712138
+  - 0.05777988
+  - 0.040679097
+  - 0.07738591
+  - 0.096034735
+  - 0.08629229
+  - 0.10538647
+  - 0.09019721
+  - 0.099832386
+  - 0.08738507
+  joints:
+    Hips: {fileID: 1554011449}
+    Chest: {fileID: 1554011448}
+    Neck: {fileID: 1554011447}
+    Head: {fileID: 1554011446}
+    HandLeft: {fileID: 1743303638}
+    HandRight: {fileID: 1743303637}
 --- !u!1 &46756878
 GameObject:
   m_ObjectHideFlags: 0
@@ -31338,6 +31399,7 @@ GameObject:
   - component: {fileID: 86712402}
   - component: {fileID: 86712399}
   - component: {fileID: 86712398}
+  - component: {fileID: 86712403}
   m_Layer: 0
   m_Name: Gilded Spearman
   m_TagString: Untagged
@@ -31494,6 +31556,66 @@ MonoBehaviour:
   LeapFrom: 0.62
   FrozenGlow: {r: 0.22, g: 0.5, b: 0.85, a: 1}
   LandingStagger: 20
+--- !u!114 &86712403
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 86712396}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f78a6757d915a934ea7781e7af1f611b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Forms.BodyMeasurement
+  anchors:
+    Waist: 1.0975999
+    Chest: 1.5567999
+    Head: 1.9487996
+    Crown: 2.1827612
+    Width: 0.10566528
+    Front: 0.1478205
+    Back: 0.16426717
+  widths:
+  - 0.16156526
+  - 0.13624777
+  - 0.12838016
+  - 0.22400017
+  - 0.21283649
+  - 0.17268783
+  - 0.16897924
+  - 0.10566528
+  - 0.107176594
+  - 0.12849861
+  fronts:
+  - 0.29598776
+  - 0.08476174
+  - 0.23686174
+  - 0.19487365
+  - 0.15137212
+  - 0.13052683
+  - 0.16566359
+  - 0.1478205
+  - 0.15606917
+  - 0.17724223
+  backs:
+  - 0.10948032
+  - 0.11857225
+  - 0.10542557
+  - 0.18086796
+  - 0.15843171
+  - 0.14143404
+  - 0.15538926
+  - 0.16426717
+  - 0.11375002
+  - 0.112187296
+  joints:
+    Hips: {fileID: 795351263}
+    Chest: {fileID: 795351264}
+    Neck: {fileID: 795351265}
+    Head: {fileID: 795351266}
+    HandLeft: {fileID: 576769896}
+    HandRight: {fileID: 576769895}
 --- !u!1 &87566220
 GameObject:
   m_ObjectHideFlags: 0
@@ -32271,6 +32393,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &93489297 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5393747351799607988, guid: 5db17ae34b457c243b7e8e20086a3db1, type: 3}
+  m_PrefabInstance: {fileID: 93489292}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &93489298 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8920833879447499071, guid: 5db17ae34b457c243b7e8e20086a3db1, type: 3}
+  m_PrefabInstance: {fileID: 93489292}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &93789792
 GameObject:
   m_ObjectHideFlags: 0
@@ -45121,6 +45253,26 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1810719815}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &109475692 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2276439185606168551, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 836263586}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &109475693 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6599595983611893827, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 836263586}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &109475694 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1410465649598312199, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 836263586}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &109475695 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2648481746283081426, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 836263586}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &109587056
 GameObject:
   m_ObjectHideFlags: 0
@@ -48904,6 +49056,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &117209593 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5393747351799607988, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 117209588}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &117209594 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8920833879447499071, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 117209588}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &117285130
 GameObject:
   m_ObjectHideFlags: 0
@@ -49530,6 +49692,7 @@ GameObject:
   - component: {fileID: 122344558}
   - component: {fileID: 122344560}
   - component: {fileID: 122344557}
+  - component: {fileID: 122344561}
   m_Layer: 0
   m_Name: Gilded Levy
   m_TagString: Untagged
@@ -49669,6 +49832,66 @@ MonoBehaviour:
   LeapFrom: 0.62
   FrozenGlow: {r: 0.22, g: 0.5, b: 0.85, a: 1}
   LandingStagger: 20
+--- !u!114 &122344561
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 122344555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f78a6757d915a934ea7781e7af1f611b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Forms.BodyMeasurement
+  anchors:
+    Waist: 1.0289998
+    Chest: 1.4594998
+    Head: 1.8269994
+    Crown: 2.0463386
+    Width: 0.099050276
+    Front: 0.13858196
+    Back: 0.15400015
+  widths:
+  - 0.15145649
+  - 0.12774315
+  - 0.12036727
+  - 0.2100001
+  - 0.19954506
+  - 0.16190569
+  - 0.15842889
+  - 0.099050276
+  - 0.10048892
+  - 0.120456524
+  fronts:
+  - 0.2774887
+  - 0.07946439
+  - 0.2220581
+  - 0.18269427
+  - 0.1419116
+  - 0.12236915
+  - 0.15530984
+  - 0.13858196
+  - 0.1463151
+  - 0.16616483
+  backs:
+  - 0.10263749
+  - 0.11116117
+  - 0.09883616
+  - 0.16956338
+  - 0.14852941
+  - 0.13259411
+  - 0.14567712
+  - 0.15400015
+  - 0.10664033
+  - 0.10517528
+  joints:
+    Hips: {fileID: 109475692}
+    Chest: {fileID: 109475693}
+    Neck: {fileID: 109475694}
+    Head: {fileID: 109475695}
+    HandLeft: {fileID: 836263592}
+    HandRight: {fileID: 836263591}
 --- !u!1 &122803907
 GameObject:
   m_ObjectHideFlags: 0
@@ -55071,6 +55294,46 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 760, y: 64}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!4 &125899671 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2648481746283081426, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1289780122}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &125899672 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1410465649598312199, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1289780122}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &125899673 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6599595983611893827, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1289780122}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &125899674 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2276439185606168551, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1289780122}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &126014616 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2648481746283081426, guid: 5db17ae34b457c243b7e8e20086a3db1, type: 3}
+  m_PrefabInstance: {fileID: 1096938565}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &126014617 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1410465649598312199, guid: 5db17ae34b457c243b7e8e20086a3db1, type: 3}
+  m_PrefabInstance: {fileID: 1096938565}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &126014618 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6599595983611893827, guid: 5db17ae34b457c243b7e8e20086a3db1, type: 3}
+  m_PrefabInstance: {fileID: 1096938565}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &126014619 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2276439185606168551, guid: 5db17ae34b457c243b7e8e20086a3db1, type: 3}
+  m_PrefabInstance: {fileID: 1096938565}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &126258577
 GameObject:
   m_ObjectHideFlags: 0
@@ -71927,6 +72190,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &165626550 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5393747351799607988, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 165626545}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &165626551 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8920833879447499071, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 165626545}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &166311316
 GameObject:
   m_ObjectHideFlags: 0
@@ -73363,6 +73636,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &175616521 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5393747351799607988, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 175616516}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &175616522 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8920833879447499071, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 175616516}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &175651108
 GameObject:
   m_ObjectHideFlags: 0
@@ -77025,6 +77308,26 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 184646042}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &185144608 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2648481746283081426, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1568752484}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &185144609 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1410465649598312199, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1568752484}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &185144610 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6599595983611893827, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1568752484}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &185144611 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2276439185606168551, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1568752484}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &185625946
 GameObject:
   m_ObjectHideFlags: 0
@@ -77741,6 +78044,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &190554100 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5393747351799607988, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 190554095}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &190554101 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8920833879447499071, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 190554095}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &191539119
 GameObject:
   m_ObjectHideFlags: 0
@@ -80917,6 +81230,26 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 198976053}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &199365736 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2648481746283081426, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1881331624}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &199365737 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1410465649598312199, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1881331624}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &199365738 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6599595983611893827, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1881331624}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &199365739 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2276439185606168551, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1881331624}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &199478101
 GameObject:
   m_ObjectHideFlags: 0
@@ -83949,6 +84282,26 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 206509150}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &206511722 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2276439185606168551, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 774907384}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &206511723 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6599595983611893827, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 774907384}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &206511724 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1410465649598312199, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 774907384}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &206511725 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2648481746283081426, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 774907384}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &207420533
 GameObject:
   m_ObjectHideFlags: 0
@@ -91289,6 +91642,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &222425491 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5393747351799607988, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 222425486}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &222425492 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8920833879447499071, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 222425486}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &222555774
 GameObject:
   m_ObjectHideFlags: 0
@@ -99708,6 +100071,7 @@ GameObject:
   - component: {fileID: 250808279}
   - component: {fileID: 250808280}
   - component: {fileID: 250808278}
+  - component: {fileID: 250808281}
   m_Layer: 0
   m_Name: The Thirsting
   m_TagString: Untagged
@@ -99881,6 +100245,66 @@ MonoBehaviour:
   LeapFrom: 0.62
   FrozenGlow: {r: 0.22, g: 0.5, b: 0.85, a: 1}
   LandingStagger: 20
+--- !u!114 &250808281
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 250808276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f78a6757d915a934ea7781e7af1f611b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Forms.BodyMeasurement
+  anchors:
+    Waist: 0.93099993
+    Chest: 1.3204999
+    Head: 1.6529996
+    Crown: 1.9156178
+    Width: 0.13125545
+    Front: 0.10128415
+    Back: 0.10538516
+  widths:
+  - 0.13252163
+  - 0.13252227
+  - 0.141007
+  - 0.19000015
+  - 0.15133315
+  - 0.10653177
+  - 0.13125545
+  - 0.045687865
+  - 0.08302945
+  - 0.11770991
+  fronts:
+  - 0.26886225
+  - 0.052250255
+  - 0.059375238
+  - 0.12825024
+  - 0.0847133
+  - 0.07895689
+  - 0.10128415
+  - 0.06067074
+  - 0.16239966
+  - 0.17970808
+  backs:
+  - 0.06712006
+  - 0.057778563
+  - 0.040677775
+  - 0.0773846
+  - 0.096033424
+  - 0.08629098
+  - 0.10538516
+  - 0.0901959
+  - 0.099831074
+  - 0.08738376
+  joints:
+    Hips: {fileID: 185144611}
+    Chest: {fileID: 185144610}
+    Neck: {fileID: 185144609}
+    Head: {fileID: 185144608}
+    HandLeft: {fileID: 1568752490}
+    HandRight: {fileID: 1568752489}
 --- !u!1 &250832349
 GameObject:
   m_ObjectHideFlags: 0
@@ -102878,6 +103302,26 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 254575439}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &255171162 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2648481746283081426, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1301037286}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &255171163 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1410465649598312199, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1301037286}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &255171164 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6599595983611893827, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1301037286}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &255171165 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2276439185606168551, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1301037286}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &255248965
 GameObject:
   m_ObjectHideFlags: 0
@@ -129452,6 +129896,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &289770181 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5393747351799607988, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 289770176}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &289770182 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8920833879447499071, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 289770176}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &290194744
 GameObject:
   m_ObjectHideFlags: 0
@@ -129921,6 +130375,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &291275113 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5393747351799607988, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 291275108}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &291275114 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8920833879447499071, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 291275108}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &291352247
 GameObject:
   m_ObjectHideFlags: 0
@@ -130351,6 +130815,7 @@ GameObject:
   - component: {fileID: 294895290}
   - component: {fileID: 294895291}
   - component: {fileID: 294895289}
+  - component: {fileID: 294895292}
   m_Layer: 0
   m_Name: The Thirsting
   m_TagString: Untagged
@@ -130524,6 +130989,66 @@ MonoBehaviour:
   LeapFrom: 0.62
   FrozenGlow: {r: 0.22, g: 0.5, b: 0.85, a: 1}
   LandingStagger: 20
+--- !u!114 &294895292
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 294895287}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f78a6757d915a934ea7781e7af1f611b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Forms.BodyMeasurement
+  anchors:
+    Waist: 0.93099993
+    Chest: 1.3204999
+    Head: 1.6529996
+    Crown: 1.9156178
+    Width: 0.13125692
+    Front: 0.1012807
+    Back: 0.10538863
+  widths:
+  - 0.13252017
+  - 0.13252375
+  - 0.14100848
+  - 0.19000015
+  - 0.15133463
+  - 0.10653324
+  - 0.13125692
+  - 0.045689333
+  - 0.08302799
+  - 0.11771138
+  fronts:
+  - 0.26885882
+  - 0.052246805
+  - 0.059371784
+  - 0.12824678
+  - 0.08470985
+  - 0.07895344
+  - 0.1012807
+  - 0.06066729
+  - 0.16239622
+  - 0.17970464
+  backs:
+  - 0.06712352
+  - 0.05778202
+  - 0.04068123
+  - 0.07738806
+  - 0.09603688
+  - 0.086294435
+  - 0.10538863
+  - 0.090199366
+  - 0.09983454
+  - 0.08738722
+  joints:
+    Hips: {fileID: 255171165}
+    Chest: {fileID: 255171164}
+    Neck: {fileID: 255171163}
+    Head: {fileID: 255171162}
+    HandLeft: {fileID: 1301037292}
+    HandRight: {fileID: 1301037291}
 --- !u!1 &295318398
 GameObject:
   m_ObjectHideFlags: 0
@@ -130614,6 +131139,26 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 295318398}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &295656239 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2276439185606168551, guid: 1072e508ec388b34597b4e65469ea78d, type: 3}
+  m_PrefabInstance: {fileID: 1133765626}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &295656240 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6599595983611893827, guid: 1072e508ec388b34597b4e65469ea78d, type: 3}
+  m_PrefabInstance: {fileID: 1133765626}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &295656241 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1410465649598312199, guid: 1072e508ec388b34597b4e65469ea78d, type: 3}
+  m_PrefabInstance: {fileID: 1133765626}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &295656242 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2648481746283081426, guid: 1072e508ec388b34597b4e65469ea78d, type: 3}
+  m_PrefabInstance: {fileID: 1133765626}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &297162132
 GameObject:
   m_ObjectHideFlags: 0
@@ -131230,6 +131775,16 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 299459793}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &300299263 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5393747351799607988, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 1614624358}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &300299264 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8920833879447499071, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 1614624358}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &300346497
 GameObject:
   m_ObjectHideFlags: 0
@@ -139399,6 +139954,7 @@ GameObject:
   - component: {fileID: 318529925}
   - component: {fileID: 318529926}
   - component: {fileID: 318529924}
+  - component: {fileID: 318529927}
   m_Layer: 0
   m_Name: Sun-Blind Priest
   m_TagString: Untagged
@@ -139536,6 +140092,66 @@ MonoBehaviour:
   LeapFrom: 0.62
   FrozenGlow: {r: 0.22, g: 0.5, b: 0.85, a: 1}
   LandingStagger: 20
+--- !u!114 &318529927
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 318529922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f78a6757d915a934ea7781e7af1f611b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Forms.BodyMeasurement
+  anchors:
+    Waist: 0.97999996
+    Chest: 1.3899999
+    Head: 1.7399997
+    Crown: 1.9532025
+    Width: 0.0676623
+    Front: 0.13847975
+    Back: 0.16396648
+  widths:
+  - 0.15485387
+  - 0.20000015
+  - 0.20000015
+  - 0.20000015
+  - 0.17859559
+  - 0.15123552
+  - 0.13067397
+  - 0.0676623
+  - 0.0832387
+  - 0.09333592
+  fronts:
+  - 0.26431468
+  - 0.2186706
+  - 0.19887207
+  - 0.17123158
+  - 0.13684723
+  - 0.12034487
+  - 0.19713245
+  - 0.13847975
+  - 0.09854578
+  - 0.08369388
+  backs:
+  - 0.2383979
+  - 0.24230947
+  - 0.21660101
+  - 0.17928146
+  - 0.1497126
+  - 0.117501445
+  - 0.118738666
+  - 0.16396648
+  - 0.12856276
+  - 0.1446515
+  joints:
+    Hips: {fileID: 961175387}
+    Chest: {fileID: 961175386}
+    Neck: {fileID: 961175385}
+    Head: {fileID: 961175384}
+    HandLeft: {fileID: 1513248902}
+    HandRight: {fileID: 1513248901}
 --- !u!1 &319755281
 GameObject:
   m_ObjectHideFlags: 0
@@ -141807,6 +142423,7 @@ GameObject:
   - component: {fileID: 335344027}
   - component: {fileID: 335344028}
   - component: {fileID: 335344026}
+  - component: {fileID: 335344029}
   m_Layer: 0
   m_Name: The Wick
   m_TagString: Untagged
@@ -141932,6 +142549,66 @@ MonoBehaviour:
   LeapFrom: 0.62
   FrozenGlow: {r: 0.22, g: 0.5, b: 0.85, a: 1}
   LandingStagger: 20
+--- !u!114 &335344029
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 335344024}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f78a6757d915a934ea7781e7af1f611b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Forms.BodyMeasurement
+  anchors:
+    Waist: 1.0289998
+    Chest: 1.4594998
+    Head: 1.8269994
+    Crown: 2.019638
+    Width: 0.05929402
+    Front: 0.14951818
+    Back: 0.15331747
+  widths:
+  - 0.15228039
+  - 0.16631854
+  - 0.17555884
+  - 0.19641039
+  - 0.1965496
+  - 0.1825774
+  - 0.14220099
+  - 0.05929402
+  - 0.067888305
+  - 0.10909378
+  fronts:
+  - 0.19332604
+  - 0.064952426
+  - 0.07990746
+  - 0.100340664
+  - 0.11021869
+  - 0.10377396
+  - 0.14964187
+  - 0.14951818
+  - 0.12688826
+  - 0.15071936
+  backs:
+  - 0.07550838
+  - 0.09158176
+  - 0.08185373
+  - 0.09162205
+  - 0.12305723
+  - 0.1295921
+  - 0.13081437
+  - 0.15331747
+  - 0.06730417
+  - 0.10422494
+  joints:
+    Hips: {fileID: 2008020435}
+    Chest: {fileID: 2008020434}
+    Neck: {fileID: 2008020433}
+    Head: {fileID: 2008020432}
+    HandLeft: {fileID: 1538510579}
+    HandRight: {fileID: 1538510578}
 --- !u!1 &335499370
 GameObject:
   m_ObjectHideFlags: 0
@@ -152973,6 +153650,7 @@ GameObject:
   - component: {fileID: 348408619}
   - component: {fileID: 348408620}
   - component: {fileID: 348408618}
+  - component: {fileID: 348408621}
   m_Layer: 0
   m_Name: The Thirsting
   m_TagString: Untagged
@@ -153146,6 +153824,66 @@ MonoBehaviour:
   LeapFrom: 0.62
   FrozenGlow: {r: 0.22, g: 0.5, b: 0.85, a: 1}
   LandingStagger: 20
+--- !u!114 &348408621
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 348408616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f78a6757d915a934ea7781e7af1f611b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Forms.BodyMeasurement
+  anchors:
+    Waist: 0.93099993
+    Chest: 1.3204999
+    Head: 1.6529996
+    Crown: 1.9156178
+    Width: 0.13126142
+    Front: 0.10128371
+    Back: 0.10538555
+  widths:
+  - 0.13252383
+  - 0.13252823
+  - 0.14101297
+  - 0.19000009
+  - 0.15133911
+  - 0.10653774
+  - 0.13126142
+  - 0.045693852
+  - 0.08302343
+  - 0.11771588
+  fronts:
+  - 0.26886177
+  - 0.05224983
+  - 0.059374813
+  - 0.1282498
+  - 0.08471287
+  - 0.078956455
+  - 0.10128371
+  - 0.060670316
+  - 0.16239922
+  - 0.17970762
+  backs:
+  - 0.067120455
+  - 0.05777896
+  - 0.040678173
+  - 0.07738499
+  - 0.09603381
+  - 0.086291365
+  - 0.10538555
+  - 0.09019629
+  - 0.09983146
+  - 0.08738415
+  joints:
+    Hips: {fileID: 1587154668}
+    Chest: {fileID: 1587154667}
+    Neck: {fileID: 1587154666}
+    Head: {fileID: 1587154665}
+    HandLeft: {fileID: 1151078142}
+    HandRight: {fileID: 1151078141}
 --- !u!1 &349333228
 GameObject:
   m_ObjectHideFlags: 0
@@ -181644,6 +182382,26 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 391713671}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &393240402 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2648481746283081426, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1262589788}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &393240403 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1410465649598312199, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1262589788}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &393240404 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6599595983611893827, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1262589788}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &393240405 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2276439185606168551, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1262589788}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &394113336
 GameObject:
   m_ObjectHideFlags: 0
@@ -193390,6 +194148,26 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 428880414}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &429127631 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2648481746283081426, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1871626139}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &429127632 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1410465649598312199, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1871626139}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &429127633 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6599595983611893827, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1871626139}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &429127634 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2276439185606168551, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1871626139}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &429267170
 GameObject:
   m_ObjectHideFlags: 0
@@ -196133,6 +196911,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &444537444 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5393747351799607988, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 444537439}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &444537445 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8920833879447499071, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 444537439}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &444846934
 GameObject:
   m_ObjectHideFlags: 0
@@ -207290,6 +208078,16 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 457239116}
   m_Mesh: {fileID: -1482355709274967728, guid: 95be5f285f4394d4ba8bce606696a830, type: 3}
+--- !u!4 &457403474 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5393747351799607988, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 1520394494}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &457403475 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8920833879447499071, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 1520394494}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &458346515
 GameObject:
   m_ObjectHideFlags: 0
@@ -207427,6 +208225,7 @@ GameObject:
   - component: {fileID: 458900539}
   - component: {fileID: 458900540}
   - component: {fileID: 458900538}
+  - component: {fileID: 458900541}
   m_Layer: 0
   m_Name: The Wick
   m_TagString: Untagged
@@ -207552,6 +208351,66 @@ MonoBehaviour:
   LeapFrom: 0.62
   FrozenGlow: {r: 0.22, g: 0.5, b: 0.85, a: 1}
   LandingStagger: 20
+--- !u!114 &458900541
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 458900536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f78a6757d915a934ea7781e7af1f611b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Forms.BodyMeasurement
+  anchors:
+    Waist: 1.0289998
+    Chest: 1.4594998
+    Head: 1.8269994
+    Crown: 2.019638
+    Width: 0.05928941
+    Front: 0.14951819
+    Back: 0.15331738
+  widths:
+  - 0.15228495
+  - 0.1663139
+  - 0.17556338
+  - 0.19641495
+  - 0.19654495
+  - 0.18257277
+  - 0.14220555
+  - 0.05928941
+  - 0.06788369
+  - 0.10909835
+  fronts:
+  - 0.19332604
+  - 0.06495246
+  - 0.07990749
+  - 0.10034069
+  - 0.11021871
+  - 0.10377398
+  - 0.14964187
+  - 0.14951819
+  - 0.12688828
+  - 0.15071937
+  backs:
+  - 0.07550831
+  - 0.091581695
+  - 0.081853665
+  - 0.09162198
+  - 0.12305716
+  - 0.12959203
+  - 0.1308143
+  - 0.15331738
+  - 0.067304105
+  - 0.10422487
+  joints:
+    Hips: {fileID: 587642064}
+    Chest: {fileID: 587642063}
+    Neck: {fileID: 587642062}
+    Head: {fileID: 587642061}
+    HandLeft: {fileID: 1397026688}
+    HandRight: {fileID: 1397026687}
 --- !u!1 &459529072
 GameObject:
   m_ObjectHideFlags: 0
@@ -208371,6 +209230,26 @@ MonoBehaviour:
   ScreenTop: 0.93
   SlideSpeed: 4
   PipSmallest: 0.55
+--- !u!4 &463249047 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2648481746283081426, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 444537439}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &463249048 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1410465649598312199, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 444537439}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &463249049 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6599595983611893827, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 444537439}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &463249050 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2276439185606168551, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 444537439}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &465355534
 GameObject:
   m_ObjectHideFlags: 0
@@ -219202,6 +220081,7 @@ GameObject:
   - component: {fileID: 475193642}
   - component: {fileID: 475193639}
   - component: {fileID: 475193638}
+  - component: {fileID: 475193643}
   m_Layer: 0
   m_Name: Gilded Spearman
   m_TagString: Untagged
@@ -219358,6 +220238,66 @@ MonoBehaviour:
   LeapFrom: 0.62
   FrozenGlow: {r: 0.22, g: 0.5, b: 0.85, a: 1}
   LandingStagger: 20
+--- !u!114 &475193643
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 475193636}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f78a6757d915a934ea7781e7af1f611b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Forms.BodyMeasurement
+  anchors:
+    Waist: 1.0975999
+    Chest: 1.5567999
+    Head: 1.9487996
+    Crown: 2.1827612
+    Width: 0.10566963
+    Front: 0.14782104
+    Back: 0.16426663
+  widths:
+  - 0.16156961
+  - 0.13624342
+  - 0.12837581
+  - 0.22400017
+  - 0.21283214
+  - 0.17268348
+  - 0.16897489
+  - 0.10566963
+  - 0.10717224
+  - 0.12850296
+  fronts:
+  - 0.2959883
+  - 0.084762275
+  - 0.23686227
+  - 0.19487418
+  - 0.15137266
+  - 0.13052736
+  - 0.16566412
+  - 0.14782104
+  - 0.15606971
+  - 0.17724277
+  backs:
+  - 0.109479785
+  - 0.11857171
+  - 0.10542503
+  - 0.18086742
+  - 0.15843117
+  - 0.1414335
+  - 0.15538873
+  - 0.16426663
+  - 0.11374948
+  - 0.11218676
+  joints:
+    Hips: {fileID: 502804313}
+    Chest: {fileID: 502804314}
+    Neck: {fileID: 502804315}
+    Head: {fileID: 502804316}
+    HandLeft: {fileID: 300299264}
+    HandRight: {fileID: 300299263}
 --- !u!1 &475646677
 GameObject:
   m_ObjectHideFlags: 0
@@ -221714,6 +222654,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &481991771 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5393747351799607988, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 481991766}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &481991772 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8920833879447499071, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 481991766}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &482063914
 GameObject:
   m_ObjectHideFlags: 0
@@ -222828,6 +223778,26 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 487370809}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &487577086 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2276439185606168551, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 175616516}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &487577087 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6599595983611893827, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 175616516}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &487577088 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1410465649598312199, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 175616516}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &487577089 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2648481746283081426, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 175616516}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &488345839
 GameObject:
   m_ObjectHideFlags: 0
@@ -226877,6 +227847,26 @@ Transform:
   - {fileID: 997052437}
   m_Father: {fileID: 161760846}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &502804313 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2276439185606168551, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 1614624358}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &502804314 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6599595983611893827, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 1614624358}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &502804315 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1410465649598312199, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 1614624358}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &502804316 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2648481746283081426, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 1614624358}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &504296644
 GameObject:
   m_ObjectHideFlags: 0
@@ -236752,6 +237742,7 @@ GameObject:
   - component: {fileID: 512484534}
   - component: {fileID: 512484535}
   - component: {fileID: 512484533}
+  - component: {fileID: 512484536}
   m_Layer: 0
   m_Name: The Wick
   m_TagString: Untagged
@@ -236877,6 +237868,66 @@ MonoBehaviour:
   LeapFrom: 0.62
   FrozenGlow: {r: 0.22, g: 0.5, b: 0.85, a: 1}
   LandingStagger: 20
+--- !u!114 &512484536
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 512484531}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f78a6757d915a934ea7781e7af1f611b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Forms.BodyMeasurement
+  anchors:
+    Waist: 1.0289998
+    Chest: 1.4594998
+    Head: 1.8269994
+    Crown: 2.019638
+    Width: 0.059289224
+    Front: 0.14951763
+    Back: 0.15331796
+  widths:
+  - 0.15228514
+  - 0.16631372
+  - 0.17556357
+  - 0.19641513
+  - 0.19654477
+  - 0.18257259
+  - 0.14220574
+  - 0.059289224
+  - 0.06788351
+  - 0.10909854
+  fronts:
+  - 0.19332547
+  - 0.06495189
+  - 0.07990692
+  - 0.10034012
+  - 0.110218145
+  - 0.103773415
+  - 0.1496413
+  - 0.14951763
+  - 0.12688771
+  - 0.15071881
+  backs:
+  - 0.075508885
+  - 0.09158226
+  - 0.08185424
+  - 0.09162255
+  - 0.12305772
+  - 0.1295926
+  - 0.13081487
+  - 0.15331796
+  - 0.06730467
+  - 0.104225434
+  joints:
+    Hips: {fileID: 976992856}
+    Chest: {fileID: 976992855}
+    Neck: {fileID: 976992854}
+    Head: {fileID: 976992853}
+    HandLeft: {fileID: 2065441546}
+    HandRight: {fileID: 2065441545}
 --- !u!1 &512809209
 GameObject:
   m_ObjectHideFlags: 0
@@ -240288,6 +241339,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &518562441 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5393747351799607988, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 518562436}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &518562442 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8920833879447499071, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 518562436}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &518783773
 GameObject:
   m_ObjectHideFlags: 0
@@ -250231,6 +251292,7 @@ GameObject:
   - component: {fileID: 534222204}
   - component: {fileID: 534222205}
   - component: {fileID: 534222203}
+  - component: {fileID: 534222206}
   m_Layer: 0
   m_Name: The Wick
   m_TagString: Untagged
@@ -250356,6 +251418,66 @@ MonoBehaviour:
   LeapFrom: 0.62
   FrozenGlow: {r: 0.22, g: 0.5, b: 0.85, a: 1}
   LandingStagger: 20
+--- !u!114 &534222206
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 534222201}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f78a6757d915a934ea7781e7af1f611b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Forms.BodyMeasurement
+  anchors:
+    Waist: 1.0289998
+    Chest: 1.4594998
+    Head: 1.8269994
+    Crown: 2.019638
+    Width: 0.05928042
+    Front: 0.14951482
+    Back: 0.15332079
+  widths:
+  - 0.15229397
+  - 0.16630493
+  - 0.1755724
+  - 0.19642396
+  - 0.19653597
+  - 0.1825638
+  - 0.14221457
+  - 0.05928042
+  - 0.06787471
+  - 0.10910736
+  fronts:
+  - 0.19332267
+  - 0.06494908
+  - 0.07990412
+  - 0.10033731
+  - 0.110215336
+  - 0.103770606
+  - 0.1496385
+  - 0.14951482
+  - 0.12688491
+  - 0.150716
+  backs:
+  - 0.07551171
+  - 0.09158509
+  - 0.08185706
+  - 0.09162537
+  - 0.123060554
+  - 0.12959543
+  - 0.1308177
+  - 0.15332079
+  - 0.0673075
+  - 0.104228266
+  joints:
+    Hips: {fileID: 1637455349}
+    Chest: {fileID: 1637455348}
+    Neck: {fileID: 1637455347}
+    Head: {fileID: 1637455346}
+    HandLeft: {fileID: 804838237}
+    HandRight: {fileID: 804838236}
 --- !u!1 &534487047
 GameObject:
   m_ObjectHideFlags: 0
@@ -250908,6 +252030,7 @@ GameObject:
   - component: {fileID: 536364718}
   - component: {fileID: 536364720}
   - component: {fileID: 536364717}
+  - component: {fileID: 536364721}
   m_Layer: 0
   m_Name: Gilded Warden
   m_TagString: Untagged
@@ -251047,6 +252170,66 @@ MonoBehaviour:
   LeapFrom: 0.62
   FrozenGlow: {r: 0.22, g: 0.5, b: 0.85, a: 1}
   LandingStagger: 20
+--- !u!114 &536364721
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 536364715}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f78a6757d915a934ea7781e7af1f611b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Forms.BodyMeasurement
+  anchors:
+    Waist: 1.176
+    Chest: 1.668
+    Head: 2.0879996
+    Crown: 2.3386729
+    Width: 0.11320033
+    Front: 0.1583794
+    Back: 0.1760002
+  widths:
+  - 0.17309314
+  - 0.14599219
+  - 0.13756262
+  - 0.24000014
+  - 0.2280515
+  - 0.1850351
+  - 0.18106161
+  - 0.11320033
+  - 0.11484449
+  - 0.1376646
+  fronts:
+  - 0.31713
+  - 0.09081645
+  - 0.25378072
+  - 0.20879348
+  - 0.1621847
+  - 0.13985047
+  - 0.17749698
+  - 0.1583794
+  - 0.16721727
+  - 0.1899027
+  backs:
+  - 0.117300004
+  - 0.12704135
+  - 0.11295562
+  - 0.19378674
+  - 0.1697479
+  - 0.15153614
+  - 0.16648814
+  - 0.1760002
+  - 0.12187468
+  - 0.120200336
+  joints:
+    Hips: {fileID: 625607146}
+    Chest: {fileID: 625607147}
+    Neck: {fileID: 625607148}
+    Head: {fileID: 625607149}
+    HandLeft: {fileID: 117209594}
+    HandRight: {fileID: 117209593}
 --- !u!1 &536520339
 GameObject:
   m_ObjectHideFlags: 0
@@ -251484,6 +252667,7 @@ GameObject:
   - component: {fileID: 538740384}
   - component: {fileID: 538740385}
   - component: {fileID: 538740383}
+  - component: {fileID: 538740386}
   m_Layer: 0
   m_Name: The Thirsting
   m_TagString: Untagged
@@ -251657,6 +252841,66 @@ MonoBehaviour:
   LeapFrom: 0.62
   FrozenGlow: {r: 0.22, g: 0.5, b: 0.85, a: 1}
   LandingStagger: 20
+--- !u!114 &538740386
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 538740381}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f78a6757d915a934ea7781e7af1f611b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Forms.BodyMeasurement
+  anchors:
+    Waist: 0.93099993
+    Chest: 1.3204999
+    Head: 1.6529996
+    Crown: 1.9156178
+    Width: 0.1312577
+    Front: 0.10128874
+    Back: 0.10538058
+  widths:
+  - 0.13252011
+  - 0.13252452
+  - 0.14100926
+  - 0.19000015
+  - 0.1513354
+  - 0.10653401
+  - 0.1312577
+  - 0.045690108
+  - 0.083027214
+  - 0.117712155
+  fronts:
+  - 0.26886687
+  - 0.052254856
+  - 0.05937983
+  - 0.12825483
+  - 0.0847179
+  - 0.078961484
+  - 0.10128874
+  - 0.060675338
+  - 0.16240427
+  - 0.17971268
+  backs:
+  - 0.06711547
+  - 0.057773974
+  - 0.04067319
+  - 0.07738002
+  - 0.096028835
+  - 0.08628639
+  - 0.10538058
+  - 0.09019132
+  - 0.09982649
+  - 0.08737917
+  joints:
+    Hips: {fileID: 1711580609}
+    Chest: {fileID: 1711580608}
+    Neck: {fileID: 1711580607}
+    Head: {fileID: 1711580606}
+    HandLeft: {fileID: 222425492}
+    HandRight: {fileID: 222425491}
 --- !u!1 &539274501
 GameObject:
   m_ObjectHideFlags: 0
@@ -252800,6 +254044,7 @@ GameObject:
   - component: {fileID: 544897648}
   - component: {fileID: 544897649}
   - component: {fileID: 544897647}
+  - component: {fileID: 544897650}
   m_Layer: 0
   m_Name: The Ashen
   m_TagString: Untagged
@@ -252934,6 +254179,66 @@ MonoBehaviour:
   LeapFrom: 0.62
   FrozenGlow: {r: 0.22, g: 0.5, b: 0.85, a: 1}
   LandingStagger: 20
+--- !u!114 &544897650
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 544897645}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f78a6757d915a934ea7781e7af1f611b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Forms.BodyMeasurement
+  anchors:
+    Waist: 0.9604
+    Chest: 1.3621999
+    Head: 1.7051998
+    Crown: 1.8849957
+    Width: 0.05534181
+    Front: 0.13955018
+    Back: 0.14309646
+  widths:
+  - 0.14212766
+  - 0.15523137
+  - 0.1638542
+  - 0.18331566
+  - 0.18344702
+  - 0.17040631
+  - 0.13272022
+  - 0.05534181
+  - 0.06336314
+  - 0.10182015
+  fronts:
+  - 0.18043752
+  - 0.06062214
+  - 0.07458017
+  - 0.09365116
+  - 0.10287066
+  - 0.09685557
+  - 0.13966562
+  - 0.13955018
+  - 0.11842892
+  - 0.14067128
+  backs:
+  - 0.07047463
+  - 0.08547646
+  - 0.076396964
+  - 0.08551405
+  - 0.11485357
+  - 0.120952785
+  - 0.12209357
+  - 0.14309646
+  - 0.062817365
+  - 0.097276755
+  joints:
+    Hips: {fileID: 1129998426}
+    Chest: {fileID: 1129998425}
+    Neck: {fileID: 1129998424}
+    Head: {fileID: 1129998423}
+    HandLeft: {fileID: 2014823041}
+    HandRight: {fileID: 2014823040}
 --- !u!1 &545416871
 GameObject:
   m_ObjectHideFlags: 0
@@ -271534,6 +272839,16 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 576698625}
   m_Mesh: {fileID: 4300000, guid: 2a86de5360b593746b488f2e8f3e39ec, type: 2}
+--- !u!4 &576769895 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5393747351799607988, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 1569271877}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &576769896 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8920833879447499071, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 1569271877}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &576829436
 GameObject:
   m_ObjectHideFlags: 0
@@ -271742,6 +273057,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &577052249 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5393747351799607988, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 577052244}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &577052250 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8920833879447499071, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 577052244}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &577471015
 GameObject:
   m_ObjectHideFlags: 0
@@ -272980,6 +274305,26 @@ MonoBehaviour:
   HoldAt: 2.4
   BrokenSeconds: 4
   GuardDownSeconds: 2.5
+--- !u!4 &587642061 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2648481746283081426, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1397026682}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &587642062 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1410465649598312199, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1397026682}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &587642063 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6599595983611893827, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1397026682}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &587642064 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2276439185606168551, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1397026682}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &587672120
 GameObject:
   m_ObjectHideFlags: 0
@@ -285580,6 +286925,26 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 625122521}
   m_Mesh: {fileID: -4301133208420335463, guid: ed2f3570cd723104aa9f9c05a7056f1c, type: 3}
+--- !u!4 &625607146 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2276439185606168551, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 117209588}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &625607147 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6599595983611893827, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 117209588}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &625607148 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1410465649598312199, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 117209588}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &625607149 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2648481746283081426, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 117209588}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &625684237
 GameObject:
   m_ObjectHideFlags: 0
@@ -299517,6 +300882,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &669985367 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5393747351799607988, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 669985362}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &669985368 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8920833879447499071, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 669985362}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &670600670
 GameObject:
   m_ObjectHideFlags: 0
@@ -303734,6 +305109,7 @@ GameObject:
   - component: {fileID: 684853831}
   - component: {fileID: 684853832}
   - component: {fileID: 684853830}
+  - component: {fileID: 684853833}
   m_Layer: 0
   m_Name: The Wick
   m_TagString: Untagged
@@ -303859,6 +305235,66 @@ MonoBehaviour:
   LeapFrom: 0.62
   FrozenGlow: {r: 0.22, g: 0.5, b: 0.85, a: 1}
   LandingStagger: 20
+--- !u!114 &684853833
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 684853828}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f78a6757d915a934ea7781e7af1f611b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Forms.BodyMeasurement
+  anchors:
+    Waist: 1.0289998
+    Chest: 1.4594998
+    Head: 1.8269994
+    Crown: 2.019638
+    Width: 0.05929242
+    Front: 0.14951766
+    Back: 0.15331799
+  widths:
+  - 0.152282
+  - 0.16631694
+  - 0.17556043
+  - 0.196412
+  - 0.196548
+  - 0.1825758
+  - 0.14220259
+  - 0.05929242
+  - 0.06788671
+  - 0.10909538
+  fronts:
+  - 0.1933255
+  - 0.064951904
+  - 0.07990693
+  - 0.100340135
+  - 0.11021817
+  - 0.10377343
+  - 0.14964134
+  - 0.14951766
+  - 0.12688774
+  - 0.15071884
+  backs:
+  - 0.0755089
+  - 0.09158229
+  - 0.08185426
+  - 0.09162257
+  - 0.12305775
+  - 0.12959264
+  - 0.13081491
+  - 0.15331799
+  - 0.06730469
+  - 0.104225464
+  joints:
+    Hips: {fileID: 716400519}
+    Chest: {fileID: 716400518}
+    Neck: {fileID: 716400517}
+    Head: {fileID: 716400516}
+    HandLeft: {fileID: 1037974244}
+    HandRight: {fileID: 1037974243}
 --- !u!1 &685386093
 GameObject:
   m_ObjectHideFlags: 0
@@ -320863,6 +322299,26 @@ Transform:
   - {fileID: 277228517}
   m_Father: {fileID: 1282985138}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &716400516 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2648481746283081426, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1037974238}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &716400517 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1410465649598312199, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1037974238}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &716400518 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6599595983611893827, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1037974238}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &716400519 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2276439185606168551, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1037974238}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &716826837
 GameObject:
   m_ObjectHideFlags: 0
@@ -343480,6 +344936,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &774907389 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5393747351799607988, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 774907384}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &774907390 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8920833879447499071, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 774907384}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &775340976
 GameObject:
   m_ObjectHideFlags: 0
@@ -353510,6 +354976,26 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 795323761}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &795351263 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2276439185606168551, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 1569271877}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &795351264 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6599595983611893827, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 1569271877}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &795351265 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1410465649598312199, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 1569271877}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &795351266 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2648481746283081426, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 1569271877}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &795749267
 GameObject:
   m_ObjectHideFlags: 0
@@ -354025,6 +355511,7 @@ GameObject:
   - component: {fileID: 799013392}
   - component: {fileID: 799013393}
   - component: {fileID: 799013391}
+  - component: {fileID: 799013394}
   m_Layer: 0
   m_Name: Sun-Blind Priest
   m_TagString: Untagged
@@ -354162,6 +355649,66 @@ MonoBehaviour:
   LeapFrom: 0.62
   FrozenGlow: {r: 0.22, g: 0.5, b: 0.85, a: 1}
   LandingStagger: 20
+--- !u!114 &799013394
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 799013389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f78a6757d915a934ea7781e7af1f611b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Forms.BodyMeasurement
+  anchors:
+    Waist: 0.97999996
+    Chest: 1.3899999
+    Head: 1.7399997
+    Crown: 1.9532025
+    Width: 0.06765382
+    Front: 0.13847913
+    Back: 0.16396704
+  widths:
+  - 0.1548623
+  - 0.2000001
+  - 0.2000001
+  - 0.2000001
+  - 0.178604
+  - 0.15124395
+  - 0.13066548
+  - 0.06765382
+  - 0.08323021
+  - 0.09334436
+  fronts:
+  - 0.26431403
+  - 0.21866997
+  - 0.19887143
+  - 0.17123096
+  - 0.13684662
+  - 0.12034425
+  - 0.19713181
+  - 0.13847913
+  - 0.098545164
+  - 0.083693266
+  backs:
+  - 0.23839846
+  - 0.24231002
+  - 0.21660157
+  - 0.17928202
+  - 0.14971317
+  - 0.11750202
+  - 0.11873924
+  - 0.16396704
+  - 0.12856333
+  - 0.14465208
+  joints:
+    Hips: {fileID: 1661689901}
+    Chest: {fileID: 1661689900}
+    Neck: {fileID: 1661689899}
+    Head: {fileID: 1661689898}
+    HandLeft: {fileID: 1353109563}
+    HandRight: {fileID: 1353109562}
 --- !u!1 &799269794
 GameObject:
   m_ObjectHideFlags: 0
@@ -354839,6 +356386,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &804838236 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5393747351799607988, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 804838231}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &804838237 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8920833879447499071, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 804838231}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &805496296
 GameObject:
   m_ObjectHideFlags: 0
@@ -355525,6 +357082,26 @@ Transform:
   - {fileID: 1404706430}
   m_Father: {fileID: 1717724216}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &806796473 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2648481746283081426, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 864604918}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &806796474 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1410465649598312199, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 864604918}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &806796475 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6599595983611893827, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 864604918}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &806796476 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2276439185606168551, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 864604918}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &806835777
 GameObject:
   m_ObjectHideFlags: 0
@@ -361118,6 +362695,7 @@ GameObject:
   - component: {fileID: 815040765}
   - component: {fileID: 815040766}
   - component: {fileID: 815040764}
+  - component: {fileID: 815040767}
   m_Layer: 0
   m_Name: The Wick
   m_TagString: Untagged
@@ -361243,6 +362821,66 @@ MonoBehaviour:
   LeapFrom: 0.62
   FrozenGlow: {r: 0.22, g: 0.5, b: 0.85, a: 1}
   LandingStagger: 20
+--- !u!114 &815040767
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 815040762}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f78a6757d915a934ea7781e7af1f611b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Forms.BodyMeasurement
+  anchors:
+    Waist: 1.0289998
+    Chest: 1.4594998
+    Head: 1.8269994
+    Crown: 2.019638
+    Width: 0.05928472
+    Front: 0.14951794
+    Back: 0.1533177
+  widths:
+  - 0.15228969
+  - 0.16630924
+  - 0.17556813
+  - 0.19641969
+  - 0.1965403
+  - 0.1825681
+  - 0.14221029
+  - 0.05928472
+  - 0.067879006
+  - 0.109103076
+  fronts:
+  - 0.1933258
+  - 0.06495219
+  - 0.07990722
+  - 0.100340426
+  - 0.11021845
+  - 0.10377372
+  - 0.14964163
+  - 0.14951794
+  - 0.12688802
+  - 0.15071912
+  backs:
+  - 0.07550862
+  - 0.091582
+  - 0.08185397
+  - 0.091622286
+  - 0.12305747
+  - 0.12959234
+  - 0.13081461
+  - 0.1533177
+  - 0.06730441
+  - 0.10422518
+  joints:
+    Hips: {fileID: 806796476}
+    Chest: {fileID: 806796475}
+    Neck: {fileID: 806796474}
+    Head: {fileID: 806796473}
+    HandLeft: {fileID: 864604924}
+    HandRight: {fileID: 864604923}
 --- !u!1 &815594934
 GameObject:
   m_ObjectHideFlags: 0
@@ -368650,6 +370288,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &836263591 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5393747351799607988, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 836263586}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &836263592 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8920833879447499071, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 836263586}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &836585124
 GameObject:
   m_ObjectHideFlags: 0
@@ -376611,6 +378259,26 @@ Light:
   m_LightUnit: 1
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
+--- !u!4 &847849756 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2648481746283081426, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1061028330}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &847849757 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1410465649598312199, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1061028330}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &847849758 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6599595983611893827, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1061028330}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &847849759 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2276439185606168551, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1061028330}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &848402286
 GameObject:
   m_ObjectHideFlags: 0
@@ -379640,6 +381308,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &864604923 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5393747351799607988, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 864604918}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &864604924 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8920833879447499071, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 864604918}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &865381520
 GameObject:
   m_ObjectHideFlags: 0
@@ -386159,6 +387837,26 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!4 &887986320 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2648481746283081426, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1687779339}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &887986321 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1410465649598312199, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1687779339}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &887986322 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6599595983611893827, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1687779339}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &887986323 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2276439185606168551, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1687779339}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &888000691
 GameObject:
   m_ObjectHideFlags: 0
@@ -413293,6 +414991,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &954188254 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5393747351799607988, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 954188249}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &954188255 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8920833879447499071, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 954188249}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &954481126
 GameObject:
   m_ObjectHideFlags: 0
@@ -416546,6 +418254,26 @@ Transform:
   - {fileID: 755085727}
   m_Father: {fileID: 377986303}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &961175384 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2648481746283081426, guid: 5db17ae34b457c243b7e8e20086a3db1, type: 3}
+  m_PrefabInstance: {fileID: 1513248896}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &961175385 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1410465649598312199, guid: 5db17ae34b457c243b7e8e20086a3db1, type: 3}
+  m_PrefabInstance: {fileID: 1513248896}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &961175386 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6599595983611893827, guid: 5db17ae34b457c243b7e8e20086a3db1, type: 3}
+  m_PrefabInstance: {fileID: 1513248896}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &961175387 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2276439185606168551, guid: 5db17ae34b457c243b7e8e20086a3db1, type: 3}
+  m_PrefabInstance: {fileID: 1513248896}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &961374294
 GameObject:
   m_ObjectHideFlags: 0
@@ -417373,6 +419101,7 @@ GameObject:
   - component: {fileID: 968433916}
   - component: {fileID: 968433917}
   - component: {fileID: 968433915}
+  - component: {fileID: 968433918}
   m_Layer: 0
   m_Name: The Thirsting
   m_TagString: Untagged
@@ -417546,6 +419275,66 @@ MonoBehaviour:
   LeapFrom: 0.62
   FrozenGlow: {r: 0.22, g: 0.5, b: 0.85, a: 1}
   LandingStagger: 20
+--- !u!114 &968433918
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 968433913}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f78a6757d915a934ea7781e7af1f611b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Forms.BodyMeasurement
+  anchors:
+    Waist: 0.93099993
+    Chest: 1.3204999
+    Head: 1.6529996
+    Crown: 1.9156178
+    Width: 0.13125627
+    Front: 0.10128813
+    Back: 0.10538115
+  widths:
+  - 0.13252078
+  - 0.13252309
+  - 0.14100781
+  - 0.19000012
+  - 0.15133397
+  - 0.10653259
+  - 0.13125627
+  - 0.045688692
+  - 0.08302861
+  - 0.117710724
+  fronts:
+  - 0.2688662
+  - 0.05225425
+  - 0.059379227
+  - 0.12825422
+  - 0.08471729
+  - 0.07896087
+  - 0.10128813
+  - 0.06067473
+  - 0.16240364
+  - 0.17971204
+  backs:
+  - 0.06711605
+  - 0.05777456
+  - 0.040673774
+  - 0.0773806
+  - 0.096029416
+  - 0.08628697
+  - 0.10538115
+  - 0.09019189
+  - 0.099827066
+  - 0.08737975
+  joints:
+    Hips: {fileID: 1763677786}
+    Chest: {fileID: 1763677785}
+    Neck: {fileID: 1763677784}
+    Head: {fileID: 1763677783}
+    HandLeft: {fileID: 1937501296}
+    HandRight: {fileID: 1937501295}
 --- !u!1 &968502824
 GameObject:
   m_ObjectHideFlags: 0
@@ -421239,6 +423028,26 @@ Transform:
   - {fileID: 613282845}
   m_Father: {fileID: 1880704382}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &976992853 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2648481746283081426, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 2065441540}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &976992854 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1410465649598312199, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 2065441540}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &976992855 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6599595983611893827, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 2065441540}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &976992856 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2276439185606168551, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 2065441540}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &977405055
 GameObject:
   m_ObjectHideFlags: 0
@@ -568517,6 +570326,26 @@ Transform:
   - {fileID: 1681274947}
   m_Father: {fileID: 1615522671}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &985128066 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2648481746283081426, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 289770176}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &985128067 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1410465649598312199, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 289770176}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &985128068 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6599595983611893827, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 289770176}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &985128069 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2276439185606168551, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 289770176}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &985367360
 GameObject:
   m_ObjectHideFlags: 0
@@ -592883,6 +594712,7 @@ GameObject:
   - component: {fileID: 1025245997}
   - component: {fileID: 1025245998}
   - component: {fileID: 1025245996}
+  - component: {fileID: 1025245999}
   m_Layer: 0
   m_Name: The Ashen
   m_TagString: Untagged
@@ -593017,6 +594847,66 @@ MonoBehaviour:
   LeapFrom: 0.62
   FrozenGlow: {r: 0.22, g: 0.5, b: 0.85, a: 1}
   LandingStagger: 20
+--- !u!114 &1025245999
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1025245994}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f78a6757d915a934ea7781e7af1f611b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Forms.BodyMeasurement
+  anchors:
+    Waist: 0.9604
+    Chest: 1.3621999
+    Head: 1.7051998
+    Crown: 1.8849957
+    Width: 0.055336535
+    Front: 0.1395495
+    Back: 0.14309709
+  widths:
+  - 0.14213288
+  - 0.15522607
+  - 0.16385943
+  - 0.18332088
+  - 0.18344171
+  - 0.170401
+  - 0.13272545
+  - 0.055336535
+  - 0.06335787
+  - 0.10182539
+  fronts:
+  - 0.18043682
+  - 0.060621466
+  - 0.07457949
+  - 0.09365048
+  - 0.10286997
+  - 0.09685489
+  - 0.13966493
+  - 0.1395495
+  - 0.11842823
+  - 0.14067058
+  backs:
+  - 0.07047527
+  - 0.0854771
+  - 0.076397605
+  - 0.085514694
+  - 0.114854194
+  - 0.12095342
+  - 0.1220942
+  - 0.14309709
+  - 0.06281801
+  - 0.097277395
+  joints:
+    Hips: {fileID: 1849775723}
+    Chest: {fileID: 1849775722}
+    Neck: {fileID: 1849775721}
+    Head: {fileID: 1849775720}
+    HandLeft: {fileID: 291275114}
+    HandRight: {fileID: 291275113}
 --- !u!1 &1025334192
 GameObject:
   m_ObjectHideFlags: 0
@@ -599191,6 +601081,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &1033285431 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5393747351799607988, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1033285426}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1033285432 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8920833879447499071, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1033285426}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1033666518
 GameObject:
   m_ObjectHideFlags: 0
@@ -602957,6 +604857,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &1037974243 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5393747351799607988, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1037974238}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1037974244 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8920833879447499071, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1037974238}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1038540263
 GameObject:
   m_ObjectHideFlags: 0
@@ -610608,6 +612518,7 @@ GameObject:
   - component: {fileID: 1051129204}
   - component: {fileID: 1051129202}
   - component: {fileID: 1051129201}
+  - component: {fileID: 1051129205}
   m_Layer: 0
   m_Name: The Thirsting
   m_TagString: Untagged
@@ -610798,6 +612709,66 @@ MonoBehaviour:
   LeapFrom: 0.62
   FrozenGlow: {r: 0.22, g: 0.5, b: 0.85, a: 1}
   LandingStagger: 20
+--- !u!114 &1051129205
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1051129199}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f78a6757d915a934ea7781e7af1f611b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Forms.BodyMeasurement
+  anchors:
+    Waist: 0.93099993
+    Chest: 1.3204999
+    Head: 1.6529996
+    Crown: 1.9156178
+    Width: 0.13125736
+    Front: 0.10128268
+    Back: 0.105386674
+  widths:
+  - 0.13251978
+  - 0.13252418
+  - 0.14100891
+  - 0.19000018
+  - 0.15133508
+  - 0.10653367
+  - 0.13125736
+  - 0.045689754
+  - 0.08302759
+  - 0.11771181
+  fronts:
+  - 0.26886082
+  - 0.052248783
+  - 0.05937376
+  - 0.12824878
+  - 0.08471183
+  - 0.07895542
+  - 0.10128268
+  - 0.060669266
+  - 0.16239822
+  - 0.17970662
+  backs:
+  - 0.06712155
+  - 0.05778006
+  - 0.040679272
+  - 0.0773861
+  - 0.09603493
+  - 0.08629248
+  - 0.105386674
+  - 0.09019741
+  - 0.09983258
+  - 0.08738527
+  joints:
+    Hips: {fileID: 429127634}
+    Chest: {fileID: 429127633}
+    Neck: {fileID: 429127632}
+    Head: {fileID: 429127631}
+    HandLeft: {fileID: 1871626145}
+    HandRight: {fileID: 1871626144}
 --- !u!1 &1051636492
 GameObject:
   m_ObjectHideFlags: 0
@@ -612450,6 +614421,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &1061028335 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5393747351799607988, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1061028330}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1061028336 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8920833879447499071, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1061028330}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1061793909
 GameObject:
   m_ObjectHideFlags: 0
@@ -617483,6 +619464,7 @@ GameObject:
   - component: {fileID: 1066107131}
   - component: {fileID: 1066107132}
   - component: {fileID: 1066107130}
+  - component: {fileID: 1066107133}
   m_Layer: 0
   m_Name: The Wick
   m_TagString: Untagged
@@ -617608,6 +619590,66 @@ MonoBehaviour:
   LeapFrom: 0.62
   FrozenGlow: {r: 0.22, g: 0.5, b: 0.85, a: 1}
   LandingStagger: 20
+--- !u!114 &1066107133
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1066107128}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f78a6757d915a934ea7781e7af1f611b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Forms.BodyMeasurement
+  anchors:
+    Waist: 1.0289998
+    Chest: 1.4594998
+    Head: 1.8269994
+    Crown: 2.019638
+    Width: 0.059294973
+    Front: 0.1495177
+    Back: 0.15331794
+  widths:
+  - 0.15227944
+  - 0.16631949
+  - 0.17555788
+  - 0.19640943
+  - 0.19655055
+  - 0.18257836
+  - 0.14220004
+  - 0.059294973
+  - 0.06788926
+  - 0.109092824
+  fronts:
+  - 0.19332556
+  - 0.06495195
+  - 0.079906985
+  - 0.10034019
+  - 0.11021821
+  - 0.10377348
+  - 0.1496414
+  - 0.1495177
+  - 0.12688778
+  - 0.15071888
+  backs:
+  - 0.075508855
+  - 0.09158224
+  - 0.08185421
+  - 0.091622524
+  - 0.12305771
+  - 0.12959258
+  - 0.13081485
+  - 0.15331794
+  - 0.06730465
+  - 0.10422542
+  joints:
+    Hips: {fileID: 1263735964}
+    Chest: {fileID: 1263735963}
+    Neck: {fileID: 1263735962}
+    Head: {fileID: 1263735961}
+    HandLeft: {fileID: 1033285432}
+    HandRight: {fileID: 1033285431}
 --- !u!1 &1066177991
 GameObject:
   m_ObjectHideFlags: 0
@@ -625435,6 +627477,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &1096595427 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5393747351799607988, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1096595422}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1096595428 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8920833879447499071, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1096595422}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1096684796
 GameObject:
   m_ObjectHideFlags: 0
@@ -625447,6 +627499,7 @@ GameObject:
   - component: {fileID: 1096684799}
   - component: {fileID: 1096684800}
   - component: {fileID: 1096684798}
+  - component: {fileID: 1096684801}
   m_Layer: 0
   m_Name: The Ashen
   m_TagString: Untagged
@@ -625581,6 +627634,66 @@ MonoBehaviour:
   LeapFrom: 0.62
   FrozenGlow: {r: 0.22, g: 0.5, b: 0.85, a: 1}
   LandingStagger: 20
+--- !u!114 &1096684801
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1096684796}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f78a6757d915a934ea7781e7af1f611b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Forms.BodyMeasurement
+  anchors:
+    Waist: 0.9604
+    Chest: 1.3621999
+    Head: 1.7051998
+    Crown: 1.8849957
+    Width: 0.055336863
+    Front: 0.13955036
+    Back: 0.14309621
+  widths:
+  - 0.14213257
+  - 0.1552264
+  - 0.1638591
+  - 0.18332055
+  - 0.18344204
+  - 0.17040133
+  - 0.13272512
+  - 0.055336863
+  - 0.063358195
+  - 0.10182506
+  fronts:
+  - 0.1804377
+  - 0.06062234
+  - 0.074580364
+  - 0.093651354
+  - 0.102870844
+  - 0.09685576
+  - 0.1396658
+  - 0.13955036
+  - 0.11842911
+  - 0.14067146
+  backs:
+  - 0.0704744
+  - 0.08547623
+  - 0.07639673
+  - 0.08551382
+  - 0.11485332
+  - 0.12095255
+  - 0.12209333
+  - 0.14309621
+  - 0.062817134
+  - 0.09727652
+  joints:
+    Hips: {fileID: 2071433512}
+    Chest: {fileID: 2071433511}
+    Neck: {fileID: 2071433510}
+    Head: {fileID: 2071433509}
+    HandLeft: {fileID: 2092080191}
+    HandRight: {fileID: 2092080190}
 --- !u!1001 &1096938565
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -625722,6 +627835,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &1096938570 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5393747351799607988, guid: 5db17ae34b457c243b7e8e20086a3db1, type: 3}
+  m_PrefabInstance: {fileID: 1096938565}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1096938571 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8920833879447499071, guid: 5db17ae34b457c243b7e8e20086a3db1, type: 3}
+  m_PrefabInstance: {fileID: 1096938565}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1098596853
 GameObject:
   m_ObjectHideFlags: 0
@@ -640994,6 +643117,26 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     vectorLabel1_3: W
+--- !u!4 &1129998423 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2648481746283081426, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 2014823035}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1129998424 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1410465649598312199, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 2014823035}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1129998425 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6599595983611893827, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 2014823035}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1129998426 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2276439185606168551, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 2014823035}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1130120413
 GameObject:
   m_ObjectHideFlags: 0
@@ -641905,6 +644048,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &1133765631 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5393747351799607988, guid: 1072e508ec388b34597b4e65469ea78d, type: 3}
+  m_PrefabInstance: {fileID: 1133765626}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1133765632 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8920833879447499071, guid: 1072e508ec388b34597b4e65469ea78d, type: 3}
+  m_PrefabInstance: {fileID: 1133765626}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1133851575
 GameObject:
   m_ObjectHideFlags: 0
@@ -648093,6 +650246,26 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1147465349}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &1148298595 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2648481746283081426, guid: 5db17ae34b457c243b7e8e20086a3db1, type: 3}
+  m_PrefabInstance: {fileID: 1897907832}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1148298596 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1410465649598312199, guid: 5db17ae34b457c243b7e8e20086a3db1, type: 3}
+  m_PrefabInstance: {fileID: 1897907832}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1148298597 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6599595983611893827, guid: 5db17ae34b457c243b7e8e20086a3db1, type: 3}
+  m_PrefabInstance: {fileID: 1897907832}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1148298598 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2276439185606168551, guid: 5db17ae34b457c243b7e8e20086a3db1, type: 3}
+  m_PrefabInstance: {fileID: 1897907832}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1148864850
 GameObject:
   m_ObjectHideFlags: 0
@@ -651063,6 +653236,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &1151078141 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5393747351799607988, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1151078136}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1151078142 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8920833879447499071, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1151078136}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1151106911
 GameObject:
   m_ObjectHideFlags: 0
@@ -652073,6 +654256,7 @@ GameObject:
   - component: {fileID: 1158633561}
   - component: {fileID: 1158633559}
   - component: {fileID: 1158633558}
+  - component: {fileID: 1158633562}
   m_Layer: 0
   m_Name: The Thirsting
   m_TagString: Untagged
@@ -652263,6 +654447,66 @@ MonoBehaviour:
   LeapFrom: 0.62
   FrozenGlow: {r: 0.22, g: 0.5, b: 0.85, a: 1}
   LandingStagger: 20
+--- !u!114 &1158633562
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1158633556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f78a6757d915a934ea7781e7af1f611b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Forms.BodyMeasurement
+  anchors:
+    Waist: 0.93099993
+    Chest: 1.3204999
+    Head: 1.6529996
+    Crown: 1.9156178
+    Width: 0.13125901
+    Front: 0.101279326
+    Back: 0.10539
+  widths:
+  - 0.13252142
+  - 0.13252583
+  - 0.14101057
+  - 0.19000015
+  - 0.15133671
+  - 0.10653532
+  - 0.13125901
+  - 0.04569142
+  - 0.0830259
+  - 0.11771347
+  fronts:
+  - 0.26885745
+  - 0.052245438
+  - 0.059370413
+  - 0.12824541
+  - 0.08470848
+  - 0.07895207
+  - 0.101279326
+  - 0.06066592
+  - 0.16239485
+  - 0.17970327
+  backs:
+  - 0.06712489
+  - 0.05778339
+  - 0.040682606
+  - 0.077389434
+  - 0.09603825
+  - 0.086295806
+  - 0.10539
+  - 0.09020074
+  - 0.09983591
+  - 0.08738859
+  joints:
+    Hips: {fileID: 1572413590}
+    Chest: {fileID: 1572413589}
+    Neck: {fileID: 1572413588}
+    Head: {fileID: 1572413587}
+    HandLeft: {fileID: 190554101}
+    HandRight: {fileID: 190554100}
 --- !u!1 &1159142525
 GameObject:
   m_ObjectHideFlags: 0
@@ -652836,6 +655080,26 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1160674336}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &1161822214 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2648481746283081426, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 577052244}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1161822215 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1410465649598312199, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 577052244}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1161822216 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6599595983611893827, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 577052244}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1161822217 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2276439185606168551, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 577052244}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1162317504
 GameObject:
   m_ObjectHideFlags: 0
@@ -673935,6 +676199,26 @@ Transform:
   - {fileID: 1375741188}
   m_Father: {fileID: 3522583}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &1208072285 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2648481746283081426, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 669985362}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1208072286 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1410465649598312199, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 669985362}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1208072287 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6599595983611893827, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 669985362}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1208072288 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2276439185606168551, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 669985362}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1208264508
 GameObject:
   m_ObjectHideFlags: 0
@@ -677111,6 +679395,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &1216140569 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5393747351799607988, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1216140564}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1216140570 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8920833879447499071, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1216140564}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1216415410
 GameObject:
   m_ObjectHideFlags: 0
@@ -701423,6 +703717,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &1262589793 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5393747351799607988, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1262589788}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1262589794 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8920833879447499071, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1262589788}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1262708361
 GameObject:
   m_ObjectHideFlags: 0
@@ -701638,6 +703942,26 @@ Transform:
   - {fileID: 1184465284}
   m_Father: {fileID: 1653411681}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &1263735961 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2648481746283081426, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1033285426}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1263735962 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1410465649598312199, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1033285426}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1263735963 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6599595983611893827, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1033285426}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1263735964 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2276439185606168551, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1033285426}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1263823575
 GameObject:
   m_ObjectHideFlags: 0
@@ -715393,6 +717717,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &1289780127 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5393747351799607988, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1289780122}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1289780128 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8920833879447499071, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1289780122}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1289965762
 GameObject:
   m_ObjectHideFlags: 0
@@ -721595,6 +723929,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &1301037291 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5393747351799607988, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1301037286}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1301037292 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8920833879447499071, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1301037286}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1301314713
 GameObject:
   m_ObjectHideFlags: 0
@@ -722249,6 +724593,7 @@ GameObject:
   - component: {fileID: 1307130769}
   - component: {fileID: 1307130770}
   - component: {fileID: 1307130768}
+  - component: {fileID: 1307130771}
   m_Layer: 0
   m_Name: The Ashen
   m_TagString: Untagged
@@ -722383,6 +724728,66 @@ MonoBehaviour:
   LeapFrom: 0.62
   FrozenGlow: {r: 0.22, g: 0.5, b: 0.85, a: 1}
   LandingStagger: 20
+--- !u!114 &1307130771
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1307130766}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f78a6757d915a934ea7781e7af1f611b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Forms.BodyMeasurement
+  anchors:
+    Waist: 0.9604
+    Chest: 1.3621999
+    Head: 1.7051998
+    Crown: 1.8849957
+    Width: 0.055336848
+    Front: 0.13954884
+    Back: 0.14309774
+  widths:
+  - 0.14213258
+  - 0.15522638
+  - 0.16385911
+  - 0.18332057
+  - 0.18344203
+  - 0.17040132
+  - 0.13272513
+  - 0.055336848
+  - 0.06335818
+  - 0.10182507
+  fronts:
+  - 0.18043616
+  - 0.06062081
+  - 0.07457884
+  - 0.09364983
+  - 0.10286932
+  - 0.09685423
+  - 0.13966428
+  - 0.13954884
+  - 0.118427575
+  - 0.14066993
+  backs:
+  - 0.07047593
+  - 0.085477754
+  - 0.07639826
+  - 0.08551535
+  - 0.11485485
+  - 0.120954074
+  - 0.122094855
+  - 0.14309774
+  - 0.06281867
+  - 0.09727805
+  joints:
+    Hips: {fileID: 1311087169}
+    Chest: {fileID: 1311087168}
+    Neck: {fileID: 1311087167}
+    Head: {fileID: 1311087166}
+    HandLeft: {fileID: 1216140570}
+    HandRight: {fileID: 1216140569}
 --- !u!1 &1307165921
 GameObject:
   m_ObjectHideFlags: 0
@@ -725201,6 +727606,26 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1310463833}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &1311087166 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2648481746283081426, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1216140564}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1311087167 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1410465649598312199, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1216140564}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1311087168 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6599595983611893827, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1216140564}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1311087169 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2276439185606168551, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1216140564}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1311372866
 GameObject:
   m_ObjectHideFlags: 0
@@ -729102,6 +731527,7 @@ GameObject:
   - component: {fileID: 1324256929}
   - component: {fileID: 1324256931}
   - component: {fileID: 1324256928}
+  - component: {fileID: 1324256932}
   m_Layer: 0
   m_Name: Gilded Levy
   m_TagString: Untagged
@@ -729241,6 +731667,66 @@ MonoBehaviour:
   LeapFrom: 0.62
   FrozenGlow: {r: 0.22, g: 0.5, b: 0.85, a: 1}
   LandingStagger: 20
+--- !u!114 &1324256932
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1324256926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f78a6757d915a934ea7781e7af1f611b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Forms.BodyMeasurement
+  anchors:
+    Waist: 1.0289998
+    Chest: 1.4594998
+    Head: 1.8269994
+    Crown: 2.0463386
+    Width: 0.09905033
+    Front: 0.13858184
+    Back: 0.15400027
+  widths:
+  - 0.15145653
+  - 0.1277431
+  - 0.12036722
+  - 0.2100001
+  - 0.199545
+  - 0.16190565
+  - 0.15842885
+  - 0.09905033
+  - 0.10048887
+  - 0.12045657
+  fronts:
+  - 0.27748862
+  - 0.07946427
+  - 0.22205798
+  - 0.18269415
+  - 0.14191149
+  - 0.122369036
+  - 0.15530974
+  - 0.13858184
+  - 0.14631498
+  - 0.16616473
+  backs:
+  - 0.102637604
+  - 0.11116129
+  - 0.09883627
+  - 0.1695635
+  - 0.14852951
+  - 0.13259421
+  - 0.14567722
+  - 0.15400027
+  - 0.10664045
+  - 0.1051754
+  joints:
+    Hips: {fileID: 1524107657}
+    Chest: {fileID: 1524107658}
+    Neck: {fileID: 1524107659}
+    Head: {fileID: 1524107660}
+    HandLeft: {fileID: 954188255}
+    HandRight: {fileID: 954188254}
 --- !u!1 &1324405805
 GameObject:
   m_ObjectHideFlags: 0
@@ -752545,6 +755031,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &1353109562 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5393747351799607988, guid: 5db17ae34b457c243b7e8e20086a3db1, type: 3}
+  m_PrefabInstance: {fileID: 1353109557}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1353109563 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8920833879447499071, guid: 5db17ae34b457c243b7e8e20086a3db1, type: 3}
+  m_PrefabInstance: {fileID: 1353109557}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1353774675
 GameObject:
   m_ObjectHideFlags: 0
@@ -761365,6 +763861,26 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1383375483}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &1383411082 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2648481746283081426, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1096595422}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1383411083 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1410465649598312199, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1096595422}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1383411084 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6599595983611893827, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1096595422}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1383411085 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2276439185606168551, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1096595422}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1383437502
 GameObject:
   m_ObjectHideFlags: 0
@@ -765666,6 +768182,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &1397026687 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5393747351799607988, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1397026682}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1397026688 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8920833879447499071, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1397026682}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1397293326
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -765807,6 +768333,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &1397293331 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5393747351799607988, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1397293326}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1397293332 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8920833879447499071, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1397293326}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1397461638
 GameObject:
   m_ObjectHideFlags: 0
@@ -780668,6 +783204,7 @@ GameObject:
   - component: {fileID: 1433924937}
   - component: {fileID: 1433924938}
   - component: {fileID: 1433924936}
+  - component: {fileID: 1433924939}
   m_Layer: 0
   m_Name: The Thirsting
   m_TagString: Untagged
@@ -780841,6 +783378,66 @@ MonoBehaviour:
   LeapFrom: 0.62
   FrozenGlow: {r: 0.22, g: 0.5, b: 0.85, a: 1}
   LandingStagger: 20
+--- !u!114 &1433924939
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1433924934}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f78a6757d915a934ea7781e7af1f611b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Forms.BodyMeasurement
+  anchors:
+    Waist: 0.93099993
+    Chest: 1.3204999
+    Head: 1.6529996
+    Crown: 1.9156178
+    Width: 0.13125835
+    Front: 0.101288565
+    Back: 0.10538076
+  widths:
+  - 0.13252077
+  - 0.13252518
+  - 0.14100991
+  - 0.19000015
+  - 0.15133606
+  - 0.10653467
+  - 0.13125835
+  - 0.045690764
+  - 0.08302656
+  - 0.11771281
+  fronts:
+  - 0.2688667
+  - 0.052254673
+  - 0.059379652
+  - 0.12825465
+  - 0.08471772
+  - 0.078961305
+  - 0.101288565
+  - 0.06067516
+  - 0.16240409
+  - 0.1797125
+  backs:
+  - 0.06711565
+  - 0.057774153
+  - 0.040673364
+  - 0.077380195
+  - 0.09602901
+  - 0.08628657
+  - 0.10538076
+  - 0.0901915
+  - 0.09982667
+  - 0.08737935
+  joints:
+    Hips: {fileID: 1161822217}
+    Chest: {fileID: 1161822216}
+    Neck: {fileID: 1161822215}
+    Head: {fileID: 1161822214}
+    HandLeft: {fileID: 577052250}
+    HandRight: {fileID: 577052249}
 --- !u!1 &1434032755
 GameObject:
   m_ObjectHideFlags: 0
@@ -781326,6 +783923,7 @@ GameObject:
   - component: {fileID: 1436870263}
   - component: {fileID: 1436870264}
   - component: {fileID: 1436870262}
+  - component: {fileID: 1436870265}
   m_Layer: 0
   m_Name: The Thirsting
   m_TagString: Untagged
@@ -781499,6 +784097,66 @@ MonoBehaviour:
   LeapFrom: 0.62
   FrozenGlow: {r: 0.22, g: 0.5, b: 0.85, a: 1}
   LandingStagger: 20
+--- !u!114 &1436870265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1436870260}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f78a6757d915a934ea7781e7af1f611b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Forms.BodyMeasurement
+  anchors:
+    Waist: 0.93099993
+    Chest: 1.3204999
+    Head: 1.6529996
+    Crown: 1.9156178
+    Width: 0.1312571
+    Front: 0.101283394
+    Back: 0.10538588
+  widths:
+  - 0.13251993
+  - 0.13252392
+  - 0.14100865
+  - 0.1900001
+  - 0.1513348
+  - 0.10653342
+  - 0.1312571
+  - 0.04568953
+  - 0.08302776
+  - 0.11771156
+  fronts:
+  - 0.26886147
+  - 0.052249517
+  - 0.059374493
+  - 0.12824948
+  - 0.08471255
+  - 0.07895614
+  - 0.101283394
+  - 0.06067
+  - 0.1623989
+  - 0.1797073
+  backs:
+  - 0.067120776
+  - 0.057779282
+  - 0.0406785
+  - 0.07738532
+  - 0.09603414
+  - 0.08629169
+  - 0.10538588
+  - 0.09019662
+  - 0.09983179
+  - 0.08738448
+  joints:
+    Hips: {fileID: 1208072288}
+    Chest: {fileID: 1208072287}
+    Neck: {fileID: 1208072286}
+    Head: {fileID: 1208072285}
+    HandLeft: {fileID: 669985368}
+    HandRight: {fileID: 669985367}
 --- !u!1 &1436941557
 GameObject:
   m_ObjectHideFlags: 0
@@ -792567,6 +795225,26 @@ Transform:
   - {fileID: 1770560436}
   m_Father: {fileID: 1779411104}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &1471028182 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2648481746283081426, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1397293326}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1471028183 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1410465649598312199, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1397293326}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1471028184 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6599595983611893827, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1397293326}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1471028185 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2276439185606168551, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1397293326}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1471398065
 GameObject:
   m_ObjectHideFlags: 0
@@ -792755,6 +795433,7 @@ GameObject:
   - component: {fileID: 1472791917}
   - component: {fileID: 1472791918}
   - component: {fileID: 1472791916}
+  - component: {fileID: 1472791919}
   m_Layer: 0
   m_Name: Sun-Blind Priest
   m_TagString: Untagged
@@ -792892,6 +795571,66 @@ MonoBehaviour:
   LeapFrom: 0.62
   FrozenGlow: {r: 0.22, g: 0.5, b: 0.85, a: 1}
   LandingStagger: 20
+--- !u!114 &1472791919
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1472791914}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f78a6757d915a934ea7781e7af1f611b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Forms.BodyMeasurement
+  anchors:
+    Waist: 0.97999996
+    Chest: 1.3899999
+    Head: 1.7399997
+    Crown: 1.9532025
+    Width: 0.0676685
+    Front: 0.1384788
+    Back: 0.16396743
+  widths:
+  - 0.15484767
+  - 0.20000015
+  - 0.20000015
+  - 0.20000015
+  - 0.17858939
+  - 0.15122932
+  - 0.13068017
+  - 0.0676685
+  - 0.0832449
+  - 0.09332972
+  fronts:
+  - 0.26431373
+  - 0.21866965
+  - 0.19887112
+  - 0.17123063
+  - 0.13684627
+  - 0.120343916
+  - 0.1971315
+  - 0.1384788
+  - 0.09854483
+  - 0.08369292
+  backs:
+  - 0.23839885
+  - 0.24231042
+  - 0.21660197
+  - 0.17928241
+  - 0.14971356
+  - 0.1175024
+  - 0.11873962
+  - 0.16396743
+  - 0.12856372
+  - 0.14465246
+  joints:
+    Hips: {fileID: 126014619}
+    Chest: {fileID: 126014618}
+    Neck: {fileID: 126014617}
+    Head: {fileID: 126014616}
+    HandLeft: {fileID: 1096938571}
+    HandRight: {fileID: 1096938570}
 --- !u!1 &1473005019
 GameObject:
   m_ObjectHideFlags: 0
@@ -796077,6 +798816,26 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 3.8571427, z: 1}
   m_Center: {x: 0, y: 1.4285713, z: 0}
+--- !u!4 &1480374047 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2648481746283081426, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 481991766}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1480374048 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1410465649598312199, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 481991766}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1480374049 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6599595983611893827, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 481991766}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1480374050 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2276439185606168551, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 481991766}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1480399621
 GameObject:
   m_ObjectHideFlags: 0
@@ -811000,6 +813759,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &1513248901 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5393747351799607988, guid: 5db17ae34b457c243b7e8e20086a3db1, type: 3}
+  m_PrefabInstance: {fileID: 1513248896}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1513248902 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8920833879447499071, guid: 5db17ae34b457c243b7e8e20086a3db1, type: 3}
+  m_PrefabInstance: {fileID: 1513248896}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1513664664
 GameObject:
   m_ObjectHideFlags: 0
@@ -812621,6 +815390,26 @@ Transform:
   - {fileID: 1146529641}
   m_Father: {fileID: 676880319}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &1524107657 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2276439185606168551, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 954188249}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1524107658 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6599595983611893827, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 954188249}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1524107659 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1410465649598312199, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 954188249}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1524107660 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2648481746283081426, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 954188249}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1526286902
 GameObject:
   m_ObjectHideFlags: 0
@@ -816064,6 +818853,7 @@ GameObject:
   - component: {fileID: 1536505292}
   - component: {fileID: 1536505293}
   - component: {fileID: 1536505291}
+  - component: {fileID: 1536505294}
   m_Layer: 0
   m_Name: The Thirsting
   m_TagString: Untagged
@@ -816237,6 +819027,66 @@ MonoBehaviour:
   LeapFrom: 0.62
   FrozenGlow: {r: 0.22, g: 0.5, b: 0.85, a: 1}
   LandingStagger: 20
+--- !u!114 &1536505294
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1536505289}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f78a6757d915a934ea7781e7af1f611b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Forms.BodyMeasurement
+  anchors:
+    Waist: 0.93099993
+    Chest: 1.3204999
+    Head: 1.6529996
+    Crown: 1.9156178
+    Width: 0.13125731
+    Front: 0.10128383
+    Back: 0.10538544
+  widths:
+  - 0.13251972
+  - 0.13252413
+  - 0.14100885
+  - 0.1900001
+  - 0.15133502
+  - 0.10653363
+  - 0.13125731
+  - 0.04568974
+  - 0.08302756
+  - 0.11771177
+  fronts:
+  - 0.26886192
+  - 0.052249953
+  - 0.05937493
+  - 0.12824991
+  - 0.08471299
+  - 0.07895658
+  - 0.10128383
+  - 0.060670435
+  - 0.16239934
+  - 0.17970775
+  backs:
+  - 0.067120336
+  - 0.057778846
+  - 0.040678065
+  - 0.07738488
+  - 0.0960337
+  - 0.08629125
+  - 0.10538544
+  - 0.090196185
+  - 0.09983135
+  - 0.08738404
+  joints:
+    Hips: {fileID: 1383411085}
+    Chest: {fileID: 1383411084}
+    Neck: {fileID: 1383411083}
+    Head: {fileID: 1383411082}
+    HandLeft: {fileID: 1096595428}
+    HandRight: {fileID: 1096595427}
 --- !u!1 &1537300334
 GameObject:
   m_ObjectHideFlags: 0
@@ -816558,6 +819408,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &1538510578 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5393747351799607988, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1538510573}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1538510579 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8920833879447499071, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1538510573}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1538670991
 GameObject:
   m_ObjectHideFlags: 0
@@ -818074,6 +820934,26 @@ Transform:
   - {fileID: 2057980316}
   m_Father: {fileID: 1409758187}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &1554011446 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2648481746283081426, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1743303632}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1554011447 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1410465649598312199, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1743303632}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1554011448 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6599595983611893827, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1743303632}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1554011449 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2276439185606168551, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1743303632}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1555777727
 GameObject:
   m_ObjectHideFlags: 0
@@ -820099,6 +822979,7 @@ GameObject:
   - component: {fileID: 1567316897}
   - component: {fileID: 1567316894}
   - component: {fileID: 1567316893}
+  - component: {fileID: 1567316898}
   m_Layer: 0
   m_Name: Gilded Spearman
   m_TagString: Untagged
@@ -820255,6 +823136,66 @@ MonoBehaviour:
   LeapFrom: 0.62
   FrozenGlow: {r: 0.22, g: 0.5, b: 0.85, a: 1}
   LandingStagger: 20
+--- !u!114 &1567316898
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1567316891}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f78a6757d915a934ea7781e7af1f611b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Forms.BodyMeasurement
+  anchors:
+    Waist: 1.0975999
+    Chest: 1.5567999
+    Head: 1.9487996
+    Crown: 2.1827612
+    Width: 0.10565546
+    Front: 0.14782481
+    Back: 0.16426289
+  widths:
+  - 0.16155544
+  - 0.13625762
+  - 0.12839001
+  - 0.22400019
+  - 0.21284634
+  - 0.17269768
+  - 0.1689891
+  - 0.10565546
+  - 0.10718644
+  - 0.1284888
+  fronts:
+  - 0.29599208
+  - 0.08476604
+  - 0.23686606
+  - 0.19487795
+  - 0.15137643
+  - 0.13053113
+  - 0.16566789
+  - 0.14782481
+  - 0.15607348
+  - 0.17724656
+  backs:
+  - 0.10947604
+  - 0.118567966
+  - 0.10542128
+  - 0.1808637
+  - 0.15842743
+  - 0.14142977
+  - 0.15538499
+  - 0.16426289
+  - 0.11374574
+  - 0.11218301
+  joints:
+    Hips: {fileID: 2057021655}
+    Chest: {fileID: 2057021656}
+    Neck: {fileID: 2057021657}
+    Head: {fileID: 2057021658}
+    HandLeft: {fileID: 457403475}
+    HandRight: {fileID: 457403474}
 --- !u!1 &1567510256
 GameObject:
   m_ObjectHideFlags: 0
@@ -820854,6 +823795,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &1568752489 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5393747351799607988, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1568752484}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1568752490 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8920833879447499071, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1568752484}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1568824912
 GameObject:
   m_ObjectHideFlags: 0
@@ -824093,6 +827044,26 @@ Transform:
   - {fileID: 281615246}
   m_Father: {fileID: 618493720}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &1572413587 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2648481746283081426, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 190554095}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1572413588 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1410465649598312199, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 190554095}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1572413589 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6599595983611893827, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 190554095}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1572413590 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2276439185606168551, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 190554095}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1572876828
 GameObject:
   m_ObjectHideFlags: 0
@@ -831013,6 +833984,26 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1586753726}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &1587154665 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2648481746283081426, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1151078136}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1587154666 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1410465649598312199, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1151078136}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1587154667 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6599595983611893827, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1151078136}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1587154668 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2276439185606168551, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1151078136}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1587380559
 GameObject:
   m_ObjectHideFlags: 0
@@ -845497,6 +848488,26 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1636177851}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &1637455346 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2648481746283081426, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 804838231}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1637455347 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1410465649598312199, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 804838231}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1637455348 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6599595983611893827, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 804838231}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1637455349 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2276439185606168551, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 804838231}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1638260719
 GameObject:
   m_ObjectHideFlags: 0
@@ -854156,6 +857167,7 @@ GameObject:
   - component: {fileID: 1651004018}
   - component: {fileID: 1651004019}
   - component: {fileID: 1651004017}
+  - component: {fileID: 1651004020}
   m_Layer: 0
   m_Name: Sun-Blind Priest
   m_TagString: Untagged
@@ -854293,6 +857305,66 @@ MonoBehaviour:
   LeapFrom: 0.62
   FrozenGlow: {r: 0.22, g: 0.5, b: 0.85, a: 1}
   LandingStagger: 20
+--- !u!114 &1651004020
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1651004015}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f78a6757d915a934ea7781e7af1f611b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Forms.BodyMeasurement
+  anchors:
+    Waist: 0.97999996
+    Chest: 1.3899999
+    Head: 1.7399997
+    Crown: 1.9532025
+    Width: 0.06765366
+    Front: 0.13847965
+    Back: 0.16396652
+  widths:
+  - 0.15486214
+  - 0.2000001
+  - 0.2000001
+  - 0.2000001
+  - 0.17860384
+  - 0.15124379
+  - 0.13066532
+  - 0.06765366
+  - 0.083230056
+  - 0.09334452
+  fronts:
+  - 0.26431456
+  - 0.21867049
+  - 0.19887196
+  - 0.1712315
+  - 0.13684714
+  - 0.12034478
+  - 0.19713235
+  - 0.13847965
+  - 0.09854569
+  - 0.08369379
+  backs:
+  - 0.23839793
+  - 0.2423095
+  - 0.21660104
+  - 0.1792815
+  - 0.14971265
+  - 0.11750149
+  - 0.11873872
+  - 0.16396652
+  - 0.12856281
+  - 0.14465155
+  joints:
+    Hips: {fileID: 1799484825}
+    Chest: {fileID: 1799484824}
+    Neck: {fileID: 1799484823}
+    Head: {fileID: 1799484822}
+    HandLeft: {fileID: 93489298}
+    HandRight: {fileID: 93489297}
 --- !u!1 &1651152510
 GameObject:
   m_ObjectHideFlags: 0
@@ -858513,6 +861585,26 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1661630145}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &1661689898 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2648481746283081426, guid: 5db17ae34b457c243b7e8e20086a3db1, type: 3}
+  m_PrefabInstance: {fileID: 1353109557}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1661689899 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1410465649598312199, guid: 5db17ae34b457c243b7e8e20086a3db1, type: 3}
+  m_PrefabInstance: {fileID: 1353109557}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1661689900 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6599595983611893827, guid: 5db17ae34b457c243b7e8e20086a3db1, type: 3}
+  m_PrefabInstance: {fileID: 1353109557}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1661689901 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2276439185606168551, guid: 5db17ae34b457c243b7e8e20086a3db1, type: 3}
+  m_PrefabInstance: {fileID: 1353109557}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1664398862
 GameObject:
   m_ObjectHideFlags: 0
@@ -858649,6 +861741,7 @@ GameObject:
   - component: {fileID: 1664737854}
   - component: {fileID: 1664737856}
   - component: {fileID: 1664737853}
+  - component: {fileID: 1664737857}
   m_Layer: 0
   m_Name: Gilded Levy
   m_TagString: Untagged
@@ -858788,6 +861881,66 @@ MonoBehaviour:
   LeapFrom: 0.62
   FrozenGlow: {r: 0.22, g: 0.5, b: 0.85, a: 1}
   LandingStagger: 20
+--- !u!114 &1664737857
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1664737851}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f78a6757d915a934ea7781e7af1f611b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Forms.BodyMeasurement
+  anchors:
+    Waist: 1.0289998
+    Chest: 1.4594998
+    Head: 1.8269994
+    Crown: 2.0463386
+    Width: 0.099050276
+    Front: 0.13858196
+    Back: 0.15400015
+  widths:
+  - 0.15145649
+  - 0.12774315
+  - 0.12036727
+  - 0.2100001
+  - 0.19954506
+  - 0.16190569
+  - 0.15842889
+  - 0.099050276
+  - 0.10048892
+  - 0.120456524
+  fronts:
+  - 0.2774887
+  - 0.07946439
+  - 0.2220581
+  - 0.18269427
+  - 0.1419116
+  - 0.12236915
+  - 0.15530984
+  - 0.13858196
+  - 0.1463151
+  - 0.16616483
+  backs:
+  - 0.10263749
+  - 0.11116117
+  - 0.09883616
+  - 0.16956338
+  - 0.14852941
+  - 0.13259411
+  - 0.14567712
+  - 0.15400015
+  - 0.10664033
+  - 0.10517528
+  joints:
+    Hips: {fileID: 487577086}
+    Chest: {fileID: 487577087}
+    Neck: {fileID: 487577088}
+    Head: {fileID: 487577089}
+    HandLeft: {fileID: 175616522}
+    HandRight: {fileID: 175616521}
 --- !u!1 &1664907998
 GameObject:
   m_ObjectHideFlags: 0
@@ -873523,6 +876676,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &1687779344 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5393747351799607988, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1687779339}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1687779345 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8920833879447499071, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1687779339}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1688044571
 GameObject:
   m_ObjectHideFlags: 0
@@ -882080,6 +885243,26 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!4 &1711580606 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2648481746283081426, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 222425486}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1711580607 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1410465649598312199, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 222425486}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1711580608 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6599595983611893827, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 222425486}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1711580609 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2276439185606168551, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 222425486}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1711893306
 GameObject:
   m_ObjectHideFlags: 0
@@ -885509,6 +888692,7 @@ GameObject:
   - component: {fileID: 1719712894}
   - component: {fileID: 1719712895}
   - component: {fileID: 1719712893}
+  - component: {fileID: 1719712896}
   m_Layer: 0
   m_Name: The Thirsting
   m_TagString: Untagged
@@ -885682,6 +888866,66 @@ MonoBehaviour:
   LeapFrom: 0.62
   FrozenGlow: {r: 0.22, g: 0.5, b: 0.85, a: 1}
   LandingStagger: 20
+--- !u!114 &1719712896
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1719712891}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f78a6757d915a934ea7781e7af1f611b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Forms.BodyMeasurement
+  anchors:
+    Waist: 0.93099993
+    Chest: 1.3204999
+    Head: 1.6529996
+    Crown: 1.9156178
+    Width: 0.13125728
+    Front: 0.101284266
+    Back: 0.105385005
+  widths:
+  - 0.13251975
+  - 0.13252409
+  - 0.14100882
+  - 0.1900001
+  - 0.15133499
+  - 0.106533594
+  - 0.13125728
+  - 0.045689706
+  - 0.08302759
+  - 0.11771174
+  fronts:
+  - 0.26886237
+  - 0.05225039
+  - 0.059375368
+  - 0.12825036
+  - 0.08471343
+  - 0.078957014
+  - 0.101284266
+  - 0.06067087
+  - 0.16239978
+  - 0.17970818
+  backs:
+  - 0.067119904
+  - 0.05777841
+  - 0.040677626
+  - 0.07738445
+  - 0.09603326
+  - 0.08629082
+  - 0.105385005
+  - 0.090195745
+  - 0.09983092
+  - 0.087383606
+  joints:
+    Hips: {fileID: 199365739}
+    Chest: {fileID: 199365738}
+    Neck: {fileID: 199365737}
+    Head: {fileID: 199365736}
+    HandLeft: {fileID: 1881331630}
+    HandRight: {fileID: 1881331629}
 --- !u!1 &1719937206
 GameObject:
   m_ObjectHideFlags: 0
@@ -892890,6 +896134,7 @@ GameObject:
   - component: {fileID: 1736668240}
   - component: {fileID: 1736668241}
   - component: {fileID: 1736668239}
+  - component: {fileID: 1736668242}
   m_Layer: 0
   m_Name: The Wick
   m_TagString: Untagged
@@ -893015,6 +896260,66 @@ MonoBehaviour:
   LeapFrom: 0.62
   FrozenGlow: {r: 0.22, g: 0.5, b: 0.85, a: 1}
   LandingStagger: 20
+--- !u!114 &1736668242
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1736668237}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f78a6757d915a934ea7781e7af1f611b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Forms.BodyMeasurement
+  anchors:
+    Waist: 1.0289998
+    Chest: 1.4594998
+    Head: 1.8269994
+    Crown: 2.019638
+    Width: 0.059289236
+    Front: 0.14951767
+    Back: 0.15331791
+  widths:
+  - 0.15228513
+  - 0.16631374
+  - 0.17556356
+  - 0.19641511
+  - 0.19654478
+  - 0.18257259
+  - 0.14220573
+  - 0.059289236
+  - 0.06788352
+  - 0.109098524
+  fronts:
+  - 0.19332552
+  - 0.064951934
+  - 0.07990696
+  - 0.100340165
+  - 0.11021819
+  - 0.10377346
+  - 0.14964135
+  - 0.14951767
+  - 0.12688775
+  - 0.15071884
+  backs:
+  - 0.07550884
+  - 0.091582224
+  - 0.081854194
+  - 0.0916225
+  - 0.12305768
+  - 0.12959255
+  - 0.13081482
+  - 0.15331791
+  - 0.06730463
+  - 0.10422539
+  joints:
+    Hips: {fileID: 1471028185}
+    Chest: {fileID: 1471028184}
+    Neck: {fileID: 1471028183}
+    Head: {fileID: 1471028182}
+    HandLeft: {fileID: 1397293332}
+    HandRight: {fileID: 1397293331}
 --- !u!1 &1737234926
 GameObject:
   m_ObjectHideFlags: 0
@@ -895698,6 +899003,7 @@ GameObject:
   - component: {fileID: 1739158224}
   - component: {fileID: 1739158222}
   - component: {fileID: 1739158225}
+  - component: {fileID: 1739158227}
   m_Layer: 0
   m_Name: Champion of the Gate
   m_TagString: Untagged
@@ -895898,6 +899204,66 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1.2723215, z: 0}
+--- !u!114 &1739158227
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1739158221}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f78a6757d915a934ea7781e7af1f611b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Forms.BodyMeasurement
+  anchors:
+    Waist: 1.4699999
+    Chest: 2.0849998
+    Head: 2.6099994
+    Crown: 2.922639
+    Width: 0.21126443
+    Front: 0.24682087
+    Back: 0.24725132
+  widths:
+  - 0.22430483
+  - 0.27541056
+  - 0.28427643
+  - 0.30000016
+  - 0.30000016
+  - 0.2874982
+  - 0.238263
+  - 0.21126443
+  - 0.28425613
+  - 0.17128935
+  fronts:
+  - 0.46970072
+  - 0.12295678
+  - 0.13900995
+  - 0.23506057
+  - 0.21948326
+  - 0.18599747
+  - 0.2608359
+  - 0.24682087
+  - 0.16380335
+  - 0.2201177
+  backs:
+  - 0.12898383
+  - 0.17441626
+  - 0.13125691
+  - 0.27548698
+  - 0.308815
+  - 0.23226127
+  - 0.31133163
+  - 0.24725132
+  - 0.19879286
+  - 0.20161813
+  joints:
+    Hips: {fileID: 295656239}
+    Chest: {fileID: 295656240}
+    Neck: {fileID: 295656241}
+    Head: {fileID: 295656242}
+    HandLeft: {fileID: 1133765632}
+    HandRight: {fileID: 1133765631}
 --- !u!1 &1739185737
 GameObject:
   m_ObjectHideFlags: 0
@@ -899425,6 +902791,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &1743303637 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5393747351799607988, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1743303632}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1743303638 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8920833879447499071, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1743303632}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1743620608
 GameObject:
   m_ObjectHideFlags: 0
@@ -901143,6 +904519,7 @@ GameObject:
   - component: {fileID: 1757294108}
   - component: {fileID: 1757294106}
   - component: {fileID: 1757294105}
+  - component: {fileID: 1757294109}
   m_Layer: 0
   m_Name: The Thirsting
   m_TagString: Untagged
@@ -901333,6 +904710,66 @@ MonoBehaviour:
   LeapFrom: 0.62
   FrozenGlow: {r: 0.22, g: 0.5, b: 0.85, a: 1}
   LandingStagger: 20
+--- !u!114 &1757294109
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1757294103}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f78a6757d915a934ea7781e7af1f611b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Forms.BodyMeasurement
+  anchors:
+    Waist: 0.93099993
+    Chest: 1.3204999
+    Head: 1.6529996
+    Crown: 1.9156178
+    Width: 0.13125661
+    Front: 0.10128193
+    Back: 0.10538735
+  widths:
+  - 0.13252045
+  - 0.13252342
+  - 0.14100815
+  - 0.19000012
+  - 0.1513343
+  - 0.10653292
+  - 0.13125661
+  - 0.045689028
+  - 0.08302827
+  - 0.11771106
+  fronts:
+  - 0.26886
+  - 0.05224805
+  - 0.05937303
+  - 0.12824802
+  - 0.08471109
+  - 0.078954674
+  - 0.10128193
+  - 0.06066853
+  - 0.16239744
+  - 0.17970584
+  backs:
+  - 0.06712225
+  - 0.057780758
+  - 0.040679973
+  - 0.0773868
+  - 0.096035615
+  - 0.08629317
+  - 0.10538735
+  - 0.09019809
+  - 0.099833265
+  - 0.08738595
+  joints:
+    Hips: {fileID: 985128069}
+    Chest: {fileID: 985128068}
+    Neck: {fileID: 985128067}
+    Head: {fileID: 985128066}
+    HandLeft: {fileID: 289770182}
+    HandRight: {fileID: 289770181}
 --- !u!1 &1757636794
 GameObject:
   m_ObjectHideFlags: 0
@@ -901819,6 +905256,7 @@ GameObject:
   - component: {fileID: 1760471509}
   - component: {fileID: 1760471510}
   - component: {fileID: 1760471508}
+  - component: {fileID: 1760471511}
   m_Layer: 0
   m_Name: Sun-Blind Priest
   m_TagString: Untagged
@@ -901956,6 +905394,66 @@ MonoBehaviour:
   LeapFrom: 0.62
   FrozenGlow: {r: 0.22, g: 0.5, b: 0.85, a: 1}
   LandingStagger: 20
+--- !u!114 &1760471511
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1760471506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f78a6757d915a934ea7781e7af1f611b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Forms.BodyMeasurement
+  anchors:
+    Waist: 0.97999996
+    Chest: 1.3899999
+    Head: 1.7399997
+    Crown: 1.9532025
+    Width: 0.06764299
+    Front: 0.13847832
+    Back: 0.1639679
+  widths:
+  - 0.15485148
+  - 0.20000015
+  - 0.20000015
+  - 0.20000015
+  - 0.1785932
+  - 0.15123314
+  - 0.13065466
+  - 0.06764299
+  - 0.083240375
+  - 0.09335523
+  fronts:
+  - 0.26431325
+  - 0.21866918
+  - 0.19887064
+  - 0.17123015
+  - 0.1368458
+  - 0.12034344
+  - 0.19713102
+  - 0.13847832
+  - 0.09854435
+  - 0.08369245
+  backs:
+  - 0.23839933
+  - 0.2423109
+  - 0.21660244
+  - 0.17928289
+  - 0.14971404
+  - 0.117502876
+  - 0.1187401
+  - 0.1639679
+  - 0.1285642
+  - 0.14465293
+  joints:
+    Hips: {fileID: 1148298598}
+    Chest: {fileID: 1148298597}
+    Neck: {fileID: 1148298596}
+    Head: {fileID: 1148298595}
+    HandLeft: {fileID: 1897907838}
+    HandRight: {fileID: 1897907837}
 --- !u!1 &1760717064
 GameObject:
   m_ObjectHideFlags: 0
@@ -902482,6 +905980,26 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1763269732}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &1763677783 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2648481746283081426, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1937501290}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1763677784 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1410465649598312199, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1937501290}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1763677785 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6599595983611893827, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1937501290}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1763677786 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2276439185606168551, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1937501290}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1764323396
 GameObject:
   m_ObjectHideFlags: 0
@@ -903632,6 +907150,7 @@ GameObject:
   - component: {fileID: 1771599924}
   - component: {fileID: 1771599925}
   - component: {fileID: 1771599923}
+  - component: {fileID: 1771599926}
   m_Layer: 0
   m_Name: The Wick
   m_TagString: Untagged
@@ -903757,6 +907276,66 @@ MonoBehaviour:
   LeapFrom: 0.62
   FrozenGlow: {r: 0.22, g: 0.5, b: 0.85, a: 1}
   LandingStagger: 20
+--- !u!114 &1771599926
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1771599921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f78a6757d915a934ea7781e7af1f611b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Forms.BodyMeasurement
+  anchors:
+    Waist: 1.0289998
+    Chest: 1.4594998
+    Head: 1.8269994
+    Crown: 2.019638
+    Width: 0.059282742
+    Front: 0.14951701
+    Back: 0.15331863
+  widths:
+  - 0.15229167
+  - 0.16630726
+  - 0.1755701
+  - 0.19642167
+  - 0.19653831
+  - 0.18256612
+  - 0.14221227
+  - 0.059282742
+  - 0.067877024
+  - 0.10910506
+  fronts:
+  - 0.19332486
+  - 0.06495126
+  - 0.07990629
+  - 0.100339495
+  - 0.11021752
+  - 0.10377279
+  - 0.1496407
+  - 0.14951701
+  - 0.12688708
+  - 0.15071818
+  backs:
+  - 0.07550955
+  - 0.09158293
+  - 0.0818549
+  - 0.09162322
+  - 0.1230584
+  - 0.12959328
+  - 0.13081555
+  - 0.15331863
+  - 0.067305334
+  - 0.104226105
+  joints:
+    Hips: {fileID: 847849759}
+    Chest: {fileID: 847849758}
+    Neck: {fileID: 847849757}
+    Head: {fileID: 847849756}
+    HandLeft: {fileID: 1061028336}
+    HandRight: {fileID: 1061028335}
 --- !u!1 &1772434260
 GameObject:
   m_ObjectHideFlags: 0
@@ -908280,6 +911859,7 @@ GameObject:
   - component: {fileID: 1783054561}
   - component: {fileID: 1783054563}
   - component: {fileID: 1783054560}
+  - component: {fileID: 1783054564}
   m_Layer: 0
   m_Name: Gilded Levy
   m_TagString: Untagged
@@ -908419,6 +911999,66 @@ MonoBehaviour:
   LeapFrom: 0.62
   FrozenGlow: {r: 0.22, g: 0.5, b: 0.85, a: 1}
   LandingStagger: 20
+--- !u!114 &1783054564
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1783054558}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f78a6757d915a934ea7781e7af1f611b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Forms.BodyMeasurement
+  anchors:
+    Waist: 1.0289998
+    Chest: 1.4594998
+    Head: 1.8269994
+    Crown: 2.0463386
+    Width: 0.09905033
+    Front: 0.13858208
+    Back: 0.15400004
+  widths:
+  - 0.15145653
+  - 0.1277431
+  - 0.12036722
+  - 0.2100001
+  - 0.199545
+  - 0.16190565
+  - 0.15842885
+  - 0.09905033
+  - 0.10048887
+  - 0.12045657
+  fronts:
+  - 0.27748883
+  - 0.0794645
+  - 0.22205822
+  - 0.18269439
+  - 0.14191172
+  - 0.12236927
+  - 0.15530996
+  - 0.13858208
+  - 0.1463152
+  - 0.16616495
+  backs:
+  - 0.10263738
+  - 0.11116106
+  - 0.09883605
+  - 0.16956328
+  - 0.14852929
+  - 0.13259399
+  - 0.145677
+  - 0.15400004
+  - 0.10664022
+  - 0.10517517
+  joints:
+    Hips: {fileID: 1926137240}
+    Chest: {fileID: 1926137241}
+    Neck: {fileID: 1926137242}
+    Head: {fileID: 1926137243}
+    HandLeft: {fileID: 518562442}
+    HandRight: {fileID: 518562441}
 --- !u!1 &1783759732
 GameObject:
   m_ObjectHideFlags: 0
@@ -910773,6 +914413,26 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1798951657}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &1799484822 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2648481746283081426, guid: 5db17ae34b457c243b7e8e20086a3db1, type: 3}
+  m_PrefabInstance: {fileID: 93489292}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1799484823 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1410465649598312199, guid: 5db17ae34b457c243b7e8e20086a3db1, type: 3}
+  m_PrefabInstance: {fileID: 93489292}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1799484824 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6599595983611893827, guid: 5db17ae34b457c243b7e8e20086a3db1, type: 3}
+  m_PrefabInstance: {fileID: 93489292}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1799484825 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2276439185606168551, guid: 5db17ae34b457c243b7e8e20086a3db1, type: 3}
+  m_PrefabInstance: {fileID: 93489292}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1800374502
 GameObject:
   m_ObjectHideFlags: 0
@@ -925348,6 +929008,26 @@ Transform:
   - {fileID: 92046937}
   m_Father: {fileID: 1880704382}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &1826220975 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2276439185606168551, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 165626545}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1826220976 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6599595983611893827, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 165626545}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1826220977 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1410465649598312199, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 165626545}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1826220978 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2648481746283081426, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 165626545}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1826396349
 GameObject:
   m_ObjectHideFlags: 0
@@ -933709,6 +937389,26 @@ Transform:
   - {fileID: 465355535}
   m_Father: {fileID: 101173911}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &1849775720 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2648481746283081426, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 291275108}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1849775721 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1410465649598312199, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 291275108}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1849775722 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6599595983611893827, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 291275108}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1849775723 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2276439185606168551, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 291275108}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1852318785
 GameObject:
   m_ObjectHideFlags: 0
@@ -943998,6 +947698,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &1871626144 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5393747351799607988, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1871626139}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1871626145 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8920833879447499071, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1871626139}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1872622759
 GameObject:
   m_ObjectHideFlags: 0
@@ -947140,6 +950850,7 @@ GameObject:
   - component: {fileID: 1879401991}
   - component: {fileID: 1879401993}
   - component: {fileID: 1879401990}
+  - component: {fileID: 1879401994}
   m_Layer: 0
   m_Name: Gilded Levy
   m_TagString: Untagged
@@ -947279,6 +950990,66 @@ MonoBehaviour:
   LeapFrom: 0.62
   FrozenGlow: {r: 0.22, g: 0.5, b: 0.85, a: 1}
   LandingStagger: 20
+--- !u!114 &1879401994
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1879401988}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f78a6757d915a934ea7781e7af1f611b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Forms.BodyMeasurement
+  anchors:
+    Waist: 1.0289998
+    Chest: 1.4594998
+    Head: 1.8269994
+    Crown: 2.0463386
+    Width: 0.09905047
+    Front: 0.13858257
+    Back: 0.15399954
+  widths:
+  - 0.15145668
+  - 0.12774296
+  - 0.12036709
+  - 0.2100001
+  - 0.19954486
+  - 0.1619055
+  - 0.15842871
+  - 0.09905047
+  - 0.10048874
+  - 0.12045671
+  fronts:
+  - 0.27748933
+  - 0.079465
+  - 0.22205871
+  - 0.18269488
+  - 0.1419122
+  - 0.12236976
+  - 0.15531045
+  - 0.13858257
+  - 0.14631571
+  - 0.16616544
+  backs:
+  - 0.10263688
+  - 0.11116056
+  - 0.09883555
+  - 0.16956277
+  - 0.1485288
+  - 0.1325935
+  - 0.14567651
+  - 0.15399954
+  - 0.10663972
+  - 0.10517467
+  joints:
+    Hips: {fileID: 1826220975}
+    Chest: {fileID: 1826220976}
+    Neck: {fileID: 1826220977}
+    Head: {fileID: 1826220978}
+    HandLeft: {fileID: 165626551}
+    HandRight: {fileID: 165626550}
 --- !u!1 &1879786475
 GameObject:
   m_ObjectHideFlags: 0
@@ -947576,6 +951347,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &1881331629 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5393747351799607988, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1881331624}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1881331630 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8920833879447499071, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1881331624}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1882746459
 GameObject:
   m_ObjectHideFlags: 0
@@ -950798,6 +954579,7 @@ GameObject:
   - component: {fileID: 1890355881}
   - component: {fileID: 1890355882}
   - component: {fileID: 1890355880}
+  - component: {fileID: 1890355883}
   m_Layer: 0
   m_Name: The Wick
   m_TagString: Untagged
@@ -950923,6 +954705,66 @@ MonoBehaviour:
   LeapFrom: 0.62
   FrozenGlow: {r: 0.22, g: 0.5, b: 0.85, a: 1}
   LandingStagger: 20
+--- !u!114 &1890355883
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1890355878}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f78a6757d915a934ea7781e7af1f611b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Forms.BodyMeasurement
+  anchors:
+    Waist: 1.0289998
+    Chest: 1.4594998
+    Head: 1.8269994
+    Crown: 2.019638
+    Width: 0.059289604
+    Front: 0.14951645
+    Back: 0.15331914
+  widths:
+  - 0.15228476
+  - 0.1663141
+  - 0.17556319
+  - 0.19641475
+  - 0.19654515
+  - 0.18257296
+  - 0.14220536
+  - 0.059289604
+  - 0.06788389
+  - 0.10909815
+  fronts:
+  - 0.1933243
+  - 0.06495071
+  - 0.07990574
+  - 0.100338936
+  - 0.11021697
+  - 0.10377223
+  - 0.14964013
+  - 0.14951645
+  - 0.12688653
+  - 0.15071762
+  backs:
+  - 0.07551006
+  - 0.091583446
+  - 0.08185542
+  - 0.09162372
+  - 0.12305891
+  - 0.12959379
+  - 0.13081606
+  - 0.15331914
+  - 0.067305855
+  - 0.10422662
+  joints:
+    Hips: {fileID: 887986323}
+    Chest: {fileID: 887986322}
+    Neck: {fileID: 887986321}
+    Head: {fileID: 887986320}
+    HandLeft: {fileID: 1687779345}
+    HandRight: {fileID: 1687779344}
 --- !u!1 &1890507539
 GameObject:
   m_ObjectHideFlags: 0
@@ -954481,6 +958323,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &1897907837 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5393747351799607988, guid: 5db17ae34b457c243b7e8e20086a3db1, type: 3}
+  m_PrefabInstance: {fileID: 1897907832}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1897907838 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8920833879447499071, guid: 5db17ae34b457c243b7e8e20086a3db1, type: 3}
+  m_PrefabInstance: {fileID: 1897907832}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1898132988
 GameObject:
   m_ObjectHideFlags: 0
@@ -965856,6 +969708,26 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1925204900}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &1926137240 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2276439185606168551, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 518562436}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1926137241 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6599595983611893827, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 518562436}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1926137242 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1410465649598312199, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 518562436}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1926137243 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2648481746283081426, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 518562436}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1926659187
 GameObject:
   m_ObjectHideFlags: 0
@@ -966388,6 +970260,7 @@ GameObject:
   - component: {fileID: 1929786810}
   - component: {fileID: 1929786812}
   - component: {fileID: 1929786809}
+  - component: {fileID: 1929786813}
   m_Layer: 0
   m_Name: Gilded Levy
   m_TagString: Untagged
@@ -966527,6 +970400,66 @@ MonoBehaviour:
   LeapFrom: 0.62
   FrozenGlow: {r: 0.22, g: 0.5, b: 0.85, a: 1}
   LandingStagger: 20
+--- !u!114 &1929786813
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1929786807}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f78a6757d915a934ea7781e7af1f611b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Forms.BodyMeasurement
+  anchors:
+    Waist: 1.0289998
+    Chest: 1.4594998
+    Head: 1.8269994
+    Crown: 2.0463386
+    Width: 0.09905037
+    Front: 0.13858144
+    Back: 0.15400067
+  widths:
+  - 0.1514566
+  - 0.12774324
+  - 0.12036737
+  - 0.2100001
+  - 0.19954495
+  - 0.1619058
+  - 0.158429
+  - 0.09905037
+  - 0.10048883
+  - 0.12045643
+  fronts:
+  - 0.2774882
+  - 0.07946386
+  - 0.22205758
+  - 0.18269375
+  - 0.14191107
+  - 0.12236863
+  - 0.15530932
+  - 0.13858144
+  - 0.14631456
+  - 0.16616431
+  backs:
+  - 0.10263801
+  - 0.1111617
+  - 0.09883668
+  - 0.1695639
+  - 0.14852993
+  - 0.13259463
+  - 0.14567764
+  - 0.15400067
+  - 0.10664086
+  - 0.10517581
+  joints:
+    Hips: {fileID: 206511722}
+    Chest: {fileID: 206511723}
+    Neck: {fileID: 206511724}
+    Head: {fileID: 206511725}
+    HandLeft: {fileID: 774907390}
+    HandRight: {fileID: 774907389}
 --- !u!1 &1929790237
 GameObject:
   m_ObjectHideFlags: 0
@@ -967815,6 +971748,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &1937501295 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5393747351799607988, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1937501290}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1937501296 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8920833879447499071, guid: e6f7837371bbef94489b1c0f7bbde7d6, type: 3}
+  m_PrefabInstance: {fileID: 1937501290}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1939178986
 GameObject:
   m_ObjectHideFlags: 0
@@ -995158,6 +999101,26 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2007525870}
   m_Mesh: {fileID: 0}
+--- !u!4 &2008020432 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2648481746283081426, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1538510573}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &2008020433 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1410465649598312199, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1538510573}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &2008020434 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6599595983611893827, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1538510573}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &2008020435 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2276439185606168551, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 1538510573}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2008149842
 GameObject:
   m_ObjectHideFlags: 0
@@ -995170,6 +999133,7 @@ GameObject:
   - component: {fileID: 2008149845}
   - component: {fileID: 2008149846}
   - component: {fileID: 2008149844}
+  - component: {fileID: 2008149847}
   m_Layer: 0
   m_Name: The Wick
   m_TagString: Untagged
@@ -995295,6 +999259,66 @@ MonoBehaviour:
   LeapFrom: 0.62
   FrozenGlow: {r: 0.22, g: 0.5, b: 0.85, a: 1}
   LandingStagger: 20
+--- !u!114 &2008149847
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2008149842}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f78a6757d915a934ea7781e7af1f611b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Forms.BodyMeasurement
+  anchors:
+    Waist: 1.0289998
+    Chest: 1.4594998
+    Head: 1.8269994
+    Crown: 2.019638
+    Width: 0.059285507
+    Front: 0.14951964
+    Back: 0.153316
+  widths:
+  - 0.15228891
+  - 0.16631003
+  - 0.17556734
+  - 0.19641891
+  - 0.19654109
+  - 0.1825689
+  - 0.1422095
+  - 0.059285507
+  - 0.067879796
+  - 0.109102294
+  fronts:
+  - 0.19332749
+  - 0.064953886
+  - 0.079908915
+  - 0.10034212
+  - 0.11022014
+  - 0.10377541
+  - 0.14964332
+  - 0.14951964
+  - 0.1268897
+  - 0.1507208
+  backs:
+  - 0.075506926
+  - 0.09158031
+  - 0.08185228
+  - 0.091620594
+  - 0.12305578
+  - 0.12959066
+  - 0.13081293
+  - 0.153316
+  - 0.06730271
+  - 0.10422348
+  joints:
+    Hips: {fileID: 125899674}
+    Chest: {fileID: 125899673}
+    Neck: {fileID: 125899672}
+    Head: {fileID: 125899671}
+    HandLeft: {fileID: 1289780128}
+    HandRight: {fileID: 1289780127}
 --- !u!1 &2008790375
 GameObject:
   m_ObjectHideFlags: 0
@@ -996282,6 +1000306,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &2014823040 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5393747351799607988, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 2014823035}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &2014823041 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8920833879447499071, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 2014823035}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2014912116
 GameObject:
   m_ObjectHideFlags: 0
@@ -1008378,6 +1012412,7 @@ GameObject:
   - component: {fileID: 2046024747}
   - component: {fileID: 2046024748}
   - component: {fileID: 2046024746}
+  - component: {fileID: 2046024749}
   m_Layer: 0
   m_Name: The Wick
   m_TagString: Untagged
@@ -1008503,6 +1012538,66 @@ MonoBehaviour:
   LeapFrom: 0.62
   FrozenGlow: {r: 0.22, g: 0.5, b: 0.85, a: 1}
   LandingStagger: 20
+--- !u!114 &2046024749
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2046024744}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f78a6757d915a934ea7781e7af1f611b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Forms.BodyMeasurement
+  anchors:
+    Waist: 1.0289998
+    Chest: 1.4594998
+    Head: 1.8269994
+    Crown: 2.019638
+    Width: 0.05928949
+    Front: 0.14951679
+    Back: 0.15331878
+  widths:
+  - 0.15228488
+  - 0.16631399
+  - 0.1755633
+  - 0.19641486
+  - 0.19654503
+  - 0.18257284
+  - 0.14220548
+  - 0.05928949
+  - 0.067883775
+  - 0.10909827
+  fronts:
+  - 0.19332464
+  - 0.06495106
+  - 0.07990609
+  - 0.100339286
+  - 0.11021731
+  - 0.10377258
+  - 0.14964049
+  - 0.14951679
+  - 0.12688687
+  - 0.15071797
+  backs:
+  - 0.07550971
+  - 0.091583095
+  - 0.081855066
+  - 0.09162337
+  - 0.12305856
+  - 0.12959343
+  - 0.1308157
+  - 0.15331878
+  - 0.067305505
+  - 0.10422627
+  joints:
+    Hips: {fileID: 1480374050}
+    Chest: {fileID: 1480374049}
+    Neck: {fileID: 1480374048}
+    Head: {fileID: 1480374047}
+    HandLeft: {fileID: 481991772}
+    HandRight: {fileID: 481991771}
 --- !u!1 &2046921745
 GameObject:
   m_ObjectHideFlags: 0
@@ -1012559,6 +1016654,7 @@ GameObject:
   - component: {fileID: 2054889193}
   - component: {fileID: 2054889191}
   - component: {fileID: 2054889190}
+  - component: {fileID: 2054889194}
   m_Layer: 0
   m_Name: The Thirsting
   m_TagString: Untagged
@@ -1012749,6 +1016845,66 @@ MonoBehaviour:
   LeapFrom: 0.62
   FrozenGlow: {r: 0.22, g: 0.5, b: 0.85, a: 1}
   LandingStagger: 20
+--- !u!114 &2054889194
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2054889188}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f78a6757d915a934ea7781e7af1f611b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Forms.BodyMeasurement
+  anchors:
+    Waist: 0.93099993
+    Chest: 1.3204999
+    Head: 1.6529996
+    Crown: 1.9156178
+    Width: 0.13125953
+    Front: 0.10128515
+    Back: 0.105384134
+  widths:
+  - 0.13252194
+  - 0.13252634
+  - 0.14101107
+  - 0.19000012
+  - 0.15133722
+  - 0.10653584
+  - 0.13125953
+  - 0.04569195
+  - 0.08302535
+  - 0.11771398
+  fronts:
+  - 0.26886323
+  - 0.05225127
+  - 0.059376247
+  - 0.12825124
+  - 0.08471431
+  - 0.07895789
+  - 0.10128515
+  - 0.06067175
+  - 0.16240066
+  - 0.17970906
+  backs:
+  - 0.06711903
+  - 0.05777754
+  - 0.040676754
+  - 0.07738358
+  - 0.096032396
+  - 0.08628995
+  - 0.105384134
+  - 0.09019487
+  - 0.09983005
+  - 0.087382734
+  joints:
+    Hips: {fileID: 393240405}
+    Chest: {fileID: 393240404}
+    Neck: {fileID: 393240403}
+    Head: {fileID: 393240402}
+    HandLeft: {fileID: 1262589794}
+    HandRight: {fileID: 1262589793}
 --- !u!1 &2055552868
 GameObject:
   m_ObjectHideFlags: 0
@@ -1013015,6 +1017171,26 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2056430872}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &2057021655 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2276439185606168551, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 1520394494}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &2057021656 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6599595983611893827, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 1520394494}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &2057021657 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1410465649598312199, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 1520394494}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &2057021658 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2648481746283081426, guid: ea6c128b4542fe84d8d2f9ea03ed1a5a, type: 3}
+  m_PrefabInstance: {fileID: 1520394494}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2057202394
 GameObject:
   m_ObjectHideFlags: 0
@@ -1023731,6 +1027907,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &2065441545 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5393747351799607988, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 2065441540}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &2065441546 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8920833879447499071, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 2065441540}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2068776941
 GameObject:
   m_ObjectHideFlags: 0
@@ -1023986,6 +1028172,26 @@ Transform:
   - {fileID: 327090894}
   m_Father: {fileID: 1091026050}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &2071433509 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2648481746283081426, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 2092080185}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &2071433510 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1410465649598312199, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 2092080185}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &2071433511 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6599595983611893827, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 2092080185}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &2071433512 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2276439185606168551, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 2092080185}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2071531372
 GameObject:
   m_ObjectHideFlags: 0
@@ -1029980,6 +1034186,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &2092080190 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5393747351799607988, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 2092080185}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &2092080191 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8920833879447499071, guid: b983a8edff395ca4fab87e081379c7ea, type: 3}
+  m_PrefabInstance: {fileID: 2092080185}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2092172641
 GameObject:
   m_ObjectHideFlags: 0
@@ -1038922,6 +1043138,7 @@ GameObject:
   - component: {fileID: 2137234616}
   - component: {fileID: 2137234614}
   - component: {fileID: 2137234613}
+  - component: {fileID: 2137234617}
   m_Layer: 0
   m_Name: The Thirsting
   m_TagString: Untagged
@@ -1039112,6 +1043329,66 @@ MonoBehaviour:
   LeapFrom: 0.62
   FrozenGlow: {r: 0.22, g: 0.5, b: 0.85, a: 1}
   LandingStagger: 20
+--- !u!114 &2137234617
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2137234611}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f78a6757d915a934ea7781e7af1f611b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Forms.BodyMeasurement
+  anchors:
+    Waist: 0.93099993
+    Chest: 1.3204999
+    Head: 1.6529996
+    Crown: 1.9156178
+    Width: 0.1312571
+    Front: 0.10128576
+    Back: 0.10538356
+  widths:
+  - 0.13251999
+  - 0.13252392
+  - 0.14100866
+  - 0.19000015
+  - 0.1513348
+  - 0.106533416
+  - 0.1312571
+  - 0.045689512
+  - 0.08302781
+  - 0.11771156
+  fronts:
+  - 0.2688639
+  - 0.052251875
+  - 0.05937685
+  - 0.12825185
+  - 0.08471492
+  - 0.078958504
+  - 0.10128576
+  - 0.060672358
+  - 0.16240129
+  - 0.1797097
+  backs:
+  - 0.06711845
+  - 0.057776954
+  - 0.04067617
+  - 0.077383
+  - 0.096031815
+  - 0.08628937
+  - 0.10538356
+  - 0.0901943
+  - 0.09982947
+  - 0.08738215
+  joints:
+    Hips: {fileID: 463249050}
+    Chest: {fileID: 463249049}
+    Neck: {fileID: 463249048}
+    Head: {fileID: 463249047}
+    HandLeft: {fileID: 444537445}
+    HandRight: {fileID: 444537444}
 --- !u!1 &2137237911
 GameObject:
   m_ObjectHideFlags: 0

@@ -72,8 +72,8 @@ The tracks run side by side. One Unity worker and one Blender worker at a time; 
 - [ ] B3. New Katana clips for the Way (way_build_plan.md: up to 27 clips), after the Way wiring.
 
 **Unity, in order:**
-- [ ] U1. The Twin Knives grip (angles, and fingers closed on the handles).
-- [ ] U2. The enemy-size anchors and body-scaled on-body pieces (round-4 notes), before any round-4 re-films.
+- [x] U1. The Twin Knives grip (angles, and fingers closed on the handles). Done 2026-11-21 (6e8fe3a9): the rig has no finger bones, so each knife crosses the fist in a forward grip with the pommel showing below; stills in `review/anim/knife_grip/`.
+- [x] U2. The enemy-size anchors and body-scaled on-body pieces (round-4 notes), before any round-4 re-films. Done 2026-11-21: `BodyAnchors` (measured at build by the enemy builder, read from the live joints in play), on-body pieces placed by anchor and sized 0.6x to 1.8x, floor pieces kept at their size; the standing size check is `AgentScripts/BodySizeProbe.cs`, sheets in `review/checks/size_check/`.
 - [ ] U3. Build each strike shape as the owner approves it; film only that shape's weapons.
 - [ ] U4. Stand-in passes: the rest of 2 and 3, then 4 (`steel/standin_clearance_plan.md`).
 - [ ] U5. Merge the Way wiring from offline (O1), then the Katana's Way per `steel/way_build_plan.md`.

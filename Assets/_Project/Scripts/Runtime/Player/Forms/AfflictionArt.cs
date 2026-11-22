@@ -187,7 +187,14 @@ namespace Clover.Player.Forms
             flareAt[slot] = feet;
             flareSeen[slot] = now;
             if (flareDepth[slot] < 0) flareDepth[slot] = depth;
-            ElementArt.Stand(ElementArt.Piece("light_glint_affliction"), feet + Vector3.up * 1.25f, 180f, 0.75f, 0.3f, FlareGold);
+            // On the body's own chest and grown with it (BodyAnchors): 1.25 m is where it sat on a castle soldier.
+            float high = 1.25f, grown = 1f;
+            if (BodyAnchors.TryAnchors(BodyAnchors.At(feet), out var body))
+            {
+                high = BodyAnchors.HeightOn(body, high / BodyAnchors.SoldierGrowth);
+                grown = Mathf.Clamp(body.Head / BodyAnchors.Soldier.Head, BodyAnchors.LeastSize, BodyAnchors.MostSize);
+            }
+            ElementArt.Stand(ElementArt.Piece("light_glint_affliction"), feet + Vector3.up * high, 180f, 0.75f * grown, 0.3f, FlareGold);
             return true;
         }
 

@@ -43543,6 +43543,26 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 535204220}
   m_CullTransparentMesh: 1
+--- !u!4 &537819897 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -6599595983611893827, guid: 904204aad886ccf488fcc239697887b5, type: 3}
+  m_PrefabInstance: {fileID: 2042880490}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &537819898 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2276439185606168551, guid: 904204aad886ccf488fcc239697887b5, type: 3}
+  m_PrefabInstance: {fileID: 2042880490}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &537819899 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2648481746283081426, guid: 904204aad886ccf488fcc239697887b5, type: 3}
+  m_PrefabInstance: {fileID: 2042880490}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &537819900 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1410465649598312199, guid: 904204aad886ccf488fcc239697887b5, type: 3}
+  m_PrefabInstance: {fileID: 2042880490}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &539157920
 GameObject:
   m_ObjectHideFlags: 0
@@ -81134,6 +81154,7 @@ GameObject:
   - component: {fileID: 992781989}
   - component: {fileID: 992781988}
   - component: {fileID: 992781990}
+  - component: {fileID: 992781992}
   m_Layer: 0
   m_Name: Khepharu
   m_TagString: Untagged
@@ -81350,6 +81371,66 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1.0602679, z: 0}
+--- !u!114 &992781992
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 992781986}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f78a6757d915a934ea7781e7af1f611b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Forms.BodyMeasurement
+  anchors:
+    Waist: 1.2249999
+    Chest: 1.7374997
+    Head: 2.1749995
+    Crown: 3.1188862
+    Width: 0.16805555
+    Front: 0.17751278
+    Back: 0.23177987
+  widths:
+  - 0.18030535
+  - 0.23837748
+  - 0.24388039
+  - 0.2172859
+  - 0.18333335
+  - 0.16805555
+  - 0.16815
+  - 0.1303573
+  - 0.19027787
+  - 0.1166063
+  fronts:
+  - 0.33034372
+  - 0.07486793
+  - 0.18138807
+  - 0.15198863
+  - 0.17324984
+  - 0.17751278
+  - 0.15646008
+  - 0.22293398
+  - 0.14410822
+  - 0.16239841
+  backs:
+  - 0.09859918
+  - 0.4524877
+  - 0.23379819
+  - 0.3253263
+  - 0.27137816
+  - 0.23177987
+  - 0.11798987
+  - 0.12718186
+  - 0.12794073
+  - 0.15755343
+  joints:
+    Hips: {fileID: 537819898}
+    Chest: {fileID: 537819897}
+    Neck: {fileID: 537819900}
+    Head: {fileID: 537819899}
+    HandLeft: {fileID: 1077230693}
+    HandRight: {fileID: 1077230692}
 --- !u!1 &997271454
 GameObject:
   m_ObjectHideFlags: 0
@@ -85541,6 +85622,16 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1072923335}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &1077230692 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5393747351799607988, guid: 904204aad886ccf488fcc239697887b5, type: 3}
+  m_PrefabInstance: {fileID: 2042880490}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1077230693 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8920833879447499071, guid: 904204aad886ccf488fcc239697887b5, type: 3}
+  m_PrefabInstance: {fileID: 2042880490}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1078484550
 GameObject:
   m_ObjectHideFlags: 0

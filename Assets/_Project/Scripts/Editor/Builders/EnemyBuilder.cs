@@ -168,7 +168,57 @@ namespace Clover.EditorTools
             if (renderers.Any(shown => shown != null && shown.sharedMaterials.Any(material => material != null && material.name.StartsWith("m_fire_"))))
                 enemy.SlashColour = new Color(1.9f, 0.55f, 0.1f, 0.7f);
             if (kind.Name == EnemyKind.ChampionName || kind.Name == EnemyKind.SunKingName) Spearman(enemy, kind.Name == EnemyKind.SunKingName);
+            Measure(root);
             return enemy;
+        }
+
+        /// <summary>
+        /// Measures where the effects on a body go (its waist, chest, head, the torso's reach, its hands: BodyAnchors) from
+        /// its model as bound, and keeps it on the body: the game cannot read the models' meshes in play. A body without
+        /// the humanoid skeleton keeps none, and its looks are fitted as before.
+        /// </summary>
+        public static bool Measure(GameObject body)
+        {
+            var measurement = body.GetComponent<Clover.Player.Forms.BodyMeasurement>();
+            if (measurement == null) measurement = body.AddComponent<Clover.Player.Forms.BodyMeasurement>();
+            if (measurement.Measure()) return true;
+            Object.DestroyImmediate(measurement);
+            return false;
+        }
+
+        /// <summary>
+        /// Opens each scene, measures every enemy in it again (<see cref="Measure"/>) and saves the scenes where anything
+        /// was measured, then opens again the scene that was open: for scenes built before the measurements, or after a
+        /// model changes. Not in Play Mode.
+        /// </summary>
+        [MenuItem("Clover/Enemies/Measure Bodies In Scenes")]
+        public static void MeasureInScenes()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                Debug.LogWarning("[Clover.Build] Measure Bodies In Scenes does not run in Play Mode.");
+                return;
+            }
+            if (!UnityEditor.SceneManagement.EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
+            string open = UnityEngine.SceneManagement.SceneManager.GetActiveScene().path;
+            var report = new List<string>();
+            foreach (string guid in AssetDatabase.FindAssets("t:Scene", new[] { "Assets/_Project/Scenes" }))
+            {
+                string path = AssetDatabase.GUIDToAssetPath(guid);
+                var scene = UnityEditor.SceneManagement.EditorSceneManager.OpenScene(path, UnityEditor.SceneManagement.OpenSceneMode.Single);
+                int measured = 0, without = 0;
+                foreach (var enemy in Object.FindObjectsByType<Enemy>(FindObjectsInactive.Include))
+                {
+                    if (Measure(enemy.gameObject)) measured++;
+                    else without++;
+                }
+                if (measured == 0) continue;
+                UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(scene);
+                UnityEditor.SceneManagement.EditorSceneManager.SaveScene(scene);
+                report.Add($"{scene.name} {measured}" + (without > 0 ? $" ({without} without a humanoid skeleton)" : ""));
+            }
+            if (!string.IsNullOrEmpty(open)) UnityEditor.SceneManagement.EditorSceneManager.OpenScene(open, UnityEditor.SceneManagement.OpenSceneMode.Single);
+            Debug.Log($"[Clover.Build] Measured enemy bodies in {report.Count} scenes: {string.Join(", ", report)}.");
         }
 
         // The Fire land's two spearmen: ember arcs, not the default magenta, and a pool of trails of flame for their

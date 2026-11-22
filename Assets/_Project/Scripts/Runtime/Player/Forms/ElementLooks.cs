@@ -63,8 +63,14 @@ namespace Clover.Player.Forms
             /// </summary>
             public float VeiledAt, Coming;
             public bool WasVeiled;
-            /// <summary>The body's measured girth (<see cref="BodyGirth"/>): its pieces on the body are drawn in to it; -1 for none.</summary>
+            /// <summary>The body's measured slot (<see cref="BodyAnchors"/>): its pieces on the body are drawn in to it; -1 for none.</summary>
             public int Girth;
+            /// <summary>
+            /// An enemy measured to its anchors: its pieces on the body are carried from the stand-in to them, and grown
+            /// with it (<see cref="FitOnEnemy"/>). False for the player (its surge looks were drawn on its own model) and
+            /// for a body that could not be measured.
+            /// </summary>
+            public bool Anchored;
         }
 
         /// <summary>Seconds a look kept unseen under a reaction's look takes to come back in once that look is over.</summary>
@@ -133,12 +139,18 @@ namespace Clover.Player.Forms
             return false;
         }
 
-        /// <summary>How much a reaction's look is grown on this body: its height over the stand-in's, never smaller.</summary>
+        /// <summary>
+        /// How much a reaction's pieces that reach off the body (a column, an arc to another enemy) are grown on this body:
+        /// its size by its anchors (<see cref="BodyAnchors.SizeOf"/>), never smaller and at most <see cref="MostTall"/>;
+        /// by its bars' height for an enemy that could not be measured. Pieces on the body are fitted by its anchors.
+        /// </summary>
         public static float TallOf(Transform body)
         {
             if (body == null) return 1f;
             var enemy = body.GetComponent<Clover.Gameplay.Enemy>();
-            return enemy != null ? Mathf.Clamp(enemy.BodyHeight / StandIn, 1f, MostTall) : 1f;
+            if (enemy == null) return 1f;
+            if (BodyAnchors.TryAnchors(BodyAnchors.Slot(body), out var anchors)) return Mathf.Clamp(BodyAnchors.SizeOf(anchors), 1f, MostTall);
+            return Mathf.Clamp(enemy.BodyHeight / StandIn, 1f, MostTall);
         }
 
         /// <summary>
@@ -364,7 +376,7 @@ namespace Clover.Player.Forms
         public const float OnBodyDrift = 0.4f;
 
         private bool[] flameParts;
-        // Parts laid on the body itself (on or round it, staying there), drawn in to the real body's girth (BodyGirth).
+        // Parts laid on the body itself (on or round it, staying there), drawn in to the real body (BodyAnchors).
         private bool[] onBody;
         private float[] flameHeight, blowFrom, blowTo, flamesGoneBy, runStretch;
 
@@ -765,8 +777,11 @@ namespace Clover.Player.Forms
             {
                 Active = true, Look = look, Body = body, Ground = body != null ? body.position : Vector3.zero, Age = 0f, KeptAt = Time.time,
                 Turn = Quaternion.identity, Size = 1f, Tall = TallOf(body), Stamp = ++stamps, VeiledAt = -1f, Coming = ComeIn,
-                Girth = BodyGirth.Slot(body),
+                Girth = BodyAnchors.Slot(body),
             };
+            // An enemy's pieces go by its anchors; the player's surge looks were drawn on its own model and keep their fit.
+            showings[free].Anchored = !set.Looks[look].OnPlayer && body != null && body.GetComponent<PlayerController>() == null
+                && BodyAnchors.TryAnchors(showings[free].Girth, out _);
             if (set.Looks[look].FacesCamera)
             {
                 // The recipe's camera stood on its player's side: that way is turned onto the game camera's.
@@ -895,8 +910,9 @@ namespace Clover.Player.Forms
                     // aftermath too).
                     float angleTime = part.RunsOn ? one.Age : t;
                     // (Not what rises under it from the floor: the anvil and the ice are what lift it.)
-                    Vector3 anchor = !part.Follows ? one.Ground : raised > 0f && onBody[look.FirstPart + k] && part.Position.y > RaisedFrom ? feet + Vector3.up * raised : feet;
-                    Pose(part, look.FirstPart + k, flamesGoneBy[one.Look], t, angleTime, anchor, one.Turn, one.Size, one.Mirror, one.Tall, one.Girth, shrink, blow, slot, at[pooled]);
+                    // (An enemy placed by its joints already rides up with them.)
+                    Vector3 anchor = !part.Follows ? one.Ground : raised > 0f && !one.Anchored && onBody[look.FirstPart + k] && part.Position.y > RaisedFrom ? feet + Vector3.up * raised : feet;
+                    Pose(part, look.FirstPart + k, flamesGoneBy[one.Look], t, angleTime, anchor, one.Turn, one.Size, one.Mirror, one.Tall, one.Girth, one.Anchored, shrink, blow, slot, at[pooled]);
                     if (part.Kind == ElementLookSet.Ribbon) Draw(part, t, pooled);
                     if (!shown[pooled].enabled) shown[pooled].enabled = true;
                 }
@@ -917,7 +933,7 @@ namespace Clover.Player.Forms
             blocked[pooled] = true;
         }
 
-        private void Pose(in ElementLookSet.Part part, int index, float goneBy, float t, float angleTime, Vector3 anchor, Quaternion turn, float size, Vector3 mirror, float tall, int girth, float shrink, float blow, int slot, Transform frame)
+        private void Pose(in ElementLookSet.Part part, int index, float goneBy, float t, float angleTime, Vector3 anchor, Quaternion turn, float size, Vector3 mirror, float tall, int girth, bool anchored, float shrink, float blow, int slot, Transform frame)
         {
             set.LocalPose(part, t, angleTime, slot, out Vector3 position, out Quaternion rotation, out Vector3 scale);
             if (runStretch[index] > 0f)
@@ -938,9 +954,15 @@ namespace Clover.Player.Forms
                 scale.y *= 1f + 0.35f * blow;
                 position.y += 0.7f * eased;
             }
-            Vector3 stretch = Vector3.one;
-            if (onBody[index] && girth >= 0) FitOnBody(part, tall, girth, ref position, out stretch);
-            else if (tall > 1.001f) Fit(part, tall, ref position, out stretch);
+            Vector3 stretch = Vector3.one, lean = Vector3.zero;
+            if (onBody[index] && girth >= 0)
+            {
+                if (anchored) FitOnEnemy(part, girth, turn, mirror, ref position, out stretch, out lean);
+                else FitOnBody(part, tall, girth, ref position, out stretch);
+            }
+            // What lies flat on the floor keeps the size it was drawn at: its size is the reach of what the game does
+            // there (the owner, 2026-11-21: "scale on-body, not areas").
+            else if (tall > 1.001f && part.Kind != ElementLookSet.Flat) Fit(part, tall, ref position, out stretch);
             if (part.Kind == ElementLookSet.Flat) position.y += FlatLift;
             if (mirror.sqrMagnitude > 0.5f)
             {
@@ -953,7 +975,7 @@ namespace Clover.Player.Forms
                 rotation = Quaternion.LookRotation(ahead, up);
                 stretch.x = -stretch.x;
             }
-            Vector3 placed = anchor + turn * (position * size);
+            Vector3 placed = anchor + lean + turn * (position * size);
             if (part.Facing != 0f) placed += towardCamera * part.Facing;
             frame.SetPositionAndRotation(placed, turn * rotation);
             frame.localScale = Vector3.Scale(scale, stretch) * (shrink * size);
@@ -984,17 +1006,57 @@ namespace Clover.Player.Forms
             position.y += (1f - life) * 0.5f * height;
         }
 
-        // A part laid on the body, carried from the clay stand-in to the real body: up it by its height, and in toward its
+        /// <summary>
+        /// A part laid on an enemy's body, carried from the clay stand-in to the real body by their anchors
+        /// (<see cref="BodyAnchors"/>): what sat at the stand-in's waist, chest or head sits at the body's; it stands out
+        /// from the upright as far past the body's own surface that way (ahead, behind or to the side, as the world will
+        /// see it once the look is turned and mirrored) as it stood past the stand-in's; and it is grown with the body,
+        /// 0.6x to 1.8x. A ribbon drawn round the upright (a coil, the veins) is drawn round the body's own girth.
+        /// </summary>
+        public static void FitOnEnemy(in ElementLookSet.Part part, int slot, Quaternion turn, Vector3 mirror, ref Vector3 position, out Vector3 stretch, out Vector3 lean)
+        {
+            BodyAnchors.TryAnchors(slot, out var bound);
+            // Sized by the body as built; placed by its joints as they stand now, so what sits on a crouching Knife
+            // Acolyte's chest sits on it and not where its chest would be standing up.
+            BodyAnchors.TryPosed(slot, out var posed);
+            var body = posed.Anchors.Crown > 0f ? posed.Anchors : bound;
+            float size = BodyAnchors.SizeOf(bound) * BodyAnchors.FoldOf(bound, body);
+            bool ribbon = part.Kind == ElementLookSet.Ribbon && part.Mesh != null;
+            // A ribbon's own points lie round the upright: it is measured where its middle is.
+            float height = ribbon ? part.Mesh.bounds.center.y : position.y;
+            float placed = BodyAnchors.HeightOn(body, height);
+            float up = height > 0.05f ? placed / height : size;
+            Vector3 seen = new Vector3(position.x, 0f, position.z);
+            if (mirror.sqrMagnitude > 0.5f) seen -= 2f * Vector3.Dot(seen, mirror) * mirror;
+            seen = turn * seen;
+            // The stand-in's own bands, by its own height (as the player's fit reads them).
+            float standIn = BodyAnchors.StandInReach(Mathf.Clamp01(height / StandIn));
+            float reach = BodyAnchors.ReachAt(slot, placed, body.Crown, ribbon ? Vector3.zero : seen);
+            lean = BodyAnchors.ShiftAt(posed, height);
+            float ratio = Mathf.Clamp(reach / standIn, BodyAnchors.LeastReach, BodyAnchors.MostReach);
+            position.x *= ratio;
+            position.z *= ratio;
+            if (ribbon)
+            {
+                position.y *= up;
+                stretch = new Vector3(ratio, up, ratio);
+                return;
+            }
+            position.y = placed;
+            stretch = new Vector3(size, size, size);
+        }
+
+        // A part laid on the player's body, carried from the clay stand-in to the real body: up it by its height, and in toward its
         // upright by how much slimmer (or wider) the real body is than the stand-in there, so what was laid on the
         // stand-in's surface lies on the real body's (Chill's crystals stood 0.15 m off a castle soldier in the air).
         private static void FitOnBody(in ElementLookSet.Part part, float tall, int girth, ref Vector3 position, out Vector3 stretch)
         {
             // A ribbon's own points lie round the upright: it is measured where its middle is.
             float height = part.Kind == ElementLookSet.Ribbon && part.Mesh != null ? part.Mesh.bounds.center.y : position.y;
-            float ratio = BodyGirth.Ratio(girth, height, StandIn);
+            float ratio = BodyAnchors.Ratio(girth, height, StandIn);
             // Up a body shorter than the stand-in by its own height (the look is never drawn smaller, but what sits on the
             // body sits at its chest): Anvil Stone's dagger stood over a Knife Acolyte's head (its film of 2026-11-20).
-            float measured = BodyGirth.Height(girth);
+            float measured = BodyAnchors.Height(girth);
             position.y *= measured > 0f && measured < StandIn ? Mathf.Max(LeastUp, measured / StandIn) : tall;
             position.x *= ratio;
             position.z *= ratio;

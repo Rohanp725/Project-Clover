@@ -56,6 +56,8 @@ namespace Clover.Player.Forms
         private MeshRenderer[] shown;
         private Transform[] bodies;
         private float[] heat, wanted, keptAt;
+        // How much taller and wider than a castle soldier each burning body is (BodyAnchors): its fire is sized to it.
+        private float[] tall, wide;
         private float[] blackness;
         private bool[] blackWanted;
         // Until when a body's fire stays black after the curse last kept it: the flare it ends in burns black too.
@@ -84,6 +86,8 @@ namespace Clover.Player.Forms
             heat = new float[Most];
             wanted = new float[Most];
             keptAt = new float[Most];
+            tall = new float[Most];
+            wide = new float[Most];
             blackWanted = new bool[Most];
             blackness = new float[Most];
             blackUntil = new float[Most];
@@ -160,6 +164,7 @@ namespace Clover.Player.Forms
                 if (ReferenceEquals(bodies[slot], null)) burning++;
                 bodies[slot] = body;
                 heat[slot] = 0f;
+                FitTo(body, out tall[slot], out wide[slot]);
                 blackness[slot] = black ? 1f : 0f;
             }
             wanted[slot] = HeatOf(depth);
@@ -172,6 +177,19 @@ namespace Clover.Player.Forms
             if (black) blackUntil[slot] = Time.time + BlackLingers;
             keptAt[slot] = Time.time;
             return true;
+        }
+
+        /// <summary>
+        /// How much taller and wider a body's fire stands than on a castle soldier, where it was tuned: its head over the
+        /// soldier's head and its torso's girth over the soldier's (BodyAnchors), each held between 0.6x and 1.8x. A body not
+        /// measured (a training dummy) burns as a soldier does.
+        /// </summary>
+        public static void FitTo(Transform body, out float taller, out float wider)
+        {
+            taller = wider = 1f;
+            if (!BodyAnchors.TryAnchors(BodyAnchors.Slot(body), out var anchors)) return;
+            taller = Mathf.Clamp(anchors.Head / BodyAnchors.Soldier.Head, BodyAnchors.LeastSize, BodyAnchors.MostSize);
+            wider = Mathf.Clamp(anchors.Girth / BodyAnchors.Soldier.Girth, BodyAnchors.LeastSize, BodyAnchors.MostSize);
         }
 
         private void LateUpdate()
@@ -204,14 +222,14 @@ namespace Clover.Player.Forms
                 }
                 var at = shown[i].transform;
                 at.SetPositionAndRotation(body.position, Quaternion.identity);
-                at.localScale = new Vector3(Girth, Height, Girth);
+                at.localScale = new Vector3(Girth * wide[i], Height * tall[i], Girth * wide[i]);
                 block.Clear();
                 block.SetFloat(HeatId, heat[i]);
                 block.SetFloat(GrownId, 1f);
                 block.SetFloat(FadeId, 1f);
                 // Taller as it catches and as it burns deeper; a yellow heart kept only in a deep burn.
-                block.SetFloat(HeightId, FlameHeight * Mathf.Lerp(0.5f, 1f, Mathf.Clamp01(heat[i])));
-                block.SetFloat(WidthId, FlameWidth);
+                block.SetFloat(HeightId, FlameHeight * tall[i] * Mathf.Lerp(0.5f, 1f, Mathf.Clamp01(heat[i])));
+                block.SetFloat(WidthId, FlameWidth * wide[i]);
                 block.SetFloat(WallId, Mathf.Clamp01((heat[i] - 0.8f) * 2.5f) * 0.6f);
                 block.SetFloat(RiseId, 1f);
                 bool stillBlack = blackWanted[i] || now < blackUntil[i];
