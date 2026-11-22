@@ -9,13 +9,13 @@ carried. Its reaction is Shut in the Dark, the jar; its Shape mark lets you choo
 
 **When it happens.** Every time Shut in the Dark goes off while you carry both Dark and Poison. It goes off when Poison lands on a Cursed enemy, or when a Curse lands on a poisoned one. If you have not bought this mark, or you carry only one of the two elements, you get the plain jar.
 
-**The numbers.** Mix, 3 Shards. Both shapes: the enemy is sealed for 8 seconds, and its poison doses don't fade during that time. When the 8 seconds end, or when the enemy dies, the jar breaks. It deals 5 damage for each dose to everything within 3 metres, and gives each of them half its doses. Swarm: as the jar breaks, 2 doses and a Curse jump to the nearest enemy within 8 metres, which may seal a new jar there. Rot to the Bone: 9 stagger every second while the jar is sealed. After Shut in the Dark goes off on an enemy, it can't go off on that enemy again for 8 seconds.
+**The numbers.** Mix, 3 Shards. Both shapes: the enemy is sealed for 8 seconds, and its poison doses don't fade during that time. When the 8 seconds end, or when the enemy dies, the jar breaks. It deals 5 damage for each dose to everything within 3 metres, and gives each of them half its doses. Swarm: as the jar breaks, the swarm crawls to the nearest other enemy within 8 metres, bringing 2 doses and a Curse, and seals a new jar on it for 8 seconds. Rot to the Bone: while the jar is sealed, each bite of poison fills its balance meter by 3 for each dose it has, and the meter doesn't drain back down. After Shut in the Dark goes off on an enemy, it can't go off on that enemy again for 8 seconds.
 
 **Works with.** Miasma and Grasp to set it up, Wither, Feeding Rot, One Death Feeds, The Reaping, Wasting Grip.
 
 **Example.** Against a pack, Swarm moves the jar from one enemy to the next. Against a brute, use Rot to the Bone, then land a finisher when its balance breaks.
 
-**Not built yet.** The swarm jumps across as a streak of poison and Curse instead of crawling. Rot to the Bone's stagger comes on a steady beat, not with each bite of poison. The balance meter still refills.
+**Not built yet.** The swarm jumps across as a streak of poison and Curse instead of crawling across the floor.
 
 ## blight.wither
 **What it does.** Poison hits a quarter harder on a Cursed enemy. It also doesn't fade from that enemy for as long as the Curse lasts.

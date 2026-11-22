@@ -31,10 +31,10 @@ namespace Clover.Player.Trees
             const string A = Elements.Dark, B = Elements.Poison;
             const AfflictionKind Cursed = AfflictionKind.Cursed, Poisoned = AfflictionKind.Poison;
 
-            // Swarm's crawl is played as its recipe look (CreatureLooks.Swarm). NEEDS: the swarm crawling to the nearest enemy and
-            // sealing a new jar there (Swarm; now the breaking jar throws its
-            // doses and a Curse at the nearest enemy within 8 m, on purpose able to react); bites that fill the stagger meter by
-            // the dose and a meter that does not recover while sealed (Rot to the Bone; now 9 stagger each second).
+            // Swarm's crawl is played as its recipe look (CreatureLooks.Swarm). Swarm: as the jar breaks, the swarm crawls to the nearest
+            // other enemy within 8 m with 2 doses and a Curse and seals a new jar there (the jar's condition set on it: EachWithin,
+            // EachOther, Count 1). Rot to the Bone: while sealed the jar holds its balance (ConditionFlags.BalanceHeld) and each
+            // bite fills its stagger meter by 3 a dose (the jar's beat is the poison's bite: ConditionSpec.OnBite; the doses counted).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Shut in the Dark: Swarm or Rot to the Bone", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -49,6 +49,9 @@ namespace Clover.Player.Trees
                         {
                             new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = SwarmJar, Do = UpgradeAction.Arc, FromTarget = true, Count = 1, Reach = 8f, Affliction = Poisoned, Stacks = 2, Cascades = true },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = SwarmJar, Do = UpgradeAction.Arc, FromTarget = true, Count = 1, Reach = 8f, Affliction = Cursed, Stacks = 1, Cascades = true },
+                            // The new jar, sealed on the nearest other enemy within 8 m.
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = SwarmJar, Do = UpgradeAction.Condition, EachWithin = 8f, EachOther = true, Count = 1,
+                                State = new ConditionSpec { Id = SwarmJar, Seconds = 8f, Keeps = AfflictionKind.Poison } },
                             // The swarm crawling out of the broken jar (the recipe look).
                             new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = SwarmJar, Do = UpgradeAction.PlayLook, Look = Forms.CreatureLooks.Swarm },
                         }),
@@ -56,11 +59,11 @@ namespace Clover.Player.Trees
                     new ShapeDef
                     {
                         Name = "Rot to the Bone",
-                        Description = "The jar is sealed as before for 8 s, its doses kept, and breaks as before; while it is sealed the rot eats its balance, 9 stagger every second.",
+                        Description = "The jar is sealed as before for 8 s, its doses kept, and breaks as before; while it is sealed the rot eats its balance: each bite fills its stagger meter by 3 a dose, and the meter does not recover.",
                         Effects = Jar(RotJar, new[]
                         {
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = RotJar, Do = UpgradeAction.Burst, Radius = 0.5f, Stagger = 9f },
-                        }, beat: 1f),
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = RotJar, Needs = AfflictionKind.Poison, CountsNeeds = true, PerStack = true, Do = UpgradeAction.Burst, Radius = 0.3f, Damage = 0f, Stagger = 3f, Stacks = 0 },
+                        }, flags: ConditionFlags.BalanceHeld, onBite: true),
                     },
                 },
             }, HeartPattern.Foot));
@@ -120,11 +123,11 @@ namespace Clover.Player.Trees
 
         // The plain reaction's jar under a shape's own name: sealed 8 s with its doses kept; breaking at the end, 5 a dose in
         // 3 m and half its doses on all it reaches, or as it dies; and the shape's own answers after.
-        private static UpgradeEffect[] Jar(string id, UpgradeEffect[] more, float beat = 0f)
+        private static UpgradeEffect[] Jar(string id, UpgradeEffect[] more, float beat = 0f, ConditionFlags flags = 0, bool onBite = false)
         {
             var effects = new List<UpgradeEffect>
             {
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = id, Seconds = 8f, Beat = beat, Keeps = AfflictionKind.Poison } },
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = id, Seconds = 8f, Beat = beat, Keeps = AfflictionKind.Poison, Flags = flags, OnBite = onBite } },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = id, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Poison, CountOnly = true },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = id, Do = UpgradeAction.Burst, Radius = 3f, DamagePerSpent = 5f, Affliction = AfflictionKind.Poison },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = id, Do = UpgradeAction.Afflict, Radius = 3f, Affliction = AfflictionKind.Poison, Stacks = 1, PerStack = true, Share = 0.5f },

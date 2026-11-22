@@ -1807,5 +1807,33 @@ namespace Clover.Tests
             combo.Tick(0.01f, stamina, null);
             Assert.AreSame(hilt, combo.Current, "a heavy press as the roll ends is the hilt");
         }
+
+        [Test]
+        public void TheSwarmSealsANewJarAndTheRotHoldsTheBalance()
+        {
+            var shapes = Upgrade.ById(BlightTree.Shape).Shapes;
+            var swarm = shapes.Single(each => each.Name == "Swarm").Effects;
+            var seal = swarm.Single(each => each.On == UpgradeTrigger.ConditionEnded && each.Do == UpgradeAction.Condition);
+            Assert.AreEqual(BlightTree.SwarmJar, seal.State.Id, "a new jar");
+            Assert.AreEqual(8f, seal.EachWithin, 1e-5f, "on the nearest enemy within 8 m");
+            Assert.IsTrue(seal.EachOther, "not the one whose jar broke");
+            Assert.AreEqual(1, seal.Count, "one");
+            Assert.AreEqual(AfflictionKind.Poison, seal.State.Keeps);
+
+            var rot = shapes.Single(each => each.Name == "Rot to the Bone").Effects;
+            var sealedRot = rot.Single(each => each.On == UpgradeTrigger.Reacted && each.State != null);
+            Assert.AreEqual(ConditionFlags.BalanceHeld, sealedRot.State.Flags & ConditionFlags.BalanceHeld, "the meter does not recover while sealed");
+            Assert.IsTrue(sealedRot.State.OnBite, "its beat is the poison's bite");
+            var bite = rot.Single(each => each.On == UpgradeTrigger.ConditionBeat);
+            Assert.AreEqual(BlightTree.RotJar, bite.Condition);
+            Assert.IsTrue(bite.CountsNeeds, "by the doses it carries");
+            Assert.AreEqual(3f, bite.Stagger, 1e-5f, "3 a dose");
+            Assert.IsTrue(bite.PerStack);
+            Assert.AreEqual(0f, sealedRot.State.Beat, 1e-5f, "no clock of a second any more");
+
+            var jar = new AfflictionSet { Reactions = new ReactionEngine((who, pair, laid) => { }, () => 0) };
+            jar.Conditions.Set(sealedRot.State, null);
+            Assert.IsFalse(jar.BalanceRecovers, "held while sealed");
+        }
     }
 }
