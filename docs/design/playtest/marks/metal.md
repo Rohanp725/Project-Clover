@@ -200,11 +200,9 @@ the steel you throw and plant: Flung Blade, the blades of Grave of Swords.
 
 **When it happens.** Always on once you learn it. The cut comes with every perfect guard.
 
-**The numbers.** 6 Shards. The perfect timing window grows by 55%, from 0.18 seconds to about 0.28. Each perfect guard hits everything within 1.2 metres of the attacker for 12 damage, 10 stagger and one notch of Sundered. A held guard lets every blow through (and costs no stamina). You can press guard again 0.2 seconds after the last press and still get a perfect window, instead of 0.4.
+**The numbers.** 6 Shards. The perfect timing window grows by 55%, from 0.18 seconds to about 0.28. Each perfect guard hits everything within 1.2 metres of the attacker for 12 damage, 10 stagger and one notch of Sundered, and counts as a light blow landed: it gives you that blow's mana and takes that blow's time off your waits. A held guard lets every blow through (and costs no stamina). You can press guard again 0.2 seconds after the last press and still get a perfect window, instead of 0.4.
 
 **Works with.** Circle of Steel, which it comes after on the chart, Sunder (two notches from one guard), Forged Answer, Open Line, Master's Answer, every Master mark that works on a perfect guard, Hanging Swords, and Bright Steel and Halo of Blades on the Halo branch.
-
-**Not built yet.** The cut doesn't yet count as a blow landed (its mana and the time it takes off your waits).
 
 **Example.** Fight a fast duellist with just the guard button. Each of its blows you meet at the right moment is blocked, cut and notched.
 

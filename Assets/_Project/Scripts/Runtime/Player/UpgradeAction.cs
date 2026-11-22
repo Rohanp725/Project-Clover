@@ -323,6 +323,8 @@ namespace Clover.Player
         /// rides on along your aim at Speed for Seconds, then settles (The Tide Brings It: Riptide's wave carrying the slicks).
         /// </summary>
         CarryGround,
+        /// <summary>The moment counts as a light weapon blow landed: its mana and its cut to the waits (Edge Guard's cut on each perfect guard).</summary>
+        CountAsBlow,
         /// <summary>
         /// You scatter for Seconds: the body is not drawn and nothing can touch you, then you stand again where you are by then
         /// (Gone to Ash: scattered as ash, standing again 0.4 s later, behind the attacker or where you were).

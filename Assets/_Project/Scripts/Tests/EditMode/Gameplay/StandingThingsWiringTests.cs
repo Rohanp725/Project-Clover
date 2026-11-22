@@ -265,6 +265,14 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void EdgeGuardsCutCountsAsABlowLanded()
+        {
+            var edge = Upgrade.ById(MetalTree.EdgeGuard).Effects;
+            Assert.AreEqual(1, edge.Count(each => each.On == UpgradeTrigger.PerfectGuard && each.Do == UpgradeAction.CountAsBlow), "its mana and its cut to the waits");
+            Assert.IsTrue(edge.Any(each => each.On == UpgradeTrigger.PerfectGuard && each.Do == UpgradeAction.Burst), "the cut itself");
+        }
+
+        [Test]
         public void TheDrawnLineStandsAcrossYourFrontHoldingWhoCrosses()
         {
             var shape = Upgrade.ById(SpellBranch.ShapeId(LightTree.RingOfSpears)).Shapes.Single(each => each.Name == "The Drawn Line");

@@ -160,6 +160,25 @@ namespace Clover.Player
         /// the spells' clocks are cut by each (STEEL_AND_ELEMENT.md 3.1). A finisher is told as a finisher only.
         /// </summary>
         public event System.Action<AttackStep> BlowLanded;
+
+        /// <summary>
+        /// Counts a blow struck by something other than a swing as a light weapon blow landed (Edge Guard's cut on a perfect guard):
+        /// the mana of the weapon's first step, and its cut to the spells' waits (BlowLanded). Returns the mana given.
+        /// </summary>
+        public float CountAsBlowLanded()
+        {
+            var combo = Weapon != null ? Weapon.Combo : null;
+            if (combo == null || combo.Steps.Count == 0) return 0f;
+            var step = combo.Steps[0];
+            float earned = step.ManaGain * StatMana;
+            Mana.Gain(earned);
+            BlowLanded?.Invoke(step);
+            BlowsCounted++;
+            return earned;
+        }
+
+        /// <summary>Blows counted as landed without a swing (CountAsBlowLanded): for probes.</summary>
+        public int BlowsCounted { get; private set; }
         public event System.Action Finished;
         /// <summary>A move was swung (struck or not): the charged blade's look draws its trail on it.</summary>
         public event System.Action<AttackStep> Swung;

@@ -2380,6 +2380,9 @@ namespace Clover.Player
                     GroundsCarried += Hazards.Drift(effect.ThroughGround, self, way, Or(effect.Reach, 7f) * spread, Or(effect.Radius, 1.5f), way * Or(effect.Speed, 8f), Or(effect.Seconds, 0.8f));
                     break;
                 }
+                case UpgradeAction.CountAsBlow:
+                    combat.CountAsBlowLanded();
+                    break;
                 case UpgradeAction.FreeDodge:
                     player.Stamina.Restore(player.Dodge.StaminaCost);
                     FreeDodges++;
