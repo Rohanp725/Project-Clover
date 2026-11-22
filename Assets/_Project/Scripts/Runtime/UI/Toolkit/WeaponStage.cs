@@ -68,13 +68,20 @@ namespace Clover.UI.Toolkit
             if (shown != null) Destroy(shown);
             shown = null;
             if (weaponPart == null) return;
+            // Copied under a switched-off holder, so the copy's scripts never wake: a picture, nothing more.
+            tilt.gameObject.SetActive(false);
             shown = Instantiate(weaponPart, tilt, false);
             shown.name = "Shown Weapon";
             shown.SetActive(true);
-            // A picture, nothing more: no scripts, no colliders, no bodies.
-            foreach (var behaviour in shown.GetComponentsInChildren<MonoBehaviour>(true)) Destroy(behaviour);
-            foreach (var collider in shown.GetComponentsInChildren<Collider>(true)) Destroy(collider);
-            foreach (var body in shown.GetComponentsInChildren<Rigidbody>(true)) Destroy(body);
+            // Scripts go first and at once, so nothing they require holds the rest; colliders and bodies are switched off.
+            foreach (var behaviour in shown.GetComponentsInChildren<MonoBehaviour>(true)) DestroyImmediate(behaviour);
+            foreach (var collider in shown.GetComponentsInChildren<Collider>(true)) collider.enabled = false;
+            foreach (var body in shown.GetComponentsInChildren<Rigidbody>(true))
+            {
+                body.isKinematic = true;
+                body.detectCollisions = false;
+            }
+            tilt.gameObject.SetActive(true);
             shown.transform.localPosition = Vector3.zero;
             shown.transform.localRotation = Quaternion.identity;
             Frame();
@@ -88,8 +95,10 @@ namespace Clover.UI.Toolkit
         {
             var renderers = shown.GetComponentsInChildren<Renderer>(true);
             if (renderers.Length == 0) return;
+            // Measured upright, so the diagonal does not make the box look longer than the weapon.
             var spin = turntable.localRotation;
             turntable.localRotation = Quaternion.identity;
+            tilt.localRotation = Quaternion.identity;
             var bounds = renderers[0].bounds;
             foreach (var each in renderers) bounds.Encapsulate(each.bounds);
             float size = Mathf.Max(bounds.size.x, Mathf.Max(bounds.size.y, bounds.size.z));
@@ -100,6 +109,7 @@ namespace Clover.UI.Toolkit
                 shown.transform.localScale *= scale;
                 shown.transform.localPosition = -offset * scale;
             }
+            tilt.localRotation = Quaternion.Euler(0f, 0f, -42f);
             turntable.localRotation = spin;
         }
 

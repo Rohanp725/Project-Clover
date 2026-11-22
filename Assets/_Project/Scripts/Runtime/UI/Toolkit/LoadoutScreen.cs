@@ -48,6 +48,9 @@ namespace Clover.UI.Toolkit
         private bool savedSuspended;
         private int openedOnFrame = -1, closedOnFrame = -1;
         private int drawnDevices = -1;
+        private VisualElement boundRoot;
+        // True while the mouse holds X's glyph on a saved Hand: the hold fills as a held X does.
+        private bool pointerKeeping;
 
         // The tree.
         private VisualElement root, paneLines, listTitle, listColumns, aspectCards, footerLeft, footerRight, paneMore, weaponPicture;
@@ -131,7 +134,8 @@ namespace Clover.UI.Toolkit
             if (root != null) root.style.display = DisplayStyle.None;
             HideHud(false);
             if (stage != null) stage.gameObject.SetActive(false);
-            Time.timeScale = savedScale > 0f ? savedScale : 1f;
+            // Back to what the rest menu had: the world stays stopped under it.
+            Time.timeScale = savedScale;
             if (player != null) player.Suspended = savedSuspended;
         }
 
@@ -188,6 +192,7 @@ namespace Clover.UI.Toolkit
         {
             if (!IsOpen || Controller == null) return;
             if (ControlDevices.Version != drawnDevices) Draw();
+            if (pointerKeeping) Controller.KeepHeld(Time.unscaledDeltaTime);
             if (Time.frameCount != openedOnFrame && input != null && input.Drive(Controller, Time.unscaledDeltaTime))
             {
                 Close();
@@ -202,13 +207,17 @@ namespace Clover.UI.Toolkit
 
         private void Bind()
         {
+            // Once per tree: a second OnEnable on the same tree must not register every callback twice.
+            if (boundRoot == root) return;
+            boundRoot = root;
             for (int i = 0; i < LoadoutPlaces.Count; i++)
             {
                 var place = root.Q(LoadoutPlaces.Names[i]);
                 places[i] = place;
                 if (place == null) continue;
                 var at = (LoadoutPlace)i;
-                place.RegisterCallback<PointerEnterEvent>(_ => Controller?.PointAt(at));
+                // Focus follows the pointer only when it moves, so parts redrawn under a resting pointer never take it.
+                place.RegisterCallback<PointerMoveEvent>(_ => Controller?.PointAt(at));
                 place.RegisterCallback<ClickEvent>(evt =>
                 {
                     if (evt.button == 0) Controller?.Click(at);
@@ -222,9 +231,14 @@ namespace Clover.UI.Toolkit
                 keep.RegisterCallback<PointerDownEvent>(evt =>
                 {
                     evt.StopPropagation();
-                    Controller?.KeepDown();
+                    if (evt.button != 0 || Controller == null) return;
+                    Controller.KeepDown();
+                    pointerKeeping = LoadoutPlaces.HandOf(Controller.Focus) > 0 && !Controller.Board.Hands[LoadoutPlaces.HandOf(Controller.Focus)].Empty;
                 });
-                keep.RegisterCallback<PointerUpEvent>(_ => Controller?.KeepUp());
+                keep.RegisterCallback<PointerUpEvent>(_ => StopKeeping());
+                keep.RegisterCallback<PointerLeaveEvent>(_ => StopKeeping());
+                // The click that ends a hold must not also wear the Hand under it.
+                keep.RegisterCallback<ClickEvent>(evt => evt.StopPropagation());
             }
             // Y on the focused slot: a click on its glyph swaps the shape.
             foreach (var slot in new[] { LoadoutPlace.West, LoadoutPlace.North, LoadoutPlace.East, LoadoutPlace.South })
@@ -233,11 +247,7 @@ namespace Clover.UI.Toolkit
                     evt.StopPropagation();
                     Controller?.Shape();
                 });
-            // A right click anywhere is B.
-            root.RegisterCallback<PointerDownEvent>(evt =>
-            {
-                if (evt.button == 1 && Controller != null && Controller.Cancel()) Close();
-            });
+            // A right click is B: MenuInput reads it from the UI map, so it is not handled here as well.
             // UI Toolkit's own navigation is swallowed: MenuInput moves focus at the game's own repeat.
             root.RegisterCallback<NavigationMoveEvent>(Swallow, TrickleDown.TrickleDown);
             root.RegisterCallback<NavigationSubmitEvent>(Swallow, TrickleDown.TrickleDown);
@@ -276,6 +286,13 @@ namespace Clover.UI.Toolkit
                 }
         }
 
+        private void StopKeeping()
+        {
+            if (!pointerKeeping) return;
+            pointerKeeping = false;
+            Controller?.KeepUp();
+        }
+
         private void Swallow(EventBase evt)
         {
             evt.StopPropagation();
@@ -289,6 +306,7 @@ namespace Clover.UI.Toolkit
             if (root == null || Controller == null) return;
             var loadout = Controller;
             var board = loadout.Board;
+            if (drawnDevices != ControlDevices.Version) root.Q("pane-more-glyph")?.Clear();
             drawnDevices = ControlDevices.Version;
             var device = ControlDevices.Current;
 
@@ -453,7 +471,7 @@ namespace Clover.UI.Toolkit
             SetIcon(surge.Q(className: "slot-icon"), !spell.Open ? IconShapes.Lock : spell.IsEmpty ? "" : IconShapes.ForElement(spell.Element));
             Tint(surge.Q(className: "slot-icon"), "el-", spell.Element);
             surge.Q<Label>(className: "surge-name")?.SetText(!spell.Open ? spell.ShutReason : spell.IsEmpty ? "No surge" : spell.Name);
-            var glyph = surge.Q<Label>("surge-glyph");
+            var glyph = surge.Q<Label>(className: "surge-glyph");
             string path = Glyphs.PathOf(controls, "Surge", device);
             if (glyph != null && path.Length > 0)
             {
@@ -587,7 +605,7 @@ namespace Clover.UI.Toolkit
             var frame = Part("focus-frame");
             frame.pickingMode = PickingMode.Ignore;
             row.Add(frame);
-            row.RegisterCallback<PointerEnterEvent>(_ => Controller?.PointAtRow(column, index));
+            row.RegisterCallback<PointerMoveEvent>(_ => Controller?.PointAtRow(column, index));
             row.RegisterCallback<ClickEvent>(evt =>
             {
                 evt.StopPropagation();
@@ -620,7 +638,7 @@ namespace Clover.UI.Toolkit
                 frame.pickingMode = PickingMode.Ignore;
                 box.Add(frame);
                 int at = i;
-                box.RegisterCallback<PointerEnterEvent>(_ => Controller?.PointAtCard(at));
+                box.RegisterCallback<PointerMoveEvent>(_ => Controller?.PointAtCard(at));
                 box.RegisterCallback<ClickEvent>(evt =>
                 {
                     evt.StopPropagation();

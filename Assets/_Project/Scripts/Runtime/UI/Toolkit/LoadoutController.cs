@@ -376,7 +376,7 @@ namespace Clover.UI.Toolkit
                 var row = FocusedRow;
                 if (row == null || !row.HasShapes)
                 {
-                    Refuse(row);
+                    Refuse(row != null && !row.IsEmpty ? row : null);
                     return;
                 }
                 previewShapes[row.Id] = (ShapeOf(row) + 1) % row.Shapes.Length;

@@ -193,6 +193,9 @@ namespace Clover.UI
             {
                 case RestEntry.Hand:
                 {
+                    // LOADOUT HOOK (ui_rest_fire_plan.md 5.1, U3 and U4): once the Menus object carries the Loadout's
+                    // UIDocument, this case opens Toolkit.LoadoutScreen.Ensure().Open() instead, and Update's wait below
+                    // reads LoadoutScreen.Showing and LoadoutScreen.BusyThisFrame where it reads HandMenu's. Not wired yet.
                     var hand = HandMenu.Ensure();
                     if (hand == null || !hand.Open()) return false;
                     Leave(RestEntry.Hand);

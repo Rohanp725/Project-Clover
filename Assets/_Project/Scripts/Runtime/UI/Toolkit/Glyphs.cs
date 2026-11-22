@@ -75,7 +75,8 @@ namespace Clover.UI.Toolkit
             glyph.AddToClassList("glyph");
             if (small) glyph.AddToClassList("glyph-small");
             string id = Id(path, style);
-            glyph.name = "glyph-" + id.Replace(':', '-');
+            // A glyph the tree named keeps its name, so the screen can find it again.
+            if (string.IsNullOrEmpty(glyph.name)) glyph.name = "glyph-" + id.Replace(':', '-');
             glyph.userData = id;
             switch (id)
             {
