@@ -9,6 +9,8 @@ namespace Clover.Player.Trees
     {
         public const string Grounded = "earthed.grounded";
         public const string Suns = "mocksuns.suns";
+        /// <summary>Mock Suns' dazzle on those near: their next blow does nothing (round 4).</summary>
+        public const string Dazzled = "mocksuns.dazzled";
         public const string Swollen = "drownedweight.swollen";
         public const string SwollenHeavy = "drownedweight.heavy";
         public const string Roots = "rotroots.roots";
@@ -53,10 +55,17 @@ namespace Clover.Player.Trees
             // the Mark (its blows are critical, as the Mark makes them).
             // NEEDS: the side of a blow: only a blow from its left or right, not its face, is critical, lays the Chill and
             // spares the Mark; and the suns themselves, turning with it.
+            // Round 4, the owner: "encase and dazzle": the struck one is held frozen 2 s inside the ice ring, and up to
+            // three enemies within 4 m are dazzled for 5 s, their next blow doing nothing.
+            // NEEDS: a real miss: the dazzled blow still swings and lands, for nothing.
             to.Add(Reaction(AfflictionKind.Chill, AfflictionKind.Marked,
-                "Chill meets Marked: two mock suns hang beside it for 4 s. Your weapon blows on it lay two Chill and do not spend its Mark.",
+                "Chill meets Marked: two mock suns hang beside it for 4 s. It is held frozen 2 s, and up to three enemies near are dazzled: their next blow does nothing. Your weapon blows on it lay two Chill and do not spend its Mark.",
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Suns, Seconds = 4f, Keeps = AfflictionKind.Marked } },
-                new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Suns, By = StruckBy.Weapon, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 2 }));
+                new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Suns, By = StruckBy.Weapon, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 2 },
+                // After the first two, so the duo marks that change them by place (Wide Fan) still find them.
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hold, Seconds = 2f, Unseen = true },
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, Radius = 4f, Count = 3,
+                    State = new ConditionSpec { Id = Dazzled, Seconds = 5f, Flags = ConditionFlags.DamageDealtShare, Scale = 0f, EndsWith = ConditionBlow.TheirBlow, ToOthers = true } }));
 
             // Water and Dark (49). Swollen 5 s: 20% slower (a god is not slowed) and 15% more from weapon blows. When it
             // dies, or a heavy blow lands while it is swollen, it bursts in black water to 4 m: 14 damage, 20 stagger,

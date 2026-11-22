@@ -651,7 +651,8 @@ public class ReactionGifFramesRunner : MonoBehaviour
                         fails.Add($"laid: {one.kind} x{one.stacks} by {one.source} on {Who(one.body)} {(one.frame - reactedFrame) / (float)Rate:0.00} s after the reaction");
                 foreach (var one in struckLog)
                 {
-                    if (one.frame <= reactedFrame) continue;
+                    // A blow of no damage (a hold, a shove) is not a hit.
+                    if (one.frame <= reactedFrame || one.damage <= 0f) continue;
                     // The reaction's own damage over time is its own, even after its look has gone (noted, not failed).
                     if (effectEnd >= 0 && one.frame >= effectEnd && one.reaction) lateOwn++;
                     else if (effectEnd >= 0 && one.frame >= effectEnd)
@@ -765,9 +766,10 @@ public class ReactionGifFramesRunner : MonoBehaviour
 
     // ---- The v2 rig's log and checks.
 
-    // Elements whose base spell lingers and doses again (Poison's Miasma bites once a second): cast for real it lays its
+    // Elements whose base spell lingers and doses again (Poison's Miasma bites once a second, Fire's Flame Wave leaves
+    // burning ground, Life's Briar Patch keeps seeding): cast for real it lays its
     // affliction again after the reaction, the second cast the owner saw. Their affliction is laid once by hand.
-    private static readonly string[] LayByHand = { Elements.Poison };
+    private static readonly string[] LayByHand = { Elements.Poison, Elements.Fire, Elements.Life };
 
     private static bool Stills => System.IO.File.Exists("AgentScripts/reaction_gif_stills.txt");
     private List<AreaDirector> directors = new List<AreaDirector>();

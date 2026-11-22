@@ -4,7 +4,8 @@ using UnityEngine;
 namespace Clover.Gameplay
 {
     /// <summary>
-    /// The mark over a staggered fighter that says: finish me. A broken ring turning round a crossed cut, in white-gold,
+    /// The mark over a staggered fighter that says: finish me. A gold crossed cut pulsing over its head (round 4, the
+    /// owner: "drop the ring"; it was a dashed ring round the cross over the body, drawn over the player in close fights),
     /// which lands with a burst the moment the stagger begins and is gone the instant it ends. Whoever owns it says each
     /// frame whether it should show; it does the rest, and does nothing at all while hidden.
     /// </summary>
@@ -19,7 +20,9 @@ namespace Clover.Gameplay
         public float LandSeconds = 0.16f;
         public float LandFrom = 1.7f;
         public float BeatsPerSecond = 2.5f;
-        public float BeatSwell = 0.16f;
+        public float BeatSwell = 0.3f;
+        /// <summary>Over an enemy: this far above its bars, at this share of the size it was built at.</summary>
+        public float OverBars = 0.55f, OverHeadSize = 0.65f;
 
         public bool IsShown { get; private set; }
 
@@ -42,6 +45,9 @@ namespace Clover.Gameplay
             facing = transform.rotation;
             if (shapes != null) shapes.SetActive(false);
             enabled = false;
+            // No ring: the cross alone.
+            if (ring != null) ring.gameObject.SetActive(false);
+            placedOverHead = false;
         }
 
         /// <summary>Shows or hides the mark. Asking for what is already so costs nothing.</summary>
@@ -54,10 +60,24 @@ namespace Clover.Gameplay
             if (!show) return;
             age = 0f;
             spun = 0f;
+            PlaceOverHead();
             // The landing burst in the mark's gold, held below white: untinted it was a pure-white disc behind the mark on
             // every staggered enemy (the swing films of 2026-11-20). 0.22 is the brightness a heavy blow's star is lit to.
             Vfx.Play(VfxKind.Burst, transform.position, Vector3.up, 0.45f, StruckLook.Glow(LandingGold, 0.22f));
             Place();
+        }
+
+        private bool placedOverHead;
+
+        // Over an enemy's head, clear of its bars (a god's mark keeps the place its builder gave it).
+        private void PlaceOverHead()
+        {
+            if (placedOverHead) return;
+            placedOverHead = true;
+            var enemy = transform.parent != null ? transform.parent.GetComponent<Enemy>() : null;
+            if (enemy == null || enemy.Kind == null || enemy.Kind.IsBoss) return;
+            transform.localPosition = new Vector3(0f, enemy.BodyHeight + 0.3f + OverBars, 0f);
+            transform.localScale *= OverHeadSize;
         }
 
         private void LateUpdate()

@@ -148,6 +148,10 @@ namespace Clover.Player.Forms
                 {
                     patches[i] = run.A + Quaternion.Euler(0f, PatchTurn[i] * cast.Spec.Arc, 0f) * run.B * (cast.Reach * PatchOut[i]);
                     Clover.World.Hazards.Lay(cast.Ground(patches[i], PatchRadius, burns, 0.5f, cast.Linger(2f)));
+                    // Round 4: the flames burn on a visible scorch with embers glowing in it, as the infused strike's do
+                    // (ElementSteel.BurnPatch), so it reads why the ground burns.
+                    StrikeScorch.Lay(patches[i], PatchRadius * 1.35f, burns * Clover.World.Hazards.FireSecondsScale + 0.3f, 0.5f);
+                    Vfx.Play(VfxKind.Embers, patches[i] + Vector3.up * 0.2f, Vector3.up, 0.6f);
                 }
                 if (ElementArt.Ready && !run.Flag2)
                 {

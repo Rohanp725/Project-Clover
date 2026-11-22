@@ -77,6 +77,12 @@ namespace Clover.Tests
             {
                 string blade = ElementMoves.BladeSlug(element);
                 if (blade == null) continue;
+                // Round 4: Life's blows left nothing on the body (its thorns, seed lumps and sprouts are left out), so no look is built.
+                if (element == ElementSubstance.Life)
+                {
+                    for (int blow = 1; blow <= 3; blow++) Assert.Less(set.Find(ElementMoves.HitKey(element, blow)), 0, $"{blade}, blow {blow}");
+                    continue;
+                }
                 for (int blow = 1; blow <= 3; blow++) Assert.GreaterOrEqual(set.Find(ElementMoves.HitKey(element, blow)), 0, $"{blade}, blow {blow}");
                 Assert.Less(set.FindSheath(element), 0, $"{blade} wears a sheath on the blade");
                 string spell = ElementMoves.SpellKey(element, false), strike = ElementMoves.StrikeKey(element, false);
@@ -93,8 +99,8 @@ namespace Clover.Tests
         {
             var set = ElementLookBuilder.Set();
             if (set == null) Assert.Ignore("The element looks have not been built; run Clover > Build > Element Looks.");
-            Assert.AreEqual(26, set.Looks.Count(look => !look.Key.Contains("@") && !look.Key.StartsWith(ElementMoves.Prefix) && System.Array.IndexOf(ElementLookBuilder.ReactionsBuilt, look.Key) < 0),
-                "21 looks of batches 1 and 2, Unsteady built for one, three and five stacks, and elements 4's Marked, Glaze and Bedrock");
+            Assert.AreEqual(25, set.Looks.Count(look => !look.Key.Contains("@") && !look.Key.StartsWith(ElementMoves.Prefix) && System.Array.IndexOf(ElementLookBuilder.ReactionsBuilt, look.Key) < 0),
+                "21 looks of batches 1 and 2, Unsteady built for one, three and five stacks, and elements 4's Marked and Bedrock (Glaze's is not built since round 4)");
             foreach (AfflictionKind kind in System.Enum.GetValues(typeof(AfflictionKind)))
                 for (int depth = 1; depth <= 6; depth++)
                 {

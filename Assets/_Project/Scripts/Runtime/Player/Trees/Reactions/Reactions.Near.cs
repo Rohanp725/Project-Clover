@@ -6,9 +6,18 @@ namespace Clover.Player.Trees
     // The pairs one and two apart on the ring (docs/design/steel/pairs_d1_d2.md), README numbers 1 to 22.
     public static partial class Reactions
     {
+        /// <summary>Thunder Gust's funnel holds it this long before the throw (its look's funnel spins out by then).</summary>
+        public const float CarriedSeconds = 1.25f;
+        /// <summary>Capsize's and Steam's blows wait this long, until the rain or the steam has visibly come down (round 4).</summary>
+        public const float LandsAfter = 0.5f;
+
         // Conditions they set, by name: their answers name them too, and the probes read them.
         public const string LiveFlame = "flashover.live";
         public const string Thrown = "thundergust.thrown";
+        /// <summary>Thunder Gust: carried in the funnel until it has spun out (round 4), then thrown.</summary>
+        public const string Carried = "thundergust.carried";
+        /// <summary>Capsize: the rain falls and it tips before it is down (round 4).</summary>
+        public const string Tipping = "capsize.tipping";
         public const string Crust = "rime.crust";
         public const string StillWater = "supercooled.still";
         public const string Flower = "quickening.flower";
@@ -48,14 +57,18 @@ namespace Clover.Player.Trees
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Flinch, Seconds = 0.4f },
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = LiveFlame, Seconds = 4f, Flags = ConditionFlags.FlameLive } }));
 
-            // Lightning and Wind (2). Thrown 3 m straight away from the player; where it stops (0.4 s on) its Static goes
-            // off as a heavy blow sets it off: 7 damage and 5 stagger a stack in 4 m. What cannot be shoved is not thrown
-            // and discharges where it stands.
+            // Lightning and Wind (2). Carried in the funnel until it has spun out (1.25 s, round 4: "the enemy stays carried
+            // until the tornado has fully spun out, then drops back"), then thrown 3 m straight away from the player; where
+            // it stops (0.4 s on) its Static goes off as a heavy blow sets it off: 7 damage and 5 stagger a stack in 4 m.
+            // What cannot be shoved is not thrown and discharges where it stands. The lift itself is the look's (the
+            // body raised with the funnel, RaisedBodies).
             // NEEDS: thrown into something: what the body hits on the way takes the discharge first.
             to.Add(Reaction(AfflictionKind.Static, AfflictionKind.Unsteady,
-                "Static meets Unsteady: thunder and wind throw it 3 m away from you, and where it lands its Static goes off, 7 a stack in 4 m.",
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Push, Shape = HazardShape.Downwind, Amount = 3f },
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Thrown, Seconds = 0.4f } },
+                "Static meets Unsteady: thunder and wind carry it up in a funnel, then throw it 3 m away from you, and where it lands its Static goes off, 7 a stack in 4 m.",
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hold, Seconds = CarriedSeconds, Unseen = true },
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Carried, Seconds = CarriedSeconds } },
+                new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Carried, Do = UpgradeAction.Push, Shape = HazardShape.Downwind, Amount = 3f },
+                new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Carried, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Thrown, Seconds = 0.4f } },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Thrown, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Static, Radius = 4f, Stagger = 5f }));
 
             // Wind and Ice (3). A crust of rime for 5 s; the next heavy blow breaks it and the ice blows out of its far
@@ -181,13 +194,15 @@ namespace Clover.Player.Trees
                 new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Charging, Do = UpgradeAction.Afflict, Radius = 4f, Affliction = AfflictionKind.Chill, Stacks = 1 }));
 
             // Wind and Water (14). It slips and goes down on its back for 1.2 s; an elite only staggers (25), a god takes 15
-            // stagger.
+            // stagger. Round 4: the fall waits until the rain has visibly come down on it (the look's rain falls to 0.47 s
+            // and the body tips from 0.45 s), so it goes down 0.5 s after the reaction.
             to.Add(Reaction(AfflictionKind.Unsteady, AfflictionKind.Soaked,
                 "Soaked meets Unsteady: it slips and goes down for 1.2 s. The great only stagger.",
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Ranks = EnemyRank.Plain, Do = UpgradeAction.Condition,
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Ranks = EnemyRank.Plain, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Tipping, Seconds = LandsAfter } },
+                new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Tipping, Ranks = EnemyRank.Plain, Do = UpgradeAction.Condition,
                     State = new ConditionSpec { Id = Capsized, Seconds = 1.2f, Flags = ConditionFlags.Down } },
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Ranks = EnemyRank.Elite, Do = UpgradeAction.Burst, Radius = 0.5f, Stagger = 25f },
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Ranks = EnemyRank.God, Do = UpgradeAction.Burst, Radius = 0.5f, Stagger = 15f }));
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Ranks = EnemyRank.Elite, Do = UpgradeAction.Burst, Radius = 0.5f, Stagger = 25f, Delay = LandsAfter },
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Ranks = EnemyRank.God, Do = UpgradeAction.Burst, Radius = 0.5f, Stagger = 15f, Delay = LandsAfter }));
 
             // Ice and Life (15). The seed sleeps under the frost: its Seeded stops fading while the Chill lasts. When the
             // Chill ends (a freeze ending by thaw or shatter ends it too) the seed wakes: thorns of 12 a Seeded stack in

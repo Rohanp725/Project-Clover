@@ -43,7 +43,8 @@ namespace Clover.Tests
         {
             var set = Built();
             Assert.AreEqual("light_marked", AfflictionArt.LookOf(AfflictionKind.Marked));
-            Assert.AreEqual("ice_glaze", SurgeArt.LookOf(ElementSubstance.Ice));
+            Assert.IsNull(SurgeArt.LookOf(ElementSubstance.Ice), "Glaze is GlazeIce's ice on the bones alone (round 4)");
+            Assert.Less(set.Find("ice_glaze"), 0, "no crystals at the feet nor frost pool");
             Assert.AreEqual("earth_bedrock", SurgeArt.LookOf(ElementSubstance.Earth));
             foreach (string key in ElementLookBuilder.E4Looks.Keys) Assert.GreaterOrEqual(set.Find(key), 0, key);
             Assert.GreaterOrEqual(set.Find(ElementMoves.SpellKey(ElementSubstance.Wind, false)), 0, "Gust's fronts of curls");
@@ -54,7 +55,6 @@ namespace Clover.Tests
             Assert.IsTrue(marked.Any(name => name.Contains("vfxe4_beam")), "Marked's one beam");
             Assert.IsFalse(marked.Any(name => name.Contains("shaft_surge")), "no slatted shaft");
             // Glaze's shoulder crystals and Bedrock's plates are on the bones (GlazeIce, StoneArmour), never in the look.
-            Assert.IsFalse(PieceNames(set, "ice_glaze").Any(name => name.Contains("shouldercrystal")));
             Assert.IsFalse(PieceNames(set, "earth_bedrock").Any(name => name.Contains("vfxe4_rock")));
             // Seeded is the circling seeds alone.
             Assert.IsTrue(PieceNames(set, "life_seeded").All(name => name.Contains("vfxe2_spore")), "Seeded: only the circling seeds");

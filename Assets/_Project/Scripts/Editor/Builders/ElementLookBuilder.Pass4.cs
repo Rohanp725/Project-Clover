@@ -52,11 +52,13 @@ namespace Clover.EditorTools
             ["lightning_static"] = "static", ["lightning_overdrive"] = "overdrive", ["water_wellspring"] = "wellspring",
             ["metal_sundered"] = "sundered", ["life_seeded"] = "seeded", ["life_regrowth"] = "regrowth",
             ["light_clarity"] = "clarity", ["dark_cursed"] = "cursed", ["dark_hunger"] = "hunger", ["poison_fever"] = "fever",
-            ["light_marked"] = "marked", ["ice_glaze"] = "glaze", ["earth_bedrock"] = "bedrock_armour",
+            // Glaze's elements 4 look (crystals at the feet and shoulders, a frost bed under the player) is not built: round 4
+            // asked for the previous version, the ice grown on the player's own bones (GlazeIce) alone.
+            ["light_marked"] = "marked", ["earth_bedrock"] = "bedrock_armour",
         };
 
         /// <summary>The element looks elements 4 adds that no earlier recipe had.</summary>
-        public static readonly string[] E4NewLooks = { "light_marked", "ice_glaze", "earth_bedrock" };
+        public static readonly string[] E4NewLooks = { "light_marked", "earth_bedrock" };
 
         /// <summary>Each element's own moments elements 4 redraws (Tailwind, Broken Ground, Briar Patch) or adds (Gust, Stone Rise).</summary>
         public static readonly HashSet<string> E4Moments = new HashSet<string> { "tailwind", "gust", "stone_rise", "broken_ground", "briar_patch" };
@@ -83,7 +85,7 @@ namespace Clover.EditorTools
         /// them up"), Frost Heave's block of ice shoves it 1.3 m up ("instead of the ice shoving up the person from the
         /// ground"). The height is the recipe body's own path.
         /// </summary>
-        public static readonly HashSet<string> RaisedBodies = new HashSet<string> { "anvil_stone", "frost_heave" };
+        public static readonly HashSet<string> RaisedBodies = new HashSet<string> { "anvil_stone", "frost_heave", "thunder_gust" };
 
         /// <summary>
         /// Affliction looks kept turned to the game camera as the Blender worker's camera saw them: Sundered's dagger in the

@@ -416,6 +416,8 @@ namespace Clover.Gameplay
         {
             if (animator == null || animator.transform == transform) return;
             int tremor = IsDead ? 0 : Afflictions.Stacks(AfflictionKind.Tremor);
+            // Turned to stone, it stands still as stone: no shaking (round 4, Turned to Stone).
+            if (tremor > 0 && Clover.Player.Forms.ElementLooks.ShellOn(transform, Clover.Player.Forms.ElementLookSet.Stone, out _, out _, out _)) tremor = 0;
             float raise = IsDead ? 0f : Clover.Player.Forms.ElementLooks.RaiseOf(transform);
             if (tremor <= 0 && raise <= 0f)
             {

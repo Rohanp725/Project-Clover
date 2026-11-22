@@ -1,6 +1,6 @@
 # Element looks (batches 1 and 2)
 
-230 looks, 5463 parts (1924 ribbons), 34563 keys, from Assets/_Project/Art/VFX/Combos/elements2_recipe.json.
+226 looks, 5333 parts (1877 ribbons), 34295 keys, from Assets/_Project/Art/VFX/Combos/elements2_recipe.json.
 
 | Look | Length | On | Parts | Ribbons | Repeats from | Shell |
 |---|---|---|---|---|---|---|
@@ -120,7 +120,7 @@
 | seized@2 | 1.6 s | body | 4 | 4 | 0.80 s | - |
 | seized@3 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | seed_storm@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| seed_storm | 1.6 s | body | 86 | 34 | -0.30 s | - |
+| seed_storm | 1.6 s | body | 66 | 14 | -0.30 s | - |
 | seed_storm@1 | 1.6 s | body | 11 | 5 | 1.60 s | - |
 | seed_storm@2 | 1.6 s | body | 11 | 5 | 1.60 s | - |
 | seed_storm@3 | 1.6 s | body | 11 | 5 | 1.60 s | - |
@@ -153,7 +153,7 @@
 | the_grudge@1 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | the_grudge@2 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | ill_wind@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| ill_wind | 1.6 s | body | 26 | 10 | -0.30 s | - |
+| ill_wind | 1.6 s | body | 25 | 10 | -0.30 s | - |
 | ill_wind@1 | 1.6 s | body | 3 | 0 | 0.90 s | - |
 | ill_wind@2 | 1.6 s | body | 2 | 0 | 1.00 s | - |
 | ill_wind@3 | 1.6 s | body | 2 | 0 | 1.10 s | - |
@@ -250,7 +250,7 @@
 | live_iron@2 | 1.6 s | body | 8 | 5 | 0.90 s | - |
 | live_iron@3 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | golden_feathers@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| golden_feathers | 1.6 s | body | 35 | 31 | -0.05 s | - |
+| golden_feathers | 1.6 s | body | 8 | 4 | -0.05 s | - |
 | golden_feathers@1 | 1.6 s | body | 6 | 3 | 1.10 s | - |
 | golden_feathers@2 | 1.6 s | body | 6 | 3 | 1.18 s | - |
 | golden_feathers@3 | 1.6 s | body | 6 | 3 | 1.26 s | - |
@@ -265,7 +265,7 @@
 | fish_poison@3 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | water_soaked | 2.2 s | body | 13 | 0 | 1.02 s | 1 bands from 0.50 s, every 0.10 s, 0.45 s each |
 | water_wellspring | 2.0 s | player | 116 | 24 | 0.05 s | - |
-| metal_sundered | 2.0 s | body | 9 | 0 | 0.60 s | - |
+| metal_sundered | 2.0 s | body | 6 | 0 | 0.60 s | - |
 | metal_sword | 1.6 s | body | 4 | 0 | 1.60 s | - |
 | metal_temper | 1.8 s | player | 3 | 0 | 0.90 s | 5 bands from 0.25 s, every 0.11 s, 0.09 s each |
 | metal_rust | 2.2 s | body | 18 | 0 | 1.15 s | - |
@@ -275,7 +275,7 @@
 | life_regrowth | 2.0 s | player | 44 | 9 | 2.00 s | - |
 | dark_cursed | 2.2 s | body | 50 | 43 | 0.27 s | - |
 | dark_hunger | 2.2 s | player | 25 | 3 | 0.15 s | - |
-| ice_chill | 2.2 s | body | 14 | 0 | 0.85 s | 5 bands from 0.10 s, every 0.10 s, 0.09 s each |
+| ice_chill | 2.2 s | body | 4 | 0 | 0.85 s | 5 bands from 0.10 s, every 0.10 s, 0.09 s each |
 | ice_rime | 2.4 s | body | 15 | 0 | 2.40 s | 5 bands from 0.05 s, every 0.30 s, 0.45 s each |
 | earth_tremor | 2.4 s | body | 28 | 0 | 0.10 s | - |
 | lightning_static | 2.2 s | body | 37 | 30 | 0.25 s | - |
@@ -287,7 +287,6 @@
 | wind_unsteady_5 | 1.8 s | body | 15 | 10 | 0.22 s | - |
 | wind_strike | 1.2 s | player | 17 | 12 | 1.20 s | - |
 | light_marked | 2.2 s | body | 8 | 0 | 0.45 s | - |
-| ice_glaze | 1.8 s | player | 18 | 0 | 0.40 s | - |
 | earth_bedrock | 2.0 s | player | 13 | 0 | 2.00 s | - |
 | e3_fire_blade_hit1 | 0.6 s | body | 7 | 0 | 0.60 s | - |
 | e3_fire_blade_hit2 | 0.6 s | body | 7 | 0 | 0.60 s | - |
@@ -304,9 +303,9 @@
 | e3_earth_blade_hit1 | 0.6 s | body | 10 | 0 | 0.60 s | - |
 | e3_earth_blade_hit2 | 0.6 s | body | 9 | 0 | 0.60 s | - |
 | e3_earth_blade_hit3 | 0.6 s | body | 14 | 0 | 0.60 s | - |
-| e3_life_blade_hit1 | 0.6 s | body | 4 | 0 | 0.60 s | - |
-| e3_life_blade_hit2 | 0.6 s | body | 6 | 0 | 0.60 s | - |
-| e3_life_blade_hit3 | 0.6 s | body | 14 | 0 | 0.60 s | - |
+| e3_life_blade_hit1 | 0.6 s | body | 0 | 0 | 0.60 s | - |
+| e3_life_blade_hit2 | 0.6 s | body | 0 | 0 | 0.60 s | - |
+| e3_life_blade_hit3 | 0.6 s | body | 0 | 0 | 0.60 s | - |
 | e3_light_blade_hit1 | 0.6 s | body | 7 | 2 | 0.03 s | - |
 | e3_light_blade_hit2 | 0.6 s | body | 7 | 2 | 0.03 s | - |
 | e3_light_blade_hit3 | 0.6 s | body | 8 | 3 | 0.03 s | - |
@@ -323,7 +322,7 @@
 | e3_flame_wave@b | 1.3 s | body | 17 | 0 | 0.25 s | - |
 | e3_riptide | 1.5 s | body | 37 | 3 | 0.25 s | - |
 | e3_riptide@b | 0.3 s | body | 4 | 0 | 0.10 s | - |
-| e3_miasma | 1.5 s | body | 18 | 0 | 1.50 s | - |
+| e3_miasma | 1.5 s | body | 17 | 0 | 1.50 s | - |
 | e3_miasma@b | 0.8 s | body | 6 | 0 | 0.00 s | - |
 | e3_frost_bite | 1.5 s | body | 0 | 0 | 1.50 s | - |
 | e3_frost_bite@b | 1.4 s | body | 10 | 0 | 0.00 s | - |
@@ -332,7 +331,7 @@
 | e3_taken | 1.5 s | body | 9 | 9 | 0.05 s | - |
 | e3_taken@b | 1.4 s | body | 7 | 1 | 1.35 s | - |
 | e3_grown_into_it | 1.5 s | body | 0 | 0 | 1.50 s | - |
-| e3_grown_into_it@b | 1.4 s | body | 8 | 1 | 1.43 s | - |
+| e3_grown_into_it@b | 1.4 s | body | 1 | 1 | 1.43 s | - |
 | e3_tailwind | 1.6 s | body | 21 | 15 | 0.00 s | - |
 | e3_gust | 1.5 s | body | 100 | 92 | 0.04 s | - |
 | e3_gust@b | 1.2 s | body | 6 | 6 | 0.00 s | - |
@@ -340,8 +339,8 @@
 | e3_stone_rise@b | 1.6 s | body | 40 | 0 | 0.03 s | - |
 | e3_broken_ground | 1.5 s | body | 31 | 1 | 0.15 s | - |
 | e3_broken_ground@b | 1.5 s | body | 0 | 0 | 1.50 s | - |
-| e3_briar_patch | 1.5 s | body | 27 | 0 | 1.50 s | - |
-| e3_briar_patch@b | 1.2 s | body | 9 | 1 | 1.20 s | - |
+| e3_briar_patch | 1.5 s | body | 13 | 0 | 1.50 s | - |
+| e3_briar_patch@b | 1.2 s | body | 4 | 1 | 1.20 s | - |
 | e3_strike_earth | 1.4 s | body | 42 | 0 | 1.40 s | - |
 | e3_strike_earth@b | 1.4 s | body | 0 | 0 | 1.40 s | - |
 | e3_strike_earth@b | 1.4 s | body | 0 | 0 | - | lifts the body 0.55 m |

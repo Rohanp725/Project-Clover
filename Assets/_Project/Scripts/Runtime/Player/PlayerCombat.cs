@@ -196,6 +196,21 @@ namespace Clover.Player
             }
         }
 
+        /// <summary>
+        /// The tint of the cut across a struck body when the blow carries no element look of its own: the carried element's
+        /// colour, or with none the weapon's slash colour; its hue at full strength, never a bright HDR glow.
+        /// </summary>
+        public Color WeaponCutTint
+        {
+            get
+            {
+                if (Weapon == null) return default;
+                Color slash = element != null && element.HasElement && element.Info != null ? element.Info.Colour : Weapon.SlashColour;
+                float most = Mathf.Max(slash.r, Mathf.Max(slash.g, slash.b));
+                return most > 0.001f ? new Color(slash.r / most, slash.g / most, slash.b / most, 1f) : default;
+            }
+        }
+
         /// <summary>True when the move in progress is an infused strike's carrier.</summary>
         public bool SwingInfused => InfusedNow && infusedElement != null;
         /// <summary>The strike clock a move belongs to (4 or 5) when it is an infused strike, else -1: its own blow does not cut its own clock.</summary>
@@ -2271,9 +2286,12 @@ namespace Clover.Player
                 {
                     // The cut line: which way the blade went through, drawn over the sparks.
                     Vector3 through = CutDirection(step);
-                    if (outcome == HitOutcome.Finisher) CutMarks.Finisher(other.bounds.center, through, struckTint);
-                    else if (step.Heavy) CutMarks.Heavy(other.bounds.center, through, struckTint);
-                    else CutMarks.Light(other.bounds.center, through, struckTint);
+                    // The cut across the body in the element's colour, or with none carried the weapon's own slash colour
+                    // (round 4: the plain cut was a white line).
+                    Color cutTint = StruckLook.Tinted(struckTint) ? struckTint : WeaponCutTint;
+                    if (outcome == HitOutcome.Finisher) CutMarks.Finisher(other.bounds.center, through, cutTint);
+                    else if (step.Heavy) CutMarks.Heavy(other.bounds.center, through, cutTint);
+                    else CutMarks.Light(other.bounds.center, through, cutTint);
                 }
                 if (reticle != null && target is Component struckThing) reticle.Struck(struckThing.transform);
                 // A finisher's flash: white for a plain weapon, the element's hue under one, as the heavy blow's star.

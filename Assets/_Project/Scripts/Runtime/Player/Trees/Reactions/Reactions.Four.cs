@@ -34,7 +34,8 @@ namespace Clover.Player.Trees
                 3f,
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Soaked },
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Burn, Share = 0.5f },
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Burst, Affliction = AfflictionKind.Soaked, Radius = 2.5f, Damage = 8f, DamagePerSpent = 4f, Stagger = 15f }));
+                // Round 4: the scald waits until the steam has visibly flashed off (the look's drop lands at 0.45 s).
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Burst, Affliction = AfflictionKind.Soaked, Radius = 2.5f, Damage = 8f, DamagePerSpent = 4f, Stagger = 15f, Delay = LandsAfter }));
 
             // Lightning and Life (35). The fern itself throws one bolt to the nearest other Seeded enemy within 8 m: 8
             // damage, 10 stagger and one Static. The enemy keeps both afflictions.

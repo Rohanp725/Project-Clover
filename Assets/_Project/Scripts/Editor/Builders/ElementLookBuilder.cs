@@ -76,7 +76,23 @@ namespace Clover.EditorTools
         /// Ribbons one look leaves out, by "slug|material": The Grudge's cyan crawl over the body before the black bolt
         /// (the owner, 2026-11-19: "it looks like some lightning is frozen in place even before the black bolt").
         /// </summary>
-        public static readonly HashSet<string> LeftOutRibbons = new HashSet<string> { "the_grudge|m3_bolt" };
+        public static readonly HashSet<string> LeftOutRibbons = new HashSet<string>
+        {
+            "the_grudge|m3_bolt",
+            // Round 4: the wind trails left combed on the floor by Windthrow (the game's Seed Storm) and Golden Feathers.
+            "seed_storm|m3_wind_dust", "golden_feathers|e3_wind_comb",
+        };
+
+        /// <summary>
+        /// Ribbons one look breaks up and fades out, by "slug|part of the ribbon's name": (when it begins to go, when it is
+        /// gone). Split Rock's (the game's Root Snare) root web stayed on the floor after the roots were torn (round 4):
+        /// it is wiped from its tail as the roots break at 0.64 s and gone by 1 s.
+        /// </summary>
+        public static readonly Dictionary<string, Vector2> RibbonFades = new Dictionary<string, Vector2>
+        {
+            ["root_snare|grip"] = new Vector2(0.64f, 1.0f),
+            ["root_snare|rootlet"] = new Vector2(0.64f, 1.0f),
+        };
 
         /// <summary>
         /// Ribbons one look carries further out from their body, by "slug|material" (the share their reach is grown by):
@@ -134,6 +150,20 @@ namespace Clover.EditorTools
         public static readonly HashSet<string> LeftOut = new HashSet<string>
         {
             "black_chain|vfxr4_chain",
+            // Round 4 (the owner's review of 2026-11-22, docs/design/feedback/2026-11-22_round4_plan.md): Ill Wind's green
+            // oval on the floor; Briar Patch's thorns out of the ground (the plants' own thorns carry it); the brown thorns,
+            // seed lumps and sprouts on the enemies' backs from Life's charged blows and Grown Into It; Miasma's pool (the
+            // cloud only); Chill's crystals (the base look is the frost on the body); Sundered's drops.
+            "ill_wind|vfxe3_disc",
+            "e3_briar_patch|vfx3c_vfx_life_thorn", "e3_briar_patch@b|vfx3c_vfx_life_thorn",
+            "e3_life_blade_hit1|vfx3c_vfx_life_thorn", "e3_life_blade_hit2|vfx3c_vfx_life_thorn", "e3_life_blade_hit3|vfx3c_vfx_life_thorn",
+            "e3_life_blade_hit1|vfxe2_seed", "e3_life_blade_hit2|vfxe2_seed", "e3_life_blade_hit3|vfxe2_seed",
+            "e3_life_blade_hit1|vfx3c_vfx_life_briar", "e3_life_blade_hit2|vfx3c_vfx_life_briar", "e3_life_blade_hit3|vfx3c_vfx_life_briar",
+            "e3_life_blade_hit1|vfxe2_spore", "e3_life_blade_hit2|vfxe2_spore", "e3_life_blade_hit3|vfxe2_spore",
+            "e3_grown_into_it@b|vfxe2_seed", "e3_grown_into_it@b|vfxe3_vfx_life_sapling", "e3_grown_into_it@b|vfxe2_spore",
+            "e3_miasma|vfx3c_vfx_water_ink", "e3_miasma@b|vfx3c_vfx_water_ink",
+            "ice_chill|vfxe2_crystal",
+            "metal_sundered|vfx3c_vfx_water_drop",
             // Metal's charged blows threw a spray of white-hot sparks round the bite, a white starburst on every weapon (the
             // swing films of 2026-11-20): Metal lands as a glint alone, painted steel (LookPaints).
             "e3_metal_blade_hit1|vfx3c_vfx_metal_spark", "e3_metal_blade_hit2|vfx3c_vfx_metal_spark", "e3_metal_blade_hit3|vfx3c_vfx_metal_spark",
@@ -670,6 +700,10 @@ namespace Clover.EditorTools
             ["anvil_stone|m3_steel_dagger"] = new ReactionArtBuilder.Paint(0.3f, 0.32f, 0.37f),
             // Red Hot's white-hot blade read as a cream-white cross: hot orange, as metal glows.
             ["red_hot|r4_whitehot"] = new ReactionArtBuilder.Paint(1f, 0.45f, 0.08f),
+            // Round 4: the sword heats from its steel through a dull red to the orange, not straight to orange.
+            ["red_hot|r4_redhot"] = new ReactionArtBuilder.Paint(0.3f, 0.04f, 0.02f),
+            // Round 4: Cold Short's frost over the whole sword, the hilt too, in the ice's blue rather than pale steel.
+            ["cold_short|r4_frost_steel"] = new ReactionArtBuilder.Paint(0.25f, 0.55f, 1f),
             ["diamond_ring|m2_light_pale"] = new ReactionArtBuilder.Paint(1f, 0.62f, 0.18f),
             ["diamond_ring|m2_light_white"] = new ReactionArtBuilder.Paint(1f, 0.7f, 0.26f),
             ["mock_suns|r4_sunbead"] = new ReactionArtBuilder.Paint(0.95f, 0.5f, 0.1f),
@@ -1592,7 +1626,16 @@ namespace Clover.EditorTools
                     part.DrawCount = AddKeys(motion, "draw_on", lists.Keys, false, shift);
                     part.EraseFirst = lists.Keys.Count;
                     float linger = Linger(slug, Text(ribbon, "object"));
-                    part.EraseCount = AddKeys(motion, "erase", lists.Keys, false, shift - linger);
+                    var fade = Fade(slug, Text(ribbon, "object"));
+                    if (fade.y > 0f)
+                    {
+                        // Wiped from its tail between the fade's two times, and gone at its end.
+                        lists.Keys.Add(new ElementLookSet.Key { Time = fade.x - shift, Value = Vector3.zero, Ease = ElementLookSet.Linear });
+                        lists.Keys.Add(new ElementLookSet.Key { Time = fade.y - shift, Value = Vector3.one, Ease = ElementLookSet.In });
+                        part.EraseCount = 2;
+                        part.Hide = Mathf.Min(part.Hide, fade.y - shift + 0.02f);
+                    }
+                    else part.EraseCount = AddKeys(motion, "erase", lists.Keys, false, shift - linger);
                     if (linger > 0f && part.Hide < 9f) part.Hide += linger;
                     if (motion.TryGetValue("orbit", out var orbitValue) && orbitValue is Dictionary<string, object> orbit)
                     {
@@ -1987,6 +2030,17 @@ namespace Clover.EditorTools
         /// "spark15", "heavechip4", are not bodies: read as such, all but one spark and one stone went astray).
         /// </summary>
         public const float AnvilBack = 0.22f, AnvilWasBack = 0.78f, AnvilSink = 0.95f;
+
+        // When a ribbon begins to fade and is gone (RibbonFades), by a part of its name; zero for none.
+        private static Vector2 Fade(string slug, string ribbonObject)
+        {
+            foreach (var pair in RibbonFades)
+            {
+                int bar = pair.Key.IndexOf('|');
+                if (pair.Key.Substring(0, bar) == slug && ribbonObject.Contains(pair.Key.Substring(bar + 1))) return pair.Value;
+            }
+            return Vector2.zero;
+        }
 
         // Seconds a reaction's ribbon is kept on longer (RibbonLinger), by a part of its name.
         private static float Linger(string slug, string ribbonObject)
