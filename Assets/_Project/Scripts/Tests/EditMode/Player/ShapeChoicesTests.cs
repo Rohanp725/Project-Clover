@@ -8,8 +8,9 @@ using NUnit.Framework;
 namespace Clover.Tests
 {
     /// <summary>
-    /// The shape screen's list (the owner's decision of 2026-11-20): every learned spell's Shape mark, then every learned
-    /// reaction's, each with the shape worn and whether it is in force; stepping goes round the shapes.
+    /// The Reactions page's list (the owner's answer Q4 of 2026-11-21): every learned reaction's Shape mark, each with
+    /// the shape worn and whether it is in force; a spell's shape is chosen on the Loadout, so none is listed here.
+    /// Stepping goes round the shapes.
     /// </summary>
     public class ShapeChoicesTests
     {
@@ -30,7 +31,7 @@ namespace Clover.Tests
         private static readonly Upgrade Plain = new Upgrade { Id = "t.plain", Element = Elements.Fire, Kind = UpgradeKind.Major };
 
         [Test]
-        public void TheLearnedShapesAreListedSpellsFirstWithTheShapeWorn()
+        public void OnlyTheLearnedReactionShapesAreListedWithTheShapeWorn()
         {
             var marks = new List<Upgrade> { SteamShape, Plain, NotLearned, RushShape };
             var learned = new HashSet<string> { SteamShape.Id, RushShape.Id, Plain.Id };
@@ -40,31 +41,25 @@ namespace Clover.Tests
 
             var choices = new ShapeChoices();
             choices.Fill(marks, learned, loadout);
-            Assert.AreEqual(2, choices.Count, "only learned Shape marks");
-            var spell = choices.At(0);
-            Assert.IsFalse(spell.Reaction, "spells first");
-            Assert.AreEqual("t.rush", spell.Key, "a spell's choice is kept under its branch");
-            Assert.AreEqual(1, spell.Worn);
-            Assert.AreEqual("High", spell.WornShape.Name);
-            Assert.IsFalse(spell.InForce, "a spell's shape is in force only with the spell in a slot");
-            var reaction = choices.At(1);
+            Assert.AreEqual(1, choices.Count, "only learned reaction Shape marks: the spell's is on the Loadout");
+            var reaction = choices.At(0);
             int steam = AfflictionPairs.Index(AfflictionKind.Burn, AfflictionKind.Soaked);
             Assert.IsTrue(reaction.Reaction);
             Assert.AreEqual(ReactionTable.ShapeKey(steam), reaction.Key, "a reaction's choice is kept under the reaction");
             Assert.AreEqual(AfflictionPairs.Name(steam), reaction.Title);
             Assert.AreEqual(0, reaction.Worn, "the first shape until another is chosen");
             Assert.IsTrue(reaction.InForce, "both elements carried");
-
-            loadout.Slots[0] = "t.rush";
-            choices.Fill(marks, learned, loadout);
-            Assert.IsTrue(choices.At(0).InForce, "slotted, the spell's shape is in force");
         }
 
         [Test]
         public void TheChoiceMovesRoundTheEndsStepsRoundTheShapesAndStaysOnItsLineWhenFilledAgain()
         {
-            var marks = new List<Upgrade> { RushShape, SteamShape };
-            var learned = new HashSet<string> { SteamShape.Id, RushShape.Id };
+            var galeShape = new Upgrade
+            {
+                Id = "t.gale.shape", Element = Elements.Wind, Element2 = Elements.Water, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Shapes = Two("Wide", "Narrow"),
+            };
+            var marks = new List<Upgrade> { RushShape, SteamShape, galeShape };
+            var learned = new HashSet<string> { SteamShape.Id, RushShape.Id, galeShape.Id };
             var loadout = new Loadout();
             loadout.Attune(Elements.Fire, Elements.Water);
             var choices = new ShapeChoices();
@@ -94,7 +89,7 @@ namespace Clover.Tests
             var loadout = new Loadout();
             var choices = new ShapeChoices();
             choices.Fill(Upgrade.All, learned, loadout);
-            Assert.Greater(choices.Count, 55, "every spell branch's and every duo branch's Shape mark");
+            Assert.AreEqual(AfflictionPairs.Count, choices.Count, "every duo branch's Shape mark, and no spell's");
             int reactions = 0;
             for (int i = 0; i < choices.Count; i++)
             {

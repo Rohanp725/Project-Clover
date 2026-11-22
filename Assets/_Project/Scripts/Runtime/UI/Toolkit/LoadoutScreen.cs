@@ -32,7 +32,7 @@ namespace Clover.UI.Toolkit
 
         /// <summary>Raised for every menu sound (4.5); the audio hook-up plays the UI mixer group's ticks from it.</summary>
         public event Action<MenuSound> Sounded;
-        /// <summary>A on the element header: the Reactions page (Q4, step U5) opens from here once built.</summary>
+        /// <summary>A on the element header, as the Reactions page (Q4) opens over the Loadout.</summary>
         public event Action ReactionsAsked;
 
         public bool IsOpen { get; private set; }
@@ -51,6 +51,8 @@ namespace Clover.UI.Toolkit
         private VisualElement boundRoot;
         // True while the mouse holds X's glyph on a saved Hand: the hold fills as a held X does.
         private bool pointerKeeping;
+        // True while the Reactions page is open over the Loadout: the Loadout is hidden and deaf until it closes.
+        private bool reactionsOpen;
 
         // The tree.
         private VisualElement root, paneLines, listTitle, listColumns, aspectCards, footerLeft, footerRight, paneMore, weaponPicture;
@@ -129,6 +131,8 @@ namespace Clover.UI.Toolkit
             if (!IsOpen) return;
             IsOpen = false;
             closedOnFrame = Time.frameCount;
+            if (reactionsOpen && ShapeMenu.Instance != null) ShapeMenu.Instance.Close();
+            reactionsOpen = false;
             Controller?.Close();
             input?.Disable();
             if (root != null) root.style.display = DisplayStyle.None;
@@ -149,7 +153,32 @@ namespace Clover.UI.Toolkit
         }
 
         private void OnSound(MenuSound sound) => Sounded?.Invoke(sound);
-        private void OnReactions() => ReactionsAsked?.Invoke();
+        private void OnReactions()
+        {
+            ReactionsAsked?.Invoke();
+            var page = ShapeMenu.Ensure();
+            if (page == null || root == null) return;
+            // The page is drawn on the HUD's canvas, which the Loadout hid; the HUD's bars stay under the page's dim.
+            HideHud(false);
+            if (!page.Open())
+            {
+                HideHud(true);
+                return;
+            }
+            reactionsOpen = true;
+            input?.Disable();
+            root.style.display = DisplayStyle.None;
+        }
+
+        // Back from the Reactions page, the frame after it closed, so its last press is its own.
+        private void ReturnFromReactions()
+        {
+            reactionsOpen = false;
+            HideHud(true);
+            root.style.display = DisplayStyle.Flex;
+            input?.Enable();
+            Draw();
+        }
         private void OnTextSize(int size) => TextSizeSetting.Current = size;
 
         private void OnPaneScrolled(float lines)
@@ -191,6 +220,11 @@ namespace Clover.UI.Toolkit
         private void Update()
         {
             if (!IsOpen || Controller == null) return;
+            if (reactionsOpen)
+            {
+                if (!ShapeMenu.Showing && !ShapeMenu.BusyThisFrame) ReturnFromReactions();
+                return;
+            }
             if (ControlDevices.Version != drawnDevices) Draw();
             if (pointerKeeping) Controller.KeepHeld(Time.unscaledDeltaTime);
             if (Time.frameCount != openedOnFrame && input != null && input.Drive(Controller, Time.unscaledDeltaTime))
@@ -730,8 +764,10 @@ namespace Clover.UI.Toolkit
             AddGlyph(footerLeft, "Cancel", device, false, false);
             footerLeft.Add(new Label(Controller.Mode == LoadoutMode.Board ? "Back to the fire" : "Back").WithClass("t-meta", "gap-left"));
             footerRight.Clear();
-            AddGlyph(footerRight, "HalfLeft", device, false, false);
-            AddGlyph(footerRight, "HalfRight", device, false, true);
+            // The keys have no HalfLeft of their own (Shift+Tab is HalfRight with Shift), so Tab alone stands for both.
+            bool halfLeft = Glyphs.PathOf(controls, "HalfLeft", device).Length > 0;
+            if (halfLeft) AddGlyph(footerRight, "HalfLeft", device, false, false);
+            AddGlyph(footerRight, "HalfRight", device, false, halfLeft);
             footerRight.Add(new Label(Controller.Mode == LoadoutMode.SpellList ? "Element groups" : "Steel / Element").WithClass("t-meta", "gap-left"));
             AddGlyph(footerRight, "TextSize", device, false, true);
             footerRight[footerRight.childCount - 1].AddToClassList("footer-gap");

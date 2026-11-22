@@ -6,8 +6,9 @@ using Clover.Player.Build;
 namespace Clover.UI
 {
     /// <summary>
-    /// What the shape screen at a rest fire lists (the owner's decision of 2026-11-20): every learned spell's Shape mark,
-    /// then every learned reaction's, each with the shape worn. Plain state with no scene behind it, like
+    /// What the Reactions page lists (opened from the Loadout's element header; the owner's answer Q4 of 2026-11-21):
+    /// every learned reaction's Shape mark, each with the shape worn. A spell's shape is chosen on the Loadout itself.
+    /// Plain state with no scene behind it, like
     /// <see cref="RestChoices"/>, so the rules can be tested; the choice itself is made through
     /// <see cref="PlayerBuild.ChooseShape"/>, which only a rest fire allows.
     /// </summary>
@@ -21,23 +22,22 @@ namespace Clover.UI
 
         public ShapeRow At(int index) => rows[index];
 
-        /// <summary>Lists the learned Shape marks of <paramref name="marks"/>, spells first and then reactions, each in the chart's order.</summary>
+        /// <summary>Lists the learned reaction Shape marks of <paramref name="marks"/>, in the chart's order.</summary>
         public void Fill(IReadOnlyList<Upgrade> marks, ICollection<string> learned, Loadout loadout)
         {
             string keep = rows.Count > 0 && Selected < rows.Count ? rows[Selected].Key : null;
             rows.Clear();
             if (marks != null && learned != null)
             {
-                for (int pass = 0; pass < 2; pass++)
-                    for (int i = 0; i < marks.Count; i++)
-                    {
-                        var mark = marks[i];
-                        if (mark == null || mark.IsHidden || mark.Part != BranchPart.Shape || mark.Shapes == null || mark.Shapes.Length == 0) continue;
-                        if (!learned.Contains(mark.Id)) continue;
-                        bool reaction = ReactionTable.IsReactionShape(mark);
-                        if (reaction != (pass == 1)) continue;
-                        rows.Add(RowFor(mark, reaction, learned, loadout));
-                    }
+                for (int i = 0; i < marks.Count; i++)
+                {
+                    var mark = marks[i];
+                    if (mark == null || mark.IsHidden || mark.Part != BranchPart.Shape || mark.Shapes == null || mark.Shapes.Length == 0) continue;
+                    if (!learned.Contains(mark.Id)) continue;
+                    // A spell's shape is chosen on the Loadout (Y on its slot); only the reactions' are listed here.
+                    if (!ReactionTable.IsReactionShape(mark)) continue;
+                    rows.Add(RowFor(mark, true, learned, loadout));
+                }
             }
             Selected = 0;
             for (int i = 0; i < rows.Count; i++)

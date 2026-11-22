@@ -193,24 +193,10 @@ namespace Clover.UI
             {
                 case RestEntry.Hand:
                 {
-                    // The Loadout (ui_rest_fire_plan.md 5.1, U3 and U4) on the scene's Menus object; a scene built before
-                    // it has one keeps the old Hand until it is rebuilt (UiToolkitBuilder.PlaceMenus).
+                    // The Loadout (ui_rest_fire_plan.md 5.1, U3 and U4) on the scene's Menus object (UiToolkitBuilder.PlaceMenus).
                     var loadout = Toolkit.LoadoutScreen.Ensure();
-                    if (loadout != null && loadout.Open())
-                    {
-                        Leave(RestEntry.Hand);
-                        return true;
-                    }
-                    var hand = HandMenu.Ensure();
-                    if (hand == null || !hand.Open()) return false;
+                    if (loadout == null || !loadout.Open()) return false;
                     Leave(RestEntry.Hand);
-                    return true;
-                }
-                case RestEntry.Shapes:
-                {
-                    var shapes = ShapeMenu.Ensure();
-                    if (shapes == null || !shapes.Open()) return false;
-                    Leave(RestEntry.Shapes);
                     return true;
                 }
                 case RestEntry.Chart:
@@ -286,8 +272,8 @@ namespace Clover.UI
             {
                 // Back in front once the screen opened from here has closed (and on the frame after, so its last press is its own).
                 bool stillOpen = waiting == RestEntry.Chart ? UpgradeMenu.Instance != null && UpgradeMenu.Instance.IsOpen
-                    : waiting == RestEntry.Shapes ? ShapeMenu.Showing : HandMenu.Showing || Toolkit.LoadoutScreen.Showing;
-                if (!stillOpen && !GuidePage.BusyThisFrame && !HandMenu.BusyThisFrame && !Toolkit.LoadoutScreen.BusyThisFrame && !ShapeMenu.BusyThisFrame) Return();
+                    : Toolkit.LoadoutScreen.Showing || ShapeMenu.Showing;
+                if (!stillOpen && !GuidePage.BusyThisFrame && !Toolkit.LoadoutScreen.BusyThisFrame && !ShapeMenu.BusyThisFrame) Return();
                 return;
             }
             if (Time.frameCount == openedOnFrame || moveAction == null || interactAction == null || dodgeAction == null) return;

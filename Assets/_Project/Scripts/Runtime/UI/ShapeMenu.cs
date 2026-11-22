@@ -9,12 +9,12 @@ using UnityEngine.UI;
 namespace Clover.UI
 {
     /// <summary>
-    /// The shape screen, opened from a rest fire's menu (the owner's decision of 2026-11-20): each learned spell's shape
-    /// and each learned reaction's shape, listed by <see cref="ShapeChoices"/>, the shape worn beside each, and the chosen
-    /// one's two shapes in full on the right. Up and down choose a line; left and right, or use, wear the other shape
-    /// through <see cref="PlayerBuild.ChooseShape"/>; a click on a line chooses it and a click on a shape wears it; the
-    /// dodge button (or Esc, or Start) backs out to the fire. Read at the player's own pace: the world stays stopped.
-    /// Made by code the first time it is wanted, under the HUD, as <see cref="HandMenu"/> is.
+    /// The Reactions page, opened from the Loadout's element header (the owner's answer Q4 of 2026-11-21): each learned
+    /// reaction's shape, listed by <see cref="ShapeChoices"/>, the shape worn beside each, and the chosen one's two shapes
+    /// in full on the right. Up and down choose a line; left and right, or use, wear the other shape through
+    /// <see cref="PlayerBuild.ChooseShape"/>; a click on a line chooses it and a click on a shape wears it; the dodge
+    /// button (or Esc, or Start) backs out to the Loadout. Read at the player's own pace: the world stays stopped.
+    /// Made by code the first time it is wanted, under the HUD. A spell's shape is chosen on the Loadout (Y on its slot).
     /// </summary>
     public class ShapeMenu : MonoBehaviour
     {
@@ -64,7 +64,7 @@ namespace Clover.UI
             var hud = MenuParts.FindHud();
             var player = FindAnyObjectByType<PlayerController>();
             if (hud == null || player == null) return null;
-            var made = new GameObject("Shape Menu", typeof(RectTransform));
+            var made = new GameObject("Reactions Page", typeof(RectTransform));
             made.transform.SetParent(hud, false);
             var menu = made.AddComponent<ShapeMenu>();
             menu.Build(hud, player);
@@ -96,7 +96,7 @@ namespace Clover.UI
             interactAction = player.FindAction("Interact");
             dodgeAction = player.FindAction("Dodge");
             pauseAction = player.FindAction("Pause");
-            alwaysBack = new InputAction("Shapes Back", InputActionType.Button);
+            alwaysBack = new InputAction("Reactions Back", InputActionType.Button);
             foreach (string path in ControlBindings.Reserved) alwaysBack.AddBinding(path);
             alwaysBack.Enable();
             MenuParts.FindLook(hud, out var font, out var frame, out var brush);
@@ -120,9 +120,9 @@ namespace Clover.UI
             panelImage.raycastTarget = false;
             MenuParts.Box("Edge", panel, new Vector2(40f, -86f), new Vector2(1560f, 2f), MenuParts.Rule);
             title = MenuParts.Label("Title", panel, font, 40, TextAnchor.UpperLeft, MenuParts.Gold, new Vector2(44f, -26f), new Vector2(1000f, 50f));
-            title.text = "Shapes";
+            title.text = "Reactions";
 
-            // The list, on the left: the spell or reaction, and the shape worn.
+            // The list, on the left: the reaction, and the shape worn.
             listCursor = (RectTransform)MenuParts.Box("Cursor", panel, new Vector2(36f, ListTop), new Vector2(780f, RowHeight - 4f), new Color(1f, 0.62f, 0.2f, 0.3f), brush).transform;
             for (int i = 0; i < VisibleRows; i++)
             {
@@ -132,7 +132,7 @@ namespace Clover.UI
             }
             empty = MenuParts.Label("Empty", panel, font, 26, TextAnchor.UpperLeft, MenuParts.Faint, new Vector2(52f, -130f), new Vector2(760f, 300f));
             empty.horizontalOverflow = HorizontalWrapMode.Wrap;
-            empty.text = "No shape is learned yet. A spell's Shape mark on the chart (the spiral on its stalk) opens two shapes of that spell, and a duo branch's Shape mark two shapes of its reaction. Each is chosen here, at any fire.";
+            empty.text = "No reaction shape is learned yet. A duo branch's Shape mark on the chart opens two shapes of its reaction. Each is chosen here, at any fire.";
 
             // The chosen line's two shapes, on the right, the worn one lit.
             infoTitle = MenuParts.Label("Info Title", panel, font, 32, TextAnchor.UpperLeft, MenuParts.Gold, new Vector2(860f, -110f), new Vector2(740f, 44f));
@@ -234,9 +234,9 @@ namespace Clover.UI
                 var row = Choices.At(index);
                 var worn = row.WornShape;
                 words.Clear();
-                words.Append(row.Title).Append("   <color=#B8B0A0>").Append(row.Reaction ? "reaction" : "spell").Append("</color>   ");
+                words.Append(row.Title).Append("   ");
                 words.Append(worn != null ? worn.Name : "");
-                if (!row.InForce) words.Append("   <color=#8C8C8C>(").Append(row.Reaction ? "both elements not carried" : "not in a slot").Append(")</color>");
+                if (!row.InForce) words.Append("   <color=#8C8C8C>(both elements not carried)</color>");
                 listRows[i].text = words.ToString();
                 listRows[i].color = index == Choices.Selected ? MenuParts.Gold : MenuParts.Plain;
             }
@@ -251,10 +251,8 @@ namespace Clover.UI
             for (int i = 0; i < 2; i++) shapeBoxes[i].gameObject.SetActive(any && i < (any ? Choices.Current.ShapeCount : 0));
             if (!any) return;
             var row = Choices.Current;
-            infoTitle.text = row.Title + (row.Reaction ? ": the reaction's shape" : ": the spell's shape");
-            infoNote.text = row.Reaction
-                ? "The shape runs instead of the plain reaction while both its elements are carried."
-                : row.InForce ? "Cast from its slot in the shape worn." : "Kept for when the spell is in a slot of the Hand.";
+            infoTitle.text = row.Title + ": the reaction's shape";
+            infoNote.text = "The shape runs instead of the plain reaction while both its elements are carried.";
             for (int i = 0; i < 2 && i < row.ShapeCount; i++)
             {
                 var shape = row.Mark.Shapes[i];
@@ -273,7 +271,7 @@ namespace Clover.UI
             bool keys = ControlDevices.Current == ControlDevice.Keys;
             string choose = keys ? "W S, the wheel or the mouse" : "Stick or d-pad up and down";
             string swap = keys ? "A D" : "left and right";
-            hint.text = $"{choose}: choose     {swap}, {ControlNames.Of("Interact")} or a click: wear the other shape     {ControlNames.Of("Dodge")}: back to the fire";
+            hint.text = $"{choose}: choose     {swap}, {ControlNames.Of("Interact")} or a click: wear the other shape     {ControlNames.Of("Dodge")}: back to the Loadout";
         }
 
         // ---- The buttons.

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 namespace Clover.UI
 {
     /// <summary>
-    /// What a rest fire offers and which entry is chosen (IMPLEMENTATION.md 4.1): set the Hand, choose the shapes (the
-    /// owner's decision of 2026-11-20), the chart, the Way (once it is built, phase 5), the road to the hub (once it is
+    /// What a rest fire offers and which entry is chosen (IMPLEMENTATION.md 4.1): the Loadout (the Hand, the Way's
+    /// choices and the spells' shapes; the reactions' shapes on its Reactions page), the chart, the Way (once it is built, phase 5), the road to the hub (once it is
     /// built, Track L), and leave. Plain state with no scene
     /// behind it, like <see cref="PauseChoices"/>, so the rules can be tested.
     /// </summary>
@@ -16,14 +16,13 @@ namespace Clover.UI
         public int Selected { get; private set; }
         public RestEntry Current => entries[Selected];
 
-        /// <summary>The entries built so far: the Hand, the shapes, the chart and leave.</summary>
+        /// <summary>The entries built so far: the Loadout, the chart and leave.</summary>
         public RestChoices() : this(false, false) { }
 
         /// <summary>The entries, with the Way and the road to the hub once each exists.</summary>
         public RestChoices(bool way, bool hub)
         {
             entries.Add(RestEntry.Hand);
-            entries.Add(RestEntry.Shapes);
             entries.Add(RestEntry.Chart);
             if (way) entries.Add(RestEntry.Way);
             if (hub) entries.Add(RestEntry.Hub);
@@ -55,8 +54,7 @@ namespace Clover.UI
         {
             switch (entry)
             {
-                case RestEntry.Hand: return "Set the Hand";
-                case RestEntry.Shapes: return "Shapes";
+                case RestEntry.Hand: return "Loadout";
                 case RestEntry.Chart: return "The chart";
                 case RestEntry.Way: return "The Way";
                 case RestEntry.Hub: return "To the hub";
@@ -70,8 +68,7 @@ namespace Clover.UI
         {
             switch (entry)
             {
-                case RestEntry.Hand: return "The four spells and the surge, from the elements you carry. Spells, shapes and Hands can be changed at any fire.";
-                case RestEntry.Shapes: return "The shape each learned spell and each learned reaction takes. Changed only at a fire.";
+                case RestEntry.Hand: return "Your spells, their shapes, your saved Hands and the Way's choices for your weapon. All of it can be changed at any fire.";
                 case RestEntry.Chart: return "The element trees. Shards are spent here.";
                 case RestEntry.Way: return "The weapon's tree. Memories are spent here.";
                 case RestEntry.Hub: return "Step out of time to the hub, to carry other elements or another weapon, and come back to this fire.";
