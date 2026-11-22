@@ -86,19 +86,23 @@ namespace Clover.Player.Trees.Duo
                 Description = "Herbs stand 3 s longer before they flower.",
                 ReactionChanges = new[]
                 {
-                    new ReactionChange { Shape = -1, Index = 0, ConditionSeconds = 9f },
+                    new ReactionChange { Shape = -1, Index = 0, Seconds = 9f },
                     new ReactionChange { Shape = 0, Index = 0, ConditionSeconds = 9f },
                     new ReactionChange { Shape = 1, Index = 0, ConditionSeconds = 9f },
                 },
             }, HeartPattern.LeftHigh));
 
-            // NEEDS: pickups (herbs drawn to you when one is picked; each after the first healing twice); now each herb that
-            // springs heals you 4.
+            // Picking any herb (UpgradeTrigger.PickedUp, AnyDrops, a Herb) draws every other herb across the floor to you
+            // (UpgradeAction.DrawPickups); each drawn one heals 8 more as it is taken (SpentAtLeast 1: it came drawn).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = TheWholeMountain, Name = "The Whole Mountain", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { SixthMoon, OpenToTheSun }, Icon = UpgradeIcons.Rock,
                 Description = "Picking a herb draws every other standing herb to you across the floor, and each one picked after the first heals twice.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = Reaction, Do = UpgradeAction.Heal, Amount = 4f } },
+                Effects = new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.PickedUp, AnyDrops = true, Drops = Clover.World.PickupKind.Herb, Do = UpgradeAction.DrawPickups },
+                    new UpgradeEffect { On = UpgradeTrigger.PickedUp, AnyDrops = true, Drops = Clover.World.PickupKind.Herb, SpentAtLeast = 1, Do = UpgradeAction.Heal, Amount = 8f },
+                },
             }, HeartPattern.Keystone));
 
             // The duo spell, bought with Shards once both are carried (no god gives it): an opener on an 11 s cooldown (SpellTimings). The field form lays a lit patch at the aim

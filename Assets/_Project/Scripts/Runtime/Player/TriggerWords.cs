@@ -91,6 +91,8 @@ namespace Clover.Player
                 case UpgradeTrigger.BladeCaught: return "you catch your blade on a perfect guard";
                 case UpgradeTrigger.StandingStruck: return "something you raised is struck";
                 case UpgradeTrigger.StandingBurst: return "something you raised bursts";
+                case UpgradeTrigger.PickedUp: return "you pick something up off the floor";
+                case UpgradeTrigger.PickupLeft: return "something on the floor is left untaken";
                 default: return "its moment comes";
             }
         }

@@ -852,9 +852,9 @@ Group: Reactions
 ## reaction-shining-herb
 Title: Shining Herb (Life and Light)
 Group: Reactions
-**What it is.** Seeded meets Marked. A shining herb springs up next to the enemy.
+**What it is.** Seeded meets Marked. A shining herb springs up at the enemy's feet, on your side of it.
 
-**The numbers.** The herb stays for 6 seconds. If you leave it alone, it flowers at the end and Marks and Seeds everyone within 3 metres of the enemy. Then it waits 6 seconds.
+**The numbers.** The herb lies on the floor 1 metre in front of the enemy for 6 seconds. Walk over it (within 1 metre) to pick it: you heal 8, and your next weapon blow within 4 seconds is a critical hit. A picked herb doesn't flower. If you leave it alone, it flowers at the end and Marks and Seeds everyone within 3 metres of it. Up to three herbs can lie at once. Then it waits 6 seconds.
 
 **What sets it off.** A seed landing on a Marked enemy, or a Mark landing on a Seeded one.
 
@@ -1109,7 +1109,7 @@ Title: Firebloom (Fire and Life)
 Group: Reactions
 **What it is.** Burn meets Seeded. The heat splits the seeds open, and they grow into lilies made of flame.
 
-**The numbers.** The Seeded is used up. One lily for each stack (one to three) springs up 2.5 metres around the enemy and stays for 5 seconds, burning anything within 1 metre (3 damage and a Burn every half second). They count as things you grew. The enemy's Burn stays. Then it waits 4 seconds.
+**The numbers.** The Seeded is used up. One lily for each stack (one to three) springs up 2.5 metres around the enemy and stays for 5 seconds, burning anything within 1 metre (3 damage and a Burn every half second). They count as things you grew. The first time you pass within 1 metre of a lily, you take its fire: you heal 3, and your blade carries one blow of Burn. The enemy's Burn stays. Then it waits 4 seconds.
 
 **What sets it off.** Burn landing on a Seeded enemy, or a seed landing on a burning one.
 

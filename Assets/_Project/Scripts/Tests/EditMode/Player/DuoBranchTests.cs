@@ -149,7 +149,9 @@ namespace Clover.Tests
         [Test]
         public void EveryReactionShapeRidesAReactionsMomentsAndAnswersOnlyTheConditionsItSets()
         {
-            var reactionTriggers = new[] { UpgradeTrigger.Reacted, UpgradeTrigger.ConditionBeat, UpgradeTrigger.ConditionStruck, UpgradeTrigger.ConditionEnded, UpgradeTrigger.ConditionDied, UpgradeTrigger.ConditionAttacked };
+            // The pickups a reaction drops give it two moments more: taken, or left to lie (World.Pickups, PlayerUpgrades.AnswerPickup).
+            var reactionTriggers = new[] { UpgradeTrigger.Reacted, UpgradeTrigger.ConditionBeat, UpgradeTrigger.ConditionStruck, UpgradeTrigger.ConditionEnded, UpgradeTrigger.ConditionDied, UpgradeTrigger.ConditionAttacked,
+                UpgradeTrigger.PickedUp, UpgradeTrigger.PickupLeft };
             var shapeMarks = Upgrade.All.Where(ReactionTable.IsReactionShape).ToList();
             Assert.GreaterOrEqual(shapeMarks.Count, 2, "Flashover's and Sleet Charge's at least");
             var conditionIds = new HashSet<string>();
@@ -166,7 +168,7 @@ namespace Clover.Tests
                     {
                         CollectionAssert.Contains(reactionTriggers, effect.On, $"{mark.Id}'s {shape.Name} has an effect on {effect.On}");
                         Assert.AreSame(mark, effect.Owner);
-                        if (effect.On != UpgradeTrigger.Reacted)
+                        if (effect.On != UpgradeTrigger.Reacted && effect.On != UpgradeTrigger.PickedUp && effect.On != UpgradeTrigger.PickupLeft)
                             Assert.IsTrue(sets.Contains(effect.Condition), $"{mark.Id}'s {shape.Name} answers '{effect.Condition}', which it never sets");
                     }
                 }

@@ -131,6 +131,10 @@ namespace Clover.Player
         /// <summary>For this many seconds the next heavy blow that lands is a critical one.</summary>
         public void PromiseHeavyCritical(float seconds) => HeavyCriticalLeft = Mathf.Max(HeavyCriticalLeft, seconds);
 
+        /// <summary>Seconds left in which the next weapon blow that lands, light or heavy, is critical (a Shining Herb picked).</summary>
+        public float CriticalLeft { get; private set; }
+        public void PromiseCritical(float seconds) => CriticalLeft = Mathf.Max(CriticalLeft, seconds);
+
         /// <summary>Stagger the next heavy blow that lands carries on top of its own, and the seconds left for it (Mountain Stance's load).</summary>
         public float HeavyStaggerLoaded { get; private set; }
         private float heavyLoadLeft;
@@ -560,6 +564,7 @@ namespace Clover.Player
             TickAspect(deltaTime);
             TurnZanshin(deltaTime);
             if (HeavyCriticalLeft > 0f) HeavyCriticalLeft -= deltaTime;
+            if (CriticalLeft > 0f) CriticalLeft -= deltaTime;
             if (heavyLoadLeft > 0f && (heavyLoadLeft -= deltaTime) <= 0f) HeavyStaggerLoaded = 0f;
             if (lightAction == null || heavyAction == null) return;
             // The element's strike follows the carrier's blow once the swing is out (or was cut short).
@@ -2248,7 +2253,7 @@ namespace Clover.Player
                 // Overdrive: while it lasts, the last blow of every chain is critical.
                 bool chainEnds = step == Combo.ChainHeavy || (Combo.Steps.Count > 0 && step == Combo.Steps[Combo.Steps.Count - 1]);
                 bool surgeCrit = chainEnds && element != null && element.SurgeActive && element.SurgeKit != null && element.SurgeKit.SurgeCritsChainEnd;
-                bool promised = (heavy && HeavyCriticalLeft > 0f) || step.Critical || surgeCrit;
+                bool promised = (heavy && HeavyCriticalLeft > 0f) || CriticalLeft > 0f || step.Critical || surgeCrit;
                 float chance = CritChance;
                 if (Stats != null) chance += Stats.Blow(PlayerStat.CritChance, heavy, false) + (afflictable != null ? Stats.Against(PlayerStat.CritChance, afflictable.Afflictions) : 0f);
                 // Counter Cut: a blow that lands on an enemy showing its own attack (winding up or striking) is critical.
@@ -2446,7 +2451,11 @@ namespace Clover.Player
                 // Spells that wait on the weapon (a brand, a copy of the player, blades at the shoulder) are told; they answer on their own next step.
                 if (outcome != HitOutcome.Blocked && pays)
                 {
-                    if (promised) HeavyCriticalLeft = 0f;
+                    if (promised)
+                    {
+                        HeavyCriticalLeft = 0f;
+                        CriticalLeft = 0f;
+                    }
                     if (loaded > 0f) LoadNextHeavy(0f, 0f);
                     Clover.Player.Forms.SpellWorks.Blow(step, target as Component, damage);
                 }

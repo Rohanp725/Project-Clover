@@ -85,16 +85,16 @@ namespace Clover.Player.Trees
                     State = new ConditionSpec { Id = PlateFallen, Seconds = 6f, Flags = ConditionFlags.WeaponTakenShare, Scale = 1.16f } },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = Rusting, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Sundered, Stacks = 1 }));
 
-            // Life and Light (28). A shining herb stands 6 s; left unpicked it flowers at the end, Marking and Seeding
-            // every enemy within 3 m of the one that reacted.
-            // NEEDS: pickups (the player walking over a thing): the herb on the floor at its feet on the player's side,
-            // picked by walking over it (heal 8, the next weapon blow critical, and then it does not flower); three at
-            // most at once.
+            // Life and Light (28). A shining herb lies 6 s on the floor at its feet, on the player's side, a pickup (World.Pickups,
+            // three at most): walked over, it heals 8 and makes the next weapon blow critical, and does not flower; left
+            // unpicked it flowers at the end, Marking and Seeding every enemy within 3 m of it.
             to.Add(Reaction(AfflictionKind.Seeded, AfflictionKind.Marked,
-                "Seeded meets Marked: a shining herb springs up by it for 6 s. Left alone it flowers, Marking and Seeding all within 3 m.",
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Herb, Seconds = 6f } },
-                new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Herb, Do = UpgradeAction.Afflict, Radius = 3f, Affliction = AfflictionKind.Marked, Stacks = 1 },
-                new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Herb, Do = UpgradeAction.Afflict, Radius = 3f, Affliction = AfflictionKind.Seeded, Stacks = 1 }));
+                "Seeded meets Marked: a shining herb springs up at its feet for 6 s. Walk over it to pick it: you heal 8 and your next blow is critical. Left alone it flowers, Marking and Seeding all within 3 m.",
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.DropPickup, Drops = Clover.World.PickupKind.Herb, RaiseAt = Clover.World.StandingPlace.Before, Reach = 1f, Seconds = 6f, Limit = 3 },
+                new UpgradeEffect { On = UpgradeTrigger.PickedUp, Do = UpgradeAction.Heal, Amount = 8f },
+                new UpgradeEffect { On = UpgradeTrigger.PickedUp, Do = UpgradeAction.CriticalNext, Seconds = 4f },
+                new UpgradeEffect { On = UpgradeTrigger.PickupLeft, Do = UpgradeAction.Afflict, Radius = 3f, Affliction = AfflictionKind.Marked, Stacks = 1 },
+                new UpgradeEffect { On = UpgradeTrigger.PickupLeft, Do = UpgradeAction.Afflict, Radius = 3f, Affliction = AfflictionKind.Seeded, Stacks = 1 }));
 
             // Earth and Dark (29). Stone climbs it over 2 s (30% slower, then 60%), then it stands as stone for 1.5 s:
             // it neither walks nor begins an attack, takes double stagger and half damage from spells. A heavy blow on the

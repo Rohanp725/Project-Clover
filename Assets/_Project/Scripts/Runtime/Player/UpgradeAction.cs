@@ -282,5 +282,15 @@ namespace Clover.Player
         /// others within Reach, or a cone Reach long and Arc wide out of its far side). Each lays BitesLay as well.
         /// </summary>
         Pieces,
+        /// <summary>
+        /// Drops pickups on the floor (World.Pickups, UpgradeEffect.Drops): one at the place RaiseAt names, Reach metres off, or
+        /// Count of them laid as a ring's patches are (Shape, PerStack); each lies Seconds (0: 8) and is taken by walking over
+        /// it, Radius (0: 1 m); Limit of its mark at once. Its taking and its being left are UpgradeTrigger.PickedUp and PickupLeft.
+        /// </summary>
+        DropPickup,
+        /// <summary>Draws every pickup of the kind Drops names across the floor to you (The Whole Mountain).</summary>
+        DrawPickups,
+        /// <summary>Your next weapon blow within Seconds is critical, light or heavy (a Shining Herb picked).</summary>
+        CriticalNext,
     }
 }

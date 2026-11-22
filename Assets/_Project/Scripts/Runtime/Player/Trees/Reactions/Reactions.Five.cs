@@ -21,13 +21,16 @@ namespace Clover.Player.Trees
             // Fire and Life (45). The Seeded is spent: one burning seed for each stack it carried (one to three) is thrown
             // 2.5 m out round it and grows at once into a flame lily, a grown thing that stands 5 s and burns what stands
             // within 1 m (3 damage and a Burn every 0.5 s). Its Burn stays.
-            // NEEDS: pickups: the first time the player passes within 1 m of a lily they pick its fire up (3 health and one
-            // charged blow of Burn on the blade).
+            // Each lily's fire is a pickup where it stands (World.Pickups): the first time the player passes within 1 m of it they
+            // pick the fire up, 3 health and one charged blow of Burn on the blade.
             to.Add(Reaction(AfflictionKind.Burn, AfflictionKind.Seeded,
-                "Burn meets Seeded: the heat splits the seeds and each grows into a flame lily round it for 5 s, burning what stands near.",
+                "Burn meets Seeded: the heat splits the seeds and each grows into a flame lily round it for 5 s, burning what stands near. Pass by a lily to take its fire: 3 health and a blow of Burn on your blade.",
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Seeded },
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Shape = HazardShape.Ring, Count = 1, PerStack = true, Reach = 2.5f, Radius = 1f, Seconds = 5f,
-                    Interval = 0.5f, Damage = 3f, Grown = true, Affliction = AfflictionKind.Burn, Stacks = 1 }));
+                    Interval = 0.5f, Damage = 3f, Grown = true, Affliction = AfflictionKind.Burn, Stacks = 1 },
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.DropPickup, Drops = Clover.World.PickupKind.LilyFire, Shape = HazardShape.Ring, Count = 1, PerStack = true, Reach = 2.5f, Radius = 1f, Seconds = 5f },
+                new UpgradeEffect { On = UpgradeTrigger.PickedUp, Do = UpgradeAction.Heal, Amount = 3f },
+                new UpgradeEffect { On = UpgradeTrigger.PickedUp, Do = UpgradeAction.CoatBlade, Affliction = AfflictionKind.Burn, Stacks = 1, Count = 1 }));
 
             // Lightning and Earth (46). All its Static runs into the floor at once: 5 damage and 3 stagger for each stack
             // spent, and one Tremor, to every enemy within 4 m; it is rooted 1 s.

@@ -25,8 +25,8 @@ namespace Clover.Player.Trees.Duo
         {
             const string A = Elements.Fire, B = Elements.Life;
 
-            // NEEDS: pickups (Between Two Fires: passing between the two lilies of a pair heals 8 and charges the blade with
-            // two blows of Burn; now the pairs only burn); mending-ground (Ash Bed's shoots mending 2 a second; now they only
+            // Between Two Fires: the gap between each pair is a pickup at the enemy's spot (World.Pickups), passing through it heals
+            // 8 and charges the blade with two blows of Burn. NEEDS: mending-ground (Ash Bed's shoots mending 2 a second; now they only
             // seed what steps in).
             to.Add(HeartPattern.Put(new Upgrade
             {
@@ -43,6 +43,9 @@ namespace Clover.Player.Trees.Duo
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Seeded },
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Shape = HazardShape.Ring, Count = 2, PerStack = true, Reach = 1.5f, Radius = 1f, Seconds = 5f,
                                 Interval = 0.5f, Damage = 3f, Grown = true, Affliction = AfflictionKind.Burn, Stacks = 1 },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.DropPickup, Drops = Clover.World.PickupKind.LilyFire, RaiseAt = Clover.World.StandingPlace.At, Count = 1, PerStack = true, Radius = 1.2f, Seconds = 5f },
+                            new UpgradeEffect { On = UpgradeTrigger.PickedUp, Do = UpgradeAction.Heal, Amount = 8f },
+                            new UpgradeEffect { On = UpgradeTrigger.PickedUp, Do = UpgradeAction.CoatBlade, Affliction = AfflictionKind.Burn, Stacks = 1, Count = 2 },
                         },
                     },
                     new ShapeDef

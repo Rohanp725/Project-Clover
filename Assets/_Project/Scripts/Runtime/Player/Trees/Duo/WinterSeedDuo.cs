@@ -59,16 +59,17 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.Foot));
 
-            // NEEDS: a pickup left on the floor, cracked by stepping on it (pickups); now its burst comes as it dies.
+            // The frozen seed lies 8 s where it died, a pickup (World.Pickups): stepping on it cracks it.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = SeedUnderSnow, Name = "Seed Under Snow", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Snowflake,
-                Description = "An enemy that dies chilled and Seeded leaves a frozen seed that cracks: you heal 8, and everything within 2.5 m is chilled and seeded.",
+                Description = "An enemy that dies chilled and Seeded leaves a frozen seed on the floor for 8 s. Step on it to crack it: you heal 8, and everything within 2.5 m is chilled and seeded.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Chill, Needs2 = AfflictionKind.Seeded, Do = UpgradeAction.Heal, Amount = 8f, Cooldown = 0.5f },
-                    new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Chill, Needs2 = AfflictionKind.Seeded, Do = UpgradeAction.Afflict, Radius = 2.5f, Affliction = AfflictionKind.Chill, Stacks = 1, Cooldown = 0.5f },
-                    new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Chill, Needs2 = AfflictionKind.Seeded, Do = UpgradeAction.Afflict, Radius = 2.5f, Affliction = AfflictionKind.Seeded, Stacks = 1, Cooldown = 0.5f },
+                    new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Chill, Needs2 = AfflictionKind.Seeded, Do = UpgradeAction.DropPickup, Drops = Clover.World.PickupKind.FrozenSeed, RaiseAt = Clover.World.StandingPlace.At, Seconds = 8f, Cooldown = 0.5f },
+                    new UpgradeEffect { On = UpgradeTrigger.PickedUp, Do = UpgradeAction.Heal, Amount = 8f },
+                    new UpgradeEffect { On = UpgradeTrigger.PickedUp, Do = UpgradeAction.Afflict, Radius = 2.5f, Affliction = AfflictionKind.Chill, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.PickedUp, Do = UpgradeAction.Afflict, Radius = 2.5f, Affliction = AfflictionKind.Seeded, Stacks = 1 },
                 },
             }, HeartPattern.LeftLow));
 

@@ -131,5 +131,12 @@ namespace Clover.Player
         StandingStruck,
         /// <summary>A standing thing a mark raised burst by itself (Cracked Wall struck by an enemy). The point is where it stood.</summary>
         StandingBurst,
+        /// <summary>
+        /// You walked over a pickup a mark dropped and took it (World.Pickups). Asked of the effects written beside the one that
+        /// dropped it (a reaction's too), and of any effect with AnyDrops whose Drops names its kind. The point is where it lay; carries 1 when it was drawn to you.
+        /// </summary>
+        PickedUp,
+        /// <summary>A pickup lay untaken until its time ran out (Shining Herb's herb flowers). The point is where it lay.</summary>
+        PickupLeft,
     }
 }

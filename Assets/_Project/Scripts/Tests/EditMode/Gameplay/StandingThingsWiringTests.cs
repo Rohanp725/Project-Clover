@@ -13,10 +13,18 @@ namespace Clover.Tests
     public class StandingThingsWiringTests
     {
         [SetUp]
-        public void Begin() => StandingThings.Clear();
+        public void Begin()
+        {
+            StandingThings.Clear();
+            Pickups.Clear();
+        }
 
         [TearDown]
-        public void End() => StandingThings.Clear();
+        public void End()
+        {
+            StandingThings.Clear();
+            Pickups.Clear();
+        }
 
         [Test]
         public void ThingsAreRaisedBehindBesideOrAtTheEnemy()
@@ -166,6 +174,59 @@ namespace Clover.Tests
             var sand = Upgrade.ById(Clover.Player.Trees.Duo.LoganStoneDuo.Shape).Shapes.Single(each => each.Name == "Sandblast").Effects.Single(each => each.Do == UpgradeAction.Pieces);
             Assert.AreEqual(PieceAim.FarCone, sand.Thrown);
             Assert.AreEqual(60f, sand.Arc, 1e-5f);
+        }
+
+        [Test]
+        public void PickupsAreTakenByWalkingOverThemOrLeftToLie()
+        {
+            int herb = Pickups.Drop(PickupKind.Herb, Vector3.zero, 6f, 5, 0f, 3);
+            Assert.AreEqual(8f, Pickups.Get(Pickups.Drop(PickupKind.FrozenSeed, Vector3.right * 9f, 0f, 6, 0f)).Until, 1e-5f, "the plain eight seconds");
+            Assert.IsFalse(Pickups.TakeAt(new Vector3(1.2f, 0f, 0f), out _), "a metre and a bit away: not taken");
+            Assert.IsTrue(Pickups.TakeAt(new Vector3(0.8f, 0f, 0f), out var taken), "walked over");
+            Assert.AreEqual(PickupKind.Herb, taken.Kind);
+            Assert.AreEqual(5, taken.Owner);
+            Assert.IsFalse(Pickups.Get(herb).Active, "taken once");
+            for (int i = 0; i < 4; i++) Pickups.Drop(PickupKind.Herb, Vector3.forward * (3f + i), 6f + i, 5, 0f, 3);
+            Assert.AreEqual(3, Pickups.Count(5), "three herbs at most");
+            Assert.IsFalse(Pickups.TakeLeft(5f, out _), "not yet");
+            Assert.IsTrue(Pickups.TakeLeft(7.5f, out var left), "left to lie until its time ran out");
+            Assert.AreEqual(PickupKind.Herb, left.Kind);
+            Assert.AreEqual(2, Pickups.DrawAll(PickupKind.Herb), "the whole mountain comes to you");
+            Pickups.StepDrawn(Vector3.zero, 10f);
+            Assert.IsTrue(Pickups.TakeAt(Vector3.zero, out var drawn) && drawn.Drawn, "drawn across the floor and taken");
+        }
+
+        [Test]
+        public void TheMarksDropTheirHerbsLiliesAndSeeds()
+        {
+            var herb = Upgrade.ById(AfflictionPairs.Id(AfflictionPairs.Index(AfflictionKind.Seeded, AfflictionKind.Marked)));
+            var drop = herb.Effects.Single(each => each.Do == UpgradeAction.DropPickup);
+            Assert.AreEqual(PickupKind.Herb, drop.Drops);
+            Assert.AreEqual(StandingPlace.Before, drop.RaiseAt, "at its feet on your side");
+            Assert.AreEqual(3, drop.Limit);
+            var picked = new System.Collections.Generic.List<UpgradeEffect>();
+            Assert.AreEqual(2, PlayerUpgrades.AnswersOf(drop, UpgradeTrigger.PickedUp, picked), "heal 8 and the next blow critical");
+            Assert.IsTrue(picked.Any(each => each.Do == UpgradeAction.Heal && each.Amount == 8f));
+            Assert.IsTrue(picked.Any(each => each.Do == UpgradeAction.CriticalNext));
+            Assert.AreEqual(2, PlayerUpgrades.AnswersOf(drop, UpgradeTrigger.PickupLeft, picked), "left, it flowers: Marked and Seeded");
+            var longDay = Upgrade.ById(Clover.Player.Trees.Duo.ShiningHerbDuo.LongDay).ReactionChanges.Single(each => each.Shape == -1);
+            Assert.AreEqual(9f, longDay.Seconds, 1e-5f, "Long Day: the herb lies 9 s");
+            var lilies = Upgrade.ById(AfflictionPairs.Id(AfflictionPairs.Index(AfflictionKind.Burn, AfflictionKind.Seeded))).Effects;
+            var lilyFire = lilies.Single(each => each.Do == UpgradeAction.DropPickup);
+            Assert.AreEqual(PickupKind.LilyFire, lilyFire.Drops);
+            Assert.AreEqual(2, PlayerUpgrades.AnswersOf(lilyFire, UpgradeTrigger.PickedUp, picked));
+            Assert.IsTrue(picked.Any(each => each.Do == UpgradeAction.CoatBlade && each.Affliction == AfflictionKind.Burn && each.Count == 1), "one charged blow of Burn");
+            var pair = Upgrade.ById(Clover.Player.Trees.Duo.FirebloomDuo.Shape).Shapes.Single(each => each.Name == "Between Two Fires");
+            var gap = pair.Effects.Single(each => each.Do == UpgradeAction.DropPickup);
+            Assert.AreEqual(2, PlayerUpgrades.AnswersOf(gap, UpgradeTrigger.PickedUp, picked), "the shape's own answers, found beside its drop");
+            Assert.IsTrue(picked.Any(each => each.Do == UpgradeAction.CoatBlade && each.Count == 2), "two blows of Burn");
+            var seed = Upgrade.ById(Clover.Player.Trees.Duo.WinterSeedDuo.SeedUnderSnow).Effects;
+            Assert.AreEqual(PickupKind.FrozenSeed, seed.Single(each => each.Do == UpgradeAction.DropPickup).Drops);
+            Assert.IsFalse(seed.Any(each => each.On == UpgradeTrigger.Kill && each.Do == UpgradeAction.Heal), "no stand-in burst as it dies");
+            var mountain = Upgrade.ById(Clover.Player.Trees.Duo.ShiningHerbDuo.TheWholeMountain).Effects;
+            Assert.IsTrue(mountain.All(each => each.On == UpgradeTrigger.PickedUp && each.AnyDrops && each.Drops == PickupKind.Herb), "any herb picked");
+            Assert.IsTrue(mountain.Any(each => each.Do == UpgradeAction.DrawPickups));
+            Assert.IsTrue(mountain.Any(each => each.Do == UpgradeAction.Heal && each.SpentAtLeast == 1), "each drawn one heals twice");
         }
     }
 }

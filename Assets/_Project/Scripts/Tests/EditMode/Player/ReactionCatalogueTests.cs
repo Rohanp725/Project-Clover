@@ -74,7 +74,9 @@ namespace Clover.Tests
         [Test]
         public void EveryEffectRidesATriggerAReactionGivesAndNamesWhatExists()
         {
-            var reactionTriggers = new[] { UpgradeTrigger.Reacted, UpgradeTrigger.ConditionBeat, UpgradeTrigger.ConditionStruck, UpgradeTrigger.ConditionEnded, UpgradeTrigger.ConditionDied, UpgradeTrigger.ConditionAttacked };
+            // The pickups a reaction drops give it two moments more: taken, or left to lie (World.Pickups, PlayerUpgrades.AnswerPickup).
+            var reactionTriggers = new[] { UpgradeTrigger.Reacted, UpgradeTrigger.ConditionBeat, UpgradeTrigger.ConditionStruck, UpgradeTrigger.ConditionEnded, UpgradeTrigger.ConditionDied, UpgradeTrigger.ConditionAttacked,
+                UpgradeTrigger.PickedUp, UpgradeTrigger.PickupLeft };
             foreach (var mark in ReactionMarks)
             {
                 var set = new HashSet<string>(mark.Effects.Where(effect => effect.Do == UpgradeAction.Condition).Select(effect => effect.State != null ? effect.State.Id : ""));
@@ -87,7 +89,7 @@ namespace Clover.Tests
                         Assert.IsNotEmpty(effect.State.Id, mark.Id + " sets a condition with no name");
                         Assert.Greater(effect.State.Seconds, 0f, mark.Id);
                     }
-                    if (effect.On != UpgradeTrigger.Reacted)
+                    if (effect.On != UpgradeTrigger.Reacted && effect.On != UpgradeTrigger.PickedUp && effect.On != UpgradeTrigger.PickupLeft)
                         Assert.IsTrue(set.Contains(effect.Condition), $"{mark.Id} answers the condition '{effect.Condition}', which it never sets");
                 }
             }

@@ -334,6 +334,10 @@ namespace Clover.Player
         public float NearStanding;
         /// <summary>For Pieces: how they leave the enemy (a fan away from you, a ring, each at a nearest other, or a cone out of its far side).</summary>
         public PieceAim Thrown;
+        /// <summary>For DropPickup: the pickup dropped (World.Pickups). For PickedUp and PickupLeft with AnyMark: the kind answered, whoever dropped it.</summary>
+        public Clover.World.PickupKind Drops;
+        /// <summary>For PickedUp: answers the taking of any pickup of the kind Drops names, whoever dropped it (The Whole Mountain).</summary>
+        public bool AnyDrops;
 
         /// <summary>A copy with every number, its slot and its mark (an Empower's twin of its Learn's effect).</summary>
         internal UpgradeEffect Twin() => (UpgradeEffect)MemberwiseClone();

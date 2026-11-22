@@ -16,17 +16,15 @@ carried.
 **Example.** Use Hard Spring on a frozen, seeded soldier in a pack. Shatter it, and the thorns fill the whole pack's Seeded all the way.
 
 ## winterseed.undersnow
-**What it does.** An enemy that dies chilled and Seeded leaves a frozen seed that cracks open. You heal, and everything nearby is chilled and Seeded.
+**What it does.** An enemy that dies chilled and Seeded leaves a frozen seed on the floor. Step on it to crack it open: you heal, and everything nearby is chilled and Seeded.
 
 **When it happens.** Each time an enemy dies with both Chill and Seeded on it.
 
-**The numbers.** Mix, 3 Shards. You heal 8, and everything within 2.5 metres of where it fell gets a Chill and a Seeded. At most twice a second.
+**The numbers.** Mix, 3 Shards. The seed lies where the enemy fell for 8 seconds. Step within 1 metre of it to crack it: you heal 8, and everything within 2.5 metres of the seed gets a Chill and a Seeded. At most twice a second.
 
 **Works with.** Winter Seed, Late Frost, Hidden in the Tree.
 
 **Example.** Kill a frosted, seeded soldier, and the soldiers next to it start their own Winter Seed.
-
-**Not built yet.** The seed is meant to lie on the floor for 8 seconds until you step on it. For now, it cracks open as the enemy dies.
 
 ## winterseed.latefrost
 **What it does.** A perfect guard against a Seeded enemy freezes its feet to the ground.

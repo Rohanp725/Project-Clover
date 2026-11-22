@@ -1193,6 +1193,7 @@ namespace Clover.Player
             if (toFinish.Count > 0) FinishBroken();
             if (echoForm != null && Time.time >= echoAt) CastEcho();
             ReadStandingNews();
+            ReadPickups();
             // A gathered spell nobody loosed goes by itself when its press window is over, or is lost when it lapses (Kept Wind).
             if (rings.Due(Time.time))
             {
@@ -1408,6 +1409,9 @@ namespace Clover.Player
                 if (effect.SpentAtLeast > 0 && spent < effect.SpentAtLeast) continue;
                 // A standing thing's moment is its own mark's alone.
                 if ((trigger == UpgradeTrigger.StandingStruck || trigger == UpgradeTrigger.StandingBurst) && !AnswersStanding(effect, standingOwner, standingHeavy)) continue;
+                // A pickup's own mark answers through the effects written beside the one that dropped it (AnswerPickup); here only
+                // the marks that answer any pickup of its kind.
+                if ((trigger == UpgradeTrigger.PickedUp || trigger == UpgradeTrigger.PickupLeft) && !(effect.AnyDrops && effect.Drops == pickupKind)) continue;
                 // A mark that deepens one reaction answers that one only.
                 bool reactionMoment = trigger == UpgradeTrigger.Reacted || trigger == UpgradeTrigger.ReactionStruck;
                 if (reactionMoment && !string.IsNullOrEmpty(effect.Reaction) && effect.Reaction != reaction) continue;
@@ -2165,6 +2169,29 @@ namespace Clover.Player
                     }
                     break;
                 }
+                case UpgradeAction.DropPickup:
+                {
+                    int dropOwner = effect.Owner != null ? effect.Owner.Index : -1;
+                    int drops = effect.PerStack ? Or(effect.Count, 1) * per : Or(effect.Count, 1);
+                    Vector3 enemyAt = target != null ? target.position : pending.HasAt ? pending.At : centre;
+                    for (int i = 0; i < drops; i++)
+                    {
+                        Vector3 spot = effect.Shape == HazardShape.Patch
+                            ? StandingRules.PlaceFor(effect.RaiseAt, self, transform.forward, enemyAt, Or(effect.Reach, 0f))
+                            : PatchAt(effect, i, drops, new Vector3(enemyAt.x, self.y, enemyAt.z), self, aim, Or(effect.Reach, 2.5f));
+                        spot.y = self.y;
+                        Pickups.Drop(effect.Drops, spot, effect.Seconds, dropOwner, Time.time, effect.Limit, effect.Radius, effect);
+                        PickupsDropped++;
+                    }
+                    break;
+                }
+                case UpgradeAction.DrawPickups:
+                    Pickups.DrawAll(effect.Drops);
+                    break;
+                case UpgradeAction.CriticalNext:
+                    combat.PromiseCritical(Or(effect.Seconds, 4f));
+                    ElementLook.Sparks(held, self + Vector3.up * 1.2f, Vector3.up, 0.6f);
+                    break;
                 case UpgradeAction.Raise:
                 {
                     // Of a moment that names an enemy, placed against it; of one that names only a place (a death), there.
@@ -2978,6 +3005,89 @@ namespace Clover.Player
         }
 
         private bool burstHooked;
+
+        // ---- Pickups the marks drop (World.Pickups): taken by walking over them, shown as a glowing sign until then.
+        private PickupKind pickupKind;
+        private readonly int[] pickupSigns = new int[Pickups.Most];
+        private readonly bool[] pickupShown = new bool[Pickups.Most];
+
+        /// <summary>Pickups dropped, taken and left: for probes.</summary>
+        public int PickupsDropped { get; private set; }
+        public int PickupsTaken { get; private set; }
+        public int PickupsLeft { get; private set; }
+
+        /// <summary>
+        /// The effects that answer a pickup's taking or its being left: those on <paramref name="moment"/> written beside the
+        /// effect that dropped it (in its mark's effects, or its shape's), so a reaction's herb is answered by that reaction.
+        /// </summary>
+        public static int AnswersOf(UpgradeEffect dropped, UpgradeTrigger moment, List<UpgradeEffect> into)
+        {
+            into.Clear();
+            var mark = dropped != null ? dropped.Owner : null;
+            if (mark == null) return 0;
+            var beside = mark.Effects != null && System.Array.IndexOf(mark.Effects, dropped) >= 0 ? mark.Effects : null;
+            if (beside == null && mark.Shapes != null)
+                foreach (var shape in mark.Shapes)
+                    if (shape.Effects != null && System.Array.IndexOf(shape.Effects, dropped) >= 0) beside = shape.Effects;
+            if (beside == null) return 0;
+            foreach (var effect in beside)
+                if (effect.On == moment) into.Add(effect);
+            return into.Count;
+        }
+
+        private readonly List<UpgradeEffect> pickupAnswers = new List<UpgradeEffect>();
+
+        // A pickup's moment: its own effects, done as its mark's (a reaction's lay nothing that starts another), then the marks
+        // that answer any of its kind.
+        private void AnswerPickup(in Pickup item, UpgradeTrigger moment, int drawn)
+        {
+            pickupKind = item.Kind;
+            var dropped = item.Source as UpgradeEffect;
+            var source = dropped != null && dropped.Owner != null && (dropped.Owner.Kind == UpgradeKind.Reaction || ReactionTable.IsReactionShape(dropped.Owner)) ? LaySource.Reaction : LaySource.Effect;
+            AnswersOf(dropped, moment, pickupAnswers);
+            for (int i = 0; i < pickupAnswers.Count; i++) Fire(pickupAnswers[i], null, item.Position, source, 0f, drawn);
+            pickupAnswers.Clear();
+            Trigger(moment, null, item.Position, true, drawn);
+        }
+
+        private void ReadPickups()
+        {
+            Vector3 feet = transform.position;
+            Pickups.StepDrawn(feet, Time.deltaTime);
+            if (defence == null || !defence.IsDead)
+                while (Pickups.TakeAt(feet, out var taken))
+                {
+                    PickupsTaken++;
+                    ElementLook.Sparks(PickupLook(taken.Kind), taken.Position + Vector3.up * 0.4f, Vector3.up, 1f);
+                    AnswerPickup(taken, UpgradeTrigger.PickedUp, taken.Drawn ? 1 : 0);
+                }
+            while (Pickups.TakeLeft(Time.time, out var left))
+            {
+                PickupsLeft++;
+                AnswerPickup(left, UpgradeTrigger.PickupLeft, 0);
+            }
+            // Each lying pickup is a small sign of its element on the floor, bobbing, until it is taken or gone.
+            for (int i = 0; i < Pickups.Most; i++)
+            {
+                var item = Pickups.Get(i);
+                if (item.Active && !pickupShown[i])
+                {
+                    var look = PickupLook(item.Kind);
+                    pickupSigns[i] = Forms.FormFx.HoldMark(Forms.FormMark.Sigil, Forms.FormKit.Lit(look != null ? look.Colour : Color.white, 2.4f));
+                    pickupShown[i] = true;
+                }
+                else if (!item.Active && pickupShown[i])
+                {
+                    Forms.FormFx.ReleaseMark(pickupSigns[i], 0.15f);
+                    pickupShown[i] = false;
+                }
+                if (item.Active) Forms.FormFx.PlaceMarkFacing(pickupSigns[i], item.Position + Vector3.up * (0.35f + 0.08f * Mathf.Sin(Time.time * 4f + i)), 0.7f, Time.time * 60f);
+            }
+        }
+
+        // The element a pickup is seen in: the herb in light, the lily's fire in flame, the seed in ice.
+        private ElementInfo PickupLook(PickupKind kind) =>
+            lookOf[(int)(kind == PickupKind.Herb ? AfflictionKind.Marked : kind == PickupKind.LilyFire ? AfflictionKind.Burn : AfflictionKind.Chill)];
 
         private void OnStandingBurst(Standing thing)
         {

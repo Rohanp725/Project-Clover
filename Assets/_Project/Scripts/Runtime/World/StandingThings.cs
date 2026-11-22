@@ -75,6 +75,8 @@ namespace Clover.World
         Beside,
         /// <summary>Ahead of you, along the way you face.</summary>
         Ahead,
+        /// <summary>In front of the enemy, on your side of it, at its feet (Shining Herb's herb).</summary>
+        Before,
     }
 
     /// <summary>A blow that landed on a standing thing, kept until the player's marks read it.</summary>
@@ -165,6 +167,7 @@ namespace Clover.World
             {
                 case StandingPlace.Behind: return enemy + way * gap;
                 case StandingPlace.Beside: return enemy + Vector3.Cross(Vector3.up, way) * gap;
+                case StandingPlace.Before: return enemy - way * gap;
                 case StandingPlace.Ahead:
                     Vector3 ahead = forward;
                     ahead.y = 0f;
