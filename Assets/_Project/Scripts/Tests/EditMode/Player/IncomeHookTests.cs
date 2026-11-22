@@ -125,6 +125,25 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void TheLineUnderTheShardsIsDrawnWhateverItsBoxHeight()
+        {
+            // Filmed 2026-11-21: the line's box is the Shards count's (40 high) and the font's line at 28 is taller, so
+            // a line cut to its box drew nothing at all.
+            var canvas = new UnityEngine.GameObject("Canvas", typeof(UnityEngine.Canvas));
+            var shardsObject = new UnityEngine.GameObject("Shards", typeof(UnityEngine.RectTransform));
+            shardsObject.transform.SetParent(canvas.transform, false);
+            var shards = shardsObject.AddComponent<UnityEngine.UI.Text>();
+            shards.fontSize = 28;
+            shards.rectTransform.sizeDelta = new UnityEngine.Vector2(400f, 40f);
+            var gain = MemoryGain.Make(shards);
+            var line = gain.GetComponent<UnityEngine.UI.Text>();
+            Assert.AreEqual(UnityEngine.VerticalWrapMode.Overflow, line.verticalOverflow);
+            Assert.AreEqual(UnityEngine.HorizontalWrapMode.Overflow, line.horizontalOverflow);
+            Assert.Less(line.rectTransform.anchoredPosition.y, shards.rectTransform.anchoredPosition.y, "under the Shards count");
+            UnityEngine.Object.DestroyImmediate(canvas);
+        }
+
+        [Test]
         public void TheLightIsAmberAndNeverWhite()
         {
             foreach (var colour in new[] { MemoryGain.Amber, MemoryGain.LineColour })

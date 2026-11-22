@@ -72,6 +72,8 @@ namespace Clover.UI
             line.fontStyle = shards.fontStyle;
             line.alignment = shards.alignment;
             line.horizontalOverflow = HorizontalWrapMode.Overflow;
+            // The font's line is taller than the box at this size: cut to the box, the words would never be drawn at all.
+            line.verticalOverflow = VerticalWrapMode.Overflow;
             line.raycastTarget = false;
             line.color = LineColour;
             line.text = "";
