@@ -142,6 +142,59 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void StandingThingsTakeBlowsBreakAndBurstAfterTheirFirstBlow()
+        {
+            StandingThings.Clear();
+            int wall = StandingThings.Raise(StandingKind.IceWall, new Vector3(0f, 0f, 2f), Vector3.forward, 6f, 60f, 10f, 7, 1.5f);
+            Assert.AreEqual(1, StandingThings.Count(7));
+            Assert.AreEqual(StandingStruck.FirstStruck, StandingThings.Strike(wall, 20f, 11f), "its first blow starts the burst's clock");
+            Assert.AreEqual(StandingStruck.Standing, StandingThings.Strike(wall, 20f, 11.5f));
+            StandingThings.Tick(12.4f, out int burst);
+            Assert.AreEqual(-1, burst, "not yet: a second and a half after the first blow");
+            StandingThings.Tick(12.5f, out burst);
+            Assert.AreEqual(wall, burst, "it bursts by itself");
+            Assert.AreEqual(0, StandingThings.Count());
+
+            int stone = StandingThings.Raise(StandingKind.StonePillar, Vector3.zero, Vector3.forward, 6f, 60f, 0f);
+            StandingThings.Strike(stone, 30f, 1f);
+            Assert.AreEqual(StandingStruck.Broken, StandingThings.Strike(stone, 30f, 2f), "60 health: two blows of 30");
+            Assert.AreEqual(StandingStruck.None, StandingThings.Strike(stone, 30f, 3f), "nothing left to strike");
+
+            int lasting = StandingThings.Raise(StandingKind.AnvilStone, new Vector3(0f, 0f, 3f), Vector3.back, 5f, 0f, 0f);
+            Assert.AreEqual(StandingStruck.FirstStruck, StandingThings.Strike(lasting, 999f, 1f), "no health: blows cannot break it");
+            Assert.AreEqual(lasting, StandingThings.Nearest(new Vector3(0f, 0f, 2.5f), 1f));
+            Assert.IsTrue(StandingRules.AtItsBack(StandingThings.Get(lasting), Vector3.zero, new Vector3(0f, 0f, 2f), 1.5f), "the enemy pushed back into the stone behind it");
+            Assert.IsFalse(StandingRules.AtItsBack(StandingThings.Get(lasting), new Vector3(0f, 0f, 6f), new Vector3(0f, 0f, 2f), 1.5f), "pushed away from it");
+            StandingThings.Tick(5f, out _);
+            Assert.AreEqual(-1, StandingThings.Nearest(new Vector3(0f, 0f, 2.5f), 1f), "gone at its time's end");
+
+            for (int i = 0; i < StandingThings.Most + 3; i++) StandingThings.Raise(StandingKind.RimedMound, new Vector3(i, 0f, 0f), Vector3.forward, 0f, 0f, 0f);
+            Assert.AreEqual(StandingThings.Most, StandingThings.Count(), "a few at a time; the longest-standing give way");
+            StandingThings.Clear();
+        }
+
+        [Test]
+        public void EachStandingKindNamesItsModelAndCollider()
+        {
+            var anvil = StandingShape.For(StandingKind.AnvilStone);
+            Assert.IsTrue(anvil.Box && anvil.Faces, "a box, its iron face to the player");
+            Assert.AreEqual(1.5f, anvil.Size.y, 1e-5f);
+            Assert.AreEqual("anvil_stone", anvil.Model);
+            var wall = StandingShape.For(StandingKind.IceWall);
+            Assert.AreEqual(5f, wall.Size.x, 1e-5f);
+            Assert.AreEqual("ice_wall_5m_cracked_lod0", wall.Cracked, "swapped in when first struck");
+            Assert.AreEqual("ice_wall_3m_lod0", StandingShape.For(StandingKind.ShieldWall).Whole);
+            var trunk = StandingShape.For(StandingKind.HollowTrunk);
+            Assert.IsFalse(trunk.Box);
+            Assert.AreEqual(0.55f, trunk.Carve, 1e-5f);
+            Assert.AreEqual("stone_pillar", StandingShape.For(StandingKind.StonePillar).Model);
+            Assert.AreEqual("rimed_mound", StandingShape.For(StandingKind.RimedMound).Model);
+            Vector3 thrown = StandingThingBody.Thrown(new Vector3(1f, 0.5f, 0f), 0);
+            Assert.Greater(thrown.x, 0f, "out from where it sat");
+            Assert.Greater(thrown.y, 0f, "and up");
+        }
+
+        [Test]
         public void PawnedHeartsShapesSetTheHeartUnderYouOrOverTheEnemy()
         {
             var shapes = Upgrade.ById(SpellBranch.ShapeId(DarkTree.PawnedHeart)).Shapes;
