@@ -242,6 +242,8 @@ namespace Clover.Player
         public float NeedsWindup;
         /// <summary>Above zero: only when an enemy's blow is about to land on the player within this many seconds (the shared movement rule's timing: 0.3).</summary>
         public float BlowLanding;
+        /// <summary>For a spell's moments: only when the cast was timed to the poison's beat, within 0.2 s of a bite on any enemy within 8 m (the ledger's cast-on-beat).</summary>
+        public bool OnCastBeat;
 
         /// <summary>A copy with every number, its slot and its mark (an Empower's twin of its Learn's effect).</summary>
         internal UpgradeEffect Twin() => (UpgradeEffect)MemberwiseClone();

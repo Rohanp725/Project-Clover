@@ -151,10 +151,9 @@ namespace Clover.Player.Trees
                     Change = new SpellChange { Count = 1 },
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Gather, Affliction = P, Radius = 10f } } },
                 "Opens two shapes of One by One, chosen at any rest fire: Eaten in Turn, a line fed by the order you kill, or All Into One, every dose run into the one you face.",
-                // NEEDS: the snap tested against the beat (cast-on-beat), and the bursts themselves raised (empower-effects). Until
-                // then each poisoned enemy struck within a fifth of a second of its bite bursts for 24 and 16 stagger more, half
-                // again an eight-deep burst.
-                new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = P, OnBeat = 0.2f, Do = UpgradeAction.Burst, Radius = 1f, Damage = 24f, Stagger = 16f, Stacks = 0 } },
+                // The snap timed to the beat (UpgradeEffect.OnCastBeat): every burst of the cast half again as hard (PlayerStat.BurstDamage
+                // while its columns rise).
+                new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, OnCastBeat = true, Do = UpgradeAction.Boon, Stat = PlayerStat.BurstDamage, Amount = 0.5f, Seconds = 1.5f } },
                 "Snap your fingers within a fifth of a second of the poison's beat, and every burst is one and a half times as strong.",
                 learnEffects: new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.SetOff, Affliction = P, Stagger = 4f, Radius = 1f, PassesOn = true } });
 
@@ -276,11 +275,12 @@ namespace Clover.Player.Trees
                     Description = "The cloud is carried. A censer swings round you on its chain three metres out, once every 1.2 seconds, for eight seconds. Each pass deals 4 damage and a dose and leaves smoke hanging for two seconds. The fight comes with you.",
                     Spell = new SpellSpec { Count = 1, Radius = 3f, Seconds = 8f, Interval = 1.2f, Damage = 4f, Stagger = 4f, Stacks = 1 } },
                 "Opens two shapes of Miasma, chosen at any rest fire: Low Mist, a sheet poured along the floor, or Censer, a cloud carried round you.",
-                // NEEDS: the cast tested against a bite on any enemy within eight metres (cast-on-beat). Until then an enemy the
-                // cloud doses within a fifth of a second of its bite is dosed once more each second for the cloud's four seconds.
+                // The cast timed to a bite on any enemy within eight metres (UpgradeEffect.OnCastBeat): every enemy the cloud doses is
+                // dosed once more each second for the cloud's four seconds. NEEDS: the cloud itself dosing twice a second (its own
+                // interval halved, empower-after-shape), not a second dose carried on each enemy.
                 new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = P, OnBeat = 0.2f, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = ThickCloud, Seconds = 4f, Beat = 1f } },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, OnCastBeat = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = ThickCloud, Seconds = 4f, Beat = 1f } },
                     new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = ThickCloud, Do = UpgradeAction.Afflict, Affliction = P, Stacks = 1 },
                 },
                 "Cast it on the poison's beat, within a fifth of a second of a bite on any enemy near, and the cloud doses twice a second.");
@@ -318,9 +318,8 @@ namespace Clover.Player.Trees
                     Description = "You rush six metres backward, away. A thrashing tail is left where you stood for two seconds, lashing everything within two metres every half second for three doses. Away from them, and what follows you pays.",
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Hazard, At = EffectAt.Self, Shape = HazardShape.Patch, Radius = 2f, Seconds = 2f, Interval = 0.5f, Damage = 0f, Stagger = 0f, Affliction = P, Stacks = 3 } } },
                 "Opens two shapes of Share Alike, chosen at any rest fire: Carried on the Blade, the sickness loaded on your weapon, or Shed Tail, a rush away that leaves a lashing tail.",
-                // NEEDS: a bite on any enemy passed as the test (cast-on-beat). Until then each enemy passed within a fifth of a
-                // second of its own bite takes its two doses again.
-                new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = P, OnBeat = 0.2f, Do = UpgradeAction.Afflict, Affliction = P, Stacks = 2 } },
+                // The rush timed to a bite on any enemy near (UpgradeEffect.OnCastBeat): each enemy passed takes its two doses again.
+                new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, OnCastBeat = true, Do = UpgradeAction.Afflict, Affliction = P, Stacks = 2 } },
                 "Rush on the poison's beat, within a fifth of a second of a bite on any enemy you pass, and the doses double.",
                 learnEffects: new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.EvenDepth, Affliction = P, Stacks = 2 } });
 

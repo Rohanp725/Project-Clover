@@ -1629,6 +1629,22 @@ namespace Clover.Player
             return found;
         }
 
+        /// <summary>
+        /// True when any enemy within <paramref name="radius"/> of a point has its poison bite within <paramref name="within"/>
+        /// seconds, before or after (the ledger's cast-on-beat: a cast timed to the poison's beat).
+        /// </summary>
+        public bool AnyNearBeat(Vector3 point, float radius, float within)
+        {
+            int count = Overlap(point + Vector3.up, radius);
+            for (int i = 0; i < count; i++)
+            {
+                var other = overlaps[i];
+                if (other.transform.root == transform.root) continue;
+                if (other.GetComponentInParent<IAfflictable>() is IAfflictable enemy && enemy.Afflictions.NearBeat(within)) return true;
+            }
+            return false;
+        }
+
         /// <summary>Metres within which an enemy's blow about to land is looked for (the shared movement rule).</summary>
         public float AboutToLandRange = 6f;
 

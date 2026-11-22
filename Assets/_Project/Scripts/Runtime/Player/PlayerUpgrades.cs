@@ -1341,6 +1341,8 @@ namespace Clover.Player
             if (effect.NeedsAirborne && !(target is IAfflictable flying && flying.Afflictions.IsAirborne)) return;
             if (effect.NeedsFrozen && !(target is IAfflictable icy && icy.Afflictions.IsFrozen)) return;
             if (effect.NeedsWindup > 0f && !InWindup(target as IAfflictable, effect.NeedsWindup)) return;
+            // Only for a cast timed to the poison's beat (Miasma's, One by One's and Share Alike's Masters).
+            if (effect.OnCastBeat && !castOnBeat) return;
             // Only as an enemy's blow is about to land (the shared movement rule's timing).
             if (effect.BlowLanding > 0f && (combat == null || combat.BlowAboutToLand(effect.BlowLanding, out _) == null)) return;
             // Only in the moment after a red attack was turned (Mountain Stance's, Circle of Steel's and Gone to Ash's Masters).
@@ -2519,12 +2521,18 @@ namespace Clover.Player
             Trigger(UpgradeTrigger.SpellCast, null, transform.position, false);
         }
 
-        // A new cast: none passed by it yet, and no doses carried down its line.
+        // A new cast: none passed by it yet, no doses carried down its line, and whether it was cast on the poison's beat.
         private void BeginCast()
         {
             castStruck.Clear();
             lineCarried = 0;
+            castOnBeat = combat != null && combat.AnyNearBeat(transform.position, BeatReach, BeatWindow);
         }
+
+        /// <summary>Metres within which, and seconds within which, a bite makes a cast one timed to the poison's beat.</summary>
+        public const float BeatReach = 8f, BeatWindow = 0.2f;
+        // True when the cast now running was cast within a fifth of a second of a bite on any enemy within eight metres.
+        private bool castOnBeat;
 
         /// <summary>
         /// A spell discharged an enemy's Static itself (Paper Seal's thunder): counted, and told to whatever answers a

@@ -190,6 +190,21 @@ namespace Clover.Tests
             Assert.IsTrue(set.Conditions.Held(Reactions.Stone), "just broken out of a shape's stone is still known as stone");
         }
 
+        [Test]
+        public void TheBeatMastersAskTheCastNotEachEnemy()
+        {
+            foreach (var branch in new[] { PoisonTree.Miasma, PoisonTree.OneByOne, PoisonTree.ShareAlike })
+            {
+                var master = Upgrade.ById(SpellBranch.MasterId(branch)).Effects;
+                Assert.IsTrue(master.Where(effect => effect.On != UpgradeTrigger.ConditionBeat).All(effect => effect.OnCastBeat && effect.OnBeat == 0f), branch + ": the cast is timed, not each enemy struck");
+            }
+            var snap = Upgrade.ById(SpellBranch.MasterId(PoisonTree.OneByOne)).Effects.Single();
+            Assert.AreEqual(PlayerStat.BurstDamage, snap.Stat);
+            Assert.AreEqual(0.5f, snap.Amount, 1e-5f, "every burst half again as hard");
+            Assert.AreEqual(8f, PlayerUpgrades.BeatReach, 1e-5f);
+            Assert.AreEqual(0.2f, PlayerUpgrades.BeatWindow, 1e-5f);
+        }
+
         private sealed class Afflicted : IAfflictable
         {
             public Afflicted(AfflictionSet set) => Afflictions = set;

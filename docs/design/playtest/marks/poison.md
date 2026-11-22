@@ -96,13 +96,11 @@ a blow or a cast "on the beat" comes within a fifth of a second of it.
 ## poison.onebyone.master
 **What it does.** Snap your fingers within a fifth of a second of the poison's beat, and every burst is one and a half times as strong.
 
-**When it happens.** Each poisoned enemy a column hits, while One by One is in a spell slot.
+**When it happens.** When you snap your fingers within a fifth of a second of a poison bite on any enemy within 8 metres, while One by One is in a spell slot.
 
-**The numbers.** 3 Shards. For now, each poisoned enemy hit within a fifth of a second of its own bite takes a second burst: 24 damage and 16 stagger within 1 metre, which is half of an eight-dose burst.
+**The numbers.** 3 Shards. For the next 1.5 seconds, while the columns rise, every burst deals 50% more damage.
 
 **Works with.** In Time (the same beat), Catching (the beat spreads across the pack), Venom.
-
-**Not built yet.** The snap itself should be timed against the beat; for now, each enemy is checked as its column comes up. The bursts should be raised by half; for now, the extra is the same no matter how many doses.
 
 **Example.** Watch the pack's poison bite and raise your hand right then. The columns that land on the bite hit 50% harder.
 
@@ -257,13 +255,13 @@ a blow or a cast "on the beat" comes within a fifth of a second of it.
 ## poison.base.master
 **What it does.** Cast it on the poison's beat, within a fifth of a second of a bite on any nearby enemy, and the cloud gives two doses a second.
 
-**When it happens.** Each enemy the cloud poisons, while Miasma is in a spell slot.
+**When it happens.** When you cast Miasma within a fifth of a second of a poison bite on any enemy within 8 metres, while Miasma is in a spell slot.
 
-**The numbers.** 3 Shards. For now, an enemy the cloud poisons within a fifth of a second of its own bite gets one more dose each second for 4 seconds.
+**The numbers.** 3 Shards. Every enemy that cast's cloud poisons gets one more dose each second for 4 seconds.
 
 **Works with.** In Time (the same beat), Catching, every other beat Master mark.
 
-**Not built yet.** The cast itself should be timed against a bite on any enemy within 8 metres. For now, each enemy is checked as the cloud poisons it.
+**Not built yet.** The cloud itself doesn't dose twice a second yet; for now, each enemy it poisons carries the second dose with it.
 
 **Example.** Cast it as a poisoned soldier's poison bites, and the cloud gives it two doses a second while it stands there.
 
@@ -307,13 +305,11 @@ a blow or a cast "on the beat" comes within a fifth of a second of it.
 ## poison.sharealike.master
 **What it does.** Rush on the poison's beat, within a fifth of a second of a bite on any enemy you pass, and the doses double.
 
-**When it happens.** Each enemy the rush passes, while Share Alike is in a spell slot.
+**When it happens.** When you rush within a fifth of a second of a poison bite on any enemy within 8 metres, while Share Alike is in a spell slot.
 
-**The numbers.** 3 Shards. For now, each enemy you pass within a fifth of a second of its own bite gets two more doses.
+**The numbers.** 3 Shards. Each enemy that rush passes gets two more doses.
 
 **Works with.** In Time and every beat Master mark, Catching (the beat spreads across the pack), One by One afterward.
-
-**Not built yet.** It should work on a bite from any enemy you pass. For now, each enemy is checked as you pass it.
 
 **Example.** Rush through a poisoned pack as their poison bites, and each one comes out with four more doses.
 
