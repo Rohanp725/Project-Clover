@@ -83,6 +83,8 @@ namespace Clover.Player
         /// laid-as-condition: The Sun Goes Under, every Burn smouldering, curse or no curse).
         /// </summary>
         public bool AsLaid;
+        /// <summary>For Heal: the mending is what the blow a counter just turned would have dealt you, Amount at most (Death Turned Back: 30).</summary>
+        public bool ByTurnedWound;
         /// <summary>
         /// For ForceReaction, or a Pass that sets <see cref="Reaction"/> off on the enemy it reaches: the counts of blows the
         /// reaction's conditions keep there start this many blows along (Held Down, What the Yew Keeps: the fig at two coils).

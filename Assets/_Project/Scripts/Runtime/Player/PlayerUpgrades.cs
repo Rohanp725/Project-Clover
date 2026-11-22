@@ -2160,7 +2160,7 @@ namespace Clover.Player
                     break;
                 }
                 case UpgradeAction.Heal:
-                    if (defence != null) defence.Heal(eAmount);
+                    if (defence != null) defence.Heal(effect.ByTurnedWound ? PlayerDefence.TurnedMend(defence.LastTurnedWound, eAmount) : eAmount);
                     break;
                 case UpgradeAction.Mana:
                     combat.Mana.Gain(eAmount);

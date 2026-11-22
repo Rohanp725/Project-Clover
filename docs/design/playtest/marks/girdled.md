@@ -53,10 +53,8 @@ both carried.
 
 **When it happens.** Cast it from a spell slot while you carry both Life and Dark. Press that slot's button (hold L2 and a face button, or press 1 to 4). The first time it lands, it charges your blade with Life.
 
-**The numbers.** Mix, duo spell, counter, 5 Shards. It costs no mana. After you cast it, you must wait 12 seconds to cast it again. Fighting with your weapon makes the wait shorter. When a blow comes, the attacker takes 8 damage, 20 stagger, three Seeds and a Curse, so Girdled starts. It is held for 2 seconds (0.8 for an elite), and you heal 15. For those 2 seconds, each weapon blow on it heals you 3. If no blow comes, the wait is half as long: 6 seconds.
+**The numbers.** Mix, duo spell, counter, 5 Shards. It costs no mana. After you cast it, you must wait 12 seconds to cast it again. Fighting with your weapon makes the wait shorter. When a blow comes, the attacker takes 8 damage, 20 stagger, three Seeds and a Curse, so Girdled starts. It is held for 2 seconds (0.8 for an elite), and you heal as much as the blow would have hurt you, up to 30. For those 2 seconds, each weapon blow on it heals you 3. If no blow comes, the wait is half as long: 6 seconds.
 
 **Works with.** Girdled and its shapes, Held Down, What the Yew Keeps.
 
 **Example.** Kneel as the brute swings, then cut it while it is caught in the roots.
-
-**Not built yet.** You heal 15, instead of the damage the blow would have done (up to 30).

@@ -106,7 +106,7 @@ namespace Clover.Player.Trees.Duo
             // answers); the answer Curses the attacker and holds it 2 s (an elite 0.8 s), and you mend 15. Each of your blows on
             // the held enemy mends you 3.
             // Half the cooldown back when nothing came (SpellSpec.MissedWait).
-            // NEEDS: the mending as what the blow would have dealt, 30 at most (damage-tally).
+            // The mending is what the turned blow would have dealt you, 30 at most (UpgradeEffect.ByTurnedWound).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = DeathTurnedBack, Name = "Death Turned Back", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Role = SpellRole.Counter, Requires = new[] { BitterSeed, HeldDown }, Icon = UpgradeIcons.Heart,
@@ -117,7 +117,7 @@ namespace Clover.Player.Trees.Duo
                 {
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Cursed, Stacks = 1 },
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Hold, Seconds = 2f },
-                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Cooldown = 1f, Do = UpgradeAction.Heal, Amount = 15f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Cooldown = 1f, Do = UpgradeAction.Heal, Amount = 30f, ByTurnedWound = true },
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Held, Seconds = 2f } },
                     new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Held, By = StruckBy.Weapon, Do = UpgradeAction.Heal, Amount = 3f },
                 },

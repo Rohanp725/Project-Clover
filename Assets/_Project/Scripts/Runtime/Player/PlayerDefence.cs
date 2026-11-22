@@ -467,6 +467,8 @@ namespace Clover.Player
                 // A red attack turned: the counters' Masters answer only that (the ledger's red-attack).
                 if (hit.Unblockable && upgrades != null) upgrades.RedTurned();
                 player.FormParriedFrom = hit.HasOrigin ? hit.Origin : transform.position - hit.Direction;
+                // What it would have dealt, for a counter that mends by it (Death Turned Back).
+                LastTurnedWound = Mathf.Max(0f, hit.Damage * DamageTaken);
                 // Whose blow it was, for an answer meant only for the attacker (The Golden Chair).
                 if (upgrades != null && combat != null) upgrades.NoteTurned(combat.EnemyAt(player.FormParriedFrom, 2.5f));
                 PerfectGuards++;
@@ -570,6 +572,12 @@ namespace Clover.Player
                     return HitOutcome.Landed;
             }
         }
+
+        /// <summary>What the last blow a counter's stance turned would have dealt you (Death Turned Back mends by it).</summary>
+        public float LastTurnedWound { get; private set; }
+
+        /// <summary>The mending a counter gives for a blow it turned: what the blow would have dealt, <paramref name="most"/> at most.</summary>
+        public static float TurnedMend(float wound, float most) => Mathf.Clamp(wound, 0f, Mathf.Max(0f, most));
 
         /// <summary>What the last blow that landed took, and when (Second Shadow's Master gives it back).</summary>
         public float LastWound { get; private set; }

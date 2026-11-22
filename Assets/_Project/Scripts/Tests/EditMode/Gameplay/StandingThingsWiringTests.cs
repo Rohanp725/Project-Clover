@@ -941,6 +941,17 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void DeathTurnedBackMendsWhatTheBlowWouldHaveDealt()
+        {
+            Assert.AreEqual(22f, PlayerDefence.TurnedMend(22f, 30f), 1e-5f);
+            Assert.AreEqual(30f, PlayerDefence.TurnedMend(55f, 30f), 1e-5f, "30 at most");
+            Assert.AreEqual(0f, PlayerDefence.TurnedMend(-3f, 30f), 1e-5f);
+            var heal = Upgrade.ById(Clover.Player.Trees.Duo.GirdledDuo.DeathTurnedBack).Effects.Single(each => each.On == UpgradeTrigger.SpellHit && each.Do == UpgradeAction.Heal);
+            Assert.IsTrue(heal.ByTurnedWound, "by the blow, not a set 15");
+            Assert.AreEqual(30f, heal.Amount, 1e-5f);
+        }
+
+        [Test]
         public void ReckoningsMasterPaysTheSealsCountOnAFinisher()
         {
             var enemy = new AfflictionSet { Reactions = new ReactionEngine((who, pair, laid) => { }, () => 0) };
