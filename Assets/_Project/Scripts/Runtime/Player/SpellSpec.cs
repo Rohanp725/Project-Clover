@@ -83,6 +83,17 @@ namespace Clover.Player
         public float HealthScaled;
         /// <summary>Above zero: the cast also takes this share of the caster's present health, left grey (Feed the Ground: a quarter; the ledger's health-share).</summary>
         public float HealthShare;
+        /// <summary>
+        /// Above zero: seconds a form's lasting thing stands (Meteor Leap's crater burns 4, 6 with its Empower; Lifting Wind's
+        /// column hangs its enemy 1, 1.3 with its Empower); zero keeps the form's own time (the ledger's form-times).
+        /// </summary>
+        public float Lasts;
+        /// <summary>Above zero: seconds between a form's pieces landing in turn (In Turn: a quarter second between spears); zero keeps the form's own quick fall.</summary>
+        public float Between;
+        /// <summary>Above zero: seconds a form's whole mark glows on the ground before it breaks open (Fissure's crack: 0.9); zero breaks it just behind its running mark.</summary>
+        public float Glow;
+        /// <summary>Above zero: the share of the run's pace the player may walk at while the form's stance holds (Firewalker: half); zero roots them.</summary>
+        public float Walk;
 
         /// <summary>The health a cast takes: its fixed price and its share of the present health.</summary>
         public static float HealthPrice(float fixedCost, float share, float present) => System.Math.Max(0f, fixedCost) + System.Math.Max(0f, share) * System.Math.Max(0f, present);

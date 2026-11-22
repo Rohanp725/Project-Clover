@@ -314,10 +314,10 @@ namespace Clover.Player.Trees
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Reacted, Needs = T, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Radius = 1f, Seconds = 6f, Interval = 1f, Damage = 3f, Stagger = 8f, Affliction = T, Stacks = 1 } } },
                 BranchPattern.RightMiddle));
 
-            // The breaker: the spikes form runs the crack and breaks it open, and what it catches is held.
-            // NEEDS: the crack glowing 0.9 s before it breaks open (form-times).
+            // The breaker: the spikes form runs the crack, it glows 0.9 s whole (SpellSpec.Glow), then breaks open, and what it
+            // catches is held.
             SpellBranch.Add(to, E, Fissure, "Fissure", SpellRole.Breaker, BranchPattern.RightB, LeftInRubble, SpellForms.Spikes,
-                new SpellSpec { Reach = 8f, Speed = 20f, Count = 1, Radius = 1f, Damage = 20f, Stagger = 35f, Stacks = 1 },
+                new SpellSpec { Reach = 8f, Speed = 20f, Count = 1, Radius = 1f, Damage = 20f, Stagger = 35f, Stacks = 1, Glow = 0.9f },
                 "You drive the weapon into the ground. A crack runs eight metres ahead in under half a second, glows, then breaks open in spikes: 20 damage, 35 stagger and Tremor. Ordinary enemies are held where they stand for 1.2 seconds.",
                 UpgradeIcons.Spike,
                 new Empower { Cooldown = 9f, Damage = 26f },
@@ -343,7 +343,7 @@ namespace Clover.Player.Trees
                         new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = OnTheFault, By = StruckBy.Heavy, Do = UpgradeAction.Burst, Radius = 2f, Damage = 24f, Stagger = 40f, Affliction = T, Stacks = 2, Cooldown = 0.5f },
                     } },
                 "Opens two shapes of Fissure, chosen at any rest fire: Basalt, a wall of columns to topple, or Fault Line, a crack that waits for your heavy blows.",
-                // NEEDS: the heavy blow landed on the crack's line while it glows (form-times, spell-windows). Until then a heavy
+                // NEEDS: the heavy blow landed on the crack's line while it glows (spell-windows). Until then a heavy
                 // blow on an enemy within 0.9 s of the spikes striking it erupts again under it for half as much.
                 new[]
                 {

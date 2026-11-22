@@ -132,12 +132,12 @@ namespace Clover.Player.Trees
                 new ShapeDef { Name = "The Drawn Line",
                     Description = "The six spears drive into the floor in a straight line six metres across your front and stand five seconds, dust lit along them. An enemy that crosses it is held a second and Marked, and your blows across the line are critical. Fight across it.",
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Hazard, Shape = HazardShape.Ring, Reach = 3f, Count = 6, Radius = 0.7f, Seconds = 5f, Interval = 1f, Damage = 0f, Stagger = 12f, Affliction = M, Stacks = 1, Cooldown = 1f } } },
-                // NEEDS: a quarter second between spears (form-times), and a spear landing within 0.1 s of a weapon blow as the
-                // moment (spell-windows). Until then the blades form drops them one after another, and each weapon blow on the
-                // enemy for a second and a half after strikes a spear's worth more.
+                // A quarter second between spears (SpellSpec.Between). NEEDS: a spear landing within 0.1 s of a weapon blow as
+                // the moment (spell-windows). Until then each weapon blow on the enemy for a second and a half after strikes a
+                // spear's worth more.
                 new ShapeDef { Name = "In Turn", Form = SpellForms.Blades,
                     Description = "The spears drive in one after another, a quarter second apart. A spear that lands within a tenth of a second of one of your weapon blows strikes double and is critical. Six beats to meet.",
-                    Spell = new SpellSpec { Count = 6, Delay = 0.6f, Radius = 1f, Damage = 6f, Stagger = 5f, Stacks = 1, Reach = 10f },
+                    Spell = new SpellSpec { Count = 6, Delay = 0.6f, Radius = 1f, Damage = 6f, Stagger = 5f, Stacks = 1, Reach = 10f, Between = 0.25f },
                     Effects = new[]
                     {
                         new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = InTurn, Seconds = 1.5f } },

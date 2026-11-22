@@ -286,11 +286,9 @@ Rise's rocks, a pillar, a heap of rubble.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4).
 
-**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 9 seconds and the damage 26.) The crack runs 8 metres at 20 metres a second. There is a spike every 1.5 metres, starting 1.3 metres out, each with a 1-metre radius. Each enemy is hit once, for 20 damage, 35 stagger and one Tremor, and is held for 1.2 seconds (0.5 for a god or an elite).
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 9 seconds and the damage 26.) The crack runs 8 metres at 20 metres a second, then glows for 0.9 seconds before it breaks open. There is a spike every 1.5 metres, starting 1.3 metres out, each with a 1-metre radius. Each enemy is hit once, for 20 damage, 35 stagger and one Tremor, and is held for 1.2 seconds (0.5 for a god or an elite).
 
 **Works with.** Left in Rubble, which it comes after on the chart, Standing Stones, Tremor and Cairn, and your heavy blows on the enemies it holds. When it lands, it charges your blade with Earth.
-
-**Not built yet.** The crack should glow for 0.9 seconds before it breaks open; for now, it breaks open as it runs.
 
 **Example.** Three spearmen stand in a line down a staircase. One crack catches all three and holds them for your blade.
 
@@ -316,7 +314,7 @@ Rise's rocks, a pillar, a heap of rubble.
 
 **Works with.** Heavy Hand (nothing can stop the heavy blow as it lands), The Slow Hand, Tremor.
 
-**Not built yet.** The crack's glow before it breaks open, and landing the heavy blow on its line during that glow. For now, the timing window opens when the spikes hit, and it adds a second eruption on that enemy.
+**Not built yet.** Landing the heavy blow on the crack's line during its glow. For now, the timing window opens when the spikes hit, and it adds a second eruption on that enemy.
 
 **Example.** Cast the crack at a brute, and step in with a heavy blow as it breaks open. It erupts again under the brute.
 

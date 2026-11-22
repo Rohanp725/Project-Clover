@@ -28,6 +28,8 @@ namespace Clover.Player.Forms
             player.FormParrying = true;
             player.FormGuardPose = true;
             player.FormSwordOut = true;
+            // A stance one walks in (Firewalker: half the pace); the plain stance roots.
+            player.FormWalk = cast.Spec.Walk;
             SpellWorks.Marks(run)[0] = FormFx.HoldMark(FormMark.Sigil, FormKit.Lit(cast.Colour, 2.6f));
             SpellWorks.Marks(run)[1] = FormFx.HoldMark(FormMark.Ring, FormKit.Lit(cast.Colour, 2f));
             ElementLook.Sparks(cast.Element, cast.Origin + Vector3.up * 1.2f + cast.Forward * 0.7f, cast.Forward, 0.6f);

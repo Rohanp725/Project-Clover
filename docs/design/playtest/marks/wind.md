@@ -33,11 +33,9 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). If no enemy is in reach, the column comes up 5 metres in front of you, and you still have to wait.
 
-**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 9 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 7 seconds.) It targets the nearest enemy within 5 metres. The column rises 0.35 seconds after you cast it, with a 2-metre radius. It deals 8 damage, 40 stagger, counts as a heavy blow, adds one stack of Unsteady to everything in it, and keeps them in the air for 0.8 seconds.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 9 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 7 seconds.) It targets the nearest enemy within 5 metres. The column rises 0.35 seconds after you cast it, with a 2-metre radius. It deals 8 damage, 40 stagger, counts as a heavy blow, adds one stack of Unsteady to everything in it, and keeps them in the air for 1 second (1.3 seconds with its Empower).
 
 **Works with.** Rising Cut, which it comes after on the chart; Nothing Beneath; Sky Dance; Against the Wall (it counts as a spell hitting); and the charged blade: when it lands, your next three blows carry Wind.
-
-**Not built yet.** Hanging in the air for a full second (1.3 seconds with its Empower). For now, the column lifts for its own 0.8 seconds.
 
 **Example.** An archer stands behind a shield. Lift the archer, step in, and keep it up with your blows.
 

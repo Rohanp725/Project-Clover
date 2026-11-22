@@ -125,14 +125,14 @@ namespace Clover.Player.Trees
                 },
                 "A perfect guard makes the next Thunderclap instant and ends its wait.");
 
-            // NEEDS: the ring standing 8 s (the drums go with it), and the third beat's great clap in 4 m (30 damage, 60
-            // stagger) that discharges everything in it. Until then a cast strikes up three drums that wait to be beaten.
+            // A cast strikes up three drums that wait to be beaten; the ring stands 8 s and the drums go with it (a count banked
+            // for a time). NEEDS: the third beat's great clap in 4 m (30 damage, 60 stagger) that discharges everything in it.
             SpellBranch.Add(to, E, RingOfDrums, "Ring of Drums", SpellRole.Counter, BranchPattern.LeftB, Upgrade.StoredCharge, SpellForms.Nova,
                 new SpellSpec { Radius = 1.5f, Damage = 0f, Stagger = 0f, Stacks = 0 },
                 "Three drums of cloud and lightning turn behind your shoulders. Each perfect guard or perfect dodge beats one, and a bolt falls on the attacker: 18 damage, 35 stagger and two Static.",
                 UpgradeIcons.Ring,
-                // NEEDS: the ring standing 10 s.
-                new Empower { Cooldown = 8f },
+                // The ring stands 10 s (the Learn's banking, timed longer).
+                new Empower { Cooldown = 8f, Effects = new[] { new EffectChange { Index = 0, Seconds = 10f } } },
                 "Ring of Drums waits 8 seconds, not 10, and the ring stands longer.",
                 // NEEDS: a perfect guard beating two at once.
                 new ShapeDef { Name = "Drum Roll",
@@ -149,7 +149,7 @@ namespace Clover.Player.Trees
                 tally: new TallySpec { Name = "Drums", Cap = 3 },
                 learnEffects: new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Bank, Count = 3 },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Bank, Count = 3, Seconds = 8f },
                     new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Spends = 1, Do = UpgradeAction.Falling, Damage = 18f, Stagger = 35f, Radius = 1.2f, Delay = 0.15f, Affliction = AfflictionKind.Static, Stacks = 2 },
                     new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, Spends = 1, Do = UpgradeAction.Falling, Damage = 18f, Stagger = 35f, Radius = 1.2f, Delay = 0.15f, Affliction = AfflictionKind.Static, Stacks = 2 },
                 });

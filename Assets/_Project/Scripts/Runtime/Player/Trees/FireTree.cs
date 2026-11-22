@@ -139,10 +139,10 @@ namespace Clover.Player.Trees
                 new ShapeDef { Name = "The Kiln",
                     Description = "The stance as it was: up to 1.2 seconds, and the first blow turned is answered at once by a pillar of fire under the attacker, 30 damage, 50 stagger and three Burn. For single blows.",
                     Spell = new SpellSpec { Seconds = 1.2f, Reach = 4f, Arc = 90f, Damage = 30f, Stagger = 50f, Stacks = 3 } },
-                // NEEDS: walking at half speed in the stance.
+                // Walking at half the pace in the stance (SpellSpec.Walk, read by the parry form).
                 new ShapeDef { Name = "Firewalker",
                     Description = "You can walk at half speed in the stance, but it holds only 0.6 seconds before the door opens. Walk into the swing.",
-                    Change = new SpellChange { Seconds = 0.6f } },
+                    Change = new SpellChange { Seconds = 0.6f, Walk = 0.5f } },
                 "Opens two shapes of Kiln Stance, chosen at any rest fire: The Kiln, the pillar for single blows, or Firewalker, a stance you walk in.",
                 new[]
                 {
@@ -199,11 +199,11 @@ namespace Clover.Player.Trees
                 BranchPattern.RightFoot));
 
             SpellBranch.Add(to, E, Upgrade.MeteorLeap, "Meteor Leap", SpellRole.Breaker, BranchPattern.MiddleB, Upgrade.Heat, SpellForms.Leap,
-                new SpellSpec { Reach = 9f, Seconds = 0.62f, Height = 3.4f, Damage = 46f, Stagger = 55f, Radius = 3.2f, LingerDamage = 5f, Stacks = 0 },
+                new SpellSpec { Reach = 9f, Seconds = 0.62f, Height = 3.4f, Damage = 46f, Stagger = 55f, Radius = 3.2f, LingerDamage = 5f, Stacks = 0, Lasts = 4f },
                 "You leap out of the fight and come down on the enemy faced as a falling stone, leaving a burning crater. 45 mana.",
                 UpgradeIcons.Comet,
-                // NEEDS: the crater burning 6 s (the leap's form keeps its crater's time).
-                new Empower { Mana = 35f },
+                // The crater burns 6 s, not the Learn's 4 (SpellSpec.Lasts, read by the leap's form).
+                new Empower { Mana = 35f, Lasts = 6f },
                 "Meteor Leap costs 35 mana, not 45, and its crater burns longer.",
                 new ShapeDef { Name = "Falling Star", Form = SpellForms.Bomb,
                     Description = "You do not leap. A burning stone falls on the aim point after a breath, its shadow growing under it, and you go on fighting. It breaks balance harder.",

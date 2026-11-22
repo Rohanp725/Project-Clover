@@ -63,12 +63,12 @@ namespace Clover.Player.Trees
                 } },
                 BranchPattern.MiddleFoot));
 
-            // NEEDS: the column hanging its enemy 1.0 s (1.3 s with the Empower); the pillars' lift is the form's own 0.8 s.
+            // The column hangs its enemy 1.0 s, 1.3 s with the Empower (SpellSpec.Lasts, read by the pillars' lift).
             SpellBranch.Add(to, E, LiftingWind, "Lifting Wind", SpellRole.Breaker, BranchPattern.MiddleA, RisingCut, SpellForms.Pillars,
-                new SpellSpec { Count = 1, Reach = 5f, Radius = 2f, Damage = 8f, Stagger = 40f, Stacks = 1, Delay = 0.35f },
+                new SpellSpec { Count = 1, Reach = 5f, Radius = 2f, Damage = 8f, Stagger = 40f, Stacks = 1, Delay = 0.35f, Lasts = 1f },
                 "A circle is drawn under the enemy faced, up to five metres away, and a column of wind rises from it: 8 damage and 40 stagger, and it goes into the air whatever its footing.",
                 UpgradeIcons.Tower,
-                new Empower { Cooldown = 7f, Seconds = 1.3f },
+                new Empower { Cooldown = 7f, Lasts = 1.3f },
                 "Lifting Wind waits 7 seconds, not 9, and its enemy hangs longer.",
                 // NEEDS: one column that wanders after enemies for 3 s. Until then two columns rise, under the two nearest.
                 new ShapeDef { Name = "Dust Devil",

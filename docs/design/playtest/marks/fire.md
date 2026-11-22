@@ -107,11 +107,9 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4).
 
-**The numbers.** 4 Shards, 45 mana (its Empower makes it 35). It finds the enemy you face within 9 metres and lands you 1 metre in front of it. If there is none, you land 5 metres ahead. The leap takes 0.62 seconds. The landing hits everything within 3.2 metres for 46 damage and 55 stagger. The crater burns for 4 seconds and deals 5 damage every half second.
+**The numbers.** 4 Shards, 45 mana (its Empower makes it 35). It finds the enemy you face within 9 metres and lands you 1 metre in front of it. If there is none, you land 5 metres ahead. The leap takes 0.62 seconds. The landing hits everything within 3.2 metres for 46 damage and 55 stagger. The crater burns for 4 seconds (6 with its Empower) and deals 5 damage every half second.
 
 **Works with.** Heat, which it comes after on the chart; Catching Fire; and its Master mark on an enemy with five Burn.
-
-**Not built yet.** The Empower's longer-lasting crater (6 seconds).
 
 **Example.** An archer stands behind two shield bearers. Leap over them and land on it.
 
@@ -201,11 +199,9 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Whenever you cast Kiln Stance, using the shape you picked.
 
-**The numbers.** 3 Shards. The Kiln: ready for 1.2 seconds. The pillar deals 30 damage, 50 stagger and three Burn. Firewalker: ready for 0.6 seconds.
+**The numbers.** 3 Shards. The Kiln: ready for 1.2 seconds. The pillar deals 30 damage, 50 stagger and three Burn. Firewalker: ready for 0.6 seconds, and you can walk at half speed while it lasts.
 
 **Works with.** Breath of the Lioness; Uraeus's Coiled shape.
-
-**Not built yet.** Walking at half speed in Firewalker (for now, it is the stance held for a shorter time).
 
 **Example.** Against a quick double cut, The Kiln answers the first one. Against a slow brute, Firewalker meets the swing.
 

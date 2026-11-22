@@ -86,11 +86,11 @@ the next blows on that enemy critical.
 
 **When it happens.** Whenever you cast Ring of Spears, using the shape you picked. If you have not bought this, you cast the plain ring.
 
-**The numbers.** 3 Shards. The Drawn Line: for now, the spears still drive in, then stand in the floor for 5 seconds in their ring 3 metres around the enemy. There are six spears, each 0.7 metres across. Once a second, they Mark and jolt whatever stands at them for 12 stagger. In Turn: six blades fall on the enemy one after another, each for 6 damage, 5 stagger and a Mark. For a second and a half after that, each weapon blow on it hits for one more spear's worth, 6 damage and 5 stagger, at most four times a second.
+**The numbers.** 3 Shards. The Drawn Line: for now, the spears still drive in, then stand in the floor for 5 seconds in their ring 3 metres around the enemy. There are six spears, each 0.7 metres across. Once a second, they Mark and jolt whatever stands at them for 12 stagger. In Turn: six blades fall on the enemy one after another, a quarter second apart, each for 6 damage, 5 stagger and a Mark. For a second and a half after that, each weapon blow on it hits for one more spear's worth, 6 damage and 5 stagger, at most four times a second.
 
 **Works with.** The Drawn Line: a doorway or a staircase, ranged weapons and spears that reach across it, the root mark (Marked enemies take critical hits). In Turn: fast weapons, Just Cut, the charged blade.
 
-**Not built yet.** The Drawn Line should be a straight line six metres across in front of you that holds anything crossing it for a second, without the spears driving into the enemy. In Turn should have a quarter second between spears (for now, they fall quickly one after another), and should check for a spear landing within a tenth of a second of your blow.
+**Not built yet.** The Drawn Line should be a straight line six metres across in front of you that holds anything crossing it for a second, without the spears driving into the enemy. In Turn should check for a spear landing within a tenth of a second of your blow.
 
 **Example.** Put The Drawn Line across a hallway. The pack comes on, each one is Marked as it reaches the spears, and every cut you make across them is a critical hit.
 

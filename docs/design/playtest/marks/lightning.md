@@ -166,11 +166,11 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button. Then it works on each perfect guard or perfect dodge until all three drums are beaten.
 
-**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again (its Empower makes it 8). There are three beats. Each is a bolt within 1.2 metres of the enemy, for 18 damage, 35 stagger and two Static. The screen shows how many drums are left.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again (its Empower makes it 8). There are three beats. Each is a bolt within 1.2 metres of the enemy, for 18 damage, 35 stagger and two Static. The ring lasts 8 seconds (10 with its Empower), and any drums not beaten by then are gone. The screen shows how many drums are left.
 
 **Works with.** Stored Charge, which it comes after on the chart; Thunderclap's Master mark; In One Breath.
 
-**Not built yet.** The ring should last 8 seconds (for now, the drums wait until they are beaten). The third beat should be a huge clap within 4 metres (30 damage, 60 stagger) that sets off all the Static in it.
+**Not built yet.** The third beat should be a huge clap within 4 metres (30 damage, 60 stagger) that sets off all the Static in it.
 
 **Example.** Cast it before the duellist's string of attacks. Three perfect guards drop three bolts on it.
 

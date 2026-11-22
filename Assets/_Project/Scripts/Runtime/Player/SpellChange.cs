@@ -26,11 +26,15 @@ namespace Clover.Player
         public float AfflictionSeconds;
         /// <summary>The blows a charge of the blade from the spell lasts (<see cref="SpellSpec.ChargeBlows"/>).</summary>
         public int ChargeBlows;
+        /// <summary>Seconds a form's lasting thing stands (<see cref="SpellSpec.Lasts"/>).</summary>
+        public float Lasts;
+        /// <summary>The share of the run's pace walked at while its stance holds (<see cref="SpellSpec.Walk"/>).</summary>
+        public float Walk;
 
         /// <summary>True when it changes nothing.</summary>
         public bool IsEmpty =>
             Cooldown == 0f && Mana == 0f && Damage == 0f && Stagger == 0f && Reach == 0f && Radius == 0f && Arc == 0f && Seconds == 0f
-            && Interval == 0f && Count == 0 && Stacks == 0 && Delay == 0f && Speed == 0f && LingerDamage == 0f && AfflictionSeconds == 0f && ChargeBlows == 0;
+            && Interval == 0f && Count == 0 && Stacks == 0 && Delay == 0f && Speed == 0f && LingerDamage == 0f && AfflictionSeconds == 0f && ChargeBlows == 0 && Lasts == 0f && Walk == 0f;
 
         /// <summary>
         /// Writes what it adds to <paramref name="learn"/>'s numbers onto <paramref name="spec"/>'s (an Empower over a shape that
@@ -59,6 +63,7 @@ namespace Clover.Player
             if (Speed > 0f) spec.Speed = System.Math.Max(0.1f, spec.Speed + Speed - learn.Speed);
             if (LingerDamage > 0f) spec.LingerDamage = System.Math.Max(0f, spec.LingerDamage + LingerDamage - learn.LingerDamage);
             if (AfflictionSeconds > 0f) spec.AfflictionSeconds = System.Math.Max(0f, spec.AfflictionSeconds + AfflictionSeconds - learn.AfflictionSeconds);
+            if (Lasts > 0f) spec.Lasts = System.Math.Max(0.05f, spec.Lasts + Lasts - learn.Lasts);
         }
 
         /// <summary>Puts back from <paramref name="before"/> every number this change sets (a shape keeping its own under an Empower).</summary>
@@ -78,6 +83,7 @@ namespace Clover.Player
             if (Speed > 0f) spec.Speed = before.Speed;
             if (LingerDamage > 0f) spec.LingerDamage = before.LingerDamage;
             if (AfflictionSeconds > 0f) spec.AfflictionSeconds = before.AfflictionSeconds;
+            if (Lasts > 0f) spec.Lasts = before.Lasts;
         }
 
         /// <summary>Writes every number it sets over <paramref name="spec"/>'s.</summary>
@@ -100,6 +106,8 @@ namespace Clover.Player
             if (LingerDamage > 0f) spec.LingerDamage = LingerDamage;
             if (AfflictionSeconds > 0f) spec.AfflictionSeconds = AfflictionSeconds;
             if (ChargeBlows > 0) spec.ChargeBlows = ChargeBlows;
+            if (Lasts > 0f) spec.Lasts = Lasts;
+            if (Walk > 0f) spec.Walk = Walk;
         }
 
         /// <summary>Copies every number of one spec into another (no allocation): how a spell's own numbers are taken before changes are laid over them.</summary>
@@ -138,6 +146,10 @@ namespace Clover.Player
             into.ChargeBlows = from.ChargeBlows;
             into.HealthScaled = from.HealthScaled;
             into.HealthShare = from.HealthShare;
+            into.Lasts = from.Lasts;
+            into.Between = from.Between;
+            into.Glow = from.Glow;
+            into.Walk = from.Walk;
         }
     }
 

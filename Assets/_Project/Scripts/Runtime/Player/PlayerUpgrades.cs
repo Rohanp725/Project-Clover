@@ -440,6 +440,8 @@ namespace Clover.Player
         // The counts marks keep, by the mark's place in the catalogue, and which of the marks in force keep one.
         private int[] tally = new int[0];
         private readonly List<int> tallied = new List<int>(8);
+        // When a count banked for a time empties by itself (Ring of Drums: the drums go with the ring); 0 for never.
+        private float[] tallyEnds = new float[0];
         private bool tallyDirty;
         private bool hasRoot;
         private Upgrade castSource;
@@ -516,6 +518,7 @@ namespace Clover.Player
             readyAt = new float[Upgrade.EffectCount];
             sinceLast = new float[Upgrade.EffectCount];
             tally = new int[catalogue.Count];
+            tallyEnds = new float[catalogue.Count];
             if (player != null && basesRead) Refresh(true);
         }
 
@@ -961,6 +964,25 @@ namespace Clover.Player
         }
 
         // The counts are few and change seldom: their words and what they add to the stats are made again when one moves.
+        // A count banked for a time empties once its time is up (the ring stands its time and takes its drums with it).
+        private void EmptyTimedTallies(float now)
+        {
+            bool emptied = false;
+            for (int i = 0; i < tallied.Count; i++)
+            {
+                int index = tallied[i];
+                if (index >= tallyEnds.Length || !TallyRunsOut(tallyEnds[index], now)) continue;
+                tallyEnds[index] = 0f;
+                if (tally[index] == 0) continue;
+                tally[index] = 0;
+                emptied = true;
+            }
+            if (emptied) ApplyTallies();
+        }
+
+        /// <summary>True when a count banked to empty at <paramref name="endsAt"/> (0: never) has run out at <paramref name="now"/>.</summary>
+        public static bool TallyRunsOut(float endsAt, float now) => endsAt > 0f && now >= endsAt;
+
         private void ApplyTallies()
         {
             tallyDirty = false;
@@ -1124,6 +1146,7 @@ namespace Clover.Player
                 combat.Combo.SkillCostScale = !hasAnswer ? 1f : answering ? 0f : AnswerDearer;
                 combat.Combo.SkillAtOnce = answering;
             }
+            EmptyTimedTallies(Time.time);
             if (hasLeaf && leafIndex >= 0 && leafIndex < tally.Length && tally[leafIndex] < 3)
             {
                 leafClock += Time.deltaTime;
@@ -2276,6 +2299,8 @@ namespace Clover.Player
                     var owner = effect.Owner;
                     if (owner == null || owner.Tally == null || owner.Index >= tally.Length) break;
                     int now = Mathf.Min(owner.Tally.Cap, tally[owner.Index] + Or(eCount, 1));
+                    // Banked for a time: the count stands that long from this banking, then empties.
+                    if (effect.Seconds > 0f && owner.Index < tallyEnds.Length) tallyEnds[owner.Index] = Time.time + effect.Seconds;
                     if (now == tally[owner.Index]) break;
                     tally[owner.Index] = now;
                     tallyDirty = true;
