@@ -32,8 +32,8 @@ namespace Clover.Player.Trees.Duo
         {
             const string A = Elements.Wind, B = Elements.Earth;
 
-            // NEEDS: a cone that leaves an enemy's far side (cone-from-enemy): Sandblast's grit, 5 m long and 60 degrees wide;
-            // now three bursts on the line beyond it. Ground that acts on whoever walks in later (ground-states): Drifted Over's
+            // Sandblast's grit leaves its far side as a cone 5 m long and 60 degrees wide (UpgradeAction.Pieces, PieceAim.FarCone).
+            // NEEDS: ground that acts on whoever walks in later (ground-states): Drifted Over's
             // sand slowing those who wade in after the fall; now those within 2 m as it falls.
             to.Add(HeartPattern.Put(new Upgrade
             {
@@ -47,8 +47,8 @@ namespace Clover.Player.Trees.Duo
                         Description = "It rocks as before and your third blow throws it down. The dust of the fall is thrown on away from you as stinging grit: 6, 15 stagger and an Unsteady to each enemy behind it, so one already shaken may begin to rock in turn.",
                         Effects = Rock(Sandblast, 1.8f, new[]
                         {
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Sandblast + ".rocking", By = StruckBy.Weapon, AtCount = 3, Ranks = EnemyRank.Plain, Do = UpgradeAction.Burst, Shape = HazardShape.Downwind, Count = 3,
-                                Reach = 2.5f, Amount = 1.4f, Radius = 1f, Damage = 6f, Stagger = 15f, Affliction = AfflictionKind.Unsteady, Stacks = 1, Cascades = true },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Sandblast + ".rocking", By = StruckBy.Weapon, AtCount = 3, Ranks = EnemyRank.Plain, Do = UpgradeAction.Pieces, Thrown = PieceAim.FarCone,
+                                Reach = 5f, Arc = 60f, Damage = 6f, Stagger = 15f, Affliction = AfflictionKind.Unsteady, Stacks = 1, Cascades = true },
                         }),
                     },
                     new ShapeDef

@@ -35,7 +35,7 @@ Wind are both carried.
 
 **When it happens.** Each time Golden Feathers goes off.
 
-**The numbers.** Mix, a minor mark, 1 Shard. Four feathers fly instead of three, and the farthest one lands 9 metres past the enemy.
+**The numbers.** Mix, a minor mark, 1 Shard. Four feathers fly instead of three, and they ride 9 metres instead of 6.
 
 **Works with.** Golden Feathers, Bane of Serpents.
 

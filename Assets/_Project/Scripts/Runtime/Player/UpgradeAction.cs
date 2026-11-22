@@ -276,5 +276,11 @@ namespace Clover.Player
         Raise,
         /// <summary>Breaks the standing thing of its own mark nearest where the moment was (Raised Stone shattered by a heavy blow).</summary>
         BreakStanding,
+        /// <summary>
+        /// Pieces thrown out of the enemy the moment names, each its own striker that ends at the first it strikes and never
+        /// strikes the enemy it left (UpgradeEffect.Thrown: a fan of Count over Arc, a ring, one at each of the Count nearest
+        /// others within Reach, or a cone Reach long and Arc wide out of its far side). Each lays BitesLay as well.
+        /// </summary>
+        Pieces,
     }
 }

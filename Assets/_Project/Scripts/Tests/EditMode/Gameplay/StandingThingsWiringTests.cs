@@ -132,5 +132,40 @@ namespace Clover.Tests
             Assert.IsFalse(StandingThings.NearKind(new Vector3(3f, 0f, 0f), 2f, StandingKind.RimedMound));
             Assert.IsFalse(StandingThings.NearKind(Vector3.zero, 2f, StandingKind.AnvilStone), "a mound, not any stone");
         }
+
+        [Test]
+        public void PiecesLeaveAnEnemyInAFanARingOrAtTheNearest()
+        {
+            var ways = new Vector3[12];
+            Assert.AreEqual(3, PieceRules.Ways(PieceAim.Fan, Vector3.forward, 3, 40f, ways));
+            Assert.AreEqual(20f, Vector3.Angle(ways[0], Vector3.forward), 0.01f, "a fan forty degrees across");
+            Assert.AreEqual(0f, Vector3.Angle(ways[1], Vector3.forward), 0.01f);
+            Assert.AreEqual(5, PieceRules.Ways(PieceAim.Ring, Vector3.forward, 5, 0f, ways));
+            Assert.AreEqual(72f, Vector3.Angle(ways[0], ways[1]), 0.01f, "five blades all round");
+            Assert.AreEqual(Vector3.right, PieceRules.Downwind(Vector3.forward, Vector3.right, 9f, 10f), "the way it was last shoved");
+            Assert.AreEqual(Vector3.forward, PieceRules.Downwind(Vector3.forward, Vector3.right, 1f, 10f), "a shove long past: away from you");
+            var feathers = Upgrade.ById(AfflictionPairs.Id(AfflictionPairs.Index(AfflictionKind.Marked, AfflictionKind.Unsteady))).Effects.Single();
+            Assert.AreEqual(UpgradeAction.Pieces, feathers.Do);
+            Assert.AreEqual(PieceAim.Fan, feathers.Thrown);
+            Assert.AreEqual(3, feathers.Count);
+            Assert.AreEqual(40f, feathers.Arc, 1e-5f);
+            Assert.AreEqual(AfflictionKind.Unsteady, feathers.BitesLay, "a Mark and an Unsteady on the first each touches");
+            var scale = Upgrade.ById(ForgeTree.Shape).Shapes.Single(each => each.Name == "Hammer Scale").Effects.Single();
+            Assert.AreEqual(PieceAim.AtNearest, scale.Thrown);
+            Assert.AreEqual(4, scale.Count, "four flakes, each its own");
+            var harvest = Upgrade.ById(Clover.Player.Trees.Duo.IronThornsDuo.Shape).Shapes.Single(each => each.Name == "Iron Harvest").Effects.Where(each => each.Do == UpgradeAction.Pieces).ToArray();
+            Assert.AreEqual(2, harvest.Length, "as it dies or as the 6 s end");
+            Assert.IsTrue(harvest.All(each => each.Thrown == PieceAim.Ring && each.Count == 5));
+            var hail = Upgrade.ById(Clover.Player.Trees.Duo.SleetChargeDuo.ChargedHail).Effects.Single();
+            Assert.AreEqual(UpgradeAction.Pieces, hail.Do, "the shatter's own shards");
+            Assert.AreEqual(AfflictionKind.Static, hail.Affliction);
+            var prism = Upgrade.ById(Clover.Player.Trees.Duo.MockSunsDuo.Shape).Shapes.Single(each => each.Name == "Prism").Effects.Single(each => each.Do == UpgradeAction.Pieces);
+            Assert.AreEqual(PieceAim.FarCone, prism.Thrown);
+            Assert.AreEqual(6f, prism.Reach, 1e-5f);
+            Assert.AreEqual(30f, prism.Arc, 1e-5f);
+            var sand = Upgrade.ById(Clover.Player.Trees.Duo.LoganStoneDuo.Shape).Shapes.Single(each => each.Name == "Sandblast").Effects.Single(each => each.Do == UpgradeAction.Pieces);
+            Assert.AreEqual(PieceAim.FarCone, sand.Thrown);
+            Assert.AreEqual(60f, sand.Arc, 1e-5f);
+        }
     }
 }

@@ -23,13 +23,11 @@ both are carried (in the playtest, whenever you pick Ice beside Lightning or Lig
 
 **When it happens.** Whenever a frozen enemy with Static shatters (from a heavy blow or a finisher on a frozen enemy).
 
-**The numbers.** Mix, 3 Shards. A Static on everything within 3 metres of the shattered enemy, at most five times a second.
+**The numbers.** Mix, 3 Shards. Six ice shards fly out of the shattered enemy, evenly all around, 3 metres each. Each shard that hits an enemy gives it a Static and stops. At most five times a second.
 
 **Works with.** Glass Spear (it freezes a charged enemy for you to shatter), Glass Storm, Nothing Resists, and Sleet Charge on whatever the shards chilled.
 
 **Example.** Freeze a charged soldier and shatter it in a pack. The three around it are charged, and the chilled ones start their own Sleet Charge.
-
-**Not built yet.** For now, the charge goes in a ring around the shattered enemy, instead of from each shard that hits.
 
 ## sleetcharge.snap
 **What it does.** A perfect guard against an enemy with a Sleet Charge running makes the charge go off right away, with full Static.

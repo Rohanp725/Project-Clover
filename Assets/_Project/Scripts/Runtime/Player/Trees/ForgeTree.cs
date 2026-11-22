@@ -28,7 +28,7 @@ namespace Clover.Player.Trees
             // Laid as stacks, more than any affliction holds: "to full depth", whatever the depth is.
             const int ToFull = 99;
 
-            // NEEDS: flakes thrown as pieces at the four nearest enemies (Hammer Scale; now an arc from it through four).
+            // Hammer Scale's flakes are pieces of their own, one at each of the four nearest enemies (UpgradeAction.Pieces).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Anvil Stone: Ringing Iron or Hammer Scale", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -51,8 +51,8 @@ namespace Clover.Player.Trees
                         Description = "No ring: flakes of glowing scale fly from it at the nearest enemies within 6 m, up to four, 8, a notch and a Tremor each.",
                         Effects = new[]
                         {
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Arc, FromTarget = true, Count = 4, Reach = 6f, Damage = 8f, Affliction = Notch, Stacks = 1 },
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Arc, FromTarget = true, Count = 4, Reach = 6f, Affliction = Tremor, Stacks = 1 },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Pieces, Thrown = PieceAim.AtNearest, Count = 4, Reach = 6f, Speed = 14f, Radius = 0.5f, Damage = 8f,
+                                Affliction = Notch, Stacks = 1, BitesLay = Tremor },
                         },
                     },
                 },

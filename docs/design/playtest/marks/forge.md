@@ -9,13 +9,11 @@ carried. Its reaction is Anvil Stone; its Shape mark lets you choose what Anvil 
 
 **When it happens.** Every time Anvil Stone goes off while you carry both Earth and Metal. Anvil Stone goes off when Sundered lands on a shaken enemy, or when Tremor lands on a notched one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Anvil Stone. The plain one puts a stone behind the enemy for 5 seconds, and your next heavy blow smashes the enemy into it.
 
-**The numbers.** Mix, 3 Shards. Ringing Iron: the enemy's Sundered fills all the way right away, and a ring of sparks 3 metres around it deals 10 damage, 15 stagger and a notch to each enemy. Hammer Scale: up to four enemies, each within 6 metres of the last one, take 8 damage, a notch and a Tremor. After Anvil Stone goes off on an enemy, it can't go off on that enemy again for 4 seconds.
+**The numbers.** Mix, 3 Shards. Ringing Iron: the enemy's Sundered fills all the way right away, and a ring of sparks 3 metres around it deals 10 damage, 15 stagger and a notch to each enemy. Hammer Scale: a glowing flake flies at each of the four nearest other enemies within 6 metres, turning after it, and deals 8 damage, a notch and a Tremor to the first enemy it hits. After Anvil Stone goes off on an enemy, it can't go off on that enemy again for 4 seconds.
 
 **Works with.** Buckled (shaken, notched enemies lose their balance sooner), Hammer and Anvil, and Stone Rise and Flung Blade to set it up.
 
 **Example.** No time for a heavy blow: Ringing Iron breaks the enemy's armour the moment the two afflictions meet. A spread-out pack: Hammer Scale notches four at once.
-
-**Not built yet.** Hammer Scale's flakes should jump from one enemy to the next in an arc, instead of flying at each one.
 
 ## forge.hammeranvil
 **What it does.** A heavy blow on an enemy with stone at its back hits twice: once from your weapon, and once more a moment later as the stone answers. Heavy blows also add Tremor and Sundered together, no matter which of the two elements is your first.

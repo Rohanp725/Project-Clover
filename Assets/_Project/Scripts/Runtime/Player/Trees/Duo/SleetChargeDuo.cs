@@ -74,15 +74,14 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.Foot));
 
-            // NEEDS: a shatter's own shards as the strikers (each shard that strikes lays a Static); now a ring of Static
-            // round the shattered enemy, 3 m.
+            // The shatter's own shards are the strikers: six fly out 3 m, and each that strikes lays a Static (UpgradeAction.Pieces).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = ChargedHail, Name = "Charged Hail", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Burst,
                 Description = "Shattering an enemy that carried Static throws its charge into the shards: everything the shards strike within 3 m takes a Static.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.Shatter, Needs = AfflictionKind.Static, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Static, Stacks = 1, Radius = 3f, Cooldown = 0.2f },
+                    new UpgradeEffect { On = UpgradeTrigger.Shatter, Needs = AfflictionKind.Static, Do = UpgradeAction.Pieces, Thrown = PieceAim.Ring, Count = 6, Reach = 3f, Speed = 12f, Radius = 0.5f, Damage = 0f, Affliction = AfflictionKind.Static, Stacks = 1, Cooldown = 0.2f },
                 },
             }, HeartPattern.LeftLow));
 

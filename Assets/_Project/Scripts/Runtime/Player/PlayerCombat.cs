@@ -1160,6 +1160,38 @@ namespace Clover.Player
         }
 
         /// <summary>
+        /// Strikes everything in a cone from a point other than the player (out of an enemy's far side): <paramref name="reach"/>
+        /// long and <paramref name="arcDegrees"/> wide along <paramref name="direction"/>, leaving <paramref name="except"/>
+        /// alone (the enemy it leaves). Returns how many it hit.
+        /// </summary>
+        public int StrikeConeFrom(Vector3 from, Vector3 direction, float reach, float arcDegrees, in SpellBlow blow, IDamageable except = null)
+        {
+            if (upgrades != null) upgrades.SpellFrom = from;
+            spellStruck.Clear();
+            direction.y = 0f;
+            if (direction.sqrMagnitude < 0.0001f) return 0;
+            direction.Normalize();
+            Vector3 origin = from + Vector3.up;
+            int count = Overlap(origin, reach);
+            for (int i = 0; i < count; i++)
+            {
+                var other = overlaps[i];
+                if (other.transform.root == transform.root) continue;
+                var target = other.GetComponentInParent<IDamageable>();
+                if (target == null || target == except || spellStruck.Contains(target)) continue;
+                Vector3 offset = other.ClosestPoint(origin) - origin;
+                offset.y = 0f;
+                if (offset.magnitude < 0.05f || Vector3.Angle(direction, offset) > arcDegrees * 0.5f) continue;
+                bool wasAfflicted = target is IAfflictable afflictable && afflictable.Afflictions.Any;
+                var outcome = target.TakeHit(Make(blow, target, direction, from));
+                if (outcome == HitOutcome.Missed) continue;
+                spellStruck.Add(target);
+                Landed(blow, target, other, direction, wasAfflicted);
+            }
+            return spellStruck.Count;
+        }
+
+        /// <summary>
         /// Strikes everything standing in a circle on the ground: what a burst, a crater or a patch of fire does. Given a
         /// list, it leaves alone whoever is already on it and adds whoever it strikes, so a lasting effect can bite each
         /// enemy once only. Returns how many it hit.

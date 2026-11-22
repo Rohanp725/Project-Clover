@@ -25,8 +25,8 @@ namespace Clover.Player.Trees.Duo
         {
             const string A = Elements.Ice, B = Elements.Light;
 
-            // NEEDS: cone-from-enemy (Prism's fan of three rays out of its far side, 6 m and 30 degrees; now three bursts on
-            // your line beyond it); freeze-moment (Lens of Ice's Mark kept only while it is Frozen and its shatter 60% harder;
+            // Prism's rays leave its far side as a cone 6 m long and 30 degrees wide (UpgradeAction.Pieces, PieceAim.FarCone).
+            // NEEDS: freeze-moment (Lens of Ice's Mark kept only while it is Frozen and its shatter 60% harder;
             // now kept while it is chilled and Marked, and a heavy blow on it at full Chill strikes 18 more and throws its Mark).
             to.Add(HeartPattern.Put(new Upgrade
             {
@@ -41,10 +41,8 @@ namespace Clover.Player.Trees.Duo
                         Effects = new[]
                         {
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Prism, Seconds = 4f, Keeps = AfflictionKind.Marked, EndsWith = ConditionBlow.Weapon } },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Prism, By = StruckBy.Weapon, Do = UpgradeAction.Burst, Shape = HazardShape.Downwind, Count = 3, Reach = 3f,
-                                Amount = 1.5f, Radius = 0.8f, Damage = 8f, Affliction = AfflictionKind.Marked, Stacks = 1 },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Prism, By = StruckBy.Weapon, Do = UpgradeAction.Burst, Shape = HazardShape.Downwind, Count = 3, Reach = 3f,
-                                Amount = 1.5f, Radius = 0.8f, Affliction = AfflictionKind.Chill, Stacks = 1 },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Prism, By = StruckBy.Weapon, Do = UpgradeAction.Pieces, Thrown = PieceAim.FarCone, Reach = 6f, Arc = 30f,
+                                Damage = 8f, Affliction = AfflictionKind.Marked, Stacks = 1, BitesLay = AfflictionKind.Chill },
                         },
                     },
                     new ShapeDef
@@ -86,8 +84,8 @@ namespace Clover.Player.Trees.Duo
                 {
                     new ReactionChange { Shape = -1, Index = 0, ConditionSeconds = 6f },
                     new ReactionChange { Shape = 0, Index = 0, ConditionSeconds = 6f },
-                    new ReactionChange { Shape = 0, Index = 1, Count = 5, Reach = 4f },
-                    new ReactionChange { Shape = 0, Index = 2, Count = 5, Reach = 4f },
+                    // Prism's cone of rays out of the far side: 8 m long and wide enough for five rays (50 degrees).
+                    new ReactionChange { Shape = 0, Index = 1, Reach = 8f, Arc = 50f },
                 },
             }, HeartPattern.RightLow));
 

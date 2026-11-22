@@ -332,6 +332,8 @@ namespace Clover.Player
         public float StoneAtBack;
         /// <summary>Above zero: only while you stand within this many metres of a standing thing of the kind <see cref="Raises"/> names (Frozen Footing: a mound).</summary>
         public float NearStanding;
+        /// <summary>For Pieces: how they leave the enemy (a fan away from you, a ring, each at a nearest other, or a cone out of its far side).</summary>
+        public PieceAim Thrown;
 
         /// <summary>A copy with every number, its slot and its mark (an Empower's twin of its Learn's effect).</summary>
         internal UpgradeEffect Twin() => (UpgradeEffect)MemberwiseClone();

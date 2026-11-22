@@ -581,7 +581,13 @@ namespace Clover.World
                 {
                     zone.UntilBite = zone.Spec.BiteEvery;
                     int hits = owner.StrikeArea(zone.Position, zone.Spec.Radius, zone.Spec.Blow, LeftAlone(i, zone));
-                    if (zone.Spec.AlsoLays != AfflictionKind.None) owner.AfflictArea(zone.Position, zone.Spec.Radius, zone.Spec.AlsoLays, 1);
+                    if (zone.Spec.AlsoLays != AfflictionKind.None && (!zone.Spec.StopsAtFirst || hits > 0)) owner.AfflictArea(zone.Position, zone.Spec.Radius, zone.Spec.AlsoLays, 1);
+                    if (zone.Spec.StopsAtFirst && hits > 0)
+                    {
+                        zone.Active = false;
+                        Spent(zone);
+                        continue;
+                    }
                     // What the player's marks make every grown thing lay with its bites (Ore in the Root, Hidden in the Tree).
                     if (zone.Spec.Grown && GrownBitesMask != 0 && hits > 0)
                         for (int k = 1; k < 32; k++)

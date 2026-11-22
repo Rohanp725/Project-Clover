@@ -264,6 +264,13 @@ namespace Clover.Player
         private readonly HashSet<IDamageable> fanTaken = new HashSet<IDamageable>();
         // Cherry Red's fan: the enemies already given a blade, or passed over, this throw; and where each blade called home stood.
         private readonly HashSet<IDamageable> plantExcept = new HashSet<IDamageable>();
+        // Thrown pieces: the enemies already aimed at, and the ways a fan or ring leaves.
+        private readonly HashSet<IDamageable> pieceExcept = new HashSet<IDamageable>();
+        private readonly Vector3[] pieceWays = new Vector3[12];
+
+        /// <summary>Pieces thrown out of enemies (feathers, flakes, blades, shards) and far-side cones: for probes.</summary>
+        public int PiecesThrown { get; private set; }
+
         // The enemy a walking helper rose from: it goes to another.
         private readonly HashSet<IDamageable> helperExcept = new HashSet<IDamageable>();
         private readonly Vector3[] bladePlaces = new Vector3[PlantedBlades.Most];
@@ -2093,6 +2100,69 @@ namespace Clover.Player
                         standingMark = null;
                     }
                     StepsToStanding++;
+                    break;
+                }
+                case UpgradeAction.Pieces:
+                {
+                    Vector3 from = target != null ? target.position : centre;
+                    from.y = self.y;
+                    Vector3 away = from - self;
+                    away.y = 0f;
+                    away = away.sqrMagnitude > 0.01f ? away.normalized : transform.forward;
+                    var left = target != null ? target.GetComponentInParent<IDamageable>() : null;
+                    var pieceBlow = Blow(look, kind, eDamage, eStagger, eStacks);
+                    float reach = Or(effect.Reach, 6f);
+                    if (effect.Thrown == PieceAim.FarCone)
+                    {
+                        int crossed = combat.StrikeConeFrom(from, away, reach, Or(effect.Arc, 60f), pieceBlow, left);
+                        // The second affliction it lays, on the same cone (a Mark and a Chill from Prism's rays).
+                        if (effect.BitesLay != AfflictionKind.None && crossed > 0)
+                            combat.StrikeConeFrom(from, away, reach, Or(effect.Arc, 60f), Blow(lookOf[(int)effect.BitesLay] ?? look, effect.BitesLay, 0f, 0f, 1), left);
+                        for (int i = 0; i < 3; i++) ElementLook.Sparks(look, from + Vector3.up, Quaternion.Euler(0f, (i - 1) * Or(effect.Arc, 60f) * 0.35f, 0f) * away, 1f);
+                        PiecesThrown++;
+                        break;
+                    }
+                    float speed = Or(effect.Speed, 12f);
+                    var piece = new HazardSpec
+                    {
+                        Kind = ElementLook.Ground(look), Tint = look.Colour, Radius = Or(effect.Radius, 0.6f), Seconds = reach / speed, BiteEvery = 0.05f, Once = true,
+                        StopsAtFirst = true, Spares = left, Blow = pieceBlow, AlsoLays = effect.BitesLay, FromReaction = laying == LaySource.Reaction,
+                    };
+                    int pieces = Or(eCount, 3);
+                    if (effect.Thrown == PieceAim.AtNearest)
+                    {
+                        pieceExcept.Clear();
+                        if (left != null) pieceExcept.Add(left);
+                        for (int i = 0; i < pieces; i++)
+                        {
+                            var next = combat.EnemyNear(from, reach, pieceExcept);
+                            if (!(next is IDamageable aimed)) break;
+                            pieceExcept.Add(aimed);
+                            Vector3 way = next.transform.position - from;
+                            way.y = 0f;
+                            way = way.sqrMagnitude > 0.01f ? way.normalized : away;
+                            piece.Flight = Flight.Homing;
+                            piece.Target = next.transform;
+                            piece.Seconds = (reach + 2f) / speed;
+                            piece.Position = from + way * 0.6f;
+                            piece.Velocity = way * speed;
+                            Hazards.Lay(piece);
+                            PiecesThrown++;
+                        }
+                        pieceExcept.Clear();
+                        break;
+                    }
+                    // A fan rides the way its enemy was last shoved, if lately (downwind), else away from you.
+                    if (effect.Thrown == PieceAim.Fan && target != null && target.GetComponentInParent<Enemy>() is Enemy shoved)
+                        away = PieceRules.Downwind(away, shoved.LastShoveWay, shoved.LastShovedAt, Time.time);
+                    int made = PieceRules.Ways(effect.Thrown, away, pieces, Or(effect.Arc, 40f), pieceWays);
+                    for (int i = 0; i < made; i++)
+                    {
+                        piece.Position = from + pieceWays[i] * 0.6f;
+                        piece.Velocity = pieceWays[i] * speed;
+                        Hazards.Lay(piece);
+                        PiecesThrown++;
+                    }
                     break;
                 }
                 case UpgradeAction.Raise:

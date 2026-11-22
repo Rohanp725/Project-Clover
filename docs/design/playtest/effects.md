@@ -1229,7 +1229,7 @@ Title: Golden Feathers (Light and Wind)
 Group: Reactions
 **What it is.** Marked meets Unsteady. The enemy's Mark breaks into golden feathers that ride the wind.
 
-**The numbers.** Three feathers fly 6 metres past the enemy, away from you. Each one Marks whatever it touches and makes it Unsteady. The first enemy keeps its Mark. Then it waits 4 seconds.
+**The numbers.** Three feathers fly 6 metres from the enemy in a fan 40 degrees wide. They ride the way the enemy was last pushed, if that was in the last 3 seconds, or else straight away from you. Each feather stops at the first enemy it touches, Marks it and makes it Unsteady; it never hits the enemy it came from. The first enemy keeps its Mark. Then it waits 4 seconds.
 
 **What sets it off.** A Mark landing on an Unsteady enemy, or Unsteady landing on a Marked one.
 

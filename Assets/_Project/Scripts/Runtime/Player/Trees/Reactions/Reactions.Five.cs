@@ -103,17 +103,13 @@ namespace Clover.Player.Trees
                 new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = IronLive, By = StruckBy.Weapon, Cooldown = 0.3f, Do = UpgradeAction.Arc,
                     LeapsTo = AfflictionKind.Sundered, Count = 2, Reach = 8f, Amount = 0.35f, Affliction = AfflictionKind.Sundered, Stacks = 1 }));
 
-            // Light and Wind (53). Three golden feathers ride 6 m downwind (away from the player), each Marking and laying
-            // one Unsteady on what it touches. The first enemy keeps its Mark. Three bursts on the player's line beyond it
-            // stand in for the feathers.
-            // NEEDS: things thrown from an enemy: a fan of three feathers across 40 degrees, each stopping at the first it
-            // touches; and the direction it was last shoved, which the feathers ride before the player's line.
+            // Light and Wind (53). Three golden feathers ride 6 m downwind (the way it was last shoved, if lately, else away from
+            // the player) in a fan across 40 degrees, each stopping at the first it touches, Marking it and laying one Unsteady
+            // (UpgradeAction.Pieces). The first enemy keeps its Mark.
             to.Add(Reaction(AfflictionKind.Marked, AfflictionKind.Unsteady,
-                "Marked meets Unsteady: its mark breaks into three golden feathers that ride the wind 6 m away from you, Marking what they touch and making it Unsteady.",
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Burst, Shape = HazardShape.Downwind, Count = 3, Reach = 3.5f, Amount = 1.4f, Radius = 0.7f, Delay = 0.3f,
-                    Affliction = AfflictionKind.Marked, Stacks = 1 },
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Burst, Shape = HazardShape.Downwind, Count = 3, Reach = 3.5f, Amount = 1.4f, Radius = 0.7f, Delay = 0.3f,
-                    Affliction = AfflictionKind.Unsteady, Stacks = 1 }));
+                "Marked meets Unsteady: its mark breaks into three golden feathers that ride the wind 6 m, each Marking the first enemy it touches and making it Unsteady.",
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Pieces, Thrown = PieceAim.Fan, Count = 3, Arc = 40f, Reach = 6f, Speed = 10f, Radius = 0.7f,
+                    Affliction = AfflictionKind.Marked, Stacks = 1, BitesLay = AfflictionKind.Unsteady }));
 
             // Dark and Ice (54), rest 6 s. While both last its Chill does not fade, and each weapon blow on it draws warmth
             // out: one Chill on it, and 2 health to the player (8 a second at most; a god gives half).

@@ -787,6 +787,10 @@ namespace Clover.Gameplay
         public float Weight => Kind != null ? Kind.Weight : 1f;
 
         /// <summary>A pull or a push from outside a blow. The great are moved less.</summary>
+        /// <summary>The way it was last shoved, and when (what it carries rides that way: Golden Feathers downwind).</summary>
+        public Vector3 LastShoveWay { get; private set; }
+        public float LastShovedAt => lastShoveMoment;
+
         public void Push(Vector3 impulse)
         {
             if (IsDead) return;
@@ -796,6 +800,7 @@ namespace Clover.Gameplay
             if (ShoveRules.IsMoment(impulse.magnitude, Time.time, lastShoveMoment))
             {
                 lastShoveMoment = Time.time;
+                LastShoveWay = impulse.normalized;
                 Afflictions.Conditions.Shoved();
             }
         }

@@ -79,8 +79,8 @@ namespace Clover.Player.Trees.Duo
                 Description = "Golden Feathers' feathers fly 9 m, four of them.",
                 ReactionChanges = new[]
                 {
-                    new ReactionChange { Shape = -1, Index = 0, Count = 4, Reach = 5.7f, Amount = 2.2f },
-                    new ReactionChange { Shape = -1, Index = 1, Count = 4, Reach = 5.7f, Amount = 2.2f },
+                    // The fan of feathers thrown from it (UpgradeAction.Pieces): four, riding 9 m.
+                    new ReactionChange { Shape = -1, Index = 0, Count = 4, Reach = 9f },
                 },
             }, HeartPattern.RightLow));
 

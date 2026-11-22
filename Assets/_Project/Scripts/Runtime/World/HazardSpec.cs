@@ -64,5 +64,7 @@ namespace Clover.World
         /// nothing on the way, and then keeps to it and bites (The Drops Quicken's rime creature, risen where an enemy fell).
         /// </summary>
         public float WalksTo;
+        /// <summary>A thrown piece: it ends at the first it strikes (a feather, a flake, a shard), and lays AlsoLays only on what it struck.</summary>
+        public bool StopsAtFirst;
     }
 }
