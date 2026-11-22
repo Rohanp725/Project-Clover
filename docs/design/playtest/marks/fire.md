@@ -116,11 +116,11 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Whenever you cast Meteor Leap, using the shape you picked.
 
-**The numbers.** 3 Shards. Falling Star: it falls 0.8 seconds after you cast it, within 9 metres. It deals 46 damage, 60 stagger and a stack of Burn within 3.2 metres, and leaves a burning patch for 4 seconds. Ash Fall: ash covers 3 metres around where you land for 5 seconds. Every second, it deals a Burn and 2 damage to everything in it. Enemies the landing hits can't get their balance back for those 5 seconds.
+**The numbers.** 3 Shards. Falling Star: it falls 0.8 seconds after you cast it, within 9 metres. It deals 46 damage, 60 stagger and a stack of Burn within 3.2 metres, and leaves a burning patch for 4 seconds. Ash Fall: ash covers 3 metres around where you land for 5 seconds. Every second, it deals a Burn and 2 damage to everything in it. Enemies the landing hits can't get their balance back for those 5 seconds, and an enemy that walks into the ash later can't either, for as long as it stands in it.
 
 **Works with.** Cinder and Catching Fire (Ash Fall in a crowd). Kiln Stance and Breath of the Lioness (Falling Star while you hold your ground).
 
-**Not built yet.** Falling Star's own stone and growing shadow (for now, it uses the thrown ball). An enemy that walks into Ash Fall's ash later doesn't yet lose its balance recovery.
+**Not built yet.** Falling Star's own stone and growing shadow (for now, it uses the thrown ball).
 
 **Example.** Hold the line with your guard, and call the stone down on the brute behind it.
 

@@ -228,5 +228,27 @@ namespace Clover.Tests
             Assert.IsTrue(mountain.Any(each => each.Do == UpgradeAction.DrawPickups));
             Assert.IsTrue(mountain.Any(each => each.Do == UpgradeAction.Heal && each.SpentAtLeast == 1), "each drawn one heals twice");
         }
+
+        [Test]
+        public void GroundKeepsActingOnWhoeverStandsInIt()
+        {
+            Assert.AreEqual(1.5f * 0.25f * 1.5f, GroundRules.PullStep(1.5f, 0.25f), 1e-5f, "a pull of 1.5 m a second, a bite every quarter second");
+            Assert.AreEqual(2f, GroundRules.MendStep(2f, 1f), 1e-5f, "2 health a second, a bite a second");
+            Assert.AreEqual(1.25f, GroundRules.StateSeconds(1f), 1e-5f, "held a little past the next bite, so it lasts while they stay");
+            Assert.IsTrue(GroundRules.Within(new Vector3(1.4f, 0f, 0f), Vector3.zero, 1.5f));
+            Assert.IsFalse(GroundRules.Within(new Vector3(1.6f, 0f, 0f), Vector3.zero, 1.5f));
+            var ash = Upgrade.ById(SpellBranch.ShapeId(Upgrade.MeteorLeap)).Shapes.Single(each => each.Name == "Ash Fall").Effects.Single(each => each.Do == UpgradeAction.Hazard);
+            Assert.IsNotNull(ash.Inside, "an enemy that walks into the ash later is held too");
+            Assert.AreNotEqual(0, (int)(ash.Inside.Flags & ConditionFlags.BalanceHeld));
+            var pit = Upgrade.ById(SpellBranch.ShapeId(DarkTree.Grasp)).Shapes.Single(each => each.Name == "The Pit");
+            Assert.AreEqual(1f, pit.Spell.Pull, 1e-5f, "drawn slowly to its middle");
+            var under = Upgrade.ById(Clover.Player.Trees.Duo.DrownedWeightDuo.Shape).Shapes.Single(each => each.Name == "Drawn Under").Effects;
+            Assert.IsTrue(under.Any(each => each.Do == UpgradeAction.Hazard && each.Pull == 1.5f), "the pool draws the others in at 1.5 m a second");
+            Assert.IsFalse(under.Any(each => each.Do == UpgradeAction.Pull), "not a pull of 2 m at once");
+            var rice = Upgrade.ById(Clover.Player.Trees.Duo.LightningFlowerDuo.Shape).Shapes.Single(each => each.Name == "The Rice Wakes").Effects.Single(each => each.Do == UpgradeAction.Hazard);
+            Assert.AreEqual(2f, rice.Mends, 1e-5f);
+            var bed = Upgrade.ById(Clover.Player.Trees.Duo.FirebloomDuo.Shape).Shapes.Single(each => each.Name == "Ash Bed").Effects.Single(each => each.Do == UpgradeAction.Hazard);
+            Assert.AreEqual(2f, bed.Mends, 1e-5f);
+        }
     }
 }

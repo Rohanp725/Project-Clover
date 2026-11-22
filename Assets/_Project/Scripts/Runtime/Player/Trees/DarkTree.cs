@@ -290,10 +290,10 @@ namespace Clover.Player.Trees
                         new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Tethered, By = StruckBy.Heavy, Do = UpgradeAction.Pull, Shape = HazardShape.Downwind, Amount = 4f },
                         new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Tethered, By = StruckBy.Heavy, Do = UpgradeAction.Burst, Radius = 0.5f, Damage = 0f, Stagger = 20f, Stacks = 0 },
                     } },
-                // NEEDS: everything in the pool drawn slowly to its middle (pull-to-point). The pool that Curses is the field form.
+                // The pool that Curses is the field form, and it draws everything in it to its middle at a metre a second (SpellSpec.Pull).
                 new ShapeDef { Name = "The Pit", Form = SpellForms.Field,
                     Description = "The ball stops at the point you aim and spreads into a pool of ink three metres across for four seconds, dragging everything in it slowly to the middle and Cursing it. You gather them at a spot.",
-                    Spell = new SpellSpec { Reach = 6f, Radius = 1.5f, Seconds = 4f, Interval = 1f, LingerDamage = 2f, Stacks = 1 } },
+                    Spell = new SpellSpec { Reach = 6f, Radius = 1.5f, Seconds = 4f, Interval = 1f, LingerDamage = 2f, Stacks = 1, Pull = 1f } },
                 "Opens two shapes of Grasp, chosen at any rest fire: Tethered, a rope that keeps one enemy close, or The Pit, a pool of ink that gathers them at a spot.",
                 // Grasp cast within a second of being struck (CastAfter Struck): the one that struck you (ToStruckBy) is dragged to
                 // your feet and Cursed twice.

@@ -1951,6 +1951,8 @@ namespace Clover.Player
                         Burst = false, Quiet = effect.Unseen || bespoke,
                         // A second affliction laid with each bite (the hollow trunk Seeding and Cursing what touches it).
                         AlsoLays = effect.BitesLay,
+                        // Ground that keeps acting on whoever stands in it (the ledger's ground-states).
+                        Acts = effect.Inside != null || effect.Mends > 0f ? effect : null, Pull = effect.Pull,
                     };
                     spec.Blow.Unseen = effect.Unseen || bespoke;
                     for (int i = 0; i < patches; i++)
@@ -3001,6 +3003,7 @@ namespace Clover.Player
             {
                 burstHooked = true;
                 StandingLibrary.Burst += OnStandingBurst;
+                Hazards.GroundActs += OnGroundActs;
             }
             while (StandingThings.TakeNews(out var item))
             {
@@ -3111,8 +3114,42 @@ namespace Clover.Player
 
         private void OnDestroy()
         {
-            if (burstHooked) StandingLibrary.Burst -= OnStandingBurst;
+            if (!burstHooked) return;
+            StandingLibrary.Burst -= OnStandingBurst;
+            Hazards.GroundActs -= OnGroundActs;
         }
+
+        // Ground of a mark's that keeps acting, at one of its bites: its state on every enemy standing in it now, and the player
+        // mended standing in it.
+        private void OnGroundActs(object source, Vector3 at, float radius, float biteEvery)
+        {
+            if (!(source is UpgradeEffect effect) || combat == null) return;
+            if (effect.Inside != null)
+            {
+                if (!groundStates.TryGetValue(effect, out var inside))
+                {
+                    inside = effect.Twin();
+                    inside.Do = UpgradeAction.Condition;
+                    inside.Count = 0;
+                    inside.State = effect.Inside.Copy();
+                    groundStates[effect] = inside;
+                }
+                inside.Radius = radius;
+                inside.State.Seconds = Mathf.Max(effect.Inside.Seconds, GroundRules.StateSeconds(biteEvery));
+                GroundStatesSet += ConditionCaster.Cast(inside, null, at, combat, LaySource.Effect, conditionScratch);
+            }
+            if (effect.Mends > 0f && defence != null && !defence.IsDead && GroundRules.Within(transform.position, at, radius))
+            {
+                defence.Heal(GroundRules.MendStep(effect.Mends, biteEvery), false);
+                GroundMended++;
+            }
+        }
+
+        private readonly Dictionary<UpgradeEffect, UpgradeEffect> groundStates = new Dictionary<UpgradeEffect, UpgradeEffect>();
+
+        /// <summary>States set by ground on those standing in it, and the times it mended you: for probes.</summary>
+        public int GroundStatesSet { get; private set; }
+        public int GroundMended { get; private set; }
 
         /// <summary>True when a standing thing's moment is one an effect answers: its own mark raised the thing, and a heavy blow when it asks for one.</summary>
         public static bool AnswersStanding(UpgradeEffect effect, int owner, bool heavy) =>

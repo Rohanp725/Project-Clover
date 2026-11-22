@@ -592,6 +592,9 @@ namespace Clover.World
                     if (zone.Spec.Grown && GrownBitesMask != 0 && hits > 0)
                         for (int k = 1; k < 32; k++)
                             if ((GrownBitesMask & (1 << k)) != 0) owner.AfflictArea(zone.Position, zone.Spec.Radius, (AfflictionKind)k, 1);
+                    // Ground that keeps acting: it draws in, and its mark sets what it sets on whoever stands in it now.
+                    if (zone.Spec.Pull > 0f) owner.Displace(zone.Position, zone.Spec.Radius, GroundRules.PullStep(zone.Spec.Pull, zone.Spec.BiteEvery), true);
+                    if (zone.Spec.Acts != null) GroundActs?.Invoke(zone.Spec.Acts, zone.Position, zone.Spec.Radius, zone.Spec.BiteEvery);
                     zone.Bitten++;
                     // A standing storm drops a bolt somewhere in itself each time it bites, whether or not anyone is under it.
                     if (zone.Spec.Quiet) { }
@@ -613,6 +616,17 @@ namespace Clover.World
                 if (zone.Left <= 0f) zone.Active = false;
             }
         }
+
+        /// <summary>
+        /// Told at each bite of ground that keeps acting (HazardSpec.Acts): the mark's effect, where the ground lies, how wide it
+        /// is and the seconds between its bites. The player's marks set its state on whoever stands in it, and mend the player
+        /// standing in it.
+        /// </summary>
+        public static event System.Action<object, Vector3, float, float> GroundActs;
+
+        // Domain reload is off: a listener from the last play must not be told in this one.
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetGroundActs() => GroundActs = null;
 
         /// <summary>
         /// One step of a helper walking to its enemy: moves <paramref name="at"/> up to <paramref name="step"/> toward

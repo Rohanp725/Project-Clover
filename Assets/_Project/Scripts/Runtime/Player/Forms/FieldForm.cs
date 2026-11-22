@@ -46,6 +46,8 @@ namespace Clover.Player.Forms
             run.T1 += Mathf.Max(0.1f, cast.Spec.Interval);
             // The bite: every spike on it stands up at once, and a ring runs to its edge.
             cast.Combat.StrikeArea(run.A, radius, cast.Blow(cast.Spec.LingerDamage, 0f));
+            // A field that draws in (The Pit): what stands in it is dragged toward its middle.
+            if (cast.Spec.Pull > 0f) cast.Combat.Displace(run.A, radius, Clover.World.GroundRules.PullStep(cast.Spec.Pull, cast.Spec.Interval), true);
             FormFx.Lay(FormMark.Ring, run.A, radius * 0.5f, FormKit.Lit(cast.Colour, 2.4f), 0.26f, radius * 2f);
             int stood = Mathf.Clamp(Mathf.RoundToInt(radius * 2.5f), 5, 10);
             for (int i = 0; i < stood; i++) Sprout(cast, run.A, radius, 0.65f, 1.2f + Random.value * 0.7f, 0.2f);

@@ -26,8 +26,8 @@ namespace Clover.Player.Trees.Duo
             const string A = Elements.Fire, B = Elements.Life;
 
             // Between Two Fires: the gap between each pair is a pickup at the enemy's spot (World.Pickups), passing through it heals
-            // 8 and charges the blade with two blows of Burn. NEEDS: mending-ground (Ash Bed's shoots mending 2 a second; now they only
-            // seed what steps in).
+            // 8 and charges the blade with two blows of Burn. Ash Bed's shoots mend the player standing in them 2 a second
+            // (UpgradeEffect.Mends).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Firebloom: Between Two Fires or Ash Bed", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -56,7 +56,7 @@ namespace Clover.Player.Trees.Duo
                         {
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = AshBed, Seconds = 30f, While = AfflictionKind.Seeded, Keeps = AfflictionKind.Burn } },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionDied, Condition = AshBed, Do = UpgradeAction.Hazard, Radius = 1.5f, Seconds = 6f, Interval = 1f, Grown = true,
-                                Affliction = AfflictionKind.Seeded, Stacks = 1 },
+                                Affliction = AfflictionKind.Seeded, Stacks = 1, Mends = 2f },
                         },
                     },
                 },

@@ -9,13 +9,13 @@ both carried.
 
 **When it happens.** Every time Firebloom goes off while you carry both Fire and Life. Firebloom goes off when Burn lands on a Seeded enemy, or when a seed lands on a burning one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Firebloom.
 
-**The numbers.** Mix, 3 Shards. Between Two Fires: the Seeded is used up, and a pair of lilies grows for each seed the enemy had, 3 metres apart on either side of it. Each lily stays for 5 seconds and burns anything within 1 metre, dealing 3 damage and a Burn every half second. Each lily counts as something you grew. Walking between the two lilies of a pair, through the spot where the enemy stood (within 1.2 metres of it, for the lilies' 5 seconds), heals you 8 and charges your blade with two blows of Burn. Ash Bed: nothing is used up. While the enemy stays Seeded, its Burn doesn't fade. When it dies, a bed of shoots 3 metres across stays for 6 seconds where it fell, Seeding every enemy in it once a second. After Firebloom goes off on an enemy, it can't go off on that enemy again for 4 seconds.
+**The numbers.** Mix, 3 Shards. Between Two Fires: the Seeded is used up, and a pair of lilies grows for each seed the enemy had, 3 metres apart on either side of it. Each lily stays for 5 seconds and burns anything within 1 metre, dealing 3 damage and a Burn every half second. Each lily counts as something you grew. Walking between the two lilies of a pair, through the spot where the enemy stood (within 1.2 metres of it, for the lilies' 5 seconds), heals you 8 and charges your blade with two blows of Burn. Ash Bed: nothing is used up. While the enemy stays Seeded, its Burn doesn't fade. When it dies, a bed of shoots 3 metres across stays for 6 seconds where it fell, Seeding every enemy in it once a second and healing you 2 health a second while you stand in it. After Firebloom goes off on an enemy, it can't go off on that enemy again for 4 seconds.
 
 **Works with.** Kindled Guard (make a lily flare with a perfect guard), Dry Pods, The Burning Tree, Need-Fire.
 
 **Example.** A crowd rushing at you: use Between Two Fires, and fight in the gap. One big burning brute: use Ash Bed, and keep it Seeded so it never stops burning.
 
-**Not built yet.** With more than one seed, the lilies stand in a ring instead of in facing pairs. Ash Bed's shoots don't heal you yet while you stand in them.
+**Not built yet.** With more than one seed, the lilies stand in a ring instead of in facing pairs.
 
 ## firebloom.kindledguard
 **What it does.** A perfect guard made within 3 metres of a lily makes it flare up. It deals 12 damage and two Burn within 2 metres, and the lily stays 3 seconds longer.

@@ -188,6 +188,8 @@ namespace Clover.Player
         public int TouchStacks;
         /// <summary>For the cobra form: set down where it was cast, Reach ahead, guarding Radius round itself on its Interval (Uraeus' Set Down).</summary>
         public bool Planted;
+        /// <summary>For the field form: draws everything standing in it toward its middle, metres a second (The Pit).</summary>
+        public float Pull;
         public int Bank;
         public float BankDamage;
         public float BankStagger;

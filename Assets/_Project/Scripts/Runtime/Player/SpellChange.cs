@@ -191,6 +191,7 @@ namespace Clover.Player
             into.BurstAfterStruck = from.BurstAfterStruck;
             into.TouchStacks = from.TouchStacks;
             into.Planted = from.Planted;
+            into.Pull = from.Pull;
             into.Bank = from.Bank;
             into.BankDamage = from.BankDamage;
             into.BankStagger = from.BankStagger;

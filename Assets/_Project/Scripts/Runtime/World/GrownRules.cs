@@ -2,6 +2,33 @@ using UnityEngine;
 
 namespace Clover.World
 {
+    /// <summary>The plain rules of ground that keeps acting on what stands in it (the ledger's ground-states, pull-to-point, mending-ground).</summary>
+    public static class GroundRules
+    {
+        /// <summary>
+        /// The shove each bite gives toward the middle for a pull of <paramref name="metresPerSecond"/>: a shove is spent over a
+        /// moment and moves about two thirds of its length, so half as much again of the seconds between bites.
+        /// </summary>
+        public static float PullStep(float metresPerSecond, float biteEvery) => metresPerSecond * Mathf.Max(0.05f, biteEvery) * 1.5f;
+
+        /// <summary>The health a bite of mending ground gives a player standing in it, for <paramref name="perSecond"/>.</summary>
+        public static float MendStep(float perSecond, float biteEvery) => perSecond * Mathf.Max(0.05f, biteEvery);
+
+        /// <summary>
+        /// The seconds a state set by ground lasts on whoever stands in it: a little past the next bite, so it holds while they
+        /// stay and goes soon after they step out.
+        /// </summary>
+        public static float StateSeconds(float biteEvery) => Mathf.Max(0.05f, biteEvery) + 0.25f;
+
+        /// <summary>True when a point within the ground's radius of its middle stands in it.</summary>
+        public static bool Within(Vector3 at, Vector3 middle, float radius)
+        {
+            Vector3 gap = at - middle;
+            gap.y = 0f;
+            return gap.magnitude <= radius;
+        }
+    }
+
     /// <summary>The plain rules of the player's grown things (the ledger's grown-bursts and grows-back), kept apart from the scene.</summary>
     public static class GrownRules
     {

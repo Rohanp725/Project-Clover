@@ -66,5 +66,12 @@ namespace Clover.World
         public float WalksTo;
         /// <summary>A thrown piece: it ends at the first it strikes (a feather, a flake, a shard), and lays AlsoLays only on what it struck.</summary>
         public bool StopsAtFirst;
+        /// <summary>
+        /// Ground that acts on whoever stands in it at each bite, not only on what stood there when it formed (the ledger's
+        /// ground-states): the mark's effect (a Player.UpgradeEffect) told to the player's marks with each bite (Hazards.GroundActs).
+        /// </summary>
+        public object Acts;
+        /// <summary>Above zero: draws everything standing in it toward its middle at this many metres a second (the ledger's pull-to-point).</summary>
+        public float Pull;
     }
 }

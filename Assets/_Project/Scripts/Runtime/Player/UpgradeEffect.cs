@@ -340,6 +340,14 @@ namespace Clover.Player
         public bool AnyDrops;
         /// <summary>A recipe look played as it is done (Forms.CreatureLooks: an effect-only creature), on its enemy or where it is done.</summary>
         public string Look = "";
+        /// <summary>
+        /// For a Hazard: ground that keeps acting. <see cref="Inside"/> is set at each bite on every enemy standing in it (for a
+        /// little past the next bite, GroundRules.StateSeconds); <see cref="Pull"/> draws what stands in it to its middle, metres a
+        /// second; <see cref="Mends"/> heals the player standing in it, health a second.
+        /// </summary>
+        public ConditionSpec Inside;
+        public float Pull;
+        public float Mends;
 
         /// <summary>A copy with every number, its slot and its mark (an Empower's twin of its Learn's effect).</summary>
         internal UpgradeEffect Twin() => (UpgradeEffect)MemberwiseClone();

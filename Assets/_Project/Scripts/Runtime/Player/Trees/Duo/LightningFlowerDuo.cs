@@ -26,8 +26,8 @@ namespace Clover.Player.Trees.Duo
         {
             const string A = Elements.Lightning, B = Elements.Life;
 
-            // NEEDS: ground that mends the player standing on it (mending-ground): The Rice Wakes' shoots mending 2 a second;
-            // now the field only charges what crosses it. And grown things as sources (grown-sources), as the plain reaction.
+            // The Rice Wakes' shoots mend the player standing in them 2 a second (UpgradeEffect.Mends). NEEDS: grown things as
+            // sources (grown-sources), as the plain reaction.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Lightning Flower: The Rice Wakes or Struck Oak", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -43,7 +43,7 @@ namespace Clover.Player.Trees.Duo
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Arc, LeapsTo = AfflictionKind.Seeded, Count = 1, Reach = 8f, Damage = 8f, Stagger = 10f,
                                 Affliction = AfflictionKind.Static, Stacks = 1 },
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Radius = 3f, Seconds = 6f, Interval = 1f, Grown = true, Limit = 2,
-                                Affliction = AfflictionKind.Static, Stacks = 1 },
+                                Affliction = AfflictionKind.Static, Stacks = 1, Mends = 2f },
                         },
                     },
                     new ShapeDef
