@@ -35,5 +35,7 @@ namespace Clover.Gameplay
         public float Side;
         /// <summary>For its carrier's blow on the player: the blow was turned by a perfect guard.</summary>
         public bool Turned;
+        /// <summary>For an end: the enemy froze, and that ended it (<see cref="ConditionSpec.EndsOnFreeze"/>).</summary>
+        public bool Frozen;
     }
 }

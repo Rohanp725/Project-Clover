@@ -17,5 +17,7 @@ namespace Clover.Player
         Finisher,
         /// <summary>For ConditionAttacked: its carrier's blow turned by a perfect guard, not one that landed or was plainly blocked (Snapped Blade).</summary>
         Turned,
+        /// <summary>For ConditionEnded: only an end the enemy's freezing brought (<see cref="Clover.Gameplay.ConditionSpec.EndsOnFreeze"/>).</summary>
+        Frozen,
     }
 }

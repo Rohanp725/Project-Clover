@@ -178,9 +178,11 @@ namespace Clover.Player.Trees
                     new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Spends = 1, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 5 },
                 });
 
-            // A perfect guard's mana and its cut to every cooldown; the turned blow does not yet count as a perfect guard for other marks.
+            // A perfect guard's mana and its cut to every cooldown, and the turned blow counts as a perfect guard for every mark that
+            // answers one (PlayerStat.WardTurnsPerfect).
             to.Add(BranchPattern.Put(new Upgrade { Id = SplinterWard, Name = "Splinter Ward", Element = E, Kind = UpgradeKind.Major, Requires = new[] { ColdRead }, Icon = UpgradeIcons.Shield,
                 Description = "When Glaze breaks, it bursts round you and gives what a perfect guard gives: its mana, and two seconds off every cooldown.",
+                Stats = new[] { new StatMod(PlayerStat.WardTurnsPerfect, 1f) },
                 Effects = new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.WardSpent, Do = UpgradeAction.Burst, At = EffectAt.Self, Damage = 12f, Stagger = 30f, Radius = 3.5f, Affliction = AfflictionKind.Chill, Stacks = 3 },

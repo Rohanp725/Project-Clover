@@ -19,14 +19,16 @@ namespace Clover.Player.Trees.Duo
         public const string RimeOverRime = "venomrime.rimeoverrime";
         /// <summary>The conditions the two shapes set, each the crust as the plain reaction's.</summary>
         public const string FrostOverFrost = "venomrime.floor";
+        /// <summary>Frost Over Frost's watch for the freeze: it ends as the enemy freezes, and its end spreads the rime.</summary>
+        public const string FrostWatch = "venomrime.watch";
         public const string ColdDamage = "venomrime.bone";
 
         public static void Add(List<Upgrade> to)
         {
             const string A = Elements.Poison, B = Elements.Ice;
 
-            // NEEDS: an enemy freezing as a moment (freeze-moment): Frost Over Frost's rime spread as it freezes, now the first
-            // bite on it while frozen (at most once in 5 s). Cold Damage's doses go off on the blow that shatters it
+            // Frost Over Frost's rime spreads as it freezes (a watch that ends on the freeze: ConditionSpec.EndsOnFreeze, StruckBy.Frozen).
+            // Cold Damage's doses go off on the blow that shatters it
             // (StruckBy.Shatter: the shatter has ended the Chill before the answer, so Needs cannot ask for it). Cold Damage's
             // poison bites twice as hard while it is frozen (ConditionSpec.BitesHarderFrozen).
             to.Add(HeartPattern.Put(new Upgrade
@@ -41,9 +43,10 @@ namespace Clover.Player.Trees.Duo
                         Description = "Its poison does not fade and each bite lays a Chill, as before. When it freezes, its rime spreads over the floor 3 m round it for 5 s: what stands there takes a Chill and a dose each second.",
                         Effects = Crust(FrostOverFrost, new[]
                         {
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = FrostOverFrost, Needs = AfflictionKind.Chill, NeedsFull = true, Cooldown = 5f, Do = UpgradeAction.Hazard,
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = FrostWatch, Seconds = 30f, EndsOnFreeze = true } },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = FrostWatch, By = StruckBy.Frozen, Do = UpgradeAction.Hazard,
                                 Radius = 3f, Seconds = 5f, Interval = 1f, Affliction = AfflictionKind.Chill, Stacks = 1 },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = FrostOverFrost, Needs = AfflictionKind.Chill, NeedsFull = true, Cooldown = 5f, Do = UpgradeAction.Hazard,
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = FrostWatch, By = StruckBy.Frozen, Do = UpgradeAction.Hazard,
                                 Radius = 3f, Seconds = 5f, Interval = 1f, Affliction = AfflictionKind.Poison, Stacks = 1 },
                         }),
                     },

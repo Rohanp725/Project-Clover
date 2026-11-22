@@ -123,7 +123,8 @@ namespace Clover.Tests
             Assert.IsTrue(EffectsOnCondition(Reactions.Nerves).Where(effect => effect.Do == UpgradeAction.Flinch && effect.Cooldown > 0f).All(effect => effect.CooldownPerEnemy),
                 "an elite flinches once every 4 s on each elite");
             Assert.IsTrue(EffectsOnCondition(Reactions.Beads).Where(effect => effect.Cooldown > 0f).All(effect => effect.CooldownPerEnemy), "the half second is each enemy's");
-            var draws = EffectsOnCondition(Reactions.Draw).Where(effect => effect.Do == UpgradeAction.Heal).ToList();
+            // The per-blow draw (the freeze's last warmth, StruckBy.Frozen, comes once and keeps no clock).
+            var draws = EffectsOnCondition(Reactions.Draw).Where(effect => effect.Do == UpgradeAction.Heal && effect.On == UpgradeTrigger.ConditionStruck).ToList();
             Assert.AreEqual(2, draws.Count);
             Assert.IsTrue(draws.All(effect => effect.CooldownPerEnemy), "8 a second from each enemy");
             Assert.IsTrue(EffectsOf(BurningSapDuo.BaredToTheSun).Single().CooldownPerEnemy, "once on each enemy in a cast");

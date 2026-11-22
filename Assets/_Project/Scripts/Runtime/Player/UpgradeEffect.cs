@@ -231,6 +231,10 @@ namespace Clover.Player
         public bool ByPower;
         /// <summary>For BoostReaction: the reaction spends nothing when it fires (its own Spend effects are not done).</summary>
         public bool SparesSpend;
+        /// <summary>The target must be frozen (Fire Under the Ice: a burning Frozen enemy shatters on any blow).</summary>
+        public bool NeedsFrozen;
+        /// <summary>Only just after a red attack was turned, by a perfect guard or a counter (the ledger's red-attack).</summary>
+        public bool RedOnly;
 
         /// <summary>A copy with every number, its slot and its mark (an Empower's twin of its Learn's effect).</summary>
         internal UpgradeEffect Twin() => (UpgradeEffect)MemberwiseClone();

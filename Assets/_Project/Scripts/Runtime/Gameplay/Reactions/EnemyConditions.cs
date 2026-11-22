@@ -261,6 +261,8 @@ namespace Clover.Gameplay
             run.Is = spec.Is;
             run.WhileIn = spec.WhileIn;
             run.CriticalOnly = spec.CriticalOnly;
+            run.EndsOnFreeze = spec.EndsOnFreeze;
+            run.DriftsTo = Math.Max(0f, spec.DriftsTo);
             run.FreezeLonger = Math.Max(0f, spec.FreezeLonger);
             run.ShatterHarder = Math.Max(1f, spec.ShatterHarder);
             // The way it faced as it was set, for a condition whose side is the side it showed then (Rime's crust).
@@ -422,16 +424,67 @@ namespace Clover.Gameplay
             runs[slot] = default;
         }
 
-        private void TellEnded(int ended)
+        private void TellEnded(int ended, bool frozen = false)
         {
             if (ended == 0) return;
             // Counted again first, so whoever hears of an end finds the enemy as it now is.
             Recount();
             for (int i = 0; i < ended; i++)
             {
-                Tell(ConditionMoment.Ended, in endedRuns[i], 0f, false, false);
+                Tell(ConditionMoment.Ended, in endedRuns[i], 0f, false, false, frozen: frozen);
                 endedRuns[i] = default;
             }
+        }
+
+        /// <summary>
+        /// Takes a condition that drifted from another enemy, whole: its time left, beats, blows and answers as it ran there
+        /// (<see cref="ConditionSpec.DriftsTo"/>). It takes a free slot, or the place of the one nearest its end. Returns the
+        /// slot, or -1 when nothing was given.
+        /// </summary>
+        public int Adopt(in ConditionRun from, Component who)
+        {
+            if (!from.Active || string.IsNullOrEmpty(from.Id) || from.Left <= 0f) return -1;
+            if (who != null) Who = who;
+            int slot = -1;
+            for (int i = 0; i < Slots && slot < 0; i++)
+                if (!runs[i].Active) slot = i;
+            if (slot < 0)
+            {
+                slot = 0;
+                for (int i = 1; i < Slots; i++)
+                    if (runs[i].Left < runs[slot].Left) slot = i;
+            }
+            runs[slot] = from;
+            Recount();
+            return slot;
+        }
+
+        /// <summary>
+        /// The enemy has just frozen: each condition that ends on a freeze (<see cref="ConditionSpec.EndsOnFreeze"/>) ends
+        /// now, and its end is told as the freeze's. Returns how many ended.
+        /// </summary>
+        public int Froze()
+        {
+            if (Count == 0) return 0;
+            int ended = 0;
+            for (int i = 0; i < Slots; i++)
+                if (runs[i].Active && runs[i].EndsOnFreeze) EndInto(i, ref ended);
+            TellEnded(ended, true);
+            return ended;
+        }
+
+        /// <summary>
+        /// Ends every condition of this name (or what it is) now, its end told as when its time runs out (the ledger's
+        /// condition-ends-now: Cold Snap makes a running Sleet Charge strike at once). Returns how many ended.
+        /// </summary>
+        public int EndNow(string id)
+        {
+            if (Count == 0 || string.IsNullOrEmpty(id)) return 0;
+            int ended = 0;
+            for (int i = 0; i < Slots; i++)
+                if (runs[i].Active && (runs[i].Id == id || runs[i].Is == id)) EndInto(i, ref ended);
+            TellEnded(ended);
+            return ended;
         }
 
         // A mark of -2 asks only for the name, from whichever mark and joined to whatever.
@@ -488,13 +541,13 @@ namespace Clover.Gameplay
         }
 
         private void Tell(ConditionMoment moment, in ConditionRun run, float damage, bool heavy, bool spell, bool shattered = false, bool critical = false, bool finisher = false,
-            bool turned = false)
+            bool turned = false, bool frozen = false)
         {
             var news = new ConditionNews
             {
                 Moment = moment, Id = run.Id, Mark = run.Mark, Count = run.Count, Blows = run.Blows, Flags = run.Flags, Scale = run.Scale, Link = run.Link,
                 Damage = damage, Heavy = heavy, Spell = spell, Shattered = shattered, Critical = critical, Is = run.Is, Finisher = finisher, Side = blowSide,
-                Turned = turned,
+                Turned = turned, Frozen = frozen,
             };
             if (Report != null) Report(Who, news);
             else CombatEvents.RaiseCondition(Who, news);

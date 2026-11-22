@@ -172,10 +172,10 @@ namespace Clover.Player.Trees
             // Lightning and Ice (13). For 3 s it gains one Static every 0.5 s (to full); at the end a bolt discharges all
             // of it (7 damage and 5 stagger a stack in 4 m) and everything the discharge reaches takes 1 Chill. A heavy
             // blow discharges it early as Lightning always does.
-            // NEEDS: a freeze moment: "at once if it freezes".
+            // If it freezes first, the bolt falls at once (ConditionSpec.EndsOnFreeze).
             to.Add(Reaction(AfflictionKind.Static, AfflictionKind.Chill,
                 "Static meets Chill: the frost charges itself, a Static every half second for 3 s. Then a bolt falls and discharges it all, 7 a stack in 4 m, chilling all it reaches.",
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Charging, Seconds = 3f, Beat = 0.5f } },
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Charging, Seconds = 3f, Beat = 0.5f, EndsOnFreeze = true } },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = Charging, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Static, Stacks = 1 },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Charging, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Static, Radius = 4f, Stagger = 5f },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Charging, Do = UpgradeAction.Afflict, Radius = 4f, Affliction = AfflictionKind.Chill, Stacks = 1 }));

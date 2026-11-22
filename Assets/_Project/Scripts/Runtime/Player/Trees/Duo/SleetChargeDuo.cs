@@ -86,16 +86,15 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.LeftLow));
 
-            // NEEDS: a condition ended on demand (the Sleet Charge already running strikes at once); now the charge is filled
-            // and set off at once, and a new Sleet Charge may begin from the Static laid.
+            // The running Sleet Charge is filled and ended at once (UpgradeAction.EndCondition): its own end strikes with full Static.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = ColdSnap, Name = "Cold Snap", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Shield,
                 Description = "A perfect guard against a chilled enemy makes its Sleet Charge strike at once, with full Static: it is charged to full and the charge goes off, 7 a stack in 4 m.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Needs = AfflictionKind.Chill, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Static, Stacks = ToFull, Cooldown = 1f },
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Needs = AfflictionKind.Chill, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Static, Radius = 4f, Stagger = 5f, Cooldown = 1f },
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, InState = Reactions.Charging, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Static, Stacks = ToFull, Cooldown = 1f },
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, InState = Reactions.Charging, Do = UpgradeAction.EndCondition, Condition = Reactions.Charging, Cooldown = 1f },
                 },
             }, HeartPattern.RightLow));
 

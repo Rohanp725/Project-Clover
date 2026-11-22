@@ -198,7 +198,7 @@ design yet, its **Not built yet** line says what is missing.
 
 **Works with.** Glaze (one ward when you light it), Cold Read, which it comes after on the chart, Winter Wall and Sent Sliding above it, Deep Winter, Chill.
 
-**Not built yet.** The blocked blow should count as a perfect guard for other marks too (Cold Read, Rime Guard). For now, it only gives a perfect guard's mana and time off.
+The blocked blow also counts as a perfect guard for every other mark that answers one (Cold Read, Rime Guard).
 
 **Example.** Light Glaze and let a brute's red attack land on the ward. Everything around you gets three stacks and is staggered, and your spells are two seconds closer to ready.
 

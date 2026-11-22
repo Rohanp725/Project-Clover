@@ -53,13 +53,11 @@ both carried.
 
 **When it happens.** Each time a burning enemy shatters, while you carry both Fire and Ice.
 
-**The numbers.** Mix, keystone, 5 Shards. Two Burns on everything within 3 metres, at most five times a second.
+**The numbers.** Mix, keystone, 5 Shards. Any weapon blow or spell that hits a Frozen, burning enemy shatters it. Two Burns on everything within 3 metres, at most five times a second.
 
 **Works with.** Hoarfrost and Winter Wall (to freeze enemies), Spark and Rime, Thermal Shock.
 
 **Example.** Freeze a burning soldier in a pack and shatter it. The pack catches fire.
-
-**Not built yet.** The shatter still needs a heavy blow for now. The spreading fire is built.
 
 ## thermalshock.firesetting
 **What it does.** A fire is lit against the enemy you face. When it is put out with a splash of frost, the heated body splits: a hard hit and three Chill, and the enemies next to it take half.

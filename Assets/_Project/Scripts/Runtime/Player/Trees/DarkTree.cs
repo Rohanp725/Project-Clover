@@ -141,12 +141,11 @@ namespace Clover.Player.Trees
                     Description = "You stand again where you were. The ash stays as a sinking cloud three metres across for three seconds. Enemies inside it are Cursed, and an attack they begin inside goes where they already faced.",
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Radius = 1.5f, Seconds = 3f, Interval = 1f, Damage = 0f, Stagger = 0f, Affliction = C, Stacks = 1, Cooldown = 1f } } },
                 "Opens two shapes of Gone to Ash, chosen at any rest fire: Ash on the Brow, a smear that marks the one who struck, or Ash Hangs, a cloud that Curses all inside.",
-                // NEEDS: a red attack as the blow scattered (red-attack). Until then any blow scattered staggers the attacker and
-                // ends the wait, once in twenty seconds.
+                // Only a red attack scattered (UpgradeEffect.RedOnly): the attacker staggered and the wait ended.
                 new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Burst, Radius = 1f, Damage = 0f, Stagger = 60f, Stacks = 0, Cooldown = 20f },
-                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.ResetCooldown, Cooldown = 20f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, RedOnly = true, Do = UpgradeAction.Burst, Radius = 1f, Damage = 0f, Stagger = 60f, Stacks = 0, Cooldown = 0.5f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, RedOnly = true, Do = UpgradeAction.ResetCooldown, Cooldown = 0.5f },
                 },
                 "Scatter a red attack, and the attacker is staggered and Gone to Ash is ready again.",
                 learnEffects: new[]

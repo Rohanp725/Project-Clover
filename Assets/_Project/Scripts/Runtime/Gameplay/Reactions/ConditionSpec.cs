@@ -80,5 +80,15 @@ namespace Clover.Gameplay
         public float FreezeLonger;
         /// <summary>While it runs, a shatter of the enemy strikes this many times as hard (Rime Tree: 1.25); 0 or 1 as written.</summary>
         public float ShatterHarder;
+        /// <summary>
+        /// It ends at once when the enemy freezes, and its end is told then as an end the freeze brought (the ledger's
+        /// freeze-moment: Sleet Charge's bolt "at once if it freezes"; Stolen Warmth's last warmth torn out).
+        /// </summary>
+        public bool EndsOnFreeze;
+        /// <summary>
+        /// Above zero: when its carrier dies, it drifts whole (its time, beats and blows) to the nearest other enemy within
+        /// this many metres (the ledger's drift-on-death: The Grudge's black cloud, Ash Plume's storm).
+        /// </summary>
+        public float DriftsTo;
     }
 }

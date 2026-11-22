@@ -102,11 +102,9 @@ draining.
 
 **When it happens.** Each blow Gone to Ash scatters, while it is in a spell slot.
 
-**The numbers.** 3 Shards. For now, any blow you scatter gives the attacker 60 stagger and ends Gone to Ash's wait, once every 20 seconds.
+**The numbers.** 3 Shards. Only a red attack counts. Scattering it gives the attacker 60 stagger and ends Gone to Ash's wait.
 
 **Works with.** Gods and elites (their red attacks), Devouring Maw and Pawned Heart (a big hit on the staggered enemy).
-
-**Not built yet.** It should only work on red attacks; for now, any blow does it, once every 20 seconds.
 
 **Example.** A god's red overhead swing comes down on you. You scatter, it staggers back, and the counter is ready for its next swing.
 

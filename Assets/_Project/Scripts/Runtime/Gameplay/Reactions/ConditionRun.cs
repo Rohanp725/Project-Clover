@@ -56,5 +56,9 @@ namespace Clover.Gameplay
         /// <summary>Seconds a freeze lasts longer, and how much harder a shatter strikes, while it runs.</summary>
         public float FreezeLonger;
         public float ShatterHarder;
+        /// <summary>It ends when the enemy freezes (<see cref="ConditionSpec.EndsOnFreeze"/>).</summary>
+        public bool EndsOnFreeze;
+        /// <summary>Metres it drifts to the nearest other enemy when its carrier dies (<see cref="ConditionSpec.DriftsTo"/>); zero: it dies with it.</summary>
+        public float DriftsTo;
     }
 }

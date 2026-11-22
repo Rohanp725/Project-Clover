@@ -158,5 +158,11 @@ namespace Clover.Player
         /// ledger's reaction-numbers-when). Nothing is done at its own moment. Reads: Reaction, Needs, Amount, SparesSpend.
         /// </summary>
         BoostReaction,
+        /// <summary>
+        /// Ends the condition named in Condition (by its name or what it is) on the target now, and its end is answered at
+        /// once as when its time runs out (Cold Snap: the running Sleet Charge strikes; the ledger's condition-ends-now).
+        /// Reads: Condition.
+        /// </summary>
+        EndCondition,
     }
 }

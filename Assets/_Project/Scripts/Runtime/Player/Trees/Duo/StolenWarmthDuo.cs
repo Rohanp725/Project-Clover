@@ -26,9 +26,8 @@ namespace Clover.Player.Trees.Duo
         {
             const string A = Elements.Dark, B = Elements.Ice;
 
-            // NEEDS: freeze-moment (Cold Shade's shade left when it is shattered; now when it dies with its warmth stolen) and
-            // standing-things (the shade struck by a heavy blow to shatter it a second time, 30 and two Chill in 3 m; now a
-            // patch that chills for 4 s).
+            // Cold Shade's shade is left when it is shattered (StruckBy.Shatter). NEEDS: standing-things (the shade struck by a
+            // heavy blow to shatter it a second time, 30 and two Chill in 3 m; now a patch that chills for 4 s).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Stolen Warmth: Cold Shade or The Long Night", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -46,7 +45,7 @@ namespace Clover.Player.Trees.Duo
                             new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Shade, By = StruckBy.Weapon, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 1 },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Shade, By = StruckBy.Weapon, Ranks = EnemyRank.Plain | EnemyRank.Elite, Cooldown = 0.25f, Do = UpgradeAction.Heal, Amount = 2f },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Shade, By = StruckBy.Weapon, Ranks = EnemyRank.God, Cooldown = 0.25f, Do = UpgradeAction.Heal, Amount = 1f },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionDied, Condition = Shade, Do = UpgradeAction.Hazard, Radius = 2.5f, Seconds = 4f, Interval = 1f, Affliction = AfflictionKind.Chill, Stacks = 1 },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Shade, By = StruckBy.Shatter, Do = UpgradeAction.Hazard, Radius = 2.5f, Seconds = 4f, Interval = 1f, Affliction = AfflictionKind.Chill, Stacks = 1 },
                         },
                     },
                     new ShapeDef

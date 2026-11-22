@@ -229,12 +229,12 @@ namespace Clover.Player.Trees
                     Description = "You stand as stone for up to a second and a half. The first blow to land, red ones too, is turned for nothing, and a fist of rock rises under the one who struck: 30 damage, 60 stagger and two Tremor. One blow, answered at once.",
                     Spell = new SpellSpec { Seconds = 1.5f, Reach = 4f, Arc = 90f, Damage = 30f, Stagger = 60f, Stacks = 2 } },
                 "Opens two shapes of Mountain Stance, chosen at any rest fire: Stone Skin, plates that take blows for you, or Fist of Rock, one blow answered at once.",
-                // NEEDS: a red attack as the blow turned (red-attack). Until then any blow turned holds its attacker (gods and
-                // elites for 0.4 of the time), and the stance is ready again once in twenty seconds.
+                // Only a red attack turned (UpgradeEffect.RedOnly): its attacker held (gods and elites for 0.4 of the time), and the
+                // stance ready again.
                 new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Hold, Seconds = 1.5f },
-                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.ResetCooldown, Cooldown = 20f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, RedOnly = true, Do = UpgradeAction.Hold, Seconds = 1.5f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, RedOnly = true, Do = UpgradeAction.ResetCooldown, Cooldown = 0.5f },
                 },
                 "Turn a red attack, and its attacker is stunned for a second and a half, less for a god or an elite, and Mountain Stance is ready again.",
                 learnEffects: new[]

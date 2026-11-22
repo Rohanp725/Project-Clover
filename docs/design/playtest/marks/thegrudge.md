@@ -9,13 +9,11 @@ Lightning are both carried.
 
 **When it happens.** Every time The Grudge goes off while you carry both Dark and Lightning. The Grudge goes off when a second Static lands on a Cursed enemy, or when a Curse lands on an enemy with two Static. If you have not bought this mark, or you carry only one of the two elements, you get the plain Grudge.
 
-**The numbers.** Mix, 3 Shards. First Strike: the cloud waits for 8 seconds. Your first heavy blow on the enemy sets off all its Static at double strength, for 14 damage each within 4 metres, and holds it still for 0.6 seconds. Ash Plume: the cloud waits for up to 6 seconds. When the enemy next attacks you (whether the blow lands, is guarded, or is blocked by a ward), or when the time runs out, one bolt falls around it for each weapon blow you landed on it, up to five bolts, each dealing 10 damage and a Static. Then all its Static goes off within 4 metres. After The Grudge goes off on an enemy, it can't go off on that enemy again for 8 seconds.
+**The numbers.** Mix, 3 Shards. First Strike: the cloud waits for 8 seconds. Your first heavy blow on the enemy sets off all its Static at double strength, for 14 damage each within 4 metres, and holds it still for 0.6 seconds. Ash Plume: the cloud waits for up to 6 seconds. When the enemy next attacks you (whether the blow lands, is guarded, or is blocked by a ward), or when the time runs out, one bolt falls around it for each weapon blow you landed on it, up to five bolts, each dealing 10 damage and a Static. Then all its Static goes off within 4 metres. If the enemy under either cloud dies first, the cloud moves, with its time and blows, to the nearest enemy within 6 metres. After The Grudge goes off on an enemy, it can't go off on that enemy again for 8 seconds.
 
 **Works with.** Grievance to add the Static, The Exile Returns, Given Bones, The Exile's Grudge.
 
 **Example.** A lone brute: use First Strike, and end the cloud with a heavy blow. A pack around one Cursed captain: use Ash Plume, and keep hitting the captain for six seconds.
-
-**Not built yet.** The cloud doesn't move to the next enemy yet when the enemy under it dies.
 
 ## thegrudge.grievance
 **What it does.** Blocking a blow from a Cursed enemy puts two Static on it.

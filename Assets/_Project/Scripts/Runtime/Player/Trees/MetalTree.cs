@@ -243,12 +243,11 @@ namespace Clover.Player.Trees
                     Description = "You stand as a struck plate. Every blow turned in a second and a half, four at most, rings: a sharp ripple to four metres, 8 damage, 20 stagger and a notch on all, each ring wider than the last. The more of them strike you, the better.",
                     Spell = new SpellSpec { Seconds = 1.5f, Reach = 4f, Arc = 360f, Damage = 8f, Stagger = 20f, Stacks = 1 } },
                 "Opens two shapes of Circle of Steel, chosen at any rest fire: The Golden Chair, bands that bind the one who struck, or Ringing Plate, a ring for every blow turned.",
-                // NEEDS: a red attack as the blow turned (red-attack). Until then any blow turned gives the mana and ends its
-                // wait, once in twenty seconds.
+                // Only a red attack turned (UpgradeEffect.RedOnly): the mana, and its wait ended.
                 new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.ResetCooldown, Cooldown = 20f },
-                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Mana, Amount = 15f, Cooldown = 20f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, RedOnly = true, Do = UpgradeAction.ResetCooldown, Cooldown = 0.5f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, RedOnly = true, Do = UpgradeAction.Mana, Amount = 15f, Cooldown = 0.5f },
                 },
                 "Turn a red attack, and 15 mana comes back to you and Circle of Steel is ready again at once.");
 

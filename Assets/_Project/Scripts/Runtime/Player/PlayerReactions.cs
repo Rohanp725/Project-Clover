@@ -153,6 +153,8 @@ namespace Clover.Player
             for (int slot = 0; slot < EnemyConditions.Slots; slot++)
             {
                 var run = afflictions.Conditions.Run(slot);
+                // A condition that drifts goes whole to the nearest other enemy (The Grudge's cloud).
+                if (run.Active && run.DriftsTo > 0f) Drift(who, at, run);
                 if (!run.Active || !run.AnswersDeath || run.Mark < 0 || run.Mark >= all.Count) continue;
                 var mark = all[run.Mark];
                 var source = SourceOf(mark);
@@ -162,6 +164,20 @@ namespace Clover.Player
                     for (int shape = 0; shape < mark.Shapes.Length; shape++)
                         if (mark.Shapes[shape] != null) AnswerDeath(ShapeEffects(mark, shape), run, who, at, source, afflictions);
             }
+        }
+
+        private readonly System.Collections.Generic.HashSet<IDamageable> driftSkip = new System.Collections.Generic.HashSet<IDamageable>();
+        /// <summary>Conditions that drifted to another enemy when their carrier died, counted for probes.</summary>
+        public int Drifted { get; private set; }
+
+        private void Drift(Component dead, Vector3 at, in ConditionRun run)
+        {
+            if (combat == null) return;
+            driftSkip.Clear();
+            if (dead is IDamageable deadBody) driftSkip.Add(deadBody);
+            var next = combat.EnemyNear(at, run.DriftsTo, driftSkip);
+            driftSkip.Clear();
+            if (next is IAfflictable taker && taker.Afflictions.Conditions.Adopt(run, next) >= 0) Drifted++;
         }
 
         private void AnswerDeath(UpgradeEffect[] effects, in ConditionRun run, Component who, Vector3 at, LaySource source, AfflictionSet afflictions)
@@ -360,6 +376,8 @@ namespace Clover.Player
                 if (trigger == UpgradeTrigger.ConditionStruck && (!Answers(effect.By, news) || !FromSide(effect, news))) continue;
                 // Its carrier's blow turned by a perfect guard, when that is what is asked (Snapped Blade).
                 if (trigger == UpgradeTrigger.ConditionAttacked && effect.By == StruckBy.Turned && !news.Turned) continue;
+                // An end the freeze brought, when that is what is asked (Stolen Warmth's last warmth).
+                if (trigger == UpgradeTrigger.ConditionEnded && effect.By == StruckBy.Frozen && !news.Frozen) continue;
                 if (effect.AtCount > 0 && effect.AtCount != (trigger == UpgradeTrigger.ConditionBeat ? news.Count : news.Blows)) continue;
                 // An answer that repeats what the condition kept takes its kept number, not the blow's (Collected Twice).
                 upgrades.Fire(effect, who, at, source, effect.ByPower ? news.Scale : news.Damage, spent, null, news.Link);

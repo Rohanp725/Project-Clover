@@ -198,5 +198,7 @@ namespace Clover.Player
         /// no other (Every Crack Rings: 25% on the notched alone).
         /// </summary>
         ReactionDamageOn,
+        /// <summary>Flat, above zero: a blow turned by a ward counts as a perfect guard for every mark that answers one (Splinter Ward; the ledger's ward-as-guard).</summary>
+        WardTurnsPerfect,
     }
 }

@@ -637,7 +637,7 @@ Group: Reactions
 
 **How to use it.** Wait the 3 seconds for a full charge, or set it off sooner with a heavy blow.
 
-**How it looks.** Its name over the enemy, then the burst of lightning. Not built yet: the bolt falling right away if the enemy freezes.
+**How it looks.** Its name over the enemy, then the burst of lightning. If the enemy freezes before the 3 seconds are up, the bolt falls right away.
 
 ## reaction-capsize
 Title: Capsize (Wind and Water)
@@ -920,7 +920,7 @@ Group: Reactions
 
 **Its shapes.** If you have the Shape mark of Dark and Lightning's duo branch (The Grudge: First Strike or Ash Plume, 3 Shards, in the middle of the chart) and carry both, The Grudge uses the shape you picked at a rest fire instead. First Strike: your first heavy blow on the enemy calls the cloud down, setting off its Static at double strength and holding it for 0.6 seconds. Ash Plume: when the enemy next attacks you, or its 6 seconds run out, one bolt falls around it for each weapon blow you landed, for 10 damage and a Static each, and its Static goes off within 4 metres.
 
-**How to use it.** Charge a Cursed enemy, then let it swing. Guard the blow, or take it, and the cloud strikes back. Not built yet: the cloud drifting to the next enemy if the enemy under it dies first.
+**How to use it.** Charge a Cursed enemy, then let it swing. Guard the blow, or take it, and the cloud strikes back. If the enemy under it dies first, the cloud moves, with the time it has left, to the nearest enemy within 6 metres.
 
 **How it looks.** Its name over the enemy. Not built yet: the cloud itself.
 
@@ -1248,11 +1248,11 @@ Group: Reactions
 
 **What sets it off.** A Curse landing on a chilled enemy, or Chill landing on a Cursed one.
 
-**Its shapes.** If you have the Shape mark of Dark and Ice's duo branch (Stolen Warmth: Cold Shade or The Long Night, 3 Shards, in the middle of the chart) and carry both, Stolen Warmth uses the shape you picked at a rest fire instead. Cold Shade: the warmth is drawn like the plain one, and when the enemy dies, a patch stays for 4 seconds where it fell, chilling everything within 2.5 metres once a second. The Long Night: you don't draw any health. Its Chill stays and your blows chill it, and while it is frozen, everything within 3 metres gets a Chill each second.
+**Its shapes.** If you have the Shape mark of Dark and Ice's duo branch (Stolen Warmth: Cold Shade or The Long Night, 3 Shards, in the middle of the chart) and carry both, Stolen Warmth uses the shape you picked at a rest fire instead. Cold Shade: the warmth is drawn like the plain one, and when your heavy blow shatters the frozen enemy, a patch stays for 4 seconds where it stood, chilling everything within 2.5 metres once a second. The Long Night: you don't draw any health. Its Chill stays and your blows chill it, and while it is frozen, everything within 3 metres gets a Chill each second.
 
 **How to use it.** Keep hitting. Every blow heals you and chills the enemy closer to freezing.
 
-**How it looks.** Its name over the enemy. Not built yet: the last of its warmth being torn out when it freezes.
+**How it looks.** Its name over the enemy. When it freezes, the last of its warmth is torn out: you heal 2 for every Chill it had (1 against a god), it stays frozen 1 second longer, and the drawing ends.
 
 ## reaction-fish-poison
 Title: Fish Poison (Poison and Water)

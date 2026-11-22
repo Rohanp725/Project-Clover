@@ -184,6 +184,8 @@ namespace Clover.Player
         public int Overflows { get; private set; }
         /// <summary>Reactions struck again by a mark (Strikes Twice, Spreading Water), counted for probes.</summary>
         public int Echoes { get; private set; }
+        /// <summary>Conditions ended on demand (Cold Snap), counted for probes.</summary>
+        public int ConditionsEnded { get; private set; }
         // The reactions' adapter, which strikes a reaction again; looked up once.
         private PlayerReactions reactionsFound;
         // The reaction whose moment the trigger now being answered is (-1: none), put on each answer's line.
@@ -1310,6 +1312,7 @@ namespace Clover.Player
                 if (!effect.AnyMark || (effect.Condition != news.Id && effect.Condition != news.Is)) continue;
                 if (trigger == UpgradeTrigger.ConditionStruck && (!PlayerReactions.Answers(effect.By, news) || !PlayerReactions.FromSide(effect, news))) continue;
                 if (trigger == UpgradeTrigger.ConditionAttacked && effect.By == StruckBy.Turned && !news.Turned) continue;
+                if (trigger == UpgradeTrigger.ConditionEnded && effect.By == StruckBy.Frozen && !news.Frozen) continue;
                 if (effect.AtCount > 0 && effect.AtCount != (trigger == UpgradeTrigger.ConditionBeat ? news.Count : news.Blows)) continue;
                 Consider(effect, who, at, true);
                 any = true;
@@ -1332,6 +1335,9 @@ namespace Clover.Player
             if (effect.WhileSurge && !(element != null && element.SurgeActive)) return;
             if (effect.While != StatWhen.Always && !Stats.Holds(effect.While)) return;
             if (effect.NeedsAirborne && !(target is IAfflictable flying && flying.Afflictions.IsAirborne)) return;
+            if (effect.NeedsFrozen && !(target is IAfflictable icy && icy.Afflictions.IsFrozen)) return;
+            // Only in the moment after a red attack was turned (Mountain Stance's, Circle of Steel's and Gone to Ash's Masters).
+            if (effect.RedOnly && !RedJustTurned(Time.time, redTurnedAt)) return;
             if (effect.OnBeat > 0f && !(target is IAfflictable beaten && beaten.Afflictions.NearBeat(effect.OnBeat))) return;
             if (effect.HealthBelow > 0f && !(defence != null && !defence.IsDead && defence.Health.Fraction < effect.HealthBelow)) return;
             if (effect.Needs != AfflictionKind.None || effect.Needs2 != AfflictionKind.None)
@@ -1971,6 +1977,10 @@ namespace Clover.Player
                     ElementLook.Sparks(look, self + Vector3.up * 1.1f + transform.forward * 0.5f, transform.forward, 0.6f);
                     break;
                 }
+                case UpgradeAction.EndCondition:
+                    // Ended now, its end answered at once (Cold Snap: the running Sleet Charge strikes).
+                    if (subject is IAfflictable ending && ending.Afflictions.Conditions.EndNow(effect.Condition) > 0) ConditionsEnded++;
+                    break;
                 case UpgradeAction.EchoReaction:
                     // The reaction that answered strikes again on this enemy, at a share, a moment later (Strikes Twice, Spreading Water).
                     if (pending.Pair >= 0 && subject != null && reactionsFound != null && reactionsFound.Echo(subject, pending.Pair, Or(effect.Amount, 0.5f), effect.Delay)) Echoes++;
@@ -2553,7 +2563,37 @@ namespace Clover.Player
         }
 
         /// <summary>A ward turned a blow from the given place: an enemy's blow turned, as a guard turns one.</summary>
-        public void OnWarded(Vector3 attacker) => TheirBlow(combat != null ? combat.EnemyAt(attacker, 2.5f) : null, attacker);
+        public void OnWarded(Vector3 attacker)
+        {
+            // With a mark that says so, a ward's turn is a perfect guard for every mark that answers one (Splinter Ward).
+            if (WardIsPerfectGuard(Stats))
+            {
+                WardsAsGuards++;
+                OnPerfectGuard(attacker);
+                return;
+            }
+            TheirBlow(combat != null ? combat.EnemyAt(attacker, 2.5f) : null, attacker);
+        }
+
+        /// <summary>True when the marks in force count a blow turned by a ward as a perfect guard (PlayerStat.WardTurnsPerfect).</summary>
+        public static bool WardIsPerfectGuard(PlayerStats stats) => stats != null && stats.Sum(PlayerStat.WardTurnsPerfect) > 0f;
+
+        /// <summary>Wards whose turn was counted as a perfect guard, and red attacks turned, counted for probes.</summary>
+        public int WardsAsGuards { get; private set; }
+        public int RedsTurned { get; private set; }
+        /// <summary>Seconds after a red attack is turned in which what answers only a red attack may answer it.</summary>
+        public const float RedWindow = 1f;
+        private float redTurnedAt = -100f;
+
+        /// <summary>A red attack, which cannot be blocked, was turned by a perfect guard or a counter's own guard.</summary>
+        public void RedTurned()
+        {
+            redTurnedAt = Time.time;
+            RedsTurned++;
+        }
+
+        /// <summary>True within <see cref="RedWindow"/> of a red attack being turned at <paramref name="at"/>.</summary>
+        public static bool RedJustTurned(float now, float at) => now >= at && now - at <= RedWindow;
 
         /// <summary>Enemy blows aimed at the player that landed or were turned, counted for probes.</summary>
         public int TheirBlows { get; private set; }

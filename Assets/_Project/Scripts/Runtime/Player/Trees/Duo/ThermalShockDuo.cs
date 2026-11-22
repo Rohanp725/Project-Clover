@@ -97,13 +97,18 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.LeftHigh));
 
-            // NEEDS: a Frozen enemy that shatters on any blow (now its shatter, by a heavy blow as usual, sets all within 3 m
-            // burning two deep when it was burning).
+            // A burning Frozen enemy shatters on any blow, weapon or spell (UpgradeEffect.NeedsFrozen, UpgradeAction.Shatter), and its
+            // shatter sets all within 3 m burning two deep.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = FireUnderTheIce, Name = "Fire Under the Ice", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { SparkAndRime, HotStoneColdWater }, Icon = UpgradeIcons.Burst,
                 Description = "A Frozen enemy that is burning shatters on any blow, not only a heavy, and its shatter sets everything within 3 m burning two deep.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Shatter, Needs = AfflictionKind.Burn, Do = UpgradeAction.Afflict, Radius = 3f, Affliction = AfflictionKind.Burn, Stacks = 2, Cooldown = 0.2f } },
+                Effects = new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.AnyHit, Needs = AfflictionKind.Burn, NeedsFrozen = true, Do = UpgradeAction.Shatter },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, Needs = AfflictionKind.Burn, NeedsFrozen = true, Do = UpgradeAction.Shatter },
+                    new UpgradeEffect { On = UpgradeTrigger.Shatter, Needs = AfflictionKind.Burn, Do = UpgradeAction.Afflict, Radius = 3f, Affliction = AfflictionKind.Burn, Stacks = 2, Cooldown = 0.2f },
+                },
             }, HeartPattern.Keystone));
 
             // The duo spell, bought with Shards once both are carried (no god gives it): a detonator on a 12 s cooldown (SpellTimings). The brand form sets a fire against the

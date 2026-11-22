@@ -35,6 +35,9 @@ namespace Clover.Gameplay
 
         public BurnStatus Burn { get; } = new BurnStatus();
         public bool IsFrozen { get; private set; }
+        /// <summary>Seconds since it last froze, while it is frozen (a cast landing within a moment of the freeze).</summary>
+        public float FrozenFor => IsFrozen ? frozenFor : float.MaxValue;
+        private float frozenFor;
         public float FrozenLeft { get; private set; }
         /// <summary>Seconds it stays brittle after a freeze ended (see <see cref="Afflictions.BrittleSeconds"/>).</summary>
         public float BrittleLeft { get; private set; }
@@ -389,6 +392,9 @@ namespace Clover.Gameplay
             if (freezes && spec.FreezesAtFull)
             {
                 IsFrozen = true;
+                frozenFor = 0f;
+                // What ends on a freeze ends now, its end told as the freeze's (Sleet Charge strikes at once).
+                Conditions.Froze();
                 // A condition may hold the freeze longer (Rime Tree: a second more).
                 FrozenLeft = GodHolds.Seconds((spec.FrozenSeconds * Afflictions.FreezeSeconds + Conditions.FreezeLonger) * RuleFreezeScale, phase, FreezeScale);
                 left[index] = Math.Max(left[index], FrozenLeft);
@@ -554,6 +560,7 @@ namespace Clover.Gameplay
             }
             if (IsFrozen)
             {
+                frozenFor += deltaTime;
                 FrozenLeft -= deltaTime;
                 // Thawed: the cold that froze it is spent.
                 if (FrozenLeft <= 0f)
@@ -840,7 +847,13 @@ namespace Clover.Gameplay
             present |= 1 << index;
             float time = GodHolds.Seconds((seconds + Conditions.FreezeLonger) * RuleFreezeScale, phase, FreezeScale);
             FrozenLeft = IsFrozen ? Math.Max(FrozenLeft, time) : time;
+            bool froze = !IsFrozen;
             IsFrozen = true;
+            if (froze)
+            {
+                frozenFor = 0f;
+                Conditions.Froze();
+            }
             shatterScale = Math.Max(shatterScale, Math.Max(1f, shatter));
             left[index] = Math.Max(left[index], FrozenLeft);
             return true;

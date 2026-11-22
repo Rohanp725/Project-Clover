@@ -117,13 +117,17 @@ namespace Clover.Player.Trees
 
             // Dark and Ice (54), rest 6 s. While both last its Chill does not fade, and each weapon blow on it draws warmth
             // out: one Chill on it, and 2 health to the player (8 a second at most; a god gives half).
-            // NEEDS: a freeze moment: when it freezes the last warmth is torn out (2 health for every Chill it carried) and
-            // it stays frozen 1 s longer.
+            // When it freezes the last warmth is torn out (ConditionSpec.EndsOnFreeze, StruckBy.Frozen): 2 health for every Chill
+            // it carried (a god gives half), and it stays frozen 1 s longer.
             to.Add(Reaction(AfflictionKind.Cursed, AfflictionKind.Chill,
                 "Cursed meets Chill: the curse takes its warmth. While both last its Chill does not fade, and each of your weapon blows chills it and draws 2 health into you.",
                 6f,
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition,
-                    State = new ConditionSpec { Id = Draw, Seconds = 30f, While = AfflictionKind.Cursed, While2 = AfflictionKind.Chill, Keeps = AfflictionKind.Chill } },
+                    State = new ConditionSpec { Id = Draw, Seconds = 30f, While = AfflictionKind.Cursed, While2 = AfflictionKind.Chill, Keeps = AfflictionKind.Chill, EndsOnFreeze = true } },
+                new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Draw, By = StruckBy.Frozen, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Chill, CountOnly = true },
+                new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Draw, By = StruckBy.Frozen, Ranks = EnemyRank.Plain | EnemyRank.Elite, Do = UpgradeAction.Heal, Amount = 2f, PerStack = true },
+                new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Draw, By = StruckBy.Frozen, Ranks = EnemyRank.God, Do = UpgradeAction.Heal, Amount = 1f, PerStack = true },
+                new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Draw, By = StruckBy.Frozen, Do = UpgradeAction.KeepFrozen, Seconds = 1f },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Draw, By = StruckBy.Weapon, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 1 },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Draw, By = StruckBy.Weapon, Ranks = EnemyRank.Plain | EnemyRank.Elite, Cooldown = 0.25f, CooldownPerEnemy = true, Do = UpgradeAction.Heal, Amount = 2f },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Draw, By = StruckBy.Weapon, Ranks = EnemyRank.God, Cooldown = 0.25f, CooldownPerEnemy = true, Do = UpgradeAction.Heal, Amount = 1f }));

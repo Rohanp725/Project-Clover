@@ -203,11 +203,9 @@ Rise's rocks, a pillar, a heap of rubble.
 
 **When it happens.** For now, whenever the stance blocks any blow. Mountain Stance must be in a spell slot.
 
-**The numbers.** 3 Shards. The attacker is held for 1.5 seconds (0.6 for a god or an elite; the colossus not at all). The stance's wait ends, at most once every 20 seconds.
+**The numbers.** 3 Shards. Only a red attack counts. The attacker is held for 1.5 seconds (0.6 for a god or an elite; the colossus not at all), and the stance's wait ends.
 
 **Works with.** Fist of Rock (a full answer on a held enemy), Cairn, and your heavy blows on the held enemy.
-
-**Not built yet.** It should only work on red attacks. The game can't tell yet whether the blocked blow was red, so any blow counts, and the stance comes back at most once every 20 seconds.
 
 **Example.** A brute's red overhead swing lands on the stone. It stands stunned while you break its balance.
 

@@ -32,17 +32,15 @@ both are carried (in the playtest, whenever you pick Ice beside Lightning or Lig
 **Not built yet.** For now, the charge goes in a ring around the shattered enemy, instead of from each shard that hits.
 
 ## sleetcharge.snap
-**What it does.** A perfect guard against a chilled enemy makes its Sleet Charge go off right away, with full Static.
+**What it does.** A perfect guard against an enemy with a Sleet Charge running makes the charge go off right away, with full Static.
 
 **When it happens.** A perfect guard (press the guard button just before a blow lands) against an enemy that has Chill.
 
-**The numbers.** Mix, 3 Shards. The enemy's Static is filled all the way (five), and it goes off right away, dealing 7 damage and 5 stagger per stack (35 damage and 25 stagger at full) to everything within 4 metres. At most once a second.
+**The numbers.** Mix, 3 Shards. The enemy's Static is filled all the way (five), and its running Sleet Charge ends at once, so its own bolt falls now: 7 damage and 5 stagger per stack (35 damage and 25 stagger at full) to everything within 4 metres, and a Chill on all it reaches. At most once a second.
 
 **Works with.** Hoarfrost, Glass Storm, Thundersnow, Nothing Resists, and the time a perfect guard takes off your spell waits.
 
 **Example.** A chilled brute swings. Guard it perfectly, and it takes 35 damage, and its pack takes the same.
-
-**Not built yet.** It doesn't end a Sleet Charge that is already running. For now, the full charge goes off alongside it, and a new Sleet Charge may start from the Static it added.
 
 ## sleetcharge.resists
 **What it does.** Cold carries lightning without losing any of it. When Static goes off on a chilled enemy, it keeps going at full strength through the chilled enemies nearby.

@@ -9,13 +9,11 @@ are both carried.
 
 **When it happens.** Every time Venom Rime goes off while you carry both Poison and Ice. Venom Rime goes off when a dose lands on a chilled enemy, or when Chill lands on a poisoned one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Venom Rime.
 
-**The numbers.** Mix, 3 Shards. Both shapes work like the plain one: while the enemy has both afflictions, its poison doesn't fade, and each bite adds a Chill. Frost Over Frost: at the first bite after the enemy freezes, frost covers 3 metres around it for 5 seconds, adding a Chill and a dose each second to whatever stands there. At most once every 5 seconds. Cold Damage: while the enemy is frozen, each bite deals twice as much. When it is shattered, every dose goes off at once, for 6 damage each, on top of the shatter. After Venom Rime goes off on an enemy, it can't go off on that enemy again for 4 seconds.
+**The numbers.** Mix, 3 Shards. Both shapes work like the plain one: while the enemy has both afflictions, its poison doesn't fade, and each bite adds a Chill. Frost Over Frost: the moment the enemy freezes, frost covers 3 metres around it for 5 seconds, adding a Chill and a dose each second to whatever stands there. Once for each time Venom Rime goes off on it. Cold Damage: while the enemy is frozen, each bite deals twice as much. When it is shattered, every dose goes off at once, for 6 damage each, on top of the shatter. After Venom Rime goes off on an enemy, it can't go off on that enemy again for 4 seconds.
 
 **Works with.** Bitter Frost to set it up, Six Levels Down, The Drops Quicken, Rime Over Rime.
 
 **Example.** A crowd around one freezing brute: use Frost Over Frost. One captain with lots of doses: use Cold Damage, and shatter it.
-
-**Not built yet.** The game can't tell yet the exact moment an enemy freezes, so Frost Over Frost spreads at the first bite after the freeze.
 
 ## venomrime.bitterfrost
 **What it does.** Your heavy blows add a Chill and a dose of poison at the same time.

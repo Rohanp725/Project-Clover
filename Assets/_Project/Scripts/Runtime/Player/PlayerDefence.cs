@@ -407,6 +407,8 @@ namespace Clover.Player
                 // The spell's own guard: the blow is turned for nothing and the form answers it.
                 player.FormParrying = false;
                 player.FormParried = true;
+                // A red attack turned: the counters' Masters answer only that (the ledger's red-attack).
+                if (hit.Unblockable && upgrades != null) upgrades.RedTurned();
                 player.FormParriedFrom = hit.HasOrigin ? hit.Origin : transform.position - hit.Direction;
                 PerfectGuards++;
                 Vfx.Play(VfxKind.PerfectGuard, GuardPoint(), transform.forward);
@@ -462,7 +464,11 @@ namespace Clover.Player
             {
                 case GuardResult.Perfect:
                     PerfectGuards++;
-                    if (hit.Unblockable) RedTurns++;
+                    if (hit.Unblockable)
+                    {
+                        RedTurns++;
+                        if (upgrades != null) upgrades.RedTurned();
+                    }
                     Vfx.Play(VfxKind.PerfectGuard, GuardPoint(), transform.forward);
                     if (guardArc != null) guardArc.Pulse(new Color(4.5f, 3.2f, 0.7f, 1f), 0.35f, 0.5f);
                     Vfx.Play(VfxKind.Ring, GuardPoint(), transform.forward);

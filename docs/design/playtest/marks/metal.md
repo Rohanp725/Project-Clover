@@ -199,11 +199,9 @@ the steel you throw and plant: Flung Blade, the blades of Grave of Swords.
 
 **When it happens.** For now, any blow the circle blocks, once every 20 seconds. Circle of Steel must be in a spell slot.
 
-**The numbers.** 3 Shards. The wait ends right away, and you get 15 mana.
+**The numbers.** 3 Shards. Only a red attack counts. The wait ends right away, and you get 15 mana.
 
 **Works with.** Edge Guard, Temper (the mana for it), Ringing Plate.
-
-**Not built yet.** It should only work on red attacks. For now, any blocked blow works, once every 20 seconds.
 
 **Example.** A god's red sweep comes. Raise the circle, block it, and raise it again for the next one.
 

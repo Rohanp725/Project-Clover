@@ -27,7 +27,7 @@ namespace Clover.Player.Trees.Duo
         {
             const string A = Elements.Ice, B = Elements.Life;
 
-            // NEEDS: a thaw or shatter moment (Hard Spring wakes only on a shatter; now on any end of the cold, twice as hard).
+            // Hard Spring wakes only on a shatter (StruckBy.Shatter), twice as hard; a thaw wakes nothing.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Winter Seed: Hard Spring or Heart Under Ice", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -37,11 +37,12 @@ namespace Clover.Player.Trees.Duo
                     new ShapeDef
                     {
                         Name = "Hard Spring",
-                        Description = "The seed sleeps under the frost and stops fading. When the cold ends it wakes twice as hard: thorns of 24 a seed in 2.5 m, seeding all they reach to full, and you heal 3 a seed.",
+                        Description = "The seed sleeps under the frost and stops fading. Only when the ice is shattered does it wake, twice as hard: thorns of 24 a seed in 2.5 m, seeding all they reach to full, and you heal 3 a seed.",
                         Effects = Asleep(HardSpring, new[]
                         {
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = HardSpring, Do = UpgradeAction.Burst, Radius = 2.5f, DamagePerSpent = 24f, Affliction = AfflictionKind.Seeded, Stacks = ToFull },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = HardSpring, Do = UpgradeAction.Heal, Amount = 3f, PerStack = true },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = HardSpring, By = StruckBy.Shatter, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Seeded, CountOnly = true },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = HardSpring, By = StruckBy.Shatter, Do = UpgradeAction.Burst, Radius = 2.5f, DamagePerSpent = 24f, Affliction = AfflictionKind.Seeded, Stacks = ToFull },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = HardSpring, By = StruckBy.Shatter, Do = UpgradeAction.Heal, Amount = 3f, PerStack = true },
                         }),
                     },
                     new ShapeDef
