@@ -93,6 +93,7 @@ public class LoadoutWalkRunner : MonoBehaviour
         yield return null;
     }
 
+    private bool quick;
     private LoadoutScreen screen;
     private LoadoutController C => screen.Controller;
     private VisualElement Root => screen.GetComponent<UIDocument>().rootVisualElement;
@@ -122,6 +123,7 @@ public class LoadoutWalkRunner : MonoBehaviour
         if (opened)
         {
             if (parts.Contains("layout")) Layout();
+            quick = parts.Contains("quick");
             if (parts.Contains("stills")) yield return Stills();
             if (parts.Contains("pad")) yield return PadWalk();
             if (parts.Contains("mouse")) yield return MouseWalk();
@@ -231,7 +233,7 @@ public class LoadoutWalkRunner : MonoBehaviour
     // ---- The plan's states (7, step 9).
     private IEnumerator Stills()
     {
-        foreach (int size in new[] { 100, 125, 150 })
+        foreach (int size in quick ? new[] { 100 } : new[] { 100, 125, 150 })
         {
             C.SetTextSize(size);
             C.PointAt(LoadoutPlace.Starter);

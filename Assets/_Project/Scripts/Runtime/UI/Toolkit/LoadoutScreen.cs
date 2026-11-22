@@ -254,6 +254,8 @@ namespace Clover.UI.Toolkit
                 var place = root.Q(LoadoutPlaces.Names[i]);
                 places[i] = place;
                 if (place == null) continue;
+                // The gold frame goes under the card's own parts, so a "Set" or "Worn" tag on the border stays readable.
+                place.Q(className: "focus-frame")?.SendToBack();
                 var at = (LoadoutPlace)i;
                 // Focus follows the pointer only when it moves, so parts redrawn under a resting pointer never take it.
                 place.RegisterCallback<PointerMoveEvent>(_ => Controller?.PointAt(at));
@@ -397,7 +399,11 @@ namespace Clover.UI.Toolkit
             if (seal != null)
             {
                 Show(seal, board.Technique.Id.Length > 0 && !board.Technique.Bought);
-                seal.Q<Label>()?.SetText(board.Technique.Lock.StartsWith("Sealed", StringComparison.Ordinal) ? "Sealed" : "Not bought");
+                // "Sealed" fits beside a name; "Not bought" does not, so an unbought one shows its lock alone (the pane says why).
+                bool isSealed = board.Technique.Lock.StartsWith("Sealed", StringComparison.Ordinal);
+                var sealWords = seal.Q<Label>();
+                sealWords?.SetText("Sealed");
+                Show(sealWords, isSealed);
             }
 
             // The infused strikes: one line, never wrapped.

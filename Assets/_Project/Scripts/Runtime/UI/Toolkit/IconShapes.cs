@@ -84,7 +84,8 @@ namespace Clover.UI.Toolkit
             [Lock] = new Shape(32, F("M6 17a3 3 0 0 1 3-3h14a3 3 0 0 1 3 3v9a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3z"), S("M10 14V10a6 6 0 0 1 12 0v4", 4f, false)),
             [Mote] = new Shape(32, F("M16 2l5 9 9 5-9 5-5 9-5-9-9-5 9-5z")),
             [Shard] = new Shape(32, F("M16 2l9 10-9 18-9-18z"), CutS("M7 12h18", 2.5f)),
-            [Hand] = new Shape(32, F("M13 3h6v6h-6zM3 13h6v6H3zM23 13h6v6h-6zM13 23h6v6h-6z")),
+            // The Hand as the HUD draws it: four slots on a diamond round the surge.
+            [Hand] = new Shape(32, F("M16 2l5 5-5 5-5-5zM7 11l5 5-5 5-5-5zM25 11l5 5-5 5-5-5zM16 20l5 5-5 5-5-5zM13 16a3 3 0 1 0 6 0a3 3 0 1 0-6 0z")),
 
             [Sheath] = new Shape(64, S("M14 54L46 12", 9f), S("M40 22l10 7", 5f), S("M48 14l6-8", 6f), F("M9 54a5 5 0 1 0 10 0a5 5 0 1 0-10 0z")),
             [Click] = new Shape(48, S("M6 30h36", 5f), S("M10 22l6 8-6 8M24 18v24M38 22l-6 8 6 8", 4f), F("M20 10a4 4 0 1 0 8 0a4 4 0 1 0-8 0z")),
