@@ -115,7 +115,8 @@ namespace Clover.UI.Toolkit
             if (missing == 0) return "";
             if (missing == Roles.Length) return "No spells yet";
             if (missing == 1) return "No " + first;
-            return missing == 2 ? "No " + first + " or " + second : "No " + first + ", " + second + " and more";
+            // Three or more names run past the strip; the cells outlined in red name them.
+            return missing == 2 ? "No " + first + " or " + second : missing + " roles missing";
         }
 
         // ---- Keywords: the first one in a pane's words gets its meaning at the pane's foot (4.4).

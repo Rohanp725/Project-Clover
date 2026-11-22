@@ -35,6 +35,10 @@ namespace Clover.UI.Toolkit
         /// <summary>A on the element header, as the Reactions page (Q4) opens over the Loadout.</summary>
         public event Action ReactionsAsked;
 
+        [Tooltip("Kenney's button pictures (Generated/UI/GlyphPictures.asset, set by UiToolkitBuilder).")]
+        [SerializeField] private GlyphPictures glyphPictures;
+
+        public GlyphPictures GlyphPictures => glyphPictures;
         public bool IsOpen { get; private set; }
         public LoadoutController Controller { get; private set; }
         public int Opened { get; private set; }
@@ -75,6 +79,7 @@ namespace Clover.UI.Toolkit
 
         private void OnEnable()
         {
+            if (glyphPictures != null) Glyphs.Pictures = glyphPictures;
             root = GetComponent<UIDocument>().rootVisualElement?.Q("loadout");
             if (root == null) return;
             Bind();
@@ -210,8 +215,8 @@ namespace Clover.UI.Toolkit
         {
             if (stage == null) stage = WeaponStage.Make();
             stage.gameObject.SetActive(true);
-            var rack = player != null ? player.GetComponentInChildren<WeaponRack>() : null;
-            stage.Show(rack != null ? rack.ShownPart : null, "");
+            var animator = player != null ? player.GetComponentInChildren<PlayerAnimator>() : null;
+            stage.Show(animator != null ? animator.PictureWeapon : null, "");
             if (weaponPicture != null) weaponPicture.style.backgroundImage = Background.FromRenderTexture(stage.Texture);
         }
 
@@ -256,6 +261,11 @@ namespace Clover.UI.Toolkit
                 {
                     if (evt.button == 0) Controller?.Click(at);
                 });
+            }
+            foreach (var pair in new[] { LoadoutPlace.Keystone1, LoadoutPlace.Keystone2, LoadoutPlace.Bearing1, LoadoutPlace.Bearing2 })
+            {
+                var cell = places[(int)pair];
+                cell?.Q<Label>(className: "card-name")?.RegisterCallback<GeometryChangedEvent>(_ => FitPairLine(cell));
             }
             // X on a saved Hand: a click on its glyph keeps the Hand worn there (a held click for one that holds a Hand).
             foreach (var hand in new[] { LoadoutPlace.Hand1, LoadoutPlace.Hand2, LoadoutPlace.Hand3 })
@@ -459,7 +469,7 @@ namespace Clover.UI.Toolkit
             for (int hand = 0; hand < board.Hands.Length; hand++) Hand(places[(int)LoadoutPlace.Starter + hand], board.Hands[hand], hand, device);
 
             Text("element-summary", board.ElementWords);
-            Text("element-summary-roles", loadout.RoleLetters());
+            Text("element-summary-roles", loadout.MissingRoles.Length > 0 ? loadout.MissingRoles : "Every role filled");
             var icons = root.Q("element-summary-icons");
             if (icons != null)
             {
@@ -842,7 +852,18 @@ namespace Clover.UI.Toolkit
             Show(cell.Q(className: "set-tag"), mark.Set);
             var line = cell.Q<Label>(className: "card-line");
             line?.EnableInClassList("t-memories", !empty && !mark.Bought);
-            Show(line, line != null && line.text.Length > 0);
+            FitPairLine(cell);
+        }
+
+        // A pair's name that wraps to two lines hides the short line under it, so the pair keeps its 84 px and the
+        // column stays clear of the infused strikes (the pane says the rest).
+        private static void FitPairLine(VisualElement cell)
+        {
+            var name = cell?.Q<Label>(className: "card-name");
+            var line = cell?.Q<Label>(className: "card-line");
+            if (name == null || line == null) return;
+            bool wraps = name.layout.height > name.resolvedStyle.fontSize * 1.9f;
+            Show(line, !wraps && line.text.Length > 0);
         }
 
         private static void Rim(VisualElement element, string elementName)

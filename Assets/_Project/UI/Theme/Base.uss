@@ -35,6 +35,13 @@ Label {
     white-space: normal;
 }
 
+/* The default theme gives .unity-label 4 px of padding and margins and no wrapping, which a type selector cannot undo. */
+.unity-label {
+    padding: 0;
+    margin: 0;
+    white-space: normal;
+}
+
 .t-title {
     font-size: var(--size-title);
     color: var(--color-gold);
@@ -271,7 +278,7 @@ Label {
     color: var(--color-text-off);
 }
 
-/* ---- Button glyphs: a coloured face with a dark letter, after Kenney's Input Prompts, until the pack's pictures replace them (5.2). */
+/* ---- Button glyphs: Kenney's pictures where the pack has one (5.2), else a coloured face with a dark letter or a word box. */
 
 .glyph {
     width: var(--size-glyph);
@@ -316,6 +323,39 @@ Label {
     border-radius: 8px;
 }
 
+/* Kenney's pictures (Glyphs.Pictures): white in the pack, tinted here; the four Xbox faces in their colours. */
+.glyph-picture {
+    background-color: rgba(0, 0, 0, 0);
+    border-radius: 0;
+    padding-left: 0;
+    padding-right: 0;
+    /* The pack draws each shape at about three quarters of its square; grown here so it fills the glyph's box. */
+    background-size: 128% 128%;
+    background-position: center;
+    background-repeat: no-repeat;
+    -unity-background-image-tint-color: var(--color-glyph-plain);
+}
+
+.glyph-picture.glyph-a {
+    background-color: rgba(0, 0, 0, 0);
+    -unity-background-image-tint-color: var(--color-glyph-a);
+}
+
+.glyph-picture.glyph-b {
+    background-color: rgba(0, 0, 0, 0);
+    -unity-background-image-tint-color: var(--color-glyph-b);
+}
+
+.glyph-picture.glyph-x {
+    background-color: rgba(0, 0, 0, 0);
+    -unity-background-image-tint-color: var(--color-glyph-x);
+}
+
+.glyph-picture.glyph-y {
+    background-color: rgba(0, 0, 0, 0);
+    -unity-background-image-tint-color: var(--color-glyph-y);
+}
+
 /* Space between a glyph and the words beside it; USS has no sibling selectors, so the code adds this class. */
 .gap-left {
     margin-left: 8px;
@@ -353,6 +393,9 @@ Label {
 
 .pane-line > Label {
     flex-shrink: 1;
+    min-width: 0;
+    /* A run of words longer than the line wraps inside it instead of running past the pane. */
+    max-width: 100%;
 }
 
 /* ---- Element colours: rims, icons, and text tints. */

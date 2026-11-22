@@ -36,6 +36,16 @@ namespace Clover.Tests
         [TestCase("Navigate", "<Keyboard>/downArrow")]
         [TestCase("Navigate", "<Keyboard>/leftArrow")]
         [TestCase("Navigate", "<Keyboard>/rightArrow")]
+        [TestCase("MenuMove", "<Gamepad>/leftStick")]
+        [TestCase("MenuMove", "<Gamepad>/dpad")]
+        [TestCase("MenuMove", "<Keyboard>/w")]
+        [TestCase("MenuMove", "<Keyboard>/a")]
+        [TestCase("MenuMove", "<Keyboard>/s")]
+        [TestCase("MenuMove", "<Keyboard>/d")]
+        [TestCase("MenuMove", "<Keyboard>/upArrow")]
+        [TestCase("MenuMove", "<Keyboard>/downArrow")]
+        [TestCase("MenuMove", "<Keyboard>/leftArrow")]
+        [TestCase("MenuMove", "<Keyboard>/rightArrow")]
         [TestCase("Submit", "<Gamepad>/buttonSouth")]
         [TestCase("Submit", "<Keyboard>/e")]
         [TestCase("Submit", "<Keyboard>/enter")]
@@ -73,6 +83,8 @@ namespace Clover.Tests
                 int space = pair.IndexOf(' ');
                 string action = pair.Substring(0, space), path = pair.Substring(space + 1);
                 if (path == "2DVector" || path == "1DAxis") continue;
+                // Navigate is MenuMove's twin for the Input System's UI integration (PassThrough); the screen swallows it.
+                if (action == "Navigate") continue;
                 Assert.IsFalse(seen.TryGetValue(path, out string other) && other != action, $"{path} is both {other} and {action}");
                 seen[path] = action;
             }

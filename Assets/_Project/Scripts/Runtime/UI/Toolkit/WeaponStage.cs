@@ -12,8 +12,9 @@ namespace Clover.UI.Toolkit
     public class WeaponStage : MonoBehaviour
     {
         public const int TextureSize = 512;
-        /// <summary>Degrees a second the weapon turns.</summary>
-        public const float TurnSpeed = 14f;
+        /// <summary>How far the weapon sways either side of facing the camera, and how fast (radians a second).</summary>
+        public const float SwayDegrees = 32f;
+        public const float SwaySpeed = 0.45f;
         // Far below the world, and the camera's reach short, so nothing of the world is in the picture.
         private static readonly Vector3 StageAt = new Vector3(0f, -4000f, 0f);
 
@@ -58,7 +59,7 @@ namespace Clover.UI.Toolkit
             fill.transform.localPosition = new Vector3(-1.2f, 1.4f, -2f);
             fill.type = LightType.Point;
             fill.range = 5f;
-            fill.intensity = 1.2f;
+            fill.intensity = 2.6f;
         }
 
         /// <summary>Shows a copy of the weapon's model (the rack's part shown now), laid on the diagonal as the mockup has it.</summary>
@@ -99,8 +100,11 @@ namespace Clover.UI.Toolkit
             var spin = turntable.localRotation;
             turntable.localRotation = Quaternion.identity;
             tilt.localRotation = Quaternion.identity;
-            var bounds = renderers[0].bounds;
-            foreach (var each in renderers) bounds.Encapsulate(each.bounds);
+            // The weapon's length laid along the stage's x, so the tilt puts it on the diagonal and the sway shows its side.
+            var bounds = Measure(renderers);
+            if (bounds.size.z >= bounds.size.x && bounds.size.z >= bounds.size.y) shown.transform.localRotation = Quaternion.Euler(0f, 90f, 0f);
+            else if (bounds.size.y >= bounds.size.x) shown.transform.localRotation = Quaternion.Euler(0f, 0f, 90f);
+            bounds = Measure(renderers);
             float size = Mathf.Max(bounds.size.x, Mathf.Max(bounds.size.y, bounds.size.z));
             if (size > 0.0001f)
             {
@@ -113,9 +117,17 @@ namespace Clover.UI.Toolkit
             turntable.localRotation = spin;
         }
 
+        private static Bounds Measure(Renderer[] renderers)
+        {
+            var bounds = renderers[0].bounds;
+            foreach (var each in renderers) bounds.Encapsulate(each.bounds);
+            return bounds;
+        }
+
         private void Update()
         {
-            if (shown != null) turntable.Rotate(Vector3.up, TurnSpeed * Time.unscaledDeltaTime, Space.World);
+            // A sway rather than a full turn, so the blade never stands edge-on to the camera and thins to a line.
+            if (shown != null) turntable.localRotation = Quaternion.Euler(0f, SwayDegrees * Mathf.Sin(Time.unscaledTime * SwaySpeed), 0f);
         }
 
         private void OnDestroy()

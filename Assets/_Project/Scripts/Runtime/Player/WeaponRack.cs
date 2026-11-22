@@ -64,6 +64,23 @@ namespace Clover.Player
             return false;
         }
 
+        /// <summary>The weapon's part held in the hand (else the one at rest), shown now or not; null for a carry with none.</summary>
+        public GameObject PartFor(string carry)
+        {
+            if (string.IsNullOrEmpty(carry)) return null;
+            foreach (var set in sets)
+            {
+                if (set.Carry != carry) continue;
+                if (set.InHand != null)
+                    foreach (var part in set.InHand)
+                        if (part != null) return part;
+                if (set.AtRest != null)
+                    foreach (var part in set.AtRest)
+                        if (part != null) return part;
+            }
+            return null;
+        }
+
         /// <summary>The part of the weapon shown now (in the hand or at rest), or null with none: where a charged blade is drawn. No allocation.</summary>
         public GameObject ShownPart
         {

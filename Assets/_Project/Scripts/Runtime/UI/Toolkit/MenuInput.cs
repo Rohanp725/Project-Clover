@@ -24,7 +24,9 @@ namespace Clover.UI.Toolkit
         {
             map = controls != null ? controls.FindActionMap(ControlBindings.MenusMap) : null;
             if (map == null) return;
-            navigate = map.FindAction("Navigate");
+            // MenuMove, not Navigate: Navigate is PassThrough for the Input System's UI integration, so it reads the last
+            // control touched, and a second pad's idle stick would wipe the push of the one in hand.
+            navigate = map.FindAction("MenuMove") ?? map.FindAction("Navigate");
             submit = map.FindAction("Submit");
             cancel = map.FindAction("Cancel");
             keep = map.FindAction("Keep");

@@ -1248,3 +1248,36 @@ Technique, left, then right now returns to the Technique, and the Element header
    each half folded.
 10. Walk the screen with a pad, as 5.3 item 5 says: every place, every list, Y, a held X, LB and RB, L3, and B from
     every depth. Then walk it with the mouse.
+
+**The editor step, done (2026-11-22).** Steps 1 to 10 are done.
+
+- **What changed:**
+  - `HandMenu` and the Shapes rest entry are deleted. The rest fire's first entry is now "Loadout".
+  - `ShapeMenu` is now the small Reactions page. It lists only the reactions' shapes and opens over the Loadout from A on
+    the element header; B brings you back to the Loadout.
+  - The screen's sounds stay hooks (`Sounded`), since the game has no audio by the owner's choice.
+- **Glyphs:** the 62 Kenney pictures are in `Art/Textures/UI/Glyphs`, keyed by `Glyphs.Id` through
+  `Generated/UI/GlyphPictures.asset`. Keys that carry a word (Tab, Space, Page Down) stay as word boxes, because the
+  pack's word is a few pixels tall at glyph size.
+- **Input:**
+  - `UI/Navigate` is PassThrough and `UI/MiddleClick` exists, as the Input System's UI integration wants.
+  - The Loadout moves by its own `UI/MenuMove` (a Value), because a PassThrough reads the last control touched, so an
+    idle second pad would wipe a push.
+  - The keys show Tab alone for Steel / Element.
+- **Fixes the stills showed:**
+  - The default theme's `.unity-label` padding, margins and no-wrap made every card 13 px too tall, which put the
+    Bearing's second card under the infused strikes. That style is reset now.
+  - A pair whose name wraps hides its short line.
+  - The board is opaque: blended in linear space, even 4% of the world showed through plainly.
+  - The weapon stage shows the Katana (the drawn sword, or the rack's part for the other weapons). It is laid on the
+    diagonal and sways rather than spinning edge-on.
+  - At 125% and 150%: the Hands flow, the infused strikes follow the columns, the cards cut the Steel half at their
+    edge, and the summaries end in an ellipsis.
+- **Checks:**
+  - The stills are in `review/shots/current/loadout/` (1920x1080 and 1280x720, at 100, 125 and 150%).
+  - `AgentScripts/LoadoutWalk.cs` walks the screen:
+    - **Pad:** every place reached from South, A into a list and the cards, Y, a held X, LB and RB, L3, and B from the
+      list, the cards, the Reactions page and the board.
+    - **Mouse:** a move points at every place, a click acts, and a right click backs out.
+  - A real DualShock plugged in ignores `GamepadState` events, so the probe walks with a pad of its own.
+

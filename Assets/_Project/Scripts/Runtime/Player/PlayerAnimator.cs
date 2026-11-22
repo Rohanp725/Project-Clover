@@ -93,6 +93,21 @@ namespace Clover.Player
         /// <summary>Adds the weapons hung on the character's sockets, shown to suit the weapon in hand.</summary>
         public void ConfigureRack(WeaponRack rackToShow) => rack = rackToShow;
 
+        /// <summary>
+        /// The weapon carried, as a picture shows it (the Loadout's stage): the drawn sword for the Katana, else the rack's
+        /// part held in the hand, shown now or not (at a rest fire the weapon may be put away). Null for bare hands.
+        /// </summary>
+        public GameObject PictureWeapon
+        {
+            get
+            {
+                var weapon = combat != null ? combat.Weapon : null;
+                if (weapon == null) return null;
+                if (weapon.UsesSword) return drawnSword != null ? drawnSword : sheath;
+                return rack != null ? rack.PartFor(weapon.Carry) : null;
+            }
+        }
+
         /// <summary>The weapon as it is seen now: the drawn sword, the sheath it waits in, or the rack's part. Null for bare hands.</summary>
         public GameObject ShownWeapon
         {

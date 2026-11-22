@@ -1,4 +1,5 @@
 using Clover.Player;
+using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
@@ -6,13 +7,20 @@ namespace Clover.UI.Toolkit
 {
     /// <summary>
     /// The picture of a press (ui_rest_fire_plan.md 4.3 and 3.5.4): the control an action is bound to on the device last
-    /// used, following rebinding, drawn next to what it acts on. Until Kenney's Input Prompts come in through the asset
-    /// intake (5.2), a glyph is a styled label: a coloured face with its letter for the four face buttons on an Xbox pad,
-    /// a rounded box with its word for everything else. <see cref="Id"/> names the control the same way for every device
-    /// ("xbox:a", "ps:cross", "key:e", "mouse:left") so the editor step maps each to one picture of the pack.
+    /// used, following rebinding, drawn next to what it acts on. A glyph is Kenney's Input Prompts picture of the control
+    /// (<see cref="Pictures"/>, keyed by <see cref="Id"/>: "xbox:a", "ps:cross", "key:e", "mouse:left"), drawn white and
+    /// tinted by its class (the four Xbox faces in their colours). A control with no picture is a styled label: a coloured
+    /// face with its letter for the four face buttons on an Xbox pad, a rounded box with its word for everything else.
     /// </summary>
     public static class Glyphs
     {
+        /// <summary>The pack's pictures, handed over by the screen that draws glyphs; null draws every glyph as a label.</summary>
+        public static GlyphPictures Pictures { get; set; }
+
+        // Domain reload is off: the last play's pictures must not be kept.
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => Pictures = null;
+
         /// <summary>The control's id for a picture of the pack: device style, then the control.</summary>
         public static string Id(string path, ControlDevice style)
         {
@@ -78,6 +86,21 @@ namespace Clover.UI.Toolkit
             // A glyph the tree named keeps its name, so the screen can find it again.
             if (string.IsNullOrEmpty(glyph.name)) glyph.name = "glyph-" + id.Replace(':', '-');
             glyph.userData = id;
+            var picture = Pictures != null && !Worded(id) ? Pictures.Find(id) : null;
+            glyph.style.backgroundImage = picture != null ? new StyleBackground(picture) : new StyleBackground(StyleKeyword.Null);
+            if (picture != null)
+            {
+                glyph.text = "";
+                glyph.AddToClassList("glyph-picture");
+                switch (id)
+                {
+                    case "xbox:a": glyph.AddToClassList("glyph-a"); break;
+                    case "xbox:b": glyph.AddToClassList("glyph-b"); break;
+                    case "xbox:x": glyph.AddToClassList("glyph-x"); break;
+                    case "xbox:y": glyph.AddToClassList("glyph-y"); break;
+                }
+                return;
+            }
             switch (id)
             {
                 case "xbox:a": Face(glyph, "A", "glyph-a"); return;
@@ -87,6 +110,17 @@ namespace Clover.UI.Toolkit
             }
             glyph.AddToClassList("glyph-wide");
             glyph.text = style == ControlDevice.Keys ? ControlNames.Keys(path) : ControlNames.Pad(path, style);
+        }
+
+        /// <summary>
+        /// True for a key whose picture carries a word (Tab, Space, Page Down): at glyph size the pack's word is a few
+        /// pixels tall, so these stay a box with the word in reading type. Letters, digits and arrows use the pictures.
+        /// </summary>
+        public static bool Worded(string id)
+        {
+            if (string.IsNullOrEmpty(id) || !id.StartsWith("key:", System.StringComparison.Ordinal)) return false;
+            string control = id.Substring(4);
+            return control.Length > 1 && !control.EndsWith("Arrow", System.StringComparison.Ordinal);
         }
 
         private static void Face(Label glyph, string letter, string colour)

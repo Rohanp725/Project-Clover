@@ -144,6 +144,7 @@ namespace Clover.Player
                 for (int i = 0; i < bindings.Count; i++)
                 {
                     if (candidate == action && i == bindingIndex) continue;
+                    if (Twins(candidate, action)) continue;
                     var each = bindings[i];
                     if (each.isComposite || !InGroup(each, group)) continue;
                     if (!string.Equals(each.effectivePath, path, StringComparison.OrdinalIgnoreCase)) continue;
@@ -181,6 +182,16 @@ namespace Clover.Player
                 return true;
             }
             return false;
+        }
+
+        /// <summary>
+        /// The menus' Navigate (PassThrough, as the Input System's UI integration wants it) and MenuMove (the Loadout's own,
+        /// a Value, so an idle second pad cannot wipe a push) are one move bound twice on purpose: never a clash.
+        /// </summary>
+        public static bool Twins(InputAction one, InputAction other)
+        {
+            if (one == null || other == null || one == other || !IsMenus(one.actionMap) || !IsMenus(other.actionMap)) return false;
+            return (one.name == "Navigate" && other.name == "MenuMove") || (one.name == "MenuMove" && other.name == "Navigate");
         }
 
         /// <summary>The spell layer's action: held, it turns the pad's face buttons into the four spells.</summary>

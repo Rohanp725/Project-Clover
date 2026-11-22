@@ -28,6 +28,8 @@ namespace Clover.EditorTools
         public const string ThemePath = "Assets/_Project/UI/Theme/Clover.tss";
         public const string LoadoutUxml = "Assets/_Project/UI/Loadout/Loadout.uxml";
         public const string ControlsPath = "Assets/_Project/Settings/Controls.inputactions";
+        public const string GlyphFolder = "Assets/_Project/Art/Textures/UI/Glyphs";
+        public const string GlyphPicturesPath = Folder + "/GlyphPictures.asset";
         /// <summary>The menus draw over the HUD canvas.</summary>
         public const float MenuSorting = 100f;
 
@@ -47,6 +49,7 @@ namespace Clover.EditorTools
             MakeFont("Assets/_Project/Art/Fonts/atkinson_hyperlegible_regular.ttf", ReadingFont, bold);
             MakeFont("Assets/_Project/Art/Fonts/spectral_semibold.ttf", TitleFont, null);
             MakePanel();
+            MakeGlyphPictures();
             var actions = AssetDatabase.LoadAssetAtPath<InputActionAsset>(ControlsPath);
             if (actions != null && InputSystem.actions != actions) InputSystem.actions = actions;
             AssetDatabase.SaveAssets();
@@ -89,6 +92,31 @@ namespace Clover.EditorTools
             return asset;
         }
 
+        // Kenney's pictures under their control ids (GlyphPictures.IdOfFile), kept under a stable name so scenes keep it.
+        public static GlyphPictures MakeGlyphPictures()
+        {
+            var pictures = AssetDatabase.LoadAssetAtPath<GlyphPictures>(GlyphPicturesPath);
+            if (pictures == null)
+            {
+                pictures = ScriptableObject.CreateInstance<GlyphPictures>();
+                AssetDatabase.CreateAsset(pictures, GlyphPicturesPath);
+            }
+            var ids = new System.Collections.Generic.List<string>();
+            var textures = new System.Collections.Generic.List<Texture2D>();
+            foreach (string guid in AssetDatabase.FindAssets("t:Texture2D", new[] { GlyphFolder }))
+            {
+                string path = AssetDatabase.GUIDToAssetPath(guid);
+                string id = GlyphPictures.IdOfFile(Path.GetFileNameWithoutExtension(path));
+                var texture = AssetDatabase.LoadAssetAtPath<Texture2D>(path);
+                if (id.Length == 0 || texture == null) continue;
+                ids.Add(id);
+                textures.Add(texture);
+            }
+            pictures.Set(ids.ToArray(), textures.ToArray());
+            EditorUtility.SetDirty(pictures);
+            return pictures;
+        }
+
         private static void MakePanel()
         {
             var panel = AssetDatabase.LoadAssetAtPath<PanelSettings>(PanelPath);
@@ -117,7 +145,10 @@ namespace Clover.EditorTools
             var document = menus.AddComponent<UIDocument>();
             document.panelSettings = AssetDatabase.LoadAssetAtPath<PanelSettings>(PanelPath);
             document.visualTreeAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(LoadoutUxml);
-            menus.AddComponent<LoadoutScreen>();
+            var screen = menus.AddComponent<LoadoutScreen>();
+            var serialized = new SerializedObject(screen);
+            serialized.FindProperty("glyphPictures").objectReferenceValue = AssetDatabase.LoadAssetAtPath<GlyphPictures>(GlyphPicturesPath);
+            serialized.ApplyModifiedPropertiesWithoutUndo();
             return menus;
         }
 

@@ -77,7 +77,7 @@
 }
 
 .way-column > .t-label {
-    height: 28px;
+    min-height: 28px;
     margin-bottom: 4px;
 }
 
@@ -98,7 +98,12 @@
 .card-words {
     flex-shrink: 1;
     flex-grow: 1;
+    /* Sized by the card, not by its words, so a long name wraps inside the card. */
+    flex-basis: 0;
+    min-width: 0;
 }
+
+/* A pair's name that wraps to two lines hides its short line (LoadoutScreen.FitPairLine), so the pair keeps 84 px. */
 
 .pair-cell {
     min-height: 84px;
@@ -123,6 +128,18 @@
 
 .technique {
     margin-top: 4px;
+}
+
+/* A long technique name gives way to its seal ("Not bought"), with an ellipsis, rather than run past the card. */
+.technique > .card-name {
+    flex-shrink: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-right: 12px;
+}
+
+#technique-seal {
+    flex-shrink: 0;
 }
 
 .pips {
@@ -287,6 +304,9 @@
 
 .slot-words {
     flex-shrink: 1;
+    flex-grow: 1;
+    flex-basis: 0;
+    min-width: 0;
 }
 
 .slot-glyph {
@@ -429,6 +449,14 @@
 
 /* ---- Folded halves (3.5.8): one line of 72 px. */
 
+/* A summary longer than the line ends in an ellipsis; the half opens with LB, RB or a push off its edge. */
+.folded > Label {
+    flex-shrink: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .folded {
     position: absolute;
     left: 64px;
@@ -469,6 +497,54 @@
 
 .fold-element #steel-half {
     height: 726px;
+}
+
+/* With the Element half folded the Steel half's words grow, so the infused strikes follow the columns down. */
+.fold-element .infused {
+    position: relative;
+    left: auto;
+    top: auto;
+    margin-top: 24px;
+    align-self: center;
+}
+
+.fold-element .ink-line {
+    display: none;
+}
+
+.fold-element .infused {
+    width: auto;
+    min-width: 880px;
+}
+
+/* The 150% title is taller than the gap above the halves. */
+.size-150 #title {
+    top: 26px;
+}
+
+/* With Steel folded the Element half's parts flow down its 726 px instead of sitting at 100%'s places. */
+.fold-steel #hands-label {
+    position: relative;
+    top: auto;
+    margin-top: 24px;
+}
+
+.fold-steel #hands {
+    position: relative;
+    top: auto;
+    margin-top: 4px;
+}
+
+/* In a list the Hands give their room to the slot being chosen. */
+.fold-steel.mode-list #hands-label,
+.fold-steel.mode-list #hands {
+    display: none;
+}
+
+/* At 125% and 150% the header is as tall as North or taller, so the middle row no longer tucks under it. */
+.size-125 .element-middle,
+.size-150 .element-middle {
+    margin-top: 0;
 }
 
 /* At 125% and 150% the slot cards drop their shape line, which the pane shows anyway (3.5.8). */
@@ -535,6 +611,8 @@
 .list-row-words {
     flex-grow: 1;
     flex-shrink: 1;
+    flex-basis: 0;
+    min-width: 0;
 }
 
 .list-tag {
@@ -582,6 +660,23 @@
     opacity: 0;
 }
 
+/* The cards take the Element half's room: what grew into it at 125% and 150% steps aside or is cut at its edge. */
+.fold-element.mode-cards #steel-half {
+    height: 408px;
+    overflow: hidden;
+}
+/* The cards take the Element half's room: what grew into it at 125% and 150% steps aside. */
+.mode-cards #element-folded,
+.fold-element.mode-cards .infused {
+    display: none;
+}
+
+/* At 125% and 150% a card drops its marks line, which the pane shows anyway. */
+.size-125 .aspect-choice > .t-small,
+.size-150 .aspect-choice > .t-small {
+    display: none;
+}
+
 /* ---- The pane (4.4). */
 
 .pane-scroll {
@@ -600,6 +695,8 @@
 .pane-head-words {
     flex-shrink: 1;
     flex-grow: 1;
+    flex-basis: 0;
+    min-width: 0;
 }
 
 .pane-section {
@@ -617,6 +714,8 @@
 }
 
 .pane-more {
+    background-color: var(--color-raised);
+    padding-left: 12px;
     position: absolute;
     left: 32px;
     right: 32px;
