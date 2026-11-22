@@ -32,7 +32,18 @@ namespace Clover.Gameplay
             PoisonBit = null;
             Reacted = null;
             Condition = null;
+            AfflictionLaid = null;
         }
+
+        /// <summary>
+        /// Every affliction that took (<see cref="AfflictionSet.Lay"/> and a burn lit, <see cref="AfflictionSet.Ignite"/>):
+        /// the set it went on, who the caller named, the kind, the stacks and what laid it. For the filming rig's
+        /// self-checks (a second cast after a reaction); nothing in play listens.
+        /// </summary>
+        public static event Action<AfflictionSet, Component, AfflictionKind, int, LaySource> AfflictionLaid;
+
+        public static void RaiseLaid(AfflictionSet set, Component who, AfflictionKind kind, int stacks, LaySource source) =>
+            AfflictionLaid?.Invoke(set, who, kind, stacks, source);
 
         /// <summary>
         /// Two afflictions reacted on something: who, the pair (numbered as in <see cref="AfflictionPairs"/>), and the

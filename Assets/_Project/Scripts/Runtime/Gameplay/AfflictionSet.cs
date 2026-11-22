@@ -190,6 +190,7 @@ namespace Clover.Gameplay
             if (seconds <= 0f) return;
             int carried = PresentMask;
             Burn.Ignite(seconds, stacks);
+            CombatEvents.RaiseLaid(this, who, AfflictionKind.Burn, stacks, source);
             if (source != LaySource.Reaction && (carried & ~(1 << (int)AfflictionKind.Burn)) != 0)
                 (Reactions ?? ReactionEngine.Shared).Laid(this, who, AfflictionKind.Burn, carried);
         }
@@ -232,6 +233,7 @@ namespace Clover.Gameplay
             // Read before the laying: the partner must already be there, and the laying itself may spend it (Flash Freeze).
             int carried = PresentMask;
             var result = Apply(kind, count, seconds, power);
+            if (result.Applied) CombatEvents.RaiseLaid(this, who, kind, count, source);
             if (result.Applied && source != LaySource.Reaction && (carried & ~(1 << (int)kind)) != 0)
                 (Reactions ?? ReactionEngine.Shared).Laid(this, who, kind, carried);
             return result;

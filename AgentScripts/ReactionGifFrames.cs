@@ -31,6 +31,22 @@ using UnityEngine.InputSystem.LowLevel;
 // poison's bites, so the bites are seen), and 0.4 s after. Frames go to review/gifs/reactions/frames/<name>/<nnn>.png
 // with info.txt (start frame, impact time and frame, designed or composed, group or alone, set off or not).
 // Set the game view to 1920x1080 first (AgentScripts/GameViewSize.cs). Assemble with AgentScripts/reaction_gifs.py.
+//
+// The rig, v2 (the owner, 2026-11-22: "the enemies are getting hit by something, even after the effect ... a second
+// cast of both element afflictions on the enemy, even when it cant react"; docs/design/feedback/2026-11-20_round4_early_notes.md):
+// - Fresh bodies for every clip: every enemy put back, afflictions cleared, the look pool and the ground empty.
+// - One trigger: the first element's affliction laid once (two stacks, as a spell lays it), then the second element's
+//   real base spell cast ONCE by the player at the main enemy, which sets the reaction off. Nothing is cast or struck
+//   after it. Only if that spell sets nothing off within 1.6 s is the second laid by hand, once (info.txt: trigger=laid).
+// - Quiet enemies: no ranged casters in the cast, the areas' storm strikes off, an attack's wind-up broken at once,
+//   never provoked; they still flinch, stagger and fall.
+// - Self-checks from a log of every affliction laid (CombatEvents.AfflictionLaid), every blow taken (Enemy.Struck) and
+//   the looks on the struck one, frame by frame. A clip FAILS when, after the reaction fires, an affliction is laid by
+//   anything but a reaction; a blow lands that is not the reaction's own, or any blow lands after the effect has ended;
+//   or the second element's own affliction look shows on the body that just reacted. The reasons are in info.txt
+//   (check=PASS or FAIL ...), the summary and the probe's lines, and every logged event is in log.txt.
+// - AgentScripts/reaction_gif_stills.txt present: a check run by day, a few frames only (before, 0.2 s and 1 s after
+//   the reaction, and the last), the checks the same.
 // bash AgentScripts/runprobe.sh ProvingGround ReactionGifFrames 900
 public static class ReactionGifFrames
 {
@@ -111,6 +127,9 @@ public class ReactionGifFramesRunner : MonoBehaviour
             enemy.GuardOpenFor = 5f;
             enemy.Brain.AggroRange = 0f;
             enemy.Brain.LeashRange = 0.5f;
+            // Quiet: never provoked into a fight, and an attack begun is broken off in its wind-up.
+            enemy.Brain.ProvokedSeconds = 0f;
+            if (enemy.Brain.State == EnemyState.Telegraph) enemy.Brain.Reset();
             // In a fight its bars are up, and with them what it carries is drawn on its body: kept up here, as the
             // enemy stands still and is never hurt into showing them.
             SinceHurt.SetValue(enemy, 0f);
@@ -411,7 +430,9 @@ public class ReactionGifFramesRunner : MonoBehaviour
             foreach (var enemy in pen.Enemies)
             {
                 if (enemy == null) continue;
-                if (cast.Count < 5 && (pen.Land == "The castle" || enemy.name == "Gilded Spearman")) cast.Add(enemy);
+                // No caster among the cast: a ranged enemy's bolts landed after the effect.
+                bool quiet = !enemy.IsRanged && !enemy.Kind.IsBoss;
+                if (cast.Count < 5 && quiet && (pen.Land == "The castle" || enemy.name == "Gilded Spearman")) cast.Add(enemy);
                 // One let out but not filmed is put away, so nothing walks in on the frame.
                 else enemy.gameObject.SetActive(false);
             }
@@ -424,12 +445,13 @@ public class ReactionGifFramesRunner : MonoBehaviour
             yield break;
         }
         Say($"cast: {string.Join(", ", cast.Select(enemy => enemy.Kind.Name))}");
-        // What each body measures out from its upright at its knees, its chest and its head (BodyGirth).
-        foreach (var enemy in cast)
-        {
-            int girth = BodyGirth.Slot(enemy.transform);
-            Say($"{enemy.Kind.Name} girth: {BodyGirth.RadiusAt(girth, enemy.BodyHeight * 0.3f):0.00} m at the knee, {BodyGirth.RadiusAt(girth, enemy.BodyHeight * 0.65f):0.00} at the chest, {BodyGirth.RadiusAt(girth, enemy.BodyHeight * 0.9f):0.00} at the head");
-        }
+        // No storm strikes from the areas while filming.
+        directors = FindObjectsByType<AreaDirector>(FindObjectsInactive.Exclude).Where(director => director.enabled).ToList();
+        foreach (var director in directors) director.enabled = false;
+        CombatEvents.AfflictionLaid += OnLaid;
+        CombatEvents.Reacted += OnReacted;
+        foreach (var enemy in cast) enemy.Struck += OnStruck;
+        element = player.GetComponent<PlayerElement>();
         // The floor's painted words, the training dummies and the afflicted row near the floor are not the look.
         hidden.AddRange(FindObjectsByType<TextMesh>(FindObjectsInactive.Exclude).Where(text => (text.transform.position - Middle).magnitude < 14f).Select(text => text.gameObject));
         hidden.AddRange(FindObjectsByType<TrainingDummy>(FindObjectsInactive.Exclude).Where(dummy => (dummy.transform.position - Middle).magnitude < 14f).Select(dummy => dummy.gameObject));
@@ -488,6 +510,9 @@ public class ReactionGifFramesRunner : MonoBehaviour
                 group = true;
             }
 
+            // The second element is the one the player carries and casts: taken now, before the clean start.
+            var secondElement = Elements.All.FirstOrDefault(info => info.Affliction == AfflictionPairs.Second(pair));
+            if (secondElement != null && (!element.HasElement || element.Info != secondElement)) element.Take(ElementKit.ByName(secondElement.Name, false));
             // A clean start: everyone put back and stood again, the player still, the pool empty and the ground clear.
             player.Teleport(Middle + Stand, Quaternion.LookRotation(Away, Vector3.up));
             lane = look == "The Bolt Runs True";
@@ -530,25 +555,62 @@ public class ReactionGifFramesRunner : MonoBehaviour
             Say($"{name} window {window.x},{window.y} {window.width}x{window.height}");
             Time.captureFramerate = Rate;
             int frame = 0;
+            laid.Clear();
+            struckLog.Clear();
+            reactedFrame = -1;
+            recording = true;
+            mainBody = main;
             for (; frame < Before; frame++)
             {
+                clipFrame = frame;
                 yield return new WaitForEndOfFrame();
-                Grab(folder, frame, window);
+                if (!Stills || frame == Before - 1) Grab(folder, frame, window);
                 yield return null;
             }
             int start = frame;
             int shownBefore = reactions.TimesShown(pair);
             var first = AfflictionPairs.First(pair);
             var second = AfflictionPairs.Second(pair);
+            // One trigger: the first laid once, the second's own spell cast once at the main enemy.
+            clipFrame = frame;
             main.Afflictions.Lay(first, 2, 0f, 1f, LaySource.Spell, main);
-            main.Afflictions.Lay(second, 2, 0f, 1f, LaySource.Spell, main);
+            var spellsHeld = player.GetComponent<PlayerSpells>();
+            if (spellsHeld != null) spellsHeld.Cooldowns.ResetAll();
+            player.transform.rotation = Quaternion.LookRotation(Flat(main.transform.position - player.transform.position).normalized, Vector3.up);
+            bool cast2 = secondElement != null && !LayByHand.Contains(secondElement.Name) && element.CastBase(secondElement.Name);
+            string trigger = cast2 ? "cast" : "laid";
+            if (!cast2) main.Afflictions.Lay(second, 2, 0f, 1f, LaySource.Spell, main);
             float impact = -1f;
-            int tail = -1, shownAt = -1;
+            int tail = -1, shownAt = -1, effectEnd = -1, lateOwn = 0;
+            float lastSecondAge = -1f;
+            var fails = new List<string>();
+            var secondLooks = Enumerable.Range(1, 5).Select(depth => ElementLooks.Find(AfflictionArt.LookOf(second, depth))).Where(index => index >= 0).Distinct().ToArray();
             float least = Biting.Contains(look) ? BitingSeconds : LeastSeconds;
             while (frame < MostFrames)
             {
+                clipFrame = frame;
                 yield return new WaitForEndOfFrame();
-                Grab(folder, frame, window);
+                bool keep = !Stills || (reactedFrame >= 0 && (frame == reactedFrame + 4 || frame == reactedFrame + 20));
+                if (keep) Grab(folder, frame, window);
+                lastWindow = window;
+                // The cast set nothing off: the second laid by hand, once.
+                if (reactedFrame < 0 && cast2 && frame - start == 32)
+                {
+                    trigger = "laid";
+                    main.Afflictions.Lay(second, 2, 0f, 1f, LaySource.Spell, main);
+                }
+                // The second element's own look shown again on the body that just reacted: begun after the reaction (it
+                // was not showing, or its showing started over), as a second cast of it would. One laid with the trigger
+                // and still playing on is the affliction the body carries, not a second cast.
+                if (reactedFrame >= 0 && frame > reactedFrame + 1)
+                {
+                    float age = YoungestAge(secondLooks, main.transform);
+                    if (age >= 0f && (lastSecondAge < 0f || age + 0.001f < lastSecondAge) && frame > reactedFrame + 2 && !fails.Any(f => f.StartsWith("look")))
+                        fails.Add($"look: {second}'s own look begun again on the struck one {(frame - reactedFrame) / (float)Rate:0.00} s after the reaction");
+                    lastSecondAge = age;
+                }
+                else if (reactedFrame >= 0) lastSecondAge = YoungestAge(secondLooks, main.transform);
+                if (reactedFrame >= 0 && effectEnd < 0 && frame > reactedFrame + 2 && PoolEmpty()) effectEnd = frame;
                 frame++;
                 if (shownAt < 0 && reactions.TimesShown(pair) > shownBefore)
                 {
@@ -576,16 +638,48 @@ public class ReactionGifFramesRunner : MonoBehaviour
                 if (tail >= 0 && tail++ >= After) break;
                 yield return null;
             }
+            if (Stills) Grab(folder, frame, lastWindow);
+            recording = false;
             Time.captureFramerate = 0;
             if (slots != null) slots.SetActive(true);
             if (gameCamera != null) gameCamera.ClearFraming();
+            // The checks, from the log.
+            if (reactedFrame >= 0)
+            {
+                foreach (var one in laid)
+                    if (one.frame > reactedFrame && one.source != LaySource.Reaction)
+                        fails.Add($"laid: {one.kind} x{one.stacks} by {one.source} on {Who(one.body)} {(one.frame - reactedFrame) / (float)Rate:0.00} s after the reaction");
+                foreach (var one in struckLog)
+                {
+                    if (one.frame <= reactedFrame) continue;
+                    // The reaction's own damage over time is its own, even after its look has gone (noted, not failed).
+                    if (effectEnd >= 0 && one.frame >= effectEnd && one.reaction) lateOwn++;
+                    else if (effectEnd >= 0 && one.frame >= effectEnd)
+                        fails.Add($"hit after the effect ended: {Who(one.body)} {one.damage:0.#} ({(one.reaction ? "reaction" : one.spell ? "spell" : "blow")}) {(one.frame - effectEnd) / (float)Rate:0.00} s after");
+                    else if (!one.reaction)
+                        fails.Add($"hit not the reaction's: {Who(one.body)} {one.damage:0.#} ({(one.spell ? "spell" : "blow")}) {(one.frame - reactedFrame) / (float)Rate:0.00} s after the reaction");
+                }
+            }
+            else fails.Add("never: the reaction never fired");
+            string note = lateOwn > 0 ? $"; note: {lateOwn} blows of the reaction's own after its look ended" : "";
+            // One line for each kind of failure is enough to read; the log keeps them all.
+            var reasons = fails.GroupBy(f => f.Substring(0, f.IndexOf(':'))).Select(g => g.First() + (g.Count() > 1 ? $" (and {g.Count() - 1} more)" : "")).ToList();
+            bool passes = reasons.Count == 0;
+            checkedClips++;
+            if (passes) passed++;
+            var logText = new StringBuilder();
+            foreach (var one in laid) logText.AppendLine($"frame {one.frame}: laid {one.kind} x{one.stacks} by {one.source} on {Who(one.body)}");
+            foreach (var one in struckLog) logText.AppendLine($"frame {one.frame}: struck {Who(one.body)} {one.damage:0.#} reaction {one.reaction} spell {one.spell}");
+            logText.AppendLine($"trigger {trigger}; reacted frame {reactedFrame}; effect ended frame {effectEnd}");
+            System.IO.File.WriteAllText(folder + "/log.txt", logText.ToString());
+            Say($"{name}: trigger {trigger}, check {(passes ? "PASS" : "FAIL: " + string.Join("; ", reasons))}{note}");
             int lookStart = shownAt >= 0 ? shownAt - 1 : start;
             int impactFrame = lookStart + Mathf.RoundToInt(Mathf.Max(0f, impact) * Rate);
             bool wentOff = shownAt >= 0;
             System.IO.File.WriteAllText(folder + "/info.txt",
                 $"name={look}\nkind={kind}\nstart={start}\nshown_frame={lookStart}\nimpact={impact:0.000}\nimpact_frame={impactFrame}\nframes={frame}\nended={(tail >= 0)}\nclean_before={wasClean}\n" +
-                $"enemies={count}\nset_off={wentOff}\n");
-            summary.AppendLine($"{name}: {frame} frames, {count} enemies, {(wentOff ? "set off" : "NOT SET OFF")}, impact {impact:0.00} s, {(tail >= 0 ? "ended" : "CUT at the cap")}{(wasClean ? "" : ", NOT clean before")}");
+                $"enemies={count}\nset_off={wentOff}\ntrigger={trigger}\ncheck={(passes ? "PASS" : "FAIL " + string.Join(" | ", reasons))}\n");
+            summary.AppendLine($"{name}: {frame} frames, {count} enemies, {(wentOff ? "set off" : "NOT SET OFF")}, impact {impact:0.00} s, {(tail >= 0 ? "ended" : "CUT at the cap")}{(wasClean ? "" : ", NOT clean before")}, {trigger}, {(passes ? "PASS" : "FAIL " + string.Join(" | ", reasons))}");
             Say($"{name}: {kind}, {count} enemies, {frame} frames, impact {impact:0.00} s{(wentOff ? "" : ", WRONG: the reaction did not go off")}{(tail >= 0 ? "" : ", WRONG: cut at the cap")}{(wasClean ? "" : ", WRONG: pool not empty before")}");
             filmed++;
             if (wentOff) setOff++;
@@ -607,7 +701,8 @@ public class ReactionGifFramesRunner : MonoBehaviour
         foreach (var canvas in huds) if (canvas != null) canvas.enabled = true;
         InputSystem.settings.backgroundBehavior = backgroundWas;
         InputSystem.settings.editorInputBehaviorInPlayMode = editorWas;
-        Say($"filmed {filmed}, set off {setOff}, on a group {grouped}");
+        foreach (var director in directors) if (director != null) director.enabled = true;
+        Say($"filmed {filmed}, set off {setOff}, on a group {grouped}, checks passed {passed} of {checkedClips}");
         Say("done");
         Destroy(gameObject);
     }
@@ -668,5 +763,75 @@ public class ReactionGifFramesRunner : MonoBehaviour
         Say($"{name}: {count} enemies, {frame} frames, main carries {main.Afflictions.Stacks(kind)}");
     }
 
-    private void OnDestroy() => Time.captureFramerate = 0;
+    // ---- The v2 rig's log and checks.
+
+    // Elements whose base spell lingers and doses again (Poison's Miasma bites once a second): cast for real it lays its
+    // affliction again after the reaction, the second cast the owner saw. Their affliction is laid once by hand.
+    private static readonly string[] LayByHand = { Elements.Poison };
+
+    private static bool Stills => System.IO.File.Exists("AgentScripts/reaction_gif_stills.txt");
+    private List<AreaDirector> directors = new List<AreaDirector>();
+    private PlayerElement element;
+    private bool recording;
+    private int clipFrame, reactedFrame = -1, passed, checkedClips;
+    private Enemy mainBody;
+    private RectInt lastWindow;
+    private readonly List<(int frame, int body, AfflictionKind kind, int stacks, LaySource source)> laid = new List<(int, int, AfflictionKind, int, LaySource)>();
+    private readonly List<(int frame, int body, float damage, bool reaction, bool spell)> struckLog = new List<(int, int, float, bool, bool)>();
+
+    private static Vector3 Flat(Vector3 v) => new Vector3(v.x, 0f, v.z);
+
+    // The youngest showing of any of these looks on a body, its age in seconds; -1 when none shows.
+    private static float YoungestAge(int[] looks, Transform body)
+    {
+        var instance = typeof(ElementLooks).GetField("instance", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
+        if (instance == null || looks.Length == 0) return -1f;
+        var showings = (System.Array)typeof(ElementLooks).GetField("showings", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(instance);
+        var type = showings.GetType().GetElementType();
+        var active = type.GetField("Active");
+        var ending = type.GetField("Ending");
+        var lookField = type.GetField("Look");
+        var bodyField = type.GetField("Body");
+        var ageField = type.GetField("Age");
+        float youngest = -1f;
+        foreach (var one in showings)
+        {
+            if (!(bool)active.GetValue(one) || (ending != null && (bool)ending.GetValue(one))) continue;
+            if (!ReferenceEquals(bodyField.GetValue(one), body) || System.Array.IndexOf(looks, (int)lookField.GetValue(one)) < 0) continue;
+            float age = (float)ageField.GetValue(one);
+            if (youngest < 0f || age < youngest) youngest = age;
+        }
+        return youngest;
+    }
+
+    private string Who(int body) => body >= 0 && body < cast.Count ? (body == 0 ? "the main one" : cast[body].Kind.Name) : "the player";
+
+    private void OnLaid(AfflictionSet set, Component who, AfflictionKind kind, int stacks, LaySource source)
+    {
+        if (!recording) return;
+        int body = cast.FindIndex(enemy => enemy != null && enemy.Afflictions == set);
+        if (body < 0) return;
+        laid.Add((clipFrame, body, kind, stacks, source));
+    }
+
+    private void OnStruck(Enemy enemy, Hit hit, HitOutcome outcome)
+    {
+        if (!recording) return;
+        struckLog.Add((clipFrame, cast.IndexOf(enemy), hit.Damage, hit.FromReaction, hit.Spell));
+    }
+
+    private void OnReacted(Component who, int pair, AfflictionKind laidKind)
+    {
+        if (!recording || reactedFrame >= 0 || mainBody == null) return;
+        if (who == mainBody || (who != null && who.transform == mainBody.transform)) reactedFrame = clipFrame;
+    }
+
+    private void OnDestroy()
+    {
+        Time.captureFramerate = 0;
+        CombatEvents.AfflictionLaid -= OnLaid;
+        CombatEvents.Reacted -= OnReacted;
+        foreach (var enemy in cast) if (enemy != null) enemy.Struck -= OnStruck;
+        foreach (var director in directors) if (director != null) director.enabled = true;
+    }
 }
