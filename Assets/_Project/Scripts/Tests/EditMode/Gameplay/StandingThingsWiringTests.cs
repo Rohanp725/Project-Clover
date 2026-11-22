@@ -1670,5 +1670,36 @@ namespace Clover.Tests
             stats.SetWhen(StatWhen.BetweenFires, false);
             Assert.AreEqual(1f, stats.Multiplier(PlayerStat.BlowCut), 1e-5f);
         }
+
+        [Test]
+        public void FireSettingBanksAFireAndTheSecondPressQuenchesIt()
+        {
+            var fire = Upgrade.ById(Clover.Player.Trees.Duo.ThermalShockDuo.FireSetting);
+            Assert.IsTrue(fire.Spell.Quiet, "no brand waiting for a blow: the fire is laid at once");
+            string banked = Clover.Player.Trees.Duo.ThermalShockDuo.Banked;
+            var lay = fire.Effects.Single(each => each.On == UpgradeTrigger.SpellCast);
+            Assert.AreEqual(banked, lay.State.Id);
+            Assert.AreEqual(4f, lay.State.Seconds, 1e-5f, "up to 4 s");
+            Assert.AreEqual(1f, lay.State.Beat, 1e-5f);
+            var beat = fire.Effects.Single(each => each.On == UpgradeTrigger.ConditionBeat);
+            Assert.AreEqual(4f, beat.Damage, 1e-5f, "4 a second");
+            Assert.AreEqual(AfflictionKind.Burn, beat.Affliction, "the Burn deepens each second");
+            var press = fire.Presses[0].Single();
+            Assert.AreEqual(UpgradeAction.EndCondition, press.Do, "the second press quenches it");
+            Assert.AreEqual(banked, press.Condition);
+            var quench = fire.Effects.Where(each => each.On == UpgradeTrigger.ConditionEnded && each.Do == UpgradeAction.Burst).ToArray();
+            var full = quench.Single(each => !each.SparesTarget);
+            Assert.AreEqual(20f, full.Damage, 1e-5f);
+            Assert.AreEqual(8f, full.DamagePerSpent, 1e-5f, "8 a Burn");
+            Assert.AreEqual(60f, full.Stagger, 1e-5f);
+            Assert.AreEqual(3, full.Stacks, "Chill three deep");
+            var half = quench.Single(each => each.SparesTarget);
+            Assert.AreEqual(full.Damage / 2f, half.Damage, 1e-5f, "neighbours half");
+            Assert.AreEqual(2.5f, half.Radius, 1e-5f);
+            Assert.AreEqual(1.5f, PlayerUpgrades.HarderBy(0.1f, 5, 5), 1e-5f, "five blows: half again");
+            Assert.AreEqual(1.5f, PlayerUpgrades.HarderBy(0.1f, 9, 5), 1e-5f, "to 50% at most");
+            Assert.AreEqual(1.2f, PlayerUpgrades.HarderBy(0.1f, 2, 5), 1e-5f);
+            Assert.AreEqual(UpgradeAction.Spend, fire.Effects.Last().Do, "all its Burn spent last");
+        }
     }
 }

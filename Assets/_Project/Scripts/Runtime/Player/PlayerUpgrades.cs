@@ -128,6 +128,9 @@ namespace Clover.Player
         public int Holds { get; private set; }
         /// <summary>How many enemies the Lift action has thrown into the air.</summary>
         public int Lifts { get; private set; }
+        /// <summary>What a blow made harder by <paramref name="each"/> a blow taken is multiplied by, <paramref name="most"/> blows at most.</summary>
+        public static float HarderBy(float each, int blows, int most) => 1f + Mathf.Max(0f, each) * Mathf.Clamp(blows, 0, most > 0 ? most : int.MaxValue);
+
         /// <summary>Standing things fed a shard (Bellows, Wind Sickle): for probes.</summary>
         public int Fed { get; private set; }
         /// <summary>Your own grounds grown (The Burning Lake): for probes.</summary>
@@ -1945,6 +1948,8 @@ namespace Clover.Player
             // The depth counted as the moment came (CountsNeeds) is what each point of it adds to (Spoken Sentence: 12 a mark).
             if (effect.CountsNeeds && bySpent) spentHere = pending.Spent;
             float eDamage = (byCount ? effect.Damage : effect.Damage * per) + effect.DamagePerSpent * spentHere;
+            // Harder for each blow its condition took (Fire-Setting's quench: 10% a blow, five at most).
+            if (effect.HarderPerBlow > 0f) eDamage *= HarderBy(effect.HarderPerBlow, pending.Spent, effect.HarderBlowsMost);
             // A reaction's own blows, by the stat ReactionDamage (Fuel to It, Left in Rubble, Every Crack Rings).
             float reactionScale = ReactionScale(effect.Owner);
             eDamage *= reactionScale;
@@ -1956,6 +1961,7 @@ namespace Clover.Player
             if (pending.Ripe > 0f) eDamage *= pending.Ripe;
             // A whirl's cuts stagger by its shards, as they cut by them (Sickle Wind: 4 a shard).
             float eStagger = (byCount ? effect.Stagger : effect.Stagger * per) + effect.StaggerPerSpent * spentHere;
+            if (effect.HarderPerBlow > 0f) eStagger *= HarderBy(effect.HarderPerBlow, pending.Spent, effect.HarderBlowsMost);
             float eAmount = effect.Amount * per;
             int eCount = byCount && effect.PerStack ? Or(effect.Count, 1) * per : effect.Count;
             int laid = effect.CarriesDepth ? Mathf.Max(1, pending.Spent) * Or(effect.Stacks, 1) : effect.Stacks;

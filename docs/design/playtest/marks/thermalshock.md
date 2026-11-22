@@ -62,15 +62,13 @@ both carried.
 ## thermalshock.firesetting
 **What it does.** A fire is lit against the enemy you face. When it is put out with a splash of frost, the heated body splits: a hard hit and three Chill, and the enemies next to it take half.
 
-**When it happens.** Cast it from a spell slot while you carry both Fire and Ice. Press that slot's button (hold L2 and a face button, or press 1 to 4). The first time it lands, it charges your blade with Fire.
+**When it happens.** Cast it from a spell slot while you carry both Fire and Ice. Press that slot's button (hold L2 and a face button, or press 1 to 4) to lay the fire. Press it again within 4 seconds to put it out. If you don't, it is put out by itself when the 4 seconds end. The first time it lands, it charges your blade with Fire.
 
-**The numbers.** Mix, duo spell, detonator, 5 Shards. It costs no mana. After you cast it, you must wait 12 seconds to cast it again. Fighting with your weapon makes the wait shorter. It reaches an enemy within 6 metres. Putting it out deals 20 damage, 60 stagger, two Burns and three Chill within 2.5 metres.
+**The numbers.** Mix, duo spell, detonator, 5 Shards. It costs no mana. After you cast it, you must wait 12 seconds to cast it again. Fighting with your weapon makes the wait shorter. It reaches an enemy within 6 metres. While the fire burns against it, the enemy takes 4 damage and one more Burn each second. Putting it out deals 20 damage plus 8 for each Burn it has, 60 stagger and three Chill, and uses up all its Burn. Enemies within 2.5 metres of it take half the damage and stagger and one Chill. Each weapon blow you land on it before you put the fire out makes the splitting 10% harder, up to 50%. The splitting also sets off Thermal Shock on it.
 
 **Works with.** Thermal Shock and its shapes, Spark and Rime.
 
-**Example.** Set it on a brute, hit the brute, and putting out the fire splits it.
-
-**Not built yet.** A second press doesn't put it out yet; for now, your weapon blow sets it off, like a sign on the enemy. Its Burn doesn't grow while the fire waits, and blows before you put it out don't make it stronger yet.
+**Example.** Set it on a brute and hit the brute while the fire builds. Then press again: the brute splits, and the soldiers beside it take half.
 
 ## thermalshock.gap
 **What it does.** A duo surge. While it is lit, your weapon blows take turns burning and chilling, so Thermal Shock keeps going off, and each split drops melted water that heals you.
