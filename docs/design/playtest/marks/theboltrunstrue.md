@@ -51,7 +51,7 @@ while Light and Lightning are both carried.
 ## boltrunstrue.diamondthunder
 **What it does.** A straight line of light lies on the floor from your hand, 14 metres long, and lightning runs the whole line in one strike. Every enemy on it takes 22 damage and 40 stagger and is Marked, and every Static it meets goes off. Your first blow on each one within 2 seconds is a critical hit.
 
-**When it happens.** Cast it from a spell slot while you carry both Light and Lightning. Press that slot's button (hold L2 and a face button, or press 1 to 4). The first time it lands, it charges your blade with Light.
+**When it happens.** Cast it from a spell slot while you carry both Light and Lightning. Hold that slot's button (hold L2 and a face button, or 1 to 4) for up to 1.5 seconds while you turn to aim the line, then let go to loose it. A quick tap looses it at once. The first time it lands, it charges your blade with Light.
 
 **The numbers.** Mix, duo spell, detonator, 5 Shards. It costs no mana. After you cast it, you must wait 11 seconds to cast it again. Fighting with your weapon makes the wait shorter. It deals 22 damage, 40 stagger and a Mark to each enemy on the line. Their Static goes off, dealing 7 damage per stack within 4 metres. For 2 seconds, your first weapon blow on each one is a critical hit.
 
@@ -59,7 +59,7 @@ while Light and Lightning are both carried.
 
 **Example.** Charge up a line of soldiers, then run the strike down them.
 
-**Not built yet.** You can't hold the line on the button yet for up to 1.5 seconds, turning with you, and release it when you let go. A perfect guard while you hold it doesn't yet release it right away for double damage.
+**Not built yet.** A perfect guard while you hold it doesn't yet release it right away for double damage.
 
 ## boltrunstrue.net
 **What it does.** A duo surge. While it is lit, every Marked enemy within 12 metres is linked to every other one by threads of light. When Static goes off on one, it runs along the threads to all the others for half. Each critical hit on one gives every linked enemy a Static.

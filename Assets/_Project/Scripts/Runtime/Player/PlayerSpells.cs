@@ -62,6 +62,14 @@ namespace Clover.Player
         private Enemy[] looseEnemies;
         private IBoss[] bosses;
         private int buffered = -1;
+        // A spell held on its button (SpellSpec.HoldUpTo): the slot gathering, how long, the most, and whether the press became a hold.
+        private int gathering = -1;
+        private float gatheredFor, gatherMost;
+        private bool gatherHeld;
+        /// <summary>The slot whose spell is being held on its button now, or -1; for the HUD and probes.</summary>
+        public int Gathering => gathering;
+        /// <summary>Spells held on their buttons and loosed, counted for probes.</summary>
+        public int HeldCasts { get; private set; }
         private float bufferLeft;
         private float untilSample;
         private float sampled;
@@ -462,11 +470,41 @@ namespace Clover.Player
                 buffered = pressed;
                 bufferLeft = PressBufferTime;
             }
-            if (buffered >= 0 && free && (element == null || !element.IsCasting))
+            // A spell held on its button gathers while it is held, and is loosed on letting go or when its time is up.
+            if (gathering >= 0)
+            {
+                gatheredFor += deltaTime;
+                if (buttons != null && buttons.SlotHoldBegan(gathering)) gatherHeld = true;
+                bool held = buttons != null && buttons.SlotHeld(gathering);
+                if (!held || gatheredFor >= gatherMost)
+                {
+                    int loosed = gathering;
+                    gathering = -1;
+                    // A tap too short to be a hold is loosed with the spell's own numbers.
+                    if (upgrades != null) upgrades.HeldShare = gatherHeld ? SpellSpec.HeldShare(gatheredFor, gatherMost) : 0f;
+                    try { if (TryCast(loosed)) HeldCasts++; }
+                    finally { if (upgrades != null) upgrades.HeldShare = 0f; }
+                }
+                buffered = -1;
+            }
+            else if (buffered >= 0 && free && (element == null || !element.IsCasting))
             {
                 int slot = buffered;
                 buffered = -1;
-                TryCast(slot);
+                // A base spell held is one cast through its mark (Glare's Gathered); the kit's own cast is loosed at once.
+                string id = Slots[slot];
+                var held = string.IsNullOrEmpty(id) || upgrades == null ? null
+                    : SpellSlots.IsBase(id) ? (upgrades.BaseCastsThroughMark(id) ? Upgrade.ById(id) : null) : MarkIn(slot);
+                float most = held != null && Cooldowns.Ready(slot) ? upgrades.HoldUpToOf(held) : 0f;
+                if (most > 0f)
+                {
+                    // Held on its button: nothing is cast until it is let go.
+                    gathering = slot;
+                    gatheredFor = 0f;
+                    gatherMost = most;
+                    gatherHeld = false;
+                }
+                else TryCast(slot);
             }
             if (bufferLeft > 0f)
             {

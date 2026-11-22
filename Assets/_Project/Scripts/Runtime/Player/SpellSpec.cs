@@ -102,6 +102,26 @@ namespace Clover.Player
         public bool Quiet;
         /// <summary>Above zero: the cast is paid in this many flasks and no mana (Poured on the Edge: one; the ledger's price-in-flasks).</summary>
         public int FlaskCost;
+        /// <summary>
+        /// Above zero: the spell is held on its button up to this many seconds and loosed on letting go (or when the time is
+        /// up), facing where the player faces then (the ledger's held-press: Glare's Gathered, 1 s; Diamond Thunder, 1.5 s).
+        /// A tap shorter than the hold (the Hold interaction in Controls) is loosed at once with its own numbers.
+        /// </summary>
+        public float HoldUpTo;
+        /// <summary>Above zero: the damage and the stagger at a full hold, risen from the spell's own with the hold (Gathered: stagger 22 to 60).</summary>
+        public float HeldDamage, HeldStagger;
+
+        /// <summary>The share of a full hold, 0 to 1, held for <paramref name="held"/> seconds of at most <paramref name="most"/>.</summary>
+        public static float HeldShare(float held, float most) => most <= 0f ? 0f : UnityEngine.Mathf.Clamp01(held / most);
+
+        /// <summary>Sets the numbers a hold of <paramref name="share"/> gathered: damage and stagger risen toward their held numbers.</summary>
+        public static void ApplyHold(SpellSpec spec, float share)
+        {
+            if (spec == null) return;
+            share = UnityEngine.Mathf.Clamp01(share);
+            if (spec.HeldDamage > 0f) spec.Damage += (spec.HeldDamage - spec.Damage) * share;
+            if (spec.HeldStagger > 0f) spec.Stagger += (spec.HeldStagger - spec.Stagger) * share;
+        }
 
         /// <summary>The health a cast takes: its fixed price and its share of the present health.</summary>
         public static float HealthPrice(float fixedCost, float share, float present) => System.Math.Max(0f, fixedCost) + System.Math.Max(0f, share) * System.Math.Max(0f, present);

@@ -100,14 +100,14 @@ namespace Clover.Player.Trees.Duo
             // The duo spell, bought with 5 Shards once both are carried (no god gives it): a detonator on an 11 s cooldown
             // (SpellTimings). The spikes form runs one stroke 14 m along the floor, cast in Light (a Mark on each); every Static
             // it meets discharges, and your first blow on each enemy struck within 2 s is critical.
-            // NEEDS: the line held on the button for up to 1.5 s, turning with you, loosed on letting go (held-press), and a
-            // perfect guard while it is held loosing it at once for twice the damage (spell-windows).
+            // The line is held on the button for up to 1.5 s, turning with you, and loosed on letting go (SpellSpec.HoldUpTo).
+            // NEEDS: a perfect guard while it is held loosing it at once for twice the damage (spell-windows).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = DiamondThunder, Name = "Diamond Thunder", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Role = SpellRole.Detonator, Requires = new[] { ChargedLight, DiamondGuard }, Icon = UpgradeIcons.Beam,
                 Description = "A straight line of light lies on the floor from your hand, 14 m, and lightning runs the whole line in one stroke: 22 and 40 stagger to every enemy on it, each Marked, and every Static it meets discharges. Your first blow on each within 2 s is critical.",
                 Form = SpellForms.Spikes,
-                Spell = new SpellSpec { Reach = 14f, Speed = 40f, Count = 1, Radius = 0.7f, Damage = 22f, Stagger = 40f, Stacks = 1 },
+                Spell = new SpellSpec { Reach = 14f, Speed = 40f, Count = 1, Radius = 0.7f, Damage = 22f, Stagger = 40f, Stacks = 1, HoldUpTo = 1.5f },
                 Effects = new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Static, Radius = 4f, Stagger = 5f },

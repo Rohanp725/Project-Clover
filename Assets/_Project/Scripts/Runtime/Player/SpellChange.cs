@@ -152,6 +152,9 @@ namespace Clover.Player
             into.Walk = from.Walk;
             into.Quiet = from.Quiet;
             into.FlaskCost = from.FlaskCost;
+            into.HoldUpTo = from.HoldUpTo;
+            into.HeldDamage = from.HeldDamage;
+            into.HeldStagger = from.HeldStagger;
         }
     }
 

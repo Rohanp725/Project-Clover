@@ -280,11 +280,12 @@ namespace Clover.Player.Trees
                 // mark, takes them as its Learn's.
                 new Empower { Cooldown = 5f, Damage = 12f, Reach = 7f },
                 "Glare waits 5 seconds, not 6, strikes for 12 and reaches seven metres.",
-                // NEEDS: held for up to a second, the ray narrowing and the stagger rising with the hold (held-press). Until then
-                // every ray strikes as at a full hold: 38 more stagger on what it crosses.
-                new ShapeDef { Name = "Gathered",
+                // Held on its button for up to a second and loosed on letting go, the stagger rising from 22 to 60 with the hold
+                // (SpellSpec.HoldUpTo, HeldStagger; cast through its mark by a narrow wave). NEEDS: the ray drawn narrowing to a
+                // point as it is held (form-pieces).
+                new ShapeDef { Name = "Gathered", Form = SpellForms.Wave,
                     Description = "Hold for up to a second and the ray narrows, the dust in it drawn to a point on the enemy. Let go, and the stagger rises from 22 to 60 with the hold. A lens, for breaking one enemy.",
-                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Burst, Radius = 0.5f, Damage = 0f, Stagger = 38f, Stacks = 0 } } },
+                    Spell = new SpellSpec { Reach = 5.5f, Arc = 12f, Damage = 8f, Stagger = 22f, Stacks = 1, HoldUpTo = 1f, HeldStagger = 60f } },
                 // NEEDS: seven thin rays rather than one cone (form-pieces). Until then the wave form throws a cone of the fan's
                 // width that strikes and Marks all in it.
                 new ShapeDef { Name = "Seven Horses", Form = SpellForms.Wave,

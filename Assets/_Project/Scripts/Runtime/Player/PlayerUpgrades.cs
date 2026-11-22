@@ -3578,6 +3578,16 @@ namespace Clover.Player
         public bool TrySpecial() => Worn != null && Cast(Worn);
 
         /// <summary>The mana a spell asks now: its price (larger spells only) as the marks make it.</summary>
+        /// <summary>The share of a full hold the spell being loosed now was held for (SpellSpec.HoldUpTo); set by the slots round the cast.</summary>
+        public float HeldShare { get; set; }
+
+        /// <summary>How long the spell of this mark may be held on its button as it is cast now; 0 for a spell loosed at once.</summary>
+        public float HoldUpToOf(Upgrade mark)
+        {
+            var spec = mark != null ? branches.SpecOf(mark, RunState.Unlocked, ReadLoadout()) : null;
+            return spec != null ? spec.HoldUpTo : 0f;
+        }
+
         public float PriceOf(Upgrade mark)
         {
             // The branch's Empower may make a larger spell cheaper (Meteor Leap 45 to 35); one paid in flasks asks no mana.
@@ -3627,6 +3637,8 @@ namespace Clover.Player
             var loadout = ReadLoadout();
             var spec = branches.SpecOf(mark, RunState.Unlocked, loadout);
             if (spec == null) return false;
+            // A spell held on its button is loosed with what the hold gathered (SpellSpec.HoldUpTo).
+            if (spec.HoldUpTo > 0f) SpellSpec.ApplyHold(spec, HeldShare);
             var form = SpellForms.Get(SpellBranches.FormOf(mark, RunState.Unlocked, loadout));
             if (form == null) return false;
             // A spell may ask health in place of mana, or as well: it is left grey, to be won back.
