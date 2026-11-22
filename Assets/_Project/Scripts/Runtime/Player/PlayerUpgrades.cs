@@ -2370,8 +2370,10 @@ namespace Clover.Player
                 }
                 case UpgradeAction.LightCoat:
                 {
-                    // Every coated enemy goes up at once, harder for each blow that spread the coat (the mark's tally, emptied).
-                    var owner = effect.Owner;
+                    // Every coated enemy goes up at once, harder for each blow that spread the coat (the mark's tally, emptied; the
+                    // Learn's for a mark that pays from it: Black Pitch's Master).
+                    var owner = PayerOf(effect);
+                    burningTaken.Clear();
                     int spreads = 0;
                     if (owner != null && owner.Tally != null && owner.Index < tally.Length)
                     {
@@ -2389,11 +2391,30 @@ namespace Clover.Player
                         fanTaken.Add(one);
                         if (!(near is IAfflictable coated) || !coated.Afflictions.Conditions.Holds(effect.Condition)) continue;
                         coated.Afflictions.Conditions.EndNow(effect.Condition);
+                        burningTaken.Add(one);
                         Vector3 at = near.transform.position;
                         combat.StrikeArea(at, Or(effect.Radius, 1.2f), Blow(look, kind, burst, eStagger, eStacks), coatStruck);
                         if (effect.Seconds > 0f) Hazards.Lay(HazardKind.Fire, at, Or(effect.Radius, 1.2f), effect.Seconds, 2f, 0f, 1f);
                         ElementLook.Puff(look, at + Vector3.up * 0.6f, Vector3.up, 1.4f);
                         CoatsLit++;
+                    }
+                    // Lit by a finisher (Black Pitch's Master): every other burning enemy near goes up with it, at a share.
+                    if (effect.BurningShare > 0f)
+                    {
+                        if (subject is IDamageable lit) burningTaken.Add(lit);
+                        for (int guard = 0; guard < 32; guard++)
+                        {
+                            var near = combat.EnemyNear(centre, Or(effect.BurningWithin, 10f), burningTaken);
+                            if (!(near is IDamageable one)) break;
+                            burningTaken.Add(one);
+                            if (!(near is IAfflictable burning) || !burning.Afflictions.Has(AfflictionKind.Burn)) continue;
+                            burning.Afflictions.SetOff(AfflictionKind.Burn);
+                            Vector3 at = near.transform.position;
+                            combat.StrikeArea(at, Or(effect.Radius, 1.2f), Blow(look, kind, burst * effect.BurningShare, eStagger * effect.BurningShare, 0), coatStruck);
+                            ElementLook.Puff(look, at + Vector3.up * 0.6f, Vector3.up, 1f);
+                            BurningLit++;
+                        }
+                        burningTaken.Clear();
                     }
                     fanTaken.Clear();
                     coatStruck.Clear();
@@ -3487,6 +3508,9 @@ namespace Clover.Player
         /// <summary>Patches of ground carried on by a spell (UpgradeAction.CarryGround): for probes.</summary>
         public int GroundsCarried { get; private set; }
         private readonly HashSet<IDamageable> coatStruck = new HashSet<IDamageable>();
+        private readonly HashSet<IDamageable> burningTaken = new HashSet<IDamageable>();
+        /// <summary>Burning enemies that went up with a coat lit by a finisher (Black Pitch's Master): for probes.</summary>
+        public int BurningLit { get; private set; }
 
         /// <summary>Enemies driven against your ring's stones and stopped there (The Closed Ring): for probes.</summary>
         public int StoppedAtStones { get; private set; }

@@ -472,6 +472,12 @@ namespace Clover.Player
         /// now, once each, the trigger's own enemy left out, not round its enemy (Stone Underfoot's stride: those passed slowed).
         /// </summary>
         public bool AlongCast;
+        /// <summary>
+        /// For LightCoat: above zero, every other burning enemy within <see cref="BurningWithin"/> of the coated one goes up too,
+        /// its Burn spent, at this share of the coat's burst (Black Pitch's Master: half, within 10 m).
+        /// </summary>
+        public float BurningShare;
+        public float BurningWithin;
 
         /// <summary>True when a Hazard effect lays ground that keeps acting, told to the marks at each bite (Hazards.GroundActs).</summary>
         public bool ActsAsGround => Inside != null || Mends > 0f || InsideDo != null || InsideAtEnd != null || YouInside != null || !string.IsNullOrEmpty(Ground);

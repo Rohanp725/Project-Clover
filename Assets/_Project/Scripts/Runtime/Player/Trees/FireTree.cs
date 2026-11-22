@@ -275,9 +275,13 @@ namespace Clover.Player.Trees
                         new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = TorchLit, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Burn, Stacks = 1, Radius = 2f },
                     } },
                 "Opens two shapes of Black Pitch, chosen at any rest fire: Pitch Pool on the floor, or The Torch, one enemy that walks burning through its friends.",
-                // A finisher on a coated enemy sets off the Burn of every burning enemy within 10 m (SetOff's Radius). NEEDS: those
-                // going up at half the coat's own burst (a SetOff scaled to another effect's number); now each at its own Burn.
-                new[] { new UpgradeEffect { On = UpgradeTrigger.FinisherHit, InState = PitchCoat, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Burn, Damage = 5f, Radius = 10f } },
+                // A finisher on a coated enemy lights the coat as a Burn would (the Learn's numbers), and every other burning enemy within
+                // 10 m goes up with it, its Burn spent, at half the coat's own burst (UpgradeEffect.BurningShare).
+                new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.FinisherHit, InState = PitchCoat, Do = UpgradeAction.LightCoat, Condition = PitchCoat, Reach = 30f, Radius = 1.2f,
+                        Damage = 16f, DamagePerSpent = 8f, Amount = 70f, Stagger = 35f, Affliction = AfflictionKind.Burn, Stacks = 3, Seconds = 3f, Cooldown = 0.2f, BurningShare = 0.5f, BurningWithin = 10f, PaysLearn = true },
+                },
                 "Light it with a finisher, and every other burning enemy near goes up with the coated, at half.",
                 tally: new TallySpec { Name = "Pitch", Cap = 7 },
                 learnEffects: new[]

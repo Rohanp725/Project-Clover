@@ -1549,5 +1549,21 @@ namespace Clover.Tests
             Assert.AreEqual(8f, until, 1e-5f, "a second longer");
             Assert.IsFalse(OwnGrounds.Grow(ground, new Vector3(9f, 0f, 0f), 0.5f, 1f, 1f), "a kill off it does nothing");
         }
+
+        [Test]
+        public void BlackPitchsMasterLightsTheCoatAndTheBurningGoUpAtHalf()
+        {
+            var master = Upgrade.ById(SpellBranch.MasterId(FireTree.BlackPitch)).Effects.Single();
+            Assert.AreEqual(UpgradeTrigger.FinisherHit, master.On);
+            Assert.AreEqual(FireTree.PitchCoat, master.InState, "a finisher on a coated enemy");
+            Assert.AreEqual(UpgradeAction.LightCoat, master.Do, "the coat lit as a Burn would light it");
+            Assert.AreEqual(0.5f, master.BurningShare, 1e-5f, "the others at half the coat's burst");
+            Assert.AreEqual(10f, master.BurningWithin, 1e-5f);
+            Assert.IsTrue(master.PaysLearn, "the spreads counted on the Learn's tally");
+            var learnLight = Upgrade.ById(FireTree.BlackPitch).Effects.Single(each => each.Do == UpgradeAction.LightCoat);
+            Assert.AreEqual(learnLight.Damage, master.Damage, 1e-5f);
+            Assert.AreEqual(learnLight.Amount, master.Amount, 1e-5f);
+            Assert.AreEqual(16f, PlayerUpgrades.CoatBurst(16f, 8f, 2, 70f) * master.BurningShare, 1e-5f, "two spreads: the coat 32, the others 16");
+        }
     }
 }

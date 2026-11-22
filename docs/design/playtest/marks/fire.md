@@ -311,11 +311,9 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** When a finisher lands on a coated enemy. Black Pitch must be in a spell slot.
 
-**The numbers.** 3 Shards. Every burning enemy within 10 metres has its Burn set off, 5 damage for each stack.
+**The numbers.** 3 Shards. A finisher on a coated enemy lights the coat just like a Burn would: every coated enemy goes up for 16 damage, plus 8 for each blow that spread the coat (70 at most), 35 stagger and 3 Burn. Every other burning enemy within 10 metres goes up with them: its Burn is used up, and it bursts for half the coat's damage and stagger.
 
 **Works with.** Cinder, Catching Fire.
-
-**Not built yet.** The others should go up at half the coat's own burst. For now each goes up by its own Burn.
 
 **Example.** End a string of blows on a coated soldier with a finisher, and the fire spreads to the next one.
 
