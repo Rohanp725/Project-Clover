@@ -1363,5 +1363,40 @@ namespace Clover.Tests
             Assert.AreEqual(0.3f, heavy.BlowLanding, 1e-5f, "only when gone under as a blow would land");
             Assert.IsFalse(heavy.OnTarget);
         }
+
+        [Test]
+        public void BellowsAndWindSickleFeedSickleWindsWhirlAShard()
+        {
+            Assert.IsTrue(Hazards.FeedsWithin(new Vector3(4.4f, 0f, 0f), Vector3.zero, 1.5f, 3f), "a dodge ending 3 m from the whirl's edge feeds it");
+            Assert.IsFalse(Hazards.FeedsWithin(new Vector3(4.6f, 0f, 0f), Vector3.zero, 1.5f, 3f), "farther does not");
+            Assert.IsTrue(Hazards.FeedsWithin(new Vector3(0f, 3f, 1f), Vector3.zero, 1.5f, 3f), "height does not count");
+
+            var reaction = Upgrade.ById(AfflictionPairs.Id(AfflictionPairs.Index(AfflictionKind.Unsteady, AfflictionKind.Sundered))).Effects.Single(each => each.Do == UpgradeAction.Helper);
+            Assert.AreEqual(Reactions.SickleWhirl, reaction.Named, "the whirl can be found by name");
+            Assert.IsFalse(reaction.ActsAsGround, "a name only: it does not act as ground");
+            Assert.AreEqual(4f, reaction.StaggerPerSpent, 1e-5f, "4 stagger a shard, as 3 damage a shard");
+            Assert.AreEqual(3f, reaction.DamagePerSpent, 1e-5f);
+
+            var bellows = Upgrade.ById(Clover.Player.Trees.Duo.SickleWindDuo.Bellows).Effects.Single();
+            Assert.AreEqual(UpgradeTrigger.DodgeEnd, bellows.On);
+            Assert.AreEqual(UpgradeAction.Feed, bellows.Do);
+            Assert.AreEqual(Reactions.SickleWhirl, bellows.Named);
+            Assert.AreEqual(3f, bellows.Reach, 1e-5f);
+            Assert.AreEqual(3f, bellows.Damage, 1e-5f, "one shard's cut");
+            Assert.AreEqual(4f, bellows.Stagger, 1e-5f);
+            Assert.AreEqual(AfflictionKind.Unsteady, bellows.Affliction, "its next cut lays Unsteady");
+            Assert.AreEqual(0f, bellows.Radius, 1e-5f, "no Unsteady on everything near any more");
+
+            var sickle = Upgrade.ById(Clover.Player.Trees.Duo.SickleWindDuo.WindSickle).Effects;
+            var tear = sickle.Single(each => each.Do == UpgradeAction.Feed);
+            Assert.AreEqual(UpgradeTrigger.ChainEnd, tear.On);
+            Assert.IsTrue(tear.TearsNeeds);
+            Assert.AreEqual(AfflictionKind.Sundered, tear.Needs, "a notch torn from a Sundered enemy");
+            Assert.AreEqual(AfflictionKind.None, tear.Affliction, "a shard, nothing laid");
+            Assert.IsTrue(sickle.Any(each => each.Do == UpgradeAction.Cone), "the sickle still cuts");
+
+            var downwind = Upgrade.ById(Clover.Player.Trees.Duo.SickleWindDuo.Shape).Shapes.Single(each => each.Name == "Sent Downwind").Effects.Single(each => each.Do == UpgradeAction.Hazard);
+            Assert.AreEqual(Reactions.SickleWhirl, downwind.Named, "the wandering whirl is fed too");
+        }
     }
 }

@@ -354,5 +354,12 @@ namespace Clover.Player
         /// that holds back its own bites already (Burning Sap) is not held again; it only takes the strength.
         /// </summary>
         HoldReaction,
+        /// <summary>
+        /// Feeds the nearest standing thing laid under the name Named whose edge is within Reach of the moment's place: each of
+        /// its bites from then on deals Damage and Stagger more, and its next bite lays Affliction (Stacks) on all it reaches
+        /// (Bellows and Wind Sickle: a shard more for Sickle Wind's whirl). With TearsNeeds, a stack of Needs is taken from the
+        /// trigger's enemy as it feeds; nothing is fed or taken when nothing of that name stands near.
+        /// </summary>
+        Feed,
     }
 }

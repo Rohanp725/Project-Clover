@@ -43,6 +43,9 @@ namespace Clover.World
             public float Delay, Left, UntilBite, UntilShow;
             // Seconds it rides on before it settles again (a slick carried by a wave).
             public float DriftLeft;
+            // What its next bite lays on all it reaches, once (a whirl fed by a dodge: Bellows).
+            public AfflictionKind NextLays;
+            public int NextLaysStacks;
             public bool Burst, Turned;
             public int Bitten;
         }
@@ -271,6 +274,48 @@ namespace Clover.World
                 carried++;
             }
             return carried;
+        }
+
+        /// <summary>True when a place <paramref name="at"/> is within <paramref name="within"/> of the edge of a thing at <paramref name="thing"/> <paramref name="radius"/> round.</summary>
+        public static bool FeedsWithin(Vector3 at, Vector3 thing, float radius, float within)
+        {
+            Vector3 apart = at - thing;
+            apart.y = 0f;
+            return apart.magnitude <= Mathf.Max(0f, radius) + Mathf.Max(0f, within);
+        }
+
+        /// <summary>
+        /// Feeds the nearest standing thing of the given name whose edge is within <paramref name="within"/> of <paramref name="at"/>:
+        /// each bite from then on deals <paramref name="damage"/> and <paramref name="stagger"/> more, and its next bite lays
+        /// <paramref name="lays"/> (Bellows, Wind Sickle: a shard more for Sickle Wind's whirl). False when none stands near.
+        /// </summary>
+        public static bool Feed(string name, Vector3 at, float within, float damage, float stagger, AfflictionKind lays, int stacks)
+        {
+            if (instance == null || string.IsNullOrEmpty(name)) return false;
+            int best = -1;
+            float bestApart = float.MaxValue;
+            for (int i = 0; i < instance.zones.Length; i++)
+            {
+                ref var zone = ref instance.zones[i];
+                if (!zone.Active || zone.Delay > 0f || zone.Spec.Name != name || !FeedsWithin(at, zone.Position, zone.Spec.Radius, within)) continue;
+                float apart = (zone.Position - at).sqrMagnitude;
+                if (apart < bestApart)
+                {
+                    bestApart = apart;
+                    best = i;
+                }
+            }
+            if (best < 0) return false;
+            ref var fed = ref instance.zones[best];
+            fed.Spec.Blow.Damage += Mathf.Max(0f, damage);
+            fed.Spec.Blow.Stagger += Mathf.Max(0f, stagger);
+            if (lays != AfflictionKind.None)
+            {
+                fed.NextLays = lays;
+                fed.NextLaysStacks = Mathf.Max(1, stacks);
+            }
+            if (!fed.Spec.Quiet) Puff(fed.Spec, fed.Position + Vector3.up * 0.5f, 2f);
+            return true;
         }
 
         /// <summary>True when <paramref name="at"/> stands in a settled patch of the player's ground of the given name (Wet Ground's sand, Low Mist's sheet).</summary>
@@ -693,6 +738,12 @@ namespace Clover.World
                         ? owner.StrikeStar(zone.Position, zone.Spec.Seams, zone.Spec.Radius, GroundRules.SeamHalf, zone.Spec.SeamWay, zone.Spec.Blow, LeftAlone(i, zone))
                         : owner.StrikeArea(zone.Position, zone.Spec.Radius, zone.Spec.Blow, LeftAlone(i, zone));
                     if (zone.Spec.AlsoLays != AfflictionKind.None && (!zone.Spec.StopsAtFirst || hits > 0)) owner.AfflictArea(zone.Position, zone.Spec.Radius, zone.Spec.AlsoLays, 1);
+                    // Fed (Bellows): the next cut lays what it was fed with, once.
+                    if (zone.NextLays != AfflictionKind.None)
+                    {
+                        owner.AfflictArea(zone.Position, zone.Spec.Radius, zone.NextLays, zone.NextLaysStacks);
+                        zone.NextLays = AfflictionKind.None;
+                    }
                     if (zone.Spec.StopsAtFirst && hits > 0)
                     {
                         zone.Active = false;

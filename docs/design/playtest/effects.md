@@ -1139,7 +1139,7 @@ Title: Sickle Wind (Wind and Metal)
 Group: Reactions
 **What it is.** Unsteady meets Sundered. The wind tears off the enemy's loose armour plates and whirls them around it.
 
-**The numbers.** For 3 seconds, the plates whirl 1.5 metres around the enemy, cutting everything they pass, including the enemy. They deal 3 damage for each shard (one for each notch, plus one) and 4 stagger every 0.4 seconds. Then it waits 4 seconds.
+**The numbers.** For 3 seconds, the plates whirl 1.5 metres around the enemy, cutting everything they pass, including the enemy. They deal 3 damage and 4 stagger for each shard (one for each notch, plus one) every 0.4 seconds. Then it waits 4 seconds.
 
 **What sets it off.** Unsteady landing on a notched enemy, or a notch landing on an Unsteady one.
 

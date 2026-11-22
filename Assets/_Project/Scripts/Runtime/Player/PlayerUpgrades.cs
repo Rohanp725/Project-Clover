@@ -128,6 +128,8 @@ namespace Clover.Player
         public int Holds { get; private set; }
         /// <summary>How many enemies the Lift action has thrown into the air.</summary>
         public int Lifts { get; private set; }
+        /// <summary>Standing things fed a shard (Bellows, Wind Sickle): for probes.</summary>
+        public int Fed { get; private set; }
         /// <summary>Goes up whenever a count kept by a mark changes; the HUD writes <see cref="TallyText"/> again then.</summary>
         public int TallyVersion { get; private set; }
         /// <summary>The counts kept by the marks in force, as the HUD shows them: "Plates 2/3".</summary>
@@ -1885,9 +1887,10 @@ namespace Clover.Player
             bool byCount = effect.Do == UpgradeAction.Projectile || effect.Do == UpgradeAction.Falling || effect.Do == UpgradeAction.Ward
                 || (effect.Do == UpgradeAction.Hazard && effect.PerStack && effect.Shape != HazardShape.Patch);
             // With no Spend of its own before it, what the trigger carried (a reaction struck again where its enemy fell: Kettle).
-            int spentHere = effect.DamagePerSpent > 0f ? (counted > 0 || !pending.Again ? counted : pending.Spent) : 0;
+            bool bySpent = effect.DamagePerSpent > 0f || effect.StaggerPerSpent > 0f;
+            int spentHere = bySpent ? (counted > 0 || !pending.Again ? counted : pending.Spent) : 0;
             // The depth counted as the moment came (CountsNeeds) is what each point of it adds to (Spoken Sentence: 12 a mark).
-            if (effect.CountsNeeds && effect.DamagePerSpent > 0f) spentHere = pending.Spent;
+            if (effect.CountsNeeds && bySpent) spentHere = pending.Spent;
             float eDamage = (byCount ? effect.Damage : effect.Damage * per) + effect.DamagePerSpent * spentHere;
             // A reaction's own blows, by the stat ReactionDamage (Fuel to It, Left in Rubble, Every Crack Rings).
             float reactionScale = ReactionScale(effect.Owner);
@@ -1898,7 +1901,8 @@ namespace Clover.Player
             if (effect.ByPower && effect.Do != UpgradeAction.Condition) eDamage = pending.Power * Or(effect.Share, 1f);
             // A reaction's blow on a ripe seed is stronger, on an unripe one softer (In Its Season).
             if (pending.Ripe > 0f) eDamage *= pending.Ripe;
-            float eStagger = byCount ? effect.Stagger : effect.Stagger * per;
+            // A whirl's cuts stagger by its shards, as they cut by them (Sickle Wind: 4 a shard).
+            float eStagger = (byCount ? effect.Stagger : effect.Stagger * per) + effect.StaggerPerSpent * spentHere;
             float eAmount = effect.Amount * per;
             int eCount = byCount && effect.PerStack ? Or(effect.Count, 1) * per : effect.Count;
             int laid = effect.CarriesDepth ? Mathf.Max(1, pending.Spent) * Or(effect.Stacks, 1) : effect.Stacks;
@@ -2076,7 +2080,7 @@ namespace Clover.Player
                         // A second affliction laid with each bite (the hollow trunk Seeding and Cursing what touches it).
                         AlsoLays = effect.BitesLay,
                         // Ground that keeps acting on whoever stands in it (the ledger's ground-states).
-                        Acts = effect.ActsAsGround ? effect : null, Pull = effect.Pull, LaidFor = pending.Target, Source = effect, Name = effect.Ground,
+                        Acts = effect.ActsAsGround ? effect : null, Pull = effect.Pull, LaidFor = pending.Target, Source = effect, Name = !string.IsNullOrEmpty(effect.Ground) ? effect.Ground : effect.Named,
                         // Ground that goes with its enemy (Heavy Silver), and a stone that cracks once when stood at (Fire-Cracked).
                         Follow = effect.Follows && target != null, Target = effect.Follows ? target : null, CrackReach = effect.CracksAt,
                         // A lane of foam carries what stands in it away from the player (the ledger's lane-shove).
@@ -2683,8 +2687,19 @@ namespace Clover.Player
                         Bites = strikes, Burst = !bespoke, Quiet = bespoke, Follow = target != null, Target = target, Blow = Unseen(Blow(look, kind, eDamage, eStagger, eStacks), bespoke),
                         // Its helpers at once, at most (Nothing Stays Buried: three); one more takes the place of the one nearest its end.
                         Family = effect.Limit > 0 ? FamilyOf(effect) : 0, Limit = effect.Limit,
-                        WalksTo = walk, AlsoLays = effect.BitesLay,
+                        WalksTo = walk, AlsoLays = effect.BitesLay, Name = effect.Named,
                     });
+                    break;
+                }
+                case UpgradeAction.Feed:
+                {
+                    // A shard torn from the trigger's enemy goes to the whirl only when a whirl stands near (Wind Sickle).
+                    var torn = effect.TearsNeeds ? subject as IAfflictable : null;
+                    if (effect.TearsNeeds && (torn == null || !torn.Afflictions.Has(effect.Needs))) break;
+                    if (!Hazards.Feed(effect.Named, centre, Or(effect.Reach, 3f), eDamage, eStagger, effect.Affliction, Or(effect.Stacks, 1))) break;
+                    if (torn != null) torn.Afflictions.Spend(effect.Needs, 1);
+                    Fed++;
+                    ElementLook.Sparks(look, centre + Vector3.up * 0.8f, Vector3.up, 0.6f);
                     break;
                 }
                 case UpgradeAction.Pass:

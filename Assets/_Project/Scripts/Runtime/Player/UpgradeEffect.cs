@@ -451,6 +451,15 @@ namespace Clover.Player
         public bool OnTarget;
         /// <summary>Only when the trigger's enemy stands in the player's own ground of this name (World.OwnGrounds: The Hag's Staff's frozen disc).</summary>
         public string TargetOnGround = "";
+        /// <summary>
+        /// For Hazard and Helper: the name what it lays goes by, so Feed can find it, without its acting as ground (Sickle Wind's
+        /// whirl). For Feed: the name of what it feeds.
+        /// </summary>
+        public string Named = "";
+        /// <summary>Stagger added for each stack the Spend effect before it (in the same mark) took (Sickle Wind: 4 a shard).</summary>
+        public float StaggerPerSpent;
+        /// <summary>For Feed: one stack of Needs is torn from the trigger's enemy as what is fed, and only when there is something to feed (Wind Sickle's notch).</summary>
+        public bool TearsNeeds;
 
         /// <summary>True when a Hazard effect lays ground that keeps acting, told to the marks at each bite (Hazards.GroundActs).</summary>
         public bool ActsAsGround => Inside != null || Mends > 0f || InsideDo != null || InsideAtEnd != null || YouInside != null || !string.IsNullOrEmpty(Ground);

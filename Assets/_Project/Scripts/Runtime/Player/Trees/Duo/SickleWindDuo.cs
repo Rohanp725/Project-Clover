@@ -40,7 +40,7 @@ namespace Clover.Player.Trees.Duo
                         Effects = new[]
                         {
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Shape = HazardShape.Downwind, Count = 3, Reach = 3f, Amount = 2f, Radius = 1f, Seconds = 3f, Interval = 0.4f,
-                                Damage = 3f, Stagger = 4f, Affliction = AfflictionKind.Sundered },
+                                Damage = 3f, Stagger = 4f, Affliction = AfflictionKind.Sundered, Named = Reactions.SickleWhirl },
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Burst, Shape = HazardShape.Downwind, Count = 3, Reach = 3f, Amount = 2f, Radius = 1f, Delay = 0.5f,
                                 Affliction = AfflictionKind.Sundered, Stacks = 1 },
                         },
@@ -59,13 +59,13 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.Foot));
 
-            // NEEDS: a dodge ending near a whirl feeding it a shard and its next cut laying Unsteady (whirl-fed); now a
-            // dodge's end lays an Unsteady on everything within 3 m of you, once in 2 s.
+            // A dodge ending within 3 m of a whirl's edge feeds it a shard (UpgradeAction.Feed: 3 damage and 4 stagger more a cut),
+            // and its next cut lays Unsteady on all it reaches.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Bellows, Name = "Bellows", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Boot,
                 Description = "A dodge that ends within 3 m of a whirl feeds it: one more shard, and its next cut lays Unsteady.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.DodgeEnd, At = EffectAt.Self, Do = UpgradeAction.Afflict, Radius = 3f, Affliction = AfflictionKind.Unsteady, Stacks = 1, Cooldown = 2f } },
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.DodgeEnd, At = EffectAt.Self, Do = UpgradeAction.Feed, Named = Reactions.SickleWhirl, Reach = 3f, Damage = 3f, Stagger = 4f, Affliction = AfflictionKind.Unsteady, Stacks = 1, Cooldown = 0.3f } },
             }, HeartPattern.LeftLow));
 
             // Changes its reaction's own numbers while it is in force (reaction-numbers, ReactionNumbers):
@@ -83,14 +83,18 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.RightLow));
 
-            // The sickle of wind: a narrow cone 5 m along the swing from the last blow of a chain.
-            // NEEDS: a notch torn from a Sundered enemy into a shard that joins the nearest whirl (whirl-fed); now only
-            // the sickle's cut.
+            // The sickle of wind: a narrow cone 5 m along the swing from the last blow of a chain. A chain's last blow on a
+            // Sundered enemy tears a notch off it into a shard for the nearest whirl within 10 m (Feed with TearsNeeds); with no
+            // whirl near, the notch stays.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = WindSickle, Name = "Wind Sickle", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { Bellows, Grit }, Icon = UpgradeIcons.Claw,
                 Description = "The last blow of a light chain throws a sickle of wind 5 m along the swing: 6 damage and an Unsteady, and a notch torn from a Sundered enemy becomes a shard that joins the nearest whirl.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.ChainEnd, Do = UpgradeAction.Cone, Reach = 5f, Arc = 30f, Damage = 6f, Stagger = 6f, Affliction = AfflictionKind.Unsteady, Stacks = 1 } },
+                Effects = new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.ChainEnd, Do = UpgradeAction.Cone, Reach = 5f, Arc = 30f, Damage = 6f, Stagger = 6f, Affliction = AfflictionKind.Unsteady, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.ChainEnd, Needs = AfflictionKind.Sundered, Do = UpgradeAction.Feed, TearsNeeds = true, Named = Reactions.SickleWhirl, Reach = 10f, Damage = 3f, Stagger = 4f },
+                },
             }, HeartPattern.Keystone));
 
             // The duo spell, a movement on a 10 s cooldown (SpellTimings), bought with 5 Shards once both are carried. Three

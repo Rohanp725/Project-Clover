@@ -8,6 +8,8 @@ namespace Clover.Player.Trees
     public static partial class Reactions
     {
         public const string Grounded = "earthed.grounded";
+        /// <summary>Sickle Wind's whirl of torn plates, by name, for what feeds it shards.</summary>
+        public const string SickleWhirl = "sicklewind.whirl";
         public const string Suns = "mocksuns.suns";
         public const string Swollen = "drownedweight.swollen";
         public const string SwollenHeavy = "drownedweight.heavy";
@@ -61,13 +63,13 @@ namespace Clover.Player.Trees
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Grounded, Seconds = 1f, Flags = ConditionFlags.Rooted } }));
 
             // Wind and Metal (47). Its loose plates whirl round it 1.5 m for 3 s: one shard for each notch, plus one, each
-            // cutting whatever it passes, the enemy itself included, every 0.4 s: 3 damage a shard and 4 stagger.
-            // NEEDS: a hazard's stagger scaled by a count: the stagger is one shard's whatever the shards.
+            // cutting whatever it passes, the enemy itself included, every 0.4 s: 3 damage and 4 stagger a shard (DamagePerSpent,
+            // StaggerPerSpent). The whirl is laid under a name (Named) so Bellows and Wind Sickle can feed it shards.
             to.Add(Reaction(AfflictionKind.Unsteady, AfflictionKind.Sundered,
                 "Unsteady meets Sundered: the wind tears its loose plates off and whirls them round it for 3 s, cutting all they pass, it too, 3 a shard.",
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Sundered, CountOnly = true },
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Helper, Radius = 1.5f, Count = 7, Interval = 0.4f, Damage = 3f, DamagePerSpent = 3f, Stagger = 4f,
-                    Affliction = AfflictionKind.Sundered }));
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Helper, Radius = 1.5f, Count = 7, Interval = 0.4f, Damage = 3f, DamagePerSpent = 3f, Stagger = 4f, StaggerPerSpent = 4f,
+                    Affliction = AfflictionKind.Sundered, Named = SickleWhirl }));
 
             // Ice and Light (48). Two mock suns hang by it for 4 s: a weapon blow on it from its left or right (45 to 135
             // degrees from its face) lays two Chill; only such a blow is made critical by the Mark and spares it (ConditionSpec.FlankLeast),
