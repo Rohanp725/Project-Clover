@@ -1721,7 +1721,7 @@ namespace Clover.Player
         /// What the carried aspect keeps (way_build_plan.md 2.0): its counts and windows, ticked once a frame with what
         /// happened, cleared when the aspect changes. Read by probes.
         /// </summary>
-        public Way.AspectRun AspectState;
+        [System.NonSerialized] public Way.AspectRun AspectState;
         private Way.WeaponAspect aspectKept;
         private int landedThisFrame, guardsSeen, blowsSeen, redSeen, blockedSeen;
         /// <summary>Answers given in the Answer's moment (the Riposte, Through the Gap), for probes.</summary>
