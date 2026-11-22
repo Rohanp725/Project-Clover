@@ -55,13 +55,11 @@ design yet, its **Not built yet** line says what is missing.
 ## wind.lifting.master
 **What it does.** Cast Lifting Wind on the enemy a perfect dodge just took you past, and it hangs in the air twice as long.
 
-**When it happens.** A perfect dodge, then Lifting Wind within a second. Lifting Wind must be in a spell slot.
+**When it happens.** When Lifting Wind lifts the very enemy whose blow you perfectly dodged, cast within 2 seconds of that dodge.
 
-**The numbers.** 3 Shards. Within a second of a perfect dodge, casting Lifting Wind while it is ready doesn't start its wait. Each enemy the column lifts is held up for 1.6 seconds.
+**The numbers.** 3 Shards. That enemy hangs in the air for 2 seconds, twice as long as usual. Other enemies, and casts at other times, hang as usual.
 
 **Works with.** Passing Cut and Leaf on the Wind, which keep you dodging; Nothing Beneath.
-
-**Not built yet.** Only the enemy you dodged past should hang twice as long. For now, every enemy the column lifts hangs longer, whether you dodged or not.
 
 **Example.** Roll through a duellist's lunge and cast it as you come out behind it. It goes up for twice as long, and the next cast is free.
 

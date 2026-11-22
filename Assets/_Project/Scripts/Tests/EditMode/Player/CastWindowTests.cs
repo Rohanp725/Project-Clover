@@ -96,6 +96,9 @@ namespace Clover.Tests
             Assert.AreEqual(ConditionFlags.CannotTurn, glare.State.Flags, "a blinding that stops only its turning");
             Assert.AreEqual(2f, glare.State.Seconds, 1e-5f);
             Assert.AreEqual(1f, glare.State.EliteSeconds, 1e-5f, "one second for a god or an elite");
+            var lift = Upgrade.ById(SpellBranch.MasterId(WindTree.LiftingWind)).Effects.Single();
+            Assert.IsTrue(lift.NeedsAttacker && lift.CastAfter == CastMoment.PerfectDodge, "only on the enemy the dodge took you past");
+            Assert.AreEqual(2f, lift.Seconds, 1e-5f, "twice its second in the air");
         }
     }
 }

@@ -84,12 +84,11 @@ namespace Clover.Player.Trees
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = TurnedAbout, Seconds = 1.2f, Flags = ConditionFlags.BeginsNoAttack | ConditionFlags.FacesPoint | ConditionFlags.BackCritical,
                         FaceAway = true, EliteSeconds = 0.5f, EndsWith = ConditionBlow.Weapon } } } },
                 "Opens two shapes of Lifting Wind, chosen at any rest fire: Dust Devil, a column that wanders, or Turned About, a column that spins its enemy round.",
-                // NEEDS: only on the enemy a perfect dodge has just taken you past. Until then a perfect dodge's next column
-                // starts no wait, and what it takes hangs twice as long.
+                // Cast within 2 s of a perfect dodge (CastAfter) on the very enemy it dodged (NeedsAttacker), it hangs twice as long.
                 new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, Do = UpgradeAction.InstantNext, Seconds = 1f },
-                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Lift, Seconds = 1.6f, Cooldown = 1f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, CastAfter = CastMoment.PerfectDodge, CastWindow = PlayerUpgrades.AttackerWindow, NeedsAttacker = true,
+                        Do = UpgradeAction.Lift, Seconds = 2f, Cooldown = 1f },
                 },
                 "Cast it on the enemy a perfect dodge has just taken you past, and it hangs twice as long.");
 
