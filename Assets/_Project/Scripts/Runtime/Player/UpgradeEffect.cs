@@ -274,6 +274,8 @@ namespace Clover.Player
         public bool PaysLearn;
         /// <summary>Above zero: grown things laid by the effects of one mark with the same number share one limit (Sapling's guard and dodge plantings: three at most in all).</summary>
         public int Kin;
+        /// <summary>For FreeSurge: the element whose surge it lights.</summary>
+        public string SurgeOf = "";
 
         /// <summary>A copy with every number, its slot and its mark (an Empower's twin of its Learn's effect).</summary>
         internal UpgradeEffect Twin() => (UpgradeEffect)MemberwiseClone();

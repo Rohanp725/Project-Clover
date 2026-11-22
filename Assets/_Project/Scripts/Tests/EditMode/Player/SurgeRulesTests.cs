@@ -50,6 +50,26 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void SkyDancesMasterLightsTailwindForFreeWhenEveryCutIsInTime()
+        {
+            var master = Upgrade.ById(SpellBranch.MasterId(Clover.Player.Trees.WindTree.SkyDance)).Effects;
+            var gift = System.Linq.Enumerable.Single(master);
+            Assert.AreEqual(UpgradeTrigger.DanceInTime, gift.On, "only when every cut was in time");
+            Assert.AreEqual(UpgradeAction.FreeSurge, gift.Do);
+            Assert.AreEqual(Elements.Wind, gift.SurgeOf, "Tailwind itself");
+            Assert.AreEqual(4f, gift.Seconds, 1e-5f);
+            Assert.IsTrue(PlayerUpgrades.AllInTime(5, 5));
+            Assert.IsFalse(PlayerUpgrades.AllInTime(4, 5), "one late cut and nothing is lit");
+            Assert.IsTrue(PlayerUpgrades.AllInTime(6, 6), "six rings with the Empower, all six");
+            Assert.IsFalse(PlayerUpgrades.AllInTime(0, 0));
+            var tailwind = ElementKit.Wind();
+            Assert.IsTrue(tailwind.LightFree(4f), "lit at no cost");
+            Assert.AreEqual(4f, tailwind.SurgeLeft, 1e-4f);
+            Assert.IsFalse(tailwind.LightFree(2f), "already lit: kept, not lit again");
+            Assert.AreEqual(4f, tailwind.SurgeLeft, 1e-4f, "never shortened");
+        }
+
+        [Test]
         public void OverdriveAndWellspringCarryTheirNewParts()
         {
             Assert.IsTrue(ElementKit.Lightning().SurgeCritsChainEnd, "the last blow of every chain is critical");

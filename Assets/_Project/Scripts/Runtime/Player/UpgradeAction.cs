@@ -184,5 +184,11 @@ namespace Clover.Player
         /// blow-made-heavy). Reads: Seconds.
         /// </summary>
         NextHeavy,
+        /// <summary>
+        /// Lights the worn surge for Seconds at no cost, when it is the surge of the element named in SurgeOf (Sky Dance's
+        /// Master: Tailwind for 4 s; the ledger's surge-from-mark). A surge already lit is kept at least that long. Reads:
+        /// SurgeOf, Seconds.
+        /// </summary>
+        FreeSurge,
     }
 }

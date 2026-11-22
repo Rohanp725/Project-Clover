@@ -166,7 +166,9 @@ namespace Clover.Player.Forms
                 run.Done++;
                 run.T1 = run.Age;
                 if (run.Done < run.Count) return true;
-                // The cuts are done: the ring goes, and the lane and the circle that follow the stick come.
+                // The cuts are done: the ring goes, and the lane and the circle that follow the stick come. Every one in time is
+                // told to the marks that answer it (Sky Dance's Master).
+                if (cast.Upgrades != null && PlayerUpgrades.AllInTime(Mathf.RoundToInt(run.T3), run.Count)) cast.Upgrades.DancedInTime();
                 run.Phase = 2;
                 FormFx.ReleaseMark(marks[0], 0.1f);
                 marks[0] = -1;

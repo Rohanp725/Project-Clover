@@ -107,14 +107,9 @@ namespace Clover.Player.Trees
                     Description = "The enemy faced and the nearest other both go up, and the rings take turns between them.",
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Lift, Radius = 3f, Seconds = 1.5f, Cooldown = 3f } } },
                 "Opens two shapes of Sky Dance, chosen at any rest fire: Carried Off, an enemy dropped on another, or Two Rise, two dancing at once.",
-                // NEEDS: only when all five cuts were in time, and Tailwind itself lit for 4 s. Until then the dance gives
-                // Tailwind's longer, safer dodge and quicker feet for 4 s.
-                new[]
-                {
-                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Boon, Stat = PlayerStat.DodgeDistance, Amount = 0.3f, Seconds = 4f, Cooldown = 4f },
-                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Boon, Stat = PlayerStat.DodgeSafeTime, Amount = 0.25f, Seconds = 4f, Cooldown = 4f },
-                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Boon, Stat = PlayerStat.MoveSpeed, Amount = 0.15f, Seconds = 4f, Cooldown = 4f },
-                },
+                // Only when every cut was in time (UpgradeTrigger.DanceInTime), Tailwind itself lit for 4 s at no cost
+                // (UpgradeAction.FreeSurge), when it is the worn surge. NEEDS: what it gives with another surge worn (owner question).
+                new[] { new UpgradeEffect { On = UpgradeTrigger.DanceInTime, OwnBranch = true, Do = UpgradeAction.FreeSurge, SurgeOf = Elements.Wind, Seconds = 4f } },
                 "Land all five cuts in time, and you come down with Tailwind lit for four seconds at no cost.");
 
             // Every reaction with Unsteady in it reaches half again as far (PlayerStat.ReactionReach). The throw is data.

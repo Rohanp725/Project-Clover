@@ -2122,6 +2122,9 @@ namespace Clover.Player
                     gatherTaken.Clear();
                     break;
                 }
+                case UpgradeAction.FreeSurge:
+                    if (element != null && element.LightSurgeFree(effect.SurgeOf, Or(effect.Seconds, 4f))) SurgesGiven++;
+                    break;
                 case UpgradeAction.NextHeavy:
                     combat.MakeNextBlowHeavy(Or(effect.Seconds, 1f));
                     ElementLook.Sparks(held, self + Vector3.up * 1.2f, transform.forward, 0.5f);
@@ -3487,6 +3490,15 @@ namespace Clover.Player
 
         /// <summary>The Flask Breaks' ring: 4 m across, 20 damage, 30 stagger and Soaked, thrown 2.5 m, and 4 s off every running wait.</summary>
         public const float FlaskRingRadius = 2f, FlaskRingDamage = 20f, FlaskRingStagger = 30f, FlaskRingThrow = 2.5f, FlaskRingCut = 4f;
+        /// <summary>Surges lit by a mark at no cost (Sky Dance's Master), counted for probes.</summary>
+        public int SurgesGiven { get; private set; }
+
+        /// <summary>A dance's cuts are done, every one in time (Sky Dance): its branch's marks that ask for that answer.</summary>
+        public void DancedInTime() => Trigger(UpgradeTrigger.DanceInTime, null, transform.position, false);
+
+        /// <summary>True when a dance of <paramref name="cuts"/> rings had every one met in time.</summary>
+        public static bool AllInTime(int inTime, int cuts) => cuts > 0 && inTime >= cuts;
+
         /// <summary>Rings The Flask Breaks has thrown, counted for probes.</summary>
         public int FlaskRings { get; private set; }
         /// <summary>Seconds of surge fed by blows on burning enemies (Fed Flame), counted for probes.</summary>

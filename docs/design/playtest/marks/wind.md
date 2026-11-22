@@ -92,13 +92,13 @@ design yet, its **Not built yet** line says what is missing.
 ## wind.skydance.master
 **What it does.** Land all five cuts perfectly, and you come down with Tailwind lit for four seconds, for free.
 
-**When it happens.** When Sky Dance hits. Sky Dance must be in a spell slot.
+**When it happens.** When the last ring of Sky Dance closes and every cut was in time (all five, or all six with the Empower). Sky Dance must be in a spell slot.
 
-**The numbers.** 3 Shards. For 4 seconds, your dodge carries you 30% farther and keeps you safe 25% longer, and you move 15% faster. These are Tailwind's own bonuses, once per dance.
+**The numbers.** 3 Shards. Tailwind is lit for 4 seconds, with all it does, and costs no mana. If Tailwind is already lit, it lasts at least 4 more seconds. It works when Tailwind is your surge.
 
 **Works with.** Passing Cut, Leaf on the Wind, Closing Circle: the fight keeps moving after you land.
 
-**Not built yet.** It should only work when all five cuts were perfectly timed, and should light Tailwind itself (with its hanging blows and its Unsteady). For now, any dance that hits gives the dodge and speed bonuses.
+**Not built yet.** What it gives when another surge is in your surge slot is still being decided. For now, it gives nothing then.
 
 **Example.** Land five perfect cuts and throw the enemy into a pack. You land and roll right through them, farther and safer.
 

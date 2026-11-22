@@ -714,6 +714,19 @@ namespace Clover.Player
         // The base spells' numbers with their Empowers laid over, made at each cast (the kit's own are never changed).
         private readonly SpellSpec[] empoweredBase = { new SpellSpec(), new SpellSpec() };
 
+        /// <summary>
+        /// Lights the worn surge for <paramref name="seconds"/> at no cost when it is <paramref name="elementName"/>'s (Sky
+        /// Dance's Master: Tailwind). False when another surge is worn.
+        /// </summary>
+        public bool LightSurgeFree(string elementName, float seconds)
+        {
+            var info = SurgeInfo;
+            var kit = SurgeKit;
+            if (info == null || kit == null || DuoSurgeWorn != null || info.Name != elementName) return false;
+            if (kit.LightFree(seconds)) BeginSurge();
+            return true;
+        }
+
         private void BeginSurge()
         {
             Surges++;

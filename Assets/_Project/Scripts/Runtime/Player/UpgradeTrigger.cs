@@ -102,5 +102,7 @@ namespace Clover.Player
         /// which kind it answers. Target: that enemy; carries the stacks laid. What the answer itself lays is not answered again.
         /// </summary>
         AfflictionLaid,
+        /// <summary>A dance whose every cut was struck in time has ended its cuts (Sky Dance's five rings all met). Target: none; asked of the spell's own branch.</summary>
+        DanceInTime,
     }
 }

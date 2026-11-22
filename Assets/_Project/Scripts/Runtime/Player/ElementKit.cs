@@ -322,6 +322,24 @@ namespace Clover.Player
         // The surge's length as it was lit, before anything fed it.
         private float litLength;
 
+        /// <summary>
+        /// Lights the surge for <paramref name="seconds"/> at no cost (a mark's gift), or keeps one already lit at least that
+        /// long. True when it was not lit before, so it begins now.
+        /// </summary>
+        public bool LightFree(float seconds)
+        {
+            if (seconds <= 0f) return false;
+            if (SurgeActive)
+            {
+                if (SurgeLeft < seconds) Lengthen(seconds - SurgeLeft);
+                return false;
+            }
+            surgeLength = seconds;
+            litLength = seconds;
+            SurgeLeft = seconds;
+            return true;
+        }
+
         /// <summary>Feeds a burning surge (Fed Flame): <paramref name="seconds"/> more, never past twice the length it was lit for.</summary>
         public void Feed(float seconds) => Lengthen(seconds, FedMost(litLength));
 
