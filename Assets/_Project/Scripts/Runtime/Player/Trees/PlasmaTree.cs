@@ -118,17 +118,17 @@ namespace Clover.Player.Trees
 
             // The branch's top mark (pairs_d1_d2.md), bought with 5 Shards once both are carried, from Ball Lightning: gods give
             // no duo crowns (the owner's decision of 2026-11-20), so a Fire holder consuming the storm is not given it. the burst on a burning enemy is done by hand in
-            // PlayerUpgrades under Upgrade.Plasma and spends nothing. On one that carries Static as well, the burst is a
-            // Flashover too, whatever its rest.
-            // NEEDS: a Flashover with no Static on the enemy (the burst as the reaction itself, rather than beside it).
+            // PlayerUpgrades under Upgrade.Plasma and spends nothing. Flashover goes off with it, whatever its rest: one Static
+            // is laid just before, so its discharge always fires (the owner's answer of 2026-11-22, standin_clearance_plan.md
+            // question 6). A heavy blow counts the finisher, so the finisher needs no effects of its own.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Upgrade.Plasma, Name = "Plasma", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { BallLightning }, Icon = UpgradeIcons.Crown,
-                Description = "A heavy blow or a finisher on a burning enemy bursts, and sets alight everyone near. If it carries Static too, Flashover goes off at once, whatever its rest. Nothing is spent.",
+                Description = "A heavy blow or a finisher on a burning enemy bursts, and sets alight everyone near. One Static is laid on it and Flashover goes off at once, whatever its rest. Nothing else is spent.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.HeavyHit, Needs = AfflictionKind.Burn, Needs2 = AfflictionKind.Static, Do = UpgradeAction.ForceReaction, Reaction = "react.flashover" },
-                    new UpgradeEffect { On = UpgradeTrigger.FinisherHit, Needs = AfflictionKind.Burn, Needs2 = AfflictionKind.Static, Do = UpgradeAction.ForceReaction, Reaction = "react.flashover" },
+                    new UpgradeEffect { On = UpgradeTrigger.HeavyHit, Needs = AfflictionKind.Burn, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Static, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.HeavyHit, Needs = AfflictionKind.Burn, Do = UpgradeAction.ForceReaction, Reaction = "react.flashover", Alone = true },
                 },
             }, HeartPattern.Crown));
         }

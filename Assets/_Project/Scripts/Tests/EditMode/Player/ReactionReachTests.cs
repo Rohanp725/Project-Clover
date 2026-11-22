@@ -115,6 +115,29 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void PlasmaLaysOneStaticBeforeItsFlashoverSoTheDischargeFires()
+        {
+            var crown = Upgrade.ById(Upgrade.Plasma).Effects;
+            Assert.AreEqual(2, crown.Length, "the heavy blow counts the finisher: no second pair");
+            Assert.AreEqual(UpgradeAction.Afflict, crown[0].Do, "the Static first");
+            Assert.AreEqual(AfflictionKind.Static, crown[0].Affliction);
+            Assert.AreEqual(1, crown[0].Stacks);
+            Assert.AreEqual(UpgradeAction.ForceReaction, crown[1].Do, "then the Flashover");
+            Assert.IsTrue(crown[1].Alone);
+            Assert.AreEqual(AfflictionKind.None, crown[1].Needs2, "asked before the Static is laid, so it must not ask for it");
+            Assert.IsTrue(crown.All(effect => effect.On == UpgradeTrigger.HeavyHit && effect.Needs == AfflictionKind.Burn));
+            // On a burning enemy that carried no Static, the laid one is there when the Flashover is forced.
+            var reported = new System.Collections.Generic.List<int>();
+            var enemy = new AfflictionSet { Reactions = new ReactionEngine((who, pair, laid) => reported.Add(pair), () => 0) };
+            enemy.Ignite(4f, 1, LaySource.Spell);
+            int flashover = AfflictionPairs.Index(AfflictionKind.Burn, AfflictionKind.Static);
+            enemy.Lay(AfflictionKind.Static, 1, 0f, 1f, LaySource.Reaction);
+            Assert.IsTrue(enemy.ForceReaction(flashover, null, true));
+            Assert.Contains(flashover, reported);
+            Assert.Greater(enemy.Stacks(AfflictionKind.Static), 0, "the discharge has a stack to fire");
+        }
+
+        [Test]
         public void TheMarksAnswerWhatTheReactionStruck()
         {
             UpgradeEffect Struck(string id) => Upgrade.ById(id).Effects.Single(effect => effect.On == UpgradeTrigger.ReactionStruck);
