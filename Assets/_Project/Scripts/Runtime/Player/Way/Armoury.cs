@@ -61,10 +61,31 @@ namespace Clover.Player.Way
         }
 
         /// <summary>The weapon the loadout carries, in its active aspect (<see cref="WayRules.ActiveAspect"/>), with the marks in force.</summary>
-        public static Weapon Resolve(Loadout loadout, IMarkQuery marks)
+        public static Weapon Resolve(Loadout loadout, IMarkQuery marks) => Resolve(loadout, marks, null);
+
+        /// <summary>
+        /// As <see cref="Resolve(Loadout, IMarkQuery)"/>, with the element the Armament is made in (null: the run's, as
+        /// <see cref="Weapons.ByName"/> makes it).
+        /// </summary>
+        public static Weapon Resolve(Loadout loadout, IMarkQuery marks, string armamentElement)
         {
             string weapon = loadout != null ? loadout.Weapon : "";
-            return Resolve(weapon, WayRules.ActiveAspect(loadout, WayRules.KindOf(weapon)), marks);
+            return Resolve(weapon, WayRules.ActiveAspect(loadout, WayRules.KindOf(weapon)), marks, armamentElement);
+        }
+
+        /// <summary>
+        /// The one call every equip point makes (way_build_plan.md 2.0): the named weapon built as the player would carry
+        /// it, in the aspect the Way's choices give its kind and with the learned marks that would be in force once it is
+        /// in hand. <paramref name="carried"/> gives the attunements and the Way's choices; it is not changed. With no
+        /// mark of the Way learned this is exactly <see cref="Weapons.ByName"/>, except that the god's own weapon carried
+        /// is his bough (phase5_questions.md 5.2, questions 6 and 13).
+        /// </summary>
+        public static Weapon Arm(string weaponName, Loadout carried, ICollection<string> learned, string armamentElement)
+        {
+            var wanted = new Loadout();
+            wanted.CopyFrom(carried);
+            wanted.Weapon = weaponName ?? "";
+            return Resolve(wanted, new LearnedMarks(wanted, learned), armamentElement);
         }
 
         /// <summary>
@@ -73,7 +94,10 @@ namespace Clover.Player.Way
         /// mark is in force (learned and active, as <paramref name="marks"/> answers); otherwise the weapon is plain, with
         /// its trunk.
         /// </summary>
-        public static Weapon Resolve(string weapon, string aspectId, IMarkQuery marks)
+        public static Weapon Resolve(string weapon, string aspectId, IMarkQuery marks) => Resolve(weapon, aspectId, marks, null);
+
+        /// <summary>As <see cref="Resolve(string, string, IMarkQuery)"/>, with the element the Armament is made in (null: the run's).</summary>
+        public static Weapon Resolve(string weapon, string aspectId, IMarkQuery marks, string armamentElement)
         {
             marks ??= MarkSet.None;
             string kind = WayRules.KindOf(weapon);
@@ -81,10 +105,15 @@ namespace Clover.Player.Way
             var aspect = ById(god ?? aspectId);
             if (aspect != null && (aspect.Weapon != kind || (god == null && !marks.Has(aspect.Id)))) aspect = null;
             Weapon built = aspect != null && aspect.GodBough ? aspect.Build() : null;
-            // The god's weapon whose bough is not written yet (the Sun-Spear) is still itself.
-            built ??= Weapons.ByName(god != null ? weapon : kind);
+            // The god's weapon whose bough is not written yet (the Sun-Spear) is still itself, and the Armament, kept on
+            // the Fists' Way, is still the Armament.
+            if (built == null)
+                built = weapon == Weapons.ArmamentName && !string.IsNullOrEmpty(armamentElement) ? Weapons.Armament(armamentElement) : Weapons.ByName(weapon);
             TrunkOf(kind)?.Patch(built, marks);
             aspect?.Patch(built, marks);
+            // The technique works in every aspect (steel/weapons.md 0.5): the chord's step, or none.
+            built.Technique = Techniques.StepFor(kind, marks);
+            built.Aspect = aspect;
             return built;
         }
     }

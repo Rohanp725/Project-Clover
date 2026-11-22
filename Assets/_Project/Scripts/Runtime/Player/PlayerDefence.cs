@@ -90,6 +90,8 @@ namespace Clover.Player
         // Counters so tests and probes can see what happened without watching the screen.
         public int BlowsTaken { get; private set; }
         public int Blocks { get; private set; }
+        /// <summary>Red (unguardable) blows turned by a perfect guard, counted for the Way's answers (Catch the Red).</summary>
+        public int RedTurns { get; private set; }
         public int PerfectGuards { get; private set; }
         public int Dodges { get; private set; }
         public int PerfectDodges { get; private set; }
@@ -354,6 +356,10 @@ namespace Clover.Player
         public bool Unflinching { get; set; }
         /// <summary>Blows taken without flinching, counted for probes.</summary>
         public int UnflinchedBlows { get; private set; }
+        /// <summary>The Body's Steady (task 5.4): outside a swing, a blow of this much damage or less hurts but does not make the player flinch. The upgrades keep it.</summary>
+        public float Steadiness { get; set; }
+        /// <summary>Blows shrugged off that way, counted for probes.</summary>
+        public int SteadiedBlows { get; private set; }
 
         public HitOutcome TakeHit(in Hit hit)
         {
@@ -430,6 +436,7 @@ namespace Clover.Player
             {
                 case GuardResult.Perfect:
                     PerfectGuards++;
+                    if (hit.Unblockable) RedTurns++;
                     Vfx.Play(VfxKind.PerfectGuard, GuardPoint(), transform.forward);
                     if (guardArc != null) guardArc.Pulse(new Color(4.5f, 3.2f, 0.7f, 1f), 0.35f, 0.5f);
                     Vfx.Play(VfxKind.Ring, GuardPoint(), transform.forward);
@@ -458,7 +465,7 @@ namespace Clover.Player
                     Callout("Guard broken");
                     if (guardArc != null) guardArc.Pulse(new Color(5f, 0.4f, 0.3f, 1f), 0.4f, 0.9f);
                     Vfx.Play(VfxKind.Danger, GuardPoint());
-                    Land(hit, GuardBreakSeconds);
+                    Land(hit, GuardBreakSeconds, true);
                     return HitOutcome.Landed;
                 default:
                     if (SpendWard(hit)) return HitOutcome.Blocked;
@@ -469,7 +476,7 @@ namespace Clover.Player
             }
         }
 
-        private void Land(in Hit hit, float seconds)
+        private void Land(in Hit hit, float seconds, bool guardBroken = false)
         {
             BlowsTaken++;
             float wound = hit.Damage * DamageTaken;
@@ -493,6 +500,13 @@ namespace Clover.Player
             {
                 // Past caring: the blow is taken whole and nothing is broken off for it.
                 UnflinchedBlows++;
+                if (shaker != null) shaker.Shake(0.1f, 0.12f);
+                return;
+            }
+            if (!IsDead && !guardBroken && Way.BodyRules.ShrugsOff(combat != null && combat.InSwingMoment, Steadiness, hit.Damage))
+            {
+                // Steady: a small blow outside a swing hurts, and the player stands through it.
+                SteadiedBlows++;
                 if (shaker != null) shaker.Shake(0.1f, 0.12f);
                 return;
             }

@@ -133,71 +133,75 @@ namespace Clover.Player.Trees.Ways
             // climb (depth_weapons.md 6: I and II in the Fire land, III at the third god, IV the fifth, V the seventh).
             string[] tempers = { Temper1, Temper2, Temper3, Temper4, Temper5 };
             string[] numerals = { "I", "II", "III", "IV", "V" };
-            int[] prices = { 1, 1, 2, 2, 3 };
-            string[] gates = { "", "", MarkRules.GodsGate + "3", MarkRules.GodsGate + "5", MarkRules.GodsGate + "7" };
+            // The player's words (way_build_plan.md 2.1): one shared line, and what ranks III and V add.
             string[] own =
             {
                 "", "",
                 " The drawing cut reaches a little further.",
                 "",
-                " The finishing blow lands harder.",
+                " The finishing blow hits harder, and you hold your last pose a moment longer.",
             };
             for (int i = 0; i < tempers.Length; i++)
             {
                 var temper = Mark(to, tempers[i], "Katana Temper " + numerals[i], UpgradeKind.Temper, "", i == 0 ? "" : tempers[i - 1], UpgradeIcons.Anvil,
-                    "The blade is folded and hardened once more. Every blow of the Katana hits harder and breaks balance sooner." + own[i]);
-                temper.Cost = prices[i];
-                temper.Gate = gates[i];
-                temper.Stats = new[] { new StatMod(PlayerStat.WeaponDamage, 0.06f), new StatMod(PlayerStat.StaggerDealt, 0.05f) };
+                    "Every Katana hit does a little more damage and breaks balance a little sooner." + own[i]);
+                temper.Cost = Temper.PriceOf(i + 1);
+                temper.Gate = Temper.GateOf(i + 1);
+                temper.Stats = new[] { new StatMod(PlayerStat.WeaponDamage, Temper.DamagePerRank), new StatMod(PlayerStat.StaggerDealt, Temper.StaggerPerRank) };
             }
-            // Temper V's held pose: NEEDS: the finisher's hold, 0.2 s longer (the Katana's finisher has no held pose to lengthen); its +15% is patched.
+            // Temper V's longer hold and harder blow are the trunk's patch (KatanaTrunk). NEEDS: the held pose in play (time
+            // slowed while the pose holds, way-finisher-hold) and the finisher's clip with the pose in it.
 
             // The infusion families (steel/weapons.md 1, "Infusion", on the drawing cut): opened once an element is owned.
-            // NEEDS: the infused strike reading the family marks (task 5.3, Way/Infusion.cs); until then they change nothing.
+            // The infused strike reads them through Way/Infusion.cs and Way/InfusionGround.cs (task 5.3), all four in play.
+            // NEEDS: Settling Draw's own clip (way-infusion-families) and the looks the approved pieces do not give (way-infusion-looks).
+            // The player's words are way_build_plan.md 2.2's; the rules are Way/Infusion.cs.
             var ground = Mark(to, InfuseGround, "Lying Draw", UpgradeKind.Major, "", "", UpgradeIcons.Flame,
-                "An infused strike of Fire, Poison or Life leaves the drawing cut's arc lying on the floor, alight with the element, for three seconds.");
+                "Your infused draw with Fire, Poison or Life leaves its cut burning on the floor for a few seconds.");
             var line = Mark(to, InfuseLine, "Running Draw", UpgradeKind.Major, "", "", UpgradeIcons.Bolt,
-                "An infused strike of Lightning, Wind or Light turns the drawing cut into a dash of five metres through every enemy on its lane.");
+                "Your infused draw with Lightning, Wind or Light becomes a dash. You cut everyone in a line.");
             var weight = Mark(to, InfuseWeight, "Settling Draw", UpgradeKind.Major, "", "", UpgradeIcons.Rock,
-                "An infused strike of Earth, Metal or Ice draws slower and cannot be broken. It stops in the first enemy, sets the element in it and staggers far harder.");
+                "Your infused draw with Earth, Metal or Ice is slower, but nothing can stop it. It sticks in the first enemy and staggers it hard.");
             var draw = Mark(to, InfuseDraw, "Dragging Draw", UpgradeKind.Major, "", "", UpgradeIcons.Drop,
-                "An infused strike of Water or Dark is followed by the return cut by itself, which drags everything the draw struck onto the point.");
+                "Your infused draw with Water or Dark is followed by a second cut on its own. It pulls back everything the draw hit.");
             foreach (var family in new[] { ground, line, weight, draw }) family.Gate = MarkRules.GodsGate + "1";
 
             // The five weapon basics (way_plan.md 0.2 and 1, "Trunk basics"), in any order once the Katana is owned.
             // NEEDS: a clip of its own, katana_roll_cut (a low rising cut out of the roll); and the cut counting as the chain's
             // first step. The trunk's patch makes it the dodge's cut on the drawing cut's clip.
             Mark(to, RisingDraw, "Rising Draw", UpgradeKind.Major, "", "", UpgradeIcons.Boot,
-                "A light attack late in a dodge, or just after it, is a low rising cut out of the roll.");
+                "Press light attack as your dodge ends. You rise out of the roll with a cut. Your combo goes on from there.");
             // NEEDS: a heavy out of the roll (the roll's second press) and a guard broken for a second, with a clip of its own.
             Mark(to, TsukaAte, "Tsuka-ate", UpgradeKind.Major, "", "", UpgradeIcons.Fist,
-                "A heavy attack out of a dodge drives the hilt into the face. Little damage, a great deal of stagger, and a raised guard is broken for a moment.");
+                "Press heavy attack as your dodge ends. You slam the hilt into their face. It does little damage but breaks their balance. It also breaks a raised guard or shield for a moment.");
             Mark(to, SettledHands, "Settled Hands", UpgradeKind.Minor, "", "", UpgradeIcons.Hourglass,
-                "The three light cuts recover a little sooner.");
+                "Your three light cuts recover a little faster.");
             // NEEDS: the guard's light attack throwing a knife (a shot from the hip, E8) once every 6 s, with its clip and prop.
             Mark(to, Kozuka, "Kozuka", UpgradeKind.Major, "", "", UpgradeIcons.Arrow,
-                "A light attack while guarding flicks the small knife from the scabbard at the enemy you face. It barely cuts, but a light enemy flinches.");
-            // NEEDS: the turn to the nearest other enemy after a kill, and the thin white glance line. The wider window is a boon.
+                "While guarding, press light attack. You flick a small knife at the enemy you face. It barely hurts, but a light enemy flinches. You can throw it every few seconds.");
+            // The turn to the nearest other enemy is PlayerCombat.Zanshin; no effect is drawn (question 19). The wider window is a boon.
+            // NEEDS (turn-to-face): the head leading the turn.
             var zanshin = Mark(to, Zanshin, "Zanshin", UpgradeKind.Major, "", "", UpgradeIcons.Eye,
-                "For a moment after a kill you turn to the next enemy, and a guard raised then is perfect a little more easily.");
+                "After a kill, you turn to face the next enemy. For a moment, a perfect guard is easier.");
             zanshin.Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Kill, Do = UpgradeAction.Boon, At = EffectAt.Self, Stat = PlayerStat.PerfectGuardWindow, Amount = 0.28f, Seconds = 1f } };
 
             // The gated technique (steel/weapons.md 0.5 and 1): sealed until the Last Retainer falls, on light and heavy together.
-            // NEEDS: the chord's step (task 5.3, PlayerCombat.TechniqueStep) and a draw that breaks a wind-up, with its clip.
+            // The chord plays it once bought (Way/Techniques.cs). NEEDS (way-technique): the broken wind-up (50 stagger, the
+            // shorter recovery) and its own clip, attack_katana_before_thunder; the drawing cut's clip plays at its timings.
             var technique = Mark(to, BeforeTheThunder, "Before the Thunder", UpgradeKind.Technique, "", "", UpgradeIcons.Bolt,
-                "Light and heavy together: the quickest draw there is. If it strikes an enemy winding up an attack, red ones too, the attack is broken. If it strikes nothing in a wind-up it leaves you open.");
+                "Press light and heavy attack together. You draw faster than anything. Hit an enemy as it winds up an attack, even a red one, and the attack is broken. Miss the timing and you are left open.");
             technique.Gate = LastRetainerFlag;
 
             // The element infusion marks: the built tree marks that need the Katana, moved here with their ids and their rules
             // on the Iaido Slash, each working while its element is carried. Opened once an element is owned, as the families.
             var crescent = Mark(to, BurningCrescent, "Burning Crescent", UpgradeKind.Major, "", "", UpgradeIcons.Flame,
-                "The Iaido Slash throws a slow arc of flame that travels on after the cut. Works while Fire is carried.");
+                "With Fire, your Iaido Slash throws a slow wave of flame ahead of it.");
             crescent.Element = Elements.Fire;
             var cuts = Mark(to, DelayedCuts, "Delayed Cuts", UpgradeKind.Major, "", "", UpgradeIcons.Bolt,
-                "The Iaido Slash passes through. Its cuts land a moment later, all at once, when the blade is home. Works while Lightning is carried.");
+                "With Lightning, your Iaido Slash passes through. The cuts land a moment later, all at once, when your sword is home.");
             cuts.Element = Elements.Lightning;
             var wind = Mark(to, DrawingWind, "Drawing Wind", UpgradeKind.Major, "", "", UpgradeIcons.Gust,
-                "When the Iaido Slash lands, everything within six metres is pulled toward you and left Unsteady. Works while Wind is carried.");
+                "With Wind, your Iaido Slash pulls everyone nearby toward you and throws them off balance.");
             wind.Element = Elements.Wind;
             wind.Effects = new[]
             {
@@ -205,13 +209,13 @@ namespace Clover.Player.Trees.Ways
                 new UpgradeEffect { On = UpgradeTrigger.SkillHit, Do = UpgradeAction.Afflict, At = EffectAt.Self, Radius = 6f, Affliction = AfflictionKind.Unsteady, Stacks = 2, Cooldown = 1f },
             };
             var winter = Mark(to, WinterDraw, "Winter Draw", UpgradeKind.Major, "", "", UpgradeIcons.Snowflake,
-                "When the Iaido Slash lands on a chilled enemy, a blade of ice flies on ahead and strikes and chills everything in its path. Works while Ice is carried.");
+                "With Ice, your Iaido Slash on a chilled enemy sends a blade of ice flying on.");
             winter.Element = Elements.Ice;
             winter.Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SkillHit, Do = UpgradeAction.Projectile, Needs = AfflictionKind.Chill, Flight = Flight.Straight, Damage = 18f, Stagger = 20f, Radius = 1f, Speed = 16f, Seconds = 0.5f, Affliction = AfflictionKind.Chill, Stacks = 2, Cooldown = 1f } };
             // Halo's (Metal and Light) once; on the Way it is Light's, so its notch lays only while Metal is the first element
             // (the weapon's blows lay the first element's affliction, MarkRules.BlowMayLay).
             var answering = Mark(to, AnsweringDraw, "Answering Draw", UpgradeKind.Major, "", "", UpgradeIcons.Sun,
-                "The Iaido Slash Marks what it cuts and notches its armour. After a perfect guard, every blow you land for a moment is critical. Works while Light is carried.");
+                "With Light, your Iaido Slash marks enemies and cracks their armour. After a perfect guard, your hits are critical for a moment.");
             answering.Element = Elements.Light;
             answering.Effects = new[]
             {
@@ -227,129 +231,128 @@ namespace Clover.Player.Trees.Ways
             // NEEDS: the sheathe as a beat of its own (the sword goes home after every chain or 0.6 s idle, a fast noto clip).
             // The patch gives the draw its bonus and ends the chain at the return cut.
             Mark(to, Sheath, "The Sheath", UpgradeKind.Aspect, Sheath, "", UpgradeIcons.Blade,
-                "Iai: the sword goes home after every chain. The first cut of every chain is a draw from the sheath, far harder and heavier than a cut. The chain is the draw, the return cut, and the sheathe.");
+                "Iai. Your sword goes back into its sheath after every combo. The first cut of each combo is a draw from the sheath, and it hits much harder. Each combo is the draw, a return cut, and then the sword goes home.");
             Mark(to, SharpDraw, "Sharp Draw", UpgradeKind.Minor, Sheath, Sheath, UpgradeIcons.Blade,
-                "The draw from the sheath cuts deeper still.");
+                "Your draw from the sheath hits even harder.");
             // NEEDS: the guard pressed in a cut's recovery sheathing in 0.15 s, the next light a draw, with a clip of its own (a fast noto).
             Mark(to, QuickSheath, "Quick Sheath", UpgradeKind.Major, Sheath, SharpDraw, UpgradeIcons.Shield,
-                "Guard in a cut's recovery to sheathe at once. The next light attack is a draw.");
+                "Press guard during a cut's recovery to sheathe at once. Your next light attack is a draw.");
             // NEEDS: the flick that clears the recovery and sheathes, with its clip. Its next draw's stagger is a boon spent by the next blow.
             var chiburi = Mark(to, Chiburi, "Chiburi", UpgradeKind.Major, Sheath, QuickSheath, UpgradeIcons.Drop,
-                "A light attack just after a kill shakes the blood from the blade and sheathes. The next draw breaks balance far sooner.");
+                "Right after a kill, press light attack. You flick your sword clean and sheathe it. Your next draw breaks balance harder.");
             chiburi.Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Kill, Do = UpgradeAction.Boon, At = EffectAt.Self, Stat = PlayerStat.StaggerDealt, Amount = 1f, Seconds = 4f, UntilBlow = true } };
 
             // Path A: the one perfect draw.
             // NEEDS: a held light press (hold 0.4 s to sink and creep; let go to draw down a lane 5 m by 1 m, carrying 3 m, 28 and
             // 36 stagger; a thin white line on the floor while held), with its clip katana_held_draw.
             Mark(to, HeldDraw, "Held Draw", UpgradeKind.Major, Sheath, Chiburi, UpgradeIcons.Hourglass,
-                "Hold the light attack to sink and creep. Let go to draw down a lane in front of you, carried with the cut. A thin white line on the floor shows the lane while you hold.");
+                "Hold light attack to crouch and creep forward. Let go to dash and cut along the line in front of you.");
             // NEEDS: the held draw (as above): held a second or more, its lane longer and cutting all on it.
             Mark(to, SayaBiki, "Saya-biki", UpgradeKind.Major, Sheath, HeldDraw, UpgradeIcons.Arrow,
-                "Held a second or more, the held draw's lane is longer and it cuts every enemy on it, not only the first.");
+                "Hold the draw for a second or more. It goes further and cuts everyone in the line.");
             // NEEDS: the held draw held to 2 s, released full at three times through any guard, everyone on the lane held 0.4 s and
             // the wounds opening as the guard clicks home, with its clip (the slow noto with a held pose).
             Mark(to, TheCutLandsAtTheClick, "The Cut Lands at the Click", UpgradeKind.Keystone, Sheath, SayaBiki, UpgradeIcons.Star,
-                "The held draw can be held longer, the white line brightening as it fills. Released full, it cuts through any guard, and every enemy on the lane stands still until the sword clicks home. Then the wounds open, all at once.");
+                "Hold the draw even longer, up to two seconds. Let go when it is full. You cut through any guard, and everyone in the line freezes. Their wounds open when your sword clicks back into its sheath. If you are hit while holding, you lose the draw.");
 
             // Path B: a flurry of draws.
             // NEEDS: the draw stepping 1.5 m to the side the stick holds, with its clip (one clip mirrored).
             Mark(to, NukitsukeAside, "Nukitsuke Aside", UpgradeKind.Major, Sheath, Chiburi, UpgradeIcons.Boot,
-                "A light attack with the stick held to one side draws as you step that way, off the line of their blow.");
+                "Hold the stick to one side and press light attack. You step that way as you draw, out of the path of their attack.");
             // NEEDS: a draw that lands sheathing at once when its recovery ends, and the stamina taken off only draws within 1 s
             // of each other. The patch takes it off every draw.
             Mark(to, LightScabbard, "Light Scabbard", UpgradeKind.Major, Sheath, NukitsukeAside, UpgradeIcons.Wing,
-                "A draw that lands sheathes at once, and draws close together cost less stamina.");
-            // NEEDS: every fourth draw in a row with no blow taken leaving its white crescent hanging 0.6 s, cutting again for 40%
-            // (a count in AspectRun and its look), and a clip of its own (a looping draw and sheathe). The patch makes every light a draw.
+                "When a draw hits, your sword goes straight home. Draws close together cost less stamina.");
+            // The count and the hanging cut are SheathAspect's (Tick, Blow). NEEDS: its clip, attack_katana_draw_loop (way-clips),
+            // and the slash trail held where it was cut (way-hanging-cut). The patch makes every light a draw.
             Mark(to, AHundredDays, "A Hundred Days at the Shrine", UpgradeKind.Keystone, Sheath, LightScabbard, UpgradeIcons.Sun,
-                "Every light attack is a draw: drawn and sheathed in one stroke, without end. Every fourth draw in a row with no blow taken leaves its crescent hanging in the air to cut again.");
+                "Every light attack is a draw. You draw and sheathe in one quick stroke, again and again. If you are not hit, every fourth draw leaves its cut hanging in the air. Anyone who walks into it is cut again.");
         }
 
         private static void AddStream(List<Upgrade> to)
         {
-            // NEEDS: clips of their own for the turning cut and the rising cut (the patch plays the return cut's and the drawing
-            // cut's), and a dodge in a cut's recovery that keeps the chain.
+            // The patch keeps the chain through a dodge (WeaponCombo.ChainKeptThroughDodge). NEEDS: clips of their own for the
+            // turning cut and the rising cut (way-clips; the return cut's and the drawing cut's play).
             Mark(to, Stream, "The Stream", UpgradeKind.Aspect, Stream, "", UpgradeIcons.Wave,
-                "Flow: five cuts in place of three, a turning cut and a rising cut after the three, and a dodge in a cut's recovery no longer ends the chain.");
+                "Flow. Your combo is five cuts instead of three. After the third come a turning cut and a rising cut. You can dodge in the middle of the combo and keep going.");
             Mark(to, LightWrist, "Light Wrist", UpgradeKind.Minor, Stream, Stream, UpgradeIcons.Hourglass,
-                "From the third cut on, cuts are quicker.");
+                "From the third cut on, your cuts are faster.");
             // NEEDS: a heavy in the middle of the chain that does not end it (a quick overhead, 26), with its clip.
             Mark(to, RiverBend, "River Bend", UpgradeKind.Major, Stream, LightWrist, UpgradeIcons.Wave,
-                "A heavy attack in the middle of the chain is a quick overhead that does not end it.");
-            // NEEDS: the cut from any part of a dodge, not only its second half, counting as the chain's next step; its clip is
-            // the Rising Draw's katana_roll_cut. The patch makes it the dodge's cut, taking the Rising Draw's place.
+                "Press heavy attack in the middle of your combo. You make a quick overhead cut, and the combo keeps going.");
+            // The patch makes it the dodge's cut from any part of the roll, the chain's next step (WeaponCombo.DashCutFrom,
+            // DashCutInChain). NEEDS: its clip, the Rising Draw's attack_katana_roll_cut (way-clips).
             Mark(to, SteppingWater, "Stepping Water", UpgradeKind.Major, Stream, RiverBend, UpgradeIcons.Boot,
-                "A light attack in a dodge cuts out of the roll, and the chain goes on from it.");
+                "Press light attack at any point in a dodge. You cut out of the roll, and it counts as the next cut of your combo.");
 
             // Path A: stand and never stop.
             // NEEDS: only from the fourth cut on (a step of the chain as a condition); now every light that lands.
             var second = Mark(to, SecondBreath, "Second Breath", UpgradeKind.Major, Stream, SteppingWater, UpgradeIcons.Heart,
-                "Each cut from the fourth on that lands gives back a little stamina.");
+                "From the fourth cut on, each cut that hits gives you back a little stamina.");
             second.Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.LightHit, Do = UpgradeAction.Stamina, At = EffectAt.Self, Amount = 4f } };
             // NEEDS: the recovery too, and the 0.15 s flinch in place; the patch gives the chain's wind-ups and swings poise 12.
             Mark(to, Unbroken, "Unbroken", UpgradeKind.Major, Stream, SecondBreath, UpgradeIcons.Shield,
-                "A small blow taken in the chain does not end it. You flinch in place and the next light attack carries on.");
+                "A small hit during your combo does not stop it. You flinch for a moment and keep cutting.");
             // NEEDS: a chain that loops (the fifth cut into the first, +8% a loop, three at most, ended only by a blow over 12, the
             // guard or no press), light blows giving half the mana, and the ring of five arcs at the third loop with its clip.
             Mark(to, NoLastCut, "No Last Cut", UpgradeKind.Keystone, Stream, Unbroken, UpgradeIcons.Ring,
-                "After the fifth cut the first follows with no pause, harder each time round. Only a heavy blow, your guard or a still hand ends it. At the end of the third loop all five arcs are cut at once as one ring round you.");
+                "After the fifth cut, your combo starts again with no pause, and each time round it hits harder. It can go round three times. Only a big hit, your guard, or stopping ends it. At the end of the third round, you cut all around you at once.");
 
             // Path B: never stand still.
             // NEEDS: a dodge inside the chain as a short slide (2.4 m for 15 stamina), with the slide's clip.
             Mark(to, EbbStep, "Ebb Step", UpgradeKind.Major, Stream, SteppingWater, UpgradeIcons.Wing,
-                "A dodge inside the chain is a short, cheap slide.");
+                "A dodge in the middle of your combo becomes a short, cheap slide.");
             // NEEDS: only the cut out of a perfect dodge; now the next blow after any perfect dodge is critical.
             var eddy = Mark(to, Eddy, "Eddy", UpgradeKind.Major, Stream, EbbStep, UpgradeIcons.Spiral,
-                "A cut out of a perfect dodge is critical.");
+                "A cut out of a perfect dodge is a critical hit.");
             eddy.Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, Do = UpgradeAction.Boon, At = EffectAt.Self, Stat = PlayerStat.CritChance, Amount = 1f, Seconds = 0.8f, UntilBlow = true } };
             // NEEDS: every dodge in the chain cutting along its own line beside the bodies it passes and counting as the chain's
             // next step, the pale wake on the floor, and a clip of its own (a sliding cut).
             Mark(to, TheWaterHasNoShape, "The Water Has No Shape", UpgradeKind.Keystone, Stream, Eddy, UpgradeIcons.Drop,
-                "Every dodge in the chain cuts all you slide past and counts as the chain's next cut: a chain can be all slides. Each slide leaves a pale wake on the floor.");
+                "Every dodge during your combo cuts everyone you slide past, and counts as the next cut. Your whole combo can be slides.");
         }
 
         private static void AddAnswer(List<Upgrade> to)
         {
-            // NEEDS: the answer window (a perfect guard opening 0.6 s, a white flick down the blade; light attack in it the
-            // Riposte, 24 and critical; heavy, Through the Gap, a step to the attacker's back, 30 and 40 stagger). The patch takes
-            // a tenth off the light blows.
+            // The moment to answer is Way/AnswerWindow.cs, kept in the player's AspectRun. NEEDS: the Riposte's and Through the
+            // Gap's own clips (way-clips) and the moment's look (way-answer-look). The patch takes a tenth off the light blows.
             Mark(to, Answer, "The Answer", UpgradeKind.Aspect, Answer, "", UpgradeIcons.Shield,
-                "Counter: a perfect guard opens a moment to answer, shown as a white flick down the blade. A light attack in it is the Riposte, a critical cut. A heavy attack is Through the Gap, a step to the attacker's back. Light blows hit a little less.");
+                "Counter. A perfect guard gives you a moment to answer. Press light attack to riposte with a critical cut. Press heavy attack to slip past and cut them from behind. Your normal light cuts do a little less damage.");
             // NEEDS: a share on the perfect guard's stagger; the patch adds a little to what it throws.
             Mark(to, TurnedEdge, "Turned Edge", UpgradeKind.Minor, Answer, Answer, UpgradeIcons.Shield,
-                "Perfect guards break the attacker's balance sooner.");
-            // NEEDS: the answer window (as the Answer's).
+                "Perfect guards break the attacker's balance faster.");
+            // Way/AnswerWindow.cs: the moment lasts 0.8 s.
             Mark(to, OpenWindow, "Open Window", UpgradeKind.Major, Answer, TurnedEdge, UpgradeIcons.Hourglass,
-                "The moment to answer lasts longer.");
-            // NEEDS: the answer window, and a count of the guard held unstruck (AspectRun).
+                "You have longer to answer.");
+            // Way/AnswerWindow.cs: the guard held unstruck counted in AspectRun.SinceCount.
             Mark(to, PatientBlade, "Patient Blade", UpgradeKind.Major, Answer, OpenWindow, UpgradeIcons.Eye,
-                "The longer the guard is held without being struck, the harder the next answer breaks balance.");
+                "The longer you hold your guard without being hit, the harder your next answer breaks balance.");
 
             // Path A: every blow answered as it comes.
             // NEEDS: a clip of its own (a short cut with the guard still raised); the patch makes it the guard's light attack on the
             // drawing cut's clip. It takes Kozuka's input while the Answer is active.
             Mark(to, GuardCut, "Guard Cut", UpgradeKind.Major, Answer, PatientBlade, UpgradeIcons.Blade,
-                "A light attack while guarding is a short cut with the guard still raised. It does not chain.");
-            // NEEDS: the answer window (as the Answer's), kept open for a second perfect guard.
+                "While guarding, press light attack. You make a short cut and keep your guard up.");
+            // Way/AnswerWindow.cs: the moment kept open for a second perfect guard.
             Mark(to, SecondAnswer, "Second Answer", UpgradeKind.Major, Answer, GuardCut, UpgradeIcons.Ring,
-                "The moment to answer stays open for a second perfect guard, and a second answer in it breaks balance harder.");
-            // NEEDS: the answer coming by itself after every perfect guard (Through the Gap if heavy follows within 0.3 s) and the
-            // Riposte's seam 4 m past the attacker. The wider window is a stat; the patch makes the light chain two cuts.
+                "Your moment to answer stays open for a second perfect guard. A second answer breaks balance harder.");
+            // The answer comes by itself (AnswerWindow.Answers). NEEDS (way-answer-window): Through the Gap if heavy follows within
+            // 0.3 s, and the Riposte running on 4 m past the attacker. The wider window is a stat; the patch makes the chain two cuts.
             var kiri = Mark(to, KiriOtoshi, "Kiri-otoshi", UpgradeKind.Keystone, Answer, SecondAnswer, UpgradeIcons.Star,
-                "The answer comes by itself: every perfect guard is followed at once by the Riposte, or by Through the Gap if you press heavy. Perfect guards come a little easier, and the light chain is two cuts. The Riposte runs on past the attacker as a white seam.");
+                "Your answer comes on its own. Every perfect guard is followed by a riposte right away. Press heavy attack quickly to slip past instead. Perfect guards are a little easier, and your light combo is two cuts. The riposte cuts on past them and hits whoever is behind.");
             kiri.Stats = new[] { new StatMod(PlayerStat.PerfectGuardWindow, 0.17f) };
 
             // Path B: kept for the red blow.
-            // NEEDS: a red attack turned as a trigger (content_open.tsv, red-attack) and the answer window.
+            // Way/AnswerWindow.cs: a red blow turned (PlayerDefence.RedTurns) opens the moment for 1 s.
             Mark(to, CatchTheRed, "Catch the Red", UpgradeKind.Major, Answer, PatientBlade, UpgradeIcons.Target,
-                "After a perfect guard on a red attack, the moment to answer lasts far longer.");
-            // NEEDS: a perfect window that is wider against red attacks only.
+                "After a perfect guard on a red attack, you have much longer to answer.");
+            // Guard.RedWindowBonus, set as the weapon is armed.
             Mark(to, ReadTheRed, "Read the Red", UpgradeKind.Major, Answer, CatchTheRed, UpgradeIcons.Eye,
                 "Red attacks are easier to guard perfectly.");
             // NEEDS: a red attack turned as a trigger, time stopped 0.3 s with the camera's lean, and one passing cut through the
             // attacker (three times the Riposte, 120 stagger, gods included) with its clip.
             Mark(to, TheFirstSword, "The First Sword", UpgradeKind.Keystone, Answer, ReadTheRed, UpgradeIcons.Crown,
-                "A perfect guard on a red attack stops time for a breath, and the answer becomes one cut through the attacker and out behind it, gods included. Perfect guards on other blows answer only as the Answer does.");
+                "A perfect guard on a red attack stops time for a moment. Your riposte becomes one cut straight through them, even a god. Perfect guards on other attacks answer as normal.");
         }
 
         private static void AddStorm(List<Upgrade> to)
@@ -357,50 +360,50 @@ namespace Clover.Player.Trees.Ways
             // Given when Narukami is taken (never sold; a playtest unlock). The patch makes his third cut a downward cut in a lane.
             // NEEDS: a clip of its own for the downward third cut (the stepping cut's is played).
             var storm = Mark(to, Storm, "Narukami's Storm Katana", UpgradeKind.Aspect, Storm, "", UpgradeIcons.Bolt,
-                "His own sword, longer, storm-grey, with lightning crawling down the fuller: every blow harder, and the Thunder Draw. The chain is his: across, back, and down a lane.");
+                "Narukami's own sword. It is longer, and every hit is stronger. Its skill is the Thunder Draw. Its combo is his: across, back, then straight down along a line.");
             storm.Currency = Currency.None;
             storm.Element = "";
             Mark(to, LongBlade, "Long Blade", UpgradeKind.Minor, Storm, Storm, UpgradeIcons.Blade,
                 "Every cut reaches a little further.");
             // NEEDS: a dodge then light within 0.2 s stepping through a line of lightning to the faced enemy's side, with its clip.
             Mark(to, FlankStep, "Flank Step", UpgradeKind.Major, Storm, LongBlade, UpgradeIcons.Bolt,
-                "A light attack just after a dodge steps through a line of lightning to the enemy's side and cuts as you arrive.");
-            // NEEDS: seven drums drawn round the guard, one beaten by each cut that lands (AspectRun), the seventh's draw +40 stagger.
+                "Right after a dodge, press light attack. You flash along a bolt of lightning to the enemy's side and cut as you land.");
+            // The drums are Way/Drums.cs, kept in the player's AspectRun. NEEDS: the seven marks on the scabbard (way-drum-looks).
             Mark(to, SevenDrums, "Seven Drums", UpgradeKind.Major, Storm, FlankStep, UpgradeIcons.Ring,
-                "Each cut that lands beats one of seven drums round you. At the seventh, the next draw breaks balance far harder.");
+                "Each cut that hits beats one of seven drums. When all seven are beaten, your next draw breaks balance much harder.");
             // NEEDS: its mana price (40; a charged heavy is free), being untouchable on the lane, and a clip of its own. The patch makes
             // it the held heavy on the Thunder Draw's clip.
             Mark(to, TheRedDraw, "The Red Draw", UpgradeKind.Major, Storm, SevenDrums, UpgradeIcons.Comet,
-                "Hold the heavy attack: you sheathe, sink, and go through along a long lane to stand behind it. Nothing touches you on the lane. His own red draw, given.");
+                "Hold heavy attack. You sheathe and crouch, then flash through everyone in a long line and stop behind them. Nothing can hurt you as you pass. It costs mana.");
             // NEEDS: a light enemy driven to one knee for 0.6 s (knocked down, task 3.7). The patch lengthens the lane.
             Mark(to, TheFallingCut, "The Falling Cut", UpgradeKind.Major, Storm, TheRedDraw, UpgradeIcons.Hammer,
-                "His third cut's lane is longer, and a light enemy it strikes is driven to one knee.");
+                "His downward cut reaches further, and it knocks light enemies to one knee.");
 
             // Path A: the bolt called down a lane.
             // NEEDS: the lane left by every draw itself (the drawing cut too), thunder running down it from the player, and its flash
             // then sound. Now a lane struck from what the Thunder Draw hit, half a second later.
             var follows = Mark(to, ThunderFollows, "Thunder Follows", UpgradeKind.Major, Storm, TheFallingCut, UpgradeIcons.Bolt,
-                "Every draw leaves its lane on the floor. Half a second later thunder runs down it and strikes all on it again: the flash, then the sound.");
+                "Each draw leaves a mark on the floor. Half a second later, thunder runs along it and hits everyone there again.");
             follows.Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SkillHit, Do = UpgradeAction.Lane, Damage = 27f, Stagger = 30f, Reach = 6f, Radius = 0.6f, Delay = 0.5f, Affliction = AfflictionKind.Static, Stacks = 1, Cooldown = 0.5f } };
             // NEEDS: Raikiri itself.
             Mark(to, LongThunder, "Long Thunder", UpgradeKind.Major, Storm, ThunderFollows, UpgradeIcons.Arrow,
-                "Raikiri's lane is longer, and it bends toward the enemy you face.");
+                "Raikiri reaches further and bends toward the enemy you face.");
             // NEEDS: the skill held past the Thunder Draw (1.2 s, 50 mana), the bolt down onto the raised blade (a column of cyan
             // light as the tell) and the cut down a 12 m lane (60, 80 stagger, scorched 2 s), with its clip katana_raikiri.
             Mark(to, Raikiri, "Raikiri, the Cut Through Lightning", UpgradeKind.Keystone, Storm, LongThunder, UpgradeIcons.Bolt,
-                "Hold the skill past the Thunder Draw: you raise the sword and a bolt comes down onto the blade. Then you cut down a long lane with the bolt carried on the edge, and the lane is left scorched.");
+                "Hold the skill button past the Thunder Draw. You raise your sword, and lightning strikes it. Then you cut down, and the lightning tears along a long line in front of you. It costs a lot of mana.");
 
             // Path B: the thunder god's drums.
-            // NEEDS: the drums (as Seven Drums').
+            // Way/Drums.cs: two drums for each perfect guard and each finisher.
             Mark(to, Drumbeat, "Drumbeat", UpgradeKind.Major, Storm, TheFallingCut, UpgradeIcons.Ring,
                 "Perfect guards and finishing blows each beat two drums.");
-            // NEEDS: the drums (as Seven Drums').
+            // Way/Drums.cs: the drums never fade out of a fight.
             Mark(to, RollingDrums, "Rolling Drums", UpgradeKind.Major, Storm, Drumbeat, UpgradeIcons.Hourglass,
-                "Beaten drums no longer fade between fights. Seven beaten wait until spent.");
+                "Your drums do not fade after a fight. Once all seven are beaten, they wait until you use them.");
             // NEEDS: the drums, the ring of seven struck in turn round you over 0.7 s and the last bolt down the draw's lane, with
             // its clip (a drummer's stance between the beats).
             Mark(to, TheDrumRing, "The Drum Ring", UpgradeKind.Keystone, Storm, RollingDrums, UpgradeIcons.Crown,
-                "With seven drums beaten, the Thunder Draw becomes the ring: seven drums stand round you and a bolt strikes each in turn, each drum flashing before its bolt, the last coming down on you and out down the lane.");
+                "When all seven drums are beaten, your Thunder Draw calls lightning all around you. Bolts strike one after another around you. The last one hits you and flies out along your draw.");
         }
     }
 }

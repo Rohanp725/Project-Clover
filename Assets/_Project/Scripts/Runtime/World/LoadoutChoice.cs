@@ -97,7 +97,7 @@ namespace Clover.World
             }
             else if (who.Combat != null)
             {
-                who.Combat.Equip(Weapons.ByName(Choice));
+                who.Combat.Arm(Choice);
                 Vfx.Play(VfxKind.Glint, who.transform.position + Vector3.up * 1.8f);
             }
             Vfx.Play(VfxKind.Ring, who.transform.position + Vector3.up * 0.2f, Vector3.up);

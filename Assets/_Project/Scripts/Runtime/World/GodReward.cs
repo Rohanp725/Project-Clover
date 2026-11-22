@@ -72,7 +72,7 @@ namespace Clover.World
                 if (upgrades != null) upgrades.Give(Gifts.SignatureOf(Element));
                 // And the god's own weapon: the storm's katana, the sun's spear.
                 string godWeapon = Weapons.OfGod(Element);
-                if (godWeapon != null && who.Combat != null) who.Combat.Equip(Weapons.ByName(godWeapon));
+                if (godWeapon != null && who.Combat != null) who.Combat.Arm(godWeapon);
                 if (Element == Elements.Lightning)
                 {
                     LightningBolts.Strike(who.transform.position, 1f);
@@ -93,7 +93,7 @@ namespace Clover.World
                 if (element != null) element.Take(ElementKit.ByName(RunState.Element, true));
                 // What is consumed only strengthens what the player already has: its Shards feed the element owned.
                 if (upgrades != null) upgrades.Earn(ConsumeEmbers);
-                if (who.Combat != null) who.Combat.Equip(Weapons.ByName(Weapons.KatanaName));
+                if (who.Combat != null) who.Combat.Arm(Weapons.KatanaName);
                 Vfx.Play(VfxKind.Fire, who.transform.position + Vector3.up, Vector3.up, 3f);
                 if (who.Defence != null) who.Defence.Callout("The storm feeds the fire");
             }

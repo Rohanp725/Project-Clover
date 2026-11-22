@@ -14,6 +14,13 @@ namespace Clover.Player.Way.Aspects
         public const float RisingDamage = 12f, RisingStagger = 12f, RisingArc = 150f, RisingReach = 2.4f;
         public const float TemperThreeReach = 0.2f;
         public const float TemperFiveFinisher = 1.15f;
+        /// <summary>The Rising Draw: a light press in the last 40% of a roll.</summary>
+        public const float RisingFrom = 0.6f;
+        /// <summary>Zanshin: for this long after a kill, the turn to the nearest other enemy this near, over this long (P).</summary>
+        public const float ZanshinSeconds = 1f, ZanshinRange = 8f, ZanshinTurnSeconds = 0.15f;
+
+        /// <summary>The share of what is left of a turn to make this step: all of it once the time is up.</summary>
+        public static float TurnShare(float deltaTime, float turnLeft) => turnLeft > deltaTime ? deltaTime / turnLeft : 1f;
 
         public override string Weapon => Weapons.KatanaName;
 
@@ -32,13 +39,21 @@ namespace Clover.Player.Way.Aspects
                 rising.ArcDegrees = RisingArc;
                 rising.Reach = RisingReach;
                 weapon.Combo.DashAttack = rising;
+                // The last 40% of the roll. NEEDS (way-chain-rules): the 0.15 s after the roll, and the cut as the chain's first step.
+                weapon.Combo.DashCutFrom = RisingFrom;
             }
             if (marks.Has(KatanaWay.Temper3))
             {
                 if (steps.Count > 0) steps[0].Reach += TemperThreeReach;
                 if (weapon.Carrier != null) weapon.Carrier.Reach += TemperThreeReach;
             }
-            if (marks.Has(KatanaWay.Temper5) && weapon.Combo.Finisher != null) weapon.Combo.Finisher.Damage *= TemperFiveFinisher;
+            if (marks.Has(KatanaWay.Temper5) && weapon.Combo.Finisher != null)
+            {
+                weapon.Combo.Finisher.Damage *= TemperFiveFinisher;
+                // The pose behind the enemy holds twice as long (way_build_plan.md question 5).
+                weapon.Combo.Finisher.HoldSeconds = Temper.FinisherHoldAtFive;
+                weapon.Combo.Finisher.PoseHold = Temper.FinisherHoldAtFive;
+            }
         }
     }
 }

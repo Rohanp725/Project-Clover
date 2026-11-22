@@ -1324,3 +1324,4 @@ Recommended option for Q1-Q8, Q10-Q22. The exceptions:
   - It must be far more readable than the Hand is now.
 - **Q23 (Chiburi): (b).** A few dark drops flick onto the floor and fade in 1.5 s.
 - **Q24-Q42 (the other nine Ways):** the recommended option for every one except **Q27 (The Trade): (b).** The Massive Sword's highlight flashes red, bending the rule for this one sign.
+- **Running Draw with Lightning (found while building O1): a "charged path".** The owner, 2026-11-21: with Lightning, the dash's path stays charged for 2 s, and enemies who cross it get Static. Built as `InfusionGround` (one Static to each enemy crossing, 1 m patches along the dash).

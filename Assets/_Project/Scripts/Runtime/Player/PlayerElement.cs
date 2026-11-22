@@ -318,7 +318,7 @@ namespace Clover.Player
             bool firstChanged = oldFirstInfo != infos[0];
             if (combat != null && (newSurge != oldSurge || firstChanged)) combat.ClearEmpower();
             // A weapon that is the element's own (the Armament) is made again in the new first element.
-            if (firstChanged && combat != null && combat.Weapon != null && combat.Weapon.ElementColoured && !combat.IsAttacking) combat.Equip(Weapons.Armament(infos[0].Name));
+            if (firstChanged && combat != null && combat.Weapon != null && combat.Weapon.ElementColoured && !combat.IsAttacking) combat.Arm(Weapons.ArmamentName, infos[0].Name);
             if (defence != null && (firstChanged || newSurge != oldSurge)) defence.ClearWards();
             if (surging && newSurge != oldSurge && upgrades != null) upgrades.OnSurgeEnd();
             if (surging && newSurge != oldSurge) oldSurge.Reset();

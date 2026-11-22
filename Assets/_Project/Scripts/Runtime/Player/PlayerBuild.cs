@@ -100,6 +100,8 @@ namespace Clover.Player
             if (!surgeKnown) into.Surge = holding && element.SurgeInfo != null ? element.SurgeId : "";
             for (int i = 0; i < Loadout.SlotCount; i++) into.Slots[i] = spells != null ? spells.Slots[i] : "";
             into.Weapon = combat != null && combat.Weapon != null ? combat.Weapon.Name : "";
+            // The Way's choices are the run's, kept from scene to scene; a mark bought writes them back (PlayerUpgrades.TryBuy).
+            into.CopyWayFrom(RunState.WayChoices);
             return into;
         }
 

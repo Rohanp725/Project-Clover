@@ -16,6 +16,10 @@ namespace Clover.World
     {
         [SerializeField] private Enemy boss;
         [SerializeField] private PlayerDefence player;
+        private readonly Clover.Player.Growth.Income income = new Clover.Player.Growth.Income();
+
+        /// <summary>Memories his fall paid, for probes.</summary>
+        public int MemoriesPaid { get; private set; }
         [SerializeField] private HitStop hitStop;
         [SerializeField] private StormRods rods;
         [SerializeField] private GodReward take;
@@ -161,6 +165,8 @@ namespace Clover.World
             Felled = true;
             stormRaised = false;
             RunState.GodsFelled++;
+            // His eight Memories, once ever, shown after the fall's own moment (task 5.6).
+            if (player != null) MemoriesPaid += MemoryPayout.GodFall(income, Elements.Lightning, where, player.transform);
             if (hitStop != null) hitStop.Slow(1.8f, 0.2f);
             ScreenFlash.Flash(new Color(1f, 1f, 1f, 0.55f), 0.1f);
             LightningBolts.Strike(where, 1f);

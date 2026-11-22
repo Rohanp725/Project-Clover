@@ -84,6 +84,8 @@ namespace Clover.Player
         public float StatStagger = 1f;
         public float StatMana = 1f;
         public float StatSwing = 1f;
+        /// <summary>Poise the Body adds to every swing of every weapon (Steady, task 5.4): flat, on top of the swing's own.</summary>
+        public float StatPoise;
         /// <summary>What damage to an enemy that carries any affliction is multiplied by.</summary>
         public float StatAfflicted = 1f;
         /// <summary>The Blade Drinks Fire: damage added to a weapon blow for each Burn it takes off the enemy struck; 0 for none.</summary>
@@ -302,7 +304,7 @@ namespace Clover.Player
             spikes = GetComponent<WeaponSpikes>();
             arrows = GetComponent<PlantedArrows>();
             // A weapon carried over from the last scene of the run takes the place of the scene's own.
-            Equip(Weapons.ByName(string.IsNullOrEmpty(RunState.Weapon) ? StartingWeapon : RunState.Weapon));
+            Arm(string.IsNullOrEmpty(RunState.Weapon) ? StartingWeapon : RunState.Weapon);
             // Every scene starts at half: mana now pays only for the big moves, and the player never starts a fight empty.
             Mana.Empty();
             Mana.AtLeast(Mana.SettleLevel);
@@ -315,13 +317,74 @@ namespace Clover.Player
             moveAction = player.FindAction("Move");
             spells = GetComponent<PlayerSpells>();
             // The Armament wears whatever element is held, which is known only once the element has woken too.
-            if (Weapon != null && Weapon.ElementColoured && element != null && element.Info != null) Equip(Weapons.Armament(element.Info.Name));
+            if (Weapon != null && Weapon.ElementColoured && element != null && element.Info != null) Arm(Weapons.ArmamentName, element.Info.Name);
         }
+
+        /// <summary>
+        /// Takes a weapon in hand by name, built by the armoury (way_build_plan.md 2.0): in the aspect the Way's choices
+        /// give its kind, with the learned marks of its Way that are in force once it is carried. Every place that hands
+        /// the player a weapon comes here; with no mark of the Way learned it is the plain weapon, as before.
+        /// </summary>
+        public void Arm(string weaponName) => Arm(weaponName, null);
+
+        /// <summary>As <see cref="Arm(string)"/>, with the element an Armament is made in (null: the run's).</summary>
+        public void Arm(string weaponName, string armamentElement) => Equip(Resolved(weaponName, armamentElement));
+
+        /// <summary>The weapon <see cref="Arm(string, string)"/> would put in hand, without taking it.</summary>
+        public Weapon Resolved(string weaponName, string armamentElement)
+        {
+            if (spells == null) spells = GetComponent<PlayerSpells>();
+            if (element == null) element = GetComponent<PlayerElement>();
+            PlayerBuild.Fill(armedWith, element, spells, this);
+            return Way.Armoury.Arm(weaponName, armedWith, RunState.Unlocked, armamentElement);
+        }
+
+        /// <summary>
+        /// Builds the weapon in hand again from the armoury, after a mark of the Way is bought or its aspect or keystone is
+        /// chosen. Never mid-swing: while an attack is on it waits for the attack to end.
+        /// </summary>
+        public void Rearm()
+        {
+            if (Weapon == null) return;
+            if (BusyWithWeapon)
+            {
+                rearmPending = true;
+                return;
+            }
+            rearmPending = false;
+            Rearms++;
+            Arm(Weapon.Name, Weapon.ElementColoured && element != null && element.Info != null ? element.Info.Name : null);
+        }
+
+        /// <summary>What the Way's family mark did to the last infused strike, for probes and the engine pieces still to come.</summary>
+        public Way.InfusionBend LastInfusion { get; private set; }
+        // Equip drops all of these, so a re-arm waits for them: a swing or a charge, a weapon thrown or a dash out, the
+        // infused strike's element still to come, a follow to what was thrown.
+        private bool BusyWithWeapon => IsAttacking || IsCharging || WeaponAway || IsDashing || infusedPending || followFor != null || dragFollow != null;
+
+        /// <summary>
+        /// True in a swing's wind-up and blow, when its poise holds (<see cref="Poised"/>); not in its recovery, where the
+        /// Body's Steady decides as it does outside a swing.
+        /// </summary>
+        public bool InSwingMoment => Combo.Current != null && (Combo.Phase == AttackPhase.Windup || Combo.Phase == AttackPhase.Active);
+
+        /// <summary>True while a re-arm waits for the swing in progress to end.</summary>
+        public bool RearmPending => rearmPending;
+        /// <summary>Re-arms done, for probes.</summary>
+        public int Rearms { get; private set; }
+        private bool rearmPending;
+        // What the armoury is asked with: the player's attunements and the Way's choices, the weapon swapped in.
+        private readonly Build.Loadout armedWith = new Build.Loadout();
 
         /// <summary>Takes a weapon in hand, dropping whatever attack was in progress.</summary>
         public void Equip(Weapon weapon)
         {
             Weapon = weapon;
+            // A change of aspect starts its counts and windows afresh; the same aspect built again keeps them.
+            if (weapon.Aspect != aspectKept) AspectState.Clear();
+            aspectKept = weapon.Aspect;
+            // The chord plays the technique the armoury found in force on this weapon; none, and the chord stays a heavy.
+            TechniqueStep = weapon.Technique;
             RunState.Weapon = weapon.Name;
             Weapon.Combo.Reset();
             // The skill is on its own button (Triangle, Y, Q); a held heavy is the charged heavy.
@@ -335,6 +398,8 @@ namespace Clover.Player
             followStep = null;
             infusedPending = false;
             infusedStep = null;
+            dragFollow = null;
+            holdLeft = 0f;
             boundTo = null;
             pullSelfTo = null;
             Step = Vector3.zero;
@@ -353,6 +418,9 @@ namespace Clover.Player
                 defence.Guard.StaminaPerDamage = guard.StaminaPerDamage;
                 defence.Guard.ChipFraction = guard.ChipFraction;
                 defence.Guard.ArcDegrees = guard.ArcDegrees;
+                // The Answer's Read the Red: red attacks are easier to guard perfectly.
+                if (upgrades == null) upgrades = GetComponent<PlayerUpgrades>();
+                defence.Guard.RedWindowBonus = upgrades != null && upgrades.Has(Trees.Ways.KatanaWay.ReadTheRed) ? Way.AnswerWindow.ReadTheRedSeconds : 0f;
                 defence.GuardWidth(guard.ArcDegrees);
             }
             var dodge = weapon.DodgeProfile ?? usualDodge;
@@ -392,7 +460,7 @@ namespace Clover.Player
         {
             if (HeavyUnbroken && InHeavySwing) return true;
             var step = Combo.Current;
-            return step != null && step.Poise > 0f && damage <= step.Poise
+            return step != null && Way.BodyRules.Poised(step.Poise + StatPoise, damage)
                 && (Combo.Phase == AttackPhase.Windup || Combo.Phase == AttackPhase.Active);
         }
 
@@ -459,6 +527,9 @@ namespace Clover.Player
         {
             Step = Vector3.zero;
             PassingThrough = false;
+            if (rearmPending && !BusyWithWeapon) Rearm();
+            TickAspect(deltaTime);
+            TurnZanshin(deltaTime);
             if (HeavyCriticalLeft > 0f) HeavyCriticalLeft -= deltaTime;
             if (lightAction == null || heavyAction == null) return;
             // The element's strike follows the carrier's blow once the swing is out (or was cut short).
@@ -470,10 +541,18 @@ namespace Clover.Player
             var buttons = player.Buttons;
             bool lightNow = (buttons != null ? buttons.Pressed(PlayerButton.LightAttack) : lightAction.WasPressedThisFrame()) && !WeaponAway;
             bool heavyNow = (buttons != null ? buttons.Pressed(PlayerButton.HeavyAttack) : heavyAction.WasPressedThisFrame()) && !WeaponAway;
+            // The Answer's moment (way_build_plan.md 3.4): light is the Riposte, heavy Through the Gap; Kiri-otoshi answers
+            // by itself. Never into a wind-up or a swing already out.
+            if (Weapon.Aspect is Way.Aspects.AnswerAspect && Way.AnswerWindow.Open(AspectState)
+                && (lightNow || heavyNow || Way.AnswerWindow.Answers(upgrades)) && TryAnswer(heavyNow && !lightNow))
+            {
+                lightNow = false;
+                heavyNow = false;
+            }
             if (lightNow)
             {
                 Chord.Light();
-                Combo.Press(defence != null && defence.IsGuarding, player != null && player.Dodge.IsRolling && player.Dodge.Progress >= 0.5f);
+                Combo.Press(defence != null && defence.IsGuarding, player != null && player.Dodge.IsRolling && player.Dodge.Progress >= Combo.DashCutFrom);
             }
             bool chordAfterTick = false, chordNow = false;
             if (heavyNow)
@@ -517,8 +596,21 @@ namespace Clover.Player
             if (unavailable)
             {
                 if (chordAfterTick || chordNow) PressHeavyNow();
-                Combo.Idle(deltaTime);
+                // A roll or a flinch takes the place of a return cut still to come.
+                dragFollow = null;
+                Combo.Idle(deltaTime, player.Dodge.IsRolling);
                 return;
+            }
+            if (dragFollow != null)
+            {
+                dragFollowIn -= deltaTime;
+                if (dragFollowIn <= 0f && Combo.Follow(dragFollow, player.Stamina))
+                {
+                    dragFollow = null;
+                    DragFollows++;
+                }
+                // Something else began meanwhile: the return cut is let go.
+                else if (dragFollowIn < -0.5f) dragFollow = null;
             }
 
             bool begun = chordNow && TakeChord();
@@ -530,7 +622,21 @@ namespace Clover.Player
                 strikeBuffered = -1;
                 begun = TryInfused(second);
             }
-            var events = Combo.Tick(deltaTime * SwingSpeed * StatSwing, player.Stamina, Mana);
+            float swingTime = deltaTime * SwingSpeed * StatSwing;
+            // The finisher's held pose (way_build_plan.md question 5): once the blow is in, the step's clock stands still
+            // for its hold, so the clip's pose holds there; 0.2 s on the Katana, 0.4 s at Temper V.
+            if (Way.Temper.HoldBegins(Combo.Current, Combo.IsFinishing, Combo.Elapsed, finisherHeld))
+            {
+                finisherHeld = true;
+                holdLeft = Combo.Current.PoseHold;
+                FinisherHolds++;
+            }
+            if (holdLeft > 0f)
+            {
+                holdLeft -= deltaTime;
+                swingTime = 0f;
+            }
+            var events = Combo.Tick(swingTime, player.Stamina, Mana);
             if (chordAfterTick)
             {
                 // Both pressed in one frame: the light has just started, and is taken at once.
@@ -538,6 +644,11 @@ namespace Clover.Player
                 else PressHeavyNow();
             }
             if (begun) events |= ComboEvents.Started;
+            if ((events & ComboEvents.Started) != 0)
+            {
+                finisherHeld = false;
+                holdLeft = 0f;
+            }
             if ((events & ComboEvents.Charged) != 0)
             {
                 // The first tier flashes white; a counter says what it is.
@@ -1566,6 +1677,9 @@ namespace Clover.Player
             }
             var step = Weapon.CarrierStep.Clone();
             ElementSteel.Bend(step, info.Name, deep);
+            // The Way's family mark for the element bends the copy too (task 5.3, Way/Infusion.cs).
+            if (upgrades == null) upgrades = GetComponent<PlayerUpgrades>();
+            LastInfusion = Way.Infusion.Bend(step, Weapon, info.Name, deep, element.AllIn, upgrades);
             player.FacePointer();
             if (!Combo.Follow(step, player.Stamina))
             {
@@ -1594,6 +1708,150 @@ namespace Clover.Player
             infusedPending = false;
             ElementSteel.Strike(this, infusedElement, LastFootprint, infusedDeep, infusedDamage, infusedFirst);
             infusedFirst = null;
+            // The Way's family mark: the cut lying on the floor, the charged path, and Dragging Draw's return cut to come.
+            Way.InfusionGround.Lay(LastInfusion, infusedElement, LastFootprint);
+            if (LastInfusion.Follow != null)
+            {
+                dragFollow = LastInfusion.Follow;
+                dragFollowIn = LastInfusion.FollowDelay;
+            }
+        }
+
+        /// <summary>
+        /// What the carried aspect keeps (way_build_plan.md 2.0): its counts and windows, ticked once a frame with what
+        /// happened, cleared when the aspect changes. Read by probes.
+        /// </summary>
+        public Way.AspectRun AspectState;
+        private Way.WeaponAspect aspectKept;
+        private int landedThisFrame, guardsSeen, blowsSeen, redSeen, blockedSeen;
+        /// <summary>Answers given in the Answer's moment (the Riposte, Through the Gap), for probes.</summary>
+        public int Answers { get; private set; }
+        private bool finishedThisFrame;
+        // Stagger the aspect adds to the blow going out (the seventh drum's draw).
+        private float aspectStagger;
+
+        // A draw, for the Way (question 22): the first cut of a combo, the skill, the charged heavy.
+        private bool IsDraw(AttackStep step) =>
+            step != null && (step == Combo.Skill || step == Combo.ChargedHeavy || (Combo.Steps.Count > 0 && step == Combo.Steps[0]));
+
+        // The carried aspect's step: what happened since the last frame, then the counters cleared.
+        private void TickAspect(float deltaTime)
+        {
+            var aspect = Weapon != null ? Weapon.Aspect : null;
+            int guards = defence != null ? defence.PerfectGuards : 0, blows = defence != null ? defence.BlowsTaken : 0;
+            int red = defence != null ? defence.RedTurns : 0, blocked = defence != null ? defence.Blocks : 0;
+            if (aspect != null)
+            {
+                if (spells == null) spells = GetComponent<PlayerSpells>();
+                var context = new Way.AspectContext
+                {
+                    DeltaTime = deltaTime,
+                    Landed = landedThisFrame,
+                    PerfectGuard = guards != guardsSeen,
+                    Struck = blows != blowsSeen,
+                    RedTurned = red != redSeen,
+                    GuardHit = blocked != blockedSeen,
+                    Guarding = defence != null && defence.IsGuarding,
+                    Finished = finishedThisFrame,
+                    InFight = spells != null && spells.Fight.InFight,
+                    Marks = upgrades,
+                };
+                aspect.Tick(ref AspectState, context);
+            }
+            guardsSeen = guards;
+            blowsSeen = blows;
+            redSeen = red;
+            blockedSeen = blocked;
+            landedThisFrame = 0;
+            finishedThisFrame = false;
+        }
+
+        // The answer given in the moment: Through the Gap is untouchable while it passes the attacker.
+        private bool TryAnswer(bool heavy)
+        {
+            if (Combo.Phase == AttackPhase.Windup || Combo.Phase == AttackPhase.Active) return false;
+            var kept = AspectState;
+            var step = Way.AnswerWindow.Answer(ref AspectState, Weapon, heavy, upgrades);
+            if (step == null || !Combo.Follow(step, player.Stamina))
+            {
+                AspectState = kept;
+                return false;
+            }
+            player.FacePointer();
+            if (heavy && defence != null) defence.UntouchableUntil = Mathf.Max(defence.UntouchableUntil, Time.time + step.Windup + step.Active);
+            Answers++;
+            return true;
+        }
+
+        // Zanshin: after a kill, the turn to the next enemy, waiting for a swing to end.
+        private Transform zanshinTarget;
+        private float zanshinFor, zanshinTurn;
+        /// <summary>Zanshin's turns made, for probes.</summary>
+        public int ZanshinTurns { get; private set; }
+
+        /// <summary>
+        /// Zanshin (way_build_plan.md 3.1 and question 19): for a second after a kill the player turns to the nearest other
+        /// enemy within 8 m over 0.15 s. No effect is drawn; the turn is the sign.
+        /// </summary>
+        public void Zanshin(Component killed)
+        {
+            var next = FindEnemy(transform.forward, 360f, Way.Aspects.KatanaTrunk.ZanshinRange, false);
+            if (next == null || (killed != null && next == killed.transform)) return;
+            zanshinTarget = next;
+            zanshinFor = Way.Aspects.KatanaTrunk.ZanshinSeconds;
+            zanshinTurn = Way.Aspects.KatanaTrunk.ZanshinTurnSeconds;
+        }
+
+        private void TurnZanshin(float deltaTime)
+        {
+            if (zanshinTarget == null) return;
+            zanshinFor -= deltaTime;
+            if (zanshinFor <= 0f || !zanshinTarget.gameObject.activeInHierarchy)
+            {
+                zanshinTarget = null;
+                return;
+            }
+            // Never mid-swing or mid-roll: it waits for them.
+            if (Combo.Phase == AttackPhase.Windup || Combo.Phase == AttackPhase.Active || (player != null && player.Dodge.IsRolling)) return;
+            Vector3 to = zanshinTarget.position - transform.position;
+            to.y = 0f;
+            if (to.sqrMagnitude < 0.01f)
+            {
+                zanshinTarget = null;
+                return;
+            }
+            float share = Way.Aspects.KatanaTrunk.TurnShare(deltaTime, zanshinTurn);
+            zanshinTurn -= deltaTime;
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(to.normalized, Vector3.up), share);
+            if (share < 1f) return;
+            zanshinTarget = null;
+            ZanshinTurns++;
+        }
+
+        // Dragging Draw's return cut, waiting its moment after the draw; and the finisher's held pose.
+        private AttackStep dragFollow;
+        private float dragFollowIn;
+        private bool finisherHeld;
+        private float holdLeft;
+        /// <summary>Counts for probes: Dragging Draw's return cuts played, and finisher poses held.</summary>
+        public int DragFollows { get; private set; }
+        public int FinisherHolds { get; private set; }
+
+        // Puts the overlaps found nearest first, for a blow that stops in the first enemy it meets.
+        private void NearestFirst(int count, Vector3 from)
+        {
+            for (int i = 1; i < count; i++)
+            {
+                var one = overlaps[i];
+                float at = (one.transform.position - from).sqrMagnitude;
+                int j = i - 1;
+                while (j >= 0 && (overlaps[j].transform.position - from).sqrMagnitude > at)
+                {
+                    overlaps[j + 1] = overlaps[j];
+                    j--;
+                }
+                overlaps[j + 1] = one;
+            }
         }
 
         /// <summary>Draws a swing's arc from the player, for effects that follow a blow.</summary>
@@ -1648,6 +1906,13 @@ namespace Clover.Player
         {
             if (fresh) struck.Clear();
             int already = struck.Count;
+            if (fresh)
+            {
+                // The carried aspect's part in the blow going out: the seventh drum's draw, the hanging cut.
+                var added = Weapon.Aspect != null ? Weapon.Aspect.Blow(ref AspectState, step, IsDraw(step), upgrades) : default;
+                aspectStagger = added.Stagger;
+                if (added.HangingCut) Way.Aspects.SheathAspect.LayHangingCut(step, transform.position, transform.forward, step.Damage * StatDamage, Weapon.SlashColour);
+            }
             bool finisher = false;
             bool clean = false;
             bool paidBlow = false;
@@ -1697,12 +1962,15 @@ namespace Clover.Player
             var struckLook = Clover.Player.Swings.SwingLooks.For(SwingElement);
             bool cutsRound = struckLook != null && struckLook.CutsRound;
             int count = Overlap(step.Radius > 0f ? discCentre : origin, step.Radius > 0f ? step.Radius + 0.5f : reach);
+            if (step.FirstOnly) NearestFirst(count, origin);
             for (int i = 0; i < count; i++)
             {
                 var other = overlaps[i];
                 if (other.transform.root == transform.root) continue;
                 var target = other.GetComponentInParent<IDamageable>();
                 if (target == null || struck.Contains(target)) continue;
+                // Settling Draw: the cut stops in the first enemy it meets.
+                if (step.FirstOnly && struck.Count > already) break;
                 // A blade does not reach an enemy on the floor far below or the ledge far above (the gods, whose
                 // parts stand high off the ground, are struck as they always were).
                 if (target is Enemy below && !below.Kind.IsBoss && !HeightReach.Within(transform.position.y, below.transform.position.y)) continue;
@@ -1727,7 +1995,7 @@ namespace Clover.Player
                 else if (distance > 0.6f && Vector3.Angle(transform.forward, offset) > step.ArcDegrees * 0.5f) continue;
                 var afflictable = target as IAfflictable;
                 // A blow is critical by chance, or always on an enemy that is Marked.
-                bool promised = step.Heavy && HeavyCriticalLeft > 0f;
+                bool promised = (step.Heavy && HeavyCriticalLeft > 0f) || step.Critical;
                 float chance = CritChance;
                 if (Stats != null) chance += Stats.Blow(PlayerStat.CritChance, step.Heavy, false) + (afflictable != null ? Stats.Against(PlayerStat.CritChance, afflictable.Afflictions) : 0f);
                 // Counter Cut: a blow that lands on an enemy showing its own attack (winding up or striking) is critical.
@@ -1826,7 +2094,7 @@ namespace Clover.Player
                 }
                 float lasts = kind != AfflictionKind.None && AfflictionSeconds != 1f ? Clover.Gameplay.Afflictions.Spec(kind).Seconds * AfflictionSeconds : 0f;
                 float secondLasts = second != AfflictionKind.None && AfflictionSeconds != 1f ? Clover.Gameplay.Afflictions.Spec(second).Seconds * AfflictionSeconds : 0f;
-                float dealtStagger = (step.Stagger + (counter ? counterStagger : 0f) + StaggerOnHit) * NextBlowStagger * StatStagger * staggerShare * scale * step.BandStagger(distance);
+                float dealtStagger = (step.Stagger + (counter ? counterStagger : 0f) + StaggerOnHit + aspectStagger) * NextBlowStagger * StatStagger * staggerShare * scale * step.BandStagger(distance);
                 if (fromBehind) dealtStagger *= Weapon.BackMultiplier;
                 if (boundTo != null && ReferenceEquals(target, boundTo)) dealtStagger *= BoundStagger;
                 var outcome = target.TakeHit(new Hit(damage, dealtStagger, transform.forward, step.Heavy, carries && ElementSteel.PassesGuard(moveElement.Name), transform.position,
@@ -1993,10 +2261,15 @@ namespace Clover.Player
             if (paidBlow)
             {
                 // The spells' clocks: a finisher takes its own, larger cut; any other move cuts once however many it struck.
-                if (finisher) Finished?.Invoke();
+                if (finisher)
+                {
+                    finishedThisFrame = true;
+                    Finished?.Invoke();
+                }
                 else if (!cutGiven)
                 {
                     cutGiven = true;
+                    landedThisFrame++;
                     BlowLanded?.Invoke(step);
                 }
             }

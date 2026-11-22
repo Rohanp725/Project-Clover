@@ -332,6 +332,8 @@ namespace Clover.Player
         private float baseDodgeDistance, baseDodgeSafe, baseDodgeCost, baseDodgeWindow, baseGuardCost, baseGuardWindow;
         private float baseHealth, baseFlaskHeal, baseGuardMana, baseDodgeMana, baseGreyFade, baseMoveSpeed;
         private int baseFlasks;
+        // The Body's numbers (task 5.4) are added to these, read once as the scene made them.
+        private float baseStaminaMost, baseStaminaDelay, baseDodgeRecovery, baseHurtSeconds, baseKnockback, baseGreyDelay;
         private float sinceStruck = 99f, sinceDodge = 99f;
         private float attackStamina = 1f;
         // The counts marks keep, by the mark's place in the catalogue, and which of the marks in force keep one.
@@ -423,6 +425,7 @@ namespace Clover.Player
             baseDodgeDistance = player.Dodge.Distance;
             baseDodgeSafe = player.Dodge.InvulnerableUntil;
             baseDodgeCost = player.Dodge.StaminaCost;
+            baseDodgeRecovery = player.Dodge.Recovery;
             if (defence != null)
             {
                 baseGuardCost = defence.Guard.StaminaPerDamage;
@@ -442,8 +445,14 @@ namespace Clover.Player
             baseDodgeDistance = player.Dodge.Distance;
             baseDodgeSafe = player.Dodge.InvulnerableUntil;
             baseDodgeCost = player.Dodge.StaminaCost;
+            baseDodgeRecovery = player.Dodge.Recovery;
             baseMoveSpeed = player.MoveSpeed;
+            baseStaminaMost = player.Stamina.Maximum;
+            baseStaminaDelay = player.Stamina.RegenerationDelay;
             if (defence == null) return;
+            baseHurtSeconds = defence.HurtSeconds;
+            baseKnockback = defence.Knockback;
+            baseGreyDelay = defence.Health.GreyDelay;
             baseDodgeWindow = defence.PerfectDodgeWindow;
             baseGuardCost = defence.Guard.StaminaPerDamage;
             baseGuardWindow = defence.Guard.PerfectWindow;
@@ -555,11 +564,14 @@ namespace Clover.Player
                 if (!Progress.Data.Wallet.Pay(upgrade)) return false;
             }
             else RunState.Points -= upgrade.Cost;
-            // Learned; a first aspect or keystone switches on in the live loadout at once.
-            MarkRules.Learn(upgrade, RunState.Unlocked, ReadLoadout());
+            // Learned; a first aspect or keystone switches on in the live loadout at once, and is kept for the run.
+            var loadout = ReadLoadout();
+            if (MarkRules.Learn(upgrade, RunState.Unlocked, loadout)) RunState.WayChoices.CopyWayFrom(loadout);
             Bought++;
             // A spell learned goes into an empty slot, if there is one, when the slots next look (PlayerSpells).
             Refresh(true);
+            // A mark of the Way changes the weapon itself: it is built again from the armoury once the swing is over.
+            if (upgrade.Tree == MarkTree.Way && combat != null) combat.Rearm();
             return true;
         }
 
@@ -572,6 +584,7 @@ namespace Clover.Player
             if (gift == null || RunState.Unlocked.Contains(gift.Id)) return false;
             RunState.Unlocked.Add(gift.Id);
             Refresh(true);
+            if (gift.Tree == MarkTree.Way && combat != null) combat.Rearm();
             // A gift that is a spell is put in a slot at once: the first empty one, else the North slot.
             if (gift.IsSpell && spells != null) spells.Place(gift.Id);
             return true;
@@ -721,6 +734,8 @@ namespace Clover.Player
                 // Weapon blows lay only the first element's affliction: a second element's root lays nothing with the weapon.
                 if (!upgrade.IsMix && upgrade.Element == first && !silenced) weaponStacks += upgrade.WeaponStacks;
             }
+            // The Body's found pieces add on top, always in force and kept for good (task 5.4).
+            foreach (var mod in Way.BodyPieces.StatsOf(Progress.Data.Found)) Stats.AddLearned(mod);
             Rules.Publish();
             // The slots look again: a spell no longer in force leaves its slot, a new one fills an empty slot.
             SpellsVersion++;
@@ -911,7 +926,12 @@ namespace Clover.Player
             appliedSurge = surging;
             float surgeSpeed = surging ? Stats.Multiplier(PlayerStat.SurgeSpeed) : 1f;
             player.MoveSpeed = baseMoveSpeed * Stats.Multiplier(PlayerStat.MoveSpeed) * surgeSpeed;
-            player.Dodge.Distance = baseDodgeDistance * Stats.Multiplier(PlayerStat.DodgeDistance);
+            player.Dodge.Distance = baseDodgeDistance * Stats.Multiplier(PlayerStat.DodgeDistance) + Stats.Sum(PlayerStat.DodgeMetres);
+            // The Body (task 5.4): stamina, how soon it returns, the dodge's wait and its flow.
+            player.Stamina.Maximum = Mathf.Max(1f, baseStaminaMost + Stats.Sum(PlayerStat.StaminaMost));
+            player.Stamina.RegenerationDelay = Mathf.Max(0f, baseStaminaDelay + Stats.Sum(PlayerStat.StaminaDelay));
+            player.Dodge.Recovery = Mathf.Max(0f, baseDodgeRecovery + Stats.Sum(PlayerStat.DodgeRecovery));
+            player.Dodge.Flows = Mathf.Max(0, Stats.Whole(PlayerStat.DodgeFlow));
             player.Dodge.InvulnerableUntil = baseDodgeSafe * Stats.Multiplier(PlayerStat.DodgeSafeTime);
             player.Dodge.StaminaCost = baseDodgeCost * Stats.Multiplier(PlayerStat.StaminaCost) * Stats.Multiplier(PlayerStat.DodgeStamina);
             attackStamina = Stats.Multiplier(PlayerStat.AttackStamina);
@@ -935,6 +955,7 @@ namespace Clover.Player
                 combat.StatStagger = Stats.Multiplier(PlayerStat.StaggerDealt);
                 combat.StatMana = Stats.Multiplier(PlayerStat.ManaFromBlows);
                 combat.StatSwing = Stats.Multiplier(PlayerStat.SwingSpeed) * surgeSpeed;
+                combat.StatPoise = Mathf.Max(0f, Stats.Sum(PlayerStat.Poise));
                 combat.StatAfflicted = Stats.Multiplier(PlayerStat.DamageToAfflicted);
                 combat.CritChance = Mathf.Clamp01(Stats.Sum(PlayerStat.CritChance));
                 combat.CritMultiplier = Mathf.Max(1f, 1.5f + Stats.Sum(PlayerStat.CritDamage));
@@ -957,6 +978,11 @@ namespace Clover.Player
             defence.PerfectGuardMana = baseGuardMana * Stats.Multiplier(PlayerStat.ManaFromGuards);
             defence.PerfectDodgeMana = baseDodgeMana * Stats.Multiplier(PlayerStat.ManaFromDodges);
             defence.Health.GreyFadePerSecond = baseGreyFade / Stats.Multiplier(PlayerStat.GreyKept);
+            // The Body: Steady's poise outside a swing, the Enduring Body's shorter flinch, smaller push and longer grey.
+            defence.Steadiness = Mathf.Max(0f, Stats.Sum(PlayerStat.Poise));
+            defence.HurtSeconds = Mathf.Max(0.05f, baseHurtSeconds + Stats.Sum(PlayerStat.FlinchSeconds));
+            defence.Knockback = baseKnockback * Stats.Multiplier(PlayerStat.KnockbackTaken);
+            defence.Health.GreyDelay = Mathf.Max(0f, baseGreyDelay + Stats.Sum(PlayerStat.GreyDelay));
         }
 
         private void Update()
@@ -1999,6 +2025,8 @@ namespace Clover.Player
             // A ripe seed in the dead bursts ripe (In Its Season): the burst above was made stronger by the set itself.
             if (withheld != AfflictionKind.Seeded && afflictions.IsRipe(AfflictionKind.Seeded)) RipeBurstAt(who, at, afflictions.Stacks(AfflictionKind.Seeded));
             Trigger(UpgradeTrigger.Kill, null, at, true, 0, afflictions);
+            // Zanshin: the turn to the next enemy (its wider perfect window is the mark's boon).
+            if (combat != null && Has(Trees.Ways.KatanaWay.Zanshin)) combat.Zanshin(who);
         }
 
         private void OnPoisonBit(Component who, int depth, float damage)

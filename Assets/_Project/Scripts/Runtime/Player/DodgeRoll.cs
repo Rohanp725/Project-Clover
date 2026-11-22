@@ -30,6 +30,12 @@ namespace Clover.Player
         /// <summary>For this roll alone (Into the Fire, toward the enemy): through bodies, stopping only at walls. Cleared as each roll starts.</summary>
         [NonSerialized] public bool PassesBodies;
         public bool CanStart => !IsRolling && sinceEnd >= Recovery;
+        /// <summary>The Light Body (task 5.4): dodges that may flow on from the last moment of a dodge, at half cost. Zero: none.</summary>
+        [NonSerialized] public int Flows;
+        /// <summary>True while the roll under way flowed from the last one: it cannot flow again.</summary>
+        public bool Flowed { get; private set; }
+        /// <summary>Dodges that flowed from another, for probes.</summary>
+        public int FlowsTaken { get; private set; }
         public Vector3 Direction { get; private set; }
         /// <summary>How far through the roll's time the player is, from 0 to 1; 0 when not rolling.</summary>
         public float Progress => IsRolling && Duration > 0f ? Mathf.Clamp01(elapsed / Duration) : 0f;
@@ -58,11 +64,19 @@ namespace Clover.Player
         public bool TryStart(Vector3 direction, StaminaPool stamina) => TryStart(direction, stamina, DodgeTerms.Plain);
 
         /// <summary>Starts a roll on the given terms (its cost, how it guards): false when it cannot be paid for or begun.</summary>
-        public bool TryStart(Vector3 direction, StaminaPool stamina, DodgeTerms terms)
+        public bool TryStart(Vector3 direction, StaminaPool stamina, DodgeTerms terms) => TryStart(direction, stamina, terms, 0f);
+
+        /// <summary>
+        /// As <see cref="TryStart(Vector3, StaminaPool, DodgeTerms)"/>, for a press made <paramref name="pressedAgo"/> seconds
+        /// ago: with the Light Body (<see cref="Flows"/>) a press in a dodge's last moment flows into a second dodge at half
+        /// cost, never a third (<see cref="Way.BodyRules.MayFlow"/>).
+        /// </summary>
+        public bool TryStart(Vector3 direction, StaminaPool stamina, DodgeTerms terms, float pressedAgo)
         {
             direction.y = 0f;
-            if (!CanStart || direction.sqrMagnitude < 0.0001f) return false;
-            float scale = terms.CostScale > 0f ? terms.CostScale : 1f;
+            bool flowing = !CanStart && Way.BodyRules.MayFlow(Flows, IsRolling, Flowed, Duration, elapsed, pressedAgo);
+            if ((!CanStart && !flowing) || direction.sqrMagnitude < 0.0001f) return false;
+            float scale = (terms.CostScale > 0f ? terms.CostScale : 1f) * (flowing ? Way.BodyRules.FlowCostShare : 1f);
             if (PayInstead != null)
             {
                 // Paid in breath, a dearer roll still asks the stamina beyond the usual: asked first, so a breath is not
@@ -75,6 +89,8 @@ namespace Clover.Player
             Direction = direction.normalized;
             IsRolling = true;
             elapsed = 0f;
+            Flowed = flowing;
+            if (flowing) FlowsTaken++;
             WholeSafe = terms.WholeSafe;
             NoPerfect = terms.NoPerfect;
             PassesBodies = terms.PassesBodies;

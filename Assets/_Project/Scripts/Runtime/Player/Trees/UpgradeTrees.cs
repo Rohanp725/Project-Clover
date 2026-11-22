@@ -77,6 +77,8 @@ namespace Clover.Player.Trees
             Duo.FishPoisonDuo.Add(to);
             // The weapons' Ways (phase 5), one file per weapon under Trees/Ways/, after the element charts.
             Ways.KatanaWay.Add(to);
+            // The Body branch at the foot of every Way (task 5.4).
+            Ways.BodyWay.Add(to);
             // The spare spells kept hidden for Phase 6's Evolutions, and the plain reactions, one hidden mark per pair, after
             // every tree (they are on none).
             SpareSpells.Add(to);

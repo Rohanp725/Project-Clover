@@ -132,6 +132,12 @@ namespace Clover.Player.Way
                 loadout.SetKeystone(BoughOf(bought), bought.Id);
                 return true;
             }
+            // The Fists, taught twice: the technique bought first is the one on the chord (way_build_plan.md question 39).
+            if (bought.Kind == UpgradeKind.Technique && bought.Weapon == Weapons.FistsName && string.IsNullOrEmpty(loadout.Technique))
+            {
+                loadout.Technique = bought.Id;
+                return true;
+            }
             return false;
         }
 

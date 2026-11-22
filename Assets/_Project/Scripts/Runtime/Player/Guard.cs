@@ -25,6 +25,10 @@ namespace Clover.Player
 
         public bool IsRaised { get; private set; }
         public bool IsPerfect => IsRaised && perfectArmed && sincePress >= PerfectFrom && sincePress <= PerfectWindow;
+        /// <summary>Seconds more of perfect window against a red (unguardable) blow only (the Answer's Read the Red: 0.04).</summary>
+        public float RedWindowBonus;
+        /// <summary>True when a red blow arriving now would be turned perfectly: the window and the red bonus.</summary>
+        public bool IsPerfectAgainstRed => IsRaised && perfectArmed && sincePress >= PerfectFrom && sincePress <= PerfectWindow + RedWindowBonus;
 
         private float sincePress = float.MaxValue;
         private bool perfectArmed;
@@ -67,7 +71,7 @@ namespace Clover.Player
             chip = 0f;
             if (!IsRaised) return GuardResult.NotGuarded;
             // A perfect guard turns even a blow that cannot be blocked.
-            if (IsPerfect) return GuardResult.Perfect;
+            if (IsPerfect || (unblockable && IsPerfectAgainstRed)) return GuardResult.Perfect;
             if (unblockable) return GuardResult.NotGuarded;
             float cost = damage * StaminaPerDamage;
             if (!stamina.TrySpend(cost))

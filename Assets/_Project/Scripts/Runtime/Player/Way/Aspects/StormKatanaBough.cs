@@ -23,6 +23,21 @@ namespace Clover.Player.Way.Aspects
 
         public override Weapon Build() => Weapons.StormKatana();
 
+        // The drums (Seven Drums, Drumbeat, Rolling Drums): Way/Drums.cs. NEEDS (way-drum-looks): the seven drum marks on the
+        // scabbard lighting one by one (way_build_plan.md question 15).
+        public override void Tick(ref AspectRun run, in AspectContext context)
+        {
+            var marks = context.Marks;
+            if (marks == null || !marks.Has(KatanaWay.SevenDrums)) return;
+            Drums.Tick(ref run, context, marks.Has(KatanaWay.Drumbeat), marks.Has(KatanaWay.RollingDrums));
+        }
+
+        public override AspectBlow Blow(ref AspectRun run, AttackStep step, bool draw, IMarkQuery marks)
+        {
+            if (marks == null || !marks.Has(KatanaWay.SevenDrums)) return default;
+            return new AspectBlow { Stagger = Drums.SpendOnDraw(ref run, draw) };
+        }
+
         public override void Patch(Weapon weapon, IMarkQuery marks)
         {
             if (weapon?.Combo == null || marks == null) return;

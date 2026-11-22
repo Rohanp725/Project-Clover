@@ -128,6 +128,10 @@ namespace Clover.World
         private Camera eye;
         private Light keySource;
         private PlayerUpgrades upgrades;
+        private readonly Clover.Player.Growth.Income income = new Clover.Player.Growth.Income();
+
+        /// <summary>Memories his fall paid, for probes.</summary>
+        public int MemoriesPaid { get; private set; }
         private readonly List<Renderer> hidden = new List<Renderer>();
         private MaterialPropertyBlock block;
         private Color noonKey, noonAmbient, noonFog, noonSky;
@@ -319,8 +323,9 @@ namespace Clover.World
             if (hitStop != null) hitStop.Slow(1.8f, 0.2f);
             ScreenFlash.Flash(new Color(1f, 0.5f, 0.16f, 0.44f), 0.1f);
             if (player != null) player.Callout("A god falls");
-            // The five Shards of a god are paid when the form falls, not the man.
+            // The five Shards of a god are paid when the form falls, not the man; so are his eight Memories, once ever.
             if (upgrades != null) upgrades.Earn(Embers);
+            if (upgrades != null) MemoriesPaid += MemoryPayout.GodFall(income, Elements.Fire, boss != null ? boss.transform.position : upgrades.transform.position, upgrades.transform);
             // The disc has cracked and he lies in the shadow (or, with no form, where he fell); a breath, then he speaks once.
             if (!ManLaid && boss != null) LayMan(form is SunBearer bearer && bearer.SunCracked ? bearer.CrackedAt : boss.transform.position);
             untilRegret = RegretDelay;

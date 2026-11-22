@@ -58,6 +58,10 @@ namespace Clover.World
         private float warningLeft;
         private PlayerUpgrades upgrades;
         private bool[] paid;
+        private readonly Clover.Player.Growth.Income income = new Clover.Player.Growth.Income();
+
+        /// <summary>Memories this area's deaths have paid, for probes.</summary>
+        public int MemoriesPaid { get; private set; }
 
         public void Configure(PlayerController playerToServe, Enemy[] enemiesHere, Transform start, MeshFilter outline, MeshFilter fill)
         {
@@ -98,10 +102,12 @@ namespace Clover.World
                 if (enemy != null) enemy.Died += OnEnemyDied;
         }
 
-        // Each of the fallen gives up its ember once; killing it again after a rest gives nothing more.
+        // Each of the fallen gives up its ember once; killing it again after a rest gives nothing more. The first of each
+        // kind (and an elite) also pays Memories, once ever (task 5.6); a pen's enemies are not the area's and pay neither.
         private void OnEnemyDied(Enemy who)
         {
             int index = System.Array.IndexOf(enemies, who);
+            if (who != null && upgrades != null) MemoriesPaid += MemoryPayout.Kill(income, who.Kind, index >= 0, who.transform.position, upgrades.transform);
             if (index < 0 || paid[index] || upgrades == null) return;
             paid[index] = true;
             int embers = who.Kind.Embers;
