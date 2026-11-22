@@ -19,6 +19,9 @@ namespace Clover.Player.Forms
         /// <summary>How many strikes the element art has drawn this play, for probes.</summary>
         public static int Played { get; private set; }
 
+        /// <summary>Counts a strike drawn elsewhere (the Great Hammer's slam), so probes see every strike drawn.</summary>
+        public static void Drawn() => Played++;
+
         // Domain reload is off: the count starts again each play.
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void ResetStatics() => Played = 0;

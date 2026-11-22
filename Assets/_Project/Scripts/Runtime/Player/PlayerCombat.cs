@@ -670,6 +670,7 @@ namespace Clover.Player
                 moveChargeSpent = false;
                 beatsDone = 0;
                 holdDone = false;
+                slamDrawn = false;
                 passTurn = null;
                 dashFor = 0f;
                 stageForward = transform.forward;
@@ -687,6 +688,7 @@ namespace Clover.Player
                     for (int i = 1; i <= 3; i++)
                         Vfx.Play(VfxKind.GuardSpark, transform.position + transform.forward * (0.6f * i) + Vector3.up * 0.1f, transform.forward);
             }
+            if (Combo.Current != null && Combo.Current == infusedStep && Combo.Phase == AttackPhase.Windup) SlamEarly(Combo.Current);
             if ((events & ComboEvents.Hit) != 0) Strike(Combo.Current);
             if ((events & ComboEvents.Repeat) != 0) Strike(Combo.Current, true, Combo.Current.RepeatScale);
             if (pendingShot != null)
@@ -1584,11 +1586,16 @@ namespace Clover.Player
             switch (step.Effect)
             {
                 case StepEffect.GroundSlam:
+                {
                     // Where the head came down, or where a finished body did.
                     Vector3 spot = (finisher ? new Vector3(finished.x, transform.position.y, finished.z) : transform.position + forward * step.Reach) + Vector3.up * 0.15f;
-                    Vfx.Play(VfxKind.Dust, spot, Vector3.up, 2f + step.Radius * 0.6f);
-                    Vfx.Play(VfxKind.TintRing, spot, Vector3.up, Mathf.Max(1.2f, step.Radius), colour);
+                    // An infused slam lands in its element's own look, which carries its own dust and debris.
+                    if (!(slamDrawn && step == infusedStep)) Vfx.Play(VfxKind.Dust, spot, Vector3.up, 2f + step.Radius * 0.6f);
+                    // The Great Hammer's slams have no glow ring: it lit white behind the target on film (swing comments,
+                    // 2026-11-21), and no strike look draws rings.
+                    if (Weapon == null || Weapon.Name != Weapons.GreatHammerName) Vfx.Play(VfxKind.TintRing, spot, Vector3.up, Mathf.Max(1.2f, step.Radius), colour);
                     break;
+                }
                 case StepEffect.SpikeLine:
                     // Eight spikes run out along a lane, each enemy struck once by whichever reaches it first.
                     if (spikes != null)
@@ -1678,7 +1685,10 @@ namespace Clover.Player
                 return false;
             }
             var step = Weapon.CarrierStep.Clone();
-            ElementSteel.Bend(step, info.Name, deep);
+            // The Great Hammer's strike is a slam where the head lands (ElementLookBuilder.Slams): it keeps its own shape,
+            // so Lightning's is the hammer as conductor, not Flash Cut's 5 m lunge.
+            bool inPlace = Weapon.Name == Weapons.GreatHammerName && step.Effect == StepEffect.GroundSlam && Clover.Player.Forms.ElementMoves.HasSlam(info.Index);
+            ElementSteel.Bend(step, info.Name, deep, inPlace);
             // The Way's family mark for the element bends the copy too (task 5.3, Way/Infusion.cs).
             if (upgrades == null) upgrades = GetComponent<PlayerUpgrades>();
             LastInfusion = Way.Infusion.Bend(step, Weapon, info.Name, deep, element.AllIn, upgrades);
@@ -1690,7 +1700,7 @@ namespace Clover.Player
                 return false;
             }
             spells.BeginStrike(second, deep);
-            float untouchable = ElementSteel.UntouchableSeconds(step, info.Name);
+            float untouchable = inPlace ? 0f : ElementSteel.UntouchableSeconds(step, info.Name);
             if (untouchable > 0f && defence != null) defence.UntouchableUntil = Mathf.Max(defence.UntouchableUntil, Time.time + untouchable);
             infusedStep = step;
             infusedSecond = second;
@@ -1828,6 +1838,49 @@ namespace Clover.Player
             if (share < 1f) return;
             zanshinTarget = null;
             ZanshinTurns++;
+        }
+
+        // The Great Hammer's infused strike drawn as a slam (ElementMoves.PlaySlam): its look about where the head lands,
+        // begun its lead before the head lands (Lightning's bolt on the raised head), and its look on each body it reaches.
+        private bool slamDrawn;
+        private readonly Component[] slamStruck = new Component[16];
+
+        /// <summary>True once the current infused strike's slam look is drawn, so the element's arc look is not drawn as well.</summary>
+        public bool SlamDrawn => slamDrawn;
+
+        private bool SlamsHere(AttackStep step) =>
+            step != null && step == infusedStep && infusedElement != null && Weapon != null && Weapon.Name == Weapons.GreatHammerName
+            && step.Effect == StepEffect.GroundSlam && Clover.Player.Forms.ElementMoves.HasSlam(infusedElement.Index);
+
+        // In the wind-up: a slam that begins before the head lands is started its lead early, where the head will land.
+        private void SlamEarly(AttackStep step)
+        {
+            if (slamDrawn || !SlamsHere(step)) return;
+            float lead = Clover.Player.Forms.ElementMoves.SlamLead(infusedElement.Index);
+            float left = step.Windup - Combo.Elapsed;
+            if (lead <= 0f || left > lead) return;
+            // The lunge still to come in the wind-up carries the head that much further.
+            float over = step.LungeSeconds > 0f ? Mathf.Min(step.LungeSeconds, step.Windup) : step.Windup;
+            float still = over > 0f ? lunge * Mathf.Clamp01((over - Combo.Elapsed) / over) : 0f;
+            Vector3 forward = transform.forward;
+            Clover.Player.Forms.ElementMoves.PlaySlam(infusedElement.Index, transform.position + forward * (step.Reach + still), forward);
+            slamDrawn = true;
+        }
+
+        // The head lands: the slam about the spot (unless begun early), and on each body the blow reached.
+        private void SlamLands(AttackStep step)
+        {
+            Vector3 forward = transform.forward;
+            if (!slamDrawn) Clover.Player.Forms.ElementMoves.PlaySlam(infusedElement.Index, transform.position + forward * step.Reach, forward);
+            slamDrawn = true;
+            int count = 0;
+            foreach (var one in struck)
+            {
+                if (count >= slamStruck.Length) break;
+                if (one is Component body && body != null) slamStruck[count++] = body;
+            }
+            Clover.Player.Forms.ElementMoves.SlamStruck(infusedElement.Index, slamStruck, count, forward);
+            Clover.Player.Forms.StrikeArt.Drawn();
         }
 
         // Dragging Draw's return cut, waiting its moment after the draw; and the finisher's held pose.
@@ -2252,6 +2305,8 @@ namespace Clover.Player
             {
                 if (upgrades != null) upgrades.OnSwing(step, struck.Count);
                 Clover.Player.Forms.SpellWorks.Swing(step, transform.position, transform.forward);
+                // Before the swing is told of (SwingTrails): the slam's look is the infused landing, never beside another.
+                if (infused && SlamsHere(step)) SlamLands(step);
                 Swung?.Invoke(step);
                 if (step.Binds > 0f && nearest != null) Bind(nearest, step.Binds);
                 if (pullSelfTo != null) pullSelfIn = 0.1f;

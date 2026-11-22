@@ -79,9 +79,9 @@ The tracks run side by side. One Unity worker and one Blender worker at a time; 
 - [x] U1. The Twin Knives grip (angles, and fingers closed on the handles). Done 2026-11-21 (6e8fe3a9): the rig has no finger bones, so each knife crosses the fist in a forward grip with the pommel showing below; stills in `review/anim/knife_grip/`.
 - [x] U2. The enemy-size anchors and body-scaled on-body pieces (round-4 notes), before any round-4 re-films. Done 2026-11-21: `BodyAnchors` (measured at build by the enemy builder, read from the live joints in play), on-body pieces placed by anchor and sized 0.6x to 1.8x, floor pieces kept at their size; the standing size check is `AgentScripts/BodySizeProbe.cs`, sheets in `review/checks/size_check/`.
 - [ ] U2b. Filming rig v2, then the round-4 Unity-only fixes (`feedback/2026-11-22_round4_plan.md` sections 0, 1 and 3). Films happen at NIGHT only.
-- [ ] U3. Build each strike shape as the owner approves it; film only that shape's weapons.
+- [ ] U3. Build each strike shape as the owner approves it; film only that shape's weapons. SLAM (Great Hammer) built 2026-11-21: all 11 in play, checked by one still each against the strips (`review/checks/slam_compare/`); its films are on the night list.
 - [ ] U4. Stand-in passes: the rest of 2 and 3, then 4 (`steel/standin_clearance_plan.md`).
-- [ ] U5. Merge the Way wiring from offline (O1), then the Katana's Way per `steel/way_build_plan.md`.
+- [ ] U5. Merge the Way wiring from offline (O1), then the Katana's Way per `steel/way_build_plan.md`. The merge is done (2026-11-21, 0f676f88), probed by `WayProbe` and `MemoriesProbe`; the Katana's Way build is next.
 - [ ] U6. The Loadout screen in UI Toolkit (`ui_rest_fire_plan.md`, layout C).
 
 **Offline:**

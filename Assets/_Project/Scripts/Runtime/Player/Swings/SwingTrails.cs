@@ -745,6 +745,9 @@ namespace Clover.Player.Swings
                 }
             }
             GroundBlows++;
+            // The Great Hammer's infused slam lands in its own look (ElementMoves.PlaySlam): the new look replaces the
+            // element thrown out here, never stands beside it.
+            if (swingInfused && combat.SlamDrawn) return;
             float radius = step.Radius > 0f ? step.Radius : 1.2f;
             SwingImpacts.Ground(element.Index, lowest, transform.forward, transform.position.y, radius, swingInfused ? InfusedWeight : 1f);
         }

@@ -1,6 +1,6 @@
 # Element looks (batches 1 and 2)
 
-216 looks, 4802 parts (1634 ribbons), 31666 keys, from Assets/_Project/Art/VFX/Combos/elements2_recipe.json.
+230 looks, 5463 parts (1924 ribbons), 34563 keys, from Assets/_Project/Art/VFX/Combos/elements2_recipe.json.
 
 | Look | Length | On | Parts | Ribbons | Repeats from | Shell |
 |---|---|---|---|---|---|---|
@@ -354,3 +354,25 @@
 | e3_strike_poison | 1.5 s | body | 0 | 0 | 1.50 s | - |
 | e3_strike_poison@b | 1.4 s | body | 125 | 69 | 0.40 s | - |
 | red_hot@+ | 1.5 s | body | 87 | 37 | 1.55 s | - |
+| e3_slam_earth | 1.4 s | body | 43 | 17 | 0.07 s | - |
+| e3_slam_earth@b | 1.4 s | body | 0 | 0 | 1.40 s | - |
+| e3_slam_ice | 1.4 s | body | 43 | 17 | 0.07 s | - |
+| e3_slam_ice@b | 1.4 s | body | 0 | 0 | 1.40 s | - |
+| e3_slam_fire | 1.4 s | body | 47 | 17 | 0.21 s | - |
+| e3_slam_fire@b | 1.4 s | body | 0 | 0 | 1.40 s | - |
+| e3_slam_water | 1.4 s | body | 46 | 17 | 1.40 s | - |
+| e3_slam_water@b | 1.4 s | body | 0 | 0 | 1.40 s | - |
+| e3_slam_lightning | 1.5 s | body | 60 | 39 | 0.00 s | - |
+| e3_slam_lightning@b | 1.4 s | body | 16 | 6 | 0.07 s | - |
+| e3_slam_metal | 1.4 s | body | 37 | 17 | 0.07 s | - |
+| e3_slam_metal@b | 1.4 s | body | 0 | 0 | 1.40 s | - |
+| e3_slam_life | 1.4 s | body | 39 | 17 | 0.07 s | - |
+| e3_slam_life@b | 1.4 s | body | 0 | 0 | 1.40 s | - |
+| e3_slam_dark | 1.4 s | body | 51 | 17 | 1.40 s | - |
+| e3_slam_dark@b | 1.4 s | body | 1 | 0 | 1.40 s | - |
+| e3_slam_poison | 1.4 s | body | 94 | 17 | 1.40 s | - |
+| e3_slam_poison@b | 1.4 s | body | 54 | 54 | 1.40 s | - |
+| e3_slam_light | 1.4 s | body | 68 | 28 | 0.02 s | - |
+| e3_slam_light@b | 1.4 s | body | 0 | 0 | 1.40 s | - |
+| e3_slam_wind | 1.4 s | body | 62 | 27 | 0.07 s | - |
+| e3_slam_wind@b | 1.4 s | body | 0 | 0 | 1.40 s | - |

@@ -201,6 +201,13 @@ namespace Clover.EditorTools
             // worker's InkHands line set, notes.md); in the usual dark ink they melt into the shadow under the enemy.
             // (The render's colour is linear; a material colour is set as seen.)
             ["e3_strike_dark@b|st_hand_small"] = new Color(0.5f, 0.3f, 0.82f).gamma,
+            // The Dark slam's smoke, about the pit and on each one struck: near black, read by the same violet silhouette
+            // (slam notes, dark_outline: 0.42, 0.18, 0.7 linear).
+            ["e3_slam_dark|st_sl_shadow_smoke"] = new Color(0.42f, 0.18f, 0.7f).gamma,
+            ["e3_slam_dark@b|st_sl_shadow_smoke"] = new Color(0.42f, 0.18f, 0.7f).gamma,
+            // The Poison slam's venom: near-black green with the sickly-green rim the owner asked for, so it reads on dark
+            // floors (round 5: 0.3, 0.6, 0.12 linear at its edge), drawn as the solid's ink round its silhouette.
+            ["e3_slam_poison|st_sl_venom"] = new Color(0.3f, 0.6f, 0.12f).gamma,
         };
 
         /// <summary>
@@ -596,6 +603,12 @@ namespace Clover.EditorTools
         public static readonly Dictionary<string, ReactionArtBuilder.Paint> LookPaints = new Dictionary<string, ReactionArtBuilder.Paint>
         {
             ["water_soaked|m2_water_foam"] = new ReactionArtBuilder.Paint(0.04f, 0.4f, 0.5f, 0.45f, 1f, true),
+            // The Lightning slam's charge forking through the cracks and its sparks, a step darker than the shared bolt: in
+            // the slam's tight star they bloomed into a white knot at the game camera (the slam stills of 2026-11-21).
+            ["e3_slam_lightning|e4_bolt_vivid"] = new ReactionArtBuilder.Paint(0.03f, 0.26f, 0.6f),
+            ["e3_slam_lightning|e4_spark_cyan"] = new ReactionArtBuilder.Paint(0.07f, 0.36f, 0.66f),
+            ["e3_slam_lightning@b|e4_spark_cyan"] = new ReactionArtBuilder.Paint(0.07f, 0.36f, 0.66f),
+            ["e3_slam_lightning@b|e4_bolt_vivid"] = new ReactionArtBuilder.Paint(0.03f, 0.26f, 0.6f),
             ["water_soaked|m_vfx_water_foam"] = new ReactionArtBuilder.Paint(0.08f, 0.42f, 0.52f, 0.8f, 1f, true),
             // The puddle under a soaked body: low and faint, so the enemy always reads clearly above it.
             ["water_soaked|m_vfx_water_ink"] = new ReactionArtBuilder.Paint(0.03f, 0.22f, 0.3f, 0.35f, 1f, true),
@@ -763,6 +776,9 @@ namespace Clover.EditorTools
         public static readonly Dictionary<string, float> LookScales = new Dictionary<string, float>
         {
             ["life_seeded|vfxe2_seed"] = 0.65f,
+            // The Metal slam's one glint is the light kit's charged glint (KitAliases), larger than the elements 3 star
+            // the render drew: at the recipe's size it stood over the sword's point as a star wider than a soldier.
+            ["e3_slam_metal|vfxe3_glint"] = 0.45f,
             // Soaked's drips while it lasts: small, so they read as drips off the body, not blobs beside it.
             ["water_soaked|vfx3c_vfx_water_drop"] = 0.6f,
             // Unsteady's caught leaves were small at the game camera (notes.md): big enough to see as leaves.
@@ -996,6 +1012,9 @@ namespace Clover.EditorTools
             ["e4_net"] = "fire", ["e4_lotus_pale"] = "fire", ["e4_gold_glow"] = "fire",
             ["e4_fang"] = "dark", ["e4_hand"] = "dark", ["e4_maw"] = "dark", ["e4_blackbolt"] = "dark", ["e4_drain"] = "dark", ["e4_well"] = "dark",
             ["e4_seedpod"] = "life", ["e4_rg_leaf"] = "life", ["e4_rg_petal"] = "life", ["e4_rg_root"] = "life",
+            // The slam's sword in earth's matte solid, so its steel blade, bronze guard and leather grip keep their own
+            // colours and the blade never catches the metal solid's chrome glint as a white flash.
+            ["st_sl_blade"] = "earth", ["st_sl_guard"] = "earth", ["st_sl_grip"] = "earth",
         };
 
         /// <summary>Soaked: seconds the water takes to run down the body, and the most its puddle spans, metres.</summary>
@@ -2100,7 +2119,7 @@ namespace Clover.EditorTools
                 }
             }
             if (KitAliases.TryGetValue(kit + "|" + kitObject, out var alias)) (kit, kitObject) = alias;
-            string path = kit == E2Kit || kit == BrazierKit || kit == E3Kit || kit == E4Kit || kit == R5Kit || kit == StrikesKit ? ReactionArtBuilder.CombosFolder + "/" + kit : ReactionArtBuilder.KitPath(kit);
+            string path = kit == E2Kit || kit == BrazierKit || kit == E3Kit || kit == E4Kit || kit == R5Kit || kit == StrikesKit || kit == SlamKit ? ReactionArtBuilder.CombosFolder + "/" + kit : ReactionArtBuilder.KitPath(kit);
             comboTurn = path.StartsWith(ReactionArtBuilder.CombosFolder);
             if (!kits.TryGetValue(path, out var loaded))
             {
@@ -2161,7 +2180,9 @@ namespace Clover.EditorTools
             var triangles = new List<int>();
             bool perSlot = source.subMeshCount > 1 && (filter.sharedMesh.name.StartsWith("vfxe2_") && material.Substring(material.IndexOf('|') + 1).StartsWith("m3_")
                 // The elements 3 pieces of several paints: the feather's vane, edge, inner band and shaft; the briar's thorns.
-                || filter.sharedMesh.name.StartsWith("vfxe3_"));
+                || filter.sharedMesh.name.StartsWith("vfxe3_")
+                // The slam's sword: its blade, bronze guard and leather grip.
+                || filter.sharedMesh.name.StartsWith("vfxsl_"));
             var mainPaint = PaintOf(material);
             for (int s = 0; s < source.subMeshCount; s++)
             {
@@ -2477,6 +2498,7 @@ namespace Clover.EditorTools
             if (material != null && LookPaints.TryGetValue(material, out var paint)) return paint;
             if (material != null && Paints.TryGetValue(material, out paint)) return paint;
             if (material != null && StrikePaints.TryGetValue(material, out paint)) return paint;
+            if (material != null && SlamPaints.TryGetValue(material, out paint)) return paint;
             if (ReactionArtBuilder.TryPaint(material, out paint)) return paint;
             if (material != null) Unknown.Add(material);
             return new ReactionArtBuilder.Paint(0.5f, 0.5f, 0.5f);

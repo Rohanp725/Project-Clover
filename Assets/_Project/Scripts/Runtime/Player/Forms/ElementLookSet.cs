@@ -77,6 +77,11 @@ namespace Clover.Player.Forms
             /// <summary>The body it plays on is not lit the frozen pale blue while it plays (Winter Seed's ice flower is what is seen).</summary>
             public bool Thawed;
             /// <summary>
+            /// Seconds the look begins before its moment (a slam's head landing): Lightning's bolt strikes the raised hammer
+            /// head 0.13 s before it lands, so its look is started that much early. Zero for a look begun at its moment.
+            /// </summary>
+            public float Lead;
+            /// <summary>
             /// Keys of how high the body's model is raised while it plays (Anvil Stone's anvil, Frost Heave's ice lifting
             /// it), metres in <see cref="Key.Value"/>.y; none for a look that leaves the body where it stands.
             /// </summary>

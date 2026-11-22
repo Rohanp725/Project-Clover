@@ -165,6 +165,38 @@ namespace Clover.Player.Forms
             return true;
         }
 
+        // The Great Hammer's slams, by the element's place on the ring (ElementLookBuilder.Slams): about where the head
+        // lands, and on each body the slam reaches.
+        private static readonly string[] Slams =
+            { "slam_fire", "slam_lightning", "slam_wind", "slam_ice", "slam_water", "slam_life", "slam_earth", "slam_metal", "slam_light", "slam_dark", "slam_poison" };
+        private static readonly string[] SlamKeys = Keys(Slams, "", "@b");
+
+        /// <summary>The key a slam's look is built under, about the impact or on a body; null for none.</summary>
+        public static string SlamKey(int element, bool onBody) => Key(SlamKeys, 2, element, onBody ? 1 : 0);
+
+        /// <summary>True when the element's slam is built (the Great Hammer's infused strike plays it in place of the arc's).</summary>
+        public static bool HasSlam(int element) => SlamKey(element, false) != null && ElementLooks.Find(SlamKey(element, false)) >= 0;
+
+        /// <summary>Seconds before the head lands that the element's slam look begins (Lightning's bolt on the raised head); 0 for none.</summary>
+        public static float SlamLead(int element) =>
+            ElementLooks.TryLook(ElementLooks.Find(SlamKey(element, false)), out var look) ? look.Lead : 0f;
+
+        /// <summary>
+        /// The slam's look about <paramref name="impact"/>, where the head lands, turned to the blow's way; begun now, its
+        /// lead before the head lands. False when there is none.
+        /// </summary>
+        public static bool PlaySlam(int element, Vector3 impact, Vector3 forward) =>
+            ElementArt.Ready && ElementLooks.PlayAt(ElementLooks.Find(SlamKey(element, false)), impact, Yaw(forward));
+
+        /// <summary>The slam's look on each body it reached (the first <paramref name="count"/> of <paramref name="struck"/>), as the head lands.</summary>
+        public static void SlamStruck(int element, Component[] struck, int count, Vector3 forward)
+        {
+            if (!ElementArt.Ready) return;
+            string key = SlamKey(element, true);
+            for (int i = 0; struck != null && i < count && i < struck.Length; i++)
+                if (struck[i] != null) OnBody(key, struck[i].transform, forward);
+        }
+
         private static void OnBody(string key, Transform body, Vector3 forward, bool mirror = false)
         {
             if (key == null || body == null) return;

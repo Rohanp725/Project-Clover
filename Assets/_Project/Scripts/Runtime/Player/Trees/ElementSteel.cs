@@ -157,10 +157,17 @@ namespace Clover.Player
         /// Bends the carrier before it is started (IMPLEMENTATION.md 3.4): Lightning's Flash Cut is a lunge of 5 m as a
         /// line of lightning that cuts at the end for one and a half times the blow. The others keep the carrier's shape.
         /// </summary>
-        public static void Bend(AttackStep step, string element, bool deep)
+        public static void Bend(AttackStep step, string element, bool deep) => Bend(step, element, deep, false);
+
+        /// <summary>
+        /// As above; <paramref name="inPlace"/> keeps the carrier's own shape (the Great Hammer's slam lands where the head
+        /// comes down): Lightning's blow is still one and a half times, without the lunge.
+        /// </summary>
+        public static void Bend(AttackStep step, string element, bool deep, bool inPlace)
         {
             if (step == null) return;
-            if (element == Elements.Lightning)
+            if (element == Elements.Lightning && inPlace) step.Damage *= 1.5f;
+            else if (element == Elements.Lightning)
             {
                 step.Travel = 5f;
                 step.Active = Mathf.Max(step.Active, 0.16f);
@@ -214,7 +221,8 @@ namespace Clover.Player
                     // Flash Cut: the lunge was the carrier, bent; its end lays 2 Static on what it cut.
                     combat.StrikeLane(print.Origin, print.Forward, print.Reach, 0.9f, Blow(element, 0f, 6f, 2));
                     if (!art) FormFx.Run(FormMark.Streak, Ground(print.Origin) + Vector3.up * 1f, print.Forward, print.Reach, 0.35f, FormKit.Lit(colour, 3f), 0.3f, 0.05f);
-                    LightningBolts.Strike(print.Far, 0.35f);
+                    // The slam's own bolt has already struck the hammer head.
+                    if (!combat.SlamDrawn) LightningBolts.Strike(print.Far, 0.35f);
                     if (deep)
                     {
                         // Down the Channel: 0.4 s later a bolt comes down along the whole line and discharges every enemy on it.
@@ -364,7 +372,8 @@ namespace Clover.Player
                     break;
                 }
             }
-            if (art)
+            // The Great Hammer's slam has already drawn this strike where the head landed (PlayerCombat.SlamLands).
+            if (art && !combat.SlamDrawn)
             {
                 int count = combat.CopyLastStruck(out var lastStruck);
                 // Which way the blade went round: the strike's look runs with it (a strike lands once in eight seconds).

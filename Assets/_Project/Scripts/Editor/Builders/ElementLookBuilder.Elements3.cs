@@ -314,6 +314,8 @@ namespace Clover.EditorTools
             }
             // Red Hot's blast of fire through the enemy, as the Flame Wave's front.
             BuildBlasts(Elements3Looks(), lists, elementArt, glow);
+            // The Great Hammer's slams (ElementLookBuilder.Slams).
+            BuildSlams(lists, elementArt, glow);
             lists.Flat = false;
         }
 
@@ -398,9 +400,16 @@ namespace Clover.EditorTools
         /// about the one body) and keyed from <paramref name="from"/> to <paramref name="to"/> seconds (a blade's blow),
         /// as a look of no bodies, so every piece kept is built and none is looked for on another body.
         /// </summary>
-        private static Dictionary<string, object> Slice(Dictionary<string, object> look, Cut cut, List<Vector3> bodies, Vector3 player, float from, float to, float seconds)
+        private static Dictionary<string, object> Slice(Dictionary<string, object> look, Cut cut, List<Vector3> bodies, Vector3 player, float from, float to, float seconds) =>
+            Slice(look, cut, bodies, player, from, to, seconds, null);
+
+        /// <summary>
+        /// As above, the pieces about the player kept in <paramref name="aboutAt"/>'s frame instead when given (a slam's
+        /// about the impact point, the recipe's origin).
+        /// </summary>
+        private static Dictionary<string, object> Slice(Dictionary<string, object> look, Cut cut, List<Vector3> bodies, Vector3 player, float from, float to, float seconds, Vector3? aboutAt)
         {
-            Vector3 frame = cut == Cut.AboutPlayer || bodies.Count == 0 ? player : bodies[0];
+            Vector3 frame = cut == Cut.AboutPlayer || bodies.Count == 0 ? aboutAt ?? player : bodies[0];
             bool marked = MarksStruck(look);
             var groups = new List<object>();
             foreach (Dictionary<string, object> group in (List<object>)look["groups"])
