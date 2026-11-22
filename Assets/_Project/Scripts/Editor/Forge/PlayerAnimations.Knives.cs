@@ -63,6 +63,8 @@ namespace Clover.EditorTools.Forge
                 Blade = bladeR,
                 AimBladeL = true,
                 BladeL = bladeL,
+                // Held across the palm, as the rack hangs them: the hands stay in line with the forearms.
+                GripAngle = WeaponBuilder.KnifeGripAngle,
             }, keep);
         }
 
@@ -78,14 +80,14 @@ namespace Clover.EditorTools.Forge
 
         private static ForgeClip KnifeIdle() => new ForgeClip("idle_knife", 1.1f, true).From(t =>
         {
-            // Never still: a bounce on the toes, and once a loop the right knife goes round its ring.
+            // Never still: a bounce on the toes, and once a loop the right wrist rolls the knife over and back.
             float bounce = Mathf.Abs(Mathf.Sin(t * Mathf.PI * 2f));
             var p = KnifeReady();
             p.Hips += V(0f, 0.03f * bounce, 0f);
             p.HandL += V(0f, 0.02f * bounce, 0f);
             p.FootLTip = 8f * bounce;
             float spin = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0.55f, 0.85f, t));
-            p.Blade = Quaternion.AngleAxis(-360f * spin, Vector3.right) * p.Blade;
+            p.WristRollR = -150f * Mathf.Sin(spin * Mathf.PI);
             return p;
         });
 
@@ -109,6 +111,7 @@ namespace Clover.EditorTools.Forge
                 p.Blade = V(0.45f, 0f, -0.9f);
                 p.AimBladeL = true;
                 p.BladeL = V(-0.45f, 0f, -0.9f);
+                p.GripAngle = WeaponBuilder.KnifeGripAngle;
                 p.TwoHanded = false;
                 return p;
             };
@@ -482,10 +485,16 @@ namespace Clover.EditorTools.Forge
             // Back to the enemy, low, the knives hanging wide.
             var arrived = With(Knifer(V(0f, -0.5f, 0f), 0f, 0f, 20f, V(-0.24f, 0f, 0.1f), V(0.24f, 0f, -0.1f),
                 V(-0.7f, 0.8f, 0.1f), V(-0.9f, -0.3f, 0.2f), V(0.7f, 0.8f, 0.1f), V(0.9f, -0.3f, 0.2f), 0f), p => p.HeadLean = 20f);
-            // Standing, arms out level: the knives go round their rings here, flat, so the turn is seen from above.
+            // Standing, arms out level: both wrists roll the knives over and back, the blades flashing as they turn.
+            // (A held knife cannot go round a ring on a finger: the hand's mesh has no fingers.)
             ForgePose Spun(float turn, float rise) => With(Knifer(V(0f, Mathf.Lerp(-0.5f, -0.04f, rise), 0f), 0f, 0f, Mathf.Lerp(20f, 0f, rise), V(-0.22f, 0f, 0.06f), V(0.22f, 0f, -0.06f),
-                V(-0.74f, Mathf.Lerp(0.8f, 1.2f, rise), 0.14f), Quaternion.AngleAxis(turn, Vector3.up) * V(-1f, 0f, 0f),
-                V(0.74f, Mathf.Lerp(0.8f, 1.2f, rise), 0.14f), Quaternion.AngleAxis(-turn, Vector3.up) * V(1f, 0f, 0f), 0f), p => p.HeadLean = Mathf.Lerp(20f, 4f, rise));
+                V(-0.74f, Mathf.Lerp(0.8f, 1.2f, rise), 0.14f), V(-0.7f, 0f, 0.7f),
+                V(0.74f, Mathf.Lerp(0.8f, 1.2f, rise), 0.14f), V(0.7f, 0f, 0.7f), 0f), p =>
+            {
+                p.HeadLean = Mathf.Lerp(20f, 4f, rise);
+                p.WristRollL = 160f * Mathf.Sin(turn * Mathf.Deg2Rad * 0.5f);
+                p.WristRollR = -p.WristRollL;
+            });
             // The knives stop dead: points down and a little out, arms straight, head bowed.
             var stopped = With(Knifer(V(0f, -0.02f, 0f), 0f, 0f, 0f, V(-0.22f, 0f, 0.06f), V(0.22f, 0f, -0.06f),
                 V(-0.72f, 1.08f, 0.12f), V(-0.72f, -0.68f, 0.14f), V(0.72f, 1.08f, 0.12f), V(0.72f, -0.68f, 0.14f), 0f), p =>

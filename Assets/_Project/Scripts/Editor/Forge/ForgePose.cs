@@ -66,6 +66,18 @@ namespace Clover.EditorTools.Forge
         public bool AimBladeL;
         public Vector3 BladeL = Vector3.down;
         public Vector3 BladeLBack;
+        /// <summary>
+        /// Zero: the weapon lies along the hand, out past the knuckles (a sword's hilt in the fist), and the hand is
+        /// turned however its blade must point. Above zero: degrees between the hand's length and a short blade that
+        /// crosses the palm (the knives, <see cref="WeaponBuilder.KnifeGripAngle"/>). The hand then stays near the line
+        /// of the forearm, bent at the wrist by no more than <see cref="WristBend"/>, the blade comes as near the asked
+        /// way as that allows, and the forearm takes part of the hand's turn about it so the wrist does not wring.
+        /// </summary>
+        public float GripAngle;
+        /// <summary>Degrees the knife hands are rolled about the forearm after aiming: a flourish of the wrist.</summary>
+        public float WristRollR, WristRollL;
+        /// <summary>The furthest a hand holding a cross-gripped blade bends from the line of its forearm.</summary>
+        public const float WristBend = 45f;
         /// <summary>When true the left hand holds the weapon's grip below the right hand.</summary>
         public bool TwoHanded;
         /// <summary>Metres down the grip from the right hand that the left hand holds.</summary>
@@ -115,6 +127,9 @@ namespace Clover.EditorTools.Forge
                 BladeL = Vector3.SlerpUnclamped(a.BladeL.normalized, b.BladeL.normalized, t),
                 BladeLBack = a.BladeLBack.sqrMagnitude < 1e-6f || b.BladeLBack.sqrMagnitude < 1e-6f ? (t < 0.5f ? a.BladeLBack : b.BladeLBack)
                     : Vector3.SlerpUnclamped(a.BladeLBack.normalized, b.BladeLBack.normalized, t),
+                GripAngle = Mathf.LerpUnclamped(a.GripAngle, b.GripAngle, t),
+                WristRollR = Mathf.LerpUnclamped(a.WristRollR, b.WristRollR, t),
+                WristRollL = Mathf.LerpUnclamped(a.WristRollL, b.WristRollL, t),
                 TwoHanded = t < 0.5f ? a.TwoHanded : b.TwoHanded,
                 GripGap = Mathf.LerpUnclamped(a.GripGap, b.GripGap, t),
                 HandLTwist = Mathf.LerpUnclamped(a.HandLTwist, b.HandLTwist, t),
@@ -186,7 +201,11 @@ namespace Clover.EditorTools.Forge
             rig.TurnOnParent("shoulder.L", Quaternion.Euler(0f, ShoulderLForward, -ShoulderLUp));
             rig.Reach("upperarm.R", "forearm.R", "hand.R", HandR, ElbowR);
             Vector3 blade = Blade.sqrMagnitude > 1e-6f ? Blade.normalized : Vector3.down;
-            if (AimBlade)
+            if (AimBlade && GripAngle > 0f)
+            {
+                AimAcross(rig, "upperarm.R", "forearm.R", "hand.R", rig.RestBlade, rig.RestBladeUp, blade, ElbowR, WristRollR);
+            }
+            else if (AimBlade)
             {
                 Vector3 back = Vector3.ProjectOnPlane(BladeBack, blade);
                 Quaternion aim = back.sqrMagnitude > 1e-5f
@@ -209,6 +228,11 @@ namespace Clover.EditorTools.Forge
                 Vector3 restUpL = rig.RestBladeUp;
                 restUpL.x = -restUpL.x;
                 Vector3 bladeL = BladeL.sqrMagnitude > 1e-6f ? BladeL.normalized : Vector3.down;
+                if (GripAngle > 0f)
+                {
+                    AimAcross(rig, "upperarm.L", "forearm.L", "hand.L", restL, restUpL, bladeL, ElbowL, WristRollL);
+                    return;
+                }
                 Vector3 backL = Vector3.ProjectOnPlane(BladeLBack, bladeL);
                 Quaternion aimL = backL.sqrMagnitude > 1e-5f
                     ? Quaternion.LookRotation(bladeL, backL) * Quaternion.Inverse(Quaternion.LookRotation(restL, restUpL))
@@ -218,6 +242,75 @@ namespace Clover.EditorTools.Forge
             }
             Vector3 forearmL = (rig["hand.L"].Transform.position - rig["forearm.L"].Transform.position).normalized;
             rig.TurnOnParent("hand.L", Quaternion.AngleAxis(HandLTwist, forearmL) * Quaternion.AngleAxis(HandLBend, Vector3.Cross(forearmL, Vector3.up)));
+        }
+
+        /// <summary>
+        /// Turns a hand holding a short blade across its palm (<see cref="GripAngle"/>). <paramref name="restHand"/> is the
+        /// hand's length at rest (its socket's +Z) and <paramref name="restSide"/> the socket's +Y, the side of the fist
+        /// the blade leaves from (the thumb's).
+        ///
+        /// A wrist can only do so much, so the asked way is met as an arm would meet it. From the hand straight on the
+        /// forearm with the thumb where the arm carries it, the shortest turn that brings the blade the asked way is split
+        /// in two: the part about the forearm, a roll of the forearm, kept within a quarter turn either way; and the rest, a
+        /// bend at the wrist, kept within <see cref="WristBend"/>. Where the asked way is out of reach the blade points
+        /// as near it as those allow. Every part of this moves smoothly with the pose, so the hand never turns over
+        /// between two frames (short of a blade asked for straight back through the little finger).
+        /// </summary>
+        private void AimAcross(ForgeRig rig, string upperName, string forearmName, string handName, Vector3 restHand, Vector3 restSide, Vector3 blade, Vector3 elbow, float roll)
+        {
+            var forearm = rig[forearmName];
+            Vector3 along = (rig[handName].Transform.position - forearm.Transform.position).normalized;
+            float g = GripAngle * Mathf.Deg2Rad;
+            Vector3 restBlade = (Mathf.Cos(g) * restHand + Mathf.Sin(g) * restSide).normalized;
+            // The thumb's side with the forearm neither turned in nor out: away from where the elbow points, square to the
+            // forearm (a handshake: elbow down, thumb up). The elbow's way is the reach's own (the pose's elbow made square
+            // to the line from shoulder to hand), which moves smoothly while the arm is bent; the forearm bone's own turn
+            // about its length is whatever the reach left it with, and can jump. A straight arm can turn its hand any way
+            // at all and its elbow's way means little, so the straighter the arm the more the asked blade's own side
+            // counts (and, last, which way is up), so a straight arm's hand never turns over when its elbow hint does.
+            Vector3 shoulder = rig[upperName].Transform.position;
+            Vector3 reach = (rig[handName].Transform.position - shoulder).normalized;
+            Vector3 elbowWay = Vector3.ProjectOnPlane(elbow, reach);
+            if (elbowWay.sqrMagnitude < 1e-6f) elbowWay = Vector3.Cross(reach, Vector3.right);
+            float bent = Mathf.Clamp01(Vector3.ProjectOnPlane(forearm.Transform.position - shoulder, reach).magnitude / 0.1f);
+            Vector3 thumb = Vector3.ProjectOnPlane(-elbowWay.normalized, along) * bent
+                + Vector3.ProjectOnPlane(blade, along) * 0.3f + Vector3.ProjectOnPlane(Vector3.up, along) * 0.05f;
+            if (thumb.sqrMagnitude < 1e-6f) thumb = Vector3.ProjectOnPlane(rig.Turned(forearm.Transform) * restSide, along);
+            thumb.Normalize();
+
+            // The hand straight on the forearm, thumb that way: the blade leaves the fist at the grip angle.
+            Vector3 natural = Mathf.Cos(g) * along + Mathf.Sin(g) * thumb;
+            Quaternion straight = Quaternion.LookRotation(natural, along) * Quaternion.Inverse(Quaternion.LookRotation(restBlade, restHand));
+            // The shortest turn to the asked way, as a roll about the forearm and a bend of the wrist, each held in reach.
+            Quaternion toAsked = Quaternion.FromToRotation(natural, blade);
+            Vector3 onAxis = Vector3.Project(new Vector3(toAsked.x, toAsked.y, toAsked.z), along);
+            var twist = new Quaternion(onAxis.x, onAxis.y, onAxis.z, toAsked.w);
+            float twistLength = Mathf.Sqrt(twist.x * twist.x + twist.y * twist.y + twist.z * twist.z + twist.w * twist.w);
+            twist = twistLength > 1e-6f ? new Quaternion(twist.x / twistLength, twist.y / twistLength, twist.z / twistLength, twist.w / twistLength) : Quaternion.identity;
+            Quaternion swing = toAsked * Quaternion.Inverse(twist);
+            float rolled = Mathf.Clamp(TwistAbout(twist, along), -90f, 90f) + roll;
+            swing.ToAngleAxis(out float swingAngle, out Vector3 swingAxis);
+            if (swingAngle > 180f) swingAngle -= 360f;
+            if (float.IsNaN(swingAxis.x) || swingAxis.sqrMagnitude < 1e-8f) swingAngle = 0f;
+            Quaternion bend = Quaternion.AngleAxis(Mathf.Clamp(swingAngle, -WristBend, WristBend), swingAngle == 0f ? along : swingAxis);
+            Quaternion turn = bend * Quaternion.AngleAxis(rolled, along) * straight;
+            // The forearm takes half of the hand's turn about it, so the wrist is not wrung like a cloth. Near half a turn
+            // either way is the same turn, so there the share eases to nothing rather than jump from one side to the other.
+            float wrung = TwistAbout(turn * Quaternion.Inverse(rig.Turned(forearm.Transform)), along);
+            float share = 0.5f * Mathf.Clamp01((180f - Mathf.Abs(wrung)) / 45f);
+            forearm.Transform.rotation = Quaternion.AngleAxis(wrung * share, along) * forearm.Transform.rotation;
+            rig.TurnAbsolute(handName, turn);
+        }
+
+        /// <summary>Degrees a rotation turns about an axis (its twist, with the swing off the axis left out), from -180 to 180.</summary>
+        public static float TwistAbout(Quaternion rotation, Vector3 axis)
+        {
+            axis.Normalize();
+            float along = rotation.x * axis.x + rotation.y * axis.y + rotation.z * axis.z;
+            float degrees = 2f * Mathf.Atan2(along, rotation.w) * Mathf.Rad2Deg;
+            if (degrees > 180f) degrees -= 360f;
+            if (degrees < -180f) degrees += 360f;
+            return degrees;
         }
     }
 }

@@ -25121,7 +25121,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
-    m_MaxSize: 40
+    m_MaxSize: 79
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -31281,8 +31281,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 241916448}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0.57357645, y: 0, z: 0, w: 0.81915206}
+  m_LocalPosition: {x: 0, y: -0.02067324, z: -0.007524442}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -111654,8 +111654,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 884651797}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0.57357645, y: 0, z: 0, w: 0.81915206}
+  m_LocalPosition: {x: 0, y: -0.02067324, z: -0.007524442}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -115834,7 +115834,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
-    m_MaxSize: 40
+    m_MaxSize: 46
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -139682,6 +139682,14 @@ MonoBehaviour:
   WhiteHeatSwing: 0.05
   WhiteHeatBurn: 4
   WhiteHeatBurnSeconds: 4
+  DrinkDamage: 6
+  IntoFireStacks: 2
+  IntoFireWidth: 1.1
+  TideTurnSeconds: 6
+  SharedShare: 0.33333334
+  SharedReach: 8
+  DodgeHoldRange: 16
+  DodgeHoldSeconds: 3
   WellPerFlask: 70
   WellMost: 140
   WellPerSecond: 6
@@ -170909,6 +170917,8 @@ MonoBehaviour:
   - 1.15
   ViewCentre: {x: -320, y: -20}
   WideCentre: {x: 0, y: -8}
+  WideTopClear: 104
+  WideBottomClear: 92
   FollowChoice: 0.55
   RepeatSeconds: 0.2
   ViewSpeed: 9
@@ -222862,7 +222872,7 @@ ParticleSystem:
           m_PostInfinity: 2
           m_RotationOrder: 4
       cycleCount: 1
-      repeatInterval: 0.0001
+      repeatInterval: 0.01
       probability: 1
   SizeModule:
     enabled: 0
@@ -227721,7 +227731,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
-    m_MaxSize: 40
+    m_MaxSize: 46
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -262047,7 +262057,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
-    m_MaxSize: 40
+    m_MaxSize: 46
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1

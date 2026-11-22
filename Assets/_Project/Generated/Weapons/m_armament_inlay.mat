@@ -31,8 +31,12 @@ Material:
     m_Floats:
     - _Fade: 1
     - _Ice: 0
+    - _IceDark: 0
+    - _IceEarth: 0
     - _IceFrost: 0
     - _IceReveal: 1
+    - _IceStone: 0
+    - _IceVenom: 0
     - _LightBands: 2
     - _Metal: 0
     - _MetalLine: -1

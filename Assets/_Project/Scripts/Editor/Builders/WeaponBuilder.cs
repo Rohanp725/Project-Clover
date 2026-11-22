@@ -66,6 +66,12 @@ namespace Clover.EditorTools
             /// copy is hung from the same prefab, and at rest it lies mirrored across the body from the first.
             /// </summary>
             public Vector3? OffHandEuler;
+            /// <summary>
+            /// How the copy in the hand is turned and moved in its socket, whose +Z runs along the hand out past the
+            /// knuckles. Zero: lying along the hand, a sword's hilt in the fist. The knives cross the palm instead
+            /// (<see cref="KnifeGripAngle"/>), with the fist round the grip and the pommel showing under it.
+            /// </summary>
+            public Vector3 InHandEuler, InHandPosition;
             /// <summary>True for a weapon held in the left hand (the bow): its one copy hangs on the left hand's socket.</summary>
             public bool LeftHanded;
             /// <summary>The carry name of something else held in the right hand with it (the bow's arrow), and where in that hand.</summary>
@@ -163,8 +169,13 @@ namespace Clover.EditorTools
                 RestPosition = new Vector3(0.12f, 0.04f, -0.15f), RestAlong = new Vector3(-0.85f, -0.5f, 0f), RestUp = new Vector3(0f, 0f, -1f),
                 // Point up on its stand, the flat toward whoever walks up.
                 DisplayPosition = new Vector3(0f, 1.0f, 0f), DisplayEuler = new Vector3(-90f, 90f, 0f),
-                // The same way round in the left hand: the reverse grip is a matter of where the pose points it.
-                OffHandEuler = Vector3.zero,
+                // Both held in a forward grip: the grip crosses the palm, the blade leaving the fist on the thumb's side and
+                // leaning toward the knuckles, the pommel under the little finger. The same in the left hand (its socket
+                // is the right's mirrored). The hand's character mesh has no fingers to close, so the fist is the grip:
+                // the knife sits back in it so the guard just clears the knuckles and the pommel shows below.
+                InHandEuler = new Vector3(-KnifeGripAngle, 0f, 0f),
+                InHandPosition = Quaternion.Euler(-KnifeGripAngle, 0f, 0f) * new Vector3(0f, 0f, -KnifeSeat),
+                OffHandEuler = new Vector3(-KnifeGripAngle, 0f, 0f),
             },
             new Spec
             {
@@ -250,6 +261,16 @@ namespace Clover.EditorTools
         };
 
         public static Spec SpecFor(string carry) => Specs.FirstOrDefault(spec => spec.Carry == carry);
+
+        /// <summary>
+        /// Degrees between the hand's length and a knife held in it: a forward grip across the palm, a little off square
+        /// so the point leans the way the knuckles face, as a fist really holds a short grip. The Forge's knife poses
+        /// aim the hands with the same number (<see cref="Forge.ForgePose.GripAngle"/>).
+        /// </summary>
+        public const float KnifeGripAngle = 70f;
+
+        /// <summary>Metres the knife sits back along its own length from the middle of the fist, so the guard clears the knuckles.</summary>
+        public const float KnifeSeat = 0.022f;
 
         /// <summary>
         /// How a bow model is strung, in its own axes (upper limb along +Z, the archer toward +Y): where the hand holds
@@ -440,7 +461,7 @@ namespace Clover.EditorTools
                 {
                     var prefab = Prefab(spec.Carry);
                     if (prefab == null || handR == null || (spec.LeftHanded && handL == null)) continue;
-                    inHand.Add(Place(prefab, spec.LeftHanded ? handL : handR, spec.Carry + "_hand", Vector3.zero, Quaternion.identity));
+                    inHand.Add(Place(prefab, spec.LeftHanded ? handL : handR, spec.Carry + "_hand", spec.InHandPosition, Quaternion.Euler(spec.InHandEuler)));
                     var also = spec.AlsoInRightHand != null ? Prefab(spec.AlsoInRightHand) : null;
                     if (also != null) inHand.Add(Place(also, handR, spec.AlsoInRightHand + "_hand", spec.AlsoPosition, Quaternion.identity));
                     var rest = spec.RestSocket == WeaponRack.Hip ? hip : back;
@@ -448,7 +469,7 @@ namespace Clover.EditorTools
                     if (spec.OffHandEuler.HasValue && handL != null)
                     {
                         // The same model a second time: in the left hand, and at rest mirrored across the body.
-                        inHand.Add(Place(prefab, handL, spec.Carry + "_hand_L", Vector3.zero, Quaternion.Euler(spec.OffHandEuler.Value)));
+                        inHand.Add(Place(prefab, handL, spec.Carry + "_hand_L", spec.InHandPosition, Quaternion.Euler(spec.OffHandEuler.Value)));
                         Vector3 along = spec.RestAlong.normalized, up = spec.RestUp.normalized;
                         if (rest != null) atRest.Add(Place(prefab, rest, spec.Carry + "_rest_L", new Vector3(-spec.RestPosition.x, spec.RestPosition.y, spec.RestPosition.z),
                             Quaternion.LookRotation(new Vector3(-along.x, along.y, along.z), new Vector3(-up.x, up.y, up.z))));
@@ -486,6 +507,62 @@ namespace Clover.EditorTools
             if (rack == null) rack = model.AddComponent<WeaponRack>();
             rack.Configure(sets.ToArray());
             return rack;
+        }
+
+        /// <summary>
+        /// Sets every weapon already hung in a model's hands to where its Spec holds it now, without hanging anything
+        /// again: for a change of grip, so the scenes' players need not be rebuilt. Returns how many were moved.
+        /// </summary>
+        public static int Reseat(GameObject model)
+        {
+            int moved = 0;
+            foreach (var spec in Specs)
+            {
+                if (spec.PropOnly || spec.ShownByAnimator || spec.Worn != null) continue;
+                foreach (var (name, euler) in new[] { (spec.Carry + "_hand", spec.InHandEuler), (spec.Carry + "_hand_L", spec.OffHandEuler ?? Vector3.zero) })
+                {
+                    var part = WeaponRack.FindSocket(model.transform, name);
+                    if (part == null) continue;
+                    var rotation = Quaternion.Euler(euler);
+                    if (part.localPosition == spec.InHandPosition && part.localRotation == rotation) continue;
+                    Undo.RecordObject(part, "Reseat hand weapons");
+                    part.localPosition = spec.InHandPosition;
+                    part.localRotation = rotation;
+                    moved++;
+                }
+            }
+            return moved;
+        }
+
+        /// <summary>
+        /// Opens each scene that holds the player, reseats the weapons in its hands (<see cref="Reseat"/>) and saves it
+        /// if anything moved, then opens again the scene that was open. Not in Play Mode.
+        /// </summary>
+        [MenuItem("Clover/Weapons/Reseat Hand Weapons In Scenes")]
+        public static void ReseatInScenes()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                Debug.LogWarning("[Clover.Build] Reseat Hand Weapons In Scenes does not run in Play Mode.");
+                return;
+            }
+            if (!UnityEditor.SceneManagement.EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
+            string open = UnityEngine.SceneManagement.SceneManager.GetActiveScene().path;
+            var report = new List<string>();
+            foreach (string guid in AssetDatabase.FindAssets("t:Scene", new[] { "Assets/_Project/Scenes" }))
+            {
+                string path = AssetDatabase.GUIDToAssetPath(guid);
+                var scene = UnityEditor.SceneManagement.EditorSceneManager.OpenScene(path, UnityEditor.SceneManagement.OpenSceneMode.Single);
+                int moved = 0;
+                foreach (var rack in UnityEngine.Object.FindObjectsByType<WeaponRack>(FindObjectsInactive.Include))
+                    moved += Reseat(rack.gameObject);
+                if (moved == 0) continue;
+                UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(scene);
+                UnityEditor.SceneManagement.EditorSceneManager.SaveScene(scene);
+                report.Add($"{scene.name} {moved}");
+            }
+            if (!string.IsNullOrEmpty(open)) UnityEditor.SceneManagement.EditorSceneManager.OpenScene(open, UnityEditor.SceneManagement.OpenSceneMode.Single);
+            Debug.Log($"[Clover.Build] Reseated hand weapons in {report.Count} scenes: {string.Join(", ", report)}.");
         }
 
         private static Transform Socket(GameObject model, string bone, string name, Vector3 localPosition, Quaternion localRotation)
