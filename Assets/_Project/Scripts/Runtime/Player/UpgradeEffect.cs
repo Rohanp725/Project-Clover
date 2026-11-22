@@ -77,6 +77,12 @@ namespace Clover.Player
         public string InState = "";
         /// <summary>For ForceReaction: one of the pair on the target is enough; the reaction itself goes off, spending nothing (the ledger's forced-alone).</summary>
         public bool Alone;
+        /// <summary>
+        /// For ForceReaction: the reaction goes off as if its missing partner had just been laid. One of the pair is enough, but
+        /// its rest on that enemy still holds, and the conditions it sets there last without the partner (the ledger's
+        /// laid-as-condition: The Sun Goes Under, every Burn smouldering, curse or no curse).
+        /// </summary>
+        public bool AsLaid;
         /// <summary>For the Reacted and ReactionStruck triggers: only a reaction with this affliction in its pair ("every reaction with Chill in it"). None: any.</summary>
         public AfflictionKind ReactionWith = AfflictionKind.None;
         /// <summary>

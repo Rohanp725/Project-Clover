@@ -3025,7 +3025,8 @@ namespace Clover.Player
                 case UpgradeAction.ForceReaction:
                 {
                     int pair = ReactionTable.PairOf(effect.Reaction);
-                    if (subject is IAfflictable forced && forced.Afflictions.ForceReaction(pair, subject, effect.Alone)) ForcedReactions++;
+                    if (subject is IAfflictable forced && (effect.AsLaid ? forced.Afflictions.ReactAsLaid(pair, subject) : forced.Afflictions.ForceReaction(pair, subject, effect.Alone)))
+                        ForcedReactions++;
                     break;
                 }
                 case UpgradeAction.Flinch:
@@ -3034,7 +3035,7 @@ namespace Clover.Player
                 case UpgradeAction.Condition:
                     // It keeps the trigger's number (ByPower), or the depth counted as the moment came (CountsNeeds).
                     ConditionsSet += ConditionCaster.Cast(effect, subject, centre, combat, laying, conditionScratch, per,
-                        effect.ByPower ? pending.Power : effect.CountsNeeds ? per : -1f, spread, pending.From);
+                        effect.ByPower ? pending.Power : effect.CountsNeeds ? per : -1f, spread, pending.From, pending.ReactionOf - 1);
                     break;
                 case UpgradeAction.Shatter:
                 {

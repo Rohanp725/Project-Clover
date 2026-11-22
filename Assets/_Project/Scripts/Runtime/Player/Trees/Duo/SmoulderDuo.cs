@@ -80,13 +80,14 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.RightLow));
 
-            // NEEDS: every Burn laid smouldering, curse or no curse (now each blow that lands on a burning enemy while you are
-            // below half health Curses it, once a second, so it smoulders).
+            // Every Burn laid while you are below half health sets Smoulder off as if a Curse had come (UpgradeEffect.AsLaid): in
+            // whichever shape is worn, not while it rests on that enemy, and what it sets there lasts without the Curse.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = TheSunGoesUnder, Name = "The Sun Goes Under", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { ThirdEye, DeepCoal }, Icon = UpgradeIcons.Moon,
                 Description = "While your health is below half, every Burn you lay smoulders, curse or no curse.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.AnyHit, While = StatWhen.HalfHealth, Needs = AfflictionKind.Burn, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Cursed, Stacks = 1, Cooldown = 1f } },
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.AfflictionLaid, Spent = AfflictionKind.Burn, While = StatWhen.HalfHealth, Do = UpgradeAction.ForceReaction,
+                    Reaction = SmoulderReaction, AsLaid = true } },
             }, HeartPattern.Keystone));
 
             // The duo spell, bought with Shards once both are carried (no god gives it): a zone on a 16 s cooldown (SpellTimings). The field form lays a lake at the aim point;

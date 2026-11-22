@@ -14,12 +14,16 @@ namespace Clover.Player
     /// </summary>
     public static class ConditionCaster
     {
-        /// <summary>Sets it; returns on how many it was set.</summary>
+        /// <summary>
+        /// Sets it; returns on how many it was set. <paramref name="reactionPair"/> is the reaction whose own effect this is
+        /// (-1: none): one that went off on the trigger's enemy as if laid sets its conditions there to last without their partner.
+        /// </summary>
         public static int Cast(UpgradeEffect effect, Component subject, Vector3 centre, PlayerCombat combat, LaySource source, HashSet<IDamageable> scratch, int stacks = 1,
-            float scale = -1f, float spread = 1f, Vector3? facing = null)
+            float scale = -1f, float spread = 1f, Vector3? facing = null, int reactionPair = -1)
         {
             var spec = effect != null ? effect.State : null;
             if (spec == null || string.IsNullOrEmpty(spec.Id) || combat == null) return 0;
+            if (reactionPair >= 0 && subject is IAfflictable reacted && reacted.Afflictions.Unbound(reactionPair)) spec = Unbound(spec);
             float pace = PaceFor(spec, stacks);
             AnswersOf(effect, spec.Id, out bool struck, out bool ended, out bool died, out bool attacked);
             int mark = effect.Owner != null ? effect.Owner.Index : -1;
@@ -53,6 +57,19 @@ namespace Clover.Player
                 if (Set(effect, alone, subject, null, mark, struck, ended, died, attacked, combat, source, pace, scale, toward)) set++;
             }
             return set;
+        }
+
+        /// <summary>
+        /// The condition as it is set by a reaction that went off as if laid (The Sun Goes Under): the same, but lasting without
+        /// the afflictions it would last with. The spec itself when it lasts with none.
+        /// </summary>
+        public static ConditionSpec Unbound(ConditionSpec spec)
+        {
+            if (spec == null || (spec.While == AfflictionKind.None && spec.While2 == AfflictionKind.None)) return spec;
+            var loose = spec.Copy();
+            loose.While = AfflictionKind.None;
+            loose.While2 = AfflictionKind.None;
+            return loose;
         }
 
         /// <summary>

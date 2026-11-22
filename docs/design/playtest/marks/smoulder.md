@@ -42,13 +42,11 @@ both carried.
 
 **When it happens.** Always on once you learn it, while you carry both Dark and Fire and your health is below half.
 
-**The numbers.** Mix, keystone, 5 Shards. For now: below half health, each blow that lands on a burning enemy Curses it, at most once a second, so Smoulder starts.
+**The numbers.** Mix, keystone, 5 Shards. Below half health, each Burn you add to an enemy starts Smoulder on it at once, in whichever shape you wear, even with no Curse on it. With no Curse, it smoulders for 30 seconds and then flares. After Smoulder goes off on an enemy, it can't go off on that enemy again for 4 seconds.
 
 **Works with.** Pawned Heart and the Dark marks you pay for with health, Smoulder and its shapes, Third Eye.
 
 **Example.** When you're hurt, every enemy you set on fire starts to smoulder.
-
-**Not built yet.** For now, it Curses the burning enemy, instead of making the Burn itself smoulder.
 
 ## smoulder.lake
 **What it does.** A lake opens where you aim: a still black surface, with flames licking at its edge and embers rising. Every enemy on it is Cursed and gets a Burn each second, so all of them smoulder.

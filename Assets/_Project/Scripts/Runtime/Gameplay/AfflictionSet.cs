@@ -240,6 +240,30 @@ namespace Clover.Gameplay
             return (Reactions ?? ReactionEngine.Shared).Force(this, who, pair, second ? AfflictionPairs.Second(pair) : AfflictionPairs.First(pair), alone);
         }
 
+        /// <summary>
+        /// Sets a pair off as if its missing partner had just been laid (The Sun Goes Under: every Burn smoulders, curse or
+        /// no curse): one of the pair is enough, but not while the pair rests here, and for the next second the conditions it
+        /// sets on this enemy last without their partner (<see cref="Unbound"/>). False when it did not go off.
+        /// </summary>
+        public bool ReactAsLaid(int pair, UnityEngine.Component who)
+        {
+            if (pair < 0 || pair >= AfflictionPairs.Count || reactionRest[pair] > 0f) return false;
+            if (!ForceReaction(pair, who, true)) return false;
+            unboundPair = pair;
+            unboundLeft = UnboundSeconds;
+            return true;
+        }
+
+        /// <summary>
+        /// True while the conditions a reaction sets here should last without the afflictions they last with: it went off as
+        /// if laid (<see cref="ReactAsLaid"/>) within the last second, the time its effects take to be done.
+        /// </summary>
+        public bool Unbound(int pair) => pair >= 0 && pair == unboundPair && unboundLeft > 0f;
+
+        private const float UnboundSeconds = 1f;
+        private int unboundPair = -1;
+        private float unboundLeft;
+
         /// <summary>Takes up to this many stacks of an affliction away, with no burst, and says how many went. A burn with no depth counts as one.</summary>
         public int Spend(AfflictionKind kind, int count)
         {
@@ -275,6 +299,8 @@ namespace Clover.Gameplay
         public void Clear()
         {
             owedSeconds = 0f;
+            unboundPair = -1;
+            unboundLeft = 0f;
             windingUp = false;
             windupFor = 0f;
             StrikeIn = float.MaxValue;
@@ -549,6 +575,7 @@ namespace Clover.Gameplay
         {
             BitThisTick = false;
             LandedThisTick = false;
+            if (unboundLeft > 0f) unboundLeft -= deltaTime;
             Conditions.Tick(deltaTime);
             // A condition that lasts only while afflictions are carried ends once one is gone.
             if (Conditions.Any) Conditions.Keep(PresentMask);

@@ -878,5 +878,46 @@ namespace Clover.Tests
             Assert.AreEqual(1.5f, stats.Multiplier(PlayerStat.DodgeDistance), 1e-5f, "in your own water");
             Assert.IsFalse(Hazards.OwnGroundUnder(Vector3.zero, AfflictionKind.Soaked), "no ground with no hazards in the scene");
         }
+
+        [Test]
+        public void TheSunGoesUnderSmouldersEveryBurnCurseOrNoCurse()
+        {
+            int reported = 0;
+            var enemy = new AfflictionSet { Reactions = new ReactionEngine((who, pair, laid) => reported++, () => 0) };
+            int smoulder = AfflictionPairs.Index(AfflictionKind.Cursed, AfflictionKind.Burn);
+            Assert.IsFalse(enemy.ReactAsLaid(smoulder, null), "nothing of the pair: nothing goes off");
+            enemy.Lay(AfflictionKind.Burn, 1, 3f, 1f, LaySource.Weapon);
+            Assert.IsTrue(enemy.ReactAsLaid(smoulder, null), "a Burn alone smoulders");
+            Assert.AreEqual(1, reported);
+            Assert.IsTrue(enemy.Unbound(smoulder), "what it sets now lasts without the Curse");
+            Assert.IsFalse(enemy.ReactAsLaid(smoulder, null), "not again while Smoulder rests on it");
+            Assert.AreEqual(1, reported);
+
+            var sunk = new ConditionSpec { Id = Reactions.Sunk, Seconds = 30f, Beat = 2f, While = AfflictionKind.Cursed, Keeps = AfflictionKind.Burn };
+            var loose = ConditionCaster.Unbound(sunk);
+            Assert.AreEqual(AfflictionKind.None, loose.While, "no Curse needed");
+            Assert.AreEqual(AfflictionKind.Cursed, sunk.While, "the reaction's own spec is left as written");
+            Assert.AreSame(loose, ConditionCaster.Unbound(loose), "a spec bound to nothing is kept");
+            enemy.Conditions.Set(loose, null, 1);
+            enemy.Tick(0.5f);
+            Assert.IsTrue(enemy.Conditions.Holds(Reactions.Sunk), "it smoulders with no Curse on it");
+            Assert.IsTrue(enemy.Burn.IsBurning, "and its fire does not fade");
+
+            var bound = new AfflictionSet { Reactions = new ReactionEngine((who, pair, laid) => { }, () => 0) };
+            bound.Lay(AfflictionKind.Burn, 1, 3f, 1f, LaySource.Weapon);
+            bound.Conditions.Set(sunk, null, 1);
+            bound.Tick(0.1f);
+            Assert.IsFalse(bound.Conditions.Holds(Reactions.Sunk), "the plain smoulder ends with no Curse");
+            enemy.Tick(1.1f);
+            Assert.IsFalse(enemy.Unbound(smoulder), "only the second after it went off");
+
+            var under = Upgrade.ById(Clover.Player.Trees.Duo.SmoulderDuo.TheSunGoesUnder).Effects.Single();
+            Assert.AreEqual(UpgradeTrigger.AfflictionLaid, under.On);
+            Assert.AreEqual(AfflictionKind.Burn, under.Spent, "every Burn you lay");
+            Assert.AreEqual(StatWhen.HalfHealth, under.While);
+            Assert.AreEqual(UpgradeAction.ForceReaction, under.Do);
+            Assert.AreEqual("react.smoulder", under.Reaction);
+            Assert.IsTrue(under.AsLaid, "curse or no curse");
+        }
     }
 }
