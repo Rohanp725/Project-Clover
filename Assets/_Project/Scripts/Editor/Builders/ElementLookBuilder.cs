@@ -1551,6 +1551,13 @@ namespace Clover.EditorTools
                     if (markedFlare) scale *= MarkedFlareSize;
                     if (LookStretch.TryGetValue(slug + "|" + kitObject, out var stretched)) scale = Vector3.Scale(scale, stretched);
                     if (LookLifts.TryGetValue(slug + "|" + kitObject, out float lift)) position.y += lift;
+                    if (RdOutward.TryGetValue(slug + "|" + kitObject, out var outward))
+                    {
+                        // Out from the body's upright and grown (round 4: Smoulder's black flames round a bulky soldier).
+                        position.x *= outward.x;
+                        position.z *= outward.x;
+                        scale *= outward.y;
+                    }
                     if (LookPaints.ContainsKey(slug + "|" + material)) material = slug + "|" + material;
                     string placement = instance.Count > 4 ? instance[4] as string : "b";
                     string verb = Text(motion, "verb");

@@ -302,6 +302,17 @@ namespace Clover.EditorTools
             part.BoneOffset = offset;
         }
 
+        /// <summary>
+        /// Round-4 pieces round a body set further out from its upright (x, a share of their distance) and grown (y), by
+        /// "tweak name|kit object", on top of the anchors' fit: Smoulder's black flames stood at the slim stand-in's girth
+        /// and were inside a castle soldier's skirt and hat from the game camera (the day stills of 2026-11-22).
+        /// </summary>
+        public static readonly Dictionary<string, Vector2> RdOutward = new Dictionary<string, Vector2>
+        {
+            ["rd_smoulder|vfxe2_flame"] = new Vector2(1.7f, 1.3f), ["rd_smoulder|vfxe2_flame_lick"] = new Vector2(1.7f, 1.3f),
+            ["rd_smoulder|vfxe2_flame_core"] = new Vector2(1.7f, 1.3f),
+        };
+
         /// <summary>Hunger's jaws about one near enemy: the shadow stretched to it and the two rows of fangs round its feet.</summary>
         public const string HungerJawsKey = "dark_hunger@b";
         private static readonly HashSet<string> JawPieces = new HashSet<string> { "vfxrd_shadow", "vfxrd_fang" };
