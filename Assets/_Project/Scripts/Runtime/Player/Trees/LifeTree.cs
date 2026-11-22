@@ -79,9 +79,8 @@ namespace Clover.Player.Trees
                 // Mending 7 a burst is the Learn's own mending, set by the Empower (empower-effects).
                 new Empower { Cooldown = 10f, Effects = new[] { new EffectChange { Index = 0, Amount = 7f }, new EffectChange { Index = 2, Amount = 7f } } },
                 "Reap What Is Sown waits 10 seconds, not 12, and you mend 7 a burst.",
-                // NEEDS: the garden kept standing (a shape that sets aside its Learn's burst, shape-sets-aside). Until then the
-                // gold sweep reaches eight metres all round, and the garden still bursts.
-                new ShapeDef { Name = "Golden Sickle", Form = SpellForms.Wave,
+                // The garden kept standing (ShapeDef.SetsAside: the Learn's burst of what you grew); the gold sweep reaches eight metres all round.
+                new ShapeDef { Name = "Golden Sickle", Form = SpellForms.Wave, SetsAside = new[] { 0 },
                     Description = "Only the Seeded within eight metres are reaped, each cut once by one sweep of gold, and the garden is kept standing.",
                     Spell = new SpellSpec { Reach = 8f, Arc = 360f, Damage = 16f, Stagger = 25f, Stacks = 0 } },
                 // NEEDS: each grown thing's burst sowing too (grown-bursts). Until then each seed set off sows a
@@ -193,9 +192,9 @@ namespace Clover.Player.Trees
                 new ShapeDef { Name = "Blood in the Furrow",
                     Description = "The green blood soaks into the ground where you knelt, a ring eight metres across for as long as it lasts, and everything in it is Seeded each second. Fight in a place, not round yourself.",
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Hazard, At = EffectAt.Self, Shape = HazardShape.Patch, Radius = 4f, Seconds = 6f, Interval = 1f, Damage = 1f, Affliction = AfflictionKind.Seeded, Stacks = 1 } } },
-                // NEEDS: nothing withering (shape-sets-aside), and a quarter of your present health, not a fixed 25 (health-share). Until then
-                // the garden still withers, and what you grow in the next eight seconds strikes twice as hard.
-                new ShapeDef { Name = "Feed the Ground", Form = SpellForms.Nova,
+                // Nothing withers (ShapeDef.SetsAside: the Learn's withering burst). NEEDS: a quarter of your present health, not a fixed
+                // 25 (health-share). What you grow in the next eight seconds strikes twice as hard.
+                new ShapeDef { Name = "Feed the Ground", Form = SpellForms.Nova, SetsAside = new[] { 2 },
                     Description = "The one place Life pays in blood. Nothing withers: you give a quarter of your present health to your garden, and for eight seconds everything you have grown within twelve metres strikes twice as hard and twice as often.",
                     Spell = new SpellSpec { Radius = 1f, Damage = 0f, Stagger = 0f, Stacks = 0, HealthCost = 25f },
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Boon, Stat = PlayerStat.GrownDamage, Amount = 1f, Seconds = 8f } } },

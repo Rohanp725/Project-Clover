@@ -47,11 +47,11 @@ the steel you throw and plant: Flung Blade, the blades of Grave of Swords.
 
 **When it happens.** Whenever you cast Poured Bronze, using the shape you picked. If you have not bought this, you cast the plain pour.
 
-**The numbers.** 3 Shards. Set: the crust stays for 4 seconds. The next heavy blow on it shatters it for 20 damage and 15 stagger within 1 metre, and sends a path of splinters 3 metres out behind it, away from you. Each enemy the splinters reach takes 8 damage, 8 stagger and a notch. Red-Hot: for 4 seconds, every weapon blow on the enemy spits sparks for 12 more damage (worth two notches).
+**The numbers.** 3 Shards. Set: the crust stays for 4 seconds. The next heavy blow on it shatters it for 20 damage and 15 stagger within 1 metre, and sends a path of splinters 3 metres out behind it, away from you. Each enemy the splinters reach takes 8 damage, 8 stagger and a notch. Red-Hot: there is no hold. For 4 seconds, every weapon blow on the enemy spits sparks for 12 more damage (worth two notches).
 
 **Works with.** Set: heavy weapons, Counter Cut, a pack standing in a line behind the enemy you poured into. Red-Hot: fast weapons, the charged blade, Open Line (a held enemy to keep attacking).
 
-**Not built yet.** Both shapes work on every enemy the pour reached, not only the ones it poured into, because the shape checks after the pour has already used up the notches. Red-Hot should do 6 more for each notch used up (for now, it is 12 no matter how many), and it shouldn't hold the enemy (for now, the hold still happens).
+**Not built yet.** Both shapes work on every enemy the pour reached, not only the ones it poured into, because the shape checks after the pour has already used up the notches. Red-Hot should do 6 more for each notch used up (for now, it is 12 no matter how many).
 
 **Example.** Use Set on a notched brute with two soldiers behind it. One heavy blow shatters the crust, and the splinters notch the two behind it, ready for the next pour.
 

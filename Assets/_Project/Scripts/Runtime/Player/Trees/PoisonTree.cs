@@ -133,9 +133,9 @@ namespace Clover.Player.Trees
                 "Its bursts strike for 7 for each dose, not 6.",
                 // For eight seconds each enemy on the line that dies poisoned passes twice its doses to the nearest other on the
                 // line (UpgradeEffect.ToState), else the nearest within ten metres; one pushed past eight bursts at once, 6 a dose,
-                // and passes the rest on (UpgradeEffect.Overflow). NEEDS: nothing burst by the snap (shape-sets-aside), and the
-                // next by the line's own order rather than the nearest on it. Until then the snap still bursts.
-                new ShapeDef { Name = "Eaten in Turn",
+                // and passes the rest on (UpgradeEffect.Overflow); the snap bursts nothing (ShapeDef.SetsAside: the Learn's set-off).
+                // NEEDS: the next by the line's own order rather than the nearest on it.
+                new ShapeDef { Name = "Eaten in Turn", SetsAside = new[] { 0 },
                     Description = "The line is drawn, but nothing bursts. For eight seconds, when an enemy on it dies, all its doses pass to the next on the line, doubled; one pushed past eight bursts at once, 6 a dose, and passes on. The blade chooses the order.",
                     Effects = new[]
                     {

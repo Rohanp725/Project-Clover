@@ -21,6 +21,14 @@ namespace Clover.Player
         public StatMod[] Stats = Array.Empty<StatMod>();
         /// <summary>What it does when things happen, while this shape is worn: the shape's own rule, often answering the branch's own spell (<see cref="UpgradeEffect.OwnBranch"/>).</summary>
         public UpgradeEffect[] Effects = Array.Empty<UpgradeEffect>();
+        /// <summary>
+        /// The places, in its Learn's own effects, of those this shape sets aside while it is worn (the ledger's
+        /// shape-sets-aside: Golden Sickle keeps the garden standing, Red-Hot has no hold). Empty: the Learn's effects all run.
+        /// </summary>
+        public int[] SetsAside = Array.Empty<int>();
+
+        /// <summary>True when the worn shape sets aside the Learn's effect at <paramref name="index"/>.</summary>
+        public static bool SetAside(ShapeDef shape, int index) => shape != null && shape.SetsAside != null && Array.IndexOf(shape.SetsAside, index) >= 0;
 
         /// <summary>True when it casts something other than the base spell's form and numbers (a base spell's shape is then cast through its mark, not its element's kit).</summary>
         public bool CastsItsOwn => !string.IsNullOrEmpty(Form) || Spell != null;

@@ -47,11 +47,11 @@ ground: Briar Patch's bed, a thornbush, a sapling, a thicket, a tuft of briar.
 
 **When it happens.** Whenever you cast Reap What Is Sown, using the shape you picked. If you have not bought this, you cast the plain call.
 
-**The numbers.** 3 Shards. Golden Sickle: one sweep 8 metres all around you, for 16 damage and 25 stagger. Each Seeded enemy it cuts has its seed burst, like the Learn mark's. Second Sowing: each seed that goes off (from Reap, Ripening or anything else) puts one Seeded on every enemy within 3 metres of it.
+**The numbers.** 3 Shards. Golden Sickle: one sweep 8 metres all around you, for 16 damage and 25 stagger. Each Seeded enemy it cuts has its seed burst, like the Learn mark's, and the things you grew are kept standing. Second Sowing: each seed that goes off (from Reap, Ripening or anything else) puts one Seeded on every enemy within 3 metres of it.
 
 **Works with.** Ripening (its bursts plant seeds too, while you use Second Sowing); Fallen Seeds and Sapling, for the garden Golden Sickle should keep.
 
-**Not built yet.** Golden Sickle should keep the garden standing; for now, the things you grew still burst. In Second Sowing, the things you grew should plant seeds as they burst; for now, only seeds that go off plant new ones.
+**Not built yet.** In Second Sowing, the things you grew should plant seeds as they burst; for now, only seeds that go off plant new ones.
 
 **Example.** Use Second Sowing in a crowd. Reap once to Seed the whole pack again, cut, then reap again.
 
@@ -160,11 +160,11 @@ ground: Briar Patch's bed, a thornbush, a sapling, a thicket, a tuft of briar.
 
 **When it happens.** Whenever you cast Drawn From the Wood, using the shape you picked. If you have not bought this, you cast the plain withering.
 
-**The numbers.** 3 Shards. Blood in the Furrow: a ring 8 metres across where you knelt, lasting 6 seconds. Once a second, it deals 1 damage and adds Seeded. Feed the Ground: it costs 25 health, which turns grey so you can win it back with blows. You can't cast it with 25 health or less. For 8 seconds, the things you grow hit twice as hard.
+**The numbers.** 3 Shards. Blood in the Furrow: a ring 8 metres across where you knelt, lasting 6 seconds. Once a second, it deals 1 damage and adds Seeded. Feed the Ground: it costs 25 health, which turns grey so you can win it back with blows. You can't cast it with 25 health or less. Nothing withers. For 8 seconds, the things you grow hit twice as hard.
 
 **Works with.** Blood in the Furrow: Bitter Rind and Briar Coat, which keep the fight in one place. Feed the Ground: Fallen Seeds, Sapling and Wildwood, for a garden worth feeding; and the Master mark, to pay with grey health.
 
-**Not built yet.** Blood in the Furrow's window should only work while you stand in the ring. Feed the Ground should take a quarter of your current health (for now, it takes 25), keep the garden (for now, it still withers like the Learn mark's), and double the power and speed of what is already standing (for now, only what you grow during the 8 seconds hits harder).
+**Not built yet.** Blood in the Furrow's window should only work while you stand in the ring. Feed the Ground should take a quarter of your current health (for now, it takes 25), and double the power and speed of what is already standing (for now, only what you grow during the 8 seconds hits harder).
 
 **Example.** Use Blood in the Furrow at a narrow spot. Wait in the ring and let them come to you, getting Seeded with every step.
 

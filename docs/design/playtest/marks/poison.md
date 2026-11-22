@@ -85,11 +85,11 @@ a blow or a cast "on the beat" comes within a fifth of a second of it.
 
 **When it happens.** Whenever you cast One by One, using the shape you picked. If you have not bought this, you cast the plain line.
 
-**The numbers.** 3 Shards. Eaten in Turn: for 8 seconds, each enemy on the line that dies poisoned passes twice its doses to the nearest other enemy still on the line (or, if none is left, the nearest enemy within 10 metres). If that pushes it past eight doses, it bursts at once, 6 damage a dose, and the extra doses pass on to the next one. This can happen up to four times in a row. All Into One: when you cast it, every poisoned enemy within 10 metres gives up all its doses. One column rises under the poisoned enemy you face (or the nearest one), and its burst carries every dose gathered, with no limit: four enemies with eight doses each make one burst of 32 doses.
+**The numbers.** 3 Shards. Eaten in Turn: the line is drawn, but the snap bursts nothing. For 8 seconds, each enemy on the line that dies poisoned passes twice its doses to the nearest other enemy still on the line (or, if none is left, the nearest enemy within 10 metres). If that pushes it past eight doses, it bursts at once, 6 damage a dose, and the extra doses pass on to the next one. This can happen up to four times in a row. All Into One: when you cast it, every poisoned enemy within 10 metres gives up all its doses. One column rises under the poisoned enemy you face (or the nearest one), and its burst carries every dose gathered, with no limit: four enemies with eight doses each make one burst of 32 doses.
 
 **Works with.** Eaten in Turn: a pack of weak enemies to kill in order, Slow Death (twenty doses to pass on), Rupture and Volatile on the enemy that gets fed. All Into One: a god or an elite, Catching and Miasma to poison the crowd first.
 
-**Not built yet.** Eaten in Turn still bursts like the plain spell, so the enemies that die must be poisoned again first. The doses go to the nearest enemy still on the line, not the next one in the line's own order. All Into One's beads of mercury rolling across the floor aren't drawn yet.
+**Not built yet.** In Eaten in Turn, the doses go to the nearest enemy still on the line, not the next one in the line's own order. All Into One's beads of mercury rolling across the floor aren't drawn yet.
 
 **Example.** Use Eaten in Turn on five soldiers. Poison them again as you cut, kill the front one with six doses, and the next one has twelve.
 

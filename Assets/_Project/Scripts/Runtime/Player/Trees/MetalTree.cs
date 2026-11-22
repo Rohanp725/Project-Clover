@@ -96,9 +96,9 @@ namespace Clover.Player.Trees
                         new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Crusted, By = StruckBy.Heavy, Do = UpgradeAction.Burst, Radius = 1f, Damage = 20f, Stagger = 15f, Stacks = 0 },
                         new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Crusted, By = StruckBy.Heavy, Do = UpgradeAction.Lane, Reach = 3f, Radius = 0.8f, Damage = 8f, Stagger = 8f, Affliction = S, Stacks = 1 },
                     } },
-                // NEEDS: no hold while it is worn (shape-sets-aside), 6 more a notch spent (count-from-depth), and only the
-                // enemies poured into (shape-before-learn). Until then the hold still comes, and each blow spits two notches' worth.
-                new ShapeDef { Name = "Red-Hot",
+                // No hold while it is worn (ShapeDef.SetsAside: the Learn's hold). NEEDS: 6 more a notch spent (count-from-depth), and
+                // only the enemies poured into (shape-before-learn). Until then each blow spits two notches' worth.
+                new ShapeDef { Name = "Red-Hot", SetsAside = new[] { 3 },
                     Description = "The bronze stays molten in the cracks for four seconds. There is no hold, but every weapon blow on that enemy spits sparks and deals 6 more for each notch that was spent. Pour, then press.",
                     Effects = new[]
                     {

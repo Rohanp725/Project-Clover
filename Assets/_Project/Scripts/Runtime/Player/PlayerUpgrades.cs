@@ -813,7 +813,11 @@ namespace Clover.Player
                     if (upgrade.Tally.Kept && tally[i] == 0 && RunState.Tallies.TryGetValue(upgrade.Id, out int kept)) tally[i] = kept;
                 }
                 foreach (var mod in upgrade.Stats) Stats.AddLearned(mod);
-                foreach (var effect in EffectsOf(upgrade)) byTrigger[(int)effect.On].Add(effect);
+                // A Learn's effects, but for those its worn shape sets aside (Golden Sickle keeps the garden standing).
+                var asideBy = upgrade.Part == BranchPart.Learn ? WornOver(upgrade, loadout) : null;
+                var own = EffectsOf(upgrade);
+                for (int e = 0; e < own.Length; e++)
+                    if (!ShapeDef.SetAside(asideBy, e)) byTrigger[(int)own[e].On].Add(own[e]);
                 Rules.Apply(upgrade);
                 // A Shape mark adds the rule of the shape its spell wears, and only that one.
                 var worn = SpellBranches.Worn(upgrade, loadout);
@@ -968,6 +972,14 @@ namespace Clover.Player
         /// A mark's effects as they stand now: a Learn's twins with its Empower's numbers while that Empower is in force
         /// (<see cref="Upgrade.EmpoweredEffects"/>), else its own. What a condition it set does is read through this too.
         /// </summary>
+        // The shape worn over a Learn, when its Shape mark is learned and in force; null otherwise.
+        private ShapeDef WornOver(Upgrade learn, Build.Loadout loadout)
+        {
+            var shapeMark = Upgrade.ById(SpellBranch.ShapeId(learn.Branch.Length > 0 ? learn.Branch : learn.Id));
+            if (shapeMark == null || has == null || shapeMark.Index < 0 || shapeMark.Index >= has.Length || !has[shapeMark.Index]) return null;
+            return SpellBranches.Worn(shapeMark, loadout);
+        }
+
         public UpgradeEffect[] EffectsOf(Upgrade mark)
         {
             if (mark == null) return System.Array.Empty<UpgradeEffect>();
