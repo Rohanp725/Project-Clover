@@ -182,40 +182,50 @@ namespace Clover.Player.Trees
                 } },
                 BranchPattern.LeftMiddle));
 
-            // NEEDS: the bag as designed: open 8 s, each perfect guard or perfect dodge in that time catching the attacker's
-            // wind (thrown back 2 m), thrown things within 2 m caught too, and a second press or the time's end opening it as
-            // one cone of 7 m, 12 damage and 25 stagger for each wind held, the thrown things flying back. Until then the cast
-            // unties a bag of three winds, and each perfect guard or perfect dodge lets one out at once as that cone.
-            SpellBranch.Add(to, E, BagOfWinds, "Bag of Winds", SpellRole.Counter, BranchPattern.LeftB, TurnedAside, SpellForms.Nova,
-                new SpellSpec { Radius = 1.5f, Damage = 0f, Stagger = 0f, Stacks = 0 },
+            // The bag (a gathered spell, SpellSpec.Rings by RingSource.Turned): open 8 s, each perfect guard or perfect dodge in that
+            // time catching the attacker's wind (thrown back 2 m), three at most, and a second press or the time's end opening it
+            // as one cone of 7 m, 12 damage and 25 stagger for each wind held. NEEDS: thrown things within 2 m caught too and
+            // flying back at their throwers when it opens (thrown-attacks-caught).
+            var bag = SpellBranch.Add(to, E, BagOfWinds, "Bag of Winds", SpellRole.Counter, BranchPattern.LeftB, TurnedAside, SpellForms.Wave,
+                new SpellSpec { Reach = 7f, Arc = 60f, Damage = 12f, Stagger = 25f, Stacks = 1, Rings = 3, RingsFor = 1, RingsBy = RingSource.Turned },
                 "You untie a bag of wind at your hip. Each blow you perfect-guard or perfect-dodge is caught in it, three at most, and thrown things that come near are caught too. Press again, and it opens: a cone of seven metres that strikes harder for each wind held, and every thrown thing flies back at its thrower.",
                 UpgradeIcons.Orb,
-                // NEEDS: a fourth wind in the bag (the count's cap is the Learn's).
-                new Empower { Cooldown = 8f },
+                // A fourth wind in the bag (SpellChange.Rings).
+                new Empower { Cooldown = 8f, Rings = 4 },
                 "Bag of Winds waits 8 seconds, not 10, and holds four winds.",
-                // NEEDS: the bag kept 20 s, opened only when you choose. Until then it is the bag as above.
-                new ShapeDef { Name = "Kept Wind",
-                    Description = "The bag does not open by itself. It keeps its winds for twenty seconds, to be opened when you choose, such as on a staggered enemy." },
-                // NEEDS: the gust thrown toward the enemy you next face, not the one caught.
-                new ShapeDef { Name = "Loose Neck",
+                // The bag kept 20 s (its own press window), opened only by the second press; at the end its winds are lost (RingsLapse).
+                new ShapeDef { Name = "Kept Wind", PressWindow = 20f, Presses = new[] { new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, Do = UpgradeAction.Loose } } },
+                    Description = "The bag does not open by itself. It keeps its winds for twenty seconds, to be opened when you choose, such as on a staggered enemy.",
+                    Spell = new SpellSpec { Reach = 7f, Arc = 60f, Damage = 12f, Stagger = 25f, Stacks = 1, Rings = 3, RingsFor = 1, RingsBy = RingSource.Turned, RingsLapse = true } },
+                // Nothing is kept: the cast unties the bag for its 8 s (WithinOwnCast), and each perfect guard or perfect dodge in them
+                // throws a free Gust at once (UpgradeAction.FreeBase). NEEDS: the gust thrown toward the enemy you next face, not
+                // the way you face as it is caught.
+                new ShapeDef { Name = "Loose Neck", Form = SpellForms.Nova, Presses = new[] { new UpgradeEffect[0] },
                     Description = "Nothing is kept. Each wind leaves at once as a free Gust toward the enemy you next face.",
+                    Spell = new SpellSpec { Radius = 1.5f, Damage = 0f, Stagger = 0f, Stacks = 0 },
                     Effects = new[]
                     {
-                        new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Cone, Reach = 5f, Arc = 70f, Damage = 8f, Stagger = 20f, Affliction = AfflictionKind.Unsteady, Stacks = 2 },
-                        new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Push, Shape = HazardShape.Downwind, Amount = 3f },
-                        new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, Do = UpgradeAction.Cone, Reach = 5f, Arc = 70f, Damage = 8f, Stagger = 20f, Affliction = AfflictionKind.Unsteady, Stacks = 2 },
+                        new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, WithinOwnCast = 8f, Do = UpgradeAction.FreeBase },
+                        new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, WithinOwnCast = 8f, Do = UpgradeAction.FreeBase },
                     } },
                 "Opens two shapes of Bag of Winds, chosen at any rest fire: Kept Wind, a bag opened when you choose, or Loose Neck, every wind let out at once.",
-                // NEEDS: only when three winds are caught within 3 s. Until then a perfect dodge raises the whirlwind, once in ten seconds.
-                new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, Do = UpgradeAction.Lift, At = EffectAt.Self, Radius = 6f, Seconds = 1f, Cooldown = 10f } },
+                // Three winds caught within 3 s (RingAdded, RingsWithin): the bag bursts by itself as a whirlwind, everything within 6 m
+                // lifted, and the bag is spent with no cone (Spill).
+                new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.RingAdded, OwnBranch = true, SpentAtLeast = 3, RingsWithin = 3f, Do = UpgradeAction.Lift, At = EffectAt.Self, Radius = 6f, Seconds = 1f },
+                    new UpgradeEffect { On = UpgradeTrigger.RingAdded, OwnBranch = true, SpentAtLeast = 3, RingsWithin = 3f, Do = UpgradeAction.Spill },
+                },
                 "Catch three winds within three seconds, and the bag bursts by itself as a whirlwind: everything within six metres goes into the air.",
-                tally: new TallySpec { Name = "Winds", Cap = 3 },
                 learnEffects: new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Bank, Count = 3 },
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Spends = 1, Do = UpgradeAction.Cone, Reach = 7f, Arc = 60f, Damage = 12f, Stagger = 25f, Affliction = AfflictionKind.Unsteady, Stacks = 1 },
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, Spends = 1, Do = UpgradeAction.Cone, Reach = 7f, Arc = 60f, Damage = 12f, Stagger = 25f, Affliction = AfflictionKind.Unsteady, Stacks = 1 },
+                    // Each wind caught throws its attacker back two metres.
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, WhileGathering = true, Do = UpgradeAction.Push, Shape = HazardShape.Downwind, Amount = 2f },
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, WhileGathering = true, Do = UpgradeAction.Push, Shape = HazardShape.Downwind, Amount = 2f },
                 });
+            // Opened by the second press within its 8 s, or by itself when they are over.
+            bag.PressWindow = 8f;
+            bag.Presses = new[] { new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, Do = UpgradeAction.Loose } } };
 
             // Built by hand (DodgeRoll.PayInstead, PlayerUpgrades.SpendBreath): three breaths kept as the mark's count, one back every
             // two seconds and one for every three blows landed. With none, no dodge.

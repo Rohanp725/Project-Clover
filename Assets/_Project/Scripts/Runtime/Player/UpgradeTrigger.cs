@@ -113,5 +113,7 @@ namespace Clover.Player
         /// (SpellSpec.Ebb) by its second press. Target: none; asked of the spell's own branch, its blows not yet landed.
         /// </summary>
         SpellLoosed,
+        /// <summary>A ring (a wind) was added to a gathered spell. Target: none; asked of that spell's own branch; carries the rings it holds.</summary>
+        RingAdded,
     }
 }

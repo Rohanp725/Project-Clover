@@ -174,6 +174,47 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void TheBagCatchesAWindForEachBlowTurnedAndOpensAsOneCone()
+        {
+            var learn = Upgrade.ById(WindTree.BagOfWinds);
+            Assert.AreEqual(RingSource.Turned, learn.Spell.RingsBy, "winds come from blows turned, not landed");
+            Assert.AreEqual(3, learn.Spell.Rings);
+            Assert.AreEqual(1, learn.Spell.RingsFor, "12 damage and 25 stagger for each wind");
+            var bag = new RingGather();
+            bag.Begin(learn, learn.Spell, 3, 8f);
+            Assert.IsTrue(bag.Add(1f));
+            Assert.IsTrue(bag.Add(2f));
+            Assert.IsFalse(bag.LastWithin(3, 3f, 2f), "two winds only");
+            Assert.IsTrue(bag.Add(3.5f));
+            Assert.IsTrue(bag.LastWithin(3, 3f, 3.5f), "three within three seconds");
+            Assert.IsFalse(bag.LastWithin(3, 2f, 3.5f));
+            var cone = new SpellSpec();
+            bag.Loose(cone);
+            Assert.AreEqual(36f, cone.Damage, 1e-4f, "three winds");
+            Assert.AreEqual(75f, cone.Stagger, 1e-4f);
+            Assert.AreEqual(7f, cone.Reach, 1e-5f, "a cone of seven metres");
+            var empowered = new SpellSpec();
+            SpellChange.Copy(learn.Spell, empowered);
+            Upgrade.ById(SpellBranch.EmpowerId(WindTree.BagOfWinds)).Empower.ApplyTo(empowered);
+            Assert.AreEqual(4, empowered.Rings, "a fourth wind");
+            Assert.AreEqual(8f, PlayerUpgrades.PressesOf(learn, null, out float window) != null ? window : 0f, 1e-5f, "opened by the second press within 8 s");
+            Assert.IsTrue(learn.Effects.All(each => each.WhileGathering && each.Do == UpgradeAction.Push && each.Amount == 2f), "each attacker thrown back two metres while the bag is open");
+
+            var shapes = Upgrade.ById(SpellBranch.ShapeId(WindTree.BagOfWinds)).Shapes;
+            var kept = shapes.Single(each => each.Name == "Kept Wind");
+            Assert.IsTrue(kept.Spell.RingsLapse, "never opens by itself");
+            Assert.AreEqual(20f, kept.PressWindow, 1e-5f, "kept twenty seconds");
+            var loose = shapes.Single(each => each.Name == "Loose Neck");
+            Assert.AreEqual(0, loose.Spell.Rings, "nothing kept");
+            Assert.IsTrue(loose.Effects.All(each => each.Do == UpgradeAction.FreeBase && each.WithinOwnCast == 8f), "each wind a free Gust while it is untied");
+
+            var master = Upgrade.ById(SpellBranch.MasterId(WindTree.BagOfWinds)).Effects;
+            Assert.IsTrue(master.All(each => each.On == UpgradeTrigger.RingAdded && each.SpentAtLeast == 3 && each.RingsWithin == 3f));
+            Assert.IsTrue(master.Any(each => each.Do == UpgradeAction.Lift && each.Radius == 6f), "everything within six metres into the air");
+            Assert.IsTrue(master.Any(each => each.Do == UpgradeAction.Spill), "the bag bursts, no cone after");
+        }
+
+        [Test]
         public void AHeldStanceStandsWhileHeldBanksEveryBlowAndPaysOnLettingGo()
         {
             Assert.IsTrue(Clover.Player.Forms.ParryForm.StanceHolds(true, 2.9f, 3f), "held, within its most");

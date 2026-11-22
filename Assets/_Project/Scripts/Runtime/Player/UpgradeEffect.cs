@@ -308,6 +308,10 @@ namespace Clover.Player
         /// </summary>
         public CastMoment After;
         public float AfterWindow;
+        /// <summary>Only while its own branch's spell is begun and gathering (Bag of Winds open: each attacker's wind thrown back).</summary>
+        public bool WhileGathering;
+        /// <summary>For RingAdded: the last SpentAtLeast rings all came within this many seconds (Bag of Winds' Master: three within three).</summary>
+        public float RingsWithin;
         public AfflictionKind CastAfterCarrying = AfflictionKind.None;
 
         /// <summary>A copy with every number, its slot and its mark (an Empower's twin of its Learn's effect).</summary>

@@ -230,5 +230,9 @@ namespace Clover.Player
         /// toward where they began the ebb, reaching on past it by the spell's Reach less the ebb (The Tide Turns' second press).
         /// </summary>
         Flood,
+        /// <summary>Ends its own branch's gathered spell where it is, loosing nothing (Bag of Winds' Master: the bag burst as a whirlwind instead).</summary>
+        Spill,
+        /// <summary>Throws the base spell of its mark's element at no cost, the way the player faces, as Storm Front's Gust is (Loose Neck: each wind a free Gust).</summary>
+        FreeBase,
     }
 }

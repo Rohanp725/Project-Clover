@@ -32,13 +32,15 @@ namespace Clover.Player
         public float Walk;
         /// <summary>The stagger each blow a held stance turned loads on the next heavy blow (<see cref="SpellSpec.BankStagger"/>).</summary>
         public float BankStagger;
+        /// <summary>The most rings a gathered spell takes (<see cref="SpellSpec.Rings"/>: Bag of Winds' fourth wind).</summary>
+        public int Rings;
         /// <summary>The form carries what it strikes before it (<see cref="SpellSpec.Carries"/>).</summary>
         public bool Carries;
 
         /// <summary>True when it changes nothing.</summary>
         public bool IsEmpty =>
             Cooldown == 0f && Mana == 0f && Damage == 0f && Stagger == 0f && Reach == 0f && Radius == 0f && Arc == 0f && Seconds == 0f
-            && Interval == 0f && Count == 0 && Stacks == 0 && Delay == 0f && Speed == 0f && LingerDamage == 0f && AfflictionSeconds == 0f && ChargeBlows == 0 && Lasts == 0f && Walk == 0f && !Carries && BankStagger == 0f;
+            && Interval == 0f && Count == 0 && Stacks == 0 && Delay == 0f && Speed == 0f && LingerDamage == 0f && AfflictionSeconds == 0f && ChargeBlows == 0 && Lasts == 0f && Walk == 0f && !Carries && BankStagger == 0f && Rings == 0;
 
         /// <summary>
         /// Writes what it adds to <paramref name="learn"/>'s numbers onto <paramref name="spec"/>'s (an Empower over a shape that
@@ -114,6 +116,7 @@ namespace Clover.Player
             if (Walk > 0f) spec.Walk = Walk;
             if (Carries) spec.Carries = true;
             if (BankStagger > 0f) spec.BankStagger = BankStagger;
+            if (Rings > 0) spec.Rings = Rings;
         }
 
         /// <summary>Copies every number of one spec into another (no allocation): how a spell's own numbers are taken before changes are laid over them.</summary>
@@ -165,6 +168,8 @@ namespace Clover.Player
             into.Rings = from.Rings;
             into.RingsFor = from.RingsFor;
             into.Ebb = from.Ebb;
+            into.RingsBy = from.RingsBy;
+            into.RingsLapse = from.RingsLapse;
             into.HeldStance = from.HeldStance;
             into.Bank = from.Bank;
             into.BankDamage = from.BankDamage;

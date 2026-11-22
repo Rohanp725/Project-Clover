@@ -190,6 +190,8 @@ namespace Clover.Player
         /// <summary>True while a gathered spell waits to be loosed, and the rings it holds, for the HUD and probes.</summary>
         public bool Gathering => rings.Active;
         public int RingsHeld => rings.Rings;
+        /// <summary>Counts for probes: gathered spells ended with nothing loosed (Bag of Winds burst as a whirlwind).</summary>
+        public int RingsSpilled { get; private set; }
         /// <summary>Counts for probes: gathered spells loosed, and the rings the last one held.</summary>
         public int RingsLoosed { get; private set; }
         public int LastRingsLoosed { get; private set; }
@@ -1172,8 +1174,12 @@ namespace Clover.Player
         private void Update()
         {
             if (toFinish.Count > 0) FinishBroken();
-            // A gathered spell nobody loosed goes by itself when its press window is over.
-            if (rings.Due(Time.time)) LooseRings();
+            // A gathered spell nobody loosed goes by itself when its press window is over, or is lost when it lapses (Kept Wind).
+            if (rings.Due(Time.time))
+            {
+                if (rings.Lapses) rings.End();
+                else LooseRings();
+            }
             if (mending.Owed > 0f && defence != null && !defence.IsDead) defence.Heal(mending.Take(Time.deltaTime), false);
             sinceBlowLanded += Time.deltaTime;
             if (hasWell && well > 0f && sinceBlowLanded < WellBlowSeconds && defence != null && !defence.IsDead && defence.Health.Fraction < 0.999f)
@@ -1464,6 +1470,9 @@ namespace Clover.Player
             if (effect.WithinOwnCast > 0f && !InCastWindow(LastCastOf(effect.Owner), Time.time, effect.WithinOwnCast)) return;
             // Only for a cast begun in the window after its moment (the ledger's spell-windows).
             if (effect.CastAfter != CastMoment.None && !Moments.Within(effect.CastAfter, effect.CastWindow, castBeganAt, effect.CastAfterCarrying)) return;
+            // Only while its own branch's spell gathers (Bag of Winds open), and with its rings come quickly enough.
+            if (effect.WhileGathering && !(rings.Active && effect.Owner != null && rings.Mark.Branch == effect.Owner.Branch)) return;
+            if (effect.RingsWithin > 0f && !rings.LastWithin(Mathf.Max(1, effect.SpentAtLeast), effect.RingsWithin, Time.time)) return;
             // Only within a moment's window as the trigger comes (Waiting Thunder's Master).
             if (effect.After != CastMoment.None && !Moments.Within(effect.After, effect.AfterWindow, Time.time)) return;
             if (effect.NeedsAttacker && !IsAttacker(target, turnedBy != null ? turnedBy : null, turnedAt, Time.time)) return;
@@ -2014,6 +2023,16 @@ namespace Clover.Player
                     break;
                 case UpgradeAction.Flood:
                     if (Ebbing) LooseFlood();
+                    break;
+                case UpgradeAction.Spill:
+                    if (rings.Active && effect.Owner != null && rings.Mark.Branch == effect.Owner.Branch)
+                    {
+                        rings.End();
+                        RingsSpilled++;
+                    }
+                    break;
+                case UpgradeAction.FreeBase:
+                    if (element != null) element.CastBaseFree(OwnElement(effect.Owner).Name);
                     break;
                 case UpgradeAction.CarryOn:
                 {
@@ -2792,7 +2811,7 @@ namespace Clover.Player
             Vector3 at = struck != null ? struck.transform.position : transform.position;
             bool finisher = outcome == HitOutcome.Finisher;
             // Each blow landed adds a ring of light up the blade to a gathered spell (Daybreak).
-            if (rings.Add() && element != null) ElementLook.Sparks(OwnElement(rings.Mark), transform.position + Vector3.up * 1.2f, Vector3.up, 0.3f);
+            if (rings.By == RingSource.Blows) AddRing();
             if (hasHeat && Heat.Landed())
             {
                 Vfx.Play(VfxKind.Embers, transform.position + Vector3.up * 1.2f, Vector3.up, 0.8f);
@@ -3175,6 +3194,8 @@ namespace Clover.Player
         {
             Moments.Note(CastMoment.PerfectGuard, Time.time);
             NoteGuard(attacker);
+            // A bag open catches the attacker's wind (Bag of Winds).
+            if (rings.By == RingSource.Turned) AddRing();
             // Open Furnace sets off every burning enemy near, the attacker among them, so the one detonation is not also made.
             bool detonate = hasDetonate && !hasFurnace;
             if (hasFurnace) OpenFurnace();
@@ -3456,6 +3477,7 @@ namespace Clover.Player
         public void OnPerfectDodge(Vector3 attacker)
         {
             Moments.Note(CastMoment.PerfectDodge, Time.time);
+            if (rings.By == RingSource.Turned) AddRing();
             // The attacker is the target, as with a perfect guard; a thrown bolt leaves only the place it came from.
             var dodged = combat != null ? combat.EnemyAt(attacker, 2.5f) : null;
             NoteTurned(dodged);
@@ -4032,6 +4054,17 @@ namespace Clover.Player
             finally { answeringCast = 0; }
             castSource = null;
             return true;
+        }
+
+        // One more ring to the spell gathering (a blow landed, a blow turned): shown, and told to its own branch's marks.
+        private void AddRing()
+        {
+            if (!rings.Add(Time.time)) return;
+            var mark = rings.Mark;
+            if (element != null) ElementLook.Sparks(OwnElement(mark), transform.position + Vector3.up * 1.2f, Vector3.up, 0.3f);
+            castSource = mark;
+            try { Trigger(UpgradeTrigger.RingAdded, null, transform.position, false, rings.Rings); }
+            finally { castSource = null; }
         }
 
         // Looses an ebb's flood: its form cast from here back along the line toward where the ebb began and on past it.

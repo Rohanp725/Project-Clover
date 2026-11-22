@@ -123,6 +123,9 @@ namespace Clover.Player
         /// </summary>
         public int Rings;
         public int RingsFor = 6;
+        /// <summary>What adds a ring (weapon blows landed, or blows turned), and true when the window's end loses them rather than loosing them (Kept Wind).</summary>
+        public RingSource RingsBy;
+        public bool RingsLapse;
         /// <summary>
         /// Above zero: the first press draws the player this many metres straight back from the enemy faced, untouchable for
         /// the moment, and the spell's form is loosed only by its second press (UpgradeAction.Flood), from wherever they stand

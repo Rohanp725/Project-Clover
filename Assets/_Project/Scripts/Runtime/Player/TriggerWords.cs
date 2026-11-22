@@ -85,6 +85,7 @@ namespace Clover.Player
                 case UpgradeTrigger.GrownBurst: return "something you grew bursts";
                 case UpgradeTrigger.GrownBolt: return "something you grew throws a bolt";
                 case UpgradeTrigger.SpellLoosed: return "a gathered spell is loosed";
+                case UpgradeTrigger.RingAdded: return "a gathered spell takes another ring";
                 default: return "its moment comes";
             }
         }
