@@ -209,7 +209,8 @@ namespace Clover.Player
                     foreach (var one in combat.LastStruck)
                         if (one is Component body && body != null) BodyFlames.HoldBack(body.transform, BodyFlames.AfterStrike);
                     if (!art) Show(combat, element, print, 3f);
-                    Burn(print);
+                    // The bow's shot burns where its arrow stops (BurnWhereShotStopped), not down the lane.
+                    if (!combat.InfusedShot) Burn(print);
                     if (deep)
                     {
                         // Burnt Offering: a pillar of flame on the enemy struck, 30 damage, and its burn goes off.
@@ -477,6 +478,12 @@ namespace Clover.Player
             for (int i = 0; i < 3; i++)
                 BurnPatch(Ground(print.Origin + print.Forward * (print.Reach * (i + 0.5f) / 3f)), 0.8f);
         }
+
+        /// <summary>The Great Bow's Fire shot: Burning Edge's ground fire on one small scorch with embers where the arrow stopped.</summary>
+        public static void BurnWhereShotStopped(Vector3 at) => BurnPatch(Ground(at), ShotBurnRadius);
+
+        /// <summary>The radius of the ground fire where a Fire shot's arrow stopped, in metres.</summary>
+        public const float ShotBurnRadius = 0.9f;
 
         // One patch of the strike's ground fire: the flames (the hazard's own real fire) stand on char with ember cracks
         // glowing in it (StrikeScorch, the burning floors' own look), a little wider than the flames, so they burn on

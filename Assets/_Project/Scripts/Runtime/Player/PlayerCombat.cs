@@ -1992,6 +1992,9 @@ namespace Clover.Player
             var carried = shotElement;
             shotElement = null;
             if (carried == null) return;
+            // Fire's Burning Edge burns where the arrow stopped, not down the lane from the bow (the owner's rule: the
+            // effect follows the weapon's path).
+            if (carried.Name == Elements.Fire) ElementSteel.BurnWhereShotStopped(at);
             if (!inSomeone)
             {
                 ShotMisses++;
@@ -2005,6 +2008,9 @@ namespace Clover.Player
             if (flown < ShotTraceMetres - 1f) Clover.Player.Forms.ElementLooks.EndHeld(shotTrace);
             shotTrace = -1;
         }
+
+        /// <summary>True while the move is the Great Bow's infused shot drawn in its own look: its element's ground waits for the arrow.</summary>
+        public bool InfusedShot => slamDrawn && drawnShape == Clover.Player.Forms.ElementMoves.Shot;
 
         /// <summary>How far out the shot's trace is drawn (the recipe's arrow stopped 6.5 m out).</summary>
         public const float ShotTraceMetres = 6.5f;
