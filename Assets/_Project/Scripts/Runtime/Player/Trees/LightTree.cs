@@ -346,12 +346,14 @@ namespace Clover.Player.Trees
                 // for six rings), and the shapes' own wall and column left as they are (LearnOnly).
                 new Empower { Damage = 15f, LearnOnly = true },
                 "Each ring of the beam strikes for 10, not 8.",
-                // NEEDS: each blow it stops adding a ring, and what is left loosed as the beam by a second press (gathered-rings:
-                // the wall's own stopping of blows is form-pieces); stopping thrown attacks as well (form-pieces). Until then the
-                // wall form stands before you four seconds and bursts along its width when its time is up or your heavy blow breaks it.
+                // The wall form stands before you four seconds and screens blows from its far side; each blow it stops adds a ring
+                // (SpellSpec.RingsBy Stopped, eight at most) to the Learn's own beam, loosed with what it gathered by a second press
+                // or when the wall falls (RingGather.Form: through the Learn's beam form, the Learn's numbers and Empower); the wall
+                // comes down as it is loosed, and bursts for nothing. The order of presses is the plan's question 17 (built as a).
+                // NEEDS: stopping thrown attacks as well (form-pieces).
                 new ShapeDef { Name = "Red Before the Sun", Form = SpellForms.Wall,
                     Description = "The rings are not loosed as a beam. They stand before you as a curved shield of red dawn three metres wide for four seconds, which stops thrown attacks and blows from the front. Each blow it stops adds a ring; press again to loose what is left as the beam. Light's one shield, and still a beam at the end.",
-                    Spell = new SpellSpec { Reach = 1.5f, Arc = 3f, Delay = 0.15f, Seconds = 4f, Radius = 2.5f, Damage = 48f, Stagger = 36f, Stacks = 1 } },
+                    Spell = new SpellSpec { Reach = 1.5f, Arc = 3f, Delay = 0.15f, Seconds = 4f, Radius = 2.5f, Damage = 0f, Stagger = 0f, Stacks = 0, Rings = 8, RingsFor = 6, RingsBy = RingSource.Stopped } },
                 // The afflictions on you are cleared as it comes down (UpgradeAction.Cleanse, as it is loosed). NEEDS: enemy clouds,
                 // flame, frost and hazards burned away inside (purify). The column is the nova form, gathered as the beam is: 6 a ring.
                 new ShapeDef { Name = "High Noon", Form = SpellForms.Nova,

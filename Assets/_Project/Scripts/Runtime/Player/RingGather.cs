@@ -7,6 +7,8 @@ namespace Clover.Player
         Blows,
         /// <summary>Each blow perfectly guarded or perfectly dodged (Bag of Winds: the attacker's wind caught).</summary>
         Turned,
+        /// <summary>Each blow a spell's own wall stopped (Red Before the Sun: the shield of dawn), gathered into the Learn's spell.</summary>
+        Stopped,
     }
 
     /// <summary>
@@ -30,6 +32,8 @@ namespace Clover.Player
         public SpellSpec Spec { get; } = new SpellSpec();
 
         public bool Active => Mark != null;
+        /// <summary>The form it is loosed through when not its branch's worn one (Red Before the Sun: the Learn's beam); null for that.</summary>
+        public string Form { get; private set; }
         /// <summary>What adds its rings, and whether its time's end loses them rather than loosing them.</summary>
         public RingSource By => Spec.RingsBy;
         public bool Lapses => Spec.RingsLapse;
@@ -37,9 +41,10 @@ namespace Clover.Player
         private readonly float[] addedAt = new float[16];
 
         /// <summary>Begins gathering <paramref name="mark"/>'s spell as <paramref name="spec"/> has it, loosed by itself at <paramref name="until"/>.</summary>
-        public void Begin(Upgrade mark, SpellSpec spec, int tag, float until)
+        public void Begin(Upgrade mark, SpellSpec spec, int tag, float until, string form = null)
         {
             Mark = mark;
+            Form = string.IsNullOrEmpty(form) ? null : form;
             SpellChange.Copy(spec, Spec);
             Most = System.Math.Max(1, spec.Rings);
             Rings = 0;
@@ -90,6 +95,7 @@ namespace Clover.Player
         public void End()
         {
             Mark = null;
+            Form = null;
             Rings = 0;
         }
 

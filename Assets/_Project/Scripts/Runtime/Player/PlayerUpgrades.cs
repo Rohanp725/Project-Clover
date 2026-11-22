@@ -5215,7 +5215,21 @@ namespace Clover.Player
             for (int i = 0; i < spec.FlaskCost; i++) defence.Flasks.TryThrow();
             if (mark.Index >= 0 && mark.Index < castAt.Length) castAt[mark.Index] = Time.time;
             WornCasts++;
-            if (spec.Rings > 0)
+            if (spec.Rings > 0 && spec.RingsBy == RingSource.Stopped)
+            {
+                // The shape's own wall stands, and each blow it stops gathers a ring into the Learn's spell, loosed through the
+                // Learn's form by a second press or when the wall falls (Red Before the Sun).
+                var gathered = branches.PlainSpecOf(mark, RunState.Unlocked, plainGathered);
+                if (gathered != null)
+                {
+                    gathered.Rings = spec.Rings;
+                    gathered.RingsFor = spec.RingsFor;
+                    gathered.RingsBy = RingSource.Stopped;
+                    rings.Begin(mark, gathered, cast.Cast, Time.time + Mathf.Max(0.15f, spec.Delay) + Mathf.Max(0.5f, spec.Seconds), mark.Form);
+                    gatheringWall = form as Forms.RunningForm;
+                }
+            }
+            else if (spec.Rings > 0)
             {
                 // Begun, not loosed: the blows landed from now each add a ring, and a second press (or the press window's end)
                 // looses it with what it gathered (LooseRings).
@@ -5293,6 +5307,16 @@ namespace Clover.Player
             return true;
         }
 
+        // The Learn's spell a wall gathers into (Red Before the Sun), and the wall's form, ended when the rings are loosed.
+        private readonly SpellSpec plainGathered = new SpellSpec();
+        private Forms.RunningForm gatheringWall;
+
+        /// <summary>A blow was stopped by a spell's wall standing between it and the player: a ring for a spell that gathers them so.</summary>
+        public void OnStopped()
+        {
+            if (rings.Active && rings.By == RingSource.Stopped) AddRing();
+        }
+
         // One more ring to the spell gathering (a blow landed, a blow turned): shown, and told to its own branch's marks.
         private void AddRing()
         {
@@ -5344,8 +5368,12 @@ namespace Clover.Player
                 rings.End();
                 return;
             }
+            string loosedAs = rings.Form;
             rings.Loose(loosedSpec);
-            var form = SpellForms.Get(SpellBranches.FormOf(mark, RunState.Unlocked, ReadLoadout()));
+            // The shield comes down as its rings are loosed (Red Before the Sun).
+            if (loosedAs != null && gatheringWall != null) Forms.SpellWorks.EndRunsOf(gatheringWall);
+            gatheringWall = null;
+            var form = SpellForms.Get(loosedAs ?? SpellBranches.FormOf(mark, RunState.Unlocked, ReadLoadout()));
             if (form == null) return;
             var cast = element.NewCast(loosedSpec, mark.Name, mark);
             cast.Cast = tag;

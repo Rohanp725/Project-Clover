@@ -509,3 +509,9 @@ default.
     - c) No cut: the carry alone, and the critical next blow.
 
     **Recommended: a.** It needs no new clip and reads as the eagle striking.
+17. **Red Before the Sun's presses** (gathered-rings, second-press). The design says the rings "stand before you as a shield" and "press again to loose what is left as the beam".
+    - a) The cast raises the shield at once; each blow it stops adds a ring; a second press, or the shield's fall after 4 s, looses them as the beam (built so).
+    - b) The cast gathers rings by your blows as Daybreak does; a second press raises them as the shield; blows it stops add more; a third press looses the beam.
+    - c) As a, but a heavy blow on your own shield looses it.
+
+    **Recommended: a.** Two presses like every other gathered spell, and the shield is up when you need it.

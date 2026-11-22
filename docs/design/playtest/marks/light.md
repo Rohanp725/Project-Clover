@@ -283,11 +283,11 @@ the next blows on that enemy critical.
 
 **When it happens.** Whenever you cast Daybreak, using the shape you picked. If you have not bought this, you cast the plain beam.
 
-**The numbers.** 3 Shards, and the same 45 mana. Red Before the Sun: a wall 3 metres wide stands 1.5 metres in front of you for 4 seconds. Nothing can walk through it or reach you from the other side. When its time is up, or when your heavy blow hits it, it bursts along its width for 48 damage, 36 stagger and a Mark. High Noon: it is started and built up with rings like the beam. When you fire it, a column 5 metres across lands on you, dealing 6 damage and 6 stagger for each ring and a Mark to everything inside, and clearing every affliction on you.
+**The numbers.** 3 Shards, and the same 45 mana. Red Before the Sun: a wall 3 metres wide stands 1.5 metres in front of you for 4 seconds. Nothing can walk through it or reach you from the other side. Each blow it stops adds a ring of light, up to eight. Press the button again, or wait for the wall to fall, and the wall comes down and its rings fire as Daybreak's beam: 8 damage and 6 stagger a ring (10 damage with the Empower), and a Mark. High Noon: it is started and built up with rings like the beam. When you fire it, a column 5 metres across lands on you, dealing 6 damage and 6 stagger for each ring and a Mark to everything inside, and clearing every affliction on you.
 
 **Works with.** Red Before the Sun: archers and charges coming at you, a build that counters attacks, Unblemished. High Noon: being surrounded, Weighed, Spoken Sentence.
 
-**Not built yet.** Red Before the Sun should add rings for each blow it stops, and fire what is left as the beam with a second press; for now, it bursts where it stands. It should also stop thrown attacks. High Noon doesn't yet burn away enemy clouds, flames, frost and danger zones.
+**Not built yet.** Red Before the Sun doesn't stop thrown attacks yet. High Noon doesn't yet burn away enemy clouds, flames, frost and danger zones.
 
 **Example.** Use High Noon in the middle of a pack. Everything around you is Marked at once, and the cuts that follow are critical hits.
 

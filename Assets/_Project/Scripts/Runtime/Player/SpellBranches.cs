@@ -174,6 +174,19 @@ namespace Clover.Player
             return spec;
         }
 
+        /// <summary>
+        /// The Learn's own spell with its Empower, whatever shape is worn (Red Before the Sun gathers into the Learn's beam while
+        /// its own wall stands); null when the Learn has no spell.
+        /// </summary>
+        public SpellSpec PlainSpecOf(Upgrade learn, ICollection<string> learned, SpellSpec into)
+        {
+            if (learn == null || learn.Spell == null || into == null) return null;
+            string branch = learn.Branch.Length > 0 ? learn.Branch : learn.Id;
+            SpellChange.Copy(learn.Spell, into);
+            if (Empowered(branch, learned)) EmpowerOf(branch)?.ApplyTo(into);
+            return into;
+        }
+
         /// <summary>Seconds the slot waits after the spell: the table's, the shape's, then the Empower's. For a base spell its kit casts, the base wait with the Empower's.</summary>
         public float CooldownOf(Upgrade learn, ICollection<string> learned, Loadout loadout)
         {

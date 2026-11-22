@@ -508,7 +508,12 @@ namespace Clover.Player
                 return HitOutcome.PerfectGuard;
             }
             // A wall of the element between the blow and the player takes it.
-            if (hit.HasOrigin && Clover.Player.Forms.SpellWorks.Screens(hit.Origin, transform.position)) return HitOutcome.Dodged;
+            if (hit.HasOrigin && Clover.Player.Forms.SpellWorks.Screens(hit.Origin, transform.position))
+            {
+                // A blow the wall stopped: a ring for a spell gathering them (Red Before the Sun).
+                if (upgrades != null) upgrades.OnStopped();
+                return HitOutcome.Dodged;
+            }
 
             if (player.Dodge.IsInvulnerable)
             {

@@ -1492,5 +1492,32 @@ namespace Clover.Tests
             Assert.AreEqual(Clover.Player.Trees.Duo.TurnedToStoneDuo.UnderfootPassed, Upgrade.ById(Clover.Player.Trees.Duo.TurnedToStoneDuo.StoneUnderfoot).Effects.Last().State.Id, "last, after the stone is set");
             Assert.AreEqual(6, PlayerUpgrades.DodgePathSteps(8f, 1.5f), "an 8 m stride looked along at every point 1.5 m apart");
         }
+
+        [Test]
+        public void RedBeforeTheSunGathersTheBlowsItStopsIntoTheBeam()
+        {
+            var shape = Upgrade.ById(SpellBranch.ShapeId(LightTree.Daybreak)).Shapes.Single(each => each.Name == "Red Before the Sun");
+            Assert.AreEqual(SpellForms.Wall, shape.Form, "a shield stands first");
+            Assert.AreEqual(RingSource.Stopped, shape.Spell.RingsBy, "each blow it stops adds a ring");
+            Assert.AreEqual(8, shape.Spell.Rings);
+            Assert.AreEqual(0f, shape.Spell.Damage, 1e-5f, "the shield's fall strikes nothing: the beam is the blow");
+
+            var learn = Upgrade.ById(LightTree.Daybreak);
+            var learned = new System.Collections.Generic.HashSet<string> { LightTree.Daybreak, SpellBranch.EmpowerId(LightTree.Daybreak) };
+            var plain = new SpellBranches().PlainSpecOf(learn, learned, new SpellSpec());
+            Assert.AreEqual(15f, plain.Damage, 1e-5f, "the Learn's beam with its Empower");
+            Assert.AreEqual(12f, plain.Reach, 1e-5f);
+
+            var gather = new RingGather();
+            plain.Rings = 8;
+            gather.Begin(learn, plain, 7, 4.15f, learn.Form);
+            Assert.AreEqual(SpellForms.Beam, gather.Form, "loosed through the Learn's beam, not the wall");
+            Assert.IsTrue(gather.Add(1f) && gather.Add(2f) && gather.Add(3f));
+            var loosed = new SpellSpec();
+            Assert.IsTrue(gather.Loose(loosed));
+            Assert.AreEqual(15f * 3f / 6f, loosed.Damage, 1e-4f, "three blows stopped: half the beam written for six");
+            Assert.IsNull(gather.Form, "forgotten once loosed");
+            Assert.IsTrue(Upgrade.ById(LightTree.Daybreak).Presses[0].Any(each => each.Do == UpgradeAction.Loose), "the second press looses it");
+        }
     }
 }
