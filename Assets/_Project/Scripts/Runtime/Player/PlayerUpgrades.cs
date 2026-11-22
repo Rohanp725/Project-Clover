@@ -1572,6 +1572,15 @@ namespace Clover.Player
                 case UpgradeAction.Lane:
                 {
                     float length = Or(effect.Reach, 8f), half = Or(effect.Radius, 0.6f), every = Or(effect.Interval, 0.03f);
+                    if (effect.AimAt != AfflictionKind.None)
+                    {
+                        // To the nearest other enemy carrying what it seeks, and no farther; with none, the target alone.
+                        var end = combat.EnemyCarrying(centre, length, effect.AimAt, effect.AimAt2, false, subject);
+                        Vector3 toEnd = end != null ? end.transform.position - centre : Vector3.zero;
+                        toEnd.y = 0f;
+                        length = Mathf.Max(0.5f, toEnd.magnitude);
+                        if (toEnd.sqrMagnitude > 0.04f) aim = toEnd.normalized;
+                    }
                     int patches = LanePatches(length, half);
                     var run = new HazardSpec
                     {

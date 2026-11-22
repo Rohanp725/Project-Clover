@@ -34,6 +34,45 @@ namespace Clover.Tests
             Assert.IsFalse(PlayerUpgrades.ReactionHas(-1, AfflictionKind.Chill));
         }
 
+        private sealed class Afflicted : IAfflictable
+        {
+            public AfflictionSet Afflictions { get; } = new AfflictionSet { Reactions = new ReactionEngine((who, pair, laid) => { }, () => 0) };
+        }
+
+        [Test]
+        public void AnAimSeeksEitherAfflictionAndTheNearestOrFarthest()
+        {
+            var wet = new Afflicted();
+            wet.Afflictions.Lay(AfflictionKind.Soaked, 1, 0f, 1f, LaySource.Spell);
+            var marked = new Afflicted();
+            marked.Afflictions.Lay(AfflictionKind.Marked, 1, 0f, 1f, LaySource.Spell);
+            var clean = new Afflicted();
+            Assert.IsTrue(PlayerCombat.CarriesEither(wet, AfflictionKind.Soaked, AfflictionKind.Marked));
+            Assert.IsTrue(PlayerCombat.CarriesEither(marked, AfflictionKind.Soaked, AfflictionKind.Marked), "either will do");
+            Assert.IsFalse(PlayerCombat.CarriesEither(clean, AfflictionKind.Soaked, AfflictionKind.Marked));
+            Assert.IsFalse(PlayerCombat.CarriesEither(wet, AfflictionKind.None, AfflictionKind.None), "asking nothing finds nothing to aim at");
+            Assert.IsTrue(PlayerCombat.Better(4f, 9f, false), "nearer is better");
+            Assert.IsTrue(PlayerCombat.Better(9f, 4f, true), "farther, when the farthest is wanted");
+        }
+
+        [Test]
+        public void TheAimedMarksSeekWhatTheySay()
+        {
+            var flat = Upgrade.ById(Clover.Player.Trees.Duo.TheBoltRunsTrueDuo.Shape).Shapes.First(shape => shape.Name == "Laid Flat").Effects.Single(effect => effect.Do == UpgradeAction.Lane);
+            Assert.AreEqual(AfflictionKind.Marked, flat.AimAt);
+            Assert.AreEqual(AfflictionKind.Static, flat.AimAt2);
+            Assert.AreEqual(10f, flat.Reach, 1e-5f);
+            Assert.AreEqual(AfflictionKind.Soaked, Upgrade.ById(BloomTree.StranglingVine).Spell.AimAt, "Strangling Vine");
+            var seeks = Upgrade.ById(Clover.Player.Trees.Duo.LiveIronDuo.LightningSeeksIron).Spell;
+            Assert.AreEqual(AfflictionKind.Sundered, seeks.AimAt);
+            Assert.IsTrue(seeks.AimFarthest);
+            Assert.AreEqual(0.5f, seeks.AimMissShare, 1e-5f, "the one faced at half with none");
+            var road = Upgrade.ById(Clover.Player.Trees.Duo.CaughtLightDuo.TheGodsRoad).Spell;
+            Assert.AreEqual(AfflictionKind.Soaked, road.AimAt);
+            Assert.AreEqual(AfflictionKind.Marked, road.AimAt2);
+            Assert.AreEqual(AfflictionKind.Soaked, Upgrade.ById(Clover.Player.Trees.Duo.SeizedDuo.TheFlashing).Spell.AimAt);
+        }
+
         [Test]
         public void TheMarksAnswerWhatTheReactionStruck()
         {

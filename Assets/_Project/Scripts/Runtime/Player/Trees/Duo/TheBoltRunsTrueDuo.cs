@@ -29,9 +29,8 @@ namespace Clover.Player.Trees.Duo
         {
             const string A = Elements.Light, B = Elements.Lightning;
 
-            // NEEDS: a line laid from one enemy to the nearest carrying a given affliction, all on it struck (aim-at-afflicted):
-            // Laid Flat's bolt along the ground to the nearest Marked or Static enemy within 10 m; now an arc to the nearest
-            // Marked one.
+            // Laid Flat's bolt runs along the ground from the reacting enemy to the nearest Marked or charged enemy within
+            // 10 m, striking all on the line (a Lane with UpgradeEffect.AimAt); with none such, the reacting one alone.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "The Bolt Runs True: Laid Flat or Struck Again", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -41,13 +40,12 @@ namespace Clover.Player.Trees.Duo
                     new ShapeDef
                     {
                         Name = "Laid Flat",
-                        Description = "The thread of light lies along the ground to the nearest other Marked enemy within 10 m, and 0.5 s later the bolt runs the line: 18 and two Static to it and to the one at the far end. Then its own Static discharges, as before.",
+                        Description = "The thread of light lies along the ground to the nearest other Marked or charged enemy within 10 m, and 0.5 s later the bolt runs the line: 18 and two Static to it, to the one at the far end and to all between. Then its own Static discharges, as before.",
                         Effects = new[]
                         {
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Flat, Seconds = 0.5f } },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Flat, Do = UpgradeAction.Burst, Radius = 0.6f, Damage = 18f, Stagger = 20f, Affliction = AfflictionKind.Static, Stacks = 2 },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Flat, Do = UpgradeAction.Arc, FromTarget = true, LeapsTo = AfflictionKind.Marked, Count = 1, Reach = 10f,
-                                Damage = 18f, Stagger = 20f, Affliction = AfflictionKind.Static, Stacks = 2 },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Flat, Do = UpgradeAction.Lane, AimAt = AfflictionKind.Marked, AimAt2 = AfflictionKind.Static, Reach = 10f,
+                                Radius = 0.6f, Damage = 18f, Stagger = 20f, Affliction = AfflictionKind.Static, Stacks = 2 },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Flat, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Static, Radius = 4f, Stagger = 5f },
                         },
                     },

@@ -42,5 +42,14 @@ namespace Clover.Player
         public float LingerDamage = 5f;
         /// <summary>Health the cast takes and leaves grey, to be won back by blows. A spell with this may cost no mana. It cannot be cast by one who has no more health than this.</summary>
         public float HealthCost;
+        /// <summary>
+        /// Not None: the cast is aimed at the nearest enemy within its reach carrying this (or <see cref="AimAt2"/>), before
+        /// the one faced (the ledger's aim-at-afflicted: Strangling Vine rises under the nearest Soaked enemy). With
+        /// <see cref="AimFarthest"/>, the farthest such. With none such, the one faced, its damage by <see cref="AimMissShare"/> (0: whole).
+        /// </summary>
+        public Clover.Gameplay.AfflictionKind AimAt = Clover.Gameplay.AfflictionKind.None;
+        public Clover.Gameplay.AfflictionKind AimAt2 = Clover.Gameplay.AfflictionKind.None;
+        public bool AimFarthest;
+        public float AimMissShare;
     }
 }

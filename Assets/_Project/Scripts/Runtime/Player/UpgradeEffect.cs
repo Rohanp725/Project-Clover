@@ -80,6 +80,13 @@ namespace Clover.Player
         /// <summary>For the Reacted and ReactionStruck triggers: only a reaction with this affliction in its pair ("every reaction with Chill in it"). None: any.</summary>
         public AfflictionKind ReactionWith = AfflictionKind.None;
         /// <summary>
+        /// For a Lane: not None, it runs from the target to the nearest other enemy within Reach carrying this (or
+        /// <see cref="AimAt2"/>), striking all on the line, and stops there (Laid Flat's bolt along the ground to the next
+        /// Marked or charged enemy); with none such it strikes the target alone.
+        /// </summary>
+        public AfflictionKind AimAt = AfflictionKind.None;
+        public AfflictionKind AimAt2 = AfflictionKind.None;
+        /// <summary>
         /// For ConditionStruck: only a blow from this side, in degrees from the enemy's face (0) to its back (180), between
         /// <see cref="SideLeast"/> and <see cref="SideMost"/> (the ledger's side-of-blow: Rime's crust breaks only from the
         /// side that faced you, Mock Suns' blows only from a flank). Both zero: any side. A blow whose side is not known is answered.

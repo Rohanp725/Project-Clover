@@ -55,7 +55,7 @@ Light are both carried.
 **Not built yet.** It only works on enemies caught when the net forms, not on enemies who walk onto it later.
 
 ## caughtlight.road
-**What it does.** A rainbow of falling spray arches from you to the enemy you face, if it is within 10 metres. You run along it, and nothing can hit you. You come down on the enemy with a falling cut that deals 18 damage and 30 stagger and adds Soaked and a Mark. The road stays for 3 seconds and Soaks and Marks anything standing in it.
+**What it does.** A rainbow of falling spray arches from you to the nearest Soaked or Marked enemy within 10 metres. If there is none, it goes to the enemy you face. You run along it, and nothing can hit you. You come down on the enemy with a falling cut that deals 18 damage and 30 stagger and adds Soaked and a Mark. The road stays for 3 seconds and Soaks and Marks anything standing in it.
 
 **When it happens.** Cast it from a spell slot while you carry both Water and Light. Press that slot's button (hold L2 and a face button, or press 1 to 4). The first time it lands, it charges your blade with Water.
 
@@ -65,4 +65,4 @@ Light are both carried.
 
 **Example.** Run the road to the archer, and catch it in the net where it stands.
 
-**Not built yet.** The road doesn't yet look for a Soaked or Marked enemy first, before the one you face. Pressing light blow as you land doesn't yet make the cut a critical hit; for now, the heavy blow after it is.
+**Not built yet.** Pressing light blow as you land doesn't yet make the cut a critical hit; for now, the heavy blow after it is.

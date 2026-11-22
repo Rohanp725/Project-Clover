@@ -1374,6 +1374,43 @@ namespace Clover.Player
         }
 
         /// <summary>The enemy the player is facing within a range; failing one, the nearest all around; failing that, null.</summary>
+        /// <summary>
+        /// The nearest (or the farthest) enemy within <paramref name="radius"/> of a point that carries either affliction
+        /// given, other than <paramref name="except"/>; null when none does (the ledger's aim-at-afflicted).
+        /// </summary>
+        public Component EnemyCarrying(Vector3 point, float radius, AfflictionKind kind, AfflictionKind orKind = AfflictionKind.None, bool farthest = false, Component except = null)
+        {
+            Component found = null;
+            float best = 0f;
+            int count = Overlap(point + Vector3.up, radius);
+            for (int i = 0; i < count; i++)
+            {
+                var other = overlaps[i];
+                if (other.transform.root == transform.root) continue;
+                if (!targetOf.TryGetValue(other, out Component target))
+                {
+                    target = other.GetComponentInParent<IDamageable>() as Component;
+                    targetOf[other] = target;
+                }
+                if (target == null || target == except || !CarriesEither(target, kind, orKind)) continue;
+                Vector3 offset = target.transform.position - point;
+                offset.y = 0f;
+                float distance = offset.sqrMagnitude;
+                if (distance > radius * radius) continue;
+                if (found != null && !Better(distance, best, farthest)) continue;
+                best = distance;
+                found = target;
+            }
+            return found;
+        }
+
+        /// <summary>True when what is struck carries either affliction asked (None asks for nothing more).</summary>
+        public static bool CarriesEither(object target, AfflictionKind kind, AfflictionKind orKind) =>
+            (kind != AfflictionKind.None && Carries(target, kind)) || (orKind != AfflictionKind.None && Carries(target, orKind));
+
+        /// <summary>Whether a distance beats the best so far: nearer, or farther when the farthest is wanted.</summary>
+        public static bool Better(float distance, float best, bool farthest) => farthest ? distance > best : distance < best;
+
         public Transform EnemyAhead(float range, float coneDegrees = 110f)
         {
             Transform ahead = FindEnemy(transform.forward, coneDegrees, range, false);

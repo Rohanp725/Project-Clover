@@ -99,14 +99,15 @@ namespace Clover.Player.Trees.Duo
             // The duo spell, a movement on a 10 s cooldown (SpellTimings), bought with 5 Shards once both are carried. The drill
             // form makes you the bolt: in 0.25 s, along the line to the enemy faced, it cuts every enemy on it and notches it
             // (the branch's first element), and each takes two Static.
-            // NEEDS: going to the farthest Sundered enemy within 10 m, the enemy faced at half with none (aim-at-afflicted;
-            // now the enemy faced, whole); a perfect guard in the 2 s before the cast sending it on to a second (spell-windows).
+            // It goes to the farthest notched enemy within 10 m, or the enemy faced at half with none (SpellSpec.AimAt,
+            // AimFarthest, AimMissShare). NEEDS: a perfect guard in the 2 s before the cast sending it on to a second (spell-windows).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = LightningSeeksIron, Name = "Lightning Seeks Iron", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Role = SpellRole.Movement, Requires = new[] { ThreeSmiths, BareWire }, Icon = UpgradeIcons.Bolt,
                 Description = "You become a bolt and in a quarter of a second, untouchable, go to the farthest notched enemy within 10 m, cutting every enemy on the line for 10, 15 stagger and two Static; arriving, 16 and two Static.",
                 Form = SpellForms.Drill,
-                Spell = new SpellSpec { Reach = 10f, Radius = 1.2f, Count = 1, Damage = 10f, Stagger = 15f, Stacks = 1, Speed = 40f },
+                Spell = new SpellSpec { Reach = 10f, Radius = 1.2f, Count = 1, Damage = 10f, Stagger = 15f, Stacks = 1, Speed = 40f,
+                    AimAt = AfflictionKind.Sundered, AimFarthest = true, AimMissShare = 0.5f },
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Static, Stacks = 2 } },
             }, HeartPattern.Spell));
         }

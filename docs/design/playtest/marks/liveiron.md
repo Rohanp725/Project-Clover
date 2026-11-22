@@ -63,4 +63,4 @@ Metal and Lightning are both carried.
 
 **Example.** Shoot through a line of soldiers as a bolt, and every one of them is live.
 
-**Not built yet.** For now, it goes toward the enemy you face, not the farthest notched one, and it doesn't hit with its own blow when you arrive. A perfect guard in the 2 seconds before you cast it doesn't yet send you on to a second notched enemy.
+**Not built yet.** It goes toward the farthest notched enemy within 10 metres, or toward the enemy you face at half damage if none is notched, but it doesn't hit with its own blow when you arrive. A perfect guard in the 2 seconds before you cast it doesn't yet send you on to a second notched enemy.

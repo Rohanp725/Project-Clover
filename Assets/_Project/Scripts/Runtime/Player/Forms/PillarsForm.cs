@@ -28,7 +28,9 @@ namespace Clover.Player.Forms
             float radius = cast.Spec.Radius;
             for (int i = 0; i < run.Count; i++)
             {
-                var enemy = cast.Combat.EnemyNear(cast.Origin, cast.Reach, taken);
+                // The first rises under what the spell seeks (SpellSpec.AimAt), when it found one; the rest under the nearest.
+                var enemy = i == 0 && cast.Spec.AimAt != Clover.Gameplay.AfflictionKind.None && cast.Target != null && cast.Target.GetComponentInParent<Clover.Gameplay.IDamageable>() is Component sought
+                    ? sought : cast.Combat.EnemyNear(cast.Origin, cast.Reach, taken);
                 if (enemy != null)
                 {
                     taken.Add((Clover.Gameplay.IDamageable)enemy);

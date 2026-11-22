@@ -439,6 +439,19 @@ namespace Clover.Player
             float reach = spec.Reach * (upgrades != null ? upgrades.Stats.Multiplier(PlayerStat.SpellReach) : 1f);
             Transform target = combat.EnemyAhead(reach);
             Vector3 forward = transform.forward;
+            // Aimed at the nearest (or farthest) enemy carrying what the spell seeks, before the one faced.
+            if (spec.AimAt != AfflictionKind.None)
+            {
+                var sought = combat.EnemyCarrying(transform.position, reach, spec.AimAt, spec.AimAt2, spec.AimFarthest);
+                if (sought != null)
+                {
+                    target = sought.transform;
+                    Vector3 toward = target.position - transform.position;
+                    toward.y = 0f;
+                    if (toward.sqrMagnitude > 0.01f) forward = toward.normalized;
+                }
+                else if (spec.AimMissShare > 0f) damage *= spec.AimMissShare;
+            }
             return new SpellCast
             {
                 Name = name,

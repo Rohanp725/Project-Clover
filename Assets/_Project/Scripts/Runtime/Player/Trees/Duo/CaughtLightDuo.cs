@@ -106,14 +106,14 @@ namespace Clover.Player.Trees.Duo
             // The duo spell, bought with 5 Shards once both are carried (no god gives it): a movement on a 9 s cooldown
             // (SpellTimings). The step form runs the rainbow to the enemy faced, cast in Water (Soaked), and the falling cut
             // Marks it, so Caught Light opens under it; the road of spray stands 3 s on the line you ran, Soaking and Marking.
-            // NEEDS: the road aimed at a Soaked or Marked enemy within 10 m first (aim-at-afflicted); light pressed as you land
-            // making the cut critical (spell-windows); the arch of falling, lit spray (form-pieces).
+            // The road runs to the nearest Soaked or Marked enemy within 10 m before the one faced (SpellSpec.AimAt).
+            // NEEDS: light pressed as you land making the cut critical (spell-windows); the arch of falling, lit spray (form-pieces).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = TheGodsRoad, Name = "The Gods' Road", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Role = SpellRole.Movement, Requires = new[] { BrightWater, SunOnTheSpray }, Icon = UpgradeIcons.Arrow,
-                Description = "A rainbow of falling spray arches from you to the enemy you face, within 10 m. You run it, untouchable, and come down on it with a falling cut, 18 and 30 stagger, Soaked and Marked. The road stands 3 s and Soaks and Marks what stands in it.",
+                Description = "A rainbow of falling spray arches from you to the nearest Soaked or Marked enemy within 10 m, or else the enemy you face. You run it, untouchable, and come down on it with a falling cut, 18 and 30 stagger, Soaked and Marked. The road stands 3 s and Soaks and Marks what stands in it.",
                 Form = SpellForms.Step,
-                Spell = new SpellSpec { Reach = 10f, Damage = 18f, Stagger = 30f, Stacks = 1, Seconds = 1.5f },
+                Spell = new SpellSpec { Reach = 10f, Damage = 18f, Stagger = 30f, Stacks = 1, Seconds = 1.5f, AimAt = AfflictionKind.Soaked, AimAt2 = AfflictionKind.Marked },
                 Effects = new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Marked, Stacks = 1 },

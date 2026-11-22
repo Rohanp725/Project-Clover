@@ -76,4 +76,4 @@ Lightning and Water are both carried.
 
 **Example.** Start a fight with it on a pack: five enemies lock up at once.
 
-**Not built yet.** It doesn't look for the nearest soaked enemy or run along the floor yet, and its path doesn't stay wet. Your next blow on the last enemy it reached doesn't set off everything it touched yet.
+**Not built yet.** It goes first to the nearest soaked enemy in reach (or the one you face), but it doesn't run along the floor yet, and its path doesn't stay wet. Your next blow on the last enemy it reached doesn't set off everything it touched yet.

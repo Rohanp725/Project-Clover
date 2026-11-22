@@ -5,17 +5,15 @@ reaction, The Bolt Runs True (`docs/design/steel/pairs_d4.md`, "Light and Lightn
 while Light and Lightning are both carried.
 
 ## boltrunstrue.shape
-**What it does.** Flat or Again unlocks two new shapes for The Bolt Runs True. At a rest fire, you pick which shape your The Bolt Runs True uses. From then on, it uses that shape instead of the plain one. **Laid Flat**: the thread of light lies along the ground to the next Marked enemy, and the bolt runs along that line. **Struck Again**: no big bolt. Instead, the thread stays on the enemy while its Mark lasts, and each critical hit calls a smaller bolt down it.
+**What it does.** Flat or Again unlocks two new shapes for The Bolt Runs True. At a rest fire, you pick which shape your The Bolt Runs True uses. From then on, it uses that shape instead of the plain one. **Laid Flat**: the thread of light lies along the ground to the next Marked or charged enemy, and the bolt runs along that line. **Struck Again**: no big bolt. Instead, the thread stays on the enemy while its Mark lasts, and each critical hit calls a smaller bolt down it.
 
 **When it happens.** Every time The Bolt Runs True goes off while you carry both Light and Lightning. The Bolt Runs True goes off when Static lands on a Marked enemy, or when a Mark lands on a charged one. If you have not bought this mark, or you carry only one of the two elements, you get the plain The Bolt Runs True.
 
-**The numbers.** Mix, 3 Shards. Laid Flat: 0.5 seconds after it goes off, it deals 18 damage, 20 stagger and two Static to the enemy and to the nearest other Marked enemy within 10 metres. Then the enemy's Static goes off, dealing 7 damage per stack within 4 metres. Struck Again: while the enemy's Mark lasts, each weapon blow on it (blows on a Marked enemy are your critical hits) calls down a bolt for 9 damage, 15 stagger and a Static. After The Bolt Runs True goes off on an enemy, it can't go off on that enemy again for 5 seconds.
+**The numbers.** Mix, 3 Shards. Laid Flat: 0.5 seconds after it goes off, the bolt runs along the ground from the enemy to the nearest other Marked or charged enemy within 10 metres. It deals 18 damage, 20 stagger and two Static to both of them and to everything on the line between. With no such enemy, it hits only the first one. Then the enemy's Static goes off, dealing 7 damage per stack within 4 metres. Struck Again: while the enemy's Mark lasts, each weapon blow on it (blows on a Marked enemy are your critical hits) calls down a bolt for 9 damage, 15 stagger and a Static. After The Bolt Runs True goes off on an enemy, it can't go off on that enemy again for 5 seconds.
 
 **Works with.** Charged Light to set it up, Diamond Guard, The Diamond Falls, Diamond Thunder, The Net of Jewels.
 
 **Example.** Two Marked captains far apart: use Laid Flat, and the bolt runs between them. One Marked brute: use Struck Again, and every critical hit calls down the sky.
-
-**Not built yet.** For now, Laid Flat's bolt jumps to the enemy at the far end, instead of hitting everything on the line in between, and it only looks for Marked enemies, not charged ones.
 
 ## boltrunstrue.chargedlight
 **What it does.** Your light blows add Static to a Marked enemy, and a burst of Static Marks every enemy it reaches.
