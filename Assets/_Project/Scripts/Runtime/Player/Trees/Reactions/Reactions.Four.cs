@@ -93,11 +93,13 @@ namespace Clover.Player.Trees
             // girdled: held 1.5 s while the roots crush, 20 damage and 40 stagger, and a fifth of that (4) heals the
             // player. The roots hold 8 s for the blows to come.
             // Coiled, it neither leaps nor steps back (ConditionFlags.Mired on the binding roots).
-            // NEEDS: standing things that block: the hollow trunk left for 8 s where it dies girdled, blocking and Seeding and
-            // Cursing what touches it.
+            // The hollow trunk left for 8 s where it dies girdled (UpgradeAction.Raise on ConditionDied), blocking, and Seeding and
+            // Cursing what touches it (a patch round it, its bites laying both).
             to.Add(Reaction(AfflictionKind.Seeded, AfflictionKind.Cursed,
-                "Seeded meets Cursed: black fig roots coil round it, slowing it. Each weapon blow draws them tighter, mends you 1 and opens it to your weapon; at four coils they crush it, 20, held 1.5 s.",
+                "Seeded meets Cursed: black fig roots coil round it, slowing it. Each weapon blow draws them tighter, mends you 1 and opens it to your weapon; at four coils they crush it, 20, held 1.5 s. If it dies in them, a hollow trunk stands where it fell.",
                 6f,
+                new UpgradeEffect { On = UpgradeTrigger.ConditionDied, Condition = Coils, Do = UpgradeAction.Raise, Raises = Clover.World.StandingKind.HollowTrunk, RaiseAt = Clover.World.StandingPlace.At, Seconds = 8f, Amount = 40f },
+                new UpgradeEffect { On = UpgradeTrigger.ConditionDied, Condition = Coils, Do = UpgradeAction.Hazard, Radius = 1.2f, Seconds = 8f, Interval = 1f, Damage = 0f, Affliction = AfflictionKind.Seeded, Stacks = 1, BitesLay = AfflictionKind.Cursed },
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Coils, Seconds = 8f, Blows = 3 } },
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Bound, Seconds = 8f, Pace = 0.75f, Flags = ConditionFlags.Mired } },
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Tight, Seconds = 8f, Flags = ConditionFlags.WeaponTakenShare, Scale = 1.06f } },

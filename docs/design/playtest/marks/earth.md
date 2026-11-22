@@ -243,11 +243,11 @@ Rise's rocks, a pillar, a heap of rubble.
 
 **When it happens.** Whenever you cast Stone Rise, using the shape you picked. If you have not bought this, the plain stone rises.
 
-**The numbers.** 3 Shards. Raised Stone: for 6 seconds, your next heavy blow on the enemy it lifted throws a cone of shards from you through it. The cone is 5 metres long and 70 degrees wide, and deals 18 damage, 20 stagger and one Tremor. Dropped From the Apron: it lands on the nearest enemy within 5 metres, 0.6 seconds after you cast it, in a 1.5-metre circle around it, for 24 damage, 45 stagger and two Tremor. For 6 seconds, a heavy blow on that enemy crushes a path 8 metres long past it, away from you, dealing 16 damage, 30 stagger and one Tremor to each enemy it hits.
+**The numbers.** 3 Shards. Raised Stone: the stone pillar stays standing 1.1 metres beside the enemy it lifted for 6 seconds (only one at a time). It blocks bodies and thrown attacks, enemies walk around it, and their blows can break it (40 health). Your heavy blow on the pillar shatters it into a cone of shards from you through it. The cone is 5 metres long and 70 degrees wide, and deals 18 damage, 20 stagger and one Tremor. Dropped From the Apron: it lands on the nearest enemy within 5 metres, 0.6 seconds after you cast it, in a 1.5-metre circle around it, for 24 damage, 45 stagger and two Tremor. For 6 seconds, a heavy blow on that enemy crushes a path 8 metres long past it, away from you, dealing 16 damage, 30 stagger and one Tremor to each enemy it hits.
 
 **Works with.** Raised Stone: Heavy Hand, The Slow Hand. Dropped From the Apron: a pack in a hallway, Cairn on the path it shook.
 
-**Not built yet.** Raised Stone's pillar should stay standing next to the enemy, block things, and be hit itself (for now, the stones sink back like normal, and the heavy blow lands on the enemy). Dropped From the Apron's boulder should fall from above and lie there as something to hit, breaking on a wall or a large enemy (for now, stone rises under the nearest enemy, and the heavy blow on that enemy sends the path on).
+**Not built yet.** Dropped From the Apron's boulder should fall from above and lie there as something to hit, breaking on a wall or a large enemy (for now, stone rises under the nearest enemy, and the heavy blow on that enemy sends the path on). It has no model yet.
 
 **Example.** Use Dropped From the Apron on the first of three soldiers in a hallway. One heavy blow on it crushes the two behind.
 

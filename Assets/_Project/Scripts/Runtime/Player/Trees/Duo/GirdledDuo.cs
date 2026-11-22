@@ -29,7 +29,7 @@ namespace Clover.Player.Trees.Duo
             const string A = Elements.Life, B = Elements.Dark;
 
             // Corpse Flowers' 3 grey health made real for each weapon blow landed within 3 m of one of its flowers, for their 8 s
-            // (UpgradeAction.Regain armed as the flowers stand, with the flowers' Kin). NEEDS: as the plain reaction, the hollow trunk (standing-things).
+            // (UpgradeAction.Regain armed as the flowers stand, with the flowers' Kin). As the plain reaction, the hollow trunk where one dies in the roots.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Girdled: Corpse Flowers or Fig in the Crown", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -144,6 +144,8 @@ namespace Clover.Player.Trees.Duo
                 new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = coils, By = StruckBy.Weapon, AtCount = 3, Do = UpgradeAction.Burst, Radius = 0.5f, Damage = 20f, Stagger = 40f,
                     Affliction = AfflictionKind.Cursed },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = coils, By = StruckBy.Weapon, AtCount = 3, Do = UpgradeAction.Heal, Amount = 4f },
+                new UpgradeEffect { On = UpgradeTrigger.ConditionDied, Condition = coils, Do = UpgradeAction.Raise, Raises = Clover.World.StandingKind.HollowTrunk, RaiseAt = Clover.World.StandingPlace.At, Seconds = 8f, Amount = 40f },
+                new UpgradeEffect { On = UpgradeTrigger.ConditionDied, Condition = coils, Do = UpgradeAction.Hazard, Radius = 1.2f, Seconds = 8f, Interval = 1f, Damage = 0f, Affliction = AfflictionKind.Seeded, Stacks = 1, BitesLay = AfflictionKind.Cursed },
             };
             effects.AddRange(more);
             return effects.ToArray();

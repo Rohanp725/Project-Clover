@@ -9,13 +9,13 @@ both carried.
 
 **When it happens.** Every time Frost Heave goes off while you carry both Ice and Earth. Frost Heave goes off when Tremor lands on a chilled enemy, or when Chill lands on a shaken one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Frost Heave.
 
-**The numbers.** Mix, 3 Shards. Both shapes heave the enemy up 0.4 seconds later. It takes 12 damage and 25 stagger and is thrown into the air for 1 second. Sorted Stones: every other enemy within 3 metres is pushed 3 metres away. Pingo: 2 seconds later, the mound bursts for 24 damage and two Chill within 2.5 metres. After Frost Heave goes off on an enemy, it can't go off on that enemy again for 6 seconds.
+**The numbers.** Mix, 3 Shards. Both shapes heave the enemy up 0.4 seconds later. It takes 12 damage and 25 stagger and is thrown into the air for 1 second, and the frozen mound stays behind it as with the plain Frost Heave. Sorted Stones: every other enemy within 3 metres is pushed 3 metres away. Pingo: 2 seconds later, the mound bursts apart for 24 damage and two Chill within 2.5 metres. After Frost Heave goes off on an enemy, it can't go off on that enemy again for 6 seconds.
 
 **Works with.** Hoarfrost and Stone Rise to set it up, Hard Frost, The Hag's Staff.
 
 **Example.** A one-on-one fight in a crowd: Sorted Stones clears space around you. A pack chasing you: use Pingo, and lead them over it.
 
-**Not built yet.** No mound or ring of stones appears on the floor yet. For now, Sorted Stones just shoves the other enemies away.
+**Not built yet.** Sorted Stones' ring of stones doesn't appear on the floor yet. For now, it just shoves the other enemies away.
 
 ## frostheave.hardfrost
 **What it does.** Heavy blows on a chilled enemy shake it. Heavy blows on a shaken enemy chill it.
@@ -31,15 +31,13 @@ both carried.
 ## frostheave.footing
 **What it does.** A perfect guard while you stand within 2 metres of a mound heaves the ground under the attacker.
 
-**When it happens.** Each perfect guard (press the guard button just before a blow lands) against an enemy that has both Chill and Tremor.
+**When it happens.** Each perfect guard (press the guard button just before a blow lands) while you stand within 2 metres of a frozen mound.
 
 **The numbers.** Mix, 3 Shards. Frost Heave goes off on the attacker, even if it would normally have to wait.
 
 **Works with.** Frost Heave, Hard Frost, Mountain Stance.
 
 **Example.** A chilled, shaken brute swings. Guard it perfectly, and it goes flying up.
-
-**Not built yet.** For now, it works on any attacker that has both afflictions, instead of needing you to stand next to a mound.
 
 ## frostheave.permafrost
 **What it does.** Tremor doesn't fade from a chilled enemy.

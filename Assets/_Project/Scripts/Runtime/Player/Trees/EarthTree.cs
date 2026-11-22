@@ -273,15 +273,16 @@ namespace Clover.Player.Trees
                 // 18 damage and 36 stagger. The Empower's numbers reach the kit's own cast too (PlayerUpgrades.BaseEmpower, read by PlayerElement).
                 new Empower { Cooldown = 6f, Damage = 18f, Stagger = 36f },
                 "Stone Rise waits 6 seconds, not 7, and strikes for 18 damage and 36 stagger.",
-                // NEEDS: the pillar left beside the enemy for 6 s, blocking bodies and thrown attacks, and
-                // struck itself (standing-things). Until then the stones sink back as usual, and a heavy blow on the lifted enemy within
-                // 6 s shatters the stone as a cone of shards from you through it.
+                // The pillar left beside the enemy for 6 s as a standing thing (UpgradeAction.Raise): it blocks bodies and thrown
+                // attacks and takes enemy blows, and your heavy blow on it (UpgradeTrigger.StandingStruck, By Heavy) shatters it
+                // into a cone of shards from you through it.
                 new ShapeDef { Name = "Raised Stone",
                     Description = "The pillar that lifted the enemy stays beside it for six seconds and blocks bodies and thrown attacks. A heavy blow of yours on it shatters it into a cone of shards away from you, five metres and 70 degrees: 18 damage, 20 stagger and Tremor. Raise it, fight round it, break it through them.",
                     Effects = new[]
                     {
-                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Raised, Seconds = 6f, EndsWith = ConditionBlow.Heavy } },
-                        new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Raised, By = StruckBy.Heavy, Do = UpgradeAction.Cone, Reach = 5f, Arc = 70f, Damage = 18f, Stagger = 20f, Affliction = T, Stacks = 1 },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Raise, Raises = Clover.World.StandingKind.StonePillar, RaiseAt = Clover.World.StandingPlace.Beside, Reach = 1.1f, Seconds = 6f, Amount = 40f, Limit = 1 },
+                        new UpgradeEffect { On = UpgradeTrigger.StandingStruck, By = StruckBy.Heavy, Do = UpgradeAction.Cone, Reach = 5f, Arc = 70f, Damage = 18f, Stagger = 20f, Affliction = T, Stacks = 1 },
+                        new UpgradeEffect { On = UpgradeTrigger.StandingStruck, By = StruckBy.Heavy, Do = UpgradeAction.BreakStanding, Radius = 0.5f },
                     } },
                 // NEEDS: a boulder falling from above with its shadow growing (form-pieces), lying 6 s as a thing struck and
                 // rolled, breaking on a wall or a large enemy (standing-things). Until then stone rises under the nearest enemy

@@ -191,10 +191,11 @@ namespace Clover.Player.Trees
                 } },
                 BranchPattern.LeftMiddle));
 
-            // NEEDS: the wall's 60 health and its touch chilling, and the burst thrown forward as a cone of 6 m. As built it
-            // chills only when it bursts, round itself.
+            // The wall stands as a standing thing with 60 health that enemy blows strike (SpellSpec.WallHealth; broken, it bursts),
+            // and what stands against it is chilled once a second (TouchStacks). NEEDS: the burst thrown forward as a cone of
+            // 6 m (form-pieces); as built it bursts round itself.
             SpellBranch.Add(to, E, WinterWall, "Winter Wall", SpellRole.Breaker, BranchPattern.LeftB, SplinterWard, SpellForms.Wall,
-                new SpellSpec { Reach = 2f, Arc = 5f, Delay = 0.2f, Seconds = 6f, Radius = 4f, Damage = 30f, Stagger = 50f, Stacks = 3 },
+                new SpellSpec { Reach = 2f, Arc = 5f, Delay = 0.2f, Seconds = 6f, Radius = 4f, Damage = 30f, Stagger = 50f, Stacks = 3, WallHealth = 60f, TouchStacks = 1 },
                 "A wall of ice five metres wide rises two metres ahead for six seconds. It stops blows, and what touches it is chilled. Your heavy blow bursts it forward as a cone: 30 damage, 50 stagger and three Chill. 35 mana.",
                 UpgradeIcons.Wall,
                 new Empower { Mana = 30f, Damage = 36f },
@@ -203,11 +204,10 @@ namespace Clover.Player.Trees
                 new ShapeDef { Name = "Shield Wall",
                     Description = "A shorter wall, three metres, that moves two metres ahead of you at walking pace for four seconds. Advance behind it.",
                     Change = new SpellChange { Arc = 3f, Seconds = 4f } },
-                // NEEDS: the wall bursting 1.5 s after an enemy first strikes it (a wall struck, standing-things). Until then it
-                // bursts by itself three seconds after it rises.
+                // It bursts by itself a second and a half after an enemy first strikes it (SpellSpec.BurstAfterStruck, StandingRules.BurstDue).
                 new ShapeDef { Name = "Cracked Wall",
                     Description = "It bursts by itself a second and a half after an enemy first strikes it. A trap that answers the enemy, not you.",
-                    Change = new SpellChange { Seconds = 3f } },
+                    Change = new SpellChange { BurstAfterStruck = 1.5f } },
                 "Opens two shapes of Winter Wall, chosen at any rest fire: Shield Wall, a wall you advance behind, or Cracked Wall, a trap that answers the enemy.",
                 // NEEDS: only a heavy blow's burst within 0.3 s of an enemy striking the wall (blow-about-to-land). Until then
                 // every burst freezes what it reaches.

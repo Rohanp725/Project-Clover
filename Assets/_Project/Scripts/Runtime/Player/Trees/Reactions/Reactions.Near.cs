@@ -103,10 +103,11 @@ namespace Clover.Player.Trees
 
             // Earth and Metal (7). An anvil at its back for 5 s; the next heavy blow drives it on: Sundered to full, and a
             // ring of sparks in 3 m: 10 damage, 15 stagger and a notch on each.
-            // NEEDS: standing things that block: the iron-faced stone itself, which also counts as "stone at its back"
-            // for Hammer and Anvil.
+            // The iron-faced stone stands at its back (UpgradeAction.Raise: a standing thing that blocks, 40 health), and it is
+            // stone at its back for Hammer and Anvil (UpgradeEffect.StoneAtBack).
             to.Add(Reaction(AfflictionKind.Tremor, AfflictionKind.Sundered,
                 "Tremor meets Sundered: an anvil heaves up at its back for 5 s. Your next heavy blow drives it on: its armour breaks to full and sparks ring out, 10 and a notch to all within 3 m.",
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Raise, Raises = Clover.World.StandingKind.AnvilStone, RaiseAt = Clover.World.StandingPlace.Behind, Reach = 1.1f, Seconds = 5f, Amount = 40f },
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Anvil, Seconds = 5f, EndsWith = ConditionBlow.Heavy } },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Anvil, By = StruckBy.Heavy, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Sundered, Stacks = ToFull },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Anvil, By = StruckBy.Heavy, Do = UpgradeAction.Burst, Radius = 3f, Damage = 10f, Stagger = 15f,

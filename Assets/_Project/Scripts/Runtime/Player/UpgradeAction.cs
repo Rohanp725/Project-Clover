@@ -268,5 +268,13 @@ namespace Clover.Player
         /// for Damage, Stagger and the affliction, and each adds Seconds to the surge.
         /// </summary>
         CallBladesHome,
+        /// <summary>
+        /// Raises a standing thing (World.StandingThings): UpgradeEffect.Raises, at UpgradeEffect.RaiseAt Reach metres from the
+        /// enemy named (or ahead of you), for Seconds, with Amount health, bursting Delay seconds after it is first struck when
+        /// set, drawing enemies within Draws onto it, and Limit of its mark's at once (the oldest crumbling).
+        /// </summary>
+        Raise,
+        /// <summary>Breaks the standing thing of its own mark nearest where the moment was (Raised Stone shattered by a heavy blow).</summary>
+        BreakStanding,
     }
 }

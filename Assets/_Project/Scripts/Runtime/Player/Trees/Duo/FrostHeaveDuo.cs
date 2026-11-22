@@ -27,8 +27,9 @@ namespace Clover.Player.Trees.Duo
         {
             const string A = Elements.Ice, B = Elements.Earth;
 
-            // NEEDS: standing things that block (standing-things): the mound, and Sorted Stones' ring that nothing crosses
-            // (now the heave shoves the others 3 m out).
+            // Both shapes leave the rimed mound as the plain reaction does (UpgradeAction.Raise); Pingo's bursts with its core.
+            // NEEDS: Sorted Stones' ring of stones that nothing crosses (a model of its own, standing-things); now the heave
+            // shoves the others 3 m out.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Frost Heave: Sorted Stones or Pingo", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -45,6 +46,7 @@ namespace Clover.Player.Trees.Duo
                             new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Sorted, Do = UpgradeAction.Burst, Radius = 0.5f, Damage = 12f, Stagger = 25f, Affliction = AfflictionKind.Tremor },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Sorted, Do = UpgradeAction.Lift, Seconds = 1f, Stagger = 1f },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Sorted, Do = UpgradeAction.Push, Radius = 3f, Amount = 3f },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Sorted, Do = UpgradeAction.Raise, Raises = Clover.World.StandingKind.RimedMound, RaiseAt = Clover.World.StandingPlace.Behind, Reach = 1.1f, Seconds = 6f, Amount = 30f },
                         },
                     },
                     new ShapeDef
@@ -58,6 +60,8 @@ namespace Clover.Player.Trees.Duo
                             new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = PingoHeave, Do = UpgradeAction.Burst, Radius = 0.5f, Damage = 12f, Stagger = 25f, Affliction = AfflictionKind.Tremor },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = PingoHeave, Do = UpgradeAction.Lift, Seconds = 1f, Stagger = 1f },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Pingo, Do = UpgradeAction.Burst, Radius = 2.5f, Damage = 24f, Affliction = AfflictionKind.Chill, Stacks = 2 },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = PingoHeave, Do = UpgradeAction.Raise, Raises = Clover.World.StandingKind.RimedMound, RaiseAt = Clover.World.StandingPlace.Behind, Reach = 1.1f, Seconds = 6f, Amount = 30f },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Pingo, Do = UpgradeAction.BreakStanding, Radius = 2.5f },
                         },
                     },
                 },
@@ -74,13 +78,12 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.LeftLow));
 
-            // NEEDS: standing near a mound (standing-things); now a perfect guard against an attacker carrying both heaves it,
-            // whatever the rest.
+            // Only while you stand within 2 m of a mound (UpgradeEffect.NearStanding).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = FrozenFooting, Name = "Frozen Footing", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Shield,
                 Description = "A perfect guard while you stand within 2 m of a mound heaves the ground under the attacker.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Needs = AfflictionKind.Chill, Needs2 = AfflictionKind.Tremor, Do = UpgradeAction.ForceReaction, Reaction = Reaction } },
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, NearStanding = 2f, Raises = Clover.World.StandingKind.RimedMound, Do = UpgradeAction.ForceReaction, Reaction = Reaction } },
             }, HeartPattern.RightLow));
 
             // Tremor kept from fading while the enemy carries Chill (AfflictionRules.KeepWhile).

@@ -64,6 +64,31 @@ namespace Clover.World
         }
     }
 
+    /// <summary>Where a mark raises its standing thing, against the enemy its moment names.</summary>
+    public enum StandingPlace
+    {
+        /// <summary>Where the enemy stands, or fell (the hollow trunk).</summary>
+        At,
+        /// <summary>Behind the enemy as you see it, its front to you (the anvil "at its back", the heaved mound).</summary>
+        Behind,
+        /// <summary>Beside the enemy, to one side of your line to it (Raised Stone's pillar).</summary>
+        Beside,
+        /// <summary>Ahead of you, along the way you face.</summary>
+        Ahead,
+    }
+
+    /// <summary>A blow that landed on a standing thing, kept until the player's marks read it.</summary>
+    public struct StandingNews
+    {
+        public int Slot;
+        public Standing Thing;
+        public StandingStruck Struck;
+        /// <summary>The blow was the player's heavy blow (Raised Stone shatters under one).</summary>
+        public bool Heavy;
+        /// <summary>The blow was the player's (not an enemy's).</summary>
+        public bool ByPlayer;
+    }
+
     /// <summary>What a blow on a standing thing did to it.</summary>
     public enum StandingStruck
     {
@@ -90,6 +115,9 @@ namespace Clover.World
         public bool Struck;
         /// <summary>Who raised it, by the raising mark's index (-1: none), so a mark can count, find and break its own.</summary>
         public int Owner;
+        /// <summary>Above zero: enemies within this many metres turn on it and strike it instead of you (a thing that draws them).</summary>
+        public float Draws;
+        public float RaisedAt;
     }
 
     /// <summary>The plain rules of a standing thing.</summary>
@@ -124,6 +152,93 @@ namespace Clover.World
         public static bool BurstDue(in Standing thing, float now) =>
             thing.Active && thing.BurstAfterStruck > 0f && thing.Struck && now - thing.FirstStruckAt >= thing.BurstAfterStruck;
 
+        /// <summary>
+        /// Where a mark raises its thing: at, behind or beside the enemy at <paramref name="enemy"/> as seen from the player at
+        /// <paramref name="player"/>, <paramref name="gap"/> metres off, or that far ahead of the player along <paramref name="forward"/>.
+        /// </summary>
+        public static Vector3 PlaceFor(StandingPlace place, Vector3 player, Vector3 forward, Vector3 enemy, float gap)
+        {
+            Vector3 line = enemy - player;
+            line.y = 0f;
+            Vector3 way = line.sqrMagnitude > 0.0001f ? line.normalized : (forward.sqrMagnitude > 0.0001f ? new Vector3(forward.x, 0f, forward.z).normalized : Vector3.forward);
+            switch (place)
+            {
+                case StandingPlace.Behind: return enemy + way * gap;
+                case StandingPlace.Beside: return enemy + Vector3.Cross(Vector3.up, way) * gap;
+                case StandingPlace.Ahead:
+                    Vector3 ahead = forward;
+                    ahead.y = 0f;
+                    return player + (ahead.sqrMagnitude > 0.0001f ? ahead.normalized : way) * gap;
+                default: return enemy;
+            }
+        }
+
+        /// <summary>How far round the thing's middle a body must keep: its round radius, or half its box's longer side.</summary>
+        public static float Reach(StandingKind kind)
+        {
+            var shape = StandingShape.For(kind);
+            return shape.Box ? Mathf.Max(shape.Size.x, shape.Size.z) * 0.5f : shape.Size.x;
+        }
+
+        /// <summary>True when a point within <paramref name="radius"/> of <paramref name="at"/> touches the thing's footprint on the ground.</summary>
+        public static bool Touches(in Standing thing, Vector3 at, float radius)
+        {
+            if (!thing.Active) return false;
+            var shape = StandingShape.For(thing.Kind);
+            Vector3 offset = at - thing.Position;
+            offset.y = 0f;
+            if (!shape.Box) return offset.magnitude <= shape.Size.x + radius;
+            Vector3 across = Vector3.Cross(Vector3.up, thing.Forward);
+            float x = Mathf.Abs(Vector3.Dot(offset, across)), z = Mathf.Abs(Vector3.Dot(offset, thing.Forward));
+            return x <= shape.Size.x * 0.5f + radius && z <= shape.Size.z * 0.5f + radius;
+        }
+
+        /// <summary>True when the straight line from <paramref name="from"/> to <paramref name="to"/> passes through the thing (a blow or a throw it stops).</summary>
+        public static bool Blocks(in Standing thing, Vector3 from, Vector3 to)
+        {
+            if (!thing.Active) return false;
+            Vector3 line = to - from;
+            line.y = 0f;
+            float length = line.magnitude;
+            if (length < 0.01f) return false;
+            Vector3 way = line / length;
+            // Sampled along the line, a quarter metre apart: walls are thick enough that nothing slips between the samples.
+            for (float along = 0.25f; along < length - 0.25f; along += 0.25f)
+                if (Touches(thing, from + way * along, 0f)) return true;
+            return false;
+        }
+
+        /// <summary>
+        /// A body at <paramref name="at"/> about to move by <paramref name="step"/>, kept off the thing: a step that would
+        /// take it inside is turned along the thing's edge, to whichever side it was already leaning. Unchanged when clear.
+        /// </summary>
+        public static Vector3 Around(in Standing thing, Vector3 at, Vector3 step, float bodyRadius)
+        {
+            Vector3 flat = new Vector3(step.x, 0f, step.z);
+            if (!thing.Active || flat.sqrMagnitude < 0.000001f) return step;
+            // Looked at a body's width ahead, so it turns before it is pressed against the thing.
+            Vector3 ahead = at + flat.normalized * Mathf.Max(flat.magnitude, bodyRadius);
+            if (!Touches(thing, ahead, bodyRadius)) return step;
+            Vector3 toThing = thing.Position - at;
+            toThing.y = 0f;
+            if (toThing.sqrMagnitude < 0.0001f) return step;
+            Vector3 side;
+            if (StandingShape.For(thing.Kind).Box)
+            {
+                // Along a wall's face, toward its nearer end.
+                side = Vector3.Cross(Vector3.up, thing.Forward);
+                if (Vector3.Dot(side, -toThing) < 0f) side = -side;
+            }
+            else
+            {
+                // Round a stone, to whichever side it was already leaning.
+                side = Vector3.Cross(Vector3.up, toThing.normalized);
+                if (Vector3.Dot(side, flat) < 0f) side = -side;
+            }
+            Vector3 turned = side * flat.magnitude;
+            return new Vector3(turned.x, step.y, turned.z);
+        }
+
         /// <summary>True when <paramref name="at"/> lies behind the thing as seen from <paramref name="from"/>, within <paramref name="reach"/> of it: "stone at its back".</summary>
         public static bool AtItsBack(in Standing thing, Vector3 from, Vector3 at, float reach)
         {
@@ -148,6 +263,10 @@ namespace Clover.World
         private static readonly StandingThingBody[] bodies = new StandingThingBody[Most];
         private static readonly StandingThingBody[] prefabs = new StandingThingBody[System.Enum.GetValues(typeof(StandingKind)).Length];
         private static int next;
+        private const int MostNews = 16;
+        private static readonly StandingNews[] news = new StandingNews[MostNews];
+        private static int newsCount;
+        private static int tickedFrame = -1;
 
         // Domain reload is off: nothing raised in the last play may stand in this one.
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -163,6 +282,8 @@ namespace Clover.World
             }
             for (int i = 0; i < prefabs.Length; i++) prefabs[i] = null;
             next = 0;
+            newsCount = 0;
+            tickedFrame = -1;
         }
 
         /// <summary>The prefab a kind is raised from, set by the scene's <see cref="StandingLibrary"/>; null until the editor step wires it.</summary>
@@ -174,7 +295,7 @@ namespace Clover.World
         /// (0: until broken) with <paramref name="health"/> (0: it cannot be broken by blows). Its body is made from the kind's
         /// prefab when one is wired. Returns its place in the list.
         /// </summary>
-        public static int Raise(StandingKind kind, Vector3 at, Vector3 forward, float seconds, float health, float now, int owner = -1, float burstAfterStruck = 0f)
+        public static int Raise(StandingKind kind, Vector3 at, Vector3 forward, float seconds, float health, float now, int owner = -1, float burstAfterStruck = 0f, float draws = 0f)
         {
             int slot = FreeSlot();
             End(slot, false);
@@ -182,7 +303,7 @@ namespace Clover.World
             things[slot] = new Standing
             {
                 Active = true, Kind = kind, Position = at, Forward = forward.sqrMagnitude > 0.0001f ? forward.normalized : Vector3.forward,
-                Health = health, Until = seconds > 0f ? now + seconds : 0f, BurstAfterStruck = burstAfterStruck, Owner = owner, FirstStruckAt = -100f,
+                Health = health, Until = seconds > 0f ? now + seconds : 0f, BurstAfterStruck = burstAfterStruck, Owner = owner, FirstStruckAt = -100f, Draws = draws, RaisedAt = now,
             };
             var prefab = prefabs[(int)kind];
             if (prefab != null)
@@ -197,11 +318,16 @@ namespace Clover.World
         /// <summary>The thing in a slot, as it is now.</summary>
         public static Standing Get(int slot) => slot >= 0 && slot < Most ? things[slot] : default;
 
-        /// <summary>A blow on the thing in <paramref name="slot"/>; a broken thing's body breaks apart.</summary>
-        public static StandingStruck Strike(int slot, float damage, float now)
+        /// <summary>
+        /// A blow on the thing in <paramref name="slot"/>; a broken thing's body breaks apart. The blow is kept as news for the
+        /// player's marks (<see cref="TakeNews"/>): whose it was and whether it was heavy.
+        /// </summary>
+        public static StandingStruck Strike(int slot, float damage, float now, bool heavy = false, bool byPlayer = false)
         {
             if (slot < 0 || slot >= Most) return StandingStruck.None;
             var struck = StandingRules.Strike(ref things[slot], damage, now);
+            if (struck != StandingStruck.None && newsCount < MostNews)
+                news[newsCount++] = new StandingNews { Slot = slot, Thing = things[slot], Struck = struck, Heavy = heavy, ByPlayer = byPlayer };
             if (bodies[slot] != null)
             {
                 if (struck == StandingStruck.FirstStruck) bodies[slot].ShowCracked();
@@ -227,6 +353,105 @@ namespace Clover.World
             }
         }
 
+        /// <summary>Takes the oldest blow on a standing thing not yet read; false when none waits.</summary>
+        public static bool TakeNews(out StandingNews item)
+        {
+            item = default;
+            if (newsCount == 0) return false;
+            item = news[0];
+            for (int i = 1; i < newsCount; i++) news[i - 1] = news[i];
+            newsCount--;
+            return true;
+        }
+
+        /// <summary>
+        /// The clock, run once a frame whoever asks first (the scene's library, the player): ends what is due, and returns
+        /// through <paramref name="burst"/> one that burst by itself this frame (-1 for none).
+        /// </summary>
+        public static void TickOnce(float now, int frame, out int burst)
+        {
+            burst = -1;
+            if (frame == tickedFrame) return;
+            tickedFrame = frame;
+            Tick(now, out burst);
+        }
+
+        /// <summary>The first standing thing on the straight line between two places (a blow or a throw it stops); -1 for none.</summary>
+        public static int FirstOnLine(Vector3 from, Vector3 to)
+        {
+            int best = -1;
+            float bestSq = float.MaxValue;
+            for (int i = 0; i < Most; i++)
+            {
+                if (!StandingRules.Blocks(things[i], from, to)) continue;
+                Vector3 offset = things[i].Position - from;
+                offset.y = 0f;
+                if (offset.sqrMagnitude >= bestSq) continue;
+                bestSq = offset.sqrMagnitude;
+                best = i;
+            }
+            return best;
+        }
+
+        /// <summary>A body's step kept off every standing thing near it (enemies walk round them).</summary>
+        public static Vector3 SteerAround(Vector3 at, Vector3 step, float bodyRadius)
+        {
+            for (int i = 0; i < Most; i++)
+            {
+                if (!things[i].Active) continue;
+                Vector3 offset = things[i].Position - at;
+                offset.y = 0f;
+                if (offset.sqrMagnitude > 36f) continue;
+                step = StandingRules.Around(things[i], at, step, bodyRadius);
+            }
+            return step;
+        }
+
+        /// <summary>The standing thing that draws an enemy at <paramref name="at"/> onto itself (the nearest whose pull reaches it); -1 for none.</summary>
+        public static int DrawnTo(Vector3 at)
+        {
+            int best = -1;
+            float bestSq = float.MaxValue;
+            for (int i = 0; i < Most; i++)
+            {
+                if (!things[i].Active || things[i].Draws <= 0f) continue;
+                Vector3 offset = things[i].Position - at;
+                offset.y = 0f;
+                if (offset.sqrMagnitude > things[i].Draws * things[i].Draws || offset.sqrMagnitude >= bestSq) continue;
+                bestSq = offset.sqrMagnitude;
+                best = i;
+            }
+            return best;
+        }
+
+        /// <summary>The body showing the thing in a slot (null until the editor step wires its prefab).</summary>
+        public static StandingThingBody BodyOf(int slot) => slot >= 0 && slot < Most ? bodies[slot] : null;
+
+        /// <summary>Breaks the thing of <paramref name="owner"/> standing nearest <paramref name="at"/> within <paramref name="within"/>; true when one broke.</summary>
+        public static bool BreakNear(Vector3 at, float within, int owner)
+        {
+            int slot = Nearest(at, within, owner);
+            if (slot < 0) return false;
+            End(slot, true);
+            return true;
+        }
+
+        /// <summary>Keeps at most <paramref name="most"/> of an owner's things standing: the oldest crumble first (Stone Remembers' eight).</summary>
+        public static void KeepAtMost(int owner, int most)
+        {
+            while (Count(owner) > Mathf.Max(0, most))
+            {
+                int oldest = -1;
+                for (int i = 0; i < Most; i++)
+                {
+                    if (!things[i].Active || things[i].Owner != owner) continue;
+                    if (oldest < 0 || things[i].RaisedAt < things[oldest].RaisedAt) oldest = i;
+                }
+                if (oldest < 0) return;
+                End(oldest, true);
+            }
+        }
+
         /// <summary>The nearest standing thing within <paramref name="within"/> of a place (of a kind, or of an owner, when given); -1 for none.</summary>
         public static int Nearest(Vector3 at, float within, int owner = -1)
         {
@@ -242,6 +467,17 @@ namespace Clover.World
                 best = i;
             }
             return best;
+        }
+
+        /// <summary>True when a standing thing of <paramref name="kind"/> stands within <paramref name="within"/> of a place (Frozen Footing: by a mound).</summary>
+        public static bool NearKind(Vector3 at, float within, StandingKind kind)
+        {
+            for (int i = 0; i < Most; i++)
+            {
+                if (!things[i].Active || things[i].Kind != kind) continue;
+                if (StandingRules.Touches(things[i], at, within)) return true;
+            }
+            return false;
         }
 
         /// <summary>How many stand now, of one owner when given (Standing Stones: two at once).</summary>

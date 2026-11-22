@@ -15,8 +15,6 @@ both carried.
 
 **Example.** Holding your ground: use Corpse Flowers, and fight on top of the flowers. A pack: use Fig in the Crown, and the roots move from one body to the next.
 
-**Not built yet.** The hollow tree trunk isn't left standing yet, just like with the plain Girdled.
-
 ## girdled.bitterseed
 **What it does.** Your finishers put a Seed and a Curse on every enemy within 3 metres.
 

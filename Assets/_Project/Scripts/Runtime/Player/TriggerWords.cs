@@ -89,6 +89,8 @@ namespace Clover.Player
                 case UpgradeTrigger.SpellPressed: return "a spell is pressed again";
                 case UpgradeTrigger.BladeDriven: return "a blade of yours is driven in";
                 case UpgradeTrigger.BladeCaught: return "you catch your blade on a perfect guard";
+                case UpgradeTrigger.StandingStruck: return "something you raised is struck";
+                case UpgradeTrigger.StandingBurst: return "something you raised bursts";
                 default: return "its moment comes";
             }
         }

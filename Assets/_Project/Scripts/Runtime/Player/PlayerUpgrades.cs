@@ -1185,6 +1185,7 @@ namespace Clover.Player
         {
             if (toFinish.Count > 0) FinishBroken();
             if (echoForm != null && Time.time >= echoAt) CastEcho();
+            ReadStandingNews();
             // A gathered spell nobody loosed goes by itself when its press window is over, or is lost when it lapses (Kept Wind).
             if (rings.Due(Time.time))
             {
@@ -1398,6 +1399,8 @@ namespace Clover.Player
                 if (effect.BaseSpell && castSource != null && !castSource.IsBaseSpell) continue;
                 if (effect.OwnBranch && !SpellBranches.OwnBranch(effect.Owner, castSource, baseElement)) continue;
                 if (effect.SpentAtLeast > 0 && spent < effect.SpentAtLeast) continue;
+                // A standing thing's moment is its own mark's alone.
+                if ((trigger == UpgradeTrigger.StandingStruck || trigger == UpgradeTrigger.StandingBurst) && !AnswersStanding(effect, standingOwner, standingHeavy)) continue;
                 // A mark that deepens one reaction answers that one only.
                 bool reactionMoment = trigger == UpgradeTrigger.Reacted || trigger == UpgradeTrigger.ReactionStruck;
                 if (reactionMoment && !string.IsNullOrEmpty(effect.Reaction) && effect.Reaction != reaction) continue;
@@ -1501,6 +1504,8 @@ namespace Clover.Player
             if (effect.RedOnly && !RedJustTurned(Time.time, redTurnedAt)) return;
             if (effect.OnBeat > 0f && !(target is IAfflictable beaten && beaten.Afflictions.NearBeat(effect.OnBeat))) return;
             if (effect.HealthBelow > 0f && !(defence != null && !defence.IsDead && defence.Health.Fraction < effect.HealthBelow)) return;
+            if (effect.StoneAtBack > 0f && (target == null || !StoneBehind(transform.position, target.transform.position, effect.StoneAtBack))) return;
+            if (effect.NearStanding > 0f && !StandingThings.NearKind(transform.position, effect.NearStanding, effect.Raises)) return;
             if (effect.Needs != AfflictionKind.None || effect.Needs2 != AfflictionKind.None)
             {
                 // Asked of what the dead one carried, of the trigger's own enemy, or, when the trigger names no one, of the enemy faced.
@@ -1930,6 +1935,8 @@ namespace Clover.Player
                         Spares = effect.SparesTarget ? pending.Target as IDamageable : null,
                         // Unseen ground is drawn by its reaction's look alone (Seized's film: no bolt at each bite).
                         Burst = false, Quiet = effect.Unseen || bespoke,
+                        // A second affliction laid with each bite (the hollow trunk Seeding and Cursing what touches it).
+                        AlsoLays = effect.BitesLay,
                     };
                     spec.Blow.Unseen = effect.Unseen || bespoke;
                     for (int i = 0; i < patches; i++)
@@ -2088,6 +2095,23 @@ namespace Clover.Player
                     StepsToStanding++;
                     break;
                 }
+                case UpgradeAction.Raise:
+                {
+                    // Of a moment that names an enemy, placed against it; of one that names only a place (a death), there.
+                    Vector3 enemyAt = target != null ? target.position : pending.HasAt ? pending.At : centre;
+                    Vector3 spot = StandingRules.PlaceFor(effect.RaiseAt, self, transform.forward, enemyAt, Or(effect.Reach, effect.RaiseAt == StandingPlace.At ? 0f : 1.2f));
+                    spot.y = self.y;
+                    int owner = effect.Owner != null ? effect.Owner.Index : -1;
+                    if (effect.Limit > 0) StandingThings.KeepAtMost(owner, effect.Limit - 1);
+                    Vector3 front = self - spot;
+                    StandingThings.Raise(effect.Raises, spot, front, effect.Seconds, effect.Amount, Time.time, owner, effect.Delay, effect.Draws);
+                    ElementLook.Puff(look, spot + Vector3.up * 0.4f, Vector3.up, 1.2f);
+                    ThingsRaised++;
+                    break;
+                }
+                case UpgradeAction.BreakStanding:
+                    if (StandingThings.BreakNear(pending.HasAt ? pending.At : centre, Or(effect.Radius, 1f), effect.Owner != null ? effect.Owner.Index : -1)) StandingAnswers++;
+                    break;
                 case UpgradeAction.DriveBlades:
                     if (target != null) PlantedBlades.DriveAllIn(target.GetComponentInParent<IDamageable>() as Component);
                     break;
@@ -2856,6 +2880,76 @@ namespace Clover.Player
             BladesDriven++;
             if (host != null) Trigger(UpgradeTrigger.BladeDriven, host, host.transform.position, true, drives);
         }
+
+        // ---- Standing things the marks raise (World.StandingThings): their clock, and blows on them told to the marks that raised them.
+        private int standingOwner = -1;
+        private bool standingHeavy;
+
+        /// <summary>Standing things raised by marks, and blows on them answered: for probes.</summary>
+        public int ThingsRaised { get; private set; }
+        public int StandingAnswers { get; private set; }
+
+        private void ReadStandingNews()
+        {
+            StandingLibrary.Run(Time.time, Time.frameCount);
+            if (!burstHooked)
+            {
+                burstHooked = true;
+                StandingLibrary.Burst += OnStandingBurst;
+            }
+            while (StandingThings.TakeNews(out var item))
+            {
+                if (item.Thing.Owner < 0 || !item.ByPlayer) continue;
+                standingOwner = item.Thing.Owner;
+                standingHeavy = item.Heavy;
+                try { Trigger(UpgradeTrigger.StandingStruck, null, item.Thing.Position, true, item.Struck == StandingStruck.Broken ? 1 : 0); }
+                finally { standingOwner = -1; }
+            }
+        }
+
+        private bool burstHooked;
+
+        private void OnStandingBurst(Standing thing)
+        {
+            if (thing.Owner < 0) return;
+            standingOwner = thing.Owner;
+            standingHeavy = false;
+            try { Trigger(UpgradeTrigger.StandingBurst, null, thing.Position, true); }
+            finally { standingOwner = -1; }
+        }
+
+        private void OnDestroy()
+        {
+            if (burstHooked) StandingLibrary.Burst -= OnStandingBurst;
+        }
+
+        /// <summary>True when a standing thing's moment is one an effect answers: its own mark raised the thing, and a heavy blow when it asks for one.</summary>
+        public static bool AnswersStanding(UpgradeEffect effect, int owner, bool heavy) =>
+            effect != null && effect.Owner != null && effect.Owner.Index == owner && (effect.By != StruckBy.Heavy || heavy);
+
+        /// <summary>
+        /// True when the enemy at <paramref name="enemy"/> has stone at its back as seen from <paramref name="from"/>: a standing
+        /// thing within <paramref name="reach"/> behind it, or the level's own wall or pillar there.
+        /// </summary>
+        private bool StoneBehind(Vector3 from, Vector3 enemy, float reach)
+        {
+            for (int i = 0; i < StandingThings.Most; i++)
+                if (StandingRules.AtItsBack(StandingThings.Get(i), from, enemy, reach + StandingRules.Reach(StandingThings.Get(i).Kind))) return true;
+            Vector3 back = enemy - from;
+            back.y = 0f;
+            if (back.sqrMagnitude < 0.0001f) return false;
+            // The level's own stone: a wall or pillar the ray from its chest backward meets (never an enemy or the player).
+            int count = Physics.RaycastNonAlloc(enemy + Vector3.up, back.normalized, backHits, reach + 0.5f, ~0, QueryTriggerInteraction.Ignore);
+            for (int i = 0; i < count; i++)
+            {
+                var hit = backHits[i].collider;
+                if (hit == null || hit.attachedRigidbody != null || hit.GetComponentInParent<IDamageable>() != null || hit.GetComponentInParent<CharacterController>() != null) continue;
+                return true;
+            }
+            return false;
+        }
+
+        private readonly RaycastHit[] backHits = new RaycastHit[8];
 
         // ---- Two Suns: a figure of light on the enemy's far side casts the spell again back toward you.
         private bool hasTwoSuns;

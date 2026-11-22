@@ -539,7 +539,7 @@ Title: Anvil Stone (Earth and Metal)
 Group: Reactions
 **What it is.** Tremor meets Sundered. An anvil stone heaves up behind the enemy, and your heavy blow smashes the enemy into it.
 
-**The numbers.** For 5 seconds, your next heavy blow on the enemy breaks its armour all the way (three notches) and sends out a ring of sparks, dealing 10 damage, 15 stagger and a notch to everything within 3 metres. Then it waits 4 seconds.
+**The numbers.** An anvil stone 1.2 metres wide rises 1.1 metres behind the enemy, its iron face toward you, and stands for 5 seconds. It blocks bodies and blows, enemies walk around it, and their blows can break it (40 health). For those 5 seconds, your next heavy blow on the enemy breaks its armour all the way (three notches) and sends out a ring of sparks, dealing 10 damage, 15 stagger and a notch to everything within 3 metres. The stone counts as stone at its back for Hammer and Anvil. Then it waits 4 seconds.
 
 **What sets it off.** Tremor landing on a notched enemy, or a notch landing on a shaken one.
 
@@ -824,7 +824,7 @@ Title: Frost Heave (Ice and Earth)
 Group: Reactions
 **What it is.** Chill meets Tremor. The cold gets into the ground and heaves the enemy up.
 
-**The numbers.** 0.4 seconds later, the floor heaves up under the enemy, dealing 12 damage and 25 stagger, and it is thrown into the air for 1 second (an elite for less; a god only staggers). Then it waits 6 seconds.
+**The numbers.** 0.4 seconds later, the floor heaves up under the enemy, dealing 12 damage and 25 stagger, and it is thrown into the air for 1 second (an elite for less; a god only staggers). The heaved ground stays as a frozen mound 1.5 metres across, just behind the enemy, for 6 seconds. Nothing walks through it, enemies walk around it, and their blows can break it (30 health). Then it waits 6 seconds.
 
 **What sets it off.** Chill landing on a shaken enemy, or Tremor landing on a chilled one.
 
@@ -1019,7 +1019,7 @@ Title: Girdled (Life and Dark)
 Group: Reactions
 **What it is.** Seeded meets Cursed. Black fig roots wrap around the enemy and squeeze tighter with each blow.
 
-**The numbers.** One coil of roots wraps it right away. It moves 25% slower (gods aren't slowed) and takes 6% more damage from your weapon. Each of your weapon blows pulls the roots one coil tighter (6% more damage each time) and heals you 1. At four coils (your third blow), it is girdled: held for 1.5 seconds while the roots crush it (an elite for 0.6 seconds; a god for 0.45 seconds in human form, 0.18 seconds in god form, and not at all while its guard is up). It takes 20 damage and 40 stagger, and you heal 4. The roots wait 8 seconds for your blows. Then it waits 6 seconds.
+**The numbers.** One coil of roots wraps it right away. It moves 25% slower (gods aren't slowed) and takes 6% more damage from your weapon. Each of your weapon blows pulls the roots one coil tighter (6% more damage each time) and heals you 1. At four coils (your third blow), it is girdled: held for 1.5 seconds while the roots crush it (an elite for 0.6 seconds; a god for 0.45 seconds in human form, 0.18 seconds in god form, and not at all while its guard is up). It takes 20 damage and 40 stagger, and you heal 4. The roots wait 8 seconds for your blows. If it dies in the roots, a hollow trunk stands where it fell for 8 seconds: it blocks bodies and blows (40 health), and once a second anything within 1.2 metres of it gets Seeded and Cursed. Then it waits 6 seconds.
 
 **What sets it off.** A seed landing on a Cursed enemy, or a Curse landing on a Seeded one.
 

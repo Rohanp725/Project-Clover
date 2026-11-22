@@ -58,15 +58,15 @@ namespace Clover.Player.Trees
                 },
             }, HeartPattern.Foot));
 
-            // NEEDS: a condition "the target stands within 1.5 m of a wall or pillar" (or Anvil Stone's stone). Here the second
-            // strike comes on an enemy already shaken.
+            // Only on an enemy with stone at its back within 1.5 m as you see it: a standing thing (Anvil Stone's stone, a pillar,
+            // a wall of ice) or the level's own wall (UpgradeEffect.StoneAtBack).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = HammerAndAnvil, Name = "Hammer and Anvil", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Hammer,
                 Description = "A heavy blow on an enemy with stone at its back strikes twice: once from your weapon, once from the stone. Heavy blows lay Tremor and Sundered together.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.HeavyHit, Needs = Tremor, Do = UpgradeAction.Echo, Amount = 0.6f, Delay = 0.15f, Radius = 2.3f, Stagger = 20f, Cooldown = 0.5f },
+                    new UpgradeEffect { On = UpgradeTrigger.HeavyHit, StoneAtBack = 1.5f, Do = UpgradeAction.Echo, Amount = 0.6f, Delay = 0.15f, Radius = 2.3f, Stagger = 20f, Cooldown = 0.5f },
                     new UpgradeEffect { On = UpgradeTrigger.HeavyHit, Do = UpgradeAction.Afflict, Affliction = Tremor, Stacks = 1 },
                     new UpgradeEffect { On = UpgradeTrigger.HeavyHit, Do = UpgradeAction.Afflict, Affliction = Notch, Stacks = 1 },
                 },

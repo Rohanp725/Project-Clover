@@ -7,6 +7,25 @@ namespace Clover.Player.Forms
     /// middle outward. Nothing walks through it and no blow from its far side reaches the player. When its time is
     /// up, or when the player strikes it with a heavy blow, it bursts.
     /// </summary>
+    /// <summary>The plain rules of a wall that stands as a standing thing (Winter Wall).</summary>
+    public static class WallRules
+    {
+        /// <summary>A wall stands against what is within this of either face.</summary>
+        public const float Touch = 0.9f;
+
+        /// <summary>The model a wall of this width is shown as: the three-metre Shield Wall, or the five-metre Winter Wall.</summary>
+        public static World.StandingKind KindFor(float width) => width <= 3.5f ? World.StandingKind.ShieldWall : World.StandingKind.IceWall;
+
+        /// <summary>True while the standing thing in the wall's place is still this wall (not gone, nor a newer thing in its slot).</summary>
+        public static bool Stands(in World.Standing thing, Vector3 at)
+        {
+            if (!thing.Active) return false;
+            Vector3 offset = thing.Position - at;
+            offset.y = 0f;
+            return offset.sqrMagnitude < 0.01f && (thing.Kind == World.StandingKind.IceWall || thing.Kind == World.StandingKind.ShieldWall);
+        }
+    }
+
     public class WallForm : RunningForm
     {
         public override string Id => SpellForms.Wall;
@@ -54,7 +73,17 @@ namespace Clover.Player.Forms
             {
                 if (run.Age < run.T0) return true;
                 run.Phase = 1;
-                for (int i = 0; i < run.Count; i++) solids[i] = FormFx.Hold(FormMesh.Slab, cast.Colour, 0.05f);
+                // A wall with health or a burst once struck stands as a standing thing too: enemy blows strike it, and its model,
+                // once the editor step has wired it, is shown in place of the slabs.
+                bool shown = false;
+                if (cast.Spec.WallHealth > 0f || cast.Spec.BurstAfterStruck > 0f)
+                {
+                    var kind = WallRules.KindFor(run.T2);
+                    run.Done = 1 + World.StandingThings.Raise(kind, run.A, run.B, Mathf.Max(0.5f, cast.Spec.Seconds) + 0.5f, cast.Spec.WallHealth, Time.time, -1, cast.Spec.BurstAfterStruck);
+                    shown = World.StandingThings.PrefabOf(kind) != null;
+                    run.T3 = run.Age + 1f;
+                }
+                if (!shown) for (int i = 0; i < run.Count; i++) solids[i] = FormFx.Hold(FormMesh.Slab, cast.Colour, 0.05f);
                 SpellWorks.Barrier(run, run.A + Vector3.up * 1.5f, facing, new Vector3(run.T2, 3f, 0.7f));
                 SpellWorks.Screen(run, run.A - right * (run.T2 * 0.5f), run.A + right * (run.T2 * 0.5f));
                 FormFx.Lay(FormMark.Scorch, run.A, run.T2 * 0.9f, FormKit.Stain(cast.Colour, 0.5f), cast.Spec.Seconds + 1f);
@@ -76,7 +105,17 @@ namespace Clover.Player.Forms
                 FormFx.Heat(solids[i], t < 1f || (ending && Mathf.Repeat(stood * 7f, 1f) < 0.4f) ? 1f : 0f);
                 if (t > 0f && t < 1f && Mathf.Repeat(stood, 0.04f) < deltaTime) ElementLook.Puff(cast.Element, foot + Vector3.up * 0.3f, Vector3.up, 0.5f);
             }
-            if (!run.Flag && stood < seconds) return true;
+            // What stands against it is touched by it once a second (Winter Wall's chill).
+            if (cast.Spec.TouchStacks > 0 && run.Done > 0 && run.Age >= run.T3)
+            {
+                run.T3 = run.Age + 1f;
+                cast.Combat.StrikeLane(run.A - right * (run.T2 * 0.5f), right, run.T2, WallRules.Touch, cast.Blow(0f, 0f, cast.Spec.TouchStacks));
+            }
+            // Broken by enemy blows, or its clock run out once an enemy struck it (Cracked Wall): it bursts now.
+            bool fell = run.Done > 0 && !WallRules.Stands(World.StandingThings.Get(run.Done - 1), run.A);
+            if (!run.Flag && !fell && stood < seconds) return true;
+            if (run.Done > 0 && !fell) World.StandingThings.End(run.Done - 1, false);
+            run.Done = 0;
 
             // The burst.
             var blow = cast.Blow(cast.Damage, cast.Stagger);

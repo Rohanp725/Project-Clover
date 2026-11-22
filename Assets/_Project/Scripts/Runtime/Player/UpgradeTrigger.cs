@@ -124,5 +124,12 @@ namespace Clover.Player
         BladeDriven,
         /// <summary>A turning blade of yours was met by a perfect guard as it came home to the hand (Returning Edge). Target: none.</summary>
         BladeCaught,
+        /// <summary>
+        /// A standing thing a mark raised was struck: asked only of the marks of the mark that raised it. The point is where it
+        /// stands; By = StruckBy.Heavy asks for your heavy blow on it. Carries 1 when the blow broke it.
+        /// </summary>
+        StandingStruck,
+        /// <summary>A standing thing a mark raised burst by itself (Cracked Wall struck by an enemy). The point is where it stood.</summary>
+        StandingBurst,
     }
 }

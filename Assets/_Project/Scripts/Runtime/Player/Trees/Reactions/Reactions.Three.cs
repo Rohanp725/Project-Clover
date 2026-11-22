@@ -62,10 +62,12 @@ namespace Clover.Player.Trees
 
             // Ice and Earth (26). After 0.4 s the floor heaves up under it: thrown up 1 s, 12 damage, 25 stagger. What
             // cannot be lifted only reels and takes the stagger.
-            // NEEDS: standing things that block: the rimed mound, 1.5 m across, standing 6 s, that nothing walks through.
+            // The heaved ground stays as the rimed mound, 1.5 m across, standing 6 s behind it, that nothing walks through
+            // (UpgradeAction.Raise; it stands a step back so the lifted body comes down beside it, not inside it).
             to.Add(Reaction(AfflictionKind.Chill, AfflictionKind.Tremor,
                 "Chill meets Tremor: the cold gets into the ground and a moment later heaves it up under it, 12 and 25 stagger, thrown into the air for 1 s.",
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Bulge, Seconds = 0.4f } },
+                new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Bulge, Do = UpgradeAction.Raise, Raises = Clover.World.StandingKind.RimedMound, RaiseAt = Clover.World.StandingPlace.Behind, Reach = 1.1f, Seconds = 6f, Amount = 30f },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Bulge, Do = UpgradeAction.Burst, Radius = 0.5f, Damage = 12f, Stagger = 25f, Affliction = AfflictionKind.Tremor },
                 // The burst carries the heave's stagger; the lift's own, for what only reels, is kept to a token.
                 new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Bulge, Do = UpgradeAction.Lift, Seconds = 1f, Stagger = 1f }));

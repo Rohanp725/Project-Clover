@@ -1,0 +1,136 @@
+using System.Linq;
+using Clover.Gameplay;
+using Clover.Player;
+using Clover.Player.Forms;
+using Clover.Player.Trees;
+using Clover.World;
+using NUnit.Framework;
+using UnityEngine;
+
+namespace Clover.Tests
+{
+    /// <summary>The standing things wired into the marks and the enemies (standin_clearance_plan.md pass 11).</summary>
+    public class StandingThingsWiringTests
+    {
+        [SetUp]
+        public void Begin() => StandingThings.Clear();
+
+        [TearDown]
+        public void End() => StandingThings.Clear();
+
+        [Test]
+        public void ThingsAreRaisedBehindBesideOrAtTheEnemy()
+        {
+            Vector3 player = Vector3.zero, enemy = new Vector3(0f, 0f, 4f);
+            Assert.AreEqual(new Vector3(0f, 0f, 5.1f), StandingRules.PlaceFor(StandingPlace.Behind, player, Vector3.forward, enemy, 1.1f), "at its back as you see it");
+            Assert.AreEqual(1.1f, Mathf.Abs(StandingRules.PlaceFor(StandingPlace.Beside, player, Vector3.forward, enemy, 1.1f).x), 1e-4f, "to one side of your line");
+            Assert.AreEqual(enemy, StandingRules.PlaceFor(StandingPlace.At, player, Vector3.forward, enemy, 1.1f));
+            Assert.AreEqual(new Vector3(0f, 0f, 2f), StandingRules.PlaceFor(StandingPlace.Ahead, player, Vector3.forward, enemy, 2f));
+        }
+
+        [Test]
+        public void AThingBlocksALineAndEnemiesWalkRoundIt()
+        {
+            int wall = StandingThings.Raise(StandingKind.IceWall, new Vector3(0f, 0f, 3f), Vector3.back, 6f, 60f, 0f);
+            Assert.AreEqual(wall, StandingThings.FirstOnLine(new Vector3(0f, 0f, 6f), Vector3.zero), "a blow from its far side meets the wall");
+            Assert.AreEqual(-1, StandingThings.FirstOnLine(new Vector3(4f, 0f, 6f), new Vector3(4f, 0f, 0f)), "past its end it does not");
+            Assert.IsTrue(StandingRules.Touches(StandingThings.Get(wall), new Vector3(2.4f, 0f, 3.3f), 0f), "five metres wide along its line");
+            Assert.IsFalse(StandingRules.Touches(StandingThings.Get(wall), new Vector3(0f, 0f, 4f), 0.3f), "and thin across it");
+            Vector3 step = new Vector3(0f, 0f, -0.5f);
+            Vector3 turned = StandingThings.SteerAround(new Vector3(0.2f, 0f, 3.9f), step, 0.4f);
+            Assert.AreEqual(0f, turned.z, 0.05f, "it does not walk into the wall");
+            Assert.Greater(Mathf.Abs(turned.x), 0.3f, "it goes along it instead");
+            Assert.AreEqual(step, StandingThings.SteerAround(new Vector3(8f, 0f, 3.9f), step, 0.4f), "far from it, its step is its own");
+        }
+
+        [Test]
+        public void ADrawingThingPullsEnemiesAndAnOwnersOldestCrumble()
+        {
+            int tree = StandingThings.Raise(StandingKind.HollowTrunk, Vector3.zero, Vector3.forward, 10f, 40f, 0f, 7, 0f, 5f);
+            Assert.AreEqual(tree, StandingThings.DrawnTo(new Vector3(4f, 0f, 0f)), "within its pull");
+            Assert.AreEqual(-1, StandingThings.DrawnTo(new Vector3(6f, 0f, 0f)), "beyond it");
+            StandingThings.Raise(StandingKind.StonePillar, Vector3.right * 10f, Vector3.forward, 6f, 40f, 1f, 3);
+            StandingThings.Raise(StandingKind.StonePillar, Vector3.right * 12f, Vector3.forward, 6f, 40f, 2f, 3);
+            StandingThings.KeepAtMost(3, 1);
+            Assert.AreEqual(1, StandingThings.Count(3));
+            Assert.AreEqual(12f, StandingThings.Get(StandingThings.Nearest(Vector3.right * 11f, 5f, 3)).Position.x, 1e-4f, "the newest stays");
+            Assert.AreEqual(1, StandingThings.Count(7), "another owner's are left alone");
+        }
+
+        [Test]
+        public void BlowsOnAThingAreToldToTheMarkThatRaisedIt()
+        {
+            int stone = StandingThings.Raise(StandingKind.StonePillar, Vector3.zero, Vector3.forward, 6f, 40f, 0f, 11);
+            StandingThings.Strike(stone, 10f, 1f, true, true);
+            Assert.IsTrue(StandingThings.TakeNews(out var news));
+            Assert.IsTrue(news.Heavy && news.ByPlayer);
+            Assert.AreEqual(11, news.Thing.Owner);
+            Assert.IsFalse(StandingThings.TakeNews(out _), "each blow told once");
+            var shape = Upgrade.ById(SpellBranch.ShapeId(EarthTree.StoneRise)).Shapes.Single(each => each.Name == "Raised Stone");
+            var raise = shape.Effects.Single(each => each.Do == UpgradeAction.Raise);
+            Assert.AreEqual(StandingKind.StonePillar, raise.Raises);
+            Assert.AreEqual(StandingPlace.Beside, raise.RaiseAt);
+            Assert.AreEqual(6f, raise.Seconds, 1e-5f);
+            var cone = shape.Effects.Single(each => each.Do == UpgradeAction.Cone);
+            Assert.AreEqual(UpgradeTrigger.StandingStruck, cone.On);
+            Assert.IsTrue(PlayerUpgrades.AnswersStanding(cone, cone.Owner.Index, true), "your heavy blow on your own pillar");
+            Assert.IsFalse(PlayerUpgrades.AnswersStanding(cone, cone.Owner.Index, false), "not a light one");
+            Assert.IsFalse(PlayerUpgrades.AnswersStanding(cone, cone.Owner.Index + 1, true), "not another mark's thing");
+            Assert.IsTrue(shape.Effects.Any(each => each.Do == UpgradeAction.BreakStanding), "and it breaks");
+        }
+
+        [Test]
+        public void TheReactionsRaiseTheirStonesMoundsAndTrunks()
+        {
+            var anvil = Upgrade.ById(AfflictionPairs.Id(AfflictionPairs.Index(AfflictionKind.Tremor, AfflictionKind.Sundered))).Effects;
+            Assert.IsTrue(anvil.Any(each => each.Do == UpgradeAction.Raise && each.Raises == StandingKind.AnvilStone && each.RaiseAt == StandingPlace.Behind && each.Seconds == 5f), "the anvil at its back for 5 s");
+            var heave = Upgrade.ById(AfflictionPairs.Id(AfflictionPairs.Index(AfflictionKind.Chill, AfflictionKind.Tremor))).Effects;
+            Assert.IsTrue(heave.Any(each => each.Do == UpgradeAction.Raise && each.Raises == StandingKind.RimedMound && each.Seconds == 6f), "the rimed mound for 6 s");
+            var girdled = Upgrade.ById(AfflictionPairs.Id(AfflictionPairs.Index(AfflictionKind.Seeded, AfflictionKind.Cursed))).Effects;
+            Assert.IsTrue(girdled.Any(each => each.On == UpgradeTrigger.ConditionDied && each.Do == UpgradeAction.Raise && each.Raises == StandingKind.HollowTrunk && each.Seconds == 8f), "the trunk where it dies girdled");
+            Assert.IsTrue(girdled.Any(each => each.On == UpgradeTrigger.ConditionDied && each.Do == UpgradeAction.Hazard && each.BitesLay == AfflictionKind.Cursed && each.Affliction == AfflictionKind.Seeded), "Seeding and Cursing what touches it");
+            var hammer = Upgrade.ById(ForgeTree.HammerAndAnvil).Effects.Single(each => each.Do == UpgradeAction.Echo);
+            Assert.AreEqual(1.5f, hammer.StoneAtBack, 1e-5f, "stone at its back, not an enemy already shaken");
+            Assert.AreEqual(AfflictionKind.None, hammer.Needs);
+            Assert.IsTrue(StandingRules.AtItsBack(new Standing { Active = true, Kind = StandingKind.AnvilStone, Position = new Vector3(0f, 0f, 5.1f), Forward = Vector3.back },
+                Vector3.zero, new Vector3(0f, 0f, 4f), 1.5f + StandingRules.Reach(StandingKind.AnvilStone)));
+        }
+
+        [Test]
+        public void WinterWallStandsWithHealthAndTheCrackedWallBurstsOnceStruck()
+        {
+            var learn = Upgrade.ById(IceTree.WinterWall);
+            Assert.AreEqual(60f, learn.Spell.WallHealth, 1e-5f);
+            Assert.AreEqual(1, learn.Spell.TouchStacks, "its touch chills");
+            var cracked = Upgrade.ById(SpellBranch.ShapeId(IceTree.WinterWall)).Shapes.Single(each => each.Name == "Cracked Wall");
+            Assert.AreEqual(1.5f, cracked.Change.BurstAfterStruck, 1e-5f);
+            Assert.AreEqual(0f, cracked.Change.Seconds, 1e-5f, "no stand-in three-second burst");
+            Assert.AreEqual(StandingKind.IceWall, WallRules.KindFor(5f));
+            Assert.AreEqual(StandingKind.ShieldWall, WallRules.KindFor(3f));
+            int wall = StandingThings.Raise(StandingKind.IceWall, Vector3.zero, Vector3.forward, 6f, 60f, 0f, -1, 1.5f);
+            Assert.IsTrue(WallRules.Stands(StandingThings.Get(wall), Vector3.zero));
+            StandingThings.Strike(wall, 5f, 2f);
+            StandingThings.Tick(3f, out int early);
+            Assert.AreEqual(-1, early, "not yet");
+            StandingThings.Tick(3.6f, out int burst);
+            Assert.AreEqual(wall, burst, "a second and a half after the first enemy blow");
+            Assert.IsFalse(WallRules.Stands(StandingThings.Get(wall), Vector3.zero), "and the wall bursts with it");
+        }
+
+        [Test]
+        public void FrostHeavesShapesLeaveTheMoundAndFrozenFootingNeedsOne()
+        {
+            var shapes = Upgrade.ById(Clover.Player.Trees.Duo.FrostHeaveDuo.Shape).Shapes;
+            Assert.IsTrue(shapes.All(shape => shape.Effects.Any(each => each.Do == UpgradeAction.Raise && each.Raises == StandingKind.RimedMound)), "both shapes heave the mound up");
+            Assert.IsTrue(shapes.Single(each => each.Name == "Pingo").Effects.Any(each => each.Do == UpgradeAction.BreakStanding), "Pingo's mound bursts with its core");
+            var footing = Upgrade.ById(Clover.Player.Trees.Duo.FrostHeaveDuo.FrozenFooting).Effects.Single();
+            Assert.AreEqual(2f, footing.NearStanding, 1e-5f);
+            Assert.AreEqual(StandingKind.RimedMound, footing.Raises);
+            Assert.AreEqual(AfflictionKind.None, footing.Needs, "no stand-in: the attacker need carry nothing");
+            StandingThings.Raise(StandingKind.RimedMound, Vector3.zero, Vector3.forward, 6f, 30f, 0f);
+            Assert.IsTrue(StandingThings.NearKind(new Vector3(2.5f, 0f, 0f), 2f, StandingKind.RimedMound), "within two metres of its edge");
+            Assert.IsFalse(StandingThings.NearKind(new Vector3(3f, 0f, 0f), 2f, StandingKind.RimedMound));
+            Assert.IsFalse(StandingThings.NearKind(Vector3.zero, 2f, StandingKind.AnvilStone), "a mound, not any stone");
+        }
+    }
+}

@@ -177,6 +177,15 @@ namespace Clover.Player
         public bool AnswersHeavy;
         /// <summary>For the burrow form: the grown thing it comes up at goes to where the caster went down (Changeling).</summary>
         public bool SwapsGrown;
+        /// <summary>
+        /// For the wall form: the wall stands as a standing thing (World.StandingThings) that enemy blows strike, with this much
+        /// health (Winter Wall: 60); broken, it bursts. With <see cref="BurstAfterStruck"/> it bursts that long after an enemy
+        /// first strikes it (Cracked Wall: 1.5 s). <see cref="TouchStacks"/>: what stands against either face takes that many
+        /// of the cast's affliction each second (Winter Wall's touch chilling).
+        /// </summary>
+        public float WallHealth;
+        public float BurstAfterStruck;
+        public int TouchStacks;
         public int Bank;
         public float BankDamage;
         public float BankStagger;

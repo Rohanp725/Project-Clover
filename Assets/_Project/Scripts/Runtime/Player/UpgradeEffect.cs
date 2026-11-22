@@ -320,6 +320,18 @@ namespace Clover.Player
         /// <summary>For RingAdded: the last SpentAtLeast rings all came within this many seconds (Bag of Winds' Master: three within three).</summary>
         public float RingsWithin;
         public AfflictionKind CastAfterCarrying = AfflictionKind.None;
+        /// <summary>
+        /// For Raise: the standing thing raised (World.StandingThings), where (RaiseAt, Reach metres off), for Seconds, with
+        /// Amount health (0: no blow breaks it), bursting Delay seconds after it is first struck when above zero, drawing
+        /// enemies within <see cref="Draws"/> onto itself, and Limit of its mark's standing at once.
+        /// </summary>
+        public Clover.World.StandingKind Raises;
+        public Clover.World.StandingPlace RaiseAt;
+        public float Draws;
+        /// <summary>Above zero: only for an enemy with stone at its back, a standing thing or a wall within this many metres behind it as you see it (Hammer and Anvil).</summary>
+        public float StoneAtBack;
+        /// <summary>Above zero: only while you stand within this many metres of a standing thing of the kind <see cref="Raises"/> names (Frozen Footing: a mound).</summary>
+        public float NearStanding;
 
         /// <summary>A copy with every number, its slot and its mark (an Empower's twin of its Learn's effect).</summary>
         internal UpgradeEffect Twin() => (UpgradeEffect)MemberwiseClone();

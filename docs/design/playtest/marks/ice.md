@@ -207,11 +207,11 @@ The blocked blow also counts as a perfect guard for every other mark that answer
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). A heavy blow swung close enough to reach it bursts it early.
 
-**The numbers.** 4 Shards, 35 mana (its Empower makes it 30, and the burst 36). The wall rises 2 metres ahead of you, is 5 metres wide, and stands for 6 seconds. The burst reaches 4 metres around it and deals 30 damage, 50 stagger and three stacks of Chill. If your heavy blow bursts it, it counts as a heavy blow. Only one wall of ice can stand at a time.
+**The numbers.** 4 Shards, 35 mana (its Empower makes it 30, and the burst 36). The wall rises 2 metres ahead of you, is 5 metres wide, and stands for 6 seconds. It has 60 health: enemies' blows on it wear it down, and if they break it, it bursts at once. Once a second, anything standing against either side of it (within 0.9 metres) gets a Chill. The burst reaches 4 metres around it and deals 30 damage, 50 stagger and three stacks of Chill. If your heavy blow bursts it, it counts as a heavy blow. Only one wall of ice can stand at a time.
 
 **Works with.** Splinter Ward, which it comes after on the chart, Sent Sliding, Rime Guard's Freezing Fog shape, Chill.
 
-**Not built yet.** The wall should have 60 health, chill anything that touches it, and throw its burst forward as a 6-metre cone. For now, it only chills when it bursts, all around where it stands.
+**Not built yet.** The burst should be thrown forward as a 6-metre cone. For now, it bursts all around where the wall stands.
 
 **Example.** Archers shoot at you across a yard. Raise the wall, wait behind it for the soldiers to come around, then cut it as they gather.
 
@@ -220,11 +220,11 @@ The blocked blow also counts as a perfect guard for every other mark that answer
 
 **When it happens.** Whenever you cast Winter Wall, using the shape you picked.
 
-**The numbers.** 3 Shards. Shield Wall: 3 metres wide, standing for 4 seconds. Cracked Wall: it bursts on its own 3 seconds after it rises, with the Learn mark's burst.
+**The numbers.** 3 Shards. Shield Wall: 3 metres wide, standing for 4 seconds. Cracked Wall: the wall stands its full 6 seconds, but once an enemy first hits it, it bursts by itself 1.5 seconds later, with the Learn mark's burst.
 
 **Works with.** Rime Guard and Hanging Ice behind a Shield Wall; Flying Shards at a Cracked Wall in a doorway.
 
-**Not built yet.** Shield Wall should move with you (for now, it stands where it rose, just shorter). Cracked Wall should burst 1.5 seconds after an enemy first hits it (for now, it bursts on a timer).
+**Not built yet.** Shield Wall should move with you (for now, it stands where it rose, just shorter).
 
 **Example.** A god charges across the arena. Put a Cracked Wall in its path, and it runs into the burst.
 
