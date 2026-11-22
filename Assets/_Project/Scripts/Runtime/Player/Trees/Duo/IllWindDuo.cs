@@ -114,10 +114,11 @@ namespace Clover.Player.Trees.Duo
             }, HeartPattern.Keystone));
 
             // The duo spell, bought with Shards once both are carried (no god gives it): a detonator on a 12 s cooldown (SpellTimings). The wave form throws the gale, a cone 9 m
-            // long and 60 degrees wide; it doses (the branch's first element), throws 4 m, unsteadies three deep and bites.
-            // NEEDS: the held press drinking for 1.5 s (held-press), every cloud, trail and half of each poisoned enemy's doses
-            // within 6 m drunk into a store and shared among those the gale strikes (depth-moved), and two more doses for each
-            // weapon blow in the 4 s before the cast.
+            // long and 60 degrees wide; it doses (the branch's first element), throws 4 m, unsteadies three deep and bites. As it
+            // goes, every cloud and trail and half of each poisoned enemy's doses within 6 m are drunk into a store, split evenly
+            // among those the gale struck, rounded up (UpgradeAction.ShareStore; the owner's answer of 2026-11-22).
+            // NEEDS: the held press drinking for 1.5 s (held-press), and two more doses for each weapon blow in the 4 s before
+            // the cast.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = TheYellowGale, Name = "The Yellow Gale", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Role = SpellRole.Detonator, Requires = new[] { SpringDust, GustAtTheHeel }, Icon = UpgradeIcons.Wave,
@@ -129,6 +130,7 @@ namespace Clover.Player.Trees.Duo
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Unsteady, Stacks = 3 },
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Push, Shape = HazardShape.Downwind, Amount = 4f },
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Bite, Delay = 0.2f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnSpell = true, Do = UpgradeAction.ShareStore, Affliction = AfflictionKind.Poison, Radius = 6f },
                 },
             }, HeartPattern.Spell));
         }

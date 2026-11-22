@@ -172,5 +172,11 @@ namespace Clover.Player
         /// Reads: Seconds.
         /// </summary>
         PerfectDodgeNow,
+        /// <summary>
+        /// Drinks every cloud and trail of Affliction within Radius (6) of the player and half of each enemy's doses there into
+        /// a store, then lays the store on the enemies this cast struck, split evenly among them and rounded up (The Yellow
+        /// Gale, the owner's answer of 2026-11-22). Reads: Affliction, Radius.
+        /// </summary>
+        ShareStore,
     }
 }

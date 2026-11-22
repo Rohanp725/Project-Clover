@@ -253,6 +253,11 @@ namespace Clover.Player
         /// on all its answer strikes (the ledger's attacker-of-turned-blow: The Golden Chair, Gust at the Heel, Ill Omen).
         /// </summary>
         public bool NeedsAttacker;
+        /// <summary>
+        /// For Boon: held by the cast whose moment this answers, not by the player, so only that cast's own blows and bursts
+        /// are made stronger (One by One's Master: its own bursts, not a reaction's or Volatile's in the same moment).
+        /// </summary>
+        public bool ThisCast;
 
         /// <summary>A copy with every number, its slot and its mark (an Empower's twin of its Learn's effect).</summary>
         internal UpgradeEffect Twin() => (UpgradeEffect)MemberwiseClone();

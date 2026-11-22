@@ -66,10 +66,10 @@ are both carried.
 
 **When it happens.** Cast it from a spell slot while you carry both Poison and Wind. Press that slot's button (hold L2 and a face button, or press 1 to 4). The first time it lands, it charges your blade with Poison.
 
-**The numbers.** Mix, duo spell, detonator, 5 Shards. It costs no mana. After you cast it, you must wait 12 seconds to cast it again. Fighting with your weapon makes the wait shorter. It deals 8 damage, 20 stagger, two doses and three Unsteady, throws enemies 4 metres, and makes their poison bite.
+**The numbers.** Mix, duo spell, detonator, 5 Shards. It costs no mana. After you cast it, you must wait 12 seconds to cast it again. Fighting with your weapon makes the wait shorter. It deals 8 damage, 20 stagger, two doses and three Unsteady, throws enemies 4 metres, and makes their poison bite. As it goes out, it drinks every poison cloud and trail within 6 metres of you, and half the doses of each poisoned enemy there. All of that is split evenly among the enemies the gale hits, rounded up. One enemy alone gets all of it.
 
 **Works with.** Ill Wind (everything it hits gets both afflictions), No Still Air, Spring Dust.
 
 **Example.** Gather a pack in front of you and blow it away in yellow dust.
 
-**Not built yet.** You can't hold the button yet to draw everything in for 1.5 seconds. For now, it doesn't pull in clouds, trails, and half the doses of each poisoned enemy within 6 metres to share them out. Weapon blows before you cast it don't add doses yet.
+**Not built yet.** You can't hold the button yet to draw everything in for 1.5 seconds. For now, it drinks at the moment you cast. Weapon blows before you cast it don't add doses yet.

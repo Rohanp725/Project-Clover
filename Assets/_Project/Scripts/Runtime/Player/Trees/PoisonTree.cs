@@ -151,9 +151,9 @@ namespace Clover.Player.Trees
                     Change = new SpellChange { Count = 1 },
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Gather, Affliction = P, Radius = 10f } } },
                 "Opens two shapes of One by One, chosen at any rest fire: Eaten in Turn, a line fed by the order you kill, or All Into One, every dose run into the one you face.",
-                // The snap timed to the beat (UpgradeEffect.OnCastBeat): every burst of the cast half again as hard (PlayerStat.BurstDamage
-                // while its columns rise).
-                new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, OnCastBeat = true, Do = UpgradeAction.Boon, Stat = PlayerStat.BurstDamage, Amount = 0.5f, Seconds = 1.5f } },
+                // The snap timed to the beat (UpgradeEffect.OnCastBeat): every burst of the cast half again as hard while its columns
+                // rise, and only its own (UpgradeEffect.ThisCast; the owner's answer of 2026-11-22), not a reaction's or Volatile's.
+                new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, OnCastBeat = true, Do = UpgradeAction.Boon, Stat = PlayerStat.BurstDamage, Amount = 0.5f, Seconds = 1.5f, ThisCast = true } },
                 "Snap your fingers within a fifth of a second of the poison's beat, and every burst is one and a half times as strong.",
                 learnEffects: new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.SetOff, Affliction = P, Stagger = 4f, Radius = 1f, PassesOn = true } });
 

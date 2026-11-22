@@ -175,6 +175,29 @@ namespace Clover.World
             return false;
         }
 
+        /// <summary>
+        /// Drinks up every patch that lays <paramref name="kind"/> within <paramref name="radius"/> of a place (a cloud, a trail),
+        /// and it is gone. Returns the doses it held: each patch's own, at least one.
+        /// </summary>
+        public static int Drink(AfflictionKind kind, Vector3 at, float radius)
+        {
+            if (instance == null || kind == AfflictionKind.None) return 0;
+            int doses = 0;
+            for (int i = 0; i < instance.zones.Length; i++)
+            {
+                ref var zone = ref instance.zones[i];
+                if (!zone.Active || zone.Spec.Blow.Affliction != kind) continue;
+                Vector3 offset = zone.Position - at;
+                offset.y = 0f;
+                float reach = radius + zone.Spec.Radius;
+                if (offset.sqrMagnitude > reach * reach) continue;
+                zone.Active = false;
+                doses += Mathf.Max(1, zone.Spec.Blow.Stacks);
+                Puff(zone.Spec, zone.Position, 2f);
+            }
+            return doses;
+        }
+
         /// <summary>Bursts everything the player has grown, each where it stands, and it is gone. Returns how many burst.</summary>
         public static int BurstGrown(in SpellBlow blow, float radius)
         {

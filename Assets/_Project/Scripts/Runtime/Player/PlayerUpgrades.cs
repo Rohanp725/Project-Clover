@@ -165,6 +165,8 @@ namespace Clover.Player
             public int Pair;
             // A reaction's blow struck again (StrikingAgain): what the trigger carried stands for what its Spend would count.
             public bool Again;
+            // The number of the cast whose moment this answers (SpellCast.Cast; 0 none), for boons held by one cast.
+            public int CastTag;
         }
 
         // ---- Depth moved between enemies (the ledger's depth-moved).
@@ -174,6 +176,14 @@ namespace Clover.Player
         private readonly List<AfflictionSet> depthScratch = new List<AfflictionSet>(MostStruck);
         // The doses a line of bursts carries on to its next (One by One), or All Into One's gathered doses; emptied at each cast.
         private int lineCarried;
+        // Boons held by one cast (UpgradeEffect.ThisCast), and the cast whose moment is being answered now.
+        private readonly CastBoons castBoons = new CastBoons();
+        private int answeringCast;
+        // Whom the cast numbered castHitsOf struck, in order (The Yellow Gale shares its store among them).
+        private readonly List<Component> castHits = new List<Component>(MostStruck);
+        private int castHitsOf;
+        /// <summary>Doses The Yellow Gale has drunk into its store and laid again, counted for probes.</summary>
+        public int DosesStored { get; private set; }
         private readonly HashSet<IDamageable> gatherTaken = new HashSet<IDamageable>();
         private readonly HashSet<IDamageable> stateScratch = new HashSet<IDamageable>();
         /// <summary>What the edge carries for its next few weapon blows (Carried on the Blade, Dust on the Blade).</summary>
@@ -1456,7 +1466,7 @@ namespace Clover.Player
             if (effect.CooldownPerEnemy && kept != null) kept.Start(effect.Slot, Time.time, wait);
             else readyAt[effect.Slot] = Time.time + wait;
             Enqueue(new Pending { Effect = effect, Target = target, At = at, HasAt = hasAt, Spent = spent, Less = less, Source = source, Power = power, Ripe = ripeScale,
-                ReactionOf = reactionPair + 1, ReactionCast = reactionPair >= 0 ? reactionCast : 0, Link = link, Pair = triggerPair, Again = strikingAgain });
+                ReactionOf = reactionPair + 1, ReactionCast = reactionPair >= 0 ? reactionCast : 0, Link = link, Pair = triggerPair, Again = strikingAgain, CastTag = answeringCast });
         }
 
         /// <summary>
@@ -1884,6 +1894,13 @@ namespace Clover.Player
                     player.Stamina.Restore(eAmount);
                     break;
                 case UpgradeAction.Boon:
+                    // Held by the cast alone: only its own blows and bursts are made stronger (One by One's Master).
+                    if (effect.ThisCast)
+                    {
+                        castBoons.Add(pending.CastTag, effect.Stat, effect.Amount, Time.time + Or(effect.Seconds, 5f) * Stats.Multiplier(PlayerStat.BoonSeconds));
+                        ElementLook.Sparks(held, self + Vector3.up * 1.2f, Vector3.up, 0.6f);
+                        break;
+                    }
                     Stats.AddBoon(effect.Stat, effect.Amount, Or(effect.Seconds, 5f) * Stats.Multiplier(PlayerStat.BoonSeconds));
                     if (effect.UntilBlow && untilBlowCount < untilBlow.Length) untilBlow[untilBlowCount++] = effect;
                     if (effect.UntilDodge && untilDodgeCount < untilDodge.Length) untilDodge[untilDodgeCount++] = effect;
@@ -2074,6 +2091,39 @@ namespace Clover.Player
                     gatherTaken.Clear();
                     break;
                 }
+                case UpgradeAction.ShareStore:
+                {
+                    // Clouds and trails near are drunk, and half of each enemy's doses there; then the store is split evenly
+                    // among those this cast struck, rounded up.
+                    float within = Or(effect.Radius, 6f);
+                    int store = Hazards.Drink(kind, self, within);
+                    gatherTaken.Clear();
+                    for (int guard = 0; guard < 24; guard++)
+                    {
+                        var near = combat.EnemyNear(self, within, gatherTaken);
+                        if (!(near is IDamageable one)) break;
+                        gatherTaken.Add(one);
+                        if (!(near is IAfflictable giving)) continue;
+                        int half = DepthMoves.Half(giving.Afflictions.Stacks(kind));
+                        if (half <= 0) continue;
+                        giving.Afflictions.Spend(kind, half);
+                        store += half;
+                        Vector3 bead = near.transform.position;
+                        if (!bespoke) ElementLook.Sparks(look, bead + Vector3.up * 0.6f, (self - bead).normalized, 0.6f);
+                    }
+                    gatherTaken.Clear();
+                    int hit = pending.CastTag != 0 && pending.CastTag == castHitsOf ? castHits.Count : 0;
+                    int each = DepthMoves.ShareEach(store, hit);
+                    if (each <= 0) break;
+                    for (int i = 0; i < hit; i++)
+                    {
+                        var struck = castHits[i];
+                        if (struck == null || !(struck is IAfflictable taking) || (struck is Enemy gone && gone.IsDead)) continue;
+                        CombatEvents.Report(struck, kind, each, taking.Afflictions.Lay(kind, each, 0f, combat.AfflictionPower, laying, struck), laying);
+                        DosesStored += each;
+                    }
+                    break;
+                }
                 case UpgradeAction.Bite:
                 {
                     int bitten = effect.Radius > 0f ? combat.BiteArea(centre, effect.Radius) : subject is IAfflictable sick && sick.Afflictions.BiteSoon() ? 1 : 0;
@@ -2097,7 +2147,8 @@ namespace Clover.Player
                     bool ripeSeed = carrier.Afflictions.IsRipe(kind);
                     float ripeShare = carrier.Afflictions.RipeShare(kind);
                     float carriedDamage = carriedIn * Afflictions.Spec(kind).SetOffPerStack * combat.AfflictionPower;
-                    float damage = ((carrier.Afflictions.SetOff(kind) + carriedDamage) * reactionScale + eDamage * depth) * Stats.Multiplier(PlayerStat.BurstDamage) * ripeShare;
+                    float damage = ((carrier.Afflictions.SetOff(kind) + carriedDamage) * reactionScale + eDamage * depth) * Stats.Multiplier(PlayerStat.BurstDamage) * ripeShare
+                        * castBoons.Multiplier(pending.CastTag, PlayerStat.BurstDamage, Time.time);
                     if (ripeSeed) RipeBurstAt(subject, centre, depth);
                     combat.StrikeArea(centre, Or(effect.Radius, 3f) * Stats.Multiplier(PlayerStat.BurstReach), Blow(look, kind, damage, eStagger * depth * Stats.Multiplier(PlayerStat.BurstStagger), 0),
                         null, 0f, effect.OnlyCarrying);
@@ -2550,18 +2601,40 @@ namespace Clover.Player
         public void OnSpellStruck(IDamageable target, bool wasAfflicted) => OnSpellStruck(target, wasAfflicted, null);
 
         /// <summary>As above, with the element of the spell that struck: a base spell's Master answers only its own element's.</summary>
-        public void OnSpellStruck(IDamageable target, bool wasAfflicted, string element)
+        public void OnSpellStruck(IDamageable target, bool wasAfflicted, string element) => OnSpellStruck(target, wasAfflicted, element, 0);
+
+        /// <summary>As above, with the number of the cast whose blow it was (<see cref="SpellBlow.Cast"/>; 0 for none): its moments know their cast.</summary>
+        public void OnSpellStruck(IDamageable target, bool wasAfflicted, string element, int cast)
         {
             var struck = target as Component;
             if (struck == null) return;
             Vector3 at = struck.transform.position;
+            NoteCastHit(struck, cast);
             baseElement = element;
+            int was = answeringCast;
+            answeringCast = cast;
             try
             {
                 Trigger(UpgradeTrigger.SpellHit, struck, at);
                 if (wasAfflicted) Trigger(UpgradeTrigger.AfflictedHit, struck, at);
             }
-            finally { baseElement = null; }
+            finally
+            {
+                baseElement = null;
+                answeringCast = was;
+            }
+        }
+
+        // Whom each cast struck, once each and in order; a blow of another cast starts the list again.
+        private void NoteCastHit(Component struck, int cast)
+        {
+            if (cast == 0) return;
+            if (cast != castHitsOf)
+            {
+                castHits.Clear();
+                castHitsOf = cast;
+            }
+            if (castHits.Count < MostStruck && !castHits.Contains(struck)) castHits.Add(struck);
         }
 
         /// <summary>A move carrying the charged blade landed on <paramref name="target"/>; <paramref name="third"/> for the charge's last.</summary>
@@ -3436,7 +3509,10 @@ namespace Clover.Player
             BeginCast();
             form.Cast(cast);
             castSource = mark;
-            Trigger(UpgradeTrigger.SpellCast, null, transform.position, false);
+            // Its own moment knows its number, for what only this cast is given (UpgradeEffect.ThisCast, ShareStore).
+            answeringCast = cast.Cast;
+            try { Trigger(UpgradeTrigger.SpellCast, null, transform.position, false); }
+            finally { answeringCast = 0; }
             castSource = null;
             return true;
         }

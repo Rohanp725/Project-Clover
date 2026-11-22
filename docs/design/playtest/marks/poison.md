@@ -98,7 +98,7 @@ a blow or a cast "on the beat" comes within a fifth of a second of it.
 
 **When it happens.** When you snap your fingers within a fifth of a second of a poison bite on any enemy within 8 metres, while One by One is in a spell slot.
 
-**The numbers.** 3 Shards. For the next 1.5 seconds, while the columns rise, every burst deals 50% more damage.
+**The numbers.** 3 Shards. For the next 1.5 seconds, while the columns rise, One by One's own bursts deal 50% more damage. Other bursts at the same time, like a reaction's or Volatile's, don't get stronger.
 
 **Works with.** In Time (the same beat), Catching (the beat spreads across the pack), Venom.
 
