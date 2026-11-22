@@ -212,5 +212,11 @@ namespace Clover.Player
         /// Stagger, Affliction and Stacks); each bolt is a moment of its own (<see cref="UpgradeTrigger.GrownBolt"/>; the ledger's grown-sources).
         /// </summary>
         GrownBolts,
+        /// <summary>
+        /// Asked as its own branch's spell is cast, before the form runs, with the effect's CastAfter window: when it holds, the
+        /// spell lands with no stillness after it (its Delay set to nothing: Seven Flashes' Master, cast in a perfect dodge's
+        /// moment, does not stand still and its cuts land at once). Nothing is done when its moment comes.
+        /// </summary>
+        Quicken,
     }
 }

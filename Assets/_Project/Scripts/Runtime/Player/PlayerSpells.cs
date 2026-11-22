@@ -613,7 +613,8 @@ namespace Clover.Player
                     {
                         if (!upgrades.Cast(Upgrade.ById(id))) return false;
                     }
-                    else if (!element.CastBase(castIn)) return false;
+                    // A slot made instant by a mark (Thunderclap's Master) is loosed with no wind-up.
+                    else if (!element.CastBase(castIn, Cooldowns.IsInstant(slot))) return false;
                     // Its own element's marks may shorten the wait (Near to Hand for Stone Rise), and its branch's Empower; every spell's rate is applied below.
                     seconds = SpellTimings.BaseCooldown(castIn, upgrades != null ? upgrades.BaseCooldownShare(castIn) : 0f);
                     if (upgrades != null) seconds = upgrades.BaseCooldownOf(id, seconds);

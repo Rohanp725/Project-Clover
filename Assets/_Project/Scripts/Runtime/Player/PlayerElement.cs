@@ -394,17 +394,21 @@ namespace Clover.Player
         /// roots the player for its short cast and leaves the hand part-way through. False with that element not
         /// carried, or mid-cast.
         /// </summary>
-        public bool CastBase(string elementName)
+        public bool CastBase(string elementName) => CastBase(elementName, false);
+
+        /// <summary>As above; <paramref name="instant"/> looses it now, with no wind-up (a slot a Master made instant).</summary>
+        public bool CastBase(string elementName, bool instant)
         {
             if (!HasElement || combat == null || IsCasting) return false;
             var kit = KitOf(elementName);
             if (kit == null) return false;
-            if (!kit.TryCast(combat.Mana, 0f)) return false;
+            if (!kit.TryCast(combat.Mana, 0f, instant)) return false;
             castingKit = kit;
             castingIndex = kit == kits[0] ? 0 : 1;
             // The cast's number is kept for the moment it leaves the hand.
             releaseTag = CastTag;
             BeginCast();
+            if (instant && kit.TickCast(0f)) Release();
             return true;
         }
 

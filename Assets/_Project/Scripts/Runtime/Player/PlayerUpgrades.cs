@@ -1449,6 +1449,8 @@ namespace Clover.Player
             if (effect.WithinOwnCast > 0f && !InCastWindow(LastCastOf(effect.Owner), Time.time, effect.WithinOwnCast)) return;
             // Only for a cast begun in the window after its moment (the ledger's spell-windows).
             if (effect.CastAfter != CastMoment.None && !Moments.Within(effect.CastAfter, effect.CastWindow, castBeganAt, effect.CastAfterCarrying)) return;
+            // Only within a moment's window as the trigger comes (Waiting Thunder's Master).
+            if (effect.After != CastMoment.None && !Moments.Within(effect.After, effect.AfterWindow, Time.time)) return;
             if (effect.NeedsAttacker && !IsAttacker(target, turnedBy != null ? turnedBy : null, turnedAt, Time.time)) return;
             // Only as an enemy's blow is about to land (the shared movement rule's timing).
             if (effect.BlowLanding > 0f && (combat == null || combat.BlowAboutToLand(effect.BlowLanding, out _) == null)) return;
@@ -2894,6 +2896,26 @@ namespace Clover.Player
 
         /// <summary>When each moment a spell may be cast just after last came (UpgradeEffect.CastAfter).</summary>
         public CastMoments Moments { get; } = new CastMoments();
+
+        /// <summary>A form's own moment came now (Waiting Thunder's last bolt sent by a light blow).</summary>
+        public void NoteMoment(CastMoment moment) => Moments.Note(moment, Time.time);
+
+        /// <summary>
+        /// True when an effect in force of <paramref name="mark"/>'s own branch quickens its cast now (UpgradeAction.Quicken):
+        /// its CastAfter window holds at <paramref name="now"/>.
+        /// </summary>
+        public static bool Quickens(List<UpgradeEffect> inForce, Upgrade mark, CastMoments moments, float now)
+        {
+            if (inForce == null || mark == null || moments == null) return false;
+            string branch = !string.IsNullOrEmpty(mark.Branch) ? mark.Branch : mark.Id;
+            for (int i = 0; i < inForce.Count; i++)
+            {
+                var effect = inForce[i];
+                if (effect.Do != UpgradeAction.Quicken || effect.Owner == null || effect.Owner.Branch != branch) continue;
+                if (moments.Within(effect.CastAfter, effect.CastWindow, now, effect.CastAfterCarrying)) return true;
+            }
+            return false;
+        }
         // When the cast now running began, asked against the moments.
         private float castBeganAt = -1000f;
 
@@ -3791,6 +3813,12 @@ namespace Clover.Player
             if (form == null) return false;
             // A spell may ask health in place of mana, or as well: it is left grey, to be won back.
             float blood = SpellSpec.HealthPrice(spec.HealthCost, spec.HealthShare, defence != null ? defence.Health.Current : 0f) * Stats.Multiplier(PlayerStat.HealthPrices);
+            // Cast in its Master's moment, it lands with no stillness after it (UpgradeAction.Quicken: Seven Flashes).
+            if (Quickens(byTrigger[(int)UpgradeTrigger.SpellCast], mark, Moments, Time.time))
+            {
+                spec.Delay = 0f;
+                Quickened++;
+            }
             var cast = element.NewCast(spec, mark.Name, mark);
             // A form that can do nothing just now says so before anything is paid.
             if (form is ISpellGate gate && !gate.CanCast(cast)) return false;
@@ -3871,6 +3899,8 @@ namespace Clover.Player
 
         /// <summary>Health paid in place of mana so far, for tests and probes.</summary>
         public float HealthPaid { get; private set; }
+        /// <summary>Casts made with no stillness by their Master's moment (UpgradeAction.Quicken), for probes.</summary>
+        public int Quickened { get; private set; }
 
         /// <summary>A ward turned a blow and is gone.</summary>
         public void OnWardSpent() => Trigger(UpgradeTrigger.WardSpent, null, transform.position, false);

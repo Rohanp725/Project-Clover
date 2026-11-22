@@ -100,5 +100,69 @@ namespace Clover.Tests
             Assert.IsTrue(lift.NeedsAttacker && lift.CastAfter == CastMoment.PerfectDodge, "only on the enemy the dodge took you past");
             Assert.AreEqual(2f, lift.Seconds, 1e-5f, "twice its second in the air");
         }
+
+        [Test]
+        public void ThunderclapsInstantCastHasNoWindUp()
+        {
+            var mana = new ManaPool { Maximum = 100f };
+            mana.Gain(100f);
+            var kit = new ElementKit { SpellCost = 0f, SpellWindup = 0.3f, SpellRecovery = 0.2f };
+            Assert.IsTrue(kit.TryCast(mana, 1f, true));
+            Assert.IsTrue(kit.TickCast(0f), "loosed on the first tick, with no time passed");
+            Assert.IsTrue(kit.IsCasting, "the recovery after it is kept");
+            var plain = new ElementKit { SpellCost = 0f, SpellWindup = 0.3f, SpellRecovery = 0.2f };
+            Assert.IsTrue(plain.TryCast(mana, 1f, false));
+            Assert.IsFalse(plain.TickCast(0.1f), "a plain cast still winds up");
+            var master = Upgrade.ById(SpellBranch.MasterId(LightningTree.Thunderclap)).Effects;
+            Assert.IsTrue(master.Any(each => each.On == UpgradeTrigger.PerfectGuard && each.Do == UpgradeAction.InstantNext));
+            var held = Upgrade.ById(SpellBranch.ShapeId(LightningTree.Thunderclap)).Shapes.Single(each => each.Name == "Held Thunder").Spell;
+            Assert.AreEqual(1f, held.HoldUpTo, 1e-5f, "held up to a second");
+            var spec = new SpellSpec();
+            SpellChange.Copy(held, spec);
+            SpellSpec.ApplyHold(spec, 1f);
+            Assert.AreEqual(90f, spec.Stagger, 1e-4f, "90 stagger at the full hold");
+            SpellChange.Copy(held, spec);
+            SpellSpec.ApplyHold(spec, 0f);
+            Assert.AreEqual(45f, spec.Stagger, 1e-4f, "a tap is Thunderclap's own clap");
+        }
+
+        [Test]
+        public void WaitingThundersSecondRoundComesOnlyAfterTheLastBoltFell()
+        {
+            var times = new[] { -1f, 0.2f, -2f };
+            Assert.IsFalse(Clover.Player.Forms.PhalanxForm.LastSent(times, 3), "one still hovers");
+            times[0] = 0f;
+            Assert.IsTrue(Clover.Player.Forms.PhalanxForm.LastSent(times, 3), "none left at the shoulder");
+            var moments = new CastMoments();
+            moments.Note(CastMoment.LastBolt, 5f);
+            Assert.IsTrue(moments.Within(CastMoment.LastBolt, 1f, 5.8f));
+            Assert.IsFalse(moments.Within(CastMoment.LastBolt, 1f, 6.2f));
+            var round = Upgrade.ById(SpellBranch.MasterId(LightningTree.WaitingThunder)).Effects.Single();
+            Assert.AreEqual(UpgradeTrigger.HeavyHit, round.On);
+            Assert.AreEqual(CastMoment.LastBolt, round.After);
+            Assert.AreEqual(1f, round.AfterWindow, 1e-5f);
+            Assert.AreEqual(UpgradeAction.Form, round.Do);
+            Assert.AreEqual(SpellForms.Waiting, round.Form, "the five hang again for a second round");
+            Assert.AreEqual(5, round.Spell.Count);
+        }
+
+        [Test]
+        public void SevenFlashesCastInADodgesMomentStandsNotStill()
+        {
+            var flashes = Upgrade.ById(LightningTree.SevenFlashes);
+            var master = Upgrade.ById(SpellBranch.MasterId(LightningTree.SevenFlashes));
+            var quick = master.Effects.Single();
+            Assert.AreEqual(UpgradeAction.Quicken, quick.Do);
+            var inForce = new System.Collections.Generic.List<UpgradeEffect> { quick };
+            var moments = new CastMoments();
+            Assert.IsFalse(PlayerUpgrades.Quickens(inForce, flashes, moments, 3f), "no dodge yet");
+            moments.Note(CastMoment.PerfectDodge, 10f);
+            Assert.IsTrue(PlayerUpgrades.Quickens(inForce, flashes, moments, 10.25f), "within a third of a second");
+            Assert.IsFalse(PlayerUpgrades.Quickens(inForce, flashes, moments, 10.4f), "too late");
+            Assert.IsFalse(PlayerUpgrades.Quickens(inForce, Upgrade.ById(LightningTree.ChainLance), moments, 10.25f), "another branch's cast");
+            Assert.AreEqual(0f, Clover.Player.Forms.FlashesForm.StillFor(0f), "quickened: no stillness");
+            Assert.AreEqual(0.5f, Clover.Player.Forms.FlashesForm.StillFor(0.5f), 1e-5f);
+            Assert.AreEqual(0.15f, Clover.Player.Forms.FlashesForm.StillFor(0.1f), 1e-5f);
+        }
     }
 }

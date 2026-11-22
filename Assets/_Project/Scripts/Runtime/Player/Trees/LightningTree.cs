@@ -83,8 +83,10 @@ namespace Clover.Player.Trees
                     Description = "Light blows send nothing. Your heavy blow brings all of them as one bolt in a three-metre circle: five times a bolt's damage and 60 stagger. Save it for the heavy.",
                     Spell = new SpellSpec { Reach = 8f, Seconds = 10f, Count = 1, Radius = 3f, Damage = 40f, Stagger = 60f, Stacks = 2 } },
                 "Opens two shapes of Waiting Thunder, chosen at any rest fire: Hanging Cloud over the enemy faced, or Hammer Fall, all of it in one heavy blow.",
-                // NEEDS: only within a second of the last bolt falling with a light blow.
-                new[] { new UpgradeEffect { On = UpgradeTrigger.HeavyHit, Do = UpgradeAction.Falling, Count = 5, Damage = 8f, Stagger = 6f, Radius = 1.5f, Delay = 0.3f, Affliction = AfflictionKind.Static, Stacks = 1, Cooldown = 10f } },
+                // Only within a second of the last bolt sent down by a light blow (After LastBolt, noted by the form): the five hang
+                // again at the shoulder for a second round, once a cast (the spell's own ten-second wait).
+                new[] { new UpgradeEffect { On = UpgradeTrigger.HeavyHit, After = CastMoment.LastBolt, AfterWindow = 1f, Do = UpgradeAction.Form, Form = SpellForms.Waiting, At = EffectAt.Self, Cooldown = 10f,
+                    Spell = new SpellSpec { Cost = 0f, Count = 5, Seconds = 10f, Reach = 8f, Damage = 8f, Stagger = 6f, Stacks = 1, Speed = 18f } } },
                 "Land the heavy blow within a second of the last bolt falling with a light blow, and all five come back for a second round.");
 
             // The RuleBook's breath (task 4.4), read by PlayerSpells: after a perfect guard or dodge the four spell slots have no
@@ -112,12 +114,13 @@ namespace Clover.Player.Trees
                 new ShapeDef { Name = "Rolling Thunder", Form = SpellForms.Spikes,
                     Description = "Three claps march out in a line, three metres apart, a quarter of a second each.",
                     Spell = new SpellSpec { Reach = 9f, Speed = 12f, Count = 3, Radius = 1.5f, Damage = 16f, Stagger = 30f, Stacks = 1 } },
-                // NEEDS: the held press (SpellSpec.HoldForm), the clap growing with the hold. Until then it is the full hold.
+                // Held on its button for up to a second and loosed on letting go (SpellSpec.HoldUpTo): the clap rises from
+                // Thunderclap's own 16 damage and 45 stagger to 20 and 90 at the full hold; a tap is the plain clap, with no forks.
                 new ShapeDef { Name = "Held Thunder", Form = SpellForms.Bolt,
                     Description = "Hold for up to a second, then one huge clap with no forks: 90 stagger at the full hold.",
-                    Spell = new SpellSpec { Reach = 10f, Damage = 20f, Stagger = 90f, Count = 0, Radius = 0.5f, Stacks = 1 } },
+                    Spell = new SpellSpec { Reach = 10f, Damage = 16f, Stagger = 45f, Count = 0, Radius = 0.5f, Stacks = 1, HoldUpTo = 1f, HeldDamage = 20f, HeldStagger = 90f } },
                 "Opens two shapes of Thunderclap, chosen at any rest fire: Rolling Thunder, claps in a line, or Held Thunder, one great clap.",
-                // NEEDS: no wind-up on the instant cast.
+                // The instant cast is loosed with no wind-up (ElementKit.TryCast instant, read by PlayerSpells from the slot's clock).
                 new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.ResetCooldown },
@@ -210,8 +213,9 @@ namespace Clover.Player.Trees
                     Description = "You do not return. You end behind the last enemy cut, and a shape of light takes the still pose on the starting spot and is what can be struck.",
                     Change = new SpellChange { Delay = 0.1f } },
                 "Opens two shapes of Seven Flashes, chosen at any rest fire: One Flash on the one faced, or Left Behind, ending in the crowd.",
-                // NEEDS: the cast within 0.3 s of a perfect dodge not standing still afterwards. Nothing in the data says it yet.
-                null,
+                // Cast within 0.3 s of a perfect dodge (UpgradeAction.Quicken, asked before the form runs): no stillness, the cuts
+                // land on the next step and the player is free at once.
+                new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, CastAfter = CastMoment.PerfectDodge, CastWindow = 0.3f, Do = UpgradeAction.Quicken } },
                 "Cast within a third of a second of a perfect dodge, and you do not stand still afterwards: the cuts land at once.");
 
             // BESPOKE: a guard that costs twice the stamina for each point caught. Until then the price is a shorter perfect guard.

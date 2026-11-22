@@ -90,13 +90,11 @@ design yet, its **Not built yet** line says what is missing.
 ## lightning.waiting.master
 **What it does.** Land the heavy blow within a second of the last bolt falling from a light blow, and all five come back for a second round.
 
-**When it happens.** When a heavy blow lands. Waiting Thunder must be in a spell slot.
+**When it happens.** When a heavy blow lands within a second of the last hanging bolt falling from a light blow. Waiting Thunder must be in a spell slot.
 
-**The numbers.** 3 Shards. For now, every heavy blow brings five bolts down around the enemy you hit, each dealing 8 damage, 6 stagger and a Static, once every 10 seconds.
+**The numbers.** 3 Shards. Five bolts hang at your shoulders again for 10 seconds, each dealing 8 damage, 6 stagger and a Static when a light blow sends it. Once for each cast (the spell's own 10-second wait).
 
 **Works with.** Static, Single Stroke.
-
-**Not built yet.** It should only work within a second of the last bolt falling from a light blow.
 
 **Example.** Light, light, light, light, light, heavy: and the sky goes around again.
 
@@ -138,11 +136,9 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Whenever you cast Thunderclap, using the shape you picked.
 
-**The numbers.** 3 Shards. Rolling Thunder: three claps, 3 metres apart, over 9 metres. Each deals 16 damage, 30 stagger and a Static. Held Thunder: one bolt on the enemy you face within 10 metres, for 20 damage and 90 stagger, with no splitting.
+**The numbers.** 3 Shards. Rolling Thunder: three claps, 3 metres apart, over 9 metres. Each deals 16 damage, 30 stagger and a Static. Held Thunder: hold the button for up to a second, then let go. One bolt hits the enemy you face within 10 metres, with no splitting. It grows from 16 damage and 45 stagger on a quick tap to 20 damage and 90 stagger at a full hold.
 
 **Works with.** Static and Chain Lance (Rolling Thunder down a line); Stored Charge (Held Thunder, then a double-strength blow).
-
-**Not built yet.** Held Thunder should be held on its button and grow stronger the longer you hold. For now, it is always at full strength.
 
 **Example.** Held Thunder on the captain staggers it right away.
 
@@ -151,11 +147,9 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** On a perfect guard. Thunderclap must be in a spell slot.
 
-**The numbers.** 3 Shards. Its wait ends right away, and your next cast doesn't start a new one.
+**The numbers.** 3 Shards. Its wait ends right away, your next cast skips its wind-up and leaves your hand at once, and it doesn't start a new wait.
 
 **Works with.** Stored Charge and Ring of Drums on the same guard; In One Breath.
-
-**Not built yet.** The cast should also skip its wind-up.
 
 **Example.** Guard the thrust perfectly and clap right away: guard, clap, guard, clap.
 
@@ -293,11 +287,13 @@ design yet, its **Not built yet** line says what is missing.
 ## lightning.flashes.master
 **What it does.** Cast it within a third of a second of a perfect dodge, and you don't have to stand still afterwards: the cuts land right away.
 
-**When it happens.** Not yet: see below.
+**When it happens.** When you cast Seven Flashes within a third of a second of a perfect dodge.
 
-**The numbers.** 3 Shards.
+**The numbers.** 3 Shards. You come back and can move right away, with no standing still. The cuts land at once, on the very next moment.
 
-**Not built yet.** All of it. It needs a timing window for casting after a perfect dodge, and a version of Seven Flashes without the standing still. Buying it now does nothing.
+**Works with.** Never There (perfect dodges cost nothing), Afterimage.
+
+**Example.** Dodge the spear thrust perfectly, flash through the crowd, and be moving again as all seven cuts land.
 
 ## lightning.neverthere
 **What it does.** Every dodge carries you farther, and a perfect dodge costs no stamina. The cost: blocking a blow with your guard costs twice the stamina.

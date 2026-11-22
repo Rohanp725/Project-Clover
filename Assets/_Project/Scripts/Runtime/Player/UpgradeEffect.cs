@@ -302,6 +302,12 @@ namespace Clover.Player
         /// </summary>
         public CastMoment CastAfter;
         public float CastWindow;
+        /// <summary>
+        /// Only within AfterWindow seconds after this moment, asked as the trigger comes rather than of the cast (Waiting
+        /// Thunder's Master: a heavy blow within a second of the last bolt falling with a light blow).
+        /// </summary>
+        public CastMoment After;
+        public float AfterWindow;
         public AfflictionKind CastAfterCarrying = AfflictionKind.None;
 
         /// <summary>A copy with every number, its slot and its mark (an Empower's twin of its Learn's effect).</summary>

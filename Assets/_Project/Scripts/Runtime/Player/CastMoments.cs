@@ -15,6 +15,8 @@ namespace Clover.Player
         Shatter,
         /// <summary>An enemy died carrying the affliction the effect names in CastAfterCarrying (Reap What Is Sown's Master: a Seeded one).</summary>
         Death,
+        /// <summary>The last of Waiting Thunder's bolts was sent down by a light blow (its Master: a heavy blow within a second of it).</summary>
+        LastBolt,
     }
 
     /// <summary>

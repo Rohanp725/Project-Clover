@@ -300,11 +300,17 @@ namespace Clover.Player
         public void KeepWait(float seconds) => SurgeWaitLeft = Math.Max(SurgeWaitLeft, Math.Min(seconds, SurgeCooldown));
 
         /// <summary>Begins the cast if the mana is there. <paramref name="costScale"/> is what the player's upgrades make of the cost.</summary>
-        public bool TryCast(ManaPool mana, float costScale = 1f)
+        public bool TryCast(ManaPool mana, float costScale = 1f) => TryCast(mana, costScale, false);
+
+        /// <summary>
+        /// As above; <paramref name="instant"/> skips the wind-up, so the next tick of the cast (even of no time) looses it
+        /// (Thunderclap's Master: the next cast after a perfect guard is instant). The recovery after it is kept.
+        /// </summary>
+        public bool TryCast(ManaPool mana, float costScale, bool instant)
         {
             if (IsCasting || !mana.TrySpend(SpellCost * costScale)) return false;
             IsCasting = true;
-            elapsed = 0f;
+            elapsed = instant ? SpellWindup : 0f;
             released = false;
             return true;
         }

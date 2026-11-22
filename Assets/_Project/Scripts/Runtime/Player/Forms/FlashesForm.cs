@@ -36,7 +36,8 @@ namespace Clover.Player.Forms
             run.A = cast.Origin;
             run.B = cast.Forward;
             run.T0 = Mathf.Max(0.04f, cast.Spec.Interval);
-            run.T1 = Mathf.Max(0.15f, cast.Spec.Delay);
+            // No stillness at all when the cast was quickened (its Master, cast in a perfect dodge's moment).
+            run.T1 = StillFor(cast.Spec.Delay);
             SpellWorks.Ghost(run.Count * run.T0 + 0.3f, FormKit.Lit(cast.Colour, 2.6f, 0.85f));
             cast.Player.Hidden = true;
             FormFx.Lay(FormMark.Ring, cast.Origin, 0.6f, FormKit.Lit(cast.Colour, 3f), 0.2f, 3f);
@@ -94,9 +95,11 @@ namespace Clover.Player.Forms
                 run.T2 = run.Age;
                 player.Hidden = false;
                 player.StepTo(run.C);
+                SpellWorks.GiveBody(ref run);
+                // Quickened, the player is free at once and the cuts land on the next step.
+                if (run.T1 <= 0f) return true;
                 Vector3 away = enemies > 0 && FormKit.Alive(things[0]) ? run.C - SigKit.Foot(things[0], run.C.y) : -run.B;
                 if (away.sqrMagnitude > 0.01f) player.transform.rotation = Quaternion.LookRotation(away.normalized, Vector3.up);
-                SpellWorks.GiveBody(ref run);
                 SpellWorks.TakeBody(ref run, false, false);
                 FormFx.Lay(FormMark.Ring, run.C, 2.6f, FormKit.Lit(cast.Colour, 3f), 0.2f, 0.8f);
                 return true;
@@ -142,6 +145,9 @@ namespace Clover.Player.Forms
             }
             return run.Age < run.T2 + AfterSeconds;
         }
+
+        /// <summary>The seconds the player stands still before the cuts land: none for a quickened cast (Delay 0), else at least 0.15.</summary>
+        public static float StillFor(float delay) => delay <= 0f ? 0f : Mathf.Max(0.15f, delay);
 
         /// <summary>How many enemies the last cast discharged, for probes.</summary>
         public static int Discharged { get; private set; }
