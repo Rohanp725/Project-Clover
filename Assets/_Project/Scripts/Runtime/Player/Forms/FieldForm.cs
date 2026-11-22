@@ -31,7 +31,9 @@ namespace Clover.Player.Forms
             float seconds = Mathf.Max(0.5f, cast.Spec.Seconds);
             // It spreads out from its middle in a moment, and draws in again at the end.
             float spread = Mathf.Clamp01(run.Age / 0.25f) * Mathf.Clamp01((seconds - run.Age) / 0.3f);
-            float across = radius * 2f * spread;
+            // A field that grows out ring by ring (Rime Over Rime) shows only as far as it has grown.
+            float grown = cast.Spec.GrowsOut > 0 ? FormRules.GrownRadius(radius, cast.Spec.GrowsOut, Mathf.Max(0, run.Done - 1)) / Mathf.Max(0.01f, radius) : 1f;
+            float across = radius * 2f * spread * grown;
             FormFx.PlaceMark(marks[0], run.A, Quaternion.identity, new Vector3(across, 1f, across));
             FormFx.PlaceMark(marks[1], run.A, Quaternion.Euler(0f, run.Age * 35f, 0f), new Vector3(across * 0.82f, 1f, across * 0.82f));
             if (run.Age >= seconds) return false;
@@ -44,6 +46,8 @@ namespace Clover.Player.Forms
             }
             if (run.Age < run.T1) return true;
             run.T1 += Mathf.Max(0.1f, cast.Spec.Interval);
+            // A field growing out reaches a ring further at each bite.
+            radius = FormRules.GrownRadius(radius, cast.Spec.GrowsOut, run.Done++);
             // The bite: every spike on it stands up at once, and a ring runs to its edge.
             cast.Combat.StrikeArea(run.A, radius, cast.Blow(cast.Spec.LingerDamage, 0f));
             // A field that draws in (The Pit): what stands in it is dragged toward its middle.

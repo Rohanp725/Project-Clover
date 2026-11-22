@@ -472,6 +472,19 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void TheRimeGrowsOutRingByRing()
+        {
+            Assert.AreEqual(1.5f, FormRules.GrownRadius(4.5f, 3, 0), 1e-5f);
+            Assert.AreEqual(3f, FormRules.GrownRadius(4.5f, 3, 1), 1e-5f);
+            Assert.AreEqual(4.5f, FormRules.GrownRadius(4.5f, 3, 2), 1e-5f);
+            Assert.AreEqual(4.5f, FormRules.GrownRadius(4.5f, 3, 7), 1e-5f, "no further than its radius");
+            Assert.AreEqual(4.5f, FormRules.GrownRadius(4.5f, 0, 0), 1e-5f, "a plain field is whole at once");
+            var rime = Upgrade.ById(Clover.Player.Trees.Duo.VenomRimeDuo.RimeOverRime).Spell;
+            Assert.AreEqual(3, rime.GrowsOut);
+            Assert.AreEqual(0.6f, rime.Interval, 1e-5f, "0.6 s apart");
+        }
+
+        [Test]
         public void TheSeaComesInQuickensYouOnlyInYourOwnWater()
         {
             var sea = Upgrade.ById(WaterTree.TheSeaComesIn);

@@ -5,6 +5,13 @@ namespace Clover.Player.Forms
     /// <summary>The plain geometry spell forms share: where the n-th of a count of things goes, and whether a wall stands between two points.</summary>
     public static class FormRules
     {
+        /// <summary>
+        /// The radius a field growing out in <paramref name="rings"/> rings reaches at its bite numbered <paramref name="bite"/>
+        /// (from 0): a ring further each bite to <paramref name="radius"/>; with no rings, the whole radius at once.
+        /// </summary>
+        public static float GrownRadius(float radius, int rings, int bite) =>
+            rings <= 0 ? radius : radius * Mathf.Clamp01((bite + 1) / (float)rings);
+
         /// <summary>The place of the piece numbered <paramref name="index"/> in a row along <paramref name="way"/> from <paramref name="from"/>, <paramref name="apart"/> metres apart, the first that far ahead.</summary>
         public static Vector3 InRow(Vector3 from, Vector3 way, float apart, int index)
         {

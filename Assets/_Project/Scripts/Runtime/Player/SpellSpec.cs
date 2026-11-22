@@ -103,6 +103,8 @@ namespace Clover.Player
         public float Between;
         /// <summary>For the pillars form: above zero, its pillars stand in a row along the way you face, this many metres apart, the first that far ahead, whoever stands there (String of Bubbles).</summary>
         public float InLine;
+        /// <summary>For the field form: above zero, it grows out in this many rings, one at each bite, each reaching further, to its full radius (Rime Over Rime).</summary>
+        public int GrowsOut;
         /// <summary>Above zero: seconds a form's whole mark glows on the ground before it breaks open (Fissure's crack: 0.9); zero breaks it just behind its running mark.</summary>
         public float Glow;
         /// <summary>Above zero: the share of the run's pace the player may walk at while the form's stance holds (Firewalker: half); zero roots them.</summary>
