@@ -313,18 +313,17 @@ namespace Clover.Player.Trees.Ways
 
         private static void AddAnswer(List<Upgrade> to)
         {
-            // NEEDS: the answer window (a perfect guard opening 0.6 s, a white flick down the blade; light attack in it the
-            // Riposte, 24 and critical; heavy, Through the Gap, a step to the attacker's back, 30 and 40 stagger). The patch takes
-            // a tenth off the light blows.
+            // The moment to answer is Way/AnswerWindow.cs, kept in the player's AspectRun. NEEDS: the Riposte's and Through the
+            // Gap's own clips (way-clips) and the moment's look (way-answer-look). The patch takes a tenth off the light blows.
             Mark(to, Answer, "The Answer", UpgradeKind.Aspect, Answer, "", UpgradeIcons.Shield,
                 "Counter. A perfect guard gives you a moment to answer. Press light attack to riposte with a critical cut. Press heavy attack to slip past and cut them from behind. Your normal light cuts do a little less damage.");
             // NEEDS: a share on the perfect guard's stagger; the patch adds a little to what it throws.
             Mark(to, TurnedEdge, "Turned Edge", UpgradeKind.Minor, Answer, Answer, UpgradeIcons.Shield,
                 "Perfect guards break the attacker's balance faster.");
-            // NEEDS: the answer window (as the Answer's).
+            // Way/AnswerWindow.cs: the moment lasts 0.8 s.
             Mark(to, OpenWindow, "Open Window", UpgradeKind.Major, Answer, TurnedEdge, UpgradeIcons.Hourglass,
                 "You have longer to answer.");
-            // NEEDS: the answer window, and a count of the guard held unstruck (AspectRun).
+            // Way/AnswerWindow.cs: the guard held unstruck counted in AspectRun.SinceCount.
             Mark(to, PatientBlade, "Patient Blade", UpgradeKind.Major, Answer, OpenWindow, UpgradeIcons.Eye,
                 "The longer you hold your guard without being hit, the harder your next answer breaks balance.");
 
@@ -333,20 +332,20 @@ namespace Clover.Player.Trees.Ways
             // drawing cut's clip. It takes Kozuka's input while the Answer is active.
             Mark(to, GuardCut, "Guard Cut", UpgradeKind.Major, Answer, PatientBlade, UpgradeIcons.Blade,
                 "While guarding, press light attack. You make a short cut and keep your guard up.");
-            // NEEDS: the answer window (as the Answer's), kept open for a second perfect guard.
+            // Way/AnswerWindow.cs: the moment kept open for a second perfect guard.
             Mark(to, SecondAnswer, "Second Answer", UpgradeKind.Major, Answer, GuardCut, UpgradeIcons.Ring,
                 "Your moment to answer stays open for a second perfect guard. A second answer breaks balance harder.");
-            // NEEDS: the answer coming by itself after every perfect guard (Through the Gap if heavy follows within 0.3 s) and the
-            // Riposte's seam 4 m past the attacker. The wider window is a stat; the patch makes the light chain two cuts.
+            // The answer comes by itself (AnswerWindow.Answers). NEEDS (way-answer-window): Through the Gap if heavy follows within
+            // 0.3 s, and the Riposte running on 4 m past the attacker. The wider window is a stat; the patch makes the chain two cuts.
             var kiri = Mark(to, KiriOtoshi, "Kiri-otoshi", UpgradeKind.Keystone, Answer, SecondAnswer, UpgradeIcons.Star,
                 "Your answer comes on its own. Every perfect guard is followed by a riposte right away. Press heavy attack quickly to slip past instead. Perfect guards are a little easier, and your light combo is two cuts. The riposte cuts on past them and hits whoever is behind.");
             kiri.Stats = new[] { new StatMod(PlayerStat.PerfectGuardWindow, 0.17f) };
 
             // Path B: kept for the red blow.
-            // NEEDS: a red attack turned as a trigger (content_open.tsv, red-attack) and the answer window.
+            // Way/AnswerWindow.cs: a red blow turned (PlayerDefence.RedTurns) opens the moment for 1 s.
             Mark(to, CatchTheRed, "Catch the Red", UpgradeKind.Major, Answer, PatientBlade, UpgradeIcons.Target,
                 "After a perfect guard on a red attack, you have much longer to answer.");
-            // NEEDS: a perfect window that is wider against red attacks only.
+            // Guard.RedWindowBonus, set as the weapon is armed.
             Mark(to, ReadTheRed, "Read the Red", UpgradeKind.Major, Answer, CatchTheRed, UpgradeIcons.Eye,
                 "Red attacks are easier to guard perfectly.");
             // NEEDS: a red attack turned as a trigger, time stopped 0.3 s with the camera's lean, and one passing cut through the

@@ -22,6 +22,10 @@ namespace Clover.Player.Way.Aspects
         public override string Id => KatanaWay.Answer;
         public override string Weapon => Weapons.KatanaName;
 
+        // The moment to answer: Way/AnswerWindow.cs. NEEDS (way-answer-look): the guard_perfect clip's blade snapped
+        // forward and the weapon's highlight glowing while the moment lasts (question 12).
+        public override void Tick(ref AspectRun run, in AspectContext context) => AnswerWindow.Tick(ref run, context);
+
         public override void Patch(Weapon weapon, IMarkQuery marks)
         {
             if (weapon?.Combo == null || weapon.Combo.Steps.Count == 0 || marks == null) return;
@@ -49,6 +53,14 @@ namespace Clover.Player.Way.Aspects
             step.Damage = RiposteDamage;
             step.Stagger = RiposteStagger;
             step.Sweep = 0f;
+            // The guard snaps straight into the cut, critical (way_build_plan.md 3.4). NEEDS: its own clip,
+            // attack_katana_riposte (way-clips, question 20); the stepping cut's plays at these timings.
+            step.Windup = AnswerWindow.RiposteWindup;
+            step.Active = AnswerWindow.RiposteActive;
+            step.Recovery = AnswerWindow.RiposteRecovery;
+            step.Lunge = AnswerWindow.RiposteLunge;
+            step.HitStopSeconds = AnswerWindow.RiposteHitStop;
+            step.Critical = true;
             return step;
         }
 
@@ -62,6 +74,10 @@ namespace Clover.Player.Way.Aspects
             step.Stagger = GapStagger;
             step.Travel = GapTravel;
             step.PassThrough = true;
+            // NEEDS: its own clip, attack_katana_through_gap (way-clips, question 20); the Iaido Slash's plays at these timings.
+            step.Windup = AnswerWindow.GapWindup;
+            step.Recovery = AnswerWindow.GapRecovery;
+            step.Lunge = 0f;
             return step;
         }
     }

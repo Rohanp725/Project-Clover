@@ -90,6 +90,8 @@ namespace Clover.Player
         // Counters so tests and probes can see what happened without watching the screen.
         public int BlowsTaken { get; private set; }
         public int Blocks { get; private set; }
+        /// <summary>Red (unguardable) blows turned by a perfect guard, counted for the Way's answers (Catch the Red).</summary>
+        public int RedTurns { get; private set; }
         public int PerfectGuards { get; private set; }
         public int Dodges { get; private set; }
         public int PerfectDodges { get; private set; }
@@ -434,6 +436,7 @@ namespace Clover.Player
             {
                 case GuardResult.Perfect:
                     PerfectGuards++;
+                    if (hit.Unblockable) RedTurns++;
                     Vfx.Play(VfxKind.PerfectGuard, GuardPoint(), transform.forward);
                     if (guardArc != null) guardArc.Pulse(new Color(4.5f, 3.2f, 0.7f, 1f), 0.35f, 0.5f);
                     Vfx.Play(VfxKind.Ring, GuardPoint(), transform.forward);

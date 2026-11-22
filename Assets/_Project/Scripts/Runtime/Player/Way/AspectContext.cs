@@ -12,6 +12,10 @@ namespace Clover.Player.Way
         public bool RedTurned;
         /// <summary>True when a blow landed on the player this step (not on the guard).</summary>
         public bool Struck;
+        /// <summary>True while the guard is raised.</summary>
+        public bool Guarding;
+        /// <summary>True when a blow landed on the raised guard this step.</summary>
+        public bool GuardHit;
         /// <summary>True when a finisher of the weapon landed this step.</summary>
         public bool Finished;
         /// <summary>True when the player killed this step.</summary>

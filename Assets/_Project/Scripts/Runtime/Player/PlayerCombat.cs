@@ -418,6 +418,9 @@ namespace Clover.Player
                 defence.Guard.StaminaPerDamage = guard.StaminaPerDamage;
                 defence.Guard.ChipFraction = guard.ChipFraction;
                 defence.Guard.ArcDegrees = guard.ArcDegrees;
+                // The Answer's Read the Red: red attacks are easier to guard perfectly.
+                if (upgrades == null) upgrades = GetComponent<PlayerUpgrades>();
+                defence.Guard.RedWindowBonus = upgrades != null && upgrades.Has(Trees.Ways.KatanaWay.ReadTheRed) ? Way.AnswerWindow.ReadTheRedSeconds : 0f;
                 defence.GuardWidth(guard.ArcDegrees);
             }
             var dodge = weapon.DodgeProfile ?? usualDodge;
@@ -537,6 +540,14 @@ namespace Clover.Player
             var buttons = player.Buttons;
             bool lightNow = (buttons != null ? buttons.Pressed(PlayerButton.LightAttack) : lightAction.WasPressedThisFrame()) && !WeaponAway;
             bool heavyNow = (buttons != null ? buttons.Pressed(PlayerButton.HeavyAttack) : heavyAction.WasPressedThisFrame()) && !WeaponAway;
+            // The Answer's moment (way_build_plan.md 3.4): light is the Riposte, heavy Through the Gap; Kiri-otoshi answers
+            // by itself. Never into a wind-up or a swing already out.
+            if (Weapon.Aspect is Way.Aspects.AnswerAspect && Way.AnswerWindow.Open(AspectState)
+                && (lightNow || heavyNow || Way.AnswerWindow.Answers(upgrades)) && TryAnswer(heavyNow && !lightNow))
+            {
+                lightNow = false;
+                heavyNow = false;
+            }
             if (lightNow)
             {
                 Chord.Light();
@@ -1711,7 +1722,9 @@ namespace Clover.Player
         /// </summary>
         public Way.AspectRun AspectState;
         private Way.WeaponAspect aspectKept;
-        private int landedThisFrame, guardsSeen, blowsSeen;
+        private int landedThisFrame, guardsSeen, blowsSeen, redSeen, blockedSeen;
+        /// <summary>Answers given in the Answer's moment (the Riposte, Through the Gap), for probes.</summary>
+        public int Answers { get; private set; }
         private bool finishedThisFrame;
         // Stagger the aspect adds to the blow going out (the seventh drum's draw).
         private float aspectStagger;
@@ -1725,6 +1738,7 @@ namespace Clover.Player
         {
             var aspect = Weapon != null ? Weapon.Aspect : null;
             int guards = defence != null ? defence.PerfectGuards : 0, blows = defence != null ? defence.BlowsTaken : 0;
+            int red = defence != null ? defence.RedTurns : 0, blocked = defence != null ? defence.Blocks : 0;
             if (aspect != null)
             {
                 if (spells == null) spells = GetComponent<PlayerSpells>();
@@ -1734,6 +1748,9 @@ namespace Clover.Player
                     Landed = landedThisFrame,
                     PerfectGuard = guards != guardsSeen,
                     Struck = blows != blowsSeen,
+                    RedTurned = red != redSeen,
+                    GuardHit = blocked != blockedSeen,
+                    Guarding = defence != null && defence.IsGuarding,
                     Finished = finishedThisFrame,
                     InFight = spells != null && spells.Fight.InFight,
                     Marks = upgrades,
@@ -1742,8 +1759,27 @@ namespace Clover.Player
             }
             guardsSeen = guards;
             blowsSeen = blows;
+            redSeen = red;
+            blockedSeen = blocked;
             landedThisFrame = 0;
             finishedThisFrame = false;
+        }
+
+        // The answer given in the moment: Through the Gap is untouchable while it passes the attacker.
+        private bool TryAnswer(bool heavy)
+        {
+            if (Combo.Phase == AttackPhase.Windup || Combo.Phase == AttackPhase.Active) return false;
+            var kept = AspectState;
+            var step = Way.AnswerWindow.Answer(ref AspectState, Weapon, heavy, upgrades);
+            if (step == null || !Combo.Follow(step, player.Stamina))
+            {
+                AspectState = kept;
+                return false;
+            }
+            player.FacePointer();
+            if (heavy && defence != null) defence.UntouchableUntil = Mathf.Max(defence.UntouchableUntil, Time.time + step.Windup + step.Active);
+            Answers++;
+            return true;
         }
 
         // Dragging Draw's return cut, waiting its moment after the draw; and the finisher's held pose.
@@ -1913,7 +1949,7 @@ namespace Clover.Player
                 else if (distance > 0.6f && Vector3.Angle(transform.forward, offset) > step.ArcDegrees * 0.5f) continue;
                 var afflictable = target as IAfflictable;
                 // A blow is critical by chance, or always on an enemy that is Marked.
-                bool promised = step.Heavy && HeavyCriticalLeft > 0f;
+                bool promised = (step.Heavy && HeavyCriticalLeft > 0f) || step.Critical;
                 float chance = CritChance;
                 if (Stats != null) chance += Stats.Blow(PlayerStat.CritChance, step.Heavy, false) + (afflictable != null ? Stats.Against(PlayerStat.CritChance, afflictable.Afflictions) : 0f);
                 // Counter Cut: a blow that lands on an enemy showing its own attack (winding up or striking) is critical.

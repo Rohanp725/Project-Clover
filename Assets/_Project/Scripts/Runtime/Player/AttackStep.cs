@@ -83,6 +83,8 @@ namespace Clover.Player
         /// clip, no new frames): the Katana's finisher behind the enemy. Zero: none, as every clip with its hold built in.
         /// </summary>
         public float PoseHold;
+        /// <summary>Every blow of this step is critical (the Answer's Riposte).</summary>
+        public bool Critical;
         /// <summary>The blow stops in the first enemy it meets, the nearest in its reach, and strikes no other (Settling Draw).</summary>
         public bool FirstOnly;
         /// <summary>Metres a finished enemy is thrown sideways, the way the cut travels: the hammer's last blow.</summary>
