@@ -8,11 +8,11 @@ design yet, its **Not built yet** line says what is missing. "Your stones" means
 Rise's rocks, a pillar, a heap of rubble.
 
 ## earth.tremor
-**What it does.** Your heavy blows shake the ground under an enemy and add Tremor. A finisher fills it all the way at once. A shaken enemy is slowed, and its balance doesn't come back while the shaking lasts.
+**What it does.** Your heavy blows shake the ground under an enemy and add Tremor. A finisher fills it all the way at once. A shaken enemy is slowed, and its balance doesn't come back while the shaking lasts. Also, afflictions that elites and gods put on you last half as long.
 
 **When it happens.** Every heavy blow that lands adds a stack. Every finisher fills it. Like every root mark, your weapon only adds it while Earth is your first element. If Earth is your second element, Tremor comes from your spells, the charged blade and the R2 strike.
 
-**The numbers.** 2 Shards. One stack for each heavy blow, three on a finisher, up to three stacks. Tremor lasts 6 seconds. Each stack slows the enemy by 10%, and while it lasts, the enemy's stagger meter doesn't go down.
+**The numbers.** 2 Shards. One stack for each heavy blow, three on a finisher, up to three stacks. Tremor lasts 6 seconds. Each stack slows the enemy by 10%, and while it lasts, the enemy's stagger meter doesn't go down. An affliction put on you (an elite or a god lays its land's when its blow lands) lasts half its usual time.
 
 **Works with.** Heavy Hand and The Slow Hand (more heavy blows, or every blow shaking), Cairn (it uses up Tremor to drop stones), Left in Rubble, Bedrock (one more stack with every blow), Buckled on the Forge branch, and The Ground Gives when Soaked meets Tremor.
 

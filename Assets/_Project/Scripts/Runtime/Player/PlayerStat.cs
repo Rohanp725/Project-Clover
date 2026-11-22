@@ -184,5 +184,7 @@ namespace Clover.Player
         KnockbackTaken,
         /// <summary>Flat, seconds. Added to the wait before grey health starts to fade.</summary>
         GreyDelay,
+        /// <summary>Share. How long afflictions laid on the player last (Tremor, Earth's root: -0.5, half as long).</summary>
+        AfflictionsOnYou,
     }
 }

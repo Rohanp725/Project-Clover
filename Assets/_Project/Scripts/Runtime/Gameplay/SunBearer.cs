@@ -2613,6 +2613,8 @@ namespace Clover.Gameplay
             LastBlow = blowName ?? mode.ToString();
             blowName = null;
             var outcome = victim.TakeHit(hit);
+            // A god lays its land's affliction on the player its blow lands on (the stand-in plan's question 1).
+            if (outcome == HitOutcome.Landed && victim is Clover.Player.PlayerDefence struckPlayer) struckPlayer.StruckInLand(EnemyRank.God, gameObject.scene.name);
             if (outcome != HitOutcome.PerfectGuard || IsStaggered || IsDead || balanceIfTurned <= 0f) return outcome;
             flashLeft = 0.09f;
             flashTint = default;

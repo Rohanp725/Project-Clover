@@ -145,7 +145,27 @@ namespace Clover.Player
         }
 
         // Tips are said last in the frame, when it is known whether the fight has already used the status line.
-        private void LateUpdate() => Tips.EndFrame(this, Time.deltaTime);
+        private void LateUpdate()
+        {
+            Tips.EndFrame(this, Time.deltaTime);
+            // What the elites and gods laid bites on its own clock.
+            float bite = Afflictions.Tick(Time.deltaTime);
+            if (bite > 0f && !IsDead) Health.Damage(bite);
+        }
+
+        /// <summary>The afflictions laid on the player (question 1 of the stand-in plan: elites and gods lay their land's).</summary>
+        public readonly PlayerAfflictions Afflictions = new PlayerAfflictions();
+
+        /// <summary>
+        /// A blow of an enemy of <paramref name="rank"/> landed on the player in the land a scene belongs to: an elite or a
+        /// god lays that land's affliction, one stack. True when it took.
+        /// </summary>
+        public bool StruckInLand(Clover.Gameplay.EnemyRank rank, string sceneName)
+        {
+            if (!PlayerAfflictions.Lays(rank)) return false;
+            var kind = PlayerAfflictions.OfLand(Outfits.LandOf(sceneName));
+            return kind != Clover.Gameplay.AfflictionKind.None && Afflictions.Lay(kind, 1);
+        }
 
         /// <summary>Forgets a button being held, as when a menu or a leap takes the buttons away part-way through a hold.</summary>
         public void DropHolds()

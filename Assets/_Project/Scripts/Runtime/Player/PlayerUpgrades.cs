@@ -960,6 +960,8 @@ namespace Clover.Player
             appliedSurge = surging;
             float surgeSpeed = surging ? Stats.Multiplier(PlayerStat.SurgeSpeed) : 1f;
             player.MoveSpeed = baseMoveSpeed * Stats.Multiplier(PlayerStat.MoveSpeed) * surgeSpeed;
+            // Afflictions laid on the player last as long as the stat says (Tremor: half as long).
+            if (defence != null) defence.Afflictions.SecondsScale = Mathf.Max(0f, Stats.Multiplier(PlayerStat.AfflictionsOnYou));
             player.Dodge.Distance = baseDodgeDistance * Stats.Multiplier(PlayerStat.DodgeDistance) + Stats.Sum(PlayerStat.DodgeMetres);
             // The Body (task 5.4): stamina, how soon it returns, the dodge's wait and its flow.
             player.Stamina.Maximum = Mathf.Max(1f, baseStaminaMost + Stats.Sum(PlayerStat.StaminaMost));
@@ -1158,6 +1160,8 @@ namespace Clover.Player
             Stats.SetWhen(StatWhen.LowWater, hasTideClock && !tideHigh);
             if (sharerCount > 0) PayShares();
             if (defence == null) return;
+            // Bedrock, Earth's surge: nothing laid on the player stays while it lasts.
+            defence.Afflictions.Shedding = element != null && element.SurgeActive && element.DuoSurgeWorn == null && element.SurgeInfo != null && element.SurgeInfo.Name == Elements.Earth;
             Stats.SetWhen(StatWhen.Guarding, defence.IsGuarding);
             Stats.SetWhen(StatWhen.LowHealth, !defence.IsDead && defence.Health.Fraction < LowHealthShare);
             Stats.SetWhen(StatWhen.HalfHealth, !defence.IsDead && defence.Health.Fraction < 0.5f);
@@ -2053,6 +2057,9 @@ namespace Clover.Player
                     if (!bespoke) ElementLook.Strike(chill, centre, 0.3f);
                     break;
                 }
+                case UpgradeAction.Cleanse:
+                    if (defence != null) defence.Afflictions.Clear();
+                    break;
                 case UpgradeAction.StrikeCondition:
                     if (subject is IAfflictable split) split.Afflictions.Conditions.StrikeWhere(effect.Condition, true);
                     break;

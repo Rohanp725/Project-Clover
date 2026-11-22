@@ -1236,6 +1236,8 @@ namespace Clover.Gameplay
             var struck = target.GetComponentInParent<IDamageable>();
             if (struck == null) return;
             var outcome = struck.TakeHit(new Hit(damage, 0f, direction, false, attack.Unblockable, from));
+            // An elite or a god lays its land's affliction on the player its blow lands on (the stand-in plan's question 1).
+            if (outcome == HitOutcome.Landed && struck is Clover.Player.PlayerDefence struckPlayer) struckPlayer.StruckInLand(Afflictions.Rank, gameObject.scene.name);
             // A blow that lands near him is a fight he can feel; a ray that lands far off tells him nothing new.
             if (Kind.HuntsByLight && outcome != HitOutcome.Missed) Sense.Fight(Vector3.Distance(transform.position, target.position));
             if (outcome == HitOutcome.Landed) Took(attack);

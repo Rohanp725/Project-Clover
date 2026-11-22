@@ -305,7 +305,7 @@ the next blows on that enemy critical.
 
 **Works with.** Red Before the Sun: archers and charges coming at you, a build that counters attacks, Unblemished. High Noon: being surrounded, Weighed, Spoken Sentence.
 
-**Not built yet.** Red Before the Sun should add rings for each blow it stops, and fire the beam with a second press; for now, it bursts where it stands. It should also stop thrown attacks. High Noon should burn away enemy clouds, flames, frost and danger zones, and clear the afflictions on you.
+**Not built yet.** Red Before the Sun should add rings for each blow it stops, and fire the beam with a second press; for now, it bursts where it stands. It should also stop thrown attacks. High Noon clears the afflictions on you as it comes down, but it doesn't yet burn away enemy clouds, flames, frost and danger zones.
 
 **Example.** Use High Noon in the middle of a pack. Everything around you is Marked at once, and the cuts that follow are critical hits.
 

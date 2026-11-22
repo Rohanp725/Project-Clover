@@ -127,5 +127,7 @@ namespace Clover.Player
         /// shatter told to whatever answers one (Brittle to the Core). Nothing on one that is not frozen. Reads: Damage, Stagger.
         /// </summary>
         Shatter,
+        /// <summary>Clears every affliction laid on the player (High Noon). Reads nothing.</summary>
+        Cleanse,
     }
 }

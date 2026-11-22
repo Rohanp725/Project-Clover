@@ -57,9 +57,10 @@ namespace Clover.Player.Trees
             const AfflictionKind T = AfflictionKind.Tremor;
 
             // The design lays Tremor with heavy blows only; a root lays its affliction with every blow, as the schema asks.
-            // NEEDS: Earth's base buff from GAME.md, afflictions on you lasting half as long (afflictions-on-player).
+            // Earth's base buff from GAME.md: afflictions laid on you (by elites and gods, PlayerAfflictions) last half as long.
             to.Add(BranchPattern.Put(new Upgrade { Id = Root, Name = "Tremor", Element = E, Kind = UpgradeKind.Root, Icon = UpgradeIcons.Rock,
-                Description = "Heavy blows and finishers shake an enemy's footing, up to three deep. A shaken enemy is slow, and its balance does not come back.",
+                Description = "Heavy blows and finishers shake an enemy's footing, up to three deep. A shaken enemy is slow, and its balance does not come back. Afflictions laid on you last half as long.",
+                Stats = new[] { new StatMod(PlayerStat.AfflictionsOnYou, -0.5f) },
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.HeavyHit, Do = UpgradeAction.Afflict, Affliction = T, Stacks = 1 }, new UpgradeEffect { On = UpgradeTrigger.FinisherHit, Do = UpgradeAction.Afflict, Affliction = T, Stacks = 3 } } },
                 BranchPattern.Root));
 

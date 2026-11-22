@@ -325,9 +325,10 @@ namespace Clover.Player.Trees
                 new ShapeDef { Name = "Red Before the Sun", Form = SpellForms.Wall,
                     Description = "The rings are not loosed as a beam. They stand before you as a curved shield of red dawn three metres wide for four seconds, which stops thrown attacks and blows from the front. Each blow it stops adds a ring; press again to loose what is left as the beam. Light's one shield, and still a beam at the end.",
                     Spell = new SpellSpec { Reach = 1.5f, Arc = 3f, Delay = 0.15f, Seconds = 4f, Radius = 2.5f, Damage = 48f, Stagger = 36f, Stacks = 1 } },
-                // NEEDS: enemy clouds, flame, frost and hazards burned away inside (purify), and the afflictions on you cleared
-                // (afflictions-on-player). The column is the nova form, six rings' worth.
+                // The afflictions on you are cleared as it comes down (UpgradeAction.Cleanse). NEEDS: enemy clouds, flame, frost
+                // and hazards burned away inside (purify). The column is the nova form, six rings' worth.
                 new ShapeDef { Name = "High Noon", Form = SpellForms.Nova,
+                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Cleanse } },
                     Description = "The light comes straight down on you as a column five metres across. It burns away every enemy cloud, flame, frost and hazard inside, clears every affliction on you, and strikes everything inside for 6 damage a ring, Marking it. The purifying version.",
                     Spell = new SpellSpec { Radius = 2.5f, Delay = 0.3f, Damage = 36f, Stagger = 36f, Stacks = 1 } },
                 "Opens two shapes of Daybreak, chosen at any rest fire: Red Before the Sun, a shield of dawn before the beam, or High Noon, a column that burns the ground clean.",
