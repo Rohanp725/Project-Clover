@@ -527,6 +527,17 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void BlownThroughLeavesYouUntouchableAsYouGo()
+        {
+            var blown = Upgrade.ById(Clover.Player.Trees.Duo.BreathTakenDuo.BlownThrough).Effects.Where(each => each.On == UpgradeTrigger.SpellHit).ToList();
+            int untouchable = blown.FindIndex(each => each.Do == UpgradeAction.Untouchable);
+            int step = blown.FindIndex(each => each.Do == UpgradeAction.Step);
+            Assert.GreaterOrEqual(untouchable, 0);
+            Assert.Less(untouchable, step, "untouchable before the step is taken");
+            Assert.AreEqual(0.4f, blown[untouchable].Seconds, 1e-5f);
+        }
+
+        [Test]
         public void TheSeaComesInQuickensYouOnlyInYourOwnWater()
         {
             var sea = Upgrade.ById(WaterTree.TheSeaComesIn);

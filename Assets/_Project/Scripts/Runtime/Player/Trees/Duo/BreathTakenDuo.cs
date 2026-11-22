@@ -113,8 +113,9 @@ namespace Clover.Player.Trees.Duo
             // (SpellTimings). The parry form stands you in the gust for 1 s, cast in Dark (a Curse on what it answers); the
             // answer makes the attacker Unsteady, so its breath is taken, and the wind sets you down 2 m behind it. Your first
             // weapon blow on it within a second is critical and gives back half its own wait.
-            // NEEDS: the wind carrying you through the attacker untouchable, facing it (form-pieces; now a step to 2 m beyond
-            // it); the small push round you when nothing comes (missed-counter). Half its own wait back (KeepWaitShare).
+            // You are untouchable as the wind sets you down beyond it, facing it (UpgradeAction.Untouchable, the step's turn).
+            // NEEDS: the wind carrying you through as a glide rather than the quick step (form-pieces); the small push round you
+            // when nothing comes (missed-counter). Half its own wait back (KeepWaitShare).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = BlownThrough, Name = "Blown Through", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Role = SpellRole.Counter, Requires = new[] { IllOmen, ShortOfBreath }, Icon = UpgradeIcons.Wing,
@@ -124,6 +125,7 @@ namespace Clover.Player.Trees.Duo
                 Effects = new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Unsteady, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Cooldown = 0.5f, Do = UpgradeAction.Untouchable, Seconds = 0.4f },
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Cooldown = 0.5f, Do = UpgradeAction.Step, Reach = 4f, Amount = 2f },
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Condition,
                         State = new ConditionSpec { Id = Back, Seconds = 1f, Flags = ConditionFlags.TakesCritical, EndsWith = ConditionBlow.Weapon } },
