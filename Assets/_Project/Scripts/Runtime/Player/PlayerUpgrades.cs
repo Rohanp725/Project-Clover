@@ -997,7 +997,8 @@ namespace Clover.Player
             if (combat != null)
             {
                 combat.CounterCut = On(Trees.MetalTree.CounterCut);
-                combat.HeavyUnbroken = On(Trees.IceTree.Unmoved) || On(Trees.EarthTree.HeavyHand);
+                heavyUnbrokenByMarks = On(Trees.IceTree.Unmoved) || On(Trees.EarthTree.HeavyHand);
+                combat.HeavyUnbroken = heavyUnbrokenByMarks || Time.time < heavyUnbrokenUntil;
                 // Heartwood: no mana. Every price is asked in health and every gain mends.
                 bool heart = On(Trees.LifeTree.Heartwood);
                 if (heart != combat.Mana.Sealed)
@@ -1336,6 +1337,7 @@ namespace Clover.Player
             bool inFire = scorched && Hazards.FireUnder(transform.position);
             Stats.SetWhen(StatWhen.InOwnFire, inFire);
             Stats.SetWhen(StatWhen.InOwnWater, Hazards.OwnGroundUnder(transform.position, AfflictionKind.Soaked));
+            if (combat != null) combat.HeavyUnbroken = heavyUnbrokenByMarks || Time.time < heavyUnbrokenUntil;
             SurgeHeld = inFire;
             if (hasTideClock)
             {
@@ -2210,6 +2212,10 @@ namespace Clover.Player
                     Pickups.DrawAll(effect.Drops);
                     break;
                 case UpgradeAction.PlayLook:
+                    break;
+                case UpgradeAction.HeavyUnbroken:
+                    heavyUnbrokenUntil = Mathf.Max(heavyUnbrokenUntil, Time.time + Or(effect.Seconds, 1f));
+                    combat.HeavyUnbroken = true;
                     break;
                 case UpgradeAction.BurstGround:
                 {
@@ -3170,6 +3176,13 @@ namespace Clover.Player
                 inside.State.Seconds = Mathf.Max(effect.Inside.Seconds, GroundRules.StateSeconds(biteEvery));
                 GroundStatesSet += ConditionCaster.Cast(inside, null, at, combat, LaySource.Effect, conditionScratch);
             }
+            // What the ground does for you while you stand in it (The Wreck), as its mark's own.
+            if (effect.YouInside != null && defence != null && !defence.IsDead && GroundRules.Within(transform.position, at, radius))
+            {
+                foreach (var inner in effect.YouInside)
+                    if (inner != null) Fire(inner, null, transform.position, GroundSource(effect));
+                GroundStoodByYou++;
+            }
             if (effect.Mends > 0f && defence != null && !defence.IsDead && GroundRules.Within(transform.position, at, radius))
             {
                 defence.Heal(GroundRules.MendStep(effect.Mends, biteEvery), false);
@@ -3192,14 +3205,23 @@ namespace Clover.Player
             GroundFlares++;
         }
 
+        /// <summary>Bites of ground that did something for you as you stood in it (UpgradeEffect.YouInside): for probes.</summary>
+        public int GroundStoodByYou { get; private set; }
+
         /// <summary>Grounds that flared as they ran out (UpgradeEffect.InsideAtEnd): for probes.</summary>
         public int GroundFlares { get; private set; }
+
+        // What a ground's own effects lay counts as: a reaction's (or its shape's) starts no reaction.
+        private static LaySource GroundSource(UpgradeEffect effect)
+        {
+            var owner = effect.Owner;
+            return owner != null && (owner.Kind == UpgradeKind.Reaction || ReactionTable.IsReactionShape(owner)) ? LaySource.Reaction : LaySource.Effect;
+        }
 
         // Each enemy standing in the ground now: the ground's own effects done on it, and the marks that answer the ground told of it.
         private void ActOnStanding(UpgradeEffect effect, UpgradeEffect[] inside, string ground, Vector3 at, float radius, object laidFor)
         {
-            var owner = effect.Owner;
-            var source = owner != null && (owner.Kind == UpgradeKind.Reaction || ReactionTable.IsReactionShape(owner)) ? LaySource.Reaction : LaySource.Effect;
+            var source = GroundSource(effect);
             standingTaken.Clear();
             for (int guard = 0; guard < 24; guard++)
             {
@@ -3234,6 +3256,10 @@ namespace Clover.Player
         /// <summary>True when an effect answers ground of the given name told of one standing in it (UpgradeTrigger.InGround).</summary>
         public static bool AnswersGround(UpgradeEffect effect, string ground) =>
             effect != null && !string.IsNullOrEmpty(ground) && effect.Condition == ground;
+
+        // Heavy blows unbroken by the marks in force, and until when by ground stood in (The Wreck).
+        private bool heavyUnbrokenByMarks;
+        private float heavyUnbrokenUntil = -100f;
 
         // Where each patch a BurstGround took lay, and how wide.
         private readonly Vector3[] groundBurstAt = new Vector3[16];

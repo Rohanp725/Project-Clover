@@ -26,7 +26,8 @@ namespace Clover.Player.Trees.Duo
             const string A = Elements.Life, B = Elements.Poison;
 
             // Gathered In draws each joined enemy's bitten dose along the roots into the host itself, to eight (UpgradeEffect.ToLink).
-            // NEEDS: in-own-ground (Summer Grass's 6 health only while you stand inside the spores; now wherever you stand).
+            // Summer Grass's 6 health comes only if you stand inside the spores as they burst (UpgradeEffect.YouInside on a brief
+            // cloud laid with the burst).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Rot Roots: Gathered In or Summer Grass", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -53,7 +54,8 @@ namespace Clover.Player.Trees.Duo
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = SummerGrass, Seconds = 20f } },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionDied, Condition = SummerGrass, Do = UpgradeAction.Burst, Radius = 4f, Delay = 1.5f, Affliction = AfflictionKind.Poison, Stacks = 3 },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionDied, Condition = SummerGrass, Do = UpgradeAction.Burst, Radius = 4f, Delay = 1.5f, Affliction = AfflictionKind.Seeded, Stacks = 1 },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionDied, Condition = SummerGrass, Do = UpgradeAction.Heal, Amount = 6f, Cooldown = 2f },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionDied, Condition = SummerGrass, Do = UpgradeAction.Hazard, Radius = 4f, Delay = 1.5f, Seconds = 0.3f, Interval = 0.5f, Damage = 0f, Stacks = 0,
+                                Affliction = AfflictionKind.Poison, Unseen = true, YouInside = new[] { new UpgradeEffect { On = UpgradeTrigger.InGround, Do = UpgradeAction.Heal, Amount = 6f, Cooldown = 2f } } },
                         },
                     },
                 },

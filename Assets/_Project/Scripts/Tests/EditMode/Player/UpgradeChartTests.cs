@@ -215,7 +215,8 @@ namespace Clover.Tests
                 .Concat(upgrade.Presses != null ? upgrade.Presses.SelectMany(press => press) : Enumerable.Empty<UpgradeEffect>())).ToList();
             // What ground does to each one standing in it (UpgradeEffect.InsideDo) has slots of its own, and its mark as owner.
             var inside = every.Where(effect => effect.InsideDo != null).SelectMany(effect => effect.InsideDo.Select(inner => (effect, inner)))
-                .Concat(every.Where(effect => effect.InsideAtEnd != null).SelectMany(effect => effect.InsideAtEnd.Select(inner => (effect, inner)))).ToList();
+                .Concat(every.Where(effect => effect.InsideAtEnd != null).SelectMany(effect => effect.InsideAtEnd.Select(inner => (effect, inner))))
+                .Concat(every.Where(effect => effect.YouInside != null).SelectMany(effect => effect.YouInside.Select(inner => (effect, inner)))).ToList();
             foreach (var (outer, inner) in inside) Assert.AreSame(outer.Owner, inner.Owner, outer.Owner.Id + "'s ground");
             every.AddRange(inside.Select(pair => pair.inner));
             foreach (var upgrade in Upgrade.All)

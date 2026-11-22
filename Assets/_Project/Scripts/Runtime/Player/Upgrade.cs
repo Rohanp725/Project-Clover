@@ -229,7 +229,7 @@ namespace Clover.Player
         // What ground does to each one standing in it (UpgradeEffect.InsideDo) is its mark's too, with clocks of its own.
         private static void SlotInside(UpgradeEffect effect, Upgrade owner, ref int slots)
         {
-            foreach (var list in new[] { effect.InsideDo, effect.InsideAtEnd })
+            foreach (var list in new[] { effect.InsideDo, effect.InsideAtEnd, effect.YouInside })
             {
                 if (list == null) continue;
                 foreach (var inner in list)

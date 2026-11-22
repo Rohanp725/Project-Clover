@@ -89,15 +89,16 @@ namespace Clover.Player.Trees.Duo
                 Rules = book => book.Afflictions.FadeSlowerWhile(AfflictionKind.Soaked, AfflictionKind.Sundered, 0.5f),
             }, HeartPattern.LeftHigh));
 
-            // NEEDS: heavy blows struck from inside ground of one's own not broken by blows taken (ground-states); the wreck is a
-            // patch that soaks and notches.
+            // The wreck is a patch that soaks and notches, and while you stand in it nothing breaks your heavy blow
+            // (UpgradeEffect.YouInside, UpgradeAction.HeavyUnbroken, kept up by each bite).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = TheWreck, Name = "The Wreck", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { SaltEdge, SaltGuard }, Icon = UpgradeIcons.Anvil,
                 Description = "A rusted enemy that dies leaves its armour on the floor as a wreck 1.5 m across for 8 s. It Soaks and notches whatever stands in it, and your heavy blows struck from inside it are not broken by blows taken.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Soaked, Needs2 = AfflictionKind.Sundered, Do = UpgradeAction.Hazard, Radius = 0.75f, Seconds = 8f, Interval = 1f, Affliction = AfflictionKind.Soaked, Stacks = 1, Cooldown = 0.5f },
+                    new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Soaked, Needs2 = AfflictionKind.Sundered, Do = UpgradeAction.Hazard, Radius = 0.75f, Seconds = 8f, Interval = 1f, Affliction = AfflictionKind.Soaked, Stacks = 1, Cooldown = 0.5f,
+                        YouInside = new[] { new UpgradeEffect { On = UpgradeTrigger.InGround, Do = UpgradeAction.HeavyUnbroken, Seconds = 1.25f } } },
                     new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Soaked, Needs2 = AfflictionKind.Sundered, Do = UpgradeAction.Hazard, Radius = 0.75f, Seconds = 8f, Interval = 2f, Affliction = AfflictionKind.Sundered, Stacks = 1, Cooldown = 0.5f },
                 },
             }, HeartPattern.Keystone));

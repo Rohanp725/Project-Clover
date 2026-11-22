@@ -9,13 +9,11 @@ are both carried.
 
 **When it happens.** Every time Rot Roots goes off while you carry both Life and Poison. Rot Roots goes off when poison lands on a Seeded enemy, or when a seed lands on a poisoned one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Rot Roots.
 
-**The numbers.** Mix, 3 Shards. Gathered In: roots reach three enemies within 5 metres for 6 seconds, and each one is Seeded once. Each time poison bites one of them, one of its doses is drawn along the roots into the enemy they grow from, up to eight. If that enemy is already full, the dose stays where it is. Summer Grass: lasts 20 seconds. If the enemy dies, 1.5 seconds later a puff of spores 4 metres across gives three doses and a Seed to everything in it, and you heal 6. After Rot Roots goes off on an enemy, it can't go off on that enemy again for 4 seconds.
+**The numbers.** Mix, 3 Shards. Gathered In: roots reach three enemies within 5 metres for 6 seconds, and each one is Seeded once. Each time poison bites one of them, one of its doses is drawn along the roots into the enemy they grow from, up to eight. If that enemy is already full, the dose stays where it is. Summer Grass: lasts 20 seconds. If the enemy dies, 1.5 seconds later a puff of spores 4 metres across gives three doses and a Seed to everything in it, and you heal 6 if you are standing inside it (at most once every 2 seconds). After Rot Roots goes off on an enemy, it can't go off on that enemy again for 4 seconds.
 
 **Works with.** Tasting, Deep Threads, The Host, The Stalks Rise (use up what Gathered In pulled together).
 
 **Example.** A crowd: use Gathered In on the toughest one, then set it off. A pack you will cut down one at a time: use Summer Grass, so each death Seeds the rest.
-
-**Not built yet.** Summer Grass heals you wherever you stand, not only inside the spores (at most once every 2 seconds).
 
 ## rotroots.tasting
 **What it does.** While you stand on a root, each poison bite on an enemy joined by the roots heals you 1.

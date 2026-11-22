@@ -429,6 +429,22 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void GroundDoesThingsForYouOnlyWhileYouStandInIt()
+        {
+            var wreck = Upgrade.ById(Clover.Player.Trees.Duo.RustDuo.TheWreck).Effects.First(each => each.YouInside != null);
+            Assert.IsTrue(wreck.ActsAsGround);
+            var unbroken = wreck.YouInside.Single();
+            Assert.AreEqual(UpgradeAction.HeavyUnbroken, unbroken.Do);
+            Assert.Greater(unbroken.Seconds, wreck.Interval, "kept up between its bites while you stay");
+            Assert.AreSame(wreck.Owner, unbroken.Owner);
+            var grass = ShapeOf(Clover.Player.Trees.Duo.RotRootsDuo.Shape, "Summer Grass");
+            Assert.IsFalse(grass.Any(each => each.Do == UpgradeAction.Heal), "not wherever you stand");
+            var spores = grass.Single(each => each.YouInside != null);
+            Assert.AreEqual(6f, spores.YouInside.Single().Amount, 1e-5f);
+            Assert.AreEqual(1.5f, spores.Delay, 1e-5f, "as the spores burst");
+        }
+
+        [Test]
         public void TheSeaComesInQuickensYouOnlyInYourOwnWater()
         {
             var sea = Upgrade.ById(WaterTree.TheSeaComesIn);

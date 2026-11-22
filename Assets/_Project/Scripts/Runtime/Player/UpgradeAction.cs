@@ -302,5 +302,7 @@ namespace Clover.Player
         /// puddles; the ledger's puddles-burst).
         /// </summary>
         BurstGround,
+        /// <summary>For Seconds, nothing interrupts your heavy blow being wound up or swung (The Wreck: struck from inside it).</summary>
+        HeavyUnbroken,
     }
 }

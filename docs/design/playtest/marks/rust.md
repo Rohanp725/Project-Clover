@@ -55,13 +55,11 @@ carried.
 
 **When it happens.** Each time an enemy with both Soaked and Sundered dies, while you carry both Water and Metal.
 
-**The numbers.** Mix, keystone, 5 Shards. A wreck 1.5 metres across that lasts 8 seconds. It adds a Soaked every second and a notch every 2 seconds to whatever stands in it.
+**The numbers.** Mix, keystone, 5 Shards. A wreck 1.5 metres across that lasts 8 seconds. It adds a Soaked every second and a notch every 2 seconds to whatever stands in it. While you stand in it, nothing interrupts your heavy blows, even blows that hit you while you wind up or swing.
 
 **Works with.** Rust, Salt Edge, The Sea Takes It.
 
 **Example.** Fight from inside the wreck of the last soldier you killed.
-
-**Not built yet.** Your heavy blows from inside it can still be interrupted for now.
 
 ## rust.seatakesit
 **What it does.** A wave of salt water rolls ahead of you. Everything it crosses is Soaked, and every notched enemy it crosses rusts all the way through right away.

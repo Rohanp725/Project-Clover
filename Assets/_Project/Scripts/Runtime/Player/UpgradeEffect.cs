@@ -361,6 +361,11 @@ namespace Clover.Player
         /// </summary>
         public UpgradeEffect[] InsideAtEnd;
         /// <summary>
+        /// For a Hazard: effects done for you at each bite while you stand in the ground (the ledger's in-own-ground: The Wreck's
+        /// heavy blows unbroken inside it). Done with no enemy named, at your feet.
+        /// </summary>
+        public UpgradeEffect[] YouInside;
+        /// <summary>
         /// For a Hazard: the name its ground answers to. At each bite every enemy standing in it is told to the marks in force
         /// as <see cref="UpgradeTrigger.InGround"/>, and those whose <see cref="Condition"/> names this ground answer (Seen in the
         /// Water on the net of light).
@@ -390,7 +395,7 @@ namespace Clover.Player
         public UpgradeEffect BurstsGround;
 
         /// <summary>True when a Hazard effect lays ground that keeps acting, told to the marks at each bite (Hazards.GroundActs).</summary>
-        public bool ActsAsGround => Inside != null || Mends > 0f || InsideDo != null || InsideAtEnd != null || !string.IsNullOrEmpty(Ground);
+        public bool ActsAsGround => Inside != null || Mends > 0f || InsideDo != null || InsideAtEnd != null || YouInside != null || !string.IsNullOrEmpty(Ground);
 
         /// <summary>A copy with every number, its slot and its mark (an Empower's twin of its Learn's effect).</summary>
         internal UpgradeEffect Twin() => (UpgradeEffect)MemberwiseClone();
