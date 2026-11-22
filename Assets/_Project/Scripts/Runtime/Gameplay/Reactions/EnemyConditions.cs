@@ -301,6 +301,13 @@ namespace Clover.Gameplay
             return most >= 0f;
         }
 
+        /// <summary>A count of blows begun this many blows along (Held Down: the fig wound at two coils). Never counts back.</summary>
+        public void StartAt(int slot, int blows)
+        {
+            if (slot < 0 || slot >= Slots || !runs[slot].Active || blows <= runs[slot].Blows) return;
+            runs[slot].Blows = blows;
+        }
+
         public void Keep(int slot, float scale)
         {
             if (slot < 0 || slot >= Slots || !runs[slot].Active) return;

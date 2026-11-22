@@ -939,5 +939,35 @@ namespace Clover.Tests
             for (int i = 0; i < 3000; i++) enemy.Tick(0.1f);
             Assert.AreEqual(2, enemy.Stacks(AfflictionKind.Sundered), "five minutes on, its notches are still there");
         }
+
+        [Test]
+        public void HeldDownAndTheYewStartTheFigAtTwoCoils()
+        {
+            int girdled = AfflictionPairs.Index(AfflictionKind.Seeded, AfflictionKind.Cursed);
+            var enemy = new AfflictionSet { Reactions = new ReactionEngine((who, pair, laid) => { }, () => 0) };
+            Assert.AreEqual(0, enemy.CountStartsAt(girdled));
+            enemy.StartCountAt(girdled, 1);
+            Assert.AreEqual(1, enemy.CountStartsAt(girdled), "one blow already drawn");
+            Assert.AreEqual(0, enemy.CountStartsAt(AfflictionPairs.Index(AfflictionKind.Cursed, AfflictionKind.Burn)), "only for the fig");
+            Assert.IsFalse(enemy.Unbound(girdled), "a count, not a reaction gone off alone");
+
+            var coils = new ConditionSpec { Id = Reactions.Coils, Seconds = 8f, Blows = 3 };
+            int slot = enemy.Conditions.Set(coils, null, 1, null, true);
+            enemy.Conditions.StartAt(slot, enemy.CountStartsAt(girdled));
+            enemy.Conditions.Struck(5f, false, false);
+            Assert.IsTrue(enemy.Conditions.Holds(Reactions.Coils), "three coils after one blow");
+            enemy.Conditions.Struck(5f, false, false);
+            Assert.IsFalse(enemy.Conditions.Holds(Reactions.Coils), "crushed at four coils on the second blow, not the third");
+            enemy.Tick(1.1f);
+            Assert.AreEqual(0, enemy.CountStartsAt(girdled), "the note lasts a second");
+
+            var held = Upgrade.ById(Clover.Player.Trees.Duo.GirdledDuo.HeldDown).Effects.Single(each => each.Do == UpgradeAction.ForceReaction);
+            Assert.AreEqual(1, held.CountedBlows, "Held Down: two coils");
+            foreach (var pass in Upgrade.ById(Clover.Player.Trees.Duo.GirdledDuo.WhatTheYewKeeps).Effects.Where(each => each.Do == UpgradeAction.Pass))
+            {
+                Assert.AreEqual("react.girdled", pass.Reaction);
+                Assert.AreEqual(1, pass.CountedBlows, "the fig on the one it passes to: two coils");
+            }
+        }
     }
 }

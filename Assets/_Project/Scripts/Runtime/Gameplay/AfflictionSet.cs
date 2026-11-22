@@ -249,20 +249,49 @@ namespace Clover.Gameplay
         {
             if (pair < 0 || pair >= AfflictionPairs.Count || reactionRest[pair] > 0f) return false;
             if (!ForceReaction(pair, who, true)) return false;
-            unboundPair = pair;
-            unboundLeft = UnboundSeconds;
+            Note(pair);
+            notedUnbound = true;
             return true;
+        }
+
+        /// <summary>
+        /// The next time the pair goes off here, within a second, the counts of blows its conditions keep start this many blows
+        /// along (Held Down and What the Yew Keeps: the fig wound at two coils, one blow already drawn).
+        /// </summary>
+        public void StartCountAt(int pair, int blows)
+        {
+            if (pair < 0 || pair >= AfflictionPairs.Count || blows <= 0) return;
+            Note(pair);
+            notedBlows = blows;
         }
 
         /// <summary>
         /// True while the conditions a reaction sets here should last without the afflictions they last with: it went off as
         /// if laid (<see cref="ReactAsLaid"/>) within the last second, the time its effects take to be done.
         /// </summary>
-        public bool Unbound(int pair) => pair >= 0 && pair == unboundPair && unboundLeft > 0f;
+        public bool Unbound(int pair) => Noted(pair) && notedUnbound;
 
-        private const float UnboundSeconds = 1f;
-        private int unboundPair = -1;
-        private float unboundLeft;
+        /// <summary>The blows a count the pair's conditions keep here starts at (<see cref="StartCountAt"/>); 0 for none.</summary>
+        public int CountStartsAt(int pair) => Noted(pair) ? notedBlows : 0;
+
+        private bool Noted(int pair) => pair >= 0 && pair == notedPair && notedLeft > 0f;
+
+        // One note at a time, kept a second: the time a reaction's effects take to be done after it goes off.
+        private void Note(int pair)
+        {
+            if (!Noted(pair))
+            {
+                notedUnbound = false;
+                notedBlows = 0;
+            }
+            notedPair = pair;
+            notedLeft = NotedSeconds;
+        }
+
+        private const float NotedSeconds = 1f;
+        private int notedPair = -1, notedBlows;
+        private bool notedUnbound;
+        private float notedLeft;
 
         /// <summary>Takes up to this many stacks of an affliction away, with no burst, and says how many went. A burn with no depth counts as one.</summary>
         public int Spend(AfflictionKind kind, int count)
@@ -299,8 +328,10 @@ namespace Clover.Gameplay
         public void Clear()
         {
             owedSeconds = 0f;
-            unboundPair = -1;
-            unboundLeft = 0f;
+            notedPair = -1;
+            notedLeft = 0f;
+            notedBlows = 0;
+            notedUnbound = false;
             windingUp = false;
             windupFor = 0f;
             StrikeIn = float.MaxValue;
@@ -575,7 +606,7 @@ namespace Clover.Gameplay
         {
             BitThisTick = false;
             LandedThisTick = false;
-            if (unboundLeft > 0f) unboundLeft -= deltaTime;
+            if (notedLeft > 0f) notedLeft -= deltaTime;
             Conditions.Tick(deltaTime);
             // A condition that lasts only while afflictions are carried ends once one is gone.
             if (Conditions.Any) Conditions.Keep(PresentMask);

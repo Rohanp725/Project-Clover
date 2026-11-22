@@ -73,8 +73,8 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.LeftLow));
 
-            // NEEDS: a reaction started at a count of its own (reaction-start-count): the fig wound at two coils; now a Seed laid
-            // and Girdled forced through its rest, at one coil.
+            // A Seed laid and Girdled forced through its rest, its coils begun one blow along (UpgradeEffect.CountedBlows): the fig
+            // wound at two coils, so two more blows crush it.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = HeldDown, Name = "Held Down", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Shield,
@@ -82,20 +82,22 @@ namespace Clover.Player.Trees.Duo
                 Effects = new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Needs = AfflictionKind.Cursed, Cooldown = 6f, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Seeded, Stacks = 1 },
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Needs = AfflictionKind.Cursed, Cooldown = 6f, Do = UpgradeAction.ForceReaction, Reaction = Reaction },
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Needs = AfflictionKind.Cursed, Cooldown = 6f, Do = UpgradeAction.ForceReaction, Reaction = Reaction, CountedBlows = 1 },
                 },
             }, HeartPattern.RightLow));
 
             // Its seed and curse pass whole to the nearest enemy within 6 m, and the thorns are withheld
-            // (PlayerUpgrades.YewWithholds). The fig may start there at one coil.
+            // (PlayerUpgrades.YewWithholds). The fig that starts there starts at two coils (UpgradeEffect.CountedBlows).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = WhatTheYewKeeps, Name = "What the Yew Keeps", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { BitterSeed, HeldDown }, Icon = UpgradeIcons.Tower,
                 Description = "A Seeded, Cursed enemy that dies does not burst into thorns: its seed and its curse pass whole to the nearest enemy within 6 m, and the fig starts on it at two coils.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Seeded, Needs2 = AfflictionKind.Cursed, Cooldown = 0.3f, Do = UpgradeAction.Pass, Affliction = AfflictionKind.Seeded, CarriesDepth = true, Reach = 6f },
-                    new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Cursed, Needs2 = AfflictionKind.Seeded, Cooldown = 0.3f, Do = UpgradeAction.Pass, Affliction = AfflictionKind.Cursed, CarriesDepth = true, Reach = 6f },
+                    new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Seeded, Needs2 = AfflictionKind.Cursed, Cooldown = 0.3f, Do = UpgradeAction.Pass, Affliction = AfflictionKind.Seeded, CarriesDepth = true, Reach = 6f,
+                        Reaction = Reaction, CountedBlows = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Cursed, Needs2 = AfflictionKind.Seeded, Cooldown = 0.3f, Do = UpgradeAction.Pass, Affliction = AfflictionKind.Cursed, CarriesDepth = true, Reach = 6f,
+                        Reaction = Reaction, CountedBlows = 1 },
                 },
             }, HeartPattern.Keystone));
 

@@ -83,6 +83,11 @@ namespace Clover.Player
         /// laid-as-condition: The Sun Goes Under, every Burn smouldering, curse or no curse).
         /// </summary>
         public bool AsLaid;
+        /// <summary>
+        /// For ForceReaction, or a Pass that sets <see cref="Reaction"/> off on the enemy it reaches: the counts of blows the
+        /// reaction's conditions keep there start this many blows along (Held Down, What the Yew Keeps: the fig at two coils).
+        /// </summary>
+        public int CountedBlows;
         /// <summary>For the Reacted and ReactionStruck triggers: only a reaction with this affliction in its pair ("every reaction with Chill in it"). None: any.</summary>
         public AfflictionKind ReactionWith = AfflictionKind.None;
         /// <summary>

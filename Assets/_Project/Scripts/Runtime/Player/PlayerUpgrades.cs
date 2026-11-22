@@ -2676,6 +2676,8 @@ namespace Clover.Player
                         var next = NearestInState(effect.ToState, from, passReach, passExcept) ?? combat.EnemyNear(from, passReach, passExcept);
                         if (!(next is IAfflictable taker) || !(next is IDamageable passedTo)) break;
                         passExcept.Add(passedTo);
+                        // The reaction it may set off there starts along its count (What the Yew Keeps: the fig at two coils).
+                        if (effect.CountedBlows > 0) taker.Afflictions.StartCountAt(ReactionTable.PairOf(effect.Reaction), effect.CountedBlows);
                         int over = 0, fits = give;
                         if (effect.Overflow) fits = DepthMoves.Fits(taker.Afflictions, kind, give, out over);
                         if (fits > 0) CombatEvents.Report(next, kind, fits, taker.Afflictions.Lay(kind, fits, 0f, combat.AfflictionPower, laying, next), laying);
@@ -3025,6 +3027,7 @@ namespace Clover.Player
                 case UpgradeAction.ForceReaction:
                 {
                     int pair = ReactionTable.PairOf(effect.Reaction);
+                    if (effect.CountedBlows > 0 && subject is IAfflictable coiled) coiled.Afflictions.StartCountAt(pair, effect.CountedBlows);
                     if (subject is IAfflictable forced && (effect.AsLaid ? forced.Afflictions.ReactAsLaid(pair, subject) : forced.Afflictions.ForceReaction(pair, subject, effect.Alone)))
                         ForcedReactions++;
                     break;

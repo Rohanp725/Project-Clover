@@ -31,26 +31,22 @@ both carried.
 
 **When it happens.** A perfect guard against a Cursed enemy, while you carry both Life and Dark, at most once every 6 seconds.
 
-**The numbers.** Mix, 3 Shards. It adds a Seed and sets off Girdled on the enemy right away, even if it would normally have to wait.
+**The numbers.** Mix, 3 Shards. It adds a Seed and sets off Girdled on the enemy right away, even if it would normally have to wait. The roots start at two coils, so two more weapon blows crush it instead of three.
 
 **Works with.** Girdled and its shapes, Bitter Seed.
 
 **Example.** Block the Cursed brute's blow perfectly, and the roots grab its legs.
-
-**Not built yet.** The roots start at one coil, not two.
 
 ## girdled.yew
 **What it does.** When an enemy with a Seed and a Curse dies, it doesn't burst into thorns. Instead, its Seed and its Curse move, whole, to the nearest enemy within 6 metres, and the fig roots start on that enemy at two coils.
 
 **When it happens.** Each time an enemy dies with both a Seed and a Curse on it, while you carry both Life and Dark.
 
-**The numbers.** Mix, keystone, 5 Shards. All its Seeds and all its Curses are put on the nearest other enemy within 6 metres, so Girdled may start there. At most once every 0.3 seconds.
+**The numbers.** Mix, keystone, 5 Shards. All its Seeds and all its Curses are put on the nearest other enemy within 6 metres, so Girdled may start there. If it does, the roots start at two coils, so two more weapon blows crush it. At most once every 0.3 seconds. The thorns don't burst: the Seed passes on whole.
 
 **Works with.** Bitter Seed, Girdled, Fig in the Crown.
 
 **Example.** Kill one enemy in the roots, and the next one is wrapped up right away.
-
-**Not built yet.** The roots start at one coil, not two. (The thorns no longer burst: the Seed passes on whole.)
 
 ## girdled.deathturnedback
 **What it does.** You drop to one knee, and roots spread out around you for 1.2 seconds. The roots take the first blow that would land. They climb up the attacker and hold it for 2 seconds, give it three Seeds and a Curse, and you heal. Each of your blows on the held enemy heals you 3.

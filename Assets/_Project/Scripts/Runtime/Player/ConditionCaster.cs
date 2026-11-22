@@ -23,12 +23,17 @@ namespace Clover.Player
         {
             var spec = effect != null ? effect.State : null;
             if (spec == null || string.IsNullOrEmpty(spec.Id) || combat == null) return 0;
-            if (reactionPair >= 0 && subject is IAfflictable reacted && reacted.Afflictions.Unbound(reactionPair)) spec = Unbound(spec);
+            int startAt = 0;
+            if (reactionPair >= 0 && subject is IAfflictable reacted)
+            {
+                if (reacted.Afflictions.Unbound(reactionPair)) spec = Unbound(spec);
+                startAt = spec.Blows > 0 ? reacted.Afflictions.CountStartsAt(reactionPair) : 0;
+            }
             float pace = PaceFor(spec, stacks);
             AnswersOf(effect, spec.Id, out bool struck, out bool ended, out bool died, out bool attacked);
             int mark = effect.Owner != null ? effect.Owner.Index : -1;
             Vector3 toward = facing ?? centre;
-            if (!spec.ToOthers && effect.Radius <= 0f) return Set(effect, spec, subject, null, mark, struck, ended, died, attacked, combat, source, pace, scale, toward) ? 1 : 0;
+            if (!spec.ToOthers && effect.Radius <= 0f) return Set(effect, spec, subject, null, mark, struck, ended, died, attacked, combat, source, pace, scale, toward, startAt) ? 1 : 0;
 
             // Round the trigger's enemy: the nearest first, as many as the effect allows (all within the radius when it names none).
             scratch.Clear();
@@ -80,13 +85,15 @@ namespace Clover.Player
             spec != null && spec.SlowPerStack > 0f ? Mathf.Max(0.05f, 1f - spec.SlowPerStack * Mathf.Max(1, stacks)) : -1f;
 
         private static bool Set(UpgradeEffect effect, ConditionSpec spec, Component who, Component link, int mark, bool struck, bool ended, bool died, bool attacked,
-            PlayerCombat combat, LaySource source, float pace, float scale, Vector3 toward)
+            PlayerCombat combat, LaySource source, float pace, float scale, Vector3 toward, int startAt = 0)
         {
             if (!(who is IAfflictable afflictable)) return false;
             var set = afflictable.Afflictions;
             if (!Takes(spec, set)) return false;
             int slot = set.Conditions.Set(spec, who, mark, link, struck, ended, ShareOf(set), died, attacked, pace);
             if (slot < 0) return false;
+            // A count begun along (the fig at two coils): the blows already drawn.
+            if (startAt > 0) set.Conditions.StartAt(slot, startAt);
             // The trigger's own number kept as the run's (Collected Twice: the damage the reaction dealt).
             if (scale >= 0f) set.Conditions.Keep(slot, scale);
             // Turned to face a point: the spell's middle, or straight away from the player.
