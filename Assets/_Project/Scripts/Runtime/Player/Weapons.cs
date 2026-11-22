@@ -649,9 +649,12 @@ namespace Clover.Player
                 },
                 Heavy = new AttackStep { Name = "attack_heavy", Heavy = true, Windup = 0.30f, Active = 0.10f, Recovery = 0.46f, Damage = 26f, Stagger = 34f, StaminaCost = 20f, ManaGain = 10f, Lunge = 1.0f, Reach = 2.8f, ArcDegrees = 90f, HitStopSeconds = 0.10f, Shake = 0.16f },
                 ChainHeavy = new AttackStep { Name = "attack_heavy", Heavy = true, Windup = 0.20f, Active = 0.10f, Recovery = 0.46f, Damage = 30f, Stagger = 40f, StaminaCost = 20f, ManaGain = 12f, Lunge = 1.2f, Reach = 2.8f, ArcDegrees = 90f, HitStopSeconds = 0.11f, Shake = 0.2f },
-                // The held pose behind the enemy once the blow is in (way_build_plan.md question 5): data until the engine
-                // holds it: PlayerCombat stands the step's clock still for PoseHold once the blow is in.
-                Finisher = new AttackStep { Name = "attack_finisher", Heavy = true, Windup = 0.30f, Active = 0.14f, Recovery = 0.56f, Damage = 30f, Stagger = 0f, StaminaCost = 0f, ManaGain = 15f, Lunge = 0f, Reach = 3.2f, ArcDegrees = 120f, HitStopSeconds = 0.2f, Shake = 0.45f, HoldAt = 0.44f, HoldSeconds = Way.Temper.FinisherHold, PoseHold = Way.Temper.FinisherHold },
+                // The run-through: the cut carries the player through the kneeling enemy, and the pose holds behind it with
+                // the blade out (way_build_plan.md question 5, the owner's answer): PlayerCombat stands the step's clock
+                // still for PoseHold once the blow is in, and turns the player to face the fallen only after the hold.
+                // From the stand-off of 1.2 m, 3 m of travel ends clear of its body on the far side, where the camera sees it.
+                Finisher = new AttackStep { Name = "attack_finisher", Heavy = true, Windup = 0.30f, Active = 0.14f, Recovery = 0.56f, Damage = 30f, Stagger = 0f, StaminaCost = 0f, ManaGain = 15f, Lunge = 0f, Reach = 3.2f, ArcDegrees = 120f, HitStopSeconds = 0.2f, Shake = 0.45f, HoldAt = 0.44f, HoldSeconds = Way.Temper.FinisherHold, PoseHold = Way.Temper.FinisherHold,
+                    Travel = 3.8f, PassThrough = true },
                 Skill = new AttackStep { Name = "attack_iaido", Sweep = -1f, Heavy = true, Windup = 0.08f, Active = 0.12f, Recovery = 0.50f, Damage = 48f, Stagger = 50f, StaminaCost = 15f, ManaGain = 0f, Lunge = 2.6f, Reach = 3.3f, ArcDegrees = 170f, HitStopSeconds = 0.14f, Shake = 0.3f },
                 SkillManaCost = 30f,
                 ChargeTime = 0.4f,

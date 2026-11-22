@@ -701,7 +701,9 @@ namespace Clover.Player
             }
 
             var step = Combo.Current;
-            if (passTurn != null && (step != passTurn || Combo.Phase == AttackPhase.Recovery))
+            // A finisher's held pose keeps its back to what it passed until the hold is over (the Katana's run-through).
+            bool holdingPose = step == passTurn && Combo.IsFinishing && step.PoseHold > 0f && (!finisherHeld || holdLeft > 0f);
+            if (passTurn != null && (step != passTurn || (Combo.Phase == AttackPhase.Recovery && !holdingPose)))
             {
                 // The passing cut is over: the player comes round to face the back of what was passed.
                 if (step == passTurn) TurnToPassed();

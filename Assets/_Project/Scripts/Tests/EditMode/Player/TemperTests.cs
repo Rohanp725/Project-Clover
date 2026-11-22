@@ -83,6 +83,20 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void TheKatanasFinisherRunsThroughAndHoldsBehindTheEnemy()
+        {
+            // Question 5, the owner's answer: you stop behind the enemy with the blade out. From the finisher's stand-off
+            // the run-through carries the player past the kneeling body, clear of it on the far side.
+            var finisher = Weapons.Katana().Combo.Finisher;
+            var combat = new UnityEngine.GameObject("Combat").AddComponent<PlayerCombat>();
+            float standOff = combat.FinisherStandOff;
+            UnityEngine.Object.DestroyImmediate(combat.gameObject);
+            Assert.IsTrue(finisher.PassThrough, "it passes through the body");
+            Assert.Greater(finisher.Travel - standOff, 2f, "and stands more than 2 m past its middle, where the camera sees it");
+            Assert.AreEqual(Weapons.StormKatana().Combo.Finisher.Travel, finisher.Travel, 1e-5f, "the Storm Katana's the same");
+        }
+
+        [Test]
         public void TemperThreeReachesFurtherAndTemperFiveHitsHarderAndHoldsThePoseLonger()
         {
             var plain = Weapons.Katana();
