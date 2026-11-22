@@ -76,5 +76,14 @@ namespace Clover.Player
         public float StepReach;
         /// <summary>Above zero: the blows a charge of the blade from this cast lasts, in place of the blade's usual three (Return Stroke: five; the ledger's blade-five).</summary>
         public int ChargeBlows;
+        /// <summary>
+        /// Above one: its damage rises smoothly as the caster's health falls, to this many times its own at one point of
+        /// health (Debts Called: 2, 18 at full and 36 at one point; the ledger's health-scaled).
+        /// </summary>
+        public float HealthScaled;
+
+        /// <summary>What a spell rising to <paramref name="most"/> times at one point multiplies its damage by at <paramref name="fraction"/> of full health.</summary>
+        public static float HealthScale(float most, float fraction) =>
+            most <= 1f ? 1f : 1f + (most - 1f) * (1f - UnityEngine.Mathf.Clamp01(fraction));
     }
 }

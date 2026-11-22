@@ -136,6 +136,7 @@ namespace Clover.Player
             into.PassReach = from.PassReach;
             into.StepReach = from.StepReach;
             into.ChargeBlows = from.ChargeBlows;
+            into.HealthScaled = from.HealthScaled;
         }
     }
 

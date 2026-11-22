@@ -198,11 +198,11 @@ namespace Clover.Player.Trees
                 Stats = new[] { new StatMod(PlayerStat.BloodPrice, 0.5f) } },
                 BranchPattern.LeftFoot));
 
-            // The breaker: the reverse form drags all within six metres to a point before you and bursts. NEEDS: the damage
-            // rising as your health falls, 18 at full and 36 at one point (health-scaled); until then a cast below half your
-            // health strikes half again as hard. The burst throwing back what it struck (form-pieces).
+            // The breaker: the reverse form drags all within six metres to a point before you and bursts, its damage rising as your
+            // health falls, 18 at full and 36 at one point (SpellSpec.HealthScaled). NEEDS: the burst throwing back what it struck
+            // (form-pieces).
             SpellBranch.Add(to, E, DebtsCalled, "Debts Called", SpellRole.Breaker, BranchPattern.LeftA, BloodPrice, SpellForms.Reverse,
-                new SpellSpec { Reach = 1f, Radius = 6f, Delay = 0.5f, Damage = 18f, Stagger = 35f, Stacks = 1 },
+                new SpellSpec { Reach = 1f, Radius = 6f, Delay = 0.5f, Damage = 18f, Stagger = 35f, Stacks = 1, HealthScaled = 2f },
                 "Everything within six metres is dragged in to a point before you over half a second, then thrown back by a burst: 18 damage, rising to 36 at one point of your health, 35 stagger, and Cursed.",
                 UpgradeIcons.Spiral,
                 // Eight metres on the Learn's own pull alone (LearnOnly), so the buffalo's lane keeps its width.
@@ -212,7 +212,7 @@ namespace Clover.Player.Trees
                 // a buffalo of smoke rather than the dragon's head (form-pieces).
                 new ShapeDef { Name = "The Black Buffalo", Form = SpellForms.Dragon,
                     Description = "No pull. A buffalo of sinking black smoke charges eight metres through the point before you, carrying everything Cursed on its horns to the far end and throwing it down: 18 damage, rising to 36 at one point of your health, and 35 stagger. Follow the lane and cut what it threw. Dark's one push.",
-                    Spell = new SpellSpec { Reach = 8f, Radius = 1.2f, Damage = 18f, Stagger = 35f, Stacks = 1, Speed = 16f } },
+                    Spell = new SpellSpec { Reach = 8f, Radius = 1.2f, Damage = 18f, Stagger = 35f, Stacks = 1, Speed = 16f, HealthScaled = 2f } },
                 // Only the Cursed called (SpellSpec.OnlyCarrying), from ten metres, with no burst; each Cursed one it reaches heals 4.
                 new ShapeDef { Name = "Collected",
                     Description = "Only the Cursed are called, from up to ten metres, and each one that reaches you gives back 4 health. There is no burst; the pull does 20 stagger.",
@@ -221,8 +221,7 @@ namespace Clover.Player.Trees
                 "Opens two shapes of Debts Called, chosen at any rest fire: The Black Buffalo, a charge of smoke down a lane, or Collected, a call that brings only the Cursed and feeds you.",
                 // Spells strike twice as hard for the second the burst or the charge takes, cast below a third of your health.
                 new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, HealthBelow = 0.34f, Do = UpgradeAction.Boon, Stat = PlayerStat.SpellDamage, Amount = 1f, Seconds = 1f } },
-                "Cast it below a third of your health, and the burst, or the buffalo, strikes twice as hard.",
-                learnEffects: new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, HealthBelow = 0.5f, Do = UpgradeAction.Boon, Stat = PlayerStat.SpellDamage, Amount = 0.5f, Seconds = 1f } });
+                "Cast it below a third of your health, and the burst, or the buffalo, strikes twice as hard.");
 
             // The strength is a boon given when health falls low, not held for as long as it stays low; the shade comes then too, not with each kill.
             to.Add(BranchPattern.Put(new Upgrade { Id = NearTheGrave, Name = "Near the Grave", Element = E, Kind = UpgradeKind.Major, Requires = new[] { BloodPrice }, Icon = UpgradeIcons.Skull,

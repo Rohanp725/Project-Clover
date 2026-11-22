@@ -94,6 +94,19 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void DebtsCalledRisesSmoothlyAsYourHealthFalls()
+        {
+            Assert.AreEqual(1f, SpellSpec.HealthScale(2f, 1f), 1e-5f, "18 at full health");
+            Assert.AreEqual(1.5f, SpellSpec.HealthScale(2f, 0.5f), 1e-5f, "27 at half");
+            Assert.AreEqual(2f, SpellSpec.HealthScale(2f, 0f), 1e-5f, "36 at one point");
+            Assert.AreEqual(1f, SpellSpec.HealthScale(0f, 0.2f), 1e-5f, "a spell that does not scale");
+            var debts = Upgrade.ById(DarkTree.DebtsCalled);
+            Assert.AreEqual(2f, debts.Spell.HealthScaled, 1e-5f);
+            Assert.IsEmpty(debts.Effects, "no stand-in half again below half health");
+            Assert.AreEqual(2f, Upgrade.ById(SpellBranch.ShapeId(DarkTree.DebtsCalled)).Shapes.First(shape => shape.Name == "The Black Buffalo").Spell.HealthScaled, 1e-5f);
+        }
+
+        [Test]
         public void EveryShapesSetAsideNamesARealEffect()
         {
             foreach (var mark in Upgrade.All.Where(mark => mark.Part == BranchPart.Shape && mark.Shapes != null))

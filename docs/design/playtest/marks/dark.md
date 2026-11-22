@@ -161,11 +161,11 @@ draining.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4).
 
-**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 9 seconds.) The spot is 1 metre in front of you. For half a second, everything within 6 metres of it is pulled in. Then they all take 18 damage, 35 stagger and a Curse. If you cast it while below half your health, your spells hit 50% harder for the next second.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 9 seconds.) The spot is 1 metre in front of you. For half a second, everything within 6 metres of it is pulled in. Then they all take 18 damage, 35 stagger and a Curse. The damage rises smoothly as your health drops: 18 at full health, 27 at half, 36 at one point.
 
 **Works with.** The root mark, Blood Price, which it comes after on the chart, Near the Grave and Pawned Heart (low health), Dread, Devouring Maw, and the charged blade.
 
-**Not built yet.** The damage should rise smoothly as your health drops, up to 36 at one point of health; for now, it jumps up once you are below half health. The burst should also throw back the enemies it hits.
+**Not built yet.** The burst should also throw back the enemies it hits.
 
 **Example.** Four soldiers are spread around you. One cast pulls them into a tight group at the tip of your sword, all Cursed, ready for a wide swing.
 
@@ -174,7 +174,7 @@ draining.
 
 **When it happens.** Whenever you cast Debts Called, using the shape you picked. If you have not bought this, you cast the plain call.
 
-**The numbers.** 3 Shards. The Black Buffalo: it charges 8 metres down a path about 2.4 metres wide, dealing 18 damage, 35 stagger and a Curse to everything it runs through. Collected: only Cursed enemies within 10 metres are pulled in. Each takes 20 stagger and no damage, and heals you 4. Enemies without a Curse aren't moved or hit.
+**The numbers.** 3 Shards. The Black Buffalo: it charges 8 metres down a path about 2.4 metres wide, dealing 18 damage (rising to 36 as your health drops, like the plain spell), 35 stagger and a Curse to everything it runs through. Collected: only Cursed enemies within 10 metres are pulled in. Each takes 20 stagger and no damage, and heals you 4. Enemies without a Curse aren't moved or hit.
 
 **Works with.** The Black Buffalo: a heavy weapon to follow its path, Dread, Devouring Maw's path. Collected: the root mark and Grasp (Curse them first), Never Sated, Near the Grave.
 
@@ -187,7 +187,7 @@ draining.
 
 **When it happens.** Each cast while below a third of your health, while Debts Called is in a spell slot.
 
-**The numbers.** 3 Shards. For one second after you cast it, your spells deal double damage (two and a half times as much, with the Learn mark's own boost below half health).
+**The numbers.** 3 Shards. For one second after you cast it, your spells deal double damage, on top of the rise from your low health.
 
 **Works with.** Near the Grave, Pawned Heart (you stay at one point of health the whole time), Blood Price, Dead Already.
 

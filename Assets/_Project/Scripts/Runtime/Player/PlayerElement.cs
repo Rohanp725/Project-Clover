@@ -452,6 +452,8 @@ namespace Clover.Player
                 }
                 else if (spec.AimMissShare > 0f) damage *= spec.AimMissShare;
             }
+            // Stronger the lower the caster's health (Debts Called).
+            if (spec.HealthScaled > 1f && defence != null) damage *= SpellSpec.HealthScale(spec.HealthScaled, defence.Health.Fraction);
             return new SpellCast
             {
                 Name = name,
