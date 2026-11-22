@@ -52,7 +52,7 @@ both carried.
 
 **Example.** Kill one enemy in the roots, and the next one is wrapped up right away.
 
-**Not built yet.** The thorns still burst when it dies, and the roots start at one coil, not two.
+**Not built yet.** The roots start at one coil, not two. (The thorns no longer burst: the Seed passes on whole.)
 
 ## girdled.deathturnedback
 **What it does.** You drop to one knee, and roots spread out around you for 1.2 seconds. The roots take the first blow that would land. They climb up the attacker and hold it for 2 seconds, give it three Seeds and a Curse, and you heal. Each of your blows on the held enemy heals you 3.
