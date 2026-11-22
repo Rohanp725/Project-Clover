@@ -9,13 +9,13 @@ are both carried.
 
 **When it happens.** Every time Earthlight goes off while you carry both Earth and Light. Earthlight goes off when a Mark lands on a shaken enemy, or when Tremor lands on a Marked one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Earthlight.
 
-**The numbers.** Mix, 3 Shards. Both shapes put a fresh Mark on the enemy. Down the Passage: half a second later, a line 8 metres long and 1 metre wide past the enemy deals 12 damage and a Mark to everything on it. Lit Seam: the light breaks out like the plain one (14 damage, 25 stagger and a Mark within 3 metres). Then for 5 seconds, each heavy blow on the enemy flashes for 10 damage and 15 stagger on everything within 3 metres. After Earthlight goes off on an enemy, it can't go off on that enemy again for 4 seconds.
+**The numbers.** Mix, 3 Shards. Both shapes put a fresh Mark on the enemy. Down the Passage: half a second later, a line 8 metres long and 1 metre wide past the enemy deals 12 damage and a Mark to everything on it. Lit Seam: the light breaks out along a star of six seams like the plain one (14 damage, 25 stagger and a Mark to everyone standing on a seam, each seam 3 metres long). Then for 5 seconds, each heavy blow on the enemy flashes a star of seams around it for 10 damage and 15 stagger on everything standing on them. After Earthlight goes off on an enemy, it can't go off on that enemy again for 4 seconds.
 
 **Works with.** Stone Rise and Glare to set it up, Keeping the Hour, Quartz Vein, Dawn Through the Door.
 
 **Example.** A line of archers stands behind a shaken soldier. Mark the soldier from the front, and Down the Passage lights up the whole line.
 
-**Not built yet.** The cracks aren't drawn as a star shape yet. For now, the light hits everything inside the ring, and Lit Seam flashes around the enemy you hit, not only on enemies standing on the cracks.
+**Not built yet.** The cracks aren't drawn as a star on the floor yet. Lit Seam's flash runs along a star around where the enemy stands now, not along the first seams if it has moved off them.
 
 ## earthlight.hour
 **What it does.** Every 6 seconds during a fight, your next heavy blow is right on the hour: it hits harder and shakes the enemy twice.

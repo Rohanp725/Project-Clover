@@ -20,6 +20,28 @@ namespace Clover.World
         /// </summary>
         public static float StateSeconds(float biteEvery) => Mathf.Max(0.05f, biteEvery) + 0.25f;
 
+        /// <summary>How far either side of its line a seam of a star of cracks strikes, in metres.</summary>
+        public const float SeamHalf = 0.5f;
+
+        /// <summary>The way the seam numbered <paramref name="index"/> of <paramref name="seams"/> runs, the first along <paramref name="first"/>.</summary>
+        public static Vector3 SeamWay(Vector3 first, int index, int seams)
+        {
+            first.y = 0f;
+            if (first.sqrMagnitude < 0.0001f) first = Vector3.forward;
+            // Turned about the up axis clockwise seen from above, as a yaw turns (worked out by hand: plain arithmetic, no engine call).
+            first.Normalize();
+            float turn = index * 2f * Mathf.PI / Mathf.Max(1, seams), cos = Mathf.Cos(turn), sin = Mathf.Sin(turn);
+            return new Vector3(first.x * cos + first.z * sin, 0f, first.z * cos - first.x * sin);
+        }
+
+        /// <summary>True when <paramref name="point"/> stands on one of a star's seams, each <paramref name="length"/> long from <paramref name="middle"/>.</summary>
+        public static bool OnStar(Vector3 point, Vector3 middle, int seams, float length, float half, Vector3 first)
+        {
+            for (int i = 0; i < seams; i++)
+                if (OnLane(point, middle, SeamWay(first, i, seams), length, half)) return true;
+            return false;
+        }
+
         /// <summary>
         /// True when <paramref name="point"/> stands on a lane <paramref name="length"/> long and <paramref name="half"/> either side
         /// of its line, running from <paramref name="from"/> along <paramref name="way"/> (flat; the ends rounded by its width).

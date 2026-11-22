@@ -1872,6 +1872,8 @@ namespace Clover.Player
                         Once = true, Burst = !effect.Unseen && !bespoke, Quiet = bespoke, Delay = effect.Delay, Blow = Unseen(Blow(look, kind, eDamage, eStagger, eStacks), bespoke), FromReaction = laying == LaySource.Reaction,
                         // A burst that starts from the one struck may leave that one alone (Earthed's fern).
                         Spares = effect.SparesTarget ? pending.Target as IDamageable : null,
+                        // A star of cracks: only what stands on its seams (the ledger's seams).
+                        Seams = effect.Seams, SeamWay = aim,
                     };
                     // One burst, or one where each patch of a shape would fall.
                     int bursts = effect.Shape == HazardShape.Patch ? 1 : Or(eCount, 3);

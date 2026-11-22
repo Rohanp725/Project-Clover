@@ -596,7 +596,9 @@ namespace Clover.World
                 if (zone.UntilBite <= 0f && owner != null)
                 {
                     zone.UntilBite = zone.Spec.BiteEvery;
-                    int hits = owner.StrikeArea(zone.Position, zone.Spec.Radius, zone.Spec.Blow, LeftAlone(i, zone));
+                    int hits = zone.Spec.Seams > 0
+                        ? owner.StrikeStar(zone.Position, zone.Spec.Seams, zone.Spec.Radius, GroundRules.SeamHalf, zone.Spec.SeamWay, zone.Spec.Blow, LeftAlone(i, zone))
+                        : owner.StrikeArea(zone.Position, zone.Spec.Radius, zone.Spec.Blow, LeftAlone(i, zone));
                     if (zone.Spec.AlsoLays != AfflictionKind.None && (!zone.Spec.StopsAtFirst || hits > 0)) owner.AfflictArea(zone.Position, zone.Spec.Radius, zone.Spec.AlsoLays, 1);
                     if (zone.Spec.StopsAtFirst && hits > 0)
                     {

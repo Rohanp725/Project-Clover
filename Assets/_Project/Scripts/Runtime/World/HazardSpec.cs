@@ -77,5 +77,8 @@ namespace Clover.World
         public object LaidFor;
         /// <summary>Nonzero: everything standing in it is shoved this far, this way, at each bite (a lane of foam carrying what is in it).</summary>
         public Vector3 Carry;
+        /// <summary>Above zero: it strikes only along this many seams out from its middle, a star of cracks, the first along <see cref="SeamWay"/>.</summary>
+        public int Seams;
+        public Vector3 SeamWay;
     }
 }

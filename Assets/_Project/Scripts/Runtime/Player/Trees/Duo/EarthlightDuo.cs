@@ -25,8 +25,9 @@ namespace Clover.Player.Trees.Duo
         {
             const string A = Elements.Earth, B = Elements.Light;
 
-            // NEEDS: the seams themselves (only enemies standing on the star of cracks; Lit Seam flashing all on them; now
-            // the flash strikes all within 3 m of the one struck).
+            // The seams themselves: only enemies standing on the star of six cracks are struck (UpgradeEffect.Seams), and Lit Seam's
+            // flash runs along a star of seams round the one struck. NEEDS: the flash along the seams where they were first laid,
+            // if the enemy has moved off them (now round where it stands).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Earthlight: Down the Passage or Lit Seam", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -50,9 +51,9 @@ namespace Clover.Player.Trees.Duo
                         Effects = new[]
                         {
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Marked, Stacks = 1 },
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Burst, Radius = 3f, Delay = 0.5f, Damage = 14f, Stagger = 25f, Affliction = AfflictionKind.Marked, Stacks = 1 },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Burst, Radius = 3f, Delay = 0.5f, Damage = 14f, Stagger = 25f, Affliction = AfflictionKind.Marked, Stacks = 1, Seams = 6 },
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = LitSeam, Seconds = 5f } },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = LitSeam, By = StruckBy.Heavy, Do = UpgradeAction.Burst, Radius = 3f, Damage = 10f, Stagger = 15f, Cooldown = 0.3f },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = LitSeam, By = StruckBy.Heavy, Do = UpgradeAction.Burst, Radius = 3f, Damage = 10f, Stagger = 15f, Cooldown = 0.3f, Seams = 6 },
                         },
                     },
                 },

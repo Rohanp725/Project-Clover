@@ -229,11 +229,11 @@ namespace Clover.Player.Trees
 
             // Earth and Light (18). 0.5 s after it cracks, light breaks up through the floor: 14 damage, 25 stagger and
             // Marked in 3 m; its own Mark is renewed (three more blows).
-            // NEEDS: the seams: only enemies standing on the star of cracks, not a disc, are struck.
+            // Only enemies standing on the star of six cracks, each 3 m long, are struck, not a disc (UpgradeEffect.Seams).
             to.Add(Reaction(AfflictionKind.Tremor, AfflictionKind.Marked,
-                "Tremor meets Marked: the floor under it cracks and light breaks up through the seams, 14 and Marked to all within 3 m. Its own Mark is renewed.",
+                "Tremor meets Marked: the floor under it cracks in a star and light breaks up through the seams, 14 and Marked to all standing on them. Its own Mark is renewed.",
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Marked, Stacks = 1 },
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Burst, Radius = 3f, Delay = 0.5f, Damage = 14f, Stagger = 25f, Affliction = AfflictionKind.Marked, Stacks = 1 }));
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Burst, Radius = 3f, Delay = 0.5f, Damage = 14f, Stagger = 25f, Affliction = AfflictionKind.Marked, Stacks = 1, Seams = 6 }));
 
             // Metal and Dark (19). A chain to the nearest other enemy within 6 m for 5 s, set as a condition on that one,
             // joined to this.

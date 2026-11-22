@@ -366,6 +366,12 @@ namespace Clover.Player
         /// foam); for a Lane, metres once, everything on the lane together (Hot Wind's gust). The ledger's lane-shove.
         /// </summary>
         public float Carry;
+        /// <summary>
+        /// For a Burst: above zero, it breaks up only along this many seams running out from its middle like the arms of a star,
+        /// each as long as its Radius (GroundRules.SeamHalf either side): only what stands on a seam is struck, not a disc (the
+        /// ledger's seams: Earthlight).
+        /// </summary>
+        public int Seams;
 
         /// <summary>True when a Hazard effect lays ground that keeps acting, told to the marks at each bite (Hazards.GroundActs).</summary>
         public bool ActsAsGround => Inside != null || Mends > 0f || InsideDo != null || !string.IsNullOrEmpty(Ground);

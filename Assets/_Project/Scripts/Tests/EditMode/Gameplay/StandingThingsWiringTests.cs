@@ -363,6 +363,25 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void EarthlightBreaksUpOnlyAlongItsSeams()
+        {
+            Vector3 first = Vector3.forward;
+            Assert.IsTrue(GroundRules.OnStar(new Vector3(0f, 0f, 2.5f), Vector3.zero, 6, 3f, GroundRules.SeamHalf, first), "on the first seam");
+            Assert.IsTrue(GroundRules.OnStar(GroundRules.SeamWay(first, 1, 6) * 2f, Vector3.zero, 6, 3f, GroundRules.SeamHalf, first), "on the second");
+            Assert.IsFalse(GroundRules.OnStar(new Vector3(Mathf.Sin(Mathf.PI / 6f), 0f, Mathf.Cos(Mathf.PI / 6f)) * 2.5f, Vector3.zero, 6, 3f, GroundRules.SeamHalf, first), "between two seams, inside the old disc");
+            Assert.IsFalse(GroundRules.OnStar(new Vector3(0f, 0f, 3.7f), Vector3.zero, 6, 3f, GroundRules.SeamHalf, first), "past a seam's end");
+            Assert.AreEqual(-1f, GroundRules.SeamWay(first, 3, 6).z, 1e-4f, "the fourth of six runs the other way");
+            Assert.AreEqual(Mathf.Sin(Mathf.PI / 3f), GroundRules.SeamWay(first, 1, 6).x, 1e-4f, "the second turned 60 degrees toward +x, as a yaw turns");
+
+            var plain = ReactionOf(AfflictionKind.Tremor, AfflictionKind.Marked).Single(each => each.Do == UpgradeAction.Burst);
+            Assert.AreEqual(6, plain.Seams);
+            Assert.AreEqual(3f, plain.Radius, 1e-5f, "each seam 3 m long");
+            var lit = ShapeOf(Clover.Player.Trees.Duo.EarthlightDuo.Shape, "Lit Seam").Where(each => each.Do == UpgradeAction.Burst).ToList();
+            Assert.AreEqual(2, lit.Count);
+            Assert.IsTrue(lit.All(each => each.Seams == 6), "the light and its flash run along the seams");
+        }
+
+        [Test]
         public void TheSeaComesInQuickensYouOnlyInYourOwnWater()
         {
             var sea = Upgrade.ById(WaterTree.TheSeaComesIn);

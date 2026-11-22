@@ -1443,6 +1443,23 @@ namespace Clover.Player
 
         /// <summary>Drags everything in a circle toward its middle, or throws it away from there, by about this many metres. Returns how many it moved.</summary>
         private readonly HashSet<IDamageable> laneShoved = new HashSet<IDamageable>();
+        private readonly HashSet<IDamageable> starStruck = new HashSet<IDamageable>();
+
+        /// <summary>
+        /// Strikes what stands on a star of seams, once each: <paramref name="seams"/> lanes out from <paramref name="centre"/>, each
+        /// <paramref name="length"/> long and <paramref name="half"/> either side, the first along <paramref name="first"/> (Earthlight's
+        /// cracks). Returns how many it hit.
+        /// </summary>
+        public int StrikeStar(Vector3 centre, int seams, float length, float half, Vector3 first, in SpellBlow blow, HashSet<IDamageable> once = null)
+        {
+            var taken = once ?? starStruck;
+            if (once == null) starStruck.Clear();
+            int hit = 0;
+            for (int i = 0; i < seams; i++)
+                hit += StrikeLane(centre, Clover.World.GroundRules.SeamWay(first, i, seams), length, half, blow, taken);
+            if (once == null) starStruck.Clear();
+            return hit;
+        }
 
         /// <summary>
         /// Shoves everything on a lane the same way, once each, <paramref name="metres"/> along it (Hot Wind's gust carrying all in

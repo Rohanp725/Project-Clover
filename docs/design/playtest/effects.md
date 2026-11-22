@@ -704,15 +704,15 @@ Title: Earthlight (Earth and Light)
 Group: Reactions
 **What it is.** Tremor meets Marked. Light breaks up through cracks in the floor under the enemy.
 
-**The numbers.** Its Mark is refreshed (three more critical hits). Half a second later, everyone within 3 metres takes 14 damage, 25 stagger and a Mark. Then it waits 4 seconds.
+**The numbers.** Its Mark is refreshed (three more critical hits). Half a second later, the floor cracks in a star of six seams, each 3 metres long and about a metre wide. Everyone standing on a seam takes 14 damage, 25 stagger and a Mark; enemies between the seams are missed. Then it waits 4 seconds.
 
 **What sets it off.** Tremor landing on a Marked enemy, or a Mark landing on a shaken one.
 
-**Its shapes.** If you have Lit Stone, the Shape mark of Earth and Light's duo branch (Earthlight: Down the Passage or Lit Seam, 3 Shards, in the middle of the chart), and carry both, Earthlight uses the shape you picked at a rest fire instead. Both refresh its Mark. Down the Passage: a line 8 metres long past the enemy deals 12 damage and a Mark to everything on it. Lit Seam: the light breaks out like the plain one, and for 5 seconds each heavy blow on the enemy flashes for 10 damage and 15 stagger on everything within 3 metres.
+**Its shapes.** If you have Lit Stone, the Shape mark of Earth and Light's duo branch (Earthlight: Down the Passage or Lit Seam, 3 Shards, in the middle of the chart), and carry both, Earthlight uses the shape you picked at a rest fire instead. Both refresh its Mark. Down the Passage: a line 8 metres long past the enemy deals 12 damage and a Mark to everything on it. Lit Seam: the light breaks out along the seams like the plain one, and for 5 seconds each heavy blow on the enemy flashes a star of seams around it again for 10 damage and 15 stagger on everything standing on them.
 
-**How to use it.** Shake a Marked enemy in a crowd. They are all Marked for your critical hits, and the first one keeps its three.
+**How to use it.** Shake a Marked enemy in a crowd. The ones on the cracks are all Marked for your critical hits, and the first one keeps its three. Pull them in close first, so more of them stand on the seams.
 
-**How it looks.** Its name over the enemy, then light bursting up around it. Not built yet: only enemies standing on the star-shaped cracks should be hit (for now, it is a circle).
+**How it looks.** Its name over the enemy, then light bursting up around it. Not built yet: the star of cracks drawn on the floor (lk_g_star_seams); for now, a ring of light shows it.
 
 ## reaction-black-chain
 Title: Black Chain (Metal and Dark)
