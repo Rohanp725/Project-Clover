@@ -941,6 +941,42 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void WastingGripDosesAllInsideTheJarsRingEachSecond()
+        {
+            var grip = Upgrade.ById(BlightTree.WastingGrip).Effects.Single(each => each.InState == Reactions.Jar);
+            Assert.AreEqual(UpgradeTrigger.SpellHit, grip.On, "as the stream bites the jarred one");
+            Assert.AreEqual(UpgradeAction.Afflict, grip.Do);
+            Assert.AreEqual(AfflictionKind.Poison, grip.Affliction);
+            Assert.AreEqual(1, grip.Stacks);
+            Assert.AreEqual(1f, grip.Cooldown, 1e-5f, "a dose a second");
+            var jar = ReactionTable.MarkFor(AfflictionPairs.Index(AfflictionKind.Cursed, AfflictionKind.Poison)).Effects.First(each => each.State != null && each.State.Id == Reactions.Jar);
+            Assert.AreEqual(jar.State.DeathsWithin, grip.Radius, 1e-5f, "the jar's own ring");
+        }
+
+        [Test]
+        public void StoneUnderfootTurnsItToStoneAtOnce()
+        {
+            var under = Upgrade.ById(Clover.Player.Trees.Duo.TurnedToStoneDuo.StoneUnderfoot).Effects;
+            var stone = under.Single(each => each.State != null && each.State.Id == Reactions.Stone);
+            Assert.AreEqual(UpgradeTrigger.SpellHit, stone.On, "as the foot comes down, no climb first");
+            Assert.AreEqual(ConditionFlags.Rooted | ConditionFlags.BeginsNoAttack | ConditionFlags.StaggerTakenShare, stone.State.Flags);
+            Assert.AreEqual(2f, stone.State.Scale, 1e-5f, "double stagger");
+            Assert.AreEqual(1.5f, stone.State.Seconds, 1e-5f);
+            Assert.IsFalse((stone.Ranks & EnemyRank.God) != 0);
+            Assert.IsTrue(under.Any(each => each.State != null && each.State.Id == Reactions.StoneSpellproof), "half from spells");
+            var god = under.Single(each => each.Ranks == EnemyRank.God);
+            Assert.AreEqual(0.4f, god.State.Pace, 1e-5f, "a god only slowed 60%");
+            var breaks = under.Single(each => each.On == UpgradeTrigger.ConditionStruck);
+            Assert.AreEqual(Reactions.Stone, breaks.Condition);
+            Assert.AreEqual(StruckBy.Heavy, breaks.By, "the heavy blow that breaks it out");
+            Assert.AreEqual(50f, breaks.Stagger, 1e-5f);
+            Assert.IsFalse(under.Any(each => each.Do == UpgradeAction.ForceReaction), "no climb");
+            var rest = under[0];
+            Assert.AreEqual(UpgradeAction.RestReaction, rest.Do, "rested first, so the Curse starts no climb");
+            Assert.AreEqual(AfflictionPairs.Index(AfflictionKind.Tremor, AfflictionKind.Cursed), ReactionTable.PairOf(rest.Reaction));
+        }
+
+        [Test]
         public void EatenInTurnPassesToTheNextOnTheLineByItsOrder()
         {
             Assert.IsTrue(PlayerUpgrades.NextInLine(2f, 3f, 0f), "the one after it");

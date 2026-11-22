@@ -341,5 +341,10 @@ namespace Clover.Player
         /// its end, its count as it stands, and runs on to pay again at its end (Reckoning's Master: the count paid on a finisher).
         /// </summary>
         PayNow,
+        /// <summary>
+        /// The pair named by Reaction rests on the target for Seconds (its usual rest when none is named), so what is laid next
+        /// does not set it off (Stone Underfoot: the stone is set at once, and the Curse it lays starts no slow climb).
+        /// </summary>
+        RestReaction,
     }
 }

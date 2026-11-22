@@ -93,8 +93,8 @@ namespace Clover.Player.Trees
             // The duo spell, re-aimed at the jar (pairs_d1_d2.md): the stream seals a jar on what it bites, past the rest.
             // BESPOKE: the grip that holds an enemy, drinks its poison and throws it. Until then a short held stream bites what
             // stands before the player, and spells that strike the poisoned feed.
-            // The jar is sealed on an enemy carrying either of the two (UpgradeEffect.Alone).
-            // NEEDS: each second of the stream adding a dose to whatever is inside the ring.
+            // The jar is sealed on an enemy carrying either of the two (UpgradeEffect.Alone). Each second the stream bites a
+            // jarred enemy, a dose lands on everything inside its ring (2 m round it: the jar's DeathsWithin).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = WastingGrip, Name = "Wasting Grip", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Role = SpellRole.Opener, Requires = new[] { Wither, FeedingRot }, Icon = UpgradeIcons.Claw,
@@ -105,6 +105,7 @@ namespace Clover.Player.Trees
                 {
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, Do = UpgradeAction.Heal, Needs = Poisoned, Amount = 5f, Cooldown = 1f },
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.ForceReaction, Reaction = "react.shutinthedark", Alone = true, Cooldown = 2.5f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, InState = Reactions.Jar, Do = UpgradeAction.Afflict, Radius = 2f, Affliction = Poisoned, Stacks = 1, Cooldown = 1f },
                 },
             }, HeartPattern.Spell));
 

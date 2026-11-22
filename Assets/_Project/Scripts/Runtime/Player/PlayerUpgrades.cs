@@ -2533,6 +2533,12 @@ namespace Clover.Player
                     broughtCount = 0;
                     break;
                 }
+                case UpgradeAction.RestReaction:
+                {
+                    int resting = ReactionTable.PairOf(effect.Reaction);
+                    if (resting >= 0 && subject is IAfflictable rester) rester.Afflictions.RestReaction(resting, Or(effect.Seconds, AfflictionPairs.Rest(resting)));
+                    break;
+                }
                 case UpgradeAction.PayNow:
                     if (reactionsFound != null && reactionsFound.PayAsEnded(subject, effect.ToState)) PaidNow++;
                     break;
