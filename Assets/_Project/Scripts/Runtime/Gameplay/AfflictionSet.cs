@@ -198,11 +198,19 @@ namespace Clover.Gameplay
         /// Sets a pair's reaction off now, through its rest (Lit Fuse, Plasma Lance and the like: the action
         /// ForceReaction), when it carries both of the pair. It rests again from now. False when a partner is missing.
         /// </summary>
-        public bool ForceReaction(int pair, UnityEngine.Component who)
+        public bool ForceReaction(int pair, UnityEngine.Component who) => ForceReaction(pair, who, false);
+
+        /// <summary>
+        /// As above; with <paramref name="alone"/>, one of the pair is enough (the ledger's forced-alone: Dusk and Dawn's cut
+        /// sets Diamond Ring off on an enemy only Marked): the reaction itself goes off, at whatever depth it lies, and
+        /// nothing is spent by the forcing. False when it carries neither.
+        /// </summary>
+        public bool ForceReaction(int pair, UnityEngine.Component who, bool alone)
         {
             if (pair < 0 || pair >= AfflictionPairs.Count) return false;
-            if (!Has(AfflictionPairs.First(pair)) || !Has(AfflictionPairs.Second(pair))) return false;
-            return (Reactions ?? ReactionEngine.Shared).Force(this, who, pair, AfflictionPairs.Second(pair));
+            bool first = Has(AfflictionPairs.First(pair)), second = Has(AfflictionPairs.Second(pair));
+            if (alone ? !first && !second : !first || !second) return false;
+            return (Reactions ?? ReactionEngine.Shared).Force(this, who, pair, second ? AfflictionPairs.Second(pair) : AfflictionPairs.First(pair), alone);
         }
 
         /// <summary>Takes up to this many stacks of an affliction away, with no burst, and says how many went. A burn with no depth counts as one.</summary>

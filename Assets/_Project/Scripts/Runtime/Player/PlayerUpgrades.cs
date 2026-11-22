@@ -1327,6 +1327,12 @@ namespace Clover.Player
         /// True when what died carried the condition (by its name or what it is), or else the one struck does, or a blow
         /// that just landed on it spent it (<see cref="EnemyConditions.Held"/>).
         /// </summary>
+        /// <summary>Breaks the ice of a frozen enemy as a heavy blow would; returns what the breaking deals (0 when it was not frozen).</summary>
+        public static float ShatterNow(IAfflictable target) => target != null && target.Afflictions.IsFrozen ? target.Afflictions.Shatter() : 0f;
+
+        /// <summary>Counts for probes: frozen enemies shattered by an effect, not a blow (Brittle to the Core).</summary>
+        public int ShattersMade { get; private set; }
+
         public static bool InState(string state, AfflictionSet dead, Component target)
         {
             var set = dead ?? (target is IAfflictable afflicted ? afflicted.Afflictions : null);
@@ -1962,7 +1968,7 @@ namespace Clover.Player
                 case UpgradeAction.ForceReaction:
                 {
                     int pair = ReactionTable.PairOf(effect.Reaction);
-                    if (subject is IAfflictable forced && forced.Afflictions.ForceReaction(pair, subject)) ForcedReactions++;
+                    if (subject is IAfflictable forced && forced.Afflictions.ForceReaction(pair, subject, effect.Alone)) ForcedReactions++;
                     break;
                 }
                 case UpgradeAction.Flinch:
@@ -1971,6 +1977,19 @@ namespace Clover.Player
                 case UpgradeAction.Condition:
                     ConditionsSet += ConditionCaster.Cast(effect, subject, centre, combat, laying, conditionScratch, per);
                     break;
+                case UpgradeAction.Shatter:
+                {
+                    // The ice breaks as under a heavy blow: what it held takes the breaking, and the shatter is told.
+                    if (!(subject is IAfflictable icy)) break;
+                    float broke = ShatterNow(icy);
+                    if (broke <= 0f) break;
+                    ShattersMade++;
+                    CombatEvents.RaiseShattered(subject);
+                    var chill = lookOf[(int)AfflictionKind.Chill] ?? look;
+                    combat.StrikeOne(subject, Blow(chill, AfflictionKind.None, broke + eDamage, eStagger, 0), self);
+                    if (!bespoke) ElementLook.Strike(chill, centre, 0.3f);
+                    break;
+                }
                 case UpgradeAction.StrikeCondition:
                     if (subject is IAfflictable split) split.Afflictions.Conditions.StrikeWhere(effect.Condition, true);
                     break;

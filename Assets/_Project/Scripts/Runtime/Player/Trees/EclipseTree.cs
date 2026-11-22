@@ -94,15 +94,15 @@ namespace Clover.Player.Trees
             // The duo spell, re-aimed at the pair (pairs_d1_d2.md): you step into the enemy's shadow and come out of its far rim
             // as the bead of light, cutting; the cut sets off Diamond Ring at once, whatever the rest, and the heavy blow after
             // it is critical. The step form gives the cut through and the critical heavy blow that answers it.
-            // NEEDS: the 0.4 s gone in the shadow; Diamond Ring set off by the cut on an enemy carrying only one of the pair
-            // (forced-alone; now only on one Marked and Cursed already).
+            // The cut sets Diamond Ring off on an enemy carrying either of the pair (UpgradeEffect.Alone).
+            // NEEDS: the 0.4 s gone in the shadow.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = DuskAndDawn, Name = "Dusk and Dawn", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Role = SpellRole.Movement, Requires = new[] { DayAndNight, LowSun }, Icon = UpgradeIcons.Blade,
-                Description = "You step into the shadow of the enemy you face and come out of its far side as the light, cutting. On one Marked and Cursed the cut sets off Diamond Ring at once, whatever its rest, and your next heavy blow in the moment after is critical. 45 mana.",
+                Description = "You step into the shadow of the enemy you face and come out of its far side as the light, cutting. On one Marked or Cursed the cut sets off Diamond Ring at once, whatever its rest, and your next heavy blow in the moment after is critical. 45 mana.",
                 Form = FormStep,
                 Spell = new SpellSpec { Cost = 45f, Reach = 5f, Damage = 10f, Stagger = 10f, Stacks = 1, Seconds = 3f },
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.ForceReaction, Reaction = "react.diamondring" } },
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.ForceReaction, Reaction = "react.diamondring", Alone = true } },
             }, HeartPattern.Spell));
 
             // BESPOKE (built): TotalityForm. The returning light gives back half of what each enemy lost in the dark, 80 at most.

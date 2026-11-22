@@ -44,13 +44,11 @@ are both carried.
 
 **When it happens.** Each Cold Short on a frozen enemy, while you carry both Ice and Metal.
 
-**The numbers.** Mix, keystone, 5 Shards. For now: a hit of 30 damage and 40 stagger on the enemy as it turns brittle.
+**The numbers.** Mix, keystone, 5 Shards. The ice breaks just as it would under your heavy blow, for the same damage, plus 40 stagger. Anything that answers a shatter answers this one too.
 
 **Works with.** Rimed Edge, Cold Short, Cold Chisel.
 
 **Example.** Freeze a soldier and notch it, and it breaks right away.
-
-**Not built yet.** An effect can't shatter an enemy yet. For now, it hits as hard as a shatter, and leaves the frozen enemy for your heavy blow to shatter.
 
 ## coldshort.chisel
 **What it does.** A chisel of black ice sticks point-first into the enemy you face, if it is within 8 metres. Each of your next blows on that enemy taps the chisel in, adding a notch and a Chill with a higher ringing sound each time. The tap that finds three notches drives it all the way in and splits the armour: 36 damage, 70 stagger, and Cold Short goes off right away.

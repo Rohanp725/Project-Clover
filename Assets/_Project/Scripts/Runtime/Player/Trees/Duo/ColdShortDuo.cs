@@ -94,16 +94,15 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.RightLow));
 
-            // NEEDS: an effect that shatters a frozen enemy as a heavy blow would (shatter-made); now Cold Short on a frozen
-            // enemy strikes it with a shatter's weight, 30 and 40 stagger, and its Chill is left for your heavy blow to shatter.
+            // Cold Short on a frozen enemy shatters it as a heavy blow would (UpgradeAction.Shatter): the ice breaks, what it
+            // held takes the breaking and 40 stagger, and whatever answers a shatter hears it.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = BrittleToTheCore, Name = "Brittle to the Core", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { RimedEdge, GlassBell }, Icon = UpgradeIcons.Gem,
                 Description = "Cold Short on a frozen enemy shatters it as well, the shatter and the crack landing together.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = Reaction, Needs = AfflictionKind.Chill, NeedsFull = true, Do = UpgradeAction.Burst, Radius = 0.5f, Damage = 30f, Stagger = 40f,
-                        Affliction = AfflictionKind.Chill },
+                    new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = Reaction, Do = UpgradeAction.Shatter, Stagger = 40f, Affliction = AfflictionKind.Chill },
                 },
             }, HeartPattern.Keystone));
 

@@ -122,5 +122,10 @@ namespace Clover.Player
         /// Condition.
         /// </summary>
         StrikeCondition,
+        /// <summary>
+        /// Shatters the target if it is frozen, as a heavy blow would: the breaking's damage, plus Damage and Stagger, and the
+        /// shatter told to whatever answers one (Brittle to the Core). Nothing on one that is not frozen. Reads: Damage, Stagger.
+        /// </summary>
+        Shatter,
     }
 }

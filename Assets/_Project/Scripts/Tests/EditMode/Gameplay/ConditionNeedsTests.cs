@@ -132,6 +132,48 @@ namespace Clover.Tests
             Assert.AreEqual(1, sowing.Count(effect => effect.By == StruckBy.Finisher), "the finisher's second bolt");
         }
 
+        [Test]
+        public void AReactionForcedAloneNeedsOnlyOneOfItsPair()
+        {
+            var reported = new List<int>();
+            var enemy = new AfflictionSet { Reactions = new ReactionEngine((who, pair, laid) => reported.Add(pair), () => 0) };
+            int ring = AfflictionPairs.Index(AfflictionKind.Marked, AfflictionKind.Cursed);
+            Assert.IsFalse(enemy.ForceReaction(ring, null, true), "carrying neither, nothing");
+            enemy.Lay(AfflictionKind.Marked, 1, 0f, 1f, LaySource.Spell);
+            Assert.IsFalse(enemy.ForceReaction(ring, null), "as written, both are needed");
+            Assert.IsTrue(enemy.ForceReaction(ring, null, true), "alone, one is enough");
+            Assert.AreEqual(1, reported.Count);
+            Assert.AreEqual(ring, reported[0]);
+            Assert.IsTrue(enemy.Has(AfflictionKind.Marked), "nothing is spent by the forcing");
+            var dusk = EffectsOf(EclipseTree.DuskAndDawn).Single(effect => effect.Do == UpgradeAction.ForceReaction);
+            Assert.IsTrue(dusk.Alone);
+            var grip = EffectsOf(BlightTree.WastingGrip).Single(effect => effect.Do == UpgradeAction.ForceReaction);
+            Assert.IsTrue(grip.Alone);
+            Assert.AreEqual(AfflictionKind.None, grip.Needs, "either of the two");
+        }
+
+        [Test]
+        public void AnEffectShattersOnlyWhatIsFrozen()
+        {
+            var warm = new Afflicted();
+            Assert.AreEqual(0f, PlayerUpgrades.ShatterNow(warm), 1e-5f, "nothing to break");
+            Assert.AreEqual(0f, PlayerUpgrades.ShatterNow(null), 1e-5f);
+            var frozen = new Afflicted();
+            Assert.IsTrue(frozen.Afflictions.FreezeFor(2f));
+            float broke = PlayerUpgrades.ShatterNow(frozen);
+            Assert.Greater(broke, 0f, "the ice breaks as under a heavy blow");
+            Assert.IsFalse(frozen.Afflictions.IsFrozen);
+            var core = EffectsOf(ColdShortDuo.BrittleToTheCore).Single();
+            Assert.AreEqual(UpgradeAction.Shatter, core.Do);
+            Assert.AreEqual(UpgradeTrigger.Reacted, core.On);
+            Assert.IsFalse(core.NeedsFull, "asks for frozen, not a full Chill");
+        }
+
+        private sealed class Afflicted : IAfflictable
+        {
+            public AfflictionSet Afflictions { get; } = new AfflictionSet { Reactions = new ReactionEngine((who, pair, laid) => { }, () => 0) };
+        }
+
         private static IEnumerable<UpgradeEffect> EveryEffect() => Upgrade.All.SelectMany(upgrade => upgrade.Effects
             .Concat(upgrade.Shapes == null ? Enumerable.Empty<UpgradeEffect>() : upgrade.Shapes.Where(shape => shape?.Effects != null).SelectMany(shape => shape.Effects)));
 

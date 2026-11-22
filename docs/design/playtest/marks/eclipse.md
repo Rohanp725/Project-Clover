@@ -33,7 +33,7 @@ are both carried. Its reaction is Diamond Ring; its Shape mark lets you choose w
 
 **The numbers.** Mix, duo spell, 5 Shards, 45 mana. It goes up to 5 metres: to 1.8 metres past the enemy you face, or about 4 metres ahead if there is none. The cut deals 10 damage, 10 stagger and a Mark to everything on the line. The heavy blow after it is a critical hit if it lands within 3 seconds.
 
-**Works with.** Diamond Ring (on a Marked and Cursed enemy, its cut sets off Diamond Ring right away, even if it would normally have to wait), Light's root mark, Reckoning's Spoken Sentence shape, Weighed, and the charged blade, which it charges with Light.
+**Works with.** Diamond Ring (on an enemy that is Marked or Cursed, even with only one of the two, its cut sets off Diamond Ring right away, even if it would normally have to wait), Light's root mark, Reckoning's Spoken Sentence shape, Weighed, and the charged blade, which it charges with Light.
 
 **Example.** Step through a captain's guard, turn around, and land a critical heavy blow on its back.
 

@@ -75,6 +75,8 @@ namespace Clover.Player
         /// enemy, Hel's Half for one whose warmth is stolen. A blow that spent the condition still finds it.
         /// </summary>
         public string InState = "";
+        /// <summary>For ForceReaction: one of the pair on the target is enough; the reaction itself goes off, spending nothing (the ledger's forced-alone).</summary>
+        public bool Alone;
         /// <summary>The stacks it lays are as many as the trigger carried: what the dead enemy bore of <see cref="Needs"/>, or what a set-off spent.</summary>
         public bool CarriesDepth;
         /// <summary>Only while this state of the player holds.</summary>

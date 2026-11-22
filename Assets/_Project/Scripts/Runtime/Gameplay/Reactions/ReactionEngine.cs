@@ -115,9 +115,10 @@ namespace Clover.Gameplay
         /// ForceReaction), within the frame's budget like any other, and rests it again from now. True when it was
         /// reported or waits to be.
         /// </summary>
-        public bool Force(AfflictionSet set, Component who, int pair, AfflictionKind laid)
+        public bool Force(AfflictionSet set, Component who, int pair, AfflictionKind laid, bool anyDepth = false)
         {
-            if (set == null || pair < 0 || pair >= rests.Length || !DeepEnough(set, pair)) return false;
+            // Forced on one that carries only one of the pair, no depth is waited for (the ledger's forced-alone).
+            if (set == null || pair < 0 || pair >= rests.Length || (!anyDepth && !DeepEnough(set, pair))) return false;
             CatchUp();
             // Already found on this enemy this frame: it reacts once, not twice.
             if (FoundThisFrame(set, pair)) return true;
