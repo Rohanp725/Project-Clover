@@ -61,7 +61,7 @@ both carried.
 
 **Example.** Wait for the brute's swing, pass through it, and cut its back.
 
-**Not built yet.** The wind doesn't yet carry you through in a glide; for now, you take a quick step past it. If no blow comes, the gust doesn't yet end in a small push.
+**Not built yet.** The wind doesn't yet carry you through in a glide; for now, you take a quick step past it. If no blow comes in the second, the gust ends in a small push that moves every enemy within 2.5 metres back 1.5 metres.
 
 ## breathtaken.grave
 **What it does.** A duo surge. While it is lit, a black wind blows out from you in the direction you face. It is 9 metres long and 100 degrees wide. Enemies in it are pushed away half a metre each second and made Unsteady each second. A Curse put on any enemy in the wind is carried along with the wind to the enemies behind it.

@@ -249,6 +249,22 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void ACounterThatMeetsNothingAndAStepThroughTwoAreMoments()
+        {
+            var blown = Upgrade.ById(Clover.Player.Trees.Duo.BreathTakenDuo.BlownThrough).Effects.Single(each => each.On == UpgradeTrigger.CounterMissed);
+            Assert.IsTrue(blown.OwnSpell, "only its own counter");
+            Assert.AreEqual(UpgradeAction.Push, blown.Do, "a small push round you");
+            Assert.AreEqual(EffectAt.Self, blown.At);
+            Assert.AreNotEqual("its moment comes", TriggerWords.Of(UpgradeTrigger.CounterMissed));
+            var master = Upgrade.ById(SpellBranch.MasterId(LightTree.StepIntoLight)).Effects;
+            Assert.IsTrue(master.All(each => each.StruckAtLeast == 2), "two in one line");
+            Assert.IsTrue(PlayerUpgrades.CastStruckAtLeast(7, 7, 2, 2));
+            Assert.IsFalse(PlayerUpgrades.CastStruckAtLeast(7, 7, 1, 2), "only one cut yet");
+            Assert.IsFalse(PlayerUpgrades.CastStruckAtLeast(8, 7, 3, 2), "another cast's count");
+            Assert.IsFalse(PlayerUpgrades.CastStruckAtLeast(0, 0, 3, 2), "no cast");
+        }
+
+        [Test]
         public void TheDrawnLineStandsAcrossYourFrontHoldingWhoCrosses()
         {
             var shape = Upgrade.ById(SpellBranch.ShapeId(LightTree.RingOfSpears)).Shapes.Single(each => each.Name == "The Drawn Line");

@@ -156,15 +156,15 @@ the next blows on that enemy critical.
 **Example.** Use Behind the Eye on a captain. Step, turn, and one heavy blow lands as a critical hit, three times as hard.
 
 ## light.step.master
-**What it does.** Cast it through two enemies standing in a line. Both are cut and Marked, and Step Into Light is ready again. Light goes straight.
+**What it does.** Cast it through two enemies standing in a line. The second one cut is Marked, and Step Into Light is ready again. Light goes straight.
 
 **When it happens.** As the step cuts, while Step Into Light is in a spell slot.
 
-**The numbers.** 3 Shards. For now, a step that cuts anything ends its own wait, once every 16 seconds.
+**The numbers.** 3 Shards. Once one step has cut two enemies, its wait ends and the second is Marked, at most once every 16 seconds.
 
 **Works with.** Hallways and staircases, a line of spearmen, Aruna's Road (a second road right away).
 
-**Not built yet.** It should need one step to cut two enemies. For now, any step that cuts works, at most once every 16 seconds.
+**Not built yet.** Only the second enemy is Marked, not both.
 
 **Example.** Two soldiers come up a staircase one behind the other. Step through both, then step again right away.
 

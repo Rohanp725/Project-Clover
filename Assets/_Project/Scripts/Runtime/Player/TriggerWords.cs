@@ -97,6 +97,7 @@ namespace Clover.Player
                 case UpgradeTrigger.StoppedAtStones: return "an enemy is driven into your stones";
                 case UpgradeTrigger.PerfectDodgeEnd: return "a perfect dodge ends";
                 case UpgradeTrigger.CarriedTo: return "a dodge carries you to an enemy";
+                case UpgradeTrigger.CounterMissed: return "nothing comes at your counter";
                 default: return "its moment comes";
             }
         }

@@ -133,6 +133,8 @@ namespace Clover.Player
         /// rule). Its mark's <see cref="Upgrade.Branch"/> names the branch.
         /// </summary>
         public bool OwnBranch;
+        /// <summary>For SpellHit: only once the cast has struck at least this many, the one now struck among them (Step Into Light's Master: two in one line).</summary>
+        public int StruckAtLeast;
         /// <summary>For a spell's moments: only for the casts of this branch (its Learn id), not the mark's own (The Tide Brings It: Riptide's).</summary>
         public string CastOf = "";
         /// <summary>For CutCooldowns, ResetCooldown and InstantNext: the branch (its Learn id) whose slot it acts on. Empty: its own mark's branch.</summary>

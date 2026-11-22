@@ -152,5 +152,7 @@ namespace Clover.Player
         PerfectDodgeEnd,
         /// <summary>A dodge carried you to an enemy that draws it (ConditionFlags.DrawsDodge: Eagle's Sight). Target: that enemy.</summary>
         CarriedTo,
+        /// <summary>A counter's stance ran out with nothing struck at it (the parry form). Answered as the counter's own cast (Blown Through).</summary>
+        CounterMissed,
     }
 }

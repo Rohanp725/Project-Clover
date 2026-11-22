@@ -221,9 +221,13 @@ namespace Clover.Player.Trees
                     Description = "You step to behind the enemy rather than through, landing at its back. Your first blow within a second deals a finisher's damage, three times as much, without ending any stagger.",
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Boon, Stat = PlayerStat.WeaponDamage, Amount = 2f, Seconds = 1f, UntilBlow = true } } },
                 "Opens two shapes of Step Into Light, chosen at any rest fire: Aruna's Road, a road of dust that Marks and leads you home, or Behind the Eye, a step to the enemy's back for one great blow.",
-                // NEEDS: two enemies struck by one cast as the moment (struck-count). Until then a step that cuts anything ends its
-                // own wait, once in sixteen seconds.
-                new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.ResetCooldown, Cooldown = 16f } },
+                // Only a step that has cut two (UpgradeEffect.StruckAtLeast): the second is Marked and the wait ends, once in sixteen
+                // seconds.
+                new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, StruckAtLeast = 2, Do = UpgradeAction.ResetCooldown, Cooldown = 16f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, StruckAtLeast = 2, Do = UpgradeAction.Afflict, Affliction = M, Stacks = 1, Cooldown = 16f },
+                },
                 "Cast it through two enemies standing in one line: both are cut and Marked, and Step Into Light is ready again. Light is straight.");
 
             // The counter: the rod form is the lamp; enemies in its glow are struck lightly and Marked. Its perfect-guard burst is

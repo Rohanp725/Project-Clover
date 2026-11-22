@@ -1445,6 +1445,8 @@ namespace Clover.Player
                 // A base spell cast through its Learn mark (its shape) is still the base spell.
                 if (effect.BaseSpell && castSource != null && !castSource.IsBaseSpell) continue;
                 if (effect.OwnBranch && !SpellBranches.OwnBranch(effect.Owner, castSource, baseElement)) continue;
+                // Only once this cast has struck so many (Step Into Light's Master).
+                if (effect.StruckAtLeast > 0 && !CastStruckAtLeast(answeringCast, castHitsOf, castHits.Count, effect.StruckAtLeast)) continue;
                 // Only another branch's casts (The Tide Brings It answers Riptide's).
                 if (!string.IsNullOrEmpty(effect.CastOf) && !SpellBranches.CastOf(effect.CastOf, castSource, baseElement)) continue;
                 if (effect.SpentAtLeast > 0 && spent < effect.SpentAtLeast) continue;
@@ -3346,6 +3348,22 @@ namespace Clover.Player
             StoppedAtStones++;
             Trigger(UpgradeTrigger.StoppedAtStones, body, body.transform.position);
         }
+
+        /// <summary>True when the cast now answered (<paramref name="cast"/>) is the one counted and has struck at least <paramref name="most"/>.</summary>
+        public static bool CastStruckAtLeast(int cast, int counted, int struck, int most) => cast != 0 && cast == counted && struck >= most;
+
+        /// <summary>A counter's stance ran out with nothing struck at it: told as that counter's own moment (Blown Through's push).</summary>
+        public void OnCounterMissed(Upgrade source)
+        {
+            var was = castSource;
+            castSource = source;
+            try { Trigger(UpgradeTrigger.CounterMissed, null, transform.position, false); }
+            finally { castSource = was; }
+            CountersMissed++;
+        }
+
+        /// <summary>Counters that ran out with nothing struck at them: for probes.</summary>
+        public int CountersMissed { get; private set; }
 
         /// <summary>How many steps a dodge's path of this length is searched in, for circles of this radius to cover it.</summary>
         public static int DodgePathSteps(float length, float radius) => Mathf.Clamp(Mathf.CeilToInt(length / Mathf.Max(0.2f, radius)), 1, 12);

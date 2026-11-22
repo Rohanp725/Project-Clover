@@ -189,6 +189,7 @@ namespace Clover.Player.Forms
                 int banked = run.Done;
                 if (banked <= 0)
                 {
+                    if (cast.Upgrades != null) cast.Upgrades.OnCounterMissed(cast.Source);
                     if (cast.Spec.MissedWait > 0f)
                     {
                         var waits = player.GetComponent<PlayerSpells>();
@@ -224,7 +225,9 @@ namespace Clover.Player.Forms
             }
             if (run.Age >= seconds)
             {
-                // Nothing struck: a counter that says so waits only part of its time (Circle of Steel, Gone to Ash).
+                // Nothing struck: a counter that says so waits only part of its time (Circle of Steel, Gone to Ash), and the
+                // marks hear of it (Blown Through's push).
+                if (cast.Upgrades != null) cast.Upgrades.OnCounterMissed(cast.Source);
                 if (cast.Spec.MissedWait > 0f)
                 {
                     var spells = player.GetComponent<PlayerSpells>();

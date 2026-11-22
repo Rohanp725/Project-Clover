@@ -114,8 +114,8 @@ namespace Clover.Player.Trees.Duo
             // answer makes the attacker Unsteady, so its breath is taken, and the wind sets you down 2 m behind it. Your first
             // weapon blow on it within a second is critical and gives back half its own wait.
             // You are untouchable as the wind sets you down beyond it, facing it (UpgradeAction.Untouchable, the step's turn).
-            // NEEDS: the wind carrying you through as a glide rather than the quick step (form-pieces); the small push round you
-            // when nothing comes (missed-counter). Half its own wait back (KeepWaitShare).
+            // When nothing comes, a small push round you (UpgradeTrigger.CounterMissed). Half its own wait back (KeepWaitShare).
+            // NEEDS: the wind carrying you through as a glide rather than the quick step (a clip, glide_through).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = BlownThrough, Name = "Blown Through", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Role = SpellRole.Counter, Requires = new[] { IllOmen, ShortOfBreath }, Icon = UpgradeIcons.Wing,
@@ -130,6 +130,7 @@ namespace Clover.Player.Trees.Duo
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Condition,
                         State = new ConditionSpec { Id = Back, Seconds = 1f, Flags = ConditionFlags.TakesCritical, EndsWith = ConditionBlow.Weapon } },
                     new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Back, By = StruckBy.Weapon, Do = UpgradeAction.KeepWaitShare, Amount = 0.5f },
+                    new UpgradeEffect { On = UpgradeTrigger.CounterMissed, OwnSpell = true, At = EffectAt.Self, Do = UpgradeAction.Push, Radius = 2.5f, Amount = 1.5f, Affliction = AfflictionKind.Unsteady },
                 },
             }, HeartPattern.Spell));
 
