@@ -44,13 +44,13 @@ both carried.
 
 **When it happens.** When Firebloom goes off, while you carry both Fire and Life.
 
-**The numbers.** Mix, keystone, 5 Shards. For now: five throws over 10 seconds, each dealing 4 damage, 4 stagger and a Burn, at most once every 30 seconds.
+**The numbers.** Mix, keystone, 5 Shards. Only the first lily of each fight. For now: five throws over 10 seconds, each dealing 4 damage, 4 stagger, a Burn and a Seed.
 
 **Works with.** Firebloom, Kindled Guard, Need-Fire (which Seeds and burns again).
 
 **Example.** Start a fight with one bloom, and the tree keeps the pack burning while you work.
 
-**Not built yet.** No tree appears yet. For now, the throws go at the enemy that bloomed, not the nearest one, and add a Burn without a seed. It comes once every 30 seconds, not once a fight.
+**Not built yet.** No tree appears yet. For now, the throws go at the enemy that bloomed, not the nearest one.
 
 ## firebloom.needfire
 **What it does.** Two fires of green branches spring up on either side of the enemy you face and burn for 6 seconds, joined by a line of sparks. Every enemy between them gets a Burn and a Seed each second.

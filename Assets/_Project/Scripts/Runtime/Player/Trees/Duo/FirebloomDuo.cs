@@ -88,9 +88,9 @@ namespace Clover.Player.Trees.Duo
             }, HeartPattern.RightLow));
 
             // The burning tree: a helper that strikes the enemy that bloomed every 2 s for 10 s, a Burn each time.
-            // NEEDS: standing-things (a tree that stands 10 s and throws a burning seed, Seeded and Burn, at the nearest
-            // enemy every 2 s; and only the first lily of each fight, once-per-fight); now the helper strikes the enemy that
-            // bloomed, Burn only, at most once in 30 s.
+            // Only the first lily of each fight (UpgradeEffect.OncePerFight), and each burning seed Seeds as well as Burns
+            // (UpgradeEffect.BitesLay). NEEDS: standing-things (a tree that stands 10 s and throws its seed at the nearest enemy
+            // every 2 s); now a helper strikes the enemy that bloomed.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = TheBurningTree, Name = "The Burning Tree", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { KindledGuard, DryPods }, Icon = UpgradeIcons.Tower,
@@ -98,7 +98,7 @@ namespace Clover.Player.Trees.Duo
                 Effects = new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = Reaction, Do = UpgradeAction.Helper, Count = 5, Interval = 2f, Radius = 6f, Damage = 4f, Stagger = 4f,
-                        Affliction = AfflictionKind.Burn, Stacks = 1, Cooldown = 30f },
+                        Affliction = AfflictionKind.Burn, Stacks = 1, BitesLay = AfflictionKind.Seeded, OncePerFight = true },
                 },
             }, HeartPattern.Keystone));
 

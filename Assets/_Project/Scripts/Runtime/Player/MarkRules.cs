@@ -13,6 +13,9 @@ namespace Clover.Player
     /// </summary>
     public static class MarkRules
     {
+        /// <summary>True when an effect that happens once a fight may go off in the fight numbered <paramref name="fight"/>: it last went off in another.</summary>
+        public static bool FirstInFight(int lastFight, int fight) => lastFight != fight;
+
         /// <summary>A gate that opens on a count of gods felled: <c>gods.3</c> opens at the third (the Way's stages, depth_weapons.md 6).</summary>
         public const string GodsGate = "gods.";
 

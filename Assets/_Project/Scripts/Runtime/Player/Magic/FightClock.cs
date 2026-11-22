@@ -15,6 +15,8 @@ namespace Clover.Player.Magic
         public float CalmSeconds = 8f;
 
         public bool InFight { get; private set; }
+        /// <summary>How many fights have begun on this clock: the fight a once-a-fight effect last went off in is told by it.</summary>
+        public int Fights { get; private set; }
         /// <summary>Seconds since an aware enemy was last near, while in a fight.</summary>
         public float Calm { get; private set; }
 
@@ -29,6 +31,7 @@ namespace Clover.Player.Magic
                 Calm = 0f;
                 if (InFight) return false;
                 InFight = true;
+                Fights++;
                 return true;
             }
             if (!InFight) return false;

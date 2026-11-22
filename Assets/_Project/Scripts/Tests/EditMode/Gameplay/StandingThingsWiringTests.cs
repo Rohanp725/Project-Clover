@@ -570,6 +570,27 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void TheBurningTreeGrowsOnceEachFight()
+        {
+            var clock = new Clover.Player.Magic.FightClock();
+            Assert.AreEqual(0, clock.Fights);
+            clock.Tick(0.1f, true);
+            Assert.AreEqual(1, clock.Fights, "a fight began");
+            clock.Tick(0.1f, true);
+            Assert.AreEqual(1, clock.Fights, "the same fight");
+            clock.Tick(clock.CalmSeconds + 1f, false);
+            clock.Tick(0.1f, true);
+            Assert.AreEqual(2, clock.Fights, "calm, then a new fight");
+            Assert.IsTrue(MarkRules.FirstInFight(-1, 1));
+            Assert.IsFalse(MarkRules.FirstInFight(1, 1), "not twice in one fight");
+            Assert.IsTrue(MarkRules.FirstInFight(1, 2));
+            var tree = Upgrade.ById(Clover.Player.Trees.Duo.FirebloomDuo.TheBurningTree).Effects.Single();
+            Assert.IsTrue(tree.OncePerFight);
+            Assert.AreEqual(0f, tree.Cooldown, 1e-5f, "not once in 30 s");
+            Assert.AreEqual(AfflictionKind.Seeded, tree.BitesLay, "Seeded and Burn");
+        }
+
+        [Test]
         public void TheSeaComesInQuickensYouOnlyInYourOwnWater()
         {
             var sea = Upgrade.ById(WaterTree.TheSeaComesIn);

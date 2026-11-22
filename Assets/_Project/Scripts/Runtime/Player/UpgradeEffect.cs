@@ -400,6 +400,8 @@ namespace Clover.Player
         public bool Behind;
         /// <summary>For a Push along the line (Shape Downwind): thrown sideways across your front, to your left, along a sweep from your right (Sweep of Wings), not away from you.</summary>
         public bool Sideways;
+        /// <summary>It goes off only once in each fight (the FightClock's), not once in so many seconds (The Burning Tree's first lily).</summary>
+        public bool OncePerFight;
         /// <summary>For BurstGround: the Hazard effect whose standing patches it bursts.</summary>
         public UpgradeEffect BurstsGround;
 

@@ -571,6 +571,8 @@ namespace Clover.Player
             catalogue = Upgrade.All;
             has = new bool[catalogue.Count];
             readyAt = new float[Upgrade.EffectCount];
+            firedInFight = new int[Upgrade.EffectCount];
+            for (int i = 0; i < firedInFight.Length; i++) firedInFight[i] = -1;
             castAt = new float[catalogue.Count];
             for (int i = 0; i < castAt.Length; i++) castAt[i] = -100f;
             sinceLast = new float[Upgrade.EffectCount];
@@ -1614,6 +1616,13 @@ namespace Clover.Player
                 at = target.transform.position;
                 hasAt = true;
                 target = mate;
+            }
+            // Once a fight (The Burning Tree): not again until the next fight begins.
+            if (effect.OncePerFight)
+            {
+                int fight = spells != null ? spells.Fight.Fights : 0;
+                if (effect.Slot >= firedInFight.Length || !MarkRules.FirstInFight(firedInFight[effect.Slot], fight)) return;
+                firedInFight[effect.Slot] = fight;
             }
             // Things that can set themselves off again are held to a few times a second at most.
             float least = effect.On == UpgradeTrigger.AfflictionFull || effect.On == UpgradeTrigger.Kill ? 0.2f : 0f;
@@ -3295,6 +3304,9 @@ namespace Clover.Player
         /// <summary>True when an effect answers ground of the given name told of one standing in it (UpgradeTrigger.InGround).</summary>
         public static bool AnswersGround(UpgradeEffect effect, string ground) =>
             effect != null && !string.IsNullOrEmpty(ground) && effect.Condition == ground;
+
+        // The fight each once-a-fight effect last went off in, by its slot (-1: never).
+        private int[] firedInFight = new int[0];
 
         // Until when you are scattered (Gone to Ash): the body comes back then; 0 when not scattered.
         private float scatteredUntil;
