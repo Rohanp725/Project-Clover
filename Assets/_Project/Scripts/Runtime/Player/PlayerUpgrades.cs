@@ -1807,12 +1807,15 @@ namespace Clover.Player
             layingReaction = pending.ReactionOf;
             layingCast = pending.ReactionCast;
             answeringLaid = pending.Effect != null && pending.Effect.On == UpgradeTrigger.AfflictionLaid;
+            // A mark that runs arcs on as they leave (Nothing Resists) is not answered by its own arcs, whatever set them going.
+            answeringArc = pending.Effect != null && (pending.Effect.On == UpgradeTrigger.ArcLeft || (pending.Effect.Do == UpgradeAction.Arc && AnswersArcs(pending.Effect.Owner)));
             try { Do(pending); }
             finally
             {
                 laying = LaySource.Effect;
                 layingReaction = layingCast = 0;
                 answeringLaid = false;
+                answeringArc = false;
             }
         }
 
@@ -4727,6 +4730,31 @@ namespace Clover.Player
         private int reactionPair = -1, reactionCast, layingReaction, layingCast;
         // True while an answer to a laying is being done: what it lays is not answered again.
         private bool answeringLaid;
+        // True while an answer to an arc leaving an enemy is being done: its own arcs are not answered again (Nothing Resists).
+        private bool answeringArc;
+
+        /// <summary>
+        /// An arc struck <paramref name="left"/> and leaves it for the next, carrying <paramref name="damage"/> (the ledger's
+        /// arc-leaves): what answers an arc leaving an enemy is told, unless the arc is such an answer's own.
+        /// </summary>
+        public void OnArcLeft(Component left, float damage)
+        {
+            if (left == null || answeringArc || byTrigger == null || byTrigger[(int)UpgradeTrigger.ArcLeft].Count == 0) return;
+            ArcsLeft++;
+            Trigger(UpgradeTrigger.ArcLeft, left, left.transform.position, true, 0, null, AfflictionKind.None, "", LaySource.Effect, damage);
+        }
+
+        /// <summary>True when the mark answers an arc leaving an enemy (UpgradeTrigger.ArcLeft): its own arcs must not be answered by it again.</summary>
+        public static bool AnswersArcs(Upgrade mark)
+        {
+            if (mark == null || mark.Effects == null) return false;
+            foreach (var effect in mark.Effects)
+                if (effect != null && effect.On == UpgradeTrigger.ArcLeft) return true;
+            return false;
+        }
+
+        /// <summary>Arcs told as leaving an enemy (UpgradeTrigger.ArcLeft): for probes.</summary>
+        public int ArcsLeft { get; private set; }
         private readonly StruckOnce struckOnce = new StruckOnce();
 
         /// <summary>

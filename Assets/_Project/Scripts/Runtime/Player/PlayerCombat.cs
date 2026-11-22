@@ -1693,6 +1693,8 @@ namespace Clover.Player
                     if (defence != null && PaysBack(target)) defence.DealtDamage(blow.Damage);
                     if (blow.Spell && upgrades != null) upgrades.OnSpellStruck(target, wasAfflicted, blow.Look != null ? blow.Look.Name : null, blow.Cast); ReactionStruck(blow, target);
                     if (blow.Spell && target is Component spellBody) SpellBlowLanded?.Invoke(spellBody, blow.Cast);
+                    // The arc leaves it for the next (Nothing Resists runs it on from a chilled one).
+                    if (upgrades != null && target is Component arcBody) upgrades.OnArcLeft(arcBody, blow.Damage);
                 }
                 from = at.position;
                 at = NextUnstruck(from, leapRange, struck);
@@ -1733,6 +1735,7 @@ namespace Clover.Player
                     hits++;
                     if (defence != null && PaysBack(target)) defence.DealtDamage(blow.Damage);
                     if (blow.Spell && upgrades != null) upgrades.OnSpellStruck(target, wasAfflicted, blow.Look != null ? blow.Look.Name : null, blow.Cast); ReactionStruck(blow, target);
+                    if (upgrades != null && target is Component arcBody) upgrades.OnArcLeft(arcBody, blow.Damage);
                 }
                 at = next.position;
                 // It leaps on only from those carrying what is asked (Mirror to Mirror: Sundered).

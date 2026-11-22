@@ -98,15 +98,18 @@ namespace Clover.Player.Trees.Duo
             }, HeartPattern.RightLow));
 
             // A discharge on a chilled enemy leaves it as an arc at the discharge's full strength (UpgradeEffect.Amount 1 of the
-            // discharge's damage), running on through every chilled enemy within 5 m of the last, a Static on each. NEEDS: every
-            // other arc leaving a chilled enemy as the moment, not only a discharge (arc-leaves).
+            // discharge's damage), running on through every chilled enemy within 5 m of the last, a Static on each; and so does
+            // every other arc as it leaves a chilled enemy (UpgradeTrigger.ArcLeft, its damage as the power), its own arcs not
+            // answered again.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = NothingResists, Name = "Nothing Resists", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { ChargedHail, ColdSnap }, Icon = UpgradeIcons.Chain,
-                Description = "Cold carries lightning without loss: Static discharged from a chilled enemy runs on at full strength to every chilled enemy within 5 m of the last, 7 and a Static each.",
+                Description = "Cold carries lightning without loss: Static discharged from a chilled enemy, or any arc leaving one, runs on at full strength to every chilled enemy within 5 m of the last, 7 and a Static each.",
                 Effects = new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.SetOff, Spent = AfflictionKind.Static, Needs = AfflictionKind.Chill, Do = UpgradeAction.Arc, FromTarget = true, LeapsTo = AfflictionKind.Chill,
+                        LeapsOnFrom = AfflictionKind.Chill, Count = 24, Reach = 5f, Amount = 1f, Damage = 7f, Stagger = 5f, Affliction = AfflictionKind.Static, Stacks = 1, Cooldown = 0.5f },
+                    new UpgradeEffect { On = UpgradeTrigger.ArcLeft, Needs = AfflictionKind.Chill, Do = UpgradeAction.Arc, FromTarget = true, LeapsTo = AfflictionKind.Chill,
                         LeapsOnFrom = AfflictionKind.Chill, Count = 24, Reach = 5f, Amount = 1f, Damage = 7f, Stagger = 5f, Affliction = AfflictionKind.Static, Stacks = 1, Cooldown = 0.5f },
                 },
             }, HeartPattern.Keystone));

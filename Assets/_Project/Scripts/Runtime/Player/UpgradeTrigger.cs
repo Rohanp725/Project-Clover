@@ -156,5 +156,10 @@ namespace Clover.Player
         CounterMissed,
         /// <summary>A plate of stone took its share of a blow and broke (Stone Skin). The point is where you stand.</summary>
         PlateBroken,
+        /// <summary>
+        /// An arc struck an enemy and leaves it for the next (a bolt's chain, an arc from one to another; the ledger's arc-leaves).
+        /// Target: the enemy it leaves; the power is the arc's damage (Nothing Resists runs it on at full strength).
+        /// </summary>
+        ArcLeft,
     }
 }

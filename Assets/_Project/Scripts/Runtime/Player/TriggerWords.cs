@@ -99,6 +99,7 @@ namespace Clover.Player
                 case UpgradeTrigger.CarriedTo: return "a dodge carries you to an enemy";
                 case UpgradeTrigger.CounterMissed: return "nothing comes at your counter";
                 case UpgradeTrigger.PlateBroken: return "a plate of stone breaks";
+                case UpgradeTrigger.ArcLeft: return "an arc leaves an enemy";
                 default: return "its moment comes";
             }
         }

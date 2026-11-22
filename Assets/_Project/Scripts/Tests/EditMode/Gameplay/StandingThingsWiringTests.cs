@@ -941,6 +941,21 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void NothingResistsRunsOnEveryArcThatLeavesAChilledEnemy()
+        {
+            var resists = Upgrade.ById(Clover.Player.Trees.Duo.SleetChargeDuo.NothingResists);
+            var onArc = resists.Effects.Single(each => each.On == UpgradeTrigger.ArcLeft);
+            Assert.AreEqual(AfflictionKind.Chill, onArc.Needs, "only from a chilled enemy");
+            Assert.AreEqual(UpgradeAction.Arc, onArc.Do);
+            Assert.AreEqual(1f, onArc.Amount, 1e-5f, "at the arc's full strength");
+            Assert.AreEqual(AfflictionKind.Chill, onArc.LeapsTo, "to the chilled");
+            Assert.IsTrue(resists.Effects.Any(each => each.On == UpgradeTrigger.SetOff && each.Spent == AfflictionKind.Static), "a discharge still counts");
+            Assert.IsTrue(PlayerUpgrades.AnswersArcs(resists), "its own arcs are not answered again");
+            Assert.IsFalse(PlayerUpgrades.AnswersArcs(Upgrade.ById(LightTree.Reckoning)));
+            Assert.AreNotEqual("its moment comes", TriggerWords.Of(UpgradeTrigger.ArcLeft));
+        }
+
+        [Test]
         public void TheFeastAnswersOnlyAKillByKindlingPointsOwnBurst()
         {
             string kindling = Clover.Player.Trees.Duo.KindlingPointDuo.KindlingReaction;

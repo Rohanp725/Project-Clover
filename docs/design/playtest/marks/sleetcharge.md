@@ -41,17 +41,15 @@ both are carried (in the playtest, whenever you pick Ice beside Lightning or Lig
 **Example.** A chilled brute swings. Guard it perfectly, and it takes 35 damage, and its pack takes the same.
 
 ## sleetcharge.resists
-**What it does.** Cold carries lightning without losing any of it. When Static goes off on a chilled enemy, it keeps going at full strength through the chilled enemies nearby.
+**What it does.** Cold carries lightning without losing any of it. When Static goes off on a chilled enemy, or any arc of lightning jumps away from one, it keeps going at full strength through the chilled enemies nearby.
 
-**When it happens.** Whenever Static is set off on an enemy that has Chill (by a heavy blow, the end of a Sleet Charge, or Cold Snap).
+**When it happens.** Whenever Static is set off on an enemy that has Chill (by a heavy blow, the end of a Sleet Charge, or Cold Snap), and whenever any other arc hits a chilled enemy and jumps on from it (a bolt's chain, or an arc from one enemy to the next).
 
-**The numbers.** Mix, keystone, 5 Shards. When Static goes off on a chilled enemy, an arc runs from it through every chilled enemy within 5 metres of the last one. Each takes the discharge's full damage (7 for every Static that went off; 35 at five), 5 stagger and a Static. At most twice a second.
+**The numbers.** Mix, keystone, 5 Shards. An arc runs from the chilled enemy through every chilled enemy within 5 metres of the last one. Each takes the full damage: the discharge's (7 for every Static that went off; 35 at five), or the arc's own. Each also takes 5 stagger and a Static. At most twice a second for each of the two. The arcs it makes don't start it again.
 
 **Works with.** Thundersnow, Cold Snap, Charged Hail, and Hoarfrost and Glass Storm to keep the pack chilled.
 
 **Example.** Glass Storm has chilled a pack of five. One heavy blow on a charged one, and the arc runs through the other four.
-
-**Not built yet.** For now, it only works when Static goes off, not on every other arc that leaves a chilled enemy.
 
 ## sleetcharge.glassstorm
 **What it does.** Six shards of clear ice spin around you, 2 metres away, for 8 seconds, with threads of lightning jumping between them. Each shard that passes through an enemy cuts it and adds a Chill, and every other pass adds a Static too, so the ring sets up Sleet Charge on any enemy that pushes in.
