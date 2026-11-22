@@ -114,7 +114,7 @@ namespace Clover.Tests
             Assert.IsTrue(quake.Any(effect => effect.Do == UpgradeAction.Burst && effect.Stagger == 30f), "double stagger");
             Assert.IsTrue(Upgrade.ById(SpellBranch.MasterId(EarthTree.QuakeStep)).Effects.All(effect => effect.NeedsWindup > 0f && effect.Cooldown < 18f));
             Assert.IsTrue(Upgrade.ById(SpellBranch.MasterId(DarkTree.DevouringMaw)).Effects.All(effect => effect.NeedsWindup > 0f));
-            Assert.AreEqual(0.3f, Upgrade.ById(SpellBranch.MasterId(WaterTree.Whirlpool)).Effects.Single().NeedsWindup, 1e-5f, "in the instant its attack mark shows");
+            Assert.IsTrue(Upgrade.ById(SpellBranch.MasterId(WaterTree.Whirlpool)).Effects.All(effect => System.Math.Abs(effect.NeedsWindup - 0.3f) < 1e-5f), "in the instant its attack mark shows");
         }
 
         [Test]

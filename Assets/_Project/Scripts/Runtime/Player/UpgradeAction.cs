@@ -190,5 +190,10 @@ namespace Clover.Player
         /// SurgeOf, Seconds.
         /// </summary>
         FreeSurge,
+        /// <summary>
+        /// Keeps only Amount (0.5) of its own spell's running wait, as if it had been that long from the start (Whirlpool's
+        /// Master: its cooldown halved; Blown Through: half its own wait back; the ledger's own-clock-share). Reads: Amount.
+        /// </summary>
+        KeepWaitShare,
     }
 }

@@ -29,6 +29,28 @@ namespace Clover.Tests
             Assert.IsFalse(moments.Within(CastMoment.Death, 0.5f, 20.3f));
         }
 
+        [Test]
+        public void AMarkGivesBackHalfItsOwnSpellsWaitAlone()
+        {
+            var clocks = new Clover.Player.Magic.SpellCooldowns();
+            var slots = new Clover.Player.Magic.SpellSlots();
+            slots.Set(0, "t.whirl");
+            slots.Set(1, "t.other");
+            clocks.Start(0, 10f);
+            clocks.Start(1, 10f);
+            var half = new UpgradeEffect { Do = UpgradeAction.KeepWaitShare, Amount = 0.5f };
+            Assert.IsTrue(Clover.Player.Magic.BranchCooldowns.Handles(UpgradeAction.KeepWaitShare));
+            Assert.AreEqual(0, Clover.Player.Magic.BranchCooldowns.Answer(half, "t.whirl", clocks, slots));
+            Assert.AreEqual(5f, clocks.Remaining(0), 1e-4f, "its own wait halved");
+            Assert.AreEqual(10f, clocks.Remaining(1), 1e-4f, "every other clock left alone");
+            var whirl = Upgrade.ById(SpellBranch.MasterId(WaterTree.Whirlpool)).Effects.Single(each => each.Do == UpgradeAction.KeepWaitShare);
+            Assert.AreEqual(0.3f, whirl.NeedsWindup, 1e-5f, "only in the instant its enemy's attack mark shows");
+            var blown = Upgrade.ById(Clover.Player.Trees.Duo.BreathTakenDuo.BlownThrough);
+            Assert.IsTrue(blown.Effects.Any(each => each.Do == UpgradeAction.KeepWaitShare && each.Amount == 0.5f), "half its own wait back");
+            Assert.IsFalse(blown.Effects.Any(each => each.Do == UpgradeAction.CutCooldowns), "not seconds off every clock");
+            Assert.AreEqual(blown.Id, Clover.Player.Magic.BranchCooldowns.BranchOf(blown.Effects.First(each => each.Do == UpgradeAction.KeepWaitShare)), "a duo spell's own slot");
+        }
+
         private static UpgradeEffect MasterAsking(string branch, CastMoment moment) =>
             Upgrade.ById(SpellBranch.MasterId(branch)).Effects.Single(each => each.CastAfter == moment);
 

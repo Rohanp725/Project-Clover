@@ -112,10 +112,9 @@ namespace Clover.Player.Trees.Duo
             // The duo spell, bought with 5 Shards once both are carried (no god gives it): a counter on a 9 s cooldown
             // (SpellTimings). The parry form stands you in the gust for 1 s, cast in Dark (a Curse on what it answers); the
             // answer makes the attacker Unsteady, so its breath is taken, and the wind sets you down 2 m behind it. Your first
-            // weapon blow on it within a second is critical and cuts every running clock 4.5 s.
+            // weapon blow on it within a second is critical and gives back half its own wait.
             // NEEDS: the wind carrying you through the attacker untouchable, facing it (form-pieces; now a step to 2 m beyond
-            // it); half its own cooldown back rather than seconds off every clock (own-clock-share); the small push round you when
-            // nothing comes (missed-counter).
+            // it); the small push round you when nothing comes (missed-counter). Half its own wait back (KeepWaitShare).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = BlownThrough, Name = "Blown Through", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Role = SpellRole.Counter, Requires = new[] { IllOmen, ShortOfBreath }, Icon = UpgradeIcons.Wing,
@@ -128,7 +127,7 @@ namespace Clover.Player.Trees.Duo
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Cooldown = 0.5f, Do = UpgradeAction.Step, Reach = 4f, Amount = 2f },
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Condition,
                         State = new ConditionSpec { Id = Back, Seconds = 1f, Flags = ConditionFlags.TakesCritical, EndsWith = ConditionBlow.Weapon } },
-                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Back, By = StruckBy.Weapon, Do = UpgradeAction.CutCooldowns, Amount = 4.5f },
+                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Back, By = StruckBy.Weapon, Do = UpgradeAction.KeepWaitShare, Amount = 0.5f },
                 },
             }, HeartPattern.Spell));
 

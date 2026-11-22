@@ -224,11 +224,9 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** For now, the first enemy it bites on each cast. Whirlpool must be in a spell slot.
 
-**The numbers.** 3 Shards. An enemy it bites in the first 0.3 seconds of its attack warning flinches and loses the attack.
+**The numbers.** 3 Shards. An enemy it bites in the first 0.3 seconds of its attack warning flinches and loses the attack, and Whirlpool's own wait is cut in half.
 
 **Works with.** Blowhole and Ebb and Flood, for the moment an attack starts; Heavy Water.
-
-**Not built yet.** The wait isn't cut in half yet.
 
 **Example.** A brute raises its club. Open the whirlpool under it, and the swing never comes.
 

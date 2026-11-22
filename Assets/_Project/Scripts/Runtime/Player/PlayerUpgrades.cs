@@ -2390,6 +2390,7 @@ namespace Clover.Player
                 case UpgradeAction.CutCooldowns:
                 case UpgradeAction.ResetCooldown:
                 case UpgradeAction.InstantNext:
+                case UpgradeAction.KeepWaitShare:
                     // The spell clocks are the slots' (Magic/BranchCooldowns): a Master's reward for its timing.
                     if (spells != null) spells.Answer(effect);
                     break;
