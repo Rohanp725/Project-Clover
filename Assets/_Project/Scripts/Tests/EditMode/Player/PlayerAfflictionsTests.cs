@@ -41,6 +41,49 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void EachAfflictionDoesToThePlayerWhatItDoesToAnEnemy()
+        {
+            var on = new PlayerAfflictions();
+            Assert.AreEqual(1f, on.MoveScale, 1e-5f);
+            Assert.AreEqual(1f, on.TakenScale, 1e-5f);
+            Assert.AreEqual(1f, on.DealtScale, 1e-5f);
+            Assert.AreEqual(1f, on.KnockbackScale, 1e-5f);
+            Assert.AreEqual(0f, on.DodgeRecoveryAdd, 1e-5f);
+            int version = on.Version;
+            on.Lay(AfflictionKind.Chill, 2);
+            Assert.AreNotEqual(version, on.Version, "what is on the player changed");
+            Assert.AreEqual(1f - 2f * Afflictions.Spec(AfflictionKind.Chill).SlowPerStack, on.MoveScale, 1e-4f, "Chill slows the step");
+            on.Lay(AfflictionKind.Soaked, 2);
+            Assert.Greater(on.DodgeRecoveryAdd, 0f, "Soaked: the dodge comes back slower");
+            Assert.AreEqual(on.Stacks(AfflictionKind.Soaked) * PlayerAfflictions.SoakedDodgeSeconds, on.DodgeRecoveryAdd, 1e-5f);
+            on.Lay(AfflictionKind.Sundered, 1);
+            on.Lay(AfflictionKind.Marked, 1);
+            Assert.AreEqual(1f + Afflictions.Spec(AfflictionKind.Sundered).WeaponDamageTakenPerStack + PlayerAfflictions.MarkedTakenPerStack, on.TakenScale, 1e-4f, "blows cut deeper");
+            on.Lay(AfflictionKind.Cursed, 1);
+            Assert.AreEqual(1f - Afflictions.Spec(AfflictionKind.Cursed).DealsLessPerStack, on.DealtScale, 1e-4f, "Cursed: your blows are weaker");
+            on.Lay(AfflictionKind.Unsteady, 1);
+            Assert.AreEqual(1f + Afflictions.Spec(AfflictionKind.Unsteady).ShovePerStack, on.KnockbackScale, 1e-4f, "Unsteady: thrown farther");
+            on.Lay(AfflictionKind.Burn, 1);
+            var kinds = new AfflictionKind[Clover.UI.AfflictionBadges.Most];
+            var seconds = new float[Clover.UI.AfflictionBadges.Most];
+            int shown = on.Shown(kinds, seconds);
+            Assert.AreEqual(Clover.UI.AfflictionBadges.Most, shown, "six on, six shown");
+            Assert.IsTrue(kinds.Take(shown).Contains(AfflictionKind.Burn));
+            Assert.IsTrue(seconds.Take(shown).All(left => left > 0f), "each with its time");
+            version = on.Version;
+            on.Clear();
+            Assert.AreNotEqual(version, on.Version);
+            Assert.AreEqual(1f, on.MoveScale, 1e-5f, "cleared, as before");
+        }
+
+        [Test]
+        public void TheMarkByTheHealthBarSaysTheNameAndTheSecondsLeft()
+        {
+            Assert.AreEqual("Burn 3", Clover.UI.AfflictionBadges.Words(AfflictionKind.Burn, 2.2f));
+            Assert.AreEqual("Burn 0", Clover.UI.AfflictionBadges.Words(AfflictionKind.Burn, -1f));
+        }
+
+        [Test]
         public void TremorHalvesTheTimeBedrockShedsAndHighNoonClears()
         {
             var plain = new PlayerAfflictions();

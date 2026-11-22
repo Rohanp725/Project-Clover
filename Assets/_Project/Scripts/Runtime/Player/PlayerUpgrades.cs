@@ -340,6 +340,7 @@ namespace Clover.Player
         private ISpellLanding landingForm;
         private SpellCast landingCast;
         private int appliedVersion = -1;
+        private int appliedAfflictions;
         private bool appliedSurge;
         private bool inFight;
         private float untilFightLook;
@@ -957,18 +958,21 @@ namespace Clover.Player
         private void ApplyStats()
         {
             bool surging = element != null && element.SurgeActive;
-            if (!basesRead || (Stats.Version == appliedVersion && surging == appliedSurge)) return;
+            // What is laid on the player changes its numbers too (PlayerAfflictions).
+            int afflicted = defence != null ? defence.Afflictions.Version : 0;
+            if (!basesRead || (Stats.Version == appliedVersion && surging == appliedSurge && afflicted == appliedAfflictions)) return;
+            appliedAfflictions = afflicted;
             appliedVersion = Stats.Version;
             appliedSurge = surging;
             float surgeSpeed = surging ? Stats.Multiplier(PlayerStat.SurgeSpeed) : 1f;
-            player.MoveSpeed = baseMoveSpeed * Stats.Multiplier(PlayerStat.MoveSpeed) * surgeSpeed;
+            player.MoveSpeed = baseMoveSpeed * Stats.Multiplier(PlayerStat.MoveSpeed) * surgeSpeed * (defence != null ? defence.Afflictions.MoveScale : 1f);
             // Afflictions laid on the player last as long as the stat says (Tremor: half as long).
             if (defence != null) defence.Afflictions.SecondsScale = Mathf.Max(0f, Stats.Multiplier(PlayerStat.AfflictionsOnYou));
             player.Dodge.Distance = baseDodgeDistance * Stats.Multiplier(PlayerStat.DodgeDistance) + Stats.Sum(PlayerStat.DodgeMetres);
             // The Body (task 5.4): stamina, how soon it returns, the dodge's wait and its flow.
             player.Stamina.Maximum = Mathf.Max(1f, baseStaminaMost + Stats.Sum(PlayerStat.StaminaMost));
             player.Stamina.RegenerationDelay = Mathf.Max(0f, baseStaminaDelay + Stats.Sum(PlayerStat.StaminaDelay));
-            player.Dodge.Recovery = Mathf.Max(0f, baseDodgeRecovery + Stats.Sum(PlayerStat.DodgeRecovery));
+            player.Dodge.Recovery = Mathf.Max(0f, baseDodgeRecovery + Stats.Sum(PlayerStat.DodgeRecovery) + (defence != null ? defence.Afflictions.DodgeRecoveryAdd : 0f));
             player.Dodge.Flows = Mathf.Max(0, Stats.Whole(PlayerStat.DodgeFlow));
             player.Dodge.InvulnerableUntil = baseDodgeSafe * Stats.Multiplier(PlayerStat.DodgeSafeTime);
             player.Dodge.StaminaCost = baseDodgeCost * Stats.Multiplier(PlayerStat.StaminaCost) * Stats.Multiplier(PlayerStat.DodgeStamina);
@@ -1012,14 +1016,14 @@ namespace Clover.Player
             defence.Flasks.HealAmount = hasWell ? 0f : baseFlaskHeal * Stats.Multiplier(PlayerStat.FlaskHeal);
             // A mark may take every flask away.
             defence.Flasks.SetMaximum(Mathf.Max(0, baseFlasks + Stats.Whole(PlayerStat.FlaskCount)));
-            defence.DamageTaken = Stats.Multiplier(PlayerStat.DamageTaken);
+            defence.DamageTaken = Stats.Multiplier(PlayerStat.DamageTaken) * defence.Afflictions.TakenScale;
             defence.PerfectGuardMana = baseGuardMana * Stats.Multiplier(PlayerStat.ManaFromGuards);
             defence.PerfectDodgeMana = baseDodgeMana * Stats.Multiplier(PlayerStat.ManaFromDodges);
             defence.Health.GreyFadePerSecond = baseGreyFade / Stats.Multiplier(PlayerStat.GreyKept);
             // The Body: Steady's poise outside a swing, the Enduring Body's shorter flinch, smaller push and longer grey.
             defence.Steadiness = Mathf.Max(0f, Stats.Sum(PlayerStat.Poise));
             defence.HurtSeconds = Mathf.Max(0.05f, baseHurtSeconds + Stats.Sum(PlayerStat.FlinchSeconds));
-            defence.Knockback = baseKnockback * Stats.Multiplier(PlayerStat.KnockbackTaken);
+            defence.Knockback = baseKnockback * Stats.Multiplier(PlayerStat.KnockbackTaken) * defence.Afflictions.KnockbackScale;
             defence.Health.GreyDelay = Mathf.Max(0f, baseGreyDelay + Stats.Sum(PlayerStat.GreyDelay));
         }
 
@@ -1078,7 +1082,7 @@ namespace Clover.Player
                 float owed = Stats.Sum(PlayerStat.GreyStrength);
                 // Health that is owed makes the arm stronger, for one who has learned to borrow.
                 float borrowed = owed > 0f && defence != null ? Mathf.Min(GreyStrengthCap, defence.Health.Grey * owed) : 0f;
-                combat.UpgradeDamage = (hasHeat ? Heat.DamageMultiplier : 1f) * (1f + borrowed);
+                combat.UpgradeDamage = (hasHeat ? Heat.DamageMultiplier : 1f) * (1f + borrowed) * (defence != null ? defence.Afflictions.DealtScale : 1f);
                 // The weapon in hand may have changed, and its chain with it.
                 if (combat.Combo != null) combat.Combo.StaminaScale = attackStamina;
             }
