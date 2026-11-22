@@ -30,6 +30,8 @@ namespace Clover.Player.Trees
         public const float DaylightRest = 4f;
         // The spells: each is its branch's Learn mark and the branch's id.
         public const string Glare = "light.base";
+        /// <summary>Glare's Master: the dodged attacker blinded, unable to turn.</summary>
+        public const string Dazzled = "light.base.dazzled";
         public const string StepIntoLight = "light.step";
         public const string RingOfSpears = "light.spears";
         public const string TwoSuns = "light.twosuns";
@@ -293,13 +295,12 @@ namespace Clover.Player.Trees
                     Description = "The ray splits into seven thin rays in a fan of 70 degrees, six metres long, as Surya's seven horses run: 5 damage each, and every enemy touched is Marked. Marking a crowd.",
                     Spell = new SpellSpec { Reach = 6f, Arc = 70f, Damage = 5f, Stagger = 6f, Stacks = 1 } },
                 "Opens two shapes of Glare, chosen at any rest fire: Gathered, a ray drawn to a point that breaks one enemy, or Seven Horses, a fan of rays that Marks a crowd.",
-                // Dazzle, once a major, folded in here. NEEDS: the cast in the perfect dodge's window as the moment
-                // (spell-windows), and a blinding that stops only turning. Until then a perfect dodge holds the enemy faced and
-                // all within two metres of it for two seconds and Marks them, once in six seconds.
+                // Dazzle, once a major, folded in here. Glare cast within 0.3 s of a perfect dodge (CastAfter PerfectDodge) blinds the
+                // attacker it dodged (ToTurnedBy): it cannot turn for 2 s, 1 s for a god or an elite (CannotTurn, EliteSeconds).
                 new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, Do = UpgradeAction.Hold, Radius = 2f, Seconds = 2f, Cooldown = 6f },
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, Do = UpgradeAction.Afflict, Affliction = M, Stacks = 1, Radius = 2f, Cooldown = 6f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, CastAfter = CastMoment.PerfectDodge, CastWindow = 0.3f, ToTurnedBy = true, Do = UpgradeAction.Condition,
+                        State = new ConditionSpec { Id = Dazzled, Seconds = 2f, EliteSeconds = 1f, Flags = ConditionFlags.CannotTurn } },
                 },
                 "Cast it in the perfect dodge's moment, and the attacker is blinded and cannot turn for two seconds, one for a god or an elite.");
 

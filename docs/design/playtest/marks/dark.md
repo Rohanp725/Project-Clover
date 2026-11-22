@@ -288,13 +288,11 @@ draining.
 ## dark.base.master
 **What it does.** Cast it within a second of being hit, and the enemy that hit you is dragged to your feet and Cursed twice. Dark strikes back when it is hurt.
 
-**When it happens.** When a blow lands on you, while Grasp is in a spell slot.
+**When it happens.** When you cast Grasp within one second after a blow lands on you.
 
-**The numbers.** 3 Shards. For one second after a blow lands on you, your first blow on the enemy that hit you, from Grasp or anything else, drags it 4 metres toward you and adds two Curses.
+**The numbers.** 3 Shards. The enemy whose blow landed on you is dragged 4 metres toward you and gets two Curses, wherever Grasp itself goes.
 
 **Works with.** Pawned Heart and Near the Grave (getting hurt is the plan), Gone to Ash, Dread.
-
-**Not built yet.** It should only work when you answer by casting Grasp; for now, any blow of yours on the attacker within that second does it.
 
 **Example.** A spearman pokes you from far away. Answer right away, and it is at your feet and Cursed.
 

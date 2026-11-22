@@ -292,13 +292,12 @@ namespace Clover.Player.Trees
                     Description = "The ball stops at the point you aim and spreads into a pool of ink three metres across for four seconds, dragging everything in it slowly to the middle and Cursing it. You gather them at a spot.",
                     Spell = new SpellSpec { Reach = 6f, Radius = 1.5f, Seconds = 4f, Interval = 1f, LingerDamage = 2f, Stacks = 1 } },
                 "Opens two shapes of Grasp, chosen at any rest fire: Tethered, a rope that keeps one enemy close, or The Pit, a pool of ink that gathers them at a spot.",
-                // NEEDS: Grasp's own cast as the answer (spell-windows). Until then any blow of yours on the one that struck you,
-                // within a second, drags it to your feet and Curses it twice.
+                // Grasp cast within a second of being struck (CastAfter Struck): the one that struck you (ToStruckBy) is dragged to
+                // your feet and Cursed twice.
                 new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.Struck, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Answered, Seconds = 1f, EndsWith = ConditionBlow.Any } },
-                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Answered, By = StruckBy.Any, Do = UpgradeAction.Pull, Shape = HazardShape.Downwind, Amount = 4f },
-                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Answered, By = StruckBy.Any, Do = UpgradeAction.Afflict, Affliction = C, Stacks = 2 },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, CastAfter = CastMoment.Struck, CastWindow = 1f, ToStruckBy = true, Do = UpgradeAction.Pull, Shape = HazardShape.Downwind, Amount = 4f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, CastAfter = CastMoment.Struck, CastWindow = 1f, ToStruckBy = true, Do = UpgradeAction.Afflict, Affliction = C, Stacks = 2 },
                 },
                 "Cast it within a second of being struck, and the one that struck you is dragged to your feet and Cursed twice. Dark answers when it is hurt.");
 

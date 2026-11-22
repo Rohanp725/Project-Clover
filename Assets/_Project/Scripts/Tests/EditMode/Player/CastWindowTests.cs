@@ -77,5 +77,25 @@ namespace Clover.Tests
             Assert.AreEqual(0.5f, frost.CastWindow, 1e-5f);
             Assert.AreEqual(2, frost.Stacks, "two more Chill: four deep");
         }
+
+        [Test]
+        public void GraspAndGlareAnswerTheOneWhoseBlowItWas()
+        {
+            Assert.IsTrue(PlayerUpgrades.RecentAttacker(new object(), 10f, 1f, 10.8f), "struck 0.8 s ago");
+            Assert.IsFalse(PlayerUpgrades.RecentAttacker(new object(), 10f, 1f, 11.2f), "too long ago");
+            Assert.IsFalse(PlayerUpgrades.RecentAttacker(null, 10f, 1f, 10.1f), "no one");
+            var grasp = Upgrade.ById(SpellBranch.MasterId(DarkTree.Grasp)).Effects;
+            Assert.AreEqual(2, grasp.Length);
+            Assert.IsTrue(grasp.All(each => each.On == UpgradeTrigger.SpellCast && each.CastAfter == CastMoment.Struck && each.CastWindow == 1f && each.ToStruckBy),
+                "Grasp cast within a second of being struck answers the one that struck you");
+            Assert.IsTrue(grasp.Any(each => each.Do == UpgradeAction.Pull) && grasp.Any(each => each.Do == UpgradeAction.Afflict && each.Stacks == 2));
+            var glare = Upgrade.ById(SpellBranch.MasterId(LightTree.Glare)).Effects.Single();
+            Assert.AreEqual(CastMoment.PerfectDodge, glare.CastAfter);
+            Assert.AreEqual(0.3f, glare.CastWindow, 1e-5f, "in the perfect dodge's moment");
+            Assert.IsTrue(glare.ToTurnedBy, "on the attacker it dodged");
+            Assert.AreEqual(ConditionFlags.CannotTurn, glare.State.Flags, "a blinding that stops only its turning");
+            Assert.AreEqual(2f, glare.State.Seconds, 1e-5f);
+            Assert.AreEqual(1f, glare.State.EliteSeconds, 1e-5f, "one second for a god or an elite");
+        }
     }
 }

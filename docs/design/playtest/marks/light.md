@@ -256,13 +256,11 @@ the next blows on that enemy critical.
 ## light.base.master
 **What it does.** Cast it at the moment of a perfect dodge, and the attacker is blinded and can't turn around for two seconds (one second for a god or an elite). Dazzle, which used to be its own mark, lives on here.
 
-**When it happens.** A perfect dodge, while Glare is in a spell slot.
+**When it happens.** When you cast Glare within 0.3 seconds after a perfect dodge.
 
-**The numbers.** 3 Shards. For now, a perfect dodge holds the enemy you face, and every enemy within 2 metres of it, still for 2 seconds (a god or an elite for 0.4 of that), and Marks them, once every 6 seconds.
+**The numbers.** 3 Shards. The enemy whose blow you dodged can't turn for 2 seconds (a god or an elite for 1 second). It can still attack, but only the way it already faces.
 
 **Works with.** Clarity (perfect timing windows 50% longer), Step Into Light, Unblemished, and the root mark's three critical hits.
-
-**Not built yet.** It should need you to cast Glare during the perfect dodge's window, and the blinding should only stop the enemy from turning. For now, the dodge alone holds them completely still, whether you cast Glare or not.
 
 **Example.** Roll through a brute's swing at the last moment. It stands still and Marked while you turn and land three critical hits.
 

@@ -224,6 +224,12 @@ namespace Clover.Player
         /// trigger's enemy's place kept as the point (Dead Weight drags the mate there); nothing when it is chained to no one.
         /// </summary>
         public bool ToChainMate;
+        /// <summary>
+        /// Done to the enemy whose blow last landed on you (Grasp's Master), or whose blow you last turned or dodged (Glare's
+        /// Master), within the effect's CastWindow (1 s when none is named); nothing when there is none that recent.
+        /// </summary>
+        public bool ToStruckBy;
+        public bool ToTurnedBy;
         /// <summary>For Tend: what the tended grown thing lays with every bite from then on (The Host: a dose of poison).</summary>
         public AfflictionKind BitesLay = AfflictionKind.None;
         /// <summary>

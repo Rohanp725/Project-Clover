@@ -223,6 +223,13 @@ namespace Clover.Player
             turnedAt = Time.time;
         }
 
+        // The enemy whose blow last landed on you, and when.
+        private Component struckBy;
+        private float struckByAt = -100f;
+
+        /// <summary>True when an attacker's blow came within <paramref name="window"/> seconds before <paramref name="now"/>.</summary>
+        public static bool RecentAttacker(object attacker, float at, float window, float now) => attacker != null && now - at >= 0f && now - at <= window;
+
         /// <summary>True when <paramref name="target"/> is the one whose blow was turned or dodged at <paramref name="at"/>, still within the window.</summary>
         public static bool IsAttacker(object target, object turned, float at, float now) =>
             target != null && turned != null && ReferenceEquals(target, turned) && now - at <= AttackerWindow;
@@ -1510,6 +1517,16 @@ namespace Clover.Player
             }
             // Asked again here for what came with no trigger to filter it (a condition's weals, a dead enemy's depth).
             if (effect.SpentAtLeast > 0 && spent < effect.SpentAtLeast) return;
+            // Done to the one whose blow landed on you, or was turned or dodged, a moment ago.
+            if (effect.ToStruckBy || effect.ToTurnedBy)
+            {
+                var attacker = effect.ToStruckBy ? struckBy : turnedBy;
+                float when = effect.ToStruckBy ? struckByAt : turnedAt;
+                if (!RecentAttacker(attacker, when, effect.CastWindow > 0f ? effect.CastWindow : 1f, Time.time) || !PlayerReactions.Alive(attacker)) return;
+                target = attacker;
+                at = attacker.transform.position;
+                hasAt = true;
+            }
             // Done to the chain-mate, found now (a dead one's chain is still on its mate, and its own is cleared after).
             if (effect.ToChainMate)
             {
@@ -3601,6 +3618,11 @@ namespace Clover.Player
             var smothered = element != null && element.SurgeActive ? element.SurgeKit : null;
             if (smothered != null && smothered.SurgeSmothers > 0f) smothered.Smother(smothered.SurgeSmothers);
             var struckBy = combat != null ? combat.EnemyAt(attacker, 2.5f) : null;
+            if (struckBy != null)
+            {
+                this.struckBy = struckBy;
+                struckByAt = Time.time;
+            }
             Trigger(UpgradeTrigger.Struck, struckBy, attacker);
             TheirBlow(struckBy, attacker);
         }
