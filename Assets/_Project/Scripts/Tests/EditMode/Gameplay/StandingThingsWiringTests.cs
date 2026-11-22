@@ -1738,5 +1738,15 @@ namespace Clover.Tests
             Assert.AreEqual(3, bolt.Stacks);
             Assert.IsTrue(grudge.Effects.Any(each => each.On == UpgradeTrigger.HarmPaid && each.Affliction == AfflictionKind.Cursed));
         }
+
+        [Test]
+        public void OneNooseForTwoSharesHalfTheFinishersStagger()
+        {
+            var noose = Upgrade.ById(Clover.Player.Trees.Duo.BlackChainDuo.OneNooseForTwo).Effects.Single();
+            Assert.IsTrue(noose.ToChainMate && noose.ByPower);
+            Assert.AreEqual(0.5f, noose.Share, 1e-5f, "half its damage");
+            Assert.AreEqual(0.5f, noose.StaggerOfBlow, 1e-5f, "half its stagger");
+            Assert.AreEqual(0f, noose.Stagger, 1e-5f, "no set 30 any more");
+        }
     }
 }

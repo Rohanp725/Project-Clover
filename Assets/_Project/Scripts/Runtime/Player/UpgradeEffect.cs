@@ -491,6 +491,8 @@ namespace Clover.Player
         /// <summary>Damage added from the trigger's power: this share of it, <see cref="PowerMost"/> at most (The Exile's Grudge: twice what was dealt, 60 at most).</summary>
         public float PowerShare;
         public float PowerMost;
+        /// <summary>Above zero: its stagger is this share of the stagger the weapon's last blow dealt (One Noose for Two: half the finisher's).</summary>
+        public float StaggerOfBlow;
         public int HarderBlowsMost = 5;
 
         /// <summary>True when a Hazard effect lays ground that keeps acting, told to the marks at each bite (Hazards.GroundActs).</summary>

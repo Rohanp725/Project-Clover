@@ -44,13 +44,11 @@ both carried.
 
 **When it happens.** Every time a finisher lands on an enemy that is chained to another (by Black Chain or Shared Wound).
 
-**The numbers.** Mix, keystone, 5 Shards. The chained partner takes half the finisher's damage and 30 stagger.
+**The numbers.** Mix, keystone, 5 Shards. The chained partner takes half the finisher's damage and half its stagger.
 
 **Works with.** Black Chain, Dead Weight, The Smith's Net, Sunder.
 
 **Example.** Finish off a chained captain, and its guard staggers from the same blow.
-
-**Not built yet.** Its stagger is always 30, not half of the finisher's.
 
 ## blackchain.net
 **What it does.** You throw a net of thin black chain. A moment later it opens and falls. You only see a shimmer and its shadow growing on the floor. Every enemy under it is Cursed, notched, and held in place, so Black Chain binds them.

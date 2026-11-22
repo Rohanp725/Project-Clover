@@ -1990,6 +1990,8 @@ namespace Clover.Player
             // A whirl's cuts stagger by its shards, as they cut by them (Sickle Wind: 4 a shard).
             float eStagger = (byCount ? effect.Stagger : effect.Stagger * per) + effect.StaggerPerSpent * spentHere;
             if (effect.HarderPerBlow > 0f) eStagger *= HarderBy(effect.HarderPerBlow, pending.Spent, effect.HarderBlowsMost);
+            // A share of the blow's own stagger, as its damage is shared by ByPower (One Noose for Two).
+            if (effect.StaggerOfBlow > 0f && combat != null) eStagger = combat.LastBlowStagger * effect.StaggerOfBlow;
             float eAmount = effect.Amount * per;
             int eCount = byCount && effect.PerStack ? Or(effect.Count, 1) * per : effect.Count;
             int laid = effect.CarriesDepth ? Mathf.Max(1, pending.Spent) * Or(effect.Stacks, 1) : effect.Stacks;
