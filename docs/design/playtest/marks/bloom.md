@@ -10,13 +10,11 @@ Quickening does.
 
 **When it happens.** Every time Quickening goes off while you carry both Water and Life. Quickening goes off when Seeded lands on a soaked enemy, or when Soaked lands on a seeded one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Quickening.
 
-**The numbers.** Mix, 3 Shards. Both shapes fill the enemy's Seeded all the way up. Floating Flower: you heal 8 as it opens. The lily is 2 metres across and lasts 5 seconds. It soaks anything standing on it once a second. Rootlets: every Soaked enemy within 5 metres gets Seeded all the way up. A heavy blow on the flowering enemy within 4 seconds heals you 10. After Quickening goes off on an enemy, it can't go off on that enemy again for 4 seconds.
+**The numbers.** Mix, 3 Shards. Both shapes fill the enemy's Seeded all the way up. Floating Flower: the lily is 2 metres across and lasts 5 seconds. It soaks anything standing on it once a second, and it heals you 3 every second while you stand on it. Rootlets: every Soaked enemy within 5 metres gets Seeded all the way up. A heavy blow on the flowering enemy within 4 seconds heals you 10. After Quickening goes off on an enemy, it can't go off on that enemy again for 4 seconds.
 
 **Works with.** Riptide and Briar Patch to add the water and the seed, Drowned Roots, Strangling Vine, and the burst of thorns Seeded makes when a seeded enemy dies.
 
 **Example.** A wet pack has one seeded soldier. Rootlets fills them all with Seeded, and each one that dies bursts into thorns.
-
-**Not built yet.** The lily heals you once as it opens, instead of 3 every second while you stand on it.
 
 ## bloom.roots
 **What it does.** A perfect guard against an enemy that is both Soaked and Seeded wraps it in roots. It is held in place for a moment.

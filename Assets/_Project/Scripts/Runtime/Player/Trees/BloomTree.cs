@@ -28,8 +28,8 @@ namespace Clover.Player.Trees
         {
             const string A = Elements.Water, B = Elements.Life;
 
-            // NEEDS: ground that mends the player who stands on it (Floating Flower's lily, 3 a second; now 8 at once as it
-            // opens, and the lily soaks what stands on it). Rootlets seed only the Soaked (UpgradeEffect.OnlyCarrying).
+            // Floating Flower's lily soaks what stands on it and mends you 3 a second while you stand on it (UpgradeEffect.Mends).
+            // Rootlets seed only the Soaked (UpgradeEffect.OnlyCarrying).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Quickening: Floating Flower or Rootlets", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -43,8 +43,8 @@ namespace Clover.Player.Trees
                         Effects = new[]
                         {
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Seeded, Stacks = ToFull },
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Radius = 1f, Seconds = 5f, Interval = 1f, Damage = 0f, Affliction = AfflictionKind.Soaked, Stacks = 1 },
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Heal, Amount = 8f },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Radius = 1f, Seconds = 5f, Interval = 1f, Damage = 0f, Affliction = AfflictionKind.Soaked, Stacks = 1,
+                                Mends = 3f },
                         },
                     },
                     new ShapeDef

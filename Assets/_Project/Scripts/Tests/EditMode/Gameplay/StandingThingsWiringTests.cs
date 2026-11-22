@@ -550,6 +550,14 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void TheLilyMendsYouWhileYouStandOnIt()
+        {
+            var lily = Upgrade.ById(BloomTree.Shape).Shapes.Single(each => each.Name == "Floating Flower").Effects;
+            Assert.AreEqual(3f, lily.Single(each => each.Do == UpgradeAction.Hazard).Mends, 1e-5f, "3 a second");
+            Assert.IsFalse(lily.Any(each => each.Do == UpgradeAction.Heal), "not 8 at once as it opens");
+        }
+
+        [Test]
         public void TheSeaComesInQuickensYouOnlyInYourOwnWater()
         {
             var sea = Upgrade.ById(WaterTree.TheSeaComesIn);
