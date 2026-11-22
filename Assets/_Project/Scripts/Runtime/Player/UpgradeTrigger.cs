@@ -91,5 +91,11 @@ namespace Clover.Player
         ConditionAttacked,
         /// <summary>A ripe seed burst (In Its Season): set off, its bearer dead, or a reaction on it. Target: that enemy; carries the seeds it held.</summary>
         RipeBurst,
+        /// <summary>
+        /// A reaction struck an enemy: the enemy it went off on, and each its own blows reached, each once for each time it
+        /// went off (the ledger's reaction-struck). An effect's <see cref="UpgradeEffect.Reaction"/> or
+        /// <see cref="UpgradeEffect.ReactionWith"/> picks which reactions. Target: that enemy.
+        /// </summary>
+        ReactionStruck,
     }
 }

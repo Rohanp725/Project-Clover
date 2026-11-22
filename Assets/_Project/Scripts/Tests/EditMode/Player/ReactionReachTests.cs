@@ -1,0 +1,57 @@
+using System.Linq;
+using Clover.Gameplay;
+using Clover.Player;
+using Clover.Player.Trees;
+using NUnit.Framework;
+
+namespace Clover.Tests
+{
+    /// <summary>
+    /// Who a reaction reaches (standin_clearance_plan.md pass 3): the enemies a reaction struck, each answered once each
+    /// time it goes off, and the reactions picked by an affliction in their pair (the ledger's reaction-struck).
+    /// </summary>
+    public class ReactionReachTests
+    {
+        [Test]
+        public void EachEnemyAReactionStrikesIsToldOnceEachTimeItGoesOff()
+        {
+            var once = new PlayerUpgrades.StruckOnce();
+            object first = new object(), second = new object();
+            Assert.IsTrue(once.First(1, first));
+            Assert.IsFalse(once.First(1, first), "its second blow on the same enemy is not told again");
+            Assert.IsTrue(once.First(1, second), "another enemy it reached is");
+            Assert.IsTrue(once.First(2, first), "the next time it goes off, the same enemy is told again");
+        }
+
+        [Test]
+        public void AReactionIsPickedByAnAfflictionInItsPair()
+        {
+            int steam = AfflictionPairs.Index(AfflictionKind.Burn, AfflictionKind.Soaked);
+            Assert.IsTrue(PlayerUpgrades.ReactionHas(steam, AfflictionKind.Soaked));
+            Assert.IsTrue(PlayerUpgrades.ReactionHas(steam, AfflictionKind.Burn));
+            Assert.IsFalse(PlayerUpgrades.ReactionHas(steam, AfflictionKind.Chill));
+            Assert.IsTrue(PlayerUpgrades.ReactionHas(steam, AfflictionKind.None), "nothing asked: any");
+            Assert.IsFalse(PlayerUpgrades.ReactionHas(-1, AfflictionKind.Chill));
+        }
+
+        [Test]
+        public void TheMarksAnswerWhatTheReactionStruck()
+        {
+            UpgradeEffect Struck(string id) => Upgrade.ById(id).Effects.Single(effect => effect.On == UpgradeTrigger.ReactionStruck);
+            var settles = Struck(IceTree.ColdSettles);
+            Assert.AreEqual(AfflictionKind.Chill, settles.ReactionWith);
+            Assert.AreEqual(UpgradeAction.Condition, settles.Do);
+            var roots = Struck(LifeTree.RootAndBranch);
+            Assert.AreEqual(AfflictionKind.Seeded, roots.ReactionWith);
+            Assert.AreEqual(0f, roots.Radius, 1e-5f, "on each it struck, not round where it happened");
+            Assert.AreEqual(AfflictionKind.Cursed, Struck(DarkTree.CollectedTwice).ReactionWith);
+            var seen = Struck(LightTree.SeenPlainly);
+            Assert.AreEqual(AfflictionKind.Marked, seen.ReactionWith);
+            Assert.AreEqual(0f, seen.Radius, 1e-5f);
+            var rings = Struck(MetalTree.EveryCrackRings);
+            Assert.AreEqual(AfflictionKind.Sundered, rings.ReactionWith);
+            Assert.AreEqual(0f, rings.Radius, 1e-5f);
+            Assert.AreEqual("a reaction strikes an enemy", TriggerWords.Of(UpgradeTrigger.ReactionStruck));
+        }
+    }
+}

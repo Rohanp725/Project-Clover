@@ -113,13 +113,13 @@ draining.
 ## dark.lift
 **What it does.** Collected Twice, Dark's reaction lift. Every reaction the Curse is part of leaves a black thumbprint on the forehead of the enemy it hit. Your next weapon blow on that enemy repeats the reaction's damage. Your blade collects the debt.
 
-**When it happens.** Whenever a reaction with Cursed in it happens, on any enemy. The print lasts 4 seconds, or until your next weapon blow on that enemy.
+**When it happens.** Whenever a reaction with Cursed in it happens, on any enemy. The print goes on everything the reaction hit: the enemy where it happened and every enemy its blows reached. It lasts 4 seconds, or until your next weapon blow on that enemy.
 
 **The numbers.** 3 Shards. A weapon blow on a printed enemy within 4 seconds hits it for 15 more damage.
 
 **Works with.** Every element pair with Cursed in it (Dark's reactions with its neighbours and the rest), the root mark, Dread, which it comes after on the chart, and Never Sated and Nothing Stays Buried, which come after it.
 
-**Not built yet.** It should repeat the reaction's own damage; for now, it is always 15, no matter what the reaction did. The print should go on every enemy the reaction hit; for now, only on the enemy where the reaction happened. The black print isn't drawn on the head yet.
+**Not built yet.** It should repeat the reaction's own damage; for now, it is always 15, no matter what the reaction did. The black print isn't drawn on the head yet.
 
 **Example.** A Curse reaction goes off on a soldier. Your next cut on it does 15 more damage.
 

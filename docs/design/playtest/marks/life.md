@@ -112,11 +112,9 @@ ground: Briar Patch's bed, a thornbush, a sapling, a thicket, a tuft of briar.
 
 **When it happens.** Whenever Seeded reacts on an enemy with another affliction it has (Rot Roots with Poison, and the rest).
 
-**The numbers.** 3 Shards. Each of these reactions heals you 4 and puts one Seeded on every enemy within 3 metres of where it happened.
+**The numbers.** 3 Shards. Each of these reactions heals you 4 and puts one Seeded on everything it hit: the enemy where it happened and every enemy its blows reached.
 
 **Works with.** Carrying a second element: every one of Life's ten reactions; Seeded; Fallen Seeds, which it comes after on the chart; Wood Grows Back above it.
-
-**Not built yet.** The seed should go into exactly what the reaction hit; for now, it goes into everything within 3 metres.
 
 **Example.** Life and Poison on a tight group. Rot Roots goes off on one, you heal 4, and the enemies next to it are Seeded for the next one.
 

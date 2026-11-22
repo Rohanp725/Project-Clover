@@ -111,11 +111,9 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Whenever Chill reacts on an enemy with another affliction it has (Steam with Burn, Supercooled with Static, and the rest).
 
-**The numbers.** 3 Shards. A patch of frozen ground with a 1.5-metre radius around the reaction, lasting 4 seconds. Once a second, it deals 1 damage and a stack of Chill. The enemy where the reaction happened moves at 60% of its speed for 2 seconds (elites are slowed half as much; gods aren't slowed).
+**The numbers.** 3 Shards. A patch of frozen ground with a 1.5-metre radius around the reaction, lasting 4 seconds. Once a second, it deals 1 damage and a stack of Chill. Everything the reaction hit moves at 60% of its speed for 2 seconds: the enemy where it happened and every enemy its blows reached (elites are slowed half as much; gods aren't slowed).
 
 **Works with.** Carrying a second element: every one of Ice's ten reactions; Flying Shards, which it comes after on the chart; All at Once and Deep Winter, above it.
-
-**Not built yet.** Slowing everything the reaction hit. For now, only the enemy where it happened is slowed.
 
 **Example.** Ice and Water on a soldier in a crowd. The reaction goes off, the floor freezes around it, and soldiers walking in get Chill.
 

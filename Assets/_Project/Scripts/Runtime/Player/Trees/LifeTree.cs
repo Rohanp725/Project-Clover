@@ -131,14 +131,14 @@ namespace Clover.Player.Trees
                     new UpgradeEffect { On = UpgradeTrigger.EverySeconds, Every = 1f, Spends = 1, Do = UpgradeAction.Heal, Amount = 3f },
                 });
 
-            // NEEDS: a seed sown in everything the reaction struck (reaction-struck); until then in everything within three
-            // metres of where it happened.
+            // A seed sown in everything the reaction struck: the enemy it went off on and each its blows reached
+            // (UpgradeTrigger.ReactionStruck).
             to.Add(BranchPattern.Put(new Upgrade { Id = RootAndBranch, Name = "Root and Branch", Element = E, Kind = UpgradeKind.Major, Lifts = E, Requires = new[] { FallenSeeds }, Icon = UpgradeIcons.Leaf,
                 Description = "Every reaction with Seeded in it mends you 4 and sows a seed in everything it reaches.",
                 Effects = new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.Reacted, Needs = AfflictionKind.Seeded, Do = UpgradeAction.Heal, Amount = 4f },
-                    new UpgradeEffect { On = UpgradeTrigger.Reacted, Needs = AfflictionKind.Seeded, Do = UpgradeAction.Afflict, Radius = 3f, Affliction = AfflictionKind.Seeded, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.ReactionStruck, ReactionWith = AfflictionKind.Seeded, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Seeded, Stacks = 1 },
                 } },
                 BranchPattern.MiddleCrown));
             // The Garden bough's keystone (the owner's pick of 2026-11-20). The RuleBook's affliction rules ripen a seed left

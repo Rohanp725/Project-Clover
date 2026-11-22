@@ -111,13 +111,14 @@ namespace Clover.Player.Trees
                 new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = AfflictionKind.Chill, NeedsFull = true, Do = UpgradeAction.ResetCooldown } },
                 "Let it land in the moment its enemy freezes, and it shatters it four times over and its cooldown comes back.");
 
-            // NEEDS: every reaction with Chill in it slowing all it struck (a reaction's struck set); until then the enemy it happened on.
+            // Every reaction with Chill in it slows all it struck: the enemy it went off on and each its blows reached
+            // (UpgradeTrigger.ReactionStruck, UpgradeEffect.ReactionWith).
             to.Add(BranchPattern.Put(new Upgrade { Id = ColdSettles, Name = "Cold Settles", Element = E, Kind = UpgradeKind.Major, Lifts = E, Requires = new[] { FlyingShards }, Icon = UpgradeIcons.Snowflake,
                 Description = "Every reaction with Chill in it leaves frozen ground where it happened for four seconds, and what it struck is slower for two.",
                 Effects = new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.Reacted, Needs = AfflictionKind.Chill, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Radius = 1.5f, Seconds = 4f, Interval = 1f, Damage = 1f, Affliction = AfflictionKind.Chill, Stacks = 1 },
-                    new UpgradeEffect { On = UpgradeTrigger.Reacted, Needs = AfflictionKind.Chill, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Settled, Seconds = 2f, Pace = 0.6f } },
+                    new UpgradeEffect { On = UpgradeTrigger.ReactionStruck, ReactionWith = AfflictionKind.Chill, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Settled, Seconds = 2f, Pace = 0.6f } },
                 } },
                 BranchPattern.MiddleCrown));
             // Built: the shatter itself is tripled (ShatterDamage) and Chill slows no one (Afflictions.ChillSlowOff); it still freezes at five.

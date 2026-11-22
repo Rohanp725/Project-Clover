@@ -275,11 +275,11 @@ the steel you throw and plant: Flung Blade, the blades of Grave of Swords.
 
 **When it happens.** Whenever a reaction with Sundered in it happens, on any enemy.
 
-**The numbers.** 3 Shards. The reaction's own damage is 25% higher. One notch on every enemy within 3 metres of where it happened.
+**The numbers.** 3 Shards. The reaction's own damage is 25% higher. One notch on everything the reaction hit: the enemy where it happened and every enemy its blows reached.
 
 **Works with.** Every element pair with Sundered in it (Live Iron with Static, Rust with Soaked, and the rest), Poured Bronze (the notches it spreads), and To the Blade and The Guard Holds, which come after it on the chart.
 
-**Not built yet.** For now, the 25% counts on every enemy the reaction hits, not only the notched ones. The notch should go on what the reaction reached, not on everything within 3 metres.
+**Not built yet.** For now, the 25% counts on every enemy the reaction hits, not only the notched ones.
 
 **Example.** Static meets the notches in one soldier. Live Iron goes off, and the two soldiers next to it come away notched, ready for the pour.
 

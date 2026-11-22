@@ -79,6 +79,7 @@ namespace Clover.Player
                 case UpgradeTrigger.TheirBlow: return "an enemy's blow lands on you or is turned";
                 case UpgradeTrigger.ConditionAttacked: return "an enemy in a state this laid strikes at you";
                 case UpgradeTrigger.RipeBurst: return "a ripe seed bursts";
+                case UpgradeTrigger.ReactionStruck: return "a reaction strikes an enemy";
                 default: return "its moment comes";
             }
         }

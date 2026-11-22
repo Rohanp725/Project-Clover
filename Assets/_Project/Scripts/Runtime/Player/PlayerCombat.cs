@@ -1040,8 +1040,14 @@ namespace Clover.Player
             else if (blow.Tinted) Vfx.Play(blow.Effect, other.bounds.center, direction, 1f, blow.Tint);
             else Vfx.Play(blow.Effect, other.bounds.center, direction);
             if (defence != null && PaysBack(target)) defence.DealtDamage(blow.Damage);
-            if (blow.Spell && upgrades != null) upgrades.OnSpellStruck(target, wasAfflicted);
+            if (blow.Spell && upgrades != null) upgrades.OnSpellStruck(target, wasAfflicted); ReactionStruck(blow, target);
             if (blow.Spell && target is Component spellBody) SpellBlowLanded?.Invoke(spellBody, blow.Cast);
+        }
+
+        // A reaction's own blow tells the upgrades whom that reaction struck (the ledger's reaction-struck).
+        private void ReactionStruck(in SpellBlow blow, IDamageable target)
+        {
+            if (blow.ReactionOf > 0 && upgrades != null && target is Component body) upgrades.OnReactionStruck(body, blow.ReactionOf - 1, blow.ReactionCast);
         }
 
         /// <summary>
@@ -1165,7 +1171,7 @@ namespace Clover.Player
             else if (blow.Tinted) Vfx.Play(blow.Effect, at, direction, 1f, blow.Tint);
             else Vfx.Play(blow.Effect, at, direction);
             if (defence != null && PaysBack(target)) defence.DealtDamage(blow.Damage);
-            if (blow.Spell && upgrades != null) upgrades.OnSpellStruck(target, wasAfflicted);
+            if (blow.Spell && upgrades != null) upgrades.OnSpellStruck(target, wasAfflicted); ReactionStruck(blow, target);
             if (blow.Spell && target is Component spellBody) SpellBlowLanded?.Invoke(spellBody, blow.Cast);
             return true;
         }
@@ -1406,7 +1412,7 @@ namespace Clover.Player
                 {
                     hits++;
                     if (defence != null && PaysBack(target)) defence.DealtDamage(blow.Damage);
-                    if (blow.Spell && upgrades != null) upgrades.OnSpellStruck(target, wasAfflicted);
+                    if (blow.Spell && upgrades != null) upgrades.OnSpellStruck(target, wasAfflicted); ReactionStruck(blow, target);
                     if (blow.Spell && target is Component spellBody) SpellBlowLanded?.Invoke(spellBody, blow.Cast);
                 }
                 from = at.position;
@@ -1447,7 +1453,7 @@ namespace Clover.Player
                 {
                     hits++;
                     if (defence != null && PaysBack(target)) defence.DealtDamage(blow.Damage);
-                    if (blow.Spell && upgrades != null) upgrades.OnSpellStruck(target, wasAfflicted);
+                    if (blow.Spell && upgrades != null) upgrades.OnSpellStruck(target, wasAfflicted); ReactionStruck(blow, target);
                 }
                 at = next.position;
                 // It leaps on only from those carrying what is asked (Mirror to Mirror: Sundered).

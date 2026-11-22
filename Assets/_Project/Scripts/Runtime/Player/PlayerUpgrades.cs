@@ -154,6 +154,9 @@ namespace Clover.Player
             public LaySource Source;
             // What its damage is multiplied by for a ripe or unripe seed it bursts (In Its Season); 0 is read as 1.
             public float Ripe;
+            // The reaction whose own effect this is (its pair plus one; 0 none), and which time it went off.
+            public int ReactionOf;
+            public int ReactionCast;
         }
 
         // ---- The keystones of 2026-11-20 (keystones_fire_water_life.md).
@@ -1188,7 +1191,10 @@ namespace Clover.Player
                 if (effect.OwnBranch && !SpellBranches.OwnBranch(effect.Owner, castSource)) continue;
                 if (effect.SpentAtLeast > 0 && spent < effect.SpentAtLeast) continue;
                 // A mark that deepens one reaction answers that one only.
-                if (trigger == UpgradeTrigger.Reacted && !string.IsNullOrEmpty(effect.Reaction) && effect.Reaction != reaction) continue;
+                bool reactionMoment = trigger == UpgradeTrigger.Reacted || trigger == UpgradeTrigger.ReactionStruck;
+                if (reactionMoment && !string.IsNullOrEmpty(effect.Reaction) && effect.Reaction != reaction) continue;
+                // Every reaction with a given affliction in it (Cold Settles: with Chill).
+                if (reactionMoment && effect.ReactionWith != AfflictionKind.None && !ReactionHas(ReactionTable.PairOf(reaction), effect.ReactionWith)) continue;
                 Consider(effect, target, at, hasAt, spent, dead, source != LaySource.Reaction || !effect.Cascades ? source : LaySource.Effect, power);
             }
         }
@@ -1320,7 +1326,8 @@ namespace Clover.Player
             float wait = Mathf.Max(effect.Cooldown, least);
             if (effect.CooldownPerEnemy && kept != null) kept.Start(effect.Slot, Time.time, wait);
             else readyAt[effect.Slot] = Time.time + wait;
-            Enqueue(new Pending { Effect = effect, Target = target, At = at, HasAt = hasAt, Spent = spent, Less = less, Source = source, Power = power, Ripe = ripeScale });
+            Enqueue(new Pending { Effect = effect, Target = target, At = at, HasAt = hasAt, Spent = spent, Less = less, Source = source, Power = power, Ripe = ripeScale,
+                ReactionOf = reactionPair + 1, ReactionCast = reactionPair >= 0 ? reactionCast : 0 });
         }
 
         /// <summary>
@@ -1380,6 +1387,9 @@ namespace Clover.Player
             Look = look,
             // What a reaction's effect strikes with starts no reaction of its own.
             FromReaction = laying == LaySource.Reaction,
+            // And whom it strikes is told as struck by that reaction (ReactionStruck).
+            ReactionOf = layingReaction,
+            ReactionCast = layingCast,
         };
 
         // A blow drawn by its reaction's own look throws no hit art of its element (Sickle Wind's whirl threw a wind strike's
@@ -1437,8 +1447,14 @@ namespace Clover.Player
         private void Execute(in Pending pending)
         {
             laying = pending.Source;
+            layingReaction = pending.ReactionOf;
+            layingCast = pending.ReactionCast;
             try { Do(pending); }
-            finally { laying = LaySource.Effect; }
+            finally
+            {
+                laying = LaySource.Effect;
+                layingReaction = layingCast = 0;
+            }
         }
 
         private void Do(in Pending pending)
@@ -2713,6 +2729,14 @@ namespace Clover.Player
         public void ReactingOn(Component who, int pair)
         {
             ripeScale = 1f;
+            // The reaction's own effects are counted as its blows from here; the enemy it went off on is among what it struck.
+            // (Told before the window opens, so what answers it is not counted as the reaction's own.)
+            if (pair >= 0)
+            {
+                reactionCast = reactionCast >= int.MaxValue - 1 ? 1 : reactionCast + 1;
+                OnReactionStruck(who, pair, reactionCast);
+                reactionPair = pair;
+            }
             if (!(who is IAfflictable afflicted) || pair < 0) return;
             var set = afflicted.Afflictions;
             var seed = AfflictionKind.Seeded;
@@ -2724,7 +2748,55 @@ namespace Clover.Player
         }
 
         /// <summary>The reaction's effects are in the line: what follows is no reaction's.</summary>
-        public void ReactedOn() => ripeScale = 1f;
+        public void ReactedOn()
+        {
+            ripeScale = 1f;
+            reactionPair = -1;
+        }
+
+        // The reaction whose own effects are being put in the line (-1: none), the times reactions have gone off, and the
+        // reaction whose effect is being done now (pair plus one) with its time: what its blows carry.
+        private int reactionPair = -1, reactionCast, layingReaction, layingCast;
+        private readonly StruckOnce struckOnce = new StruckOnce();
+
+        /// <summary>
+        /// A reaction's own blow landed on <paramref name="who"/> (or it went off on it): whatever answers what a reaction
+        /// struck is told, once for each enemy each time a reaction goes off (the ledger's reaction-struck).
+        /// </summary>
+        public void OnReactionStruck(Component who, int pair, int cast)
+        {
+            if (who == null || pair < 0 || cast <= 0 || !struckOnce.First(cast, who)) return;
+            var mark = ReactionTable.MarkFor(pair);
+            if (mark == null) return;
+            Trigger(UpgradeTrigger.ReactionStruck, who, who.transform.position, true, 0, null, AfflictionKind.None, mark.Id, LaySource.Reaction);
+        }
+
+        /// <summary>True when the reaction's pair has <paramref name="kind"/> in it, or none is asked.</summary>
+        public static bool ReactionHas(int pair, AfflictionKind kind) =>
+            kind == AfflictionKind.None || (pair >= 0 && pair < AfflictionPairs.Count && (AfflictionPairs.First(pair) == kind || AfflictionPairs.Second(pair) == kind));
+
+        /// <summary>
+        /// Remembers which enemies each going-off of a reaction has struck, so each is answered once however many of the
+        /// reaction's blows reach it. Fixed size: the oldest are forgotten first.
+        /// </summary>
+        public sealed class StruckOnce
+        {
+            private const int Size = 48;
+            private readonly int[] casts = new int[Size];
+            private readonly object[] struck = new object[Size];
+            private int next;
+
+            /// <summary>True the first time <paramref name="who"/> is told for this going-off; false after.</summary>
+            public bool First(int cast, object who)
+            {
+                for (int i = 0; i < Size; i++)
+                    if (casts[i] == cast && ReferenceEquals(struck[i], who)) return false;
+                casts[next] = cast;
+                struck[next] = who;
+                next = (next + 1) % Size;
+                return true;
+            }
+        }
 
         // A ripe seed burst on this enemy: whatever answers that (In Its Season's thornbush) is told.
         private void RipeBurstAt(Component who, Vector3 at, int seeds)

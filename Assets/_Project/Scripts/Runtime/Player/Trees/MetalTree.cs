@@ -314,13 +314,12 @@ namespace Clover.Player.Trees
                 },
                 "A perfect guard drives every blade standing in the attacker at once, and Flung Blade is ready again.");
 
-            // Every reaction with Sundered in it strikes 25% harder (PlayerStat.ReactionDamage). NEEDS: the 25% asked of the
-            // notched it strikes alone, and the notch laid on what the reaction struck rather than three metres round it
-            // (reaction-struck).
+            // Every reaction with Sundered in it strikes 25% harder (PlayerStat.ReactionDamage), and notches what it struck
+            // (UpgradeTrigger.ReactionStruck). NEEDS: the 25% asked of the notched it strikes alone (reaction-stats).
             to.Add(BranchPattern.Put(new Upgrade { Id = EveryCrackRings, Name = "Every Crack Rings", Element = E, Kind = UpgradeKind.Major, Lifts = E, Requires = new[] { ForgedAnswer }, Icon = UpgradeIcons.Burst,
                 Description = "Every reaction Sundered takes part in rings out like struck plate. It notches everything it reaches, and strikes 25% harder on the notched.",
                 Stats = new[] { new StatMod(PlayerStat.ReactionDamage, 0.25f, S) },
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Reacted, Needs = S, Do = UpgradeAction.Afflict, Affliction = S, Stacks = 1, Radius = 3f } } },
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.ReactionStruck, ReactionWith = S, Do = UpgradeAction.Afflict, Affliction = S, Stacks = 1 } } },
                 BranchPattern.RightMiddle));
 
             // The movement spell: the drill form carries you through what lies on the line and strikes it. NEEDS: flying to a

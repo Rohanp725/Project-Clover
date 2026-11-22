@@ -157,13 +157,13 @@ namespace Clover.Player.Trees
                     new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Ashen, By = StruckBy.Weapon, Do = UpgradeAction.Heal, Amount = 10f },
                 });
 
-            // NEEDS: the reaction's own damage repeated (reaction-stats), and the print laid on everything the reaction struck
-            // (reaction-struck). Until then the print is laid on the enemy the reaction happened on, and the blow strikes 15 more.
+            // The print is laid on everything the reaction struck (UpgradeTrigger.ReactionStruck). NEEDS: the reaction's own
+            // damage repeated (reaction-stats); until then the blow strikes 15 more.
             to.Add(BranchPattern.Put(new Upgrade { Id = CollectedTwice, Name = "Collected Twice", Element = E, Kind = UpgradeKind.Major, Lifts = E, Requires = new[] { Dread }, Icon = UpgradeIcons.Target,
                 Description = "Every reaction the Curse takes part in leaves a black thumbprint on the brow of what it struck for four seconds. The next weapon blow on it repeats the reaction's damage. The debt is collected by the blade.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.Reacted, Needs = C, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Thumbprint, Seconds = 4f, EndsWith = ConditionBlow.Weapon } },
+                    new UpgradeEffect { On = UpgradeTrigger.ReactionStruck, ReactionWith = C, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Thumbprint, Seconds = 4f, EndsWith = ConditionBlow.Weapon } },
                     new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Thumbprint, By = StruckBy.Weapon, Do = UpgradeAction.Burst, Radius = 0.6f, Damage = 15f, Stagger = 0f, Stacks = 0 },
                 } },
                 BranchPattern.MiddleCrown));
