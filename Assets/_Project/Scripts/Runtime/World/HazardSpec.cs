@@ -75,5 +75,7 @@ namespace Clover.World
         public float Pull;
         /// <summary>The enemy the ground was laid for (a reaction's own), told with each bite so its marks may leave it out; or null.</summary>
         public object LaidFor;
+        /// <summary>Nonzero: everything standing in it is shoved this far, this way, at each bite (a lane of foam carrying what is in it).</summary>
+        public Vector3 Carry;
     }
 }

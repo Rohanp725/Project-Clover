@@ -594,6 +594,7 @@ namespace Clover.World
                             if ((GrownBitesMask & (1 << k)) != 0) owner.AfflictArea(zone.Position, zone.Spec.Radius, (AfflictionKind)k, 1);
                     // Ground that keeps acting: it draws in, and its mark sets what it sets on whoever stands in it now.
                     if (zone.Spec.Pull > 0f) owner.Displace(zone.Position, zone.Spec.Radius, GroundRules.PullStep(zone.Spec.Pull, zone.Spec.BiteEvery), true);
+                    if (zone.Spec.Carry.sqrMagnitude > 0f) owner.ShoveArea(zone.Position, zone.Spec.Radius, zone.Spec.Carry);
                     if (zone.Spec.Acts != null) GroundActs?.Invoke(zone.Spec.Acts, zone.Position, zone.Spec.Radius, zone.Spec.BiteEvery, zone.Spec.LaidFor);
                     zone.Bitten++;
                     // A standing storm drops a bolt somewhere in itself each time it bites, whether or not anyone is under it.

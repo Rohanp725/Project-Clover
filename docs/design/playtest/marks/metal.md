@@ -281,11 +281,9 @@ the steel you throw and plant: Flung Blade, the blades of Grave of Swords.
 
 **When it happens.** Whenever you cast To the Blade, using the shape you picked. If you have not bought this, you cast the plain flight.
 
-**The numbers.** 3 Shards. Chain: a line of five patches, 6 metres long from where you started, each 0.6 metres across, lasting 3 seconds. Once a second, it deals 20 stagger and a notch. There and Back: press the slot again within 2 seconds to fly straight back to where you cast it, cutting everything on the line for 10 damage, 15 stagger and a notch.
+**The numbers.** 3 Shards. Chain: a line of five patches, 6 metres long from where you started, each 0.6 metres across, lasting 3 seconds. Twice a second, it deals 10 stagger and a notch to what stands on it, and each enemy that crosses it is tripped and knocked flat for 0.6 seconds (each one at most once every 1.5 seconds). There and Back: press the slot again within 2 seconds to fly straight back to where you cast it, cutting everything on the line for 10 damage, 15 stagger and a notch.
 
 **Works with.** Chain: a doorway, Poured Bronze on enemies that crossed it, Circle of Steel. There and Back: Sunder, Poured Bronze (two notches from one flight).
-
-**Not built yet.** Chain's trip should knock enemies down (for now, it is 20 stagger each time).
 
 **Example.** Put Chain across the entrance to a hallway. The soldiers that follow you through it arrive notched and off balance.
 

@@ -313,5 +313,53 @@ namespace Clover.Tests
             Assert.AreEqual(3f, quick.Single(each => each.Do == UpgradeAction.Hazard).Radius * 2f, 1e-5f, "3 m across");
             Assert.IsFalse(quick.Any(each => each.Do == UpgradeAction.Pull), "not a tug once a second from the sunk one");
         }
+
+        [Test]
+        public void LanesCarryAndFieldsDrawInAndTheIceGivesUnderFollowers()
+        {
+            Vector3 from = Vector3.zero, way = Vector3.forward;
+            Assert.IsTrue(GroundRules.OnLane(new Vector3(0.9f, 0f, 5f), from, way, 8f, 1f), "within a metre of its line");
+            Assert.IsFalse(GroundRules.OnLane(new Vector3(1.1f, 0f, 5f), from, way, 8f, 1f), "beside it");
+            Assert.IsFalse(GroundRules.OnLane(new Vector3(0f, 0f, 9.5f), from, way, 8f, 1f), "past its end");
+            Assert.IsTrue(GroundRules.OnLane(new Vector3(0f, 0f, -0.5f), from, way, 8f, 1f), "its ends are rounded by its width");
+
+            var spec = new SpellSpec { Pull = 1.2f };
+            new SpellChange { Pull = 3f }.ApplyTo(spec);
+            Assert.AreEqual(3f, spec.Pull, 1e-5f);
+            new SpellChange { NoPull = true }.ApplyTo(spec);
+            Assert.AreEqual(0f, spec.Pull, 1e-5f);
+            Assert.IsFalse(new SpellChange { NoPull = true }.IsEmpty);
+
+            // Whirlpool draws in at 1.2 m a second, Maelstrom at 3; Rip Current draws nothing in and its foam carries down the lane.
+            Assert.AreEqual(1.2f, Upgrade.ById(WaterTree.Whirlpool).Spell.Pull, 1e-5f);
+            var whirl = Upgrade.ById(SpellBranch.ShapeId(WaterTree.Whirlpool)).Shapes;
+            Assert.AreEqual(3f, whirl.Single(each => each.Name == "Maelstrom").Change.Pull, 1e-5f);
+            var rip = whirl.Single(each => each.Name == "Rip Current");
+            Assert.IsTrue(rip.Change.NoPull);
+            var foam = rip.Effects.Single(each => each.Do == UpgradeAction.Hazard);
+            Assert.AreEqual(2.5f, foam.Carry, 1e-5f, "2.5 m a second");
+            Assert.AreEqual(6f, foam.Seconds, 1e-5f);
+            Assert.AreEqual(2f, foam.Radius * 2f, 1e-5f, "2 m wide");
+            Assert.AreEqual(1.3f, foam.Inside.Scale, 1e-5f, "blows on the carried break balance 30% harder");
+            Assert.IsFalse(rip.Effects.Any(each => each.Do == UpgradeAction.Push));
+
+            // Thin Ice: every one on the lane cracks through once, a god slowed rather than held.
+            var thin = Upgrade.ById(SpellBranch.ShapeId(IceTree.SkiRun)).Shapes.Single(each => each.Name == "Thin Ice").Effects.Single(each => each.Do == UpgradeAction.Hazard);
+            Assert.AreEqual(5f, thin.Seconds, 1e-5f);
+            Assert.IsTrue(thin.InsideDo.Any(each => each.Do == UpgradeAction.Hold && (each.Ranks & EnemyRank.God) == 0 && each.CooldownPerEnemy));
+            Assert.AreEqual(0.7f, thin.InsideDo.Single(each => each.Ranks == EnemyRank.God).State.Pace, 1e-5f);
+            Assert.IsTrue(thin.InsideDo.Any(each => each.Do == UpgradeAction.Condition && each.State.Id == IceTree.ThroughTheIce));
+            // Ink blinds only while they stand in it.
+            var ink = Upgrade.ById(SpellBranch.ShapeId(WaterTree.DeepCrack)).Shapes.Single(each => each.Name == "Ink").Effects;
+            Assert.AreEqual(3f, ink.Single(each => each.Do == UpgradeAction.Hazard).Inside.Sight, 1e-5f);
+            Assert.IsFalse(ink.Any(each => each.Do == UpgradeAction.Condition));
+            // To the Blade's chain trips each crosser flat.
+            var chain = Upgrade.ById(SpellBranch.ShapeId(MetalTree.ToTheBlade)).Shapes.Single(each => each.Name == "Chain").Effects.Single();
+            Assert.AreEqual(ConditionFlags.Down, chain.InsideDo.Single().State.Flags);
+            // Hot Wind's gust carries everything on its lane 2 m.
+            var hot = Upgrade.ById(Clover.Player.Trees.Duo.CarriedEmbersDuo.Shape).Shapes.Single(each => each.Name == "Hot Wind").Effects;
+            Assert.AreEqual(2f, hot.Single(each => each.Do == UpgradeAction.Lane).Carry, 1e-5f);
+            Assert.IsFalse(hot.Any(each => each.Do == UpgradeAction.Push), "not the enemy alone");
+        }
     }
 }

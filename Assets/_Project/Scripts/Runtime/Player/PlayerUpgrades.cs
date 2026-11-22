@@ -1905,6 +1905,8 @@ namespace Clover.Player
                         // A lane run out of the one struck (Carried Embers' column) may leave that one alone.
                         Spares = effect.SparesTarget ? pending.Target as IDamageable : null,
                     };
+                    // A gust down the lane carries everything on it along it together (Hot Wind).
+                    if (effect.Carry > 0f) LanesShoved += combat.ShoveLane(centre, aim, length, half, effect.Carry);
                     for (int i = 0; i < patches; i++)
                     {
                         run.Position = LanePatch(centre, aim, length, i, patches);
@@ -1959,6 +1961,8 @@ namespace Clover.Player
                         AlsoLays = effect.BitesLay,
                         // Ground that keeps acting on whoever stands in it (the ledger's ground-states).
                         Acts = effect.ActsAsGround ? effect : null, Pull = effect.Pull, LaidFor = pending.Target,
+                        // A lane of foam carries what stands in it away from the player (the ledger's lane-shove).
+                        Carry = effect.Carry > 0f ? aim * GroundRules.PullStep(effect.Carry, Or(effect.Interval, 0.5f)) : Vector3.zero,
                     };
                     spec.Blow.Unseen = effect.Unseen || bespoke;
                     for (int i = 0; i < patches; i++)
@@ -3187,6 +3191,9 @@ namespace Clover.Player
         /// <summary>True when an effect answers ground of the given name told of one standing in it (UpgradeTrigger.InGround).</summary>
         public static bool AnswersGround(UpgradeEffect effect, string ground) =>
             effect != null && !string.IsNullOrEmpty(ground) && effect.Condition == ground;
+
+        /// <summary>Enemies carried along a lane by a gust (UpgradeEffect.Carry on a Lane): for probes.</summary>
+        public int LanesShoved { get; private set; }
 
         /// <summary>Enemies found standing in acting ground with effects or answers of its own, counted at each bite: for probes.</summary>
         public int GroundStood { get; private set; }

@@ -50,6 +50,7 @@ namespace Clover.Player.Trees
         public const string Churned = "water.whirlpool.churn";
         public const string SpoutRising = "water.whirlpool.spout";
         public const string InInk = "water.crack.ink";
+        public const string InTheCurrent = "water.whirlpool.current";
         public const string Snapped = "water.crack.snap";
 
         // Retired in Phase 4 (RetiredMarks): kept as names because code still asks for them.
@@ -85,14 +86,13 @@ namespace Clover.Player.Trees
                 UpgradeIcons.Burst,
                 new Empower { Cooldown = 9f, Damage = 22f },
                 "Deep Crack waits 9 seconds, not 11, and cracks for 22.",
-                // NEEDS: only what stands in the ink losing track of you while it stands there (ground-states). Until then what
-                // the ink first reaches loses track of you for its five seconds.
+                // Only what stands in the ink loses track of you, while it stands there (UpgradeEffect.Inside).
                 new ShapeDef { Name = "Ink",
                     Description = "The bubble is black water from the deep. It bursts into a pool of ink three metres across that stays five seconds. Enemies in it lose track of you beyond three metres and stay Soaked. You stay in plain sight.",
                     Effects = new[]
                     {
-                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Radius = 1.5f, Seconds = 5f, Interval = 1f, Damage = 1f, Affliction = AfflictionKind.Soaked, Stacks = 1, Cooldown = 0.5f },
-                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, Radius = 1.5f, State = new ConditionSpec { Id = InInk, Seconds = 5f, Flags = ConditionFlags.SightShort, Sight = 3f } },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Radius = 1.5f, Seconds = 5f, Interval = 1f, Damage = 1f, Affliction = AfflictionKind.Soaked, Stacks = 1, Cooldown = 0.5f,
+                            Inside = new ConditionSpec { Id = InInk, Seconds = 0.5f, Flags = ConditionFlags.SightShort, Sight = 3f } },
                     } },
                 // NEEDS: three bubbles 2 m apart each cracking 0.15 s after the last. Until then one line of water runs seven
                 // metres along the way you face at that pace and cracks on all it crosses.
@@ -255,31 +255,34 @@ namespace Clover.Player.Trees
                 BranchPattern.LeftCrown));
 
             // The field form bites and soaks; each bite breaks balance harder for a moment and holds it there (ConditionFlags.
-            // BalanceHeld, kept up by each bite, so it holds while they are inside). NEEDS: enemies drawn to the middle at 1.2 m a
-            // second (pull-to-point).
+            // BalanceHeld, kept up by each bite, so it holds while they are inside); everything in it is drawn to the middle at
+            // 1.2 m a second (SpellSpec.Pull).
             SpellBranch.Add(to, E, Whirlpool, "Whirlpool", SpellRole.Breaker, BranchPattern.LeftB, HeavyWater, SpellForms.Field,
-                new SpellSpec { Reach = 6f, Radius = 4f, Seconds = 5f, Interval = 0.5f, LingerDamage = 3f, Stacks = 1 },
+                new SpellSpec { Reach = 6f, Radius = 4f, Seconds = 5f, Interval = 0.5f, LingerDamage = 3f, Stacks = 1, Pull = 1.2f },
                 "A whirlpool four metres round opens under the enemy faced, up to six metres away, for five seconds. Enemies in it are drawn to the middle, kept Soaked and bitten for 3 twice a second. Their balance does not recover inside it, and your blows there break balance 30% harder.",
                 UpgradeIcons.Spiral,
                 new Empower { Cooldown = 8f, Seconds = 7f },
                 "Whirlpool waits 8 seconds, not 10, and lasts seven seconds.",
-                // NEEDS: the hard pull (3 m a second, pull-to-point). The throw at its end is the end of each enemy's churn: when
-                // the bites stop.
+                // The hard pull, 3 m a second (SpellChange.Pull). The throw at its end is the end of each enemy's churn: when the
+                // bites stop.
                 new ShapeDef { Name = "Maelstrom",
                     Description = "Smaller, two and a half metres round, and pulling hard. At its end it throws everything inside up in a spout and down again for 50 stagger.",
-                    Change = new SpellChange { Radius = 2.5f },
+                    Change = new SpellChange { Radius = 2.5f, Pull = 3f },
                     Effects = new[]
                     {
                         new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = SpoutRising, Seconds = 0.7f } },
                         new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = SpoutRising, Do = UpgradeAction.Lift, Seconds = 0.8f },
                         new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = SpoutRising, Do = UpgradeAction.Burst, Damage = 0f, Stagger = 50f, Radius = 0.6f },
                     } },
-                // NEEDS: the lane of foam 2 m wide and 9 m long running from the point away from you for 6 s, and no dodging
-                // against it (ground-states, no-dodge-or-leap). Until then the whirlpool carries what it bites away from you at
-                // two and a half metres a second instead of drawing it in.
+                // The lane of foam, 2 m wide and 9 m long from the point away from you for 6 s, carries all in it down it at 2.5 m a
+                // second (UpgradeEffect.Carry), and blows on one in it break balance 30% harder (UpgradeEffect.Inside); the
+                // whirlpool draws nothing in (SpellChange.NoPull). NEEDS: no dodging against it (no-dodge-or-leap).
                 new ShapeDef { Name = "Rip Current",
                     Description = "No pull to the middle. A lane of churning foam two metres wide and nine long runs from the whirlpool's point away from you for six seconds. Enemies in it are carried down it and cannot dodge against it, and your blows on a carried enemy break balance 30% harder. Cut them as the current drags them past.",
-                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Push, Shape = HazardShape.Downwind, Amount = 1.25f } } },
+                    Change = new SpellChange { NoPull = true },
+                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Hazard, Shape = HazardShape.Downwind, Count = 5, Reach = 4.5f, Amount = 2f,
+                        Radius = 1f, Seconds = 6f, Interval = 0.25f, Damage = 0f, Stacks = 0, Affliction = AfflictionKind.Soaked, Carry = 2.5f,
+                        Inside = new ConditionSpec { Id = InTheCurrent, Seconds = 0.25f, Flags = ConditionFlags.StaggerTakenShare, Scale = 1.3f } } } },
                 "Opens two shapes of Whirlpool, chosen at any rest fire: Maelstrom, a hard pull that ends in a spout, or Rip Current, a lane that carries them past you.",
                 // In the instant its enemy's attack mark shows (UpgradeEffect.NeedsWindup, 0.3 s), the attack is lost and its own
                 // cooldown halved (UpgradeAction.KeepWaitShare).

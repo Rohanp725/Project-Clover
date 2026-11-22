@@ -1442,6 +1442,39 @@ namespace Clover.Player
         }
 
         /// <summary>Drags everything in a circle toward its middle, or throws it away from there, by about this many metres. Returns how many it moved.</summary>
+        private readonly HashSet<IDamageable> laneShoved = new HashSet<IDamageable>();
+
+        /// <summary>
+        /// Shoves everything on a lane the same way, once each, <paramref name="metres"/> along it (Hot Wind's gust carrying all in
+        /// it): the lane runs <paramref name="length"/> from <paramref name="from"/> along <paramref name="way"/>, <paramref name="half"/>
+        /// either side. Returns how many it moved.
+        /// </summary>
+        public int ShoveLane(Vector3 from, Vector3 way, float length, float half, float metres)
+        {
+            way.y = 0f;
+            if (way.sqrMagnitude < 0.0001f || metres <= 0f) return 0;
+            way.Normalize();
+            laneShoved.Clear();
+            int steps = Mathf.Max(1, Mathf.CeilToInt(length / Mathf.Max(0.25f, half)));
+            for (int step = 0; step <= steps; step++)
+            {
+                int count = Overlap(from + way * (length * step / steps) + Vector3.up, half + 0.5f);
+                for (int i = 0; i < count; i++)
+                {
+                    var other = overlaps[i];
+                    if (other.transform.root == transform.root) continue;
+                    var target = other.GetComponentInParent<IDamageable>();
+                    if (target == null || laneShoved.Contains(target) || !(target is IShovable shovable)) continue;
+                    if (!Clover.World.GroundRules.OnLane(((Component)target).transform.position, from, way, length, half)) continue;
+                    laneShoved.Add(target);
+                    shovable.Push(way * (metres * StatPush));
+                }
+            }
+            int moved = laneShoved.Count;
+            laneShoved.Clear();
+            return moved;
+        }
+
         public int Displace(Vector3 centre, float radius, float metres, bool pull, AfflictionKind onlyCarrying = AfflictionKind.None)
         {
             if (!pull) metres *= StatPush;

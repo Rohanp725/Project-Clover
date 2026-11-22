@@ -33,6 +33,8 @@ namespace Clover.Player.Trees
         public const string ReturningEdge = "metal.returningedge";
         public const string PouredBronze = "metal.bronze";
         public const string ToTheBlade = "metal.toblade";
+        /// <summary>To the Blade's Chain: an enemy tripped flat crossing it.</summary>
+        public const string Tripped = "metal.toblade.tripped";
         public const string GraveOfSwords = "metal.graveofswords";
         public const string AllBladesHome = "metal.allbladeshome";
         // The god's gift.
@@ -321,11 +323,13 @@ namespace Clover.Player.Trees
                 UpgradeIcons.Arrow,
                 new Empower { Cooldown = 7f, BladeReach = BladeRules.ToBladeEmpoweredReach },
                 "To the Blade waits 7 seconds, not 8, and reaches a blade fourteen metres off.",
-                // NEEDS: tripped as a fall, a knock-down for each crossing (ground-states). Until then the chain is ground along
-                // your path that notches and staggers what stands on it.
+                // The chain is ground along your path that notches and staggers what stands on it, and trips each one that crosses
+                // it flat for 0.6 s, once in 1.5 s each (UpgradeEffect.InsideDo).
                 new ShapeDef { Name = "Chain",
                     Description = "A bronze chain stays stretched along the line you flew for three seconds. An enemy that crosses it is notched and tripped, 20 stagger. Your path becomes a tripwire.",
-                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Hazard, At = EffectAt.Self, Shape = HazardShape.Line, Reach = 6f, Count = 5, Radius = 0.6f, Seconds = 3f, Interval = 1f, Damage = 0f, Stagger = 20f, Affliction = S, Stacks = 1 } } },
+                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Hazard, At = EffectAt.Self, Shape = HazardShape.Line, Reach = 6f, Count = 5, Radius = 0.6f, Seconds = 3f, Interval = 0.5f, Damage = 0f, Stagger = 10f, Affliction = S, Stacks = 1,
+                        InsideDo = new[] { new UpgradeEffect { On = UpgradeTrigger.InGround, Do = UpgradeAction.Condition, CooldownPerEnemy = true, Cooldown = 1.5f,
+                            State = new ConditionSpec { Id = Tripped, Seconds = 0.6f, Flags = ConditionFlags.Down } } } } } },
                 // The flight back as a second press within 2 s of arriving (ShapeDef.Presses, UpgradeAction.ReturnToCast), cutting the
                 // line a second time as the flight did: 10 damage, 15 stagger and a notch.
                 new ShapeDef { Name = "There and Back", PressWindow = 2f,

@@ -20,6 +20,21 @@ namespace Clover.World
         /// </summary>
         public static float StateSeconds(float biteEvery) => Mathf.Max(0.05f, biteEvery) + 0.25f;
 
+        /// <summary>
+        /// True when <paramref name="point"/> stands on a lane <paramref name="length"/> long and <paramref name="half"/> either side
+        /// of its line, running from <paramref name="from"/> along <paramref name="way"/> (flat; the ends rounded by its width).
+        /// </summary>
+        public static bool OnLane(Vector3 point, Vector3 from, Vector3 way, float length, float half)
+        {
+            way.y = 0f;
+            if (way.sqrMagnitude < 0.0001f) return Within(point, from, half);
+            way.Normalize();
+            Vector3 gap = point - from;
+            gap.y = 0f;
+            float along = Mathf.Clamp(Vector3.Dot(gap, way), 0f, Mathf.Max(0f, length));
+            return (gap - way * along).magnitude <= half;
+        }
+
         /// <summary>True when a point within the ground's radius of its middle stands in it.</summary>
         public static bool Within(Vector3 at, Vector3 middle, float radius)
         {

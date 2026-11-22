@@ -361,6 +361,11 @@ namespace Clover.Player
         /// Water on the net of light).
         /// </summary>
         public string Ground = "";
+        /// <summary>
+        /// Carries what stands in it along its way, away from the player: for a Hazard, metres a second at each bite (Rip Current's
+        /// foam); for a Lane, metres once, everything on the lane together (Hot Wind's gust). The ledger's lane-shove.
+        /// </summary>
+        public float Carry;
 
         /// <summary>True when a Hazard effect lays ground that keeps acting, told to the marks at each bite (Hazards.GroundActs).</summary>
         public bool ActsAsGround => Inside != null || Mends > 0f || InsideDo != null || !string.IsNullOrEmpty(Ground);

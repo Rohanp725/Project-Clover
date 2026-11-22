@@ -40,6 +40,17 @@ namespace Clover.Player.Trees
         public const string ShardsClosing = "ice.eight.closing";
         public const string RimeFog = "ice.rime.fog";
         public const string ThroughTheIce = "ice.ski.through";
+
+        // Thin Ice: what an enemy on the lane takes as it cracks through, once a lane each (a god slowed, not held).
+        private static UpgradeEffect[] CracksThrough() => new[]
+        {
+            new UpgradeEffect { On = UpgradeTrigger.InGround, Ranks = EnemyRank.Plain | EnemyRank.Elite, Do = UpgradeAction.Hold, Seconds = 1.2f, CooldownPerEnemy = true, Cooldown = 5f },
+            new UpgradeEffect { On = UpgradeTrigger.InGround, Ranks = EnemyRank.God, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = ThroughTheIce + ".slowed", Seconds = 1.2f, Pace = 0.7f },
+                CooldownPerEnemy = true, Cooldown = 5f },
+            new UpgradeEffect { On = UpgradeTrigger.InGround, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 1, CooldownPerEnemy = true, Cooldown = 5f },
+            new UpgradeEffect { On = UpgradeTrigger.InGround, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = ThroughTheIce, Seconds = 1.2f, EndsWith = ConditionBlow.Heavy },
+                CooldownPerEnemy = true, Cooldown = 5f },
+        };
         public const string Settled = "ice.lift.slow";
 
         // Retired in Phase 4 (RetiredMarks): kept as names because code still asks for them.
@@ -267,15 +278,15 @@ namespace Clover.Player.Trees
                 UpgradeIcons.Boot,
                 new Empower { Cooldown = 6f, Reach = 12f },
                 "Ski Run waits 6 seconds, not 8, and its lane is twelve metres.",
-                // NEEDS: an enemy stepping onto the lane later cracking through (ground-states), and a god slowed by 30% instead
-                // of held. Until then each enemy the slide passes is held, three deep, and a heavy blow on it then freezes it.
+                // The lane is ground of its own for its five seconds (UpgradeEffect.InsideDo): each enemy on it, the slide's or one
+                // that steps on later, cracks through once, held 1.2 s and chilled; a god is slowed 30% instead of held. A heavy blow
+                // on one cracked through freezes it.
                 new ShapeDef { Name = "Thin Ice",
                     Description = "The lane is lake ice over black water. An enemy that steps onto it within five seconds cracks through to the knees: held for a moment and three deep in Chill. A heavy blow on it then freezes the water round it, and it is Frozen.",
                     Effects = new[]
                     {
-                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Hold, Seconds = 1.2f },
-                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 1 },
-                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = ThroughTheIce, Seconds = 1.2f, EndsWith = ConditionBlow.Heavy } },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Hazard, At = EffectAt.Self, Shape = HazardShape.Line, Reach = 9f, Count = 6, Radius = 1f,
+                            Seconds = 5f, Interval = 0.25f, Damage = 0f, Stacks = 0, Affliction = AfflictionKind.Chill, Unseen = true, InsideDo = CracksThrough() },
                         new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = ThroughTheIce, By = StruckBy.Heavy, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 5 },
                     } },
                 // NEEDS: the shards loosed through the slide, not all as it begins.

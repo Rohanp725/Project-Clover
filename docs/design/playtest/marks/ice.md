@@ -320,11 +320,11 @@ The blocked blow also counts as a perfect guard for every other mark that answer
 
 **When it happens.** Whenever you cast Ski Run, using the shape you picked.
 
-**The numbers.** 3 Shards. Thin Ice: each enemy the slide passes is held for 1.2 seconds (less for elites) and has three stacks of Chill. A heavy blow on it within those 1.2 seconds fills its Chill all the way, and it is Frozen. Shooting Run: three shards that chase their target, each dealing 8 damage, 6 stagger and a stack of Chill.
+**The numbers.** 3 Shards. Thin Ice: the path stays as thin ice for 5 seconds. Each enemy on it, one the slide passes or one that steps on it later, cracks through once: it is held for 1.2 seconds (less for elites) and gets a stack of Chill. A god is slowed by 30% for those 1.2 seconds instead of held. A heavy blow on a cracked-through enemy within those 1.2 seconds fills its Chill all the way, and it is Frozen. Shooting Run: three shards that chase their target, each dealing 8 damage, 6 stagger and a stack of Chill.
 
 **Works with.** Brittle and Flying Shards (Thin Ice: a held enemy frozen and broken); Hanging Ice (Shooting Run builds up an archer's Chill).
 
-**Not built yet.** Thin Ice should catch anyone who steps on the path within 5 seconds after (for now, only enemies the slide passes), and a god should be slowed by 30% instead of held. Shooting Run's shards should be shot all through the slide (for now, all three go when it starts).
+**Not built yet.** Shooting Run's shards should be shot all through the slide (for now, all three go when it starts).
 
 **Example.** Slide past two soldiers on Thin Ice and turn around. Both are stuck to the knees, and one heavy blow freezes the first.
 

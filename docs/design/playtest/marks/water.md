@@ -46,11 +46,11 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Whenever you cast Deep Crack, using the shape you picked. If you have not bought this, you cast the single bubble.
 
-**The numbers.** 3 Shards. Ink: a pool with a 1.5-metre radius that lasts 5 seconds. Once a second, it deals 1 damage and adds Soaked. Whatever it reaches when it bursts can't see farther than 3 metres for 5 seconds. String of Bubbles: a line of water 7 metres long and 2 metres wide, moving at 13 metres a second. It deals 18 damage and 40 stagger to everything it crosses, and the crack spreads from each Soaked enemy, like above.
+**The numbers.** 3 Shards. Ink: a pool with a 1.5-metre radius that lasts 5 seconds. Once a second, it deals 1 damage and adds Soaked. Any enemy standing in the ink can't see farther than 3 metres, and sees again soon after it steps out. String of Bubbles: a line of water 7 metres long and 2 metres wide, moving at 13 metres a second. It deals 18 damage and 40 stagger to everything it crosses, and the crack spreads from each Soaked enemy, like above.
 
 **Works with.** Blowhole and Whirlpool, to hold enemies in the ink; Riptide's Breaking Swell shape, to line them up for the string.
 
-**Not built yet.** Ink's blindness should only last while an enemy stands in the ink (for now, enemies the ink reaches first stay blinded for 5 seconds). String of Bubbles should be three bubbles 2 metres apart (for now, it is one moving line).
+**Not built yet.** String of Bubbles should be three bubbles 2 metres apart (for now, it is one moving line).
 
 **Example.** Use Ink in a doorway. The archers behind it lose track of you, and the soldiers in it stay Soaked for the next crack.
 
@@ -194,11 +194,9 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). If you aren't facing an enemy, it opens 6 metres in front of you.
 
-**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 8 seconds, and makes it last 7 seconds.) It opens on the enemy you face within 6 metres. The whirlpool has a 4-metre radius and lasts 5 seconds. It bites every half second for 3 damage, with no stagger, and adds Soaked with each bite. Each bite makes its enemy take 30% more stagger for 0.7 seconds, and its balance doesn't recover for that time, so while it stands in the water, every blow breaks its balance harder and none of it comes back.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 8 seconds, and makes it last 7 seconds.) It opens on the enemy you face within 6 metres. The whirlpool has a 4-metre radius and lasts 5 seconds. It pulls everything in it toward the middle at 1.2 metres a second. It bites every half second for 3 damage, with no stagger, and adds Soaked with each bite. Each bite makes its enemy take 30% more stagger for 0.7 seconds, and its balance doesn't recover for that time, so while it stands in the water, every blow breaks its balance harder and none of it comes back.
 
 **Works with.** Soaked, Heavy Water, which it comes after on the chart, Undertow, Deep Crack, a second element's Static or Chill, and Steam if you carry Fire.
-
-**Not built yet.** Enemies should be pulled to the middle at 1.2 metres a second.
 
 **Example.** Open it under a pack. For five seconds, every one of them stays Soaked and breaks a third faster under your blade.
 
@@ -207,11 +205,11 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Whenever you cast Whirlpool, using the shape you picked. If you have not bought this, you cast the plain whirlpool.
 
-**The numbers.** 3 Shards. Maelstrom: a 2.5-metre radius. When the bites on an enemy stop (the whirlpool ends, or the enemy leaves the water), it is thrown up for 0.8 seconds and takes 50 stagger. Rip Current: each bite carries its enemy 1.25 metres away from you, two and a half metres a second, and the bites still churn.
+**The numbers.** 3 Shards. Maelstrom: a 2.5-metre radius that pulls hard, 3 metres a second. When the bites on an enemy stop (the whirlpool ends, or the enemy leaves the water), it is thrown up for 0.8 seconds and takes 50 stagger. Rip Current: the whirlpool doesn't pull. A path of foam 2 metres wide runs about 9 metres from it, away from you, for 6 seconds. Everything in the foam is carried down it at 2.5 metres a second, and your blows on an enemy in the foam break its balance 30% harder.
 
 **Works with.** Deep Crack on the bodies Maelstrom throws up; Undertow and your blade on the enemies Rip Current carries past.
 
-**Not built yet.** Maelstrom's strong pull (3 metres a second). Rip Current's path of foam, 2 metres wide and 9 long, lasting 6 seconds, and its rule against dodging. For now, the whirlpool itself carries the enemies it bites away from you.
+**Not built yet.** Rip Current's rule against dodging: enemies in the foam can still dodge against it.
 
 **Example.** Use Maelstrom on two soldiers. They churn around for five seconds, then go up together for your heavy blow.
 

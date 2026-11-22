@@ -40,12 +40,16 @@ namespace Clover.Player
         public float BladeReach;
         /// <summary>The wall bursts this long after an enemy first strikes it (<see cref="SpellSpec.BurstAfterStruck"/>: Cracked Wall).</summary>
         public float BurstAfterStruck;
+        /// <summary>The field draws what stands in it to its middle this fast, metres a second (<see cref="SpellSpec.Pull"/>: Maelstrom).</summary>
+        public float Pull;
+        /// <summary>The field draws nothing in (Rip Current: the foam carries them away instead).</summary>
+        public bool NoPull;
 
         /// <summary>True when it changes nothing.</summary>
         public bool IsEmpty =>
             Cooldown == 0f && Mana == 0f && Damage == 0f && Stagger == 0f && Reach == 0f && Radius == 0f && Arc == 0f && Seconds == 0f
             && Interval == 0f && Count == 0 && Stacks == 0 && Delay == 0f && Speed == 0f && LingerDamage == 0f && AfflictionSeconds == 0f && ChargeBlows == 0 && Lasts == 0f && Walk == 0f && !Carries && BankStagger == 0f && Rings == 0
-            && BladeReach == 0f && BurstAfterStruck == 0f;
+            && BladeReach == 0f && BurstAfterStruck == 0f && Pull == 0f && !NoPull;
 
         /// <summary>
         /// Writes what it adds to <paramref name="learn"/>'s numbers onto <paramref name="spec"/>'s (an Empower over a shape that
@@ -124,6 +128,8 @@ namespace Clover.Player
             if (Rings > 0) spec.Rings = Rings;
             if (BladeReach > 0f) spec.BladeReach = BladeReach;
             if (BurstAfterStruck > 0f) spec.BurstAfterStruck = BurstAfterStruck;
+            if (Pull > 0f) spec.Pull = Pull;
+            if (NoPull) spec.Pull = 0f;
         }
 
         /// <summary>Copies every number of one spec into another (no allocation): how a spell's own numbers are taken before changes are laid over them.</summary>
