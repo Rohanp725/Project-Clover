@@ -231,7 +231,8 @@ namespace Clover.Tests
         public void EveryDuoSurgeHasItsOwnPriceAndTimeAndASurgeCanBeLengthened()
         {
             var surges = Upgrade.All.Where(DuoSurge.Is).Select(mark => mark.Name).ToList();
-            CollectionAssert.AreEquivalent(new[] { "Great Lotus", "Open the Gourd", "The Yawning Gap", "Ash and Thunder", "Heated Bronze", "The Net of Jewels", "Wind From the Grave", "When the Watch Sleeps", "Three Winters" }, surges);
+            // The Ground Wakes and Totality joined them in the surge slot (pass 13, the owner's answer 4 of 2026-11-21).
+            CollectionAssert.AreEquivalent(new[] { "Great Lotus", "The Ground Wakes", "Totality", "Open the Gourd", "The Yawning Gap", "Ash and Thunder", "Heated Bronze", "The Net of Jewels", "Wind From the Grave", "When the Watch Sleeps", "Three Winters" }, surges);
             foreach (var mark in Upgrade.All.Where(DuoSurge.Is))
             {
                 Assert.That(mark.Surge.Mana, Is.InRange(30f, 50f), mark.Id);

@@ -63,9 +63,9 @@ Rock does.
 ## overgrowth.groundwakes
 **What it does.** When your surge starts, the ground rises around you in a ring of stone and roots and holds every enemy inside it, shaken and Seeded. Then it flowers: a burst goes off, and you heal for each enemy it held.
 
-**When it happens.** Each time you light the surge with the surge button, whichever element's surge you have.
+**When it happens.** It is a duo surge: pick it for your surge slot at a rest fire, in place of an element's surge, while you carry both Life and Earth. It happens each time you light it with the surge button.
 
-**The numbers.** 5 Shards. You can buy it once you carry both elements; no god gives it. Everything within 7 metres of you is held for 2 seconds (less for elites and gods) and gets three stacks of Tremor and one of Seeded. When the hold ends, everything within 7 metres takes 15 damage and 20 stagger, and you heal 5 for each enemy held.
+**The numbers.** 5 Shards. You can buy it once you carry both elements; no god gives it. It costs 40 mana and lasts 10 seconds. Everything within 7 metres of you is held for 2 seconds (less for elites and gods) and gets three stacks of Tremor and one of Seeded. When the hold ends, everything within 7 metres takes 15 damage and 20 stagger, and you heal 5 for each enemy held.
 
 **Works with.** Split Rock, Seeded, Living Rampart.
 

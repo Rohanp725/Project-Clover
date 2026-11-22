@@ -132,6 +132,19 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void TotalityAndTheGroundWakesArePickedInTheSurgeSlot()
+        {
+            foreach (var id in new[] { EclipseTree.Totality, OvergrowthTree.TheGroundWakes })
+            {
+                var mark = Upgrade.ById(id);
+                Assert.IsTrue(DuoSurge.Is(mark), id + " is a duo surge for the surge slot");
+                Assert.AreEqual(40f, mark.Surge.Mana, 1e-5f);
+                Assert.AreEqual(10f, mark.Surge.Seconds, 1e-5f);
+                Assert.IsTrue(mark.Effects.Any(effect => effect.On == UpgradeTrigger.SurgeStart), id + " begins with its own surge");
+            }
+        }
+
+        [Test]
         public void EveryShapesSetAsideNamesARealEffect()
         {
             foreach (var mark in Upgrade.All.Where(mark => mark.Part == BranchPart.Shape && mark.Shapes != null))

@@ -106,11 +106,13 @@ namespace Clover.Player.Trees
             }, HeartPattern.Spell));
 
             // BESPOKE (built): TotalityForm. The returning light gives back half of what each enemy lost in the dark, 80 at most.
-            // The branch's duo surge, begun by the surge, and its top mark. NEEDS: a duo surge chosen in the Hand's surge slot (duo-surge-slot).
+            // The branch's duo surge, worn in the Hand's surge slot with its own 40 mana and 10 s (DuoSurge), and its top mark: in force
+            // only while it is the surge worn, so it answers its own surge alone.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Totality, Name = "Totality", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { DuskAndDawn }, Icon = UpgradeIcons.Crown,
-                Description = "When your surge begins, the sun is covered. While the dark lasts every enemy is Marked and Cursed and every blow you land is critical and feeds you. When the light returns, it strikes all you wounded.",
+                Description = "A duo surge for your surge slot: 40 mana, 10 seconds. When it begins, the sun is covered. While the dark lasts every enemy is Marked and Cursed and every blow you land is critical and feeds you. When the light returns, it strikes all you wounded.",
+                Surge = new DuoSurge { Mana = 40f, Seconds = 10f },
                 Stats = new[] { new StatMod(PlayerStat.CritChance, 1f, StatWhen.Surge) },
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.AnyHit, Do = UpgradeAction.Heal, WhileSurge = true, Amount = 1f, Cooldown = 0.2f }, new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.Form, Form = SpellForms.Totality, Affliction = AfflictionKind.Marked, Spell = new SpellSpec { Cost = 0f, Reach = 14f, Stacks = 3, Damage = 50f, Count = 80, Stagger = 30f } } },
             }, HeartPattern.Crown));
