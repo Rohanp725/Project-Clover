@@ -68,6 +68,16 @@ namespace Clover.Player
             return set;
         }
 
+        /// <summary>Sets it on <paramref name="who"/> alone, as for one found by the caller (a step's path: Stone Underfoot); true when it took.</summary>
+        public static bool CastOne(UpgradeEffect effect, Component who, PlayerCombat combat, LaySource source, int stacks = 1)
+        {
+            var spec = effect != null ? effect.State : null;
+            if (spec == null || string.IsNullOrEmpty(spec.Id) || combat == null || who == null) return false;
+            AnswersOf(effect, spec.Id, out bool struck, out bool ended, out bool died, out bool attacked);
+            int mark = effect.Owner != null ? effect.Owner.Index : -1;
+            return Set(effect, spec, who, null, mark, struck, ended, died, attacked, combat, source, PaceFor(spec, stacks), -1f, who.transform.position);
+        }
+
         /// <summary>
         /// The condition as it is set by a reaction that went off as if laid (The Sun Goes Under): the same, but lasting without
         /// the afflictions it would last with. The spec itself when it lasts with none.

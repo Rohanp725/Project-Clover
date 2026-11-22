@@ -1478,5 +1478,19 @@ namespace Clover.Tests
             stats.AddLearned(new StatMod(PlayerStat.CritDamage, 0.2f, AfflictionKind.Marked));
             Assert.AreEqual(0.3f, stats.Against(PlayerStat.CritDamage, target), 1e-5f, "a plain one counts once");
         }
+
+        [Test]
+        public void StoneUnderfootSlowsThoseItsStridePasses()
+        {
+            var spell = Upgrade.ById(Clover.Player.Trees.Duo.TurnedToStoneDuo.StoneUnderfoot).Effects;
+            var passed = spell.Single(each => each.AlongCast);
+            Assert.AreEqual(UpgradeAction.Condition, passed.Do);
+            Assert.AreEqual(1.5f, passed.Radius, 1e-5f, "within a metre and a half of the stride");
+            Assert.AreEqual(2f, passed.State.Seconds, 1e-5f);
+            Assert.AreEqual(0.7f, passed.State.Pace, 1e-5f, "30% slower");
+            Assert.AreEqual(Clover.Player.Trees.Duo.TurnedToStoneDuo.UnderfootPassed, passed.State.Id);
+            Assert.AreEqual(Clover.Player.Trees.Duo.TurnedToStoneDuo.UnderfootPassed, Upgrade.ById(Clover.Player.Trees.Duo.TurnedToStoneDuo.StoneUnderfoot).Effects.Last().State.Id, "last, after the stone is set");
+            Assert.AreEqual(6, PlayerUpgrades.DodgePathSteps(8f, 1.5f), "an 8 m stride looked along at every point 1.5 m apart");
+        }
     }
 }

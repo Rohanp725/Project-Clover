@@ -467,6 +467,11 @@ namespace Clover.Player
         public float StaggerPerSpent;
         /// <summary>For Feed: one stack of Needs is torn from the trigger's enemy as what is fed, and only when there is something to feed (Wind Sickle's notch).</summary>
         public bool TearsNeeds;
+        /// <summary>
+        /// For Condition with a Radius: set on everyone within Radius of the line from where the spell was cast to where you stand
+        /// now, once each, the trigger's own enemy left out, not round its enemy (Stone Underfoot's stride: those passed slowed).
+        /// </summary>
+        public bool AlongCast;
 
         /// <summary>True when a Hazard effect lays ground that keeps acting, told to the marks at each bite (Hazards.GroundActs).</summary>
         public bool ActsAsGround => Inside != null || Mends > 0f || InsideDo != null || InsideAtEnd != null || YouInside != null || !string.IsNullOrEmpty(Ground);

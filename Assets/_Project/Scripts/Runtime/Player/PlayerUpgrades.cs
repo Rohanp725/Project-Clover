@@ -3100,6 +3100,28 @@ namespace Clover.Player
                 case UpgradeAction.Flinch:
                     if (subject is IFlinchable flinching && flinching.Flinch(Or(effect.Seconds, 0.4f))) Flinches++;
                     break;
+                case UpgradeAction.Condition when effect.AlongCast && effect.Radius > 0f:
+                {
+                    // Everyone passed on the way from where the spell was cast, once each, but its own enemy (Stone Underfoot).
+                    Vector3 path = self - castFrom;
+                    path.y = 0f;
+                    int steps = DodgePathSteps(path.magnitude, effect.Radius);
+                    fanTaken.Clear();
+                    if (subject is IDamageable passedTo) fanTaken.Add(passedTo);
+                    for (int i = 0; i <= steps; i++)
+                    {
+                        Vector3 point = castFrom + path * (i / (float)steps);
+                        for (int guard = 0; guard < 12; guard++)
+                        {
+                            var near = combat.EnemyNear(point, effect.Radius * spread, fanTaken);
+                            if (!(near is IDamageable passed)) break;
+                            fanTaken.Add(passed);
+                            if (ConditionCaster.CastOne(effect, near, combat, laying, per)) ConditionsSet++;
+                        }
+                    }
+                    fanTaken.Clear();
+                    break;
+                }
                 case UpgradeAction.Condition:
                     // It keeps the trigger's number (ByPower), or the depth counted as the moment came (CountsNeeds), or its place
                     // in the cast's line (Numbered).
