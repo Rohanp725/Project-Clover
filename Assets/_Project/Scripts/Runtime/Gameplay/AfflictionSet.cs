@@ -827,6 +827,8 @@ namespace Clover.Gameplay
         {
             get
             {
+                // A condition may hold its balance where it is (ConditionFlags.BalanceHeld).
+                if (Conditions.Has(ConditionFlags.BalanceHeld)) return false;
                 for (int i = 2; i < stacks.Length; i++)
                     if (stacks[i] > 0 && Afflictions.Spec((AfflictionKind)i).StopsBalanceRecovery) return false;
                 return true;

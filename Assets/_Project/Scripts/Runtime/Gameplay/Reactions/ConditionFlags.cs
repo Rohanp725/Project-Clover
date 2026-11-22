@@ -52,5 +52,7 @@ namespace Clover.Gameplay
         WeaponStaggerShare = 1 << 15,
         /// <summary>A plain guard against its blows counts as a perfect guard (Snapped Blade's brittle weapon; the ledger's guard-made-perfect).</summary>
         GuardMadePerfect = 1 << 16,
+        /// <summary>Its balance does not recover while this lasts (Whirlpool's water, Ash Fall's ash; the ledger's enemy-balance-held).</summary>
+        BalanceHeld = 1 << 17,
     }
 }

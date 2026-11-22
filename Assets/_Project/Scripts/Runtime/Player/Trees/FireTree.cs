@@ -42,6 +42,8 @@ namespace Clover.Player.Trees
         // Retired in Phase 4 (RetiredMarks): kept as names because hand-written code still asks for them, and finds none.
         public const string OpenFurnace = "fire.furnace";
         public const string ScorchedEarth = "fire.scorched";
+        /// <summary>Ash Fall's ash on those the landing caught: their balance does not recover for its five seconds.</summary>
+        public const string InTheAsh = "fire.meteor.ash";
 
         public static void Add(List<Upgrade> to)
         {
@@ -208,11 +210,14 @@ namespace Clover.Player.Trees
                 new ShapeDef { Name = "Falling Star", Form = SpellForms.Bomb,
                     Description = "You do not leap. A burning stone falls on the aim point after a breath, its shadow growing under it, and you go on fighting. It breaks balance harder.",
                     Spell = new SpellSpec { Delay = 0.8f, Reach = 9f, Radius = 3.2f, Damage = 46f, Stagger = 60f, Stacks = 1, Seconds = 4f, LingerDamage = 5f } },
-                // NEEDS: balance not recovering in the ash (an enemy condition flag).
+                // Those the landing catches in the ash keep their balance from recovering for its five seconds (ConditionFlags.
+                // BalanceHeld). NEEDS: an enemy that walks into the ash later held too (ground-states).
                 new ShapeDef { Name = "Ash Fall",
                     Description = "The landing throws hot ash over six metres. For five seconds enemies in the ash gain a Burn a second and their balance does not recover.",
                     // The landing's first strike lays the ash where you came down (once a landing).
-                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Hazard, At = EffectAt.Self, Shape = HazardShape.Patch, Radius = 3f, Seconds = 5f, Interval = 1f, Damage = 2f, Affliction = AfflictionKind.Burn, Stacks = 1, Cooldown = 1f } } },
+                    Effects = new[] {
+                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = InTheAsh, Seconds = 5f, Flags = ConditionFlags.BalanceHeld } },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Hazard, At = EffectAt.Self, Shape = HazardShape.Patch, Radius = 3f, Seconds = 5f, Interval = 1f, Damage = 2f, Affliction = AfflictionKind.Burn, Stacks = 1, Cooldown = 1f } } },
                 "Opens two shapes of Meteor Leap, chosen at any rest fire: Falling Star, a stone you call down, or Ash Fall, a landing that leaves hot ash.",
                 new[]
                 {

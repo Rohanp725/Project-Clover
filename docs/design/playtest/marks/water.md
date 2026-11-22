@@ -198,11 +198,11 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). If you aren't facing an enemy, it opens 6 metres in front of you.
 
-**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 8 seconds, and makes it last 7 seconds.) It opens on the enemy you face within 6 metres. The whirlpool has a 4-metre radius and lasts 5 seconds. It bites every half second for 3 damage, with no stagger, and adds Soaked with each bite. Each bite makes its enemy take 30% more stagger for 0.7 seconds, so while it stands in the water, every blow breaks its balance harder.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 8 seconds, and makes it last 7 seconds.) It opens on the enemy you face within 6 metres. The whirlpool has a 4-metre radius and lasts 5 seconds. It bites every half second for 3 damage, with no stagger, and adds Soaked with each bite. Each bite makes its enemy take 30% more stagger for 0.7 seconds, and its balance doesn't recover for that time, so while it stands in the water, every blow breaks its balance harder and none of it comes back.
 
 **Works with.** Soaked, Heavy Water, which it comes after on the chart, Undertow, Deep Crack, a second element's Static or Chill, and Steam if you carry Fire.
 
-**Not built yet.** Enemies should be pulled to the middle at 1.2 metres a second, and their balance shouldn't recover inside it.
+**Not built yet.** Enemies should be pulled to the middle at 1.2 metres a second.
 
 **Example.** Open it under a pack. For five seconds, every one of them stays Soaked and breaks a third faster under your blade.
 

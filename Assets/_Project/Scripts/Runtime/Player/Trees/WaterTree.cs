@@ -251,8 +251,9 @@ namespace Clover.Player.Trees
                 } },
                 BranchPattern.LeftCrown));
 
-            // The field form bites and soaks; each bite breaks balance harder for a moment. NEEDS: enemies drawn to the middle
-            // at 1.2 m a second (pull-to-point), and their balance not recovering inside it (enemy-balance-held).
+            // The field form bites and soaks; each bite breaks balance harder for a moment and holds it there (ConditionFlags.
+            // BalanceHeld, kept up by each bite, so it holds while they are inside). NEEDS: enemies drawn to the middle at 1.2 m a
+            // second (pull-to-point).
             SpellBranch.Add(to, E, Whirlpool, "Whirlpool", SpellRole.Breaker, BranchPattern.LeftB, HeavyWater, SpellForms.Field,
                 new SpellSpec { Reach = 6f, Radius = 4f, Seconds = 5f, Interval = 0.5f, LingerDamage = 3f, Stacks = 1 },
                 "A whirlpool four metres round opens under the enemy faced, up to six metres away, for five seconds. Enemies in it are drawn to the middle, kept Soaked and bitten for 3 twice a second. Their balance does not recover inside it, and your blows there break balance 30% harder.",
@@ -285,7 +286,7 @@ namespace Clover.Player.Trees
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, NeedsWindup = 0.3f, Do = UpgradeAction.KeepWaitShare, Amount = 0.5f, Cooldown = 0.5f },
                 },
                 "Open it under an enemy in the instant its attack mark shows, and the attack is lost as it goes in to the knees. Its cooldown is halved.",
-                learnEffects: new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Churned, Seconds = 0.7f, Flags = ConditionFlags.StaggerTakenShare, Scale = 1.3f } } });
+                learnEffects: new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Churned, Seconds = 0.7f, Flags = ConditionFlags.StaggerTakenShare | ConditionFlags.BalanceHeld, Scale = 1.3f } } });
 
             // ---- The right bough: Vessel. The flask and the copy.
             // NEAREST: the pool soaks; it cannot mend the player who stands in it, so the throw mends a part at once.
