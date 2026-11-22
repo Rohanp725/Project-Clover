@@ -129,5 +129,22 @@ namespace Clover.Player
         Shatter,
         /// <summary>Clears every affliction laid on the player (High Noon). Reads nothing.</summary>
         Cleanse,
+        /// <summary>
+        /// Raises the target, and every enemy the same cast struck before it, to the depth of Affliction the sickest of them
+        /// carries, Stacks at least (Share Alike: every one passed raised to the sickest one's depth). Reads: Affliction, Stacks.
+        /// </summary>
+        EvenDepth,
+        /// <summary>
+        /// Loads the player's edge for its next Count weapon blows on any enemy (light ones only with LightOnly): each lays
+        /// Stacks of Affliction on what it strikes, or with SetsDepth raises it to the depth the target carries now
+        /// (Carried on the Blade, Dust on the Blade). Reads: Affliction, Stacks, Count (3), Seconds (0: until spent), SetsDepth, LightOnly.
+        /// </summary>
+        CoatBlade,
+        /// <summary>
+        /// Every enemy within Radius (10) of the player that carries Affliction gives all of it up, gathered for the next
+        /// set-off of this cast that carries doses on (<see cref="UpgradeEffect.PassesOn"/>), with no limit (All Into One).
+        /// Reads: Affliction, Radius.
+        /// </summary>
+        Gather,
     }
 }

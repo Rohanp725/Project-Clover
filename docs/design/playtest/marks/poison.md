@@ -74,11 +74,9 @@ a blow or a cast "on the beat" comes within a fifth of a second of it.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4).
 
-**The numbers.** 4 Shards, 50 mana (its Empower makes it 7 damage per dose instead of 6). It reaches up to six enemies within 10 metres of you. After half a second's warning, a column rises under each one in turn, every 0.07 seconds, 1 metre across. The column itself does no damage. Each poisoned enemy it hits has its poison set off: 6 damage and 4 stagger per dose to everything within 1 metre (48 damage and 32 stagger at eight). Whatever a column hits is thrown into the air for 0.8 seconds.
+**The numbers.** 4 Shards, 50 mana (its Empower makes it 7 damage per dose instead of 6). It reaches up to six poisoned enemies within 10 metres of you. The line starts at the poisoned enemy you face (or the nearest one) and runs to the poisoned enemy nearest that one, and so on. Enemies with no poison are skipped and never hit. After half a second's warning, a column rises under each one in turn, every 0.07 seconds, 1 metre across. The column itself does no damage. Each enemy's poison is set off: 6 damage and 4 stagger per dose to everything within 1 metre (48 damage and 32 stagger at eight). Each burst also carries every dose of the bursts before it, so three enemies with 2, 3 and 4 doses burst with 2, 5 and 9. Whatever a column hits is thrown into the air for 0.8 seconds.
 
 **Works with.** Rupture, which it comes after on the chart, Venom, Blister, Catching and Miasma to add the poison first, the root mark's healing (every burst heals you), and the charged blade.
-
-**Not built yet.** The line should only run between poisoned enemies; for now, the columns come up under the six nearest enemies, poisoned or not. Each enemy should pass its doses to the next, with the last burst the biggest; for now, each bursts with what it has.
 
 **Example.** Poison a pack with Miasma and a rush of Share Alike, then snap your fingers. Six bursts go off in a moment, and each one heals you.
 
@@ -87,11 +85,11 @@ a blow or a cast "on the beat" comes within a fifth of a second of it.
 
 **When it happens.** Whenever you cast One by One, using the shape you picked. If you have not bought this, you cast the plain line.
 
-**The numbers.** 3 Shards. Eaten in Turn: for 8 seconds, each enemy the spell hit that dies poisoned passes twice its doses to the nearest other enemy within 10 metres. All Into One: only one column, under the nearest enemy.
+**The numbers.** 3 Shards. Eaten in Turn: for 8 seconds, each enemy on the line that dies poisoned passes twice its doses to the nearest other enemy still on the line (or, if none is left, the nearest enemy within 10 metres). If that pushes it past eight doses, it bursts at once, 6 damage a dose, and the extra doses pass on to the next one. This can happen up to four times in a row. All Into One: when you cast it, every poisoned enemy within 10 metres gives up all its doses. One column rises under the poisoned enemy you face (or the nearest one), and its burst carries every dose gathered, with no limit: four enemies with eight doses each make one burst of 32 doses.
 
 **Works with.** Eaten in Turn: a pack of weak enemies to kill in order, Slow Death (twenty doses to pass on), Rupture and Volatile on the enemy that gets fed. All Into One: a god or an elite, Catching and Miasma to poison the crowd first.
 
-**Not built yet.** Eaten in Turn still bursts like the plain spell, so the enemies that die must be poisoned again first. The doses go to the nearest enemy, not the next one on the line, and an enemy pushed past eight doesn't burst. All Into One doesn't gather anything yet: the one enemy bursts with what it has.
+**Not built yet.** Eaten in Turn still bursts like the plain spell, so the enemies that die must be poisoned again first. The doses go to the nearest enemy still on the line, not the next one in the line's own order. All Into One's beads of mercury rolling across the floor aren't drawn yet.
 
 **Example.** Use Eaten in Turn on five soldiers. Poison them again as you cut, kill the front one with six doses, and the next one has twelve.
 
@@ -291,8 +289,6 @@ a blow or a cast "on the beat" comes within a fifth of a second of it.
 
 **Works with.** The Delayed Touch, which it comes after on the chart, Catching, One by One (a line of poisoned enemies), Rupture, and the charged blade: if it lands, it charges your weapon with Poison.
 
-**Not built yet.** Raising every enemy you pass to the sickest one's number of doses. For now, each one gets its two doses.
-
 **Example.** Rush through a line of three archers. Each one is poisoned, and you end up behind them.
 
 ## poison.sharealike.shape
@@ -300,13 +296,13 @@ a blow or a cast "on the beat" comes within a fifth of a second of it.
 
 **When it happens.** Whenever you cast Share Alike, using the shape you picked. If you have not bought this, you cast the plain rush.
 
-**The numbers.** 3 Shards. Carried on the Blade: for 5 seconds after the rush, every blow adds two more doses. Shed Tail: where you stood, for 2 seconds, everything within 2 metres gets three doses every half second.
+**The numbers.** 3 Shards. Carried on the Blade: your blade takes the sickest number of doses among the enemies you rushed through. Your next five weapon blows, on any enemy, each raise what they hit to that number. A blow on an enemy that already has that many still counts as one of the five. Shed Tail: where you stood, for 2 seconds, everything within 2 metres gets three doses every half second.
 
 **Works with.** Carried on the Blade: a fast weapon, Rupture, In Time. Shed Tail: enemies that chase you, Catching, Low Mist.
 
-**Not built yet.** Carried on the Blade should carry the sickest enemy's number of doses for five blows; for now, it adds two more doses per blow for 5 seconds. Shed Tail should rush you backward; for now, you rush forward like the plain spell, and the tail is left where you started.
+**Not built yet.** Shed Tail should rush you backward; for now, you rush forward like the plain spell, and the tail is left where you started. The heavy venom dripping from the edge isn't drawn yet.
 
-**Example.** Use Carried on the Blade through a pack, then turn on the captain. Every blow of your chain adds three doses.
+**Example.** Use Carried on the Blade through a pack where one soldier has seven doses, then turn on the captain. Each of your next five blows brings what it hits up to seven.
 
 ## poison.sharealike.master
 **What it does.** Rush on the poison's beat, within a fifth of a second of a bite on any enemy you pass, and the doses double.

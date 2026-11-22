@@ -73,6 +73,16 @@ namespace Clover.Player
             into.LingerDamage = from.LingerDamage;
             into.HealthCost = from.HealthCost;
             into.MissedWait = from.MissedWait;
+            // What it seeks and how it ends go with the numbers: a branch's spell cast through its Learn keeps its aim.
+            into.AimAt = from.AimAt;
+            into.AimAt2 = from.AimAt2;
+            into.AimFarthest = from.AimFarthest;
+            into.AimMissShare = from.AimMissShare;
+            into.OnlyCarrying = from.OnlyCarrying;
+            into.Seal = from.Seal;
+            into.PerDose = from.PerDose;
+            into.PassReach = from.PassReach;
+            into.StepReach = from.StepReach;
         }
     }
 

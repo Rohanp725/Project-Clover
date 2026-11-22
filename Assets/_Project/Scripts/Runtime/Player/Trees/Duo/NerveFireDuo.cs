@@ -88,17 +88,23 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.Keystone));
 
-            // The duo spell, bought with Shards once both are carried (no god gives it): a detonator on a 13 s cooldown (SpellTimings). The brand form sets a sign on the enemy
-            // faced that the next weapon blows burn down and set off; it is held as the seal is slapped on.
-            // NEEDS: the step to the enemy; its Static discharged and each dose passed to all within 3 m at the thunder; the
-            // thunder at half if the 6 s run out first; elites held 0.5 s and gods not at all.
+            // The duo spell, bought with Shards once both are carried (no god gives it): a detonator on a 13 s cooldown (SpellTimings). The brand form as a seal
+            // (SpellSpec.Seal): you step up to 3 m to the enemy faced, the seal holds it (1.2 s, an elite 0.5 s, a god not at all), five
+            // weapon blows char it down, and the thunder at the fifth deals 30 and 4 a dose, discharges all its Static, staggers 50 in
+            // 3.5 m and passes each dose to every enemy within 3 m; at half if the 6 s run out first (SealRules).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = PaperSeal, Name = "Paper Seal", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Role = SpellRole.Detonator, Requires = new[] { StrikeOnTheBeat, FiveThunders }, Icon = UpgradeIcons.Target,
                 Description = "You slap a seal of yellow paper on the brow of the enemy you face and it is held. For 6 s each weapon blow on it burns the seal down a fifth; at the fifth, thunder falls on it.",
                 Form = SpellForms.Brand,
-                Spell = new SpellSpec { Reach = 3f, Seconds = 6f, Count = 5, Radius = 3.5f, Damage = 30f, Stagger = 50f, Stacks = 1 },
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Ranks = EnemyRank.Plain, Do = UpgradeAction.Hold, Seconds = 1.2f, Cooldown = 6f } },
+                Spell = new SpellSpec { Reach = 3f + Forms.BrandForm.ArmsLength, StepReach = 3f, Seconds = 6f, Count = 5, Radius = 3.5f, Damage = 30f, Stagger = 50f, Stacks = 1,
+                    Seal = true, PerDose = 4f, PassReach = 3f },
+                Effects = new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Ranks = EnemyRank.Plain, Do = UpgradeAction.Hold, Seconds = 1.2f, Cooldown = 6f },
+                    // An elite is held 0.4 of a hold's time: 1.25 s asked is its 0.5 s.
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Ranks = EnemyRank.Elite, Do = UpgradeAction.Hold, Seconds = 1.25f, Cooldown = 6f },
+                },
             }, HeartPattern.Spell));
         }
 

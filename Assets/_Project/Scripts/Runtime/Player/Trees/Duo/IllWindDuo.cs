@@ -29,10 +29,9 @@ namespace Clover.Player.Trees.Duo
         {
             const string A = Elements.Poison, B = Elements.Wind;
 
-            // NEEDS: every shove and throw shedding (shove-moment; now a heavy blow, as the plain reaction); Dust on the Blade's
-            // coat on your own edge for your next three light blows on any enemy (depth-moved; now the next three weapon blows on the one
-            // shed); Dust Bank's trail drifting on 2 m a second (plume-along-path; now a longer line of Unsteady ground laid
-            // at once downwind).
+            // Dust on the Blade's grit coats your own edge (UpgradeAction.CoatBlade) for your next three light blows on any enemy.
+            // NEEDS: every shove and throw shedding (shove-moment; now a heavy blow, as the plain reaction); Dust Bank's trail
+            // drifting on 2 m a second (plume-along-path; now a longer line of Unsteady ground laid at once downwind).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Ill Wind: Dust on the Blade or Dust Bank", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -42,14 +41,13 @@ namespace Clover.Player.Trees.Duo
                     new ShapeDef
                     {
                         Name = "Dust on the Blade",
-                        Description = "Its poison goes loose as before, but your heavy blow sheds it with no trail: the grit coats your edge, and your next three weapon blows on it each lay a dose and an Unsteady.",
+                        Description = "Its poison goes loose as before, but your heavy blow sheds it with no trail: the grit coats your edge, and your next three light blows on any enemy each lay a dose and an Unsteady.",
                         Effects = new[]
                         {
                             Loose(BladeDust),
                             new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = BladeDust, By = StruckBy.Heavy, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Poison },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = BladeDust, By = StruckBy.Heavy, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Coat, Seconds = 6f, Blows = 3 } },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Coat, By = StruckBy.Weapon, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Poison, Stacks = 1 },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Coat, By = StruckBy.Weapon, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Unsteady, Stacks = 1 },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = BladeDust, By = StruckBy.Heavy, Do = UpgradeAction.CoatBlade, Affliction = AfflictionKind.Poison, Stacks = 1, Count = 3, LightOnly = true },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = BladeDust, By = StruckBy.Heavy, Do = UpgradeAction.CoatBlade, Affliction = AfflictionKind.Unsteady, Stacks = 1, Count = 3, LightOnly = true },
                         },
                     },
                     new ShapeDef

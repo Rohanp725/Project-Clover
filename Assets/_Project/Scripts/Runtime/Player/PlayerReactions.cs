@@ -298,7 +298,7 @@ namespace Clover.Player
                 if (effect.On != trigger || effect.Condition != news.Id) continue;
                 if (trigger == UpgradeTrigger.ConditionStruck && (!Answers(effect.By, news) || !FromSide(effect, news))) continue;
                 if (effect.AtCount > 0 && effect.AtCount != (trigger == UpgradeTrigger.ConditionBeat ? news.Count : news.Blows)) continue;
-                upgrades.Fire(effect, who, at, source, news.Damage, spent);
+                upgrades.Fire(effect, who, at, source, news.Damage, spent, null, news.Link);
                 ConditionAnswers++;
                 any = true;
             }

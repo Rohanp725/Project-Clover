@@ -159,7 +159,27 @@ namespace Clover.Player
             public int ReactionCast;
             // Already handed to one enemy of several (UpgradeEffect.EachWithin): done as it stands.
             public bool Fanned;
+            // For a condition's answer: the enemy the condition is joined to (Rot Roots' host), or null.
+            public Component Link;
         }
+
+        // ---- Depth moved between enemies (the ledger's depth-moved).
+        private const int MostStruck = 16;
+        // The enemies the cast now running has raised to the sickest one's depth (Share Alike), emptied at each cast.
+        private readonly List<Component> castStruck = new List<Component>(MostStruck);
+        private readonly List<AfflictionSet> depthScratch = new List<AfflictionSet>(MostStruck);
+        // The doses a line of bursts carries on to its next (One by One), or All Into One's gathered doses; emptied at each cast.
+        private int lineCarried;
+        private readonly HashSet<IDamageable> gatherTaken = new HashSet<IDamageable>();
+        private readonly HashSet<IDamageable> stateScratch = new HashSet<IDamageable>();
+        /// <summary>What the edge carries for its next few weapon blows (Carried on the Blade, Dust on the Blade).</summary>
+        public BladeCoat Coat { get; } = new BladeCoat();
+        private readonly AfflictionKind[] coatKinds = new AfflictionKind[BladeCoat.Most];
+        private readonly int[] coatStacks = new int[BladeCoat.Most];
+        /// <summary>Counts for probes: enemies raised to the sickest one's depth, doses gathered into one burst, and doses pushed past a body's depth that burst it.</summary>
+        public int DepthsRaised { get; private set; }
+        public int DosesGathered { get; private set; }
+        public int Overflows { get; private set; }
 
         private readonly HashSet<IDamageable> fanTaken = new HashSet<IDamageable>();
 
@@ -1256,10 +1276,10 @@ namespace Clover.Player
         /// <paramref name="spent"/> its count (for PerStack), and <paramref name="dead"/> what a dead enemy carried, read
         /// now, before it is cleared, as the Kill trigger reads it.
         /// </summary>
-        public void Fire(UpgradeEffect effect, Component target, Vector3 at, LaySource source, float power = 0f, int spent = 0, AfflictionSet dead = null)
+        public void Fire(UpgradeEffect effect, Component target, Vector3 at, LaySource source, float power = 0f, int spent = 0, AfflictionSet dead = null, Component link = null)
         {
             if (effect == null) return;
-            Consider(effect, target, at, true, spent, dead, source == LaySource.Reaction && effect.Cascades ? LaySource.Effect : source, power);
+            Consider(effect, target, at, true, spent, dead, source == LaySource.Reaction && effect.Cascades ? LaySource.Effect : source, power, link);
         }
 
         /// <summary>
@@ -1291,7 +1311,7 @@ namespace Clover.Player
         private static bool IsBlow(UpgradeTrigger trigger) => MarkRules.IsBlow(trigger);
 
         private void Consider(UpgradeEffect effect, Component target, Vector3 at, bool hasAt, int spent = 0, AfflictionSet dead = null,
-            LaySource source = LaySource.Effect, float power = 0f)
+            LaySource source = LaySource.Effect, float power = 0f, Component link = null)
         {
             if (effect.Slot < 0 || effect.Slot >= readyAt.Length) return;
             if (Time.time < readyAt[effect.Slot]) return;
@@ -1368,7 +1388,7 @@ namespace Clover.Player
             if (effect.CooldownPerEnemy && kept != null) kept.Start(effect.Slot, Time.time, wait);
             else readyAt[effect.Slot] = Time.time + wait;
             Enqueue(new Pending { Effect = effect, Target = target, At = at, HasAt = hasAt, Spent = spent, Less = less, Source = source, Power = power, Ripe = ripeScale,
-                ReactionOf = reactionPair + 1, ReactionCast = reactionPair >= 0 ? reactionCast : 0 });
+                ReactionOf = reactionPair + 1, ReactionCast = reactionPair >= 0 ? reactionCast : 0, Link = link });
         }
 
         /// <summary>
@@ -1857,14 +1877,95 @@ namespace Clover.Player
                 {
                     passExcept.Clear();
                     if (subject is IDamageable bearer) passExcept.Add(bearer);
-                    var next = combat.EnemyNear(centre, Or(effect.Reach, 4f) * Stats.Multiplier(PlayerStat.LeapReach), passExcept);
-                    if (next is IAfflictable taker)
+                    float passReach = Or(effect.Reach, 4f) * Stats.Multiplier(PlayerStat.LeapReach);
+                    if (effect.ToLink)
                     {
-                        CombatEvents.Report(next, kind, eStacks, taker.Afflictions.Lay(kind, Mathf.Max(1, eStacks), 0f, combat.AfflictionPower, laying, next), laying);
-                        ElementLook.Sparks(look, centre + Vector3.up * 1.2f, (next.transform.position - centre).normalized, 1f);
+                        // Drawn out of the joined enemy along the roots into its host, as deep as the host can take.
+                        if (!(pending.Link is IAfflictable host) || pending.Link == subject || !(subject is IAfflictable giver) || !pending.Link.gameObject.activeInHierarchy) break;
+                        int moved = DepthMoves.Movable(giver.Afflictions, host.Afflictions, kind, Mathf.Max(1, eStacks));
+                        if (moved <= 0) break;
+                        giver.Afflictions.Spend(kind, moved);
+                        CombatEvents.Report(pending.Link, kind, moved, host.Afflictions.Lay(kind, moved, 0f, combat.AfflictionPower, laying, pending.Link), laying);
+                        ElementLook.Sparks(look, centre + Vector3.up * 0.4f, (pending.Link.transform.position - centre).normalized, 0.8f);
+                        Passed++;
+                        break;
+                    }
+                    int give = Mathf.Max(1, eStacks);
+                    Vector3 from = centre;
+                    // Pushed past the taker's depth, the rest bursts it and runs on, a few bodies at most (Eaten in Turn).
+                    for (int hop = 0; hop < 4 && give > 0; hop++)
+                    {
+                        var next = NearestInState(effect.ToState, from, passReach, passExcept) ?? combat.EnemyNear(from, passReach, passExcept);
+                        if (!(next is IAfflictable taker) || !(next is IDamageable passedTo)) break;
+                        passExcept.Add(passedTo);
+                        int over = 0, fits = give;
+                        if (effect.Overflow) fits = DepthMoves.Fits(taker.Afflictions, kind, give, out over);
+                        if (fits > 0) CombatEvents.Report(next, kind, fits, taker.Afflictions.Lay(kind, fits, 0f, combat.AfflictionPower, laying, next), laying);
+                        ElementLook.Sparks(look, from + Vector3.up * 1.2f, (next.transform.position - from).normalized, 1f);
                         ElementLook.Puff(look, next.transform.position + Vector3.up * 1.2f, Vector3.up, 0.6f);
                         Passed++;
+                        if (over <= 0) break;
+                        int depth = taker.Afflictions.Stacks(kind);
+                        float burst = taker.Afflictions.SetOff(kind) * Stats.Multiplier(PlayerStat.BurstDamage);
+                        from = next.transform.position;
+                        combat.StrikeArea(from, 1.5f * Stats.Multiplier(PlayerStat.BurstReach), Blow(look, kind, burst, 4f * depth * Stats.Multiplier(PlayerStat.BurstStagger), 0));
+                        if (!bespoke) ElementLook.Strike(look, from, 0.3f);
+                        Overflows++;
+                        Trigger(UpgradeTrigger.SetOff, next, from, true, depth, null, kind, "", laying, burst);
+                        give = over;
                     }
+                    break;
+                }
+                case UpgradeAction.EvenDepth:
+                {
+                    if (!(subject is IAfflictable)) break;
+                    if (!castStruck.Contains(subject) && castStruck.Count < MostStruck) castStruck.Add(subject);
+                    depthScratch.Clear();
+                    for (int i = 0; i < castStruck.Count; i++)
+                        if (castStruck[i] != null && castStruck[i] is IAfflictable passedBy) depthScratch.Add(passedBy.Afflictions);
+                    int sickest = DepthMoves.Sickest(depthScratch, kind, effect.Stacks);
+                    depthScratch.Clear();
+                    // Each passed so far comes up to it: the last one passed leaves every one of them at the sickest's depth.
+                    for (int i = 0; i < castStruck.Count; i++)
+                    {
+                        var one = castStruck[i];
+                        if (one == null || !(one is IAfflictable raised)) continue;
+                        int lay = DepthMoves.ToRaise(raised.Afflictions, kind, sickest);
+                        if (lay <= 0) continue;
+                        CombatEvents.Report(one, kind, lay, raised.Afflictions.Lay(kind, lay, 0f, combat.AfflictionPower, laying, one), laying);
+                        DepthsRaised++;
+                        if (!bespoke) ElementLook.Puff(look, one.transform.position + Vector3.up * 1.2f, Vector3.up, 0.5f);
+                    }
+                    break;
+                }
+                case UpgradeAction.CoatBlade:
+                {
+                    // The depth it carries now, or a set number laid each blow.
+                    int load = effect.SetsDepth ? DepthOn(kind, subject as IAfflictable) : Or(effect.Stacks, 1);
+                    if (load <= 0) break;
+                    Coat.Load(kind, load, effect.SetsDepth, effect.LightOnly, Or(effect.Count, 3), effect.Seconds > 0f ? Time.time + effect.Seconds : 0f);
+                    ElementLook.Sparks(look, self + Vector3.up * 1.1f + transform.forward * 0.5f, transform.forward, 0.6f);
+                    break;
+                }
+                case UpgradeAction.Gather:
+                {
+                    // Every dose near runs into the next burst of this cast that carries doses on, with no limit.
+                    gatherTaken.Clear();
+                    float within = Or(effect.Radius, 10f);
+                    for (int guard = 0; guard < 24; guard++)
+                    {
+                        var near = combat.EnemyNear(self, within, gatherTaken);
+                        if (!(near is IDamageable one)) break;
+                        gatherTaken.Add(one);
+                        if (!(near is IAfflictable giving)) continue;
+                        int doses = giving.Afflictions.Consume(kind);
+                        if (doses <= 0) continue;
+                        lineCarried += doses;
+                        DosesGathered += doses;
+                        Vector3 bead = near.transform.position;
+                        if (!bespoke) ElementLook.Sparks(look, bead + Vector3.up * 0.3f, (centre - bead).normalized, 0.6f);
+                    }
+                    gatherTaken.Clear();
                     break;
                 }
                 case UpgradeAction.Bite:
@@ -1879,12 +1980,18 @@ namespace Clover.Player
                 }
                 case UpgradeAction.SetOff:
                 {
-                    if (!(subject is IAfflictable carrier) || !carrier.Afflictions.Has(kind)) break;
+                    if (!(subject is IAfflictable carrier)) break;
+                    // A burst in a line bursts on what the one before carried to it, even with none of its own (One by One).
+                    bool carries = effect.PassesOn && lineCarried > 0;
+                    if (!carrier.Afflictions.Has(kind) && !carries) break;
                     int depth = carrier.Afflictions.Stacks(kind);
+                    int carriedIn = effect.PassesOn ? lineCarried : 0;
+                    if (effect.PassesOn) depth = DepthMoves.LineBurst(depth, ref lineCarried);
                     // A seed set off ripe bursts harder, unripe softer (In Its Season); read before it is spent.
                     bool ripeSeed = carrier.Afflictions.IsRipe(kind);
                     float ripeShare = carrier.Afflictions.RipeShare(kind);
-                    float damage = (carrier.Afflictions.SetOff(kind) * reactionScale + eDamage * depth) * Stats.Multiplier(PlayerStat.BurstDamage) * ripeShare;
+                    float carriedDamage = carriedIn * Afflictions.Spec(kind).SetOffPerStack * combat.AfflictionPower;
+                    float damage = ((carrier.Afflictions.SetOff(kind) + carriedDamage) * reactionScale + eDamage * depth) * Stats.Multiplier(PlayerStat.BurstDamage) * ripeShare;
                     if (ripeSeed) RipeBurstAt(subject, centre, depth);
                     combat.StrikeArea(centre, Or(effect.Radius, 3f) * Stats.Multiplier(PlayerStat.BurstReach), Blow(look, kind, damage, eStagger * depth * Stats.Multiplier(PlayerStat.BurstStagger), 0),
                         null, 0f, effect.OnlyCarrying);
@@ -2241,6 +2348,13 @@ namespace Clover.Player
             if (wasAfflicted) Trigger(UpgradeTrigger.AfflictedHit, struck, at);
 
             var afflictable = target as IAfflictable;
+            // What the edge carries (Carried on the Blade, Dust on the Blade) goes into what it strikes.
+            if (afflictable != null && struck != null && Coat.Any)
+            {
+                int coats = Coat.Blow(afflictable.Afflictions, step.Heavy || finisher, Time.time, coatKinds, coatStacks);
+                for (int i = 0; i < coats; i++)
+                    CombatEvents.Report(struck, coatKinds[i], coatStacks[i], afflictable.Afflictions.Lay(coatKinds[i], coatStacks[i], 0f, combat.AfflictionPower, LaySource.Weapon, struck), LaySource.Weapon);
+            }
             if (hasPlasma && (step.Heavy || finisher) && afflictable != null && afflictable.Afflictions.Burn.IsBurning)
                 toBurst.Add(target);
             if (!hasStatic || afflictable == null) return;
@@ -2308,6 +2422,8 @@ namespace Clover.Player
                 if (hasCuts && struck > 0)
                     Hazards.Lay(HazardKind.Lightning, transform.position + forward * (step.Reach * 0.5f), step.Reach * 0.65f, 0.12f, step.Damage * DelayedCutsShare, 22f, 0f, 0.1f, true, DelayedCutsDelay, default, true);
             }
+            // Each coat the swing used has one blow fewer.
+            Coat.Swung();
             if (struck > 0 && untilBlowCount > 0)
             {
                 // Boons that were for one blow have had it.
@@ -2342,7 +2458,52 @@ namespace Clover.Player
         }
 
         /// <summary>The element's own spell has left the hand.</summary>
-        public void OnSpellCast() => Trigger(UpgradeTrigger.SpellCast, null, transform.position, false);
+        public void OnSpellCast()
+        {
+            BeginCast();
+            Trigger(UpgradeTrigger.SpellCast, null, transform.position, false);
+        }
+
+        // A new cast: none passed by it yet, and no doses carried down its line.
+        private void BeginCast()
+        {
+            castStruck.Clear();
+            lineCarried = 0;
+        }
+
+        /// <summary>
+        /// A spell discharged an enemy's Static itself (Paper Seal's thunder): counted, and told to whatever answers a
+        /// discharge with how deep it was, as a heavy blow's discharge is.
+        /// </summary>
+        public void Discharged(Component who, int stacks)
+        {
+            if (who == null || stacks <= 0) return;
+            Discharges++;
+            Trigger(UpgradeTrigger.SetOff, who, who.transform.position, true, stacks, null, AfflictionKind.Static);
+        }
+
+        // The nearest enemy within reach in the condition named (by its name or what it is), leaving out those given; null
+        // when none is, or when no condition is named.
+        private Component NearestInState(string state, Vector3 from, float reach, HashSet<IDamageable> except)
+        {
+            if (string.IsNullOrEmpty(state) || combat == null) return null;
+            stateScratch.Clear();
+            foreach (var left in except) stateScratch.Add(left);
+            Component found = null;
+            for (int guard = 0; guard < 24; guard++)
+            {
+                var near = combat.EnemyNear(from, reach, stateScratch);
+                if (!(near is IDamageable one)) break;
+                stateScratch.Add(one);
+                if (InState(state, null, near))
+                {
+                    found = near;
+                    break;
+                }
+            }
+            stateScratch.Clear();
+            return found;
+        }
 
         /// <summary>A blow was caught on the guard; the attacker stands at the given place.</summary>
         public void OnGuard(Vector3 attacker)
@@ -3064,6 +3225,7 @@ namespace Clover.Player
             }
             castSource = mark;
             castOrigin = transform.position;
+            BeginCast();
             form.Cast(cast);
             castSource = mark;
             Trigger(UpgradeTrigger.SpellCast, null, transform.position, false);

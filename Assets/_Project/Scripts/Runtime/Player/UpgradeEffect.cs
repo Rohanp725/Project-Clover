@@ -202,6 +202,27 @@ namespace Clover.Player
         /// <summary>For an Arc: it starts from the target without striking it and leaps to whoever is nearest, carrying anything (Glint's ray).</summary>
         public bool FromTarget;
 
+        // Depth moved between enemies (the ledger's depth-moved).
+        /// <summary>For CoatBlade: each blow raises what it strikes to the depth loaded, rather than laying that many more.</summary>
+        public bool SetsDepth;
+        /// <summary>For CoatBlade: only light blows take the coat (Dust on the Blade's three light blows).</summary>
+        public bool LightOnly;
+        /// <summary>
+        /// For SetOff: the burst carries on the doses of the one before it in the same cast, and what it burst with is carried
+        /// to the next (One by One: each passing its doses to the next before it goes, the last the largest; All Into One:
+        /// the doses gathered first). It bursts on carried doses alone when it has none of its own.
+        /// </summary>
+        public bool PassesOn;
+        /// <summary>For Pass: the doses go to the enemy the condition is joined to (Rot Roots' host), as deep as it can take, not to the nearest.</summary>
+        public bool ToLink;
+        /// <summary>
+        /// For Pass: what is pushed past the taker's depth bursts it at once (its own set-off) and passes on to the next, a
+        /// few times at most (Eaten in Turn). Without it, what does not fit is lost.
+        /// </summary>
+        public bool Overflow;
+        /// <summary>For Pass: not empty, the nearest other enemy in this condition (by its name or what it is) takes the doses before any other (the next on Eaten in Turn's line).</summary>
+        public string ToState = "";
+
         /// <summary>A copy with every number, its slot and its mark (an Empower's twin of its Learn's effect).</summary>
         internal UpgradeEffect Twin() => (UpgradeEffect)MemberwiseClone();
 

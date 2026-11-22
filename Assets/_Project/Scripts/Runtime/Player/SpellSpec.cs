@@ -51,5 +51,21 @@ namespace Clover.Player
         public Clover.Gameplay.AfflictionKind AimAt2 = Clover.Gameplay.AfflictionKind.None;
         public bool AimFarthest;
         public float AimMissShare;
+        /// <summary>
+        /// Not None: the spell takes only the enemies carrying this (the ledger's afflicted-only). The pillars rise under
+        /// them alone, in a line from the nearest to the nearest to it (One by One's line from poisoned to poisoned).
+        /// </summary>
+        public Clover.Gameplay.AfflictionKind OnlyCarrying = Clover.Gameplay.AfflictionKind.None;
+        /// <summary>
+        /// For the brand form: a seal (Paper Seal; the ledger's seal-thunder). The blows only burn it down; at the last,
+        /// thunder falls on the sealed enemy: Damage and <see cref="PerDose"/> a dose of the cast's affliction it carries, all
+        /// its Static discharged, Stagger in Radius, and each dose it carries passing one to every enemy within
+        /// <see cref="PassReach"/>. If its Seconds run out first, the thunder falls at half.
+        /// </summary>
+        public bool Seal;
+        public float PerDose;
+        public float PassReach;
+        /// <summary>Above zero: the caster steps up to the enemy faced, this far at most, before the spell lands on it (Paper Seal's 3 m step).</summary>
+        public float StepReach;
     }
 }

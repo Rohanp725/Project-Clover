@@ -25,9 +25,8 @@ namespace Clover.Player.Trees.Duo
         {
             const string A = Elements.Life, B = Elements.Poison;
 
-            // NEEDS: depth-moved (Gathered In's doses drawn out of each joined enemy into the host itself, to eight; now each
-            // bite on a joined enemy passes one of its doses to the nearest other enemy within 5 m, most often the host);
-            // in-own-ground (Summer Grass's 6 health only while you stand inside the spores; now wherever you stand).
+            // Gathered In draws each joined enemy's bitten dose along the roots into the host itself, to eight (UpgradeEffect.ToLink).
+            // NEEDS: in-own-ground (Summer Grass's 6 health only while you stand inside the spores; now wherever you stand).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Rot Roots: Gathered In or Summer Grass", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -42,8 +41,7 @@ namespace Clover.Player.Trees.Duo
                         {
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, Radius = 5f, Count = 3, Affliction = AfflictionKind.Seeded, Stacks = 1,
                                 State = new ConditionSpec { Id = Gathered, Seconds = 6f, OnBite = true, ToOthers = true } },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = Gathered, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Poison, Count = 1 },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = Gathered, Do = UpgradeAction.Pass, Affliction = AfflictionKind.Poison, Stacks = 1, Reach = 5f },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = Gathered, Do = UpgradeAction.Pass, Affliction = AfflictionKind.Poison, Stacks = 1, ToLink = true },
                         },
                     },
                     new ShapeDef
@@ -79,8 +77,8 @@ namespace Clover.Player.Trees.Duo
                 ReactionChanges = new[]
                 {
                     new ReactionChange { Shape = -1, Index = 0, Radius = 7f, Count = 4 },
+                    // Gathered In's doses go along the roots to the host, however far: only the roots' own reach is longer.
                     new ReactionChange { Shape = 0, Index = 0, Radius = 7f, Count = 4 },
-                    new ReactionChange { Shape = 0, Index = 2, Reach = 7f },
                 },
             }, HeartPattern.RightLow));
 
