@@ -53,6 +53,15 @@ for path in sorted(glob.glob("review/gifs/**/*.gif", recursive=True)):
         continue
     path = path.replace("\\", "/")
     name = os.path.basename(path)[:-4]
+    # Only a GIF whose frames were filmed since then: an assembly script also rewrites GIFs of older frames.
+    folder = os.path.dirname(path)
+    key = name.split("_", 1)[1] if "_" in name else name
+    frames = os.path.join(folder, "frames", key) if not path.startswith("review/gifs/swings/alone/") else os.path.join("review/gifs/swings/alone", key)
+    if path.startswith("review/gifs/way/"):
+        frames = os.path.join(folder, "frames", name)
+    pngs = glob.glob(os.path.join(frames, "*.png"))
+    if not pngs or max(os.path.getmtime(f) for f in pngs) < since:
+        continue
     replaces = "new: no doc picture yet"
     if name.startswith("react_"):
         key = name[len("react_"):]
