@@ -113,6 +113,7 @@ namespace Clover.Player.Way
             aspect?.Patch(built, marks);
             // The technique works in every aspect (steel/weapons.md 0.5): the chord's step, or none.
             built.Technique = Techniques.StepFor(kind, marks);
+            built.Aspect = aspect;
             return built;
         }
     }

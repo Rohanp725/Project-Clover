@@ -16,6 +16,8 @@ namespace Clover.Player
         public WeaponCombo Combo;
         /// <summary>The technique the chord plays (R1 and R2 together), set by the armoury from the Way's marks in force; null: none, the chord is a heavy.</summary>
         [System.NonSerialized] public AttackStep Technique;
+        /// <summary>The Way's aspect the armoury built it in, whose counts and windows the player keeps; null: the plain weapon.</summary>
+        [System.NonSerialized] public Way.WeaponAspect Aspect;
         /// <summary>
         /// The move an infused strike plays with the element on it (steel/weapons.md 0.4): the Katana's drawing cut, the
         /// Hammer's drop. Null: the first light. Its shape (<see cref="Footprint"/>) is what each element's strike acts on.

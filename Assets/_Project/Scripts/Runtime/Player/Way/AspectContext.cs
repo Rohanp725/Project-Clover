@@ -10,6 +10,10 @@ namespace Clover.Player.Way
         public bool PerfectGuard;
         /// <summary>True when the guard turned a red attack this step.</summary>
         public bool RedTurned;
+        /// <summary>True when a blow landed on the player this step (not on the guard).</summary>
+        public bool Struck;
+        /// <summary>True when a finisher of the weapon landed this step.</summary>
+        public bool Finished;
         /// <summary>True when the player killed this step.</summary>
         public bool Killed;
         /// <summary>True while a fight is on (the fight clock is running).</summary>

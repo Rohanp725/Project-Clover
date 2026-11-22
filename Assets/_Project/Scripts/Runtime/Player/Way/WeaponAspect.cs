@@ -32,6 +32,12 @@ namespace Clover.Player.Way
         /// <summary>Each step while the aspect is carried, for the rules that count or keep a window. Most aspects keep nothing.</summary>
         public virtual void Tick(ref AspectRun run, in AspectContext context) { }
 
+        /// <summary>
+        /// A blow of the weapon goes out while the aspect is carried: what the aspect adds to it. <paramref name="draw"/> is
+        /// true for any draw (the first cut of a combo, the skill, the charged heavy; way_build_plan.md question 22).
+        /// </summary>
+        public virtual AspectBlow Blow(ref AspectRun run, AttackStep step, bool draw, IMarkQuery marks) => default;
+
         /// <summary>A step's wind-up, swing and recovery times a share (below one is quicker).</summary>
         protected static void Retime(AttackStep step, float share)
         {

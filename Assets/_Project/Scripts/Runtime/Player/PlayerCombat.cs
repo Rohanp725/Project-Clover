@@ -380,6 +380,9 @@ namespace Clover.Player
         public void Equip(Weapon weapon)
         {
             Weapon = weapon;
+            // A change of aspect starts its counts and windows afresh; the same aspect built again keeps them.
+            if (weapon.Aspect != aspectKept) AspectState.Clear();
+            aspectKept = weapon.Aspect;
             // The chord plays the technique the armoury found in force on this weapon; none, and the chord stays a heavy.
             TechniqueStep = weapon.Technique;
             RunState.Weapon = weapon.Name;
@@ -522,6 +525,7 @@ namespace Clover.Player
             Step = Vector3.zero;
             PassingThrough = false;
             if (rearmPending && !BusyWithWeapon) Rearm();
+            TickAspect(deltaTime);
             if (HeavyCriticalLeft > 0f) HeavyCriticalLeft -= deltaTime;
             if (lightAction == null || heavyAction == null) return;
             // The element's strike follows the carrier's blow once the swing is out (or was cut short).
@@ -1701,6 +1705,47 @@ namespace Clover.Player
             }
         }
 
+        /// <summary>
+        /// What the carried aspect keeps (way_build_plan.md 2.0): its counts and windows, ticked once a frame with what
+        /// happened, cleared when the aspect changes. Read by probes.
+        /// </summary>
+        public Way.AspectRun AspectState;
+        private Way.WeaponAspect aspectKept;
+        private int landedThisFrame, guardsSeen, blowsSeen;
+        private bool finishedThisFrame;
+        // Stagger the aspect adds to the blow going out (the seventh drum's draw).
+        private float aspectStagger;
+
+        // A draw, for the Way (question 22): the first cut of a combo, the skill, the charged heavy.
+        private bool IsDraw(AttackStep step) =>
+            step != null && (step == Combo.Skill || step == Combo.ChargedHeavy || (Combo.Steps.Count > 0 && step == Combo.Steps[0]));
+
+        // The carried aspect's step: what happened since the last frame, then the counters cleared.
+        private void TickAspect(float deltaTime)
+        {
+            var aspect = Weapon != null ? Weapon.Aspect : null;
+            int guards = defence != null ? defence.PerfectGuards : 0, blows = defence != null ? defence.BlowsTaken : 0;
+            if (aspect != null)
+            {
+                if (spells == null) spells = GetComponent<PlayerSpells>();
+                var context = new Way.AspectContext
+                {
+                    DeltaTime = deltaTime,
+                    Landed = landedThisFrame,
+                    PerfectGuard = guards != guardsSeen,
+                    Struck = blows != blowsSeen,
+                    Finished = finishedThisFrame,
+                    InFight = spells != null && spells.Fight.InFight,
+                    Marks = upgrades,
+                };
+                aspect.Tick(ref AspectState, context);
+            }
+            guardsSeen = guards;
+            blowsSeen = blows;
+            landedThisFrame = 0;
+            finishedThisFrame = false;
+        }
+
         // Dragging Draw's return cut, waiting its moment after the draw; and the finisher's held pose.
         private AttackStep dragFollow;
         private float dragFollowIn;
@@ -1779,6 +1824,13 @@ namespace Clover.Player
         {
             if (fresh) struck.Clear();
             int already = struck.Count;
+            if (fresh)
+            {
+                // The carried aspect's part in the blow going out: the seventh drum's draw, the hanging cut.
+                var added = Weapon.Aspect != null ? Weapon.Aspect.Blow(ref AspectState, step, IsDraw(step), upgrades) : default;
+                aspectStagger = added.Stagger;
+                if (added.HangingCut) Way.Aspects.SheathAspect.LayHangingCut(step, transform.position, transform.forward, step.Damage * StatDamage, Weapon.SlashColour);
+            }
             bool finisher = false;
             bool clean = false;
             bool paidBlow = false;
@@ -1960,7 +2012,7 @@ namespace Clover.Player
                 }
                 float lasts = kind != AfflictionKind.None && AfflictionSeconds != 1f ? Clover.Gameplay.Afflictions.Spec(kind).Seconds * AfflictionSeconds : 0f;
                 float secondLasts = second != AfflictionKind.None && AfflictionSeconds != 1f ? Clover.Gameplay.Afflictions.Spec(second).Seconds * AfflictionSeconds : 0f;
-                float dealtStagger = (step.Stagger + (counter ? counterStagger : 0f) + StaggerOnHit) * NextBlowStagger * StatStagger * staggerShare * scale * step.BandStagger(distance);
+                float dealtStagger = (step.Stagger + (counter ? counterStagger : 0f) + StaggerOnHit + aspectStagger) * NextBlowStagger * StatStagger * staggerShare * scale * step.BandStagger(distance);
                 if (fromBehind) dealtStagger *= Weapon.BackMultiplier;
                 if (boundTo != null && ReferenceEquals(target, boundTo)) dealtStagger *= BoundStagger;
                 var outcome = target.TakeHit(new Hit(damage, dealtStagger, transform.forward, step.Heavy, carries && ElementSteel.PassesGuard(moveElement.Name), transform.position,
@@ -2127,10 +2179,15 @@ namespace Clover.Player
             if (paidBlow)
             {
                 // The spells' clocks: a finisher takes its own, larger cut; any other move cuts once however many it struck.
-                if (finisher) Finished?.Invoke();
+                if (finisher)
+                {
+                    finishedThisFrame = true;
+                    Finished?.Invoke();
+                }
                 else if (!cutGiven)
                 {
                     cutGiven = true;
+                    landedThisFrame++;
                     BlowLanded?.Invoke(step);
                 }
             }
