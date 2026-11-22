@@ -30,6 +30,8 @@ namespace Clover.Player
                 startAt = spec.Blows > 0 ? reacted.Afflictions.CountStartsAt(reactionPair) : 0;
             }
             float pace = PaceFor(spec, stacks);
+            // Turning slowed by the stacks counted (Seized Joints): its run's one number is the turn it keeps.
+            if (spec.TurnPerStack > 0f) scale = TurnFor(spec, stacks);
             AnswersOf(effect, spec.Id, out bool struck, out bool ended, out bool died, out bool attacked);
             int mark = effect.Owner != null ? effect.Owner.Index : -1;
             Vector3 toward = facing ?? centre;
@@ -81,6 +83,9 @@ namespace Clover.Player
         /// The pace a condition is set at for <paramref name="stacks"/> counted: by <see cref="ConditionSpec.SlowPerStack"/>
         /// when it has one (Cairn: 15% a stone), never below 0.05; -1 (the spec's own pace) otherwise.
         /// </summary>
+        public static float TurnFor(ConditionSpec spec, int stacks) =>
+            spec != null && spec.TurnPerStack > 0f ? Mathf.Max(0.1f, 1f - spec.TurnPerStack * Mathf.Max(1, stacks)) : 1f;
+
         public static float PaceFor(ConditionSpec spec, int stacks) =>
             spec != null && spec.SlowPerStack > 0f ? Mathf.Max(0.05f, 1f - spec.SlowPerStack * Mathf.Max(1, stacks)) : -1f;
 

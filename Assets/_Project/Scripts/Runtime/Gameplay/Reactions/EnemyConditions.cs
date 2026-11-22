@@ -360,6 +360,8 @@ namespace Clover.Gameplay
         {
             if (slot < 0 || slot >= Slots || !runs[slot].Active) return;
             runs[slot].Scale = scale;
+            // The scale may be what it does (a turning slowed by the notch: Seized Joints), so what is summed is summed again.
+            Recount();
         }
 
         public int Set(ConditionSpec spec, Component who, int mark = -1, Component link = null, bool answersStruck = false, bool answersEnd = false, float slowShare = 1f,

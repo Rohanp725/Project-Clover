@@ -941,6 +941,31 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void AshHangsAndSeizedJointsKeepEnemiesFromTurning()
+        {
+            var ash = Upgrade.ById(SpellBranch.ShapeId(DarkTree.GoneToAsh)).Shapes.Single(each => each.Name == "Ash Hangs").Effects.Single(each => each.Do == UpgradeAction.Hazard);
+            Assert.AreEqual(ConditionFlags.CannotTurn, ash.Inside.Flags & ConditionFlags.CannotTurn, "an attack begun inside goes where it already faced");
+            Assert.IsTrue(ash.ActsAsGround);
+
+            var spec = new ConditionSpec { Id = "test.joints", Seconds = 2f, SlowPerStack = 0.06f, TurnPerStack = 0.1f, Flags = ConditionFlags.TurnSlowed };
+            Assert.AreEqual(0.7f, ConditionCaster.TurnFor(spec, 3), 1e-4f, "10% a notch");
+            Assert.AreEqual(0.82f, ConditionCaster.PaceFor(spec, 3), 1e-4f, "6% a notch");
+            Assert.AreEqual(0.1f, ConditionCaster.TurnFor(spec, 20), 1e-4f, "never below a tenth");
+            var enemy = new AfflictionSet { Reactions = new ReactionEngine((who, pair, laid) => { }, () => 0) };
+            int slot = enemy.Conditions.Set(spec, null, 1, null, false, false, 1f, false, false, ConditionCaster.PaceFor(spec, 5));
+            enemy.Conditions.Keep(slot, ConditionCaster.TurnFor(spec, 5));
+            enemy.Tick(0.1f);
+            Assert.AreEqual(0.5f, enemy.Conditions.TurnScale, 1e-4f, "five notches: half the turning");
+
+            var joints = Upgrade.ById(Clover.Player.Trees.Duo.RustDuo.Shape).Shapes.Single(each => each.Name == "Seized Joints").Effects;
+            var seize = joints.Single(each => each.State != null && each.State.Id == Clover.Player.Trees.Duo.RustDuo.JointsSeized);
+            Assert.IsTrue(seize.CountsNeeds && seize.PerStack, "by the notches it carries");
+            Assert.AreEqual(0.06f, seize.State.SlowPerStack, 1e-5f);
+            Assert.AreEqual(0.1f, seize.State.TurnPerStack, 1e-5f);
+            Assert.AreEqual(1f, joints[0].State.Pace, 1e-5f, "no flat fifth slower");
+        }
+
+        [Test]
         public void TheBlisterSwellsAtEachBiteAndBreaksOnlyOnAHeavyBlow()
         {
             Assert.AreEqual(20f, Clover.Player.Forms.BrandForm.BlisterDamage(40f, 0), 1e-4f);

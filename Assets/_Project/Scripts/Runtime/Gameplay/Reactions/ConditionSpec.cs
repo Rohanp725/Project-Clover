@@ -137,5 +137,10 @@ namespace Clover.Gameplay
         /// </summary>
         public float FlankLeast;
         public float FlankMost;
+        /// <summary>
+        /// Above zero: it slows turning by this share for each of the stacks counted as it is set (ConditionFlags.TurnSlowed with
+        /// its run's Scale; Seized Joints: 10% a notch), never below a tenth.
+        /// </summary>
+        public float TurnPerStack;
     }
 }

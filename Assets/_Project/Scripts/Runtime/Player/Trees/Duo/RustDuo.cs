@@ -20,6 +20,8 @@ namespace Clover.Player.Trees.Duo
         /// <summary>The conditions the two shapes set, each a rusting and its fallen plate as the plain reaction's.</summary>
         public const string Joints = "rust.joints";
         public const string JointsPlate = "rust.jointsplate";
+        /// <summary>Seized Joints' slowing by the notch, set again at each beat of the rust.</summary>
+        public const string JointsSeized = "rust.joints.seized";
         public const string Flaking = "rust.flaking";
         public const string FlakingPlate = "rust.flakingplate";
         /// <summary>The Sea Takes It's seized joints (turning 40% slower for 4 s), and the plate a heavy blow knocks off them.</summary>
@@ -31,7 +33,8 @@ namespace Clover.Player.Trees.Duo
             const string A = Elements.Water, B = Elements.Metal;
 
             // Sundered runs past three, up to five, as the plain reaction.
-            // NEEDS: a slowing and a turning slowed by the notch (Seized Joints; now the rusting enemy walks a fifth slower).
+            // Seized Joints: at each beat of the rust, the notches it carries are counted (CountsNeeds) and its walk is slowed 6% and
+            // its turning 10% for each (ConditionSpec.SlowPerStack, TurnPerStack), until the next beat.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Rust: Seized Joints or Flaking", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -42,7 +45,11 @@ namespace Clover.Player.Trees.Duo
                     {
                         Name = "Seized Joints",
                         Description = "It rusts as before, its notches kept and spreading while it is wet, a plate falling when it is rusted through; and while it rusts its joints seize, so it walks and turns slower. Go round it.",
-                        Effects = Rusting(Joints, JointsPlate, 0.8f, new UpgradeEffect[0]),
+                        Effects = Rusting(Joints, JointsPlate, 1f, new[]
+                        {
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = Joints, Needs = AfflictionKind.Sundered, CountsNeeds = true, PerStack = true, Do = UpgradeAction.Condition,
+                                State = new ConditionSpec { Id = JointsSeized, Seconds = 2.2f, SlowPerStack = 0.06f, TurnPerStack = 0.1f, Flags = ConditionFlags.TurnSlowed } },
+                        }),
                     },
                     new ShapeDef
                     {

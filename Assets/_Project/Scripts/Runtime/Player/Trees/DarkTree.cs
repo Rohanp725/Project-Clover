@@ -33,6 +33,8 @@ namespace Clover.Player.Trees
         public const string DebtsCalled = "dark.debtscalled";
         public const string DevouringMaw = "dark.maw";
         public const string GoneToAsh = "dark.ash";
+        /// <summary>Ash Hangs: standing in the cloud, an enemy cannot turn.</summary>
+        public const string AshHangsHeld = "dark.ash.hangs";
         public const string SecondShadow = "dark.secondshadow";
         public const string PawnedHeart = "dark.pawnedheart";
         // The god's gift.
@@ -135,11 +137,13 @@ namespace Clover.Player.Trees
                         new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = AshOnTheBrow, Seconds = 6f, Keeps = C } },
                         new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Ward, Count = 1, Cooldown = 1f },
                     } },
-                // Standing again where you were: the Learn's step behind set aside (ShapeDef.SetsAside). NEEDS: an attack begun
-                // inside going where it already faced (cannot-turn). The cloud that Curses is data, laid on the attacker.
+                // Standing again where you were: the Learn's step behind set aside (ShapeDef.SetsAside). The cloud that Curses is
+                // data, laid on the attacker; whoever stands in it cannot turn (UpgradeEffect.Inside, ConditionFlags.CannotTurn), so
+                // an attack begun inside goes where it already faced.
                 new ShapeDef { Name = "Ash Hangs", SetsAside = new[] { 0 },
                     Description = "You stand again where you were. The ash stays as a sinking cloud three metres across for three seconds. Enemies inside it are Cursed, and an attack they begin inside goes where they already faced.",
-                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Radius = 1.5f, Seconds = 3f, Interval = 1f, Damage = 0f, Stagger = 0f, Affliction = C, Stacks = 1, Cooldown = 1f } } },
+                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Radius = 1.5f, Seconds = 3f, Interval = 1f, Damage = 0f, Stagger = 0f, Affliction = C, Stacks = 1, Cooldown = 1f,
+                        Inside = new ConditionSpec { Id = AshHangsHeld, Seconds = 0.5f, Flags = ConditionFlags.CannotTurn } } } },
                 "Opens two shapes of Gone to Ash, chosen at any rest fire: Ash on the Brow, a smear that marks the one who struck, or Ash Hangs, a cloud that Curses all inside.",
                 // Only a red attack scattered (UpgradeEffect.RedOnly): the attacker staggered and the wait ended.
                 new[]
