@@ -18,6 +18,9 @@ namespace Clover.Player.Trees.Duo
         public const string TheBurningLake = "smoulder.lake";
         /// <summary>The condition Night Sun sets: the fire sunk in, as the plain reaction's.</summary>
         public const string NightSun = "smoulder.nightsun";
+        /// <summary>The condition Deep Coal sets while its enemy smoulders: its Burn may lie two deeper.</summary>
+        public const string DeepCoalBed = "smoulder.deepcoal.bed";
+        private const string SmoulderReaction = "react.smoulder";
 
         public static void Add(List<Upgrade> to)
         {
@@ -64,11 +67,17 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.LeftLow));
 
-            // NEEDS: an affliction's depth raised on one enemy while it is in a condition; until then it does nothing.
+            // Each Smoulder sets a condition that lasts while its enemy is Cursed, so while it smoulders, in whichever shape: its
+            // Burn may lie two deeper than its usual depth (ConditionSpec.Deepens, as Rust's notches past three).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = DeepCoal, Name = "Deep Coal", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Flame,
                 Description = "Burn on a smouldering enemy can lie two deeper.",
+                Effects = new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = SmoulderReaction, Do = UpgradeAction.Condition,
+                        State = new ConditionSpec { Id = DeepCoalBed, Seconds = 30f, While = AfflictionKind.Cursed, Deepens = AfflictionKind.Burn, DeepensBy = 2 } },
+                },
             }, HeartPattern.RightLow));
 
             // NEEDS: every Burn laid smouldering, curse or no curse (now each blow that lands on a burning enemy while you are

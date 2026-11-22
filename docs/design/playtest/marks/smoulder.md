@@ -29,15 +29,13 @@ both carried.
 ## smoulder.deepcoal
 **What it does.** Burn on a smouldering enemy can stack two higher.
 
-**When it happens.** Always on once you learn it, while you carry both Dark and Fire.
+**When it happens.** Always on once you learn it, while you carry both Dark and Fire. Each time Smoulder goes off, in any shape, it lasts on that enemy for as long as its Curse does.
 
-**The numbers.** Mix, 3 Shards.
+**The numbers.** Mix, 3 Shards. While the enemy smoulders, its Burn can stack 2 higher than usual.
 
 **Works with.** Smoulder (it grows on its own while the Curse lasts), Fire Without End.
 
 **Example.** A smouldering brute reaches seven Burns instead of five before it flares up.
-
-**Not built yet.** It does nothing yet. The game can't yet let an affliction stack higher on one enemy.
 
 ## smoulder.sungoesunder
 **What it does.** While your health is below half, every Burn you add smoulders, Curse or no Curse.

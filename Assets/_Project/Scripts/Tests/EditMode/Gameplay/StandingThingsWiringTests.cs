@@ -558,6 +558,18 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void DeepCoalLetsTheBurnLieDeeperWhileItSmoulders()
+        {
+            Assert.AreEqual("react.smoulder", AfflictionPairs.Id(AfflictionPairs.Index(AfflictionKind.Cursed, AfflictionKind.Burn)));
+            var deep = Upgrade.ById(Clover.Player.Trees.Duo.SmoulderDuo.DeepCoal).Effects.Single();
+            Assert.AreEqual(UpgradeTrigger.Reacted, deep.On);
+            Assert.AreEqual("react.smoulder", deep.Reaction, "on Smoulder alone");
+            Assert.AreEqual(AfflictionKind.Burn, deep.State.Deepens);
+            Assert.AreEqual(2, deep.State.DeepensBy, "two deeper");
+            Assert.AreEqual(AfflictionKind.Cursed, deep.State.While, "while it smoulders: its curse lasts");
+        }
+
+        [Test]
         public void TheSeaComesInQuickensYouOnlyInYourOwnWater()
         {
             var sea = Upgrade.ById(WaterTree.TheSeaComesIn);
