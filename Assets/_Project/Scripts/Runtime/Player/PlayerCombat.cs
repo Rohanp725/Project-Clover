@@ -235,6 +235,16 @@ namespace Clover.Player
             }
         }
 
+        /// <summary>
+        /// The tint every blow of the weapon in hand lands with: the element look's when the move carries one, else the
+        /// weapon's own cut tint, so no blow of the player's (a swing, a shot, a shadow struck) flashes a body white.
+        /// </summary>
+        public Color BlowTint => BlowTintOf(StruckTint, Weapon, element != null && element.HasElement ? element.Info : null);
+
+        /// <summary>The blow tint for a struck tint (clear when the move carries no element look), a weapon and what it carries.</summary>
+        public static Color BlowTintOf(Color struckTint, Weapon weapon, ElementInfo carried) =>
+            StruckLook.Tinted(struckTint) ? struckTint : CutTintOf(weapon, carried);
+
         /// <summary>The cut and flash tint for a weapon with <paramref name="carried"/> (or none): its hue at full strength.</summary>
         public static Color CutTintOf(Weapon weapon, ElementInfo carried)
         {
@@ -924,7 +934,7 @@ namespace Clover.Player
         {
             if (step.Shot == null || shots == null) return;
             Vector3 forward = transform.forward;
-            int handle = shots.Fire(this, step.Shot, (step.Shot.FromStepStart ? stageOrigin : transform.position) + forward * 0.4f, forward, EffectColour, element != null ? element.Info : null, StruckTint);
+            int handle = shots.Fire(this, step.Shot, (step.Shot.FromStepStart ? stageOrigin : transform.position) + forward * 0.4f, forward, EffectColour, element != null ? element.Info : null, BlowTint);
             // The infused shot's arrow: told where it stops, so its impact is drawn there.
             if (shotWatchPending && handle >= 0) shots.Watch(handle);
             shotWatchPending = false;
@@ -1074,6 +1084,10 @@ namespace Clover.Player
             float damage = blow.Damage;
             // Critical by its own word, or because its cast was made critical (Daybreak's Master: loosed as a blow would land).
             bool critical = blow.Critical || (upgrades != null && upgrades.CastCritical(blow.Cast));
+            // What the body flashes in: the blow's own struck tint; else the spell's colour; else the weapon's (an arrow, a
+            // thrown blade, an infused strike's spread). Untinted, these lit whole bodies pure white (the bow's films of
+            // 2026-11-22). A reaction's untinted blow is left to the body's lilac.
+            Color struck = StruckLook.Tinted(blow.Struck) || blow.FromReaction ? blow.Struck : blow.Tinted && StruckLook.Tinted(blow.Tint) ? blow.Tint : BlowTint;
             var carrier = target as IAfflictable;
             if (StatAfflicted != 1f && carrier != null && carrier.Afflictions.Any) damage *= StatAfflicted;
             if (Stats != null && carrier != null) damage *= Mathf.Max(0.1f, 1f + Stats.Against(PlayerStat.SpellDamage, carrier.Afflictions));
@@ -1085,13 +1099,13 @@ namespace Clover.Player
                 // A burn is given in seconds, with or without depth.
                 float seconds = (blow.AfflictionSeconds > 0f ? blow.AfflictionSeconds : Clover.Gameplay.Afflictions.Spec(AfflictionKind.Burn).Seconds) * AfflictionSeconds;
                 return new Hit(damage, blow.Stagger, direction, blow.Heavy, true, origin, seconds, blow.Stacks > 0 ? blow.Stacks + ExtraStacks : 0, blow.Detonate,
-                    AfflictionKind.None, 0, 0f, AfflictionPower, blow.Spell, critical, fromReaction: blow.FromReaction, tint: blow.Struck);
+                    AfflictionKind.None, 0, 0f, AfflictionPower, blow.Spell, critical, fromReaction: blow.FromReaction, tint: struck);
             }
             bool lays = blow.Affliction != AfflictionKind.None && blow.Stacks > 0;
             float lasts = !lays ? 0f : blow.AfflictionSeconds > 0f ? blow.AfflictionSeconds * AfflictionSeconds
                 : AfflictionSeconds != 1f ? Clover.Gameplay.Afflictions.Spec(blow.Affliction).Seconds * AfflictionSeconds : 0f;
             return new Hit(damage, blow.Stagger, direction, blow.Heavy, true, origin, 0f, 0, blow.Detonate,
-                lays ? blow.Affliction : AfflictionKind.None, lays ? blow.Stacks + ExtraStacks : 0, lasts, AfflictionPower, blow.Spell, critical, fromReaction: blow.FromReaction, tint: blow.Struck);
+                lays ? blow.Affliction : AfflictionKind.None, lays ? blow.Stacks + ExtraStacks : 0, lasts, AfflictionPower, blow.Spell, critical, fromReaction: blow.FromReaction, tint: struck);
         }
 
         // What every spell's blow does once it has landed: its effect, what it earns, and word to the upgrades.
@@ -2377,10 +2391,9 @@ namespace Clover.Player
             float reach = boundTo != null && step == Combo.ChainHeavy ? Mathf.Max(step.Reach, BindLeash + 1f) : step.Reach * WeaponReachScale;
             Component nearest = null;
             float nearestAt = float.MaxValue;
-            Color struckTint = StruckTint;
             // A plain blow lands in the weapon's own slash colour, held below white, never a white flash (the owner,
             // 2026-11-22: a plain Katana blow lit the soldier's shield as a white disc). Under an element, its colour.
-            Color blowTint = StruckLook.Tinted(struckTint) ? struckTint : WeaponCutTint;
+            Color blowTint = BlowTint;
             // Wind's blows go round the body: no cut streak through it.
             var struckLook = Clover.Player.Swings.SwingLooks.For(SwingElement);
             bool cutsRound = struckLook != null && struckLook.CutsRound;
@@ -2688,7 +2701,7 @@ namespace Clover.Player
                     shadowBodies[s] = null;
                     if (!(body is IDamageable shadowed) || struck.Contains(shadowed) || !PlayerReactions.Alive(body)) continue;
                     float shadowDamage = step.Damage * scale * DamageMultiplier * UpgradeDamage * NextBlowDamage * StatDamage;
-                    var outcome = shadowed.TakeHit(new Hit(shadowDamage, lightStagger * scale * StatStagger, transform.forward, heavy, true, transform.position, tint: struckTint));
+                    var outcome = shadowed.TakeHit(new Hit(shadowDamage, lightStagger * scale * StatStagger, transform.forward, heavy, true, transform.position, tint: blowTint));
                     if (outcome == HitOutcome.Missed) continue;
                     struck.Add(shadowed);
                     ShadowBlows++;

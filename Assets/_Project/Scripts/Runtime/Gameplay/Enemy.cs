@@ -93,6 +93,17 @@ namespace Clover.Gameplay
         /// <summary>The flash a landed blow gives the body: white for a plain one, the element's colour softened under one (<see cref="StruckLook"/>).</summary>
         public static Color FlashColour(Color tint) => StruckLook.Flash(StruckFlash, tint);
 
+        /// <summary>The hue a blow that carries no tint at all flashes the body in: a warm steel, softened like any tint.</summary>
+        public static readonly Color UntintedFlashTint = new Color(0.95f, 0.82f, 0.62f, 1f);
+
+        /// <summary>
+        /// The flash a landed blow gives the body, never plain white: its own tint, a reaction's lilac, or a warm steel for
+        /// a blow no one tinted. The player's blows carry their element's or weapon's colour, but a path that forgot to
+        /// pass one (the Great Bow's arrows in the films of 2026-11-22) lit whole bodies pure white; this is the backstop.
+        /// </summary>
+        public static Color FlashFor(in Hit hit) =>
+            FlashColour(StruckLook.Tinted(hit.Tint) ? hit.Tint : hit.FromReaction ? ReactionFlashTint : UntintedFlashTint);
+
         /// <summary>
         /// The guard's flash as a blow is turned on it: a cold white for a plain blow, but a blow of an element or a
         /// reaction lights it in that hue, never white (the films of Thunder Gust and Glint, 2026-11-20: a white crescent
@@ -721,7 +732,7 @@ namespace Clover.Gameplay
             Health.Damage(detonated + (finisher && Kind.FinisherHealthShare > 0f ? Mathf.Max(hit.Damage * multiplier * takes, Kind.Health * Kind.FinisherHealthShare) : hit.Damage * multiplier * takes));
             // A reaction's blow that carries no element's tint flashes a soft lilac, not a plain blow's white (the films of
             // 2026-11-20: Flashover's, Thunder Gust's, Glint's and The Bolt Runs True's strikes lit whole soldiers pure white).
-            Flash(FlashColour(hit.FromReaction && !StruckLook.Tinted(hit.Tint) ? ReactionFlashTint : hit.Tint));
+            Flash(FlashFor(hit));
             Vector3 away = hit.Direction;
             away.y = 0f;
             // Flat on its back it is not slid along the floor by the blows that follow the one that felled it.
@@ -1349,7 +1360,7 @@ namespace Clover.Gameplay
             if (outcome == HitOutcome.Landed) Took(attack);
             // A perfect guard turns a blow struck by hand back on the one who struck it. A thrown bolt has no one to turn on.
             if (outcome != HitOutcome.PerfectGuard || attack.Ranged) return;
-            Flash(StruckFlash);
+            Flash(FlashColour(UntintedFlashTint));
             shove = -transform.forward * (Shove * 1.6f);
             if (!IsStaggered && Stagger.Add(Kind.PerfectGuardStagger * Afflictions.StaggerTakenMultiplier))
             {

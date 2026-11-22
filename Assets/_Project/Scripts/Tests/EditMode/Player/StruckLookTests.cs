@@ -112,5 +112,59 @@ namespace Clover.Tests
                 Assert.Less(flash.maxColorComponent, 1f, weapon.Name + " flash stays below white");
             }
         }
+
+        [Test]
+        public void NoLandedBlowFlashesABodyWhite()
+        {
+            // The owner bans pure white. The Great Bow's arrows (2026-11-22) and a Massive Sword Life strike's spread
+            // still lit whole soldiers white: they reached the body with no tint. Whatever a blow carries, the flash is a
+            // hue held below white.
+            var hits = new System.Collections.Generic.List<(string, Hit)>
+            {
+                ("a blow with no tint", new Hit(10f, 5f, Vector3.forward)),
+                ("a reaction's blow with no tint", new Hit(10f, 5f, Vector3.forward, fromReaction: true)),
+            };
+            foreach (var look in SwingLooks.All) hits.Add((look.Name + "'s blow", new Hit(10f, 5f, Vector3.forward, tint: look.Tint)));
+            foreach (var (what, hit) in hits)
+            {
+                Color flash = Enemy.FlashFor(hit);
+                Assert.AreNotEqual(Enemy.StruckFlash, flash, what + " flashes plain white");
+                Assert.LessOrEqual(Palest(flash), StruckLook.PalestFlash + 1e-4f, what + "'s flash is lit to white");
+                Assert.Less(Peak(flash), 1f, what + "'s flash stays below white");
+            }
+        }
+
+        [Test]
+        public void TheGreatBowsShotsCarryTheWeaponsOrTheElementsTint()
+        {
+            var bow = Weapons.GreatBow();
+            Assert.IsTrue(StruckLook.Tinted(PlayerCombat.BlowTintOf(default, bow, null)), "a plain shot carries the bow's colour");
+            foreach (var info in Elements.All)
+            {
+                Color tint = PlayerCombat.BlowTintOf(default, bow, info);
+                Assert.IsTrue(StruckLook.Tinted(tint), info.Name + ": the shot carries a tint");
+                SameHue(info.Colour, tint, info.Name + ": the shot's tint is the element's");
+            }
+            foreach (var look in SwingLooks.All)
+                Assert.AreEqual(look.Tint, PlayerCombat.BlowTintOf(look.Tint, bow, null), look.Name + ": the element look's tint wins");
+        }
+
+        [Test]
+        public void EveryBlowThePlayerMakesIsGivenATint()
+        {
+            // Each Hit the player's code builds names its tint, so no new path lands untinted and falls to the backstop
+            // (PlayerDefence's own hits are the player's, not blows on a body).
+            foreach (var file in System.IO.Directory.GetFiles("Assets/_Project/Scripts/Runtime/Player", "*.cs", System.IO.SearchOption.AllDirectories))
+            {
+                if (file.EndsWith("PlayerDefence.cs")) continue;
+                string text = System.IO.File.ReadAllText(file);
+                for (int at = text.IndexOf("new Hit("); at >= 0; at = text.IndexOf("new Hit(", at + 1))
+                {
+                    int end = text.IndexOf(';', at);
+                    string statement = text.Substring(at, (end < 0 ? text.Length : end) - at);
+                    Assert.That(statement.Contains("tint:"), System.IO.Path.GetFileName(file) + ": a Hit made with no tint: " + statement.Split('\n')[0]);
+                }
+            }
+        }
     }
 }
