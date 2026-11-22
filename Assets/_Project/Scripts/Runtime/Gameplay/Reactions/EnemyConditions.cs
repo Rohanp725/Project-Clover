@@ -263,6 +263,7 @@ namespace Clover.Gameplay
             run.CriticalOnly = spec.CriticalOnly;
             run.EndsOnFreeze = spec.EndsOnFreeze;
             run.DriftsTo = Math.Max(0f, spec.DriftsTo);
+            run.DeathsWithin = Math.Max(0f, spec.DeathsWithin);
             run.FreezeLonger = Math.Max(0f, spec.FreezeLonger);
             run.ShatterHarder = Math.Max(1f, spec.ShatterHarder);
             // The way it faced as it was set, for a condition whose side is the side it showed then (Rime's crust).

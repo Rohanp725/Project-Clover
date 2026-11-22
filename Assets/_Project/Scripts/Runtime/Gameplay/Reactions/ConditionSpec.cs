@@ -90,5 +90,10 @@ namespace Clover.Gameplay
         /// this many metres (the ledger's drift-on-death: The Grudge's black cloud, Ash Plume's storm).
         /// </summary>
         public float DriftsTo;
+        /// <summary>
+        /// Above zero: a death of another enemy within this many metres of its carrier is told to it, as a blow of its own kind
+        /// carrying the dead one's doses (StruckBy.DeathNear; the ledger's jar-deaths: Shut in the Dark's ring, 4 m across).
+        /// </summary>
+        public float DeathsWithin;
     }
 }

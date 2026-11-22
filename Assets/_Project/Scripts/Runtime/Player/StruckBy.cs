@@ -21,5 +21,7 @@ namespace Clover.Player
         Frozen,
         /// <summary>A shove or a throw (a Gust, a ram, Riptide, a lift), or a heavy weapon blow, which shoves (the ledger's shove-moment).</summary>
         Shove,
+        /// <summary>Another enemy's death within the condition's reach of its carrier (Shut in the Dark: a death inside the jar's ring).</summary>
+        DeathNear,
     }
 }

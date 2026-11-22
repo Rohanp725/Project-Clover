@@ -584,7 +584,7 @@ Title: Shut in the Dark (Dark and Poison)
 Group: Reactions
 **What it is.** Cursed meets Poisoned. A black ring seals the enemy inside like a jar.
 
-**The numbers.** For 8 seconds, its doses stop fading. When the 8 seconds end, or when it dies, the jar breaks. It deals 5 damage for each dose to everyone within 3 metres, and half its doses (rounded up) spill onto everything it reaches. Then it waits 8 seconds.
+**The numbers.** For 8 seconds, its doses stop fading, and it can hold up to 12 doses instead of 8. When another enemy dies within 2 metres of it (inside a ring 4 metres across), all that enemy's doses go into the jar, and you heal 4. When the 8 seconds end, or when it dies, the jar breaks. It deals 5 damage for each dose to everyone within 3 metres, and half its doses (rounded up) spill onto everything it reaches. Then it waits 8 seconds.
 
 **What sets it off.** A Curse landing on a poisoned enemy, or poison landing on a Cursed one.
 
@@ -592,7 +592,7 @@ Group: Reactions
 
 **How to use it.** Give the enemy lots of doses before you Curse it. The more doses, the bigger the break. Killing it breaks the jar right away.
 
-**How it looks.** Its name over the enemy, then a burst when the jar breaks. Not built yet: the black ring on the floor, and poisoned enemies that die inside crawling to it to feed it.
+**How it looks.** Its name over the enemy, then a burst when the jar breaks. Not built yet: the black ring drawn on the floor, and the doses seen crawling to it.
 
 ## reaction-fire-medicine
 Title: Fire Medicine (Poison and Fire)

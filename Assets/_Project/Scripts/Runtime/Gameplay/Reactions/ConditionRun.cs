@@ -60,5 +60,7 @@ namespace Clover.Gameplay
         public bool EndsOnFreeze;
         /// <summary>Metres it drifts to the nearest other enemy when its carrier dies (<see cref="ConditionSpec.DriftsTo"/>); zero: it dies with it.</summary>
         public float DriftsTo;
+        /// <summary>Metres round its carrier within which another's death is told to it (<see cref="ConditionSpec.DeathsWithin"/>).</summary>
+        public float DeathsWithin;
     }
 }

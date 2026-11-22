@@ -39,5 +39,7 @@ namespace Clover.Gameplay
         public bool Frozen;
         /// <summary>For a blow: it was a shove or a throw, not a blow (a Gust, a ram, Riptide, a lift; the ledger's shove-moment).</summary>
         public bool Shoved;
+        /// <summary>For a blow: it was no blow but another enemy's death near its carrier (<see cref="ConditionSpec.DeathsWithin"/>).</summary>
+        public bool DiedNear;
     }
 }

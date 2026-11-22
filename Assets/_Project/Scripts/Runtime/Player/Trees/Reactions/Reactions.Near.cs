@@ -129,12 +129,16 @@ namespace Clover.Player.Trees
 
             // Dark and Poison (10), rest 8 s. Sealed as a jar for 8 s: its doses stop fading. When the 8 s end, or it
             // dies, the jar breaks: 5 a dose in 3 m, and half its doses (rounded up) laid on all it reaches.
-            // NEEDS: the jar's ring on the floor (4 m across); other poisoned enemies that die inside it crawling to it
-            // and giving it every dose (to twelve, past the usual eight); each kill inside feeding the player 4.
+            // Another poisoned enemy that dies inside its ring (4 m across: ConditionSpec.DeathsWithin, StruckBy.DeathNear) gives it every
+            // dose, to twelve past the usual eight (ConditionSpec.Deepens), and each kill inside feeds the player 4. NEEDS: the jar's
+            // ring drawn on the floor and the doses crawling to it (looks).
             to.Add(Reaction(AfflictionKind.Cursed, AfflictionKind.Poison,
                 "Cursed meets Poisoned: it is sealed as a jar for 8 s and its doses stop fading. When the time ends or it dies the jar breaks, 5 a dose in 3 m, and half its doses spill on all it reaches.",
                 new ReactionDef { Rest = 8f },
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Jar, Seconds = 8f, Keeps = AfflictionKind.Poison } },
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Jar, Seconds = 8f, Keeps = AfflictionKind.Poison,
+                    DeathsWithin = 2f, Deepens = AfflictionKind.Poison, DeepensBy = 4 } },
+                new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Jar, By = StruckBy.DeathNear, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Poison, Stacks = 1, PerStack = true },
+                new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Jar, By = StruckBy.DeathNear, Do = UpgradeAction.Heal, Amount = 4f },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Jar, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Poison, CountOnly = true },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Jar, Do = UpgradeAction.Burst, Radius = 3f, DamagePerSpent = 5f, Affliction = AfflictionKind.Poison },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Jar, Do = UpgradeAction.Afflict, Radius = 3f, Affliction = AfflictionKind.Poison, Stacks = 1, PerStack = true, Share = 0.5f },

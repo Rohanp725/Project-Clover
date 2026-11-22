@@ -147,7 +147,10 @@ namespace Clover.Player
         // Queued, not done: the set is cleared as soon as this returns, so its depth is read now (Smoulder's flare, the jar's break).
         private void OnDied(Component who, AfflictionSet afflictions)
         {
-            if (who == null || afflictions == null || upgrades == null || !afflictions.Conditions.Any) return;
+            if (who == null || afflictions == null || upgrades == null) return;
+            // Told to the conditions near that hear a death (Shut in the Dark's jar), before its own are answered.
+            HearDeath(who, who.transform.position, afflictions);
+            if (!afflictions.Conditions.Any) return;
             var all = Upgrade.All;
             Vector3 at = who.transform.position;
             for (int slot = 0; slot < EnemyConditions.Slots; slot++)
@@ -169,6 +172,47 @@ namespace Clover.Player
         private readonly System.Collections.Generic.HashSet<IDamageable> driftSkip = new System.Collections.Generic.HashSet<IDamageable>();
         /// <summary>Conditions that drifted to another enemy when their carrier died, counted for probes.</summary>
         public int Drifted { get; private set; }
+
+        private readonly System.Collections.Generic.HashSet<IDamageable> nearSkip = new System.Collections.Generic.HashSet<IDamageable>();
+        /// <summary>The most metres a condition hears a death from (ConditionSpec.DeathsWithin).</summary>
+        public const float DeathsHeardWithin = 6f;
+        /// <summary>Deaths told to a condition near them (Shut in the Dark's ring), counted for probes.</summary>
+        public int DeathsHeard { get; private set; }
+
+        // Another enemy's death near a condition that hears deaths: told to it as a blow of its own kind, carrying the dead
+        // one's doses (Shut in the Dark: each poisoned death inside the ring feeds the jar).
+        private void HearDeath(Component dead, Vector3 at, AfflictionSet afflictions)
+        {
+            if (combat == null || upgrades == null) return;
+            int doses = afflictions != null ? afflictions.Stacks(AfflictionKind.Poison) : 0;
+            nearSkip.Clear();
+            if (dead is IDamageable deadBody) nearSkip.Add(deadBody);
+            var all = Upgrade.All;
+            for (int guard = 0; guard < 16; guard++)
+            {
+                var near = combat.EnemyNear(at, DeathsHeardWithin, nearSkip);
+                if (!(near is IDamageable body)) break;
+                nearSkip.Add(body);
+                if (!(near is IAfflictable hearer) || !hearer.Afflictions.Conditions.Any) continue;
+                Vector3 offset = near.transform.position - at;
+                offset.y = 0f;
+                for (int slot = 0; slot < EnemyConditions.Slots; slot++)
+                {
+                    var run = hearer.Afflictions.Conditions.Run(slot);
+                    if (!run.Active || run.DeathsWithin <= 0f || offset.magnitude > run.DeathsWithin || run.Mark < 0 || run.Mark >= all.Count) continue;
+                    var news = new ConditionNews { Moment = ConditionMoment.Struck, Id = run.Id, Mark = run.Mark, Count = run.Count, Blows = run.Blows, Flags = run.Flags,
+                        Scale = run.Scale, Link = run.Link, Is = run.Is, DiedNear = true, Side = -1f };
+                    var mark = all[run.Mark];
+                    var source = SourceOf(mark);
+                    AnswerFrom(OwnEffects(mark), UpgradeTrigger.ConditionStruck, news, near, near.transform.position, source, doses);
+                    if (ReactionTable.IsReactionShape(mark))
+                        for (int shape = 0; shape < mark.Shapes.Length; shape++)
+                            if (mark.Shapes[shape] != null) AnswerFrom(ShapeEffects(mark, shape), UpgradeTrigger.ConditionStruck, news, near, near.transform.position, source, doses);
+                    DeathsHeard++;
+                }
+            }
+            nearSkip.Clear();
+        }
 
         private void Drift(Component dead, Vector3 at, in ConditionRun run)
         {
@@ -410,8 +454,9 @@ namespace Clover.Player
 
         /// <summary>True when a condition's blow is one the answer asks for (<see cref="UpgradeEffect.By"/>).</summary>
         public static bool Answers(StruckBy by, in ConditionNews news) =>
-            // A shove is no blow: only what answers a shove hears it.
-            news.Shoved ? by == StruckBy.Shove
+            // A shove is no blow, nor a death near: only what answers that hears it.
+            news.DiedNear ? by == StruckBy.DeathNear
+            : news.Shoved ? by == StruckBy.Shove
             : by == StruckBy.Any || (by == StruckBy.Weapon && !news.Spell) || (by == StruckBy.Heavy && news.Heavy) || (by == StruckBy.Shatter && news.Shattered)
             || (by == StruckBy.Critical && news.Critical && !news.Spell) || (by == StruckBy.Finisher && news.Finisher && !news.Spell)
             || (by == StruckBy.Shove && news.Heavy && !news.Spell);

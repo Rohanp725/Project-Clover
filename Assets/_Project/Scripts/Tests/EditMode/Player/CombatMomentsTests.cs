@@ -251,6 +251,25 @@ namespace Clover.Tests
             Assert.IsTrue(Upgrade.ById(BreathTakenDuo.IllOmen).Effects.All(effect => effect.NeedsAttacker && effect.Radius == 0f));
         }
 
+        [Test]
+        public void TheJarHearsADeathInsideItsRing()
+        {
+            var news = new ConditionNews { DiedNear = true };
+            Assert.IsTrue(PlayerReactions.Answers(StruckBy.DeathNear, news));
+            Assert.IsFalse(PlayerReactions.Answers(StruckBy.Any, news), "a death near is no blow");
+            Assert.IsFalse(PlayerReactions.Answers(StruckBy.DeathNear, new ConditionNews { Heavy = true }));
+            var jar = ReactionTable.MarkFor(AfflictionPairs.Index(AfflictionKind.Cursed, AfflictionKind.Poison)).Effects;
+            var spec = jar.First(effect => effect.State != null && effect.State.Id == Reactions.Jar).State;
+            Assert.AreEqual(2f, spec.DeathsWithin, 1e-5f, "a ring 4 m across");
+            Assert.AreEqual(AfflictionKind.Poison, spec.Deepens);
+            Assert.AreEqual(4, spec.DeepensBy, "to twelve, past the usual eight");
+            Assert.IsTrue(jar.Any(effect => effect.By == StruckBy.DeathNear && effect.Do == UpgradeAction.Afflict && effect.PerStack), "every dose given to it");
+            Assert.IsTrue(jar.Any(effect => effect.By == StruckBy.DeathNear && effect.Do == UpgradeAction.Heal && effect.Amount == 4f), "each kill inside feeds you 4");
+            var set = Quiet();
+            set.Conditions.Set(spec, null);
+            Assert.AreEqual(Afflictions.Depth(AfflictionKind.Poison) + 4, set.DepthOf(AfflictionKind.Poison));
+        }
+
         private sealed class Afflicted : IAfflictable
         {
             public Afflicted(AfflictionSet set) => Afflictions = set;
