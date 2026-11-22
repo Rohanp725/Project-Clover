@@ -31,15 +31,13 @@ are both carried.
 ## coldshort.glassbell
 **What it does.** Each blow on a brittle enemy rings like glass. You get 3 mana, and 0.3 seconds come off the wait on every spell that is waiting.
 
-**When it happens.** Each weapon blow on an enemy during the 5 seconds after its Cold Short, until a heavy blow cracks it, while you carry both Ice and Metal.
+**When it happens.** Each weapon blow on a brittle enemy, while you carry both Ice and Metal. The enemy is brittle for 5 seconds after its Cold Short, in any shape, until a heavy blow cracks it. That heavy blow rings too.
 
 **The numbers.** Mix, 3 Shards. 3 mana and 0.3 seconds off every spell's wait for each blow, at most ten times a second.
 
 **Works with.** Cold Short, Rimed Edge, Cold Chisel.
 
 **Example.** Ring a brittle brute with light blows, then crack it with a heavy blow.
-
-**Not built yet.** For now, it keeps its own brittle timer from each Cold Short, instead of checking the enemy's.
 
 ## coldshort.core
 **What it does.** Cold Short on a frozen enemy also shatters it. The shatter and the crack land at the same time.

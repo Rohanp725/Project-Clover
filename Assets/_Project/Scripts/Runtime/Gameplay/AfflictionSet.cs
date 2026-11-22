@@ -745,8 +745,14 @@ namespace Clover.Gameplay
             }
         }
 
-        /// <summary>What a blow's damage is multiplied by: one number for spells, another for weapons.</summary>
-        public float DamageTakenMultiplier(bool spell)
+        /// <summary>What a blow's damage is multiplied by: one number for spells, another for weapons, and more for a heavy weapon blow while a condition asks it.</summary>
+        public float DamageTakenMultiplier(bool spell, bool heavy = false)
+        {
+            float heavyShare = heavy && !spell ? Conditions.HeavyTakenScale : 1f;
+            return Taken(spell) * heavyShare;
+        }
+
+        private float Taken(bool spell)
         {
             float more = 0f;
             for (int i = 2; i < stacks.Length; i++)
@@ -758,6 +764,9 @@ namespace Clover.Gameplay
             return (1f + more) * (!spell && BrittleLeft > 0f ? 1f + Afflictions.BrittleShare : 1f) * Conditions.TakenScale
                 * (spell ? Conditions.SpellTakenScale : Conditions.WeaponTakenScale);
         }
+
+        /// <summary>What a blow's stagger is multiplied by: <see cref="StaggerTakenMultiplier"/>, and for a weapon blow the share a condition asks of weapon blows alone (The Lamp Goes Out).</summary>
+        public float StaggerTakenFor(bool spell) => StaggerTakenMultiplier * (spell ? 1f : Conditions.WeaponStaggerScale);
 
         public float StaggerTakenMultiplier => (1f + Sum(spec => spec.StaggerTakenPerStack))
             * (BrittleLeft > 0f ? 1f + Afflictions.BrittleShare : 1f)

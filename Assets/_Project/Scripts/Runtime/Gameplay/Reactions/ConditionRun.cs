@@ -46,5 +46,8 @@ namespace Clover.Gameplay
         public bool OnBite;
         public ConditionBlow EndsWith;
         public int BlowLimit;
+        /// <summary>What it is beyond its own name (<see cref="ConditionSpec.Is"/>), and the condition it lasts only while (<see cref="ConditionSpec.WhileIn"/>).</summary>
+        public string Is;
+        public string WhileIn;
     }
 }

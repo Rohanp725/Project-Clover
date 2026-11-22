@@ -58,5 +58,13 @@ namespace Clover.Gameplay
         public ConditionBlow EndsWith;
         /// <summary>It ends once it has taken this many weapon blows, after answering the last (Logan Stone's third); 0 for no limit.</summary>
         public int Blows;
+        /// <summary>
+        /// What it is, when a shape sets it under a name of its own: the plain reaction's name for the same state (Hot
+        /// Shards' crack is a <c>thermalshock.cracked</c>). A mark that asks for an enemy in a condition another mark set
+        /// (<c>UpgradeEffect.InState</c>, the ledger's condition-needs) finds it by either name.
+        /// </summary>
+        public string Is = "";
+        /// <summary>It lasts only while the enemy is in this condition (by name or by what it is): once that ends, so does this, and its end is told.</summary>
+        public string WhileIn = "";
     }
 }

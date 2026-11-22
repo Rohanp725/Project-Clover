@@ -629,8 +629,8 @@ namespace Clover.Gameplay
             bool open = mode == Mode.Exposed || IsStaggered || (isHead && headOpen) || shellCool;
             float share = IsStaggered ? (isHead ? HeadDamage : 1f) : open ? 1f : HotShellShare;
             Afflictions.IgniteFrom(hit, part);
-            float takes = Afflictions.DamageTakenMultiplier(hit.Spell);
-            float unsteadies = Afflictions.StaggerTakenMultiplier;
+            float takes = Afflictions.DamageTakenMultiplier(hit.Spell, hit.Heavy);
+            float unsteadies = Afflictions.StaggerTakenFor(hit.Spell);
             Afflictions.TakeFrom(hit, part);
             float damage = finisher ? Mathf.Max(hit.Damage * 3f * takes, MaximumHealth * FinisherShare) : hit.Damage * share * takes;
             Health.Damage(damage);

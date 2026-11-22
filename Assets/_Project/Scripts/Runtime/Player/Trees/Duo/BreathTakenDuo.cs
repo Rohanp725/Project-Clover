@@ -82,35 +82,31 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.LeftLow));
 
-            // NEEDS: an answer to an enemy in a condition another mark set (condition-needs): the winded enemy; now Short of
-            // Breath keeps its own winding from each Breath Taken, and the half again is on every weapon blow in it, not only the
-            // heavy ones.
+            // The winded enemy read from the enemy, in whichever shape: the half again rides on a share that lasts only while it
+            // is winded (ConditionSpec.WhileIn) and asks only heavy blows (ConditionFlags.HeavyTakenShare); the clocks are cut by
+            // each heavy blow on a winded enemy (UpgradeEffect.InState).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = ShortOfBreath, Name = "Short of Breath", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Hourglass,
                 Description = "Your heavy blows on a winded enemy strike half again as hard, and each takes 1 s off every running spell cooldown.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = Reaction, Ranks = EnemyRank.Plain | EnemyRank.God, Do = UpgradeAction.Condition,
-                        State = new ConditionSpec { Id = Gasping, Seconds = 1.5f, Flags = ConditionFlags.WeaponTakenShare, Scale = 1.5f } },
-                    new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = Reaction, Ranks = EnemyRank.Elite, Do = UpgradeAction.Condition,
-                        State = new ConditionSpec { Id = Gasping, Seconds = 0.6f, Flags = ConditionFlags.WeaponTakenShare, Scale = 1.5f } },
-                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Gasping, By = StruckBy.Heavy, Cooldown = 0.3f, Do = UpgradeAction.CutCooldowns, Amount = 1f },
+                    new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = Reaction, Do = UpgradeAction.Condition,
+                        State = new ConditionSpec { Id = Gasping, Seconds = 2f, Flags = ConditionFlags.HeavyTakenShare, Scale = 1.5f, WhileIn = Reactions.Winded } },
+                    new UpgradeEffect { On = UpgradeTrigger.HeavyHit, InState = Reactions.Winded, Cooldown = 0.3f, Do = UpgradeAction.CutCooldowns, Amount = 1f },
                 },
             }, HeartPattern.RightLow));
 
-            // A winded enemy that dies lets its last breath out: everything within 4 m pushed 3 m and Cursed. It keeps its own
-            // winding from each Breath Taken, as long as the plain one's.
+            // A winded enemy that dies lets its last breath out: everything within 4 m pushed 3 m and Cursed. The winding is read
+            // from what it carried as it died, in whichever shape (UpgradeEffect.InState).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = TheLastBreath, Name = "The Last Breath", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { IllOmen, ShortOfBreath }, Icon = UpgradeIcons.Skull,
                 Description = "A winded enemy that dies lets its last breath out as a black gust: everything within 4 m is pushed 3 m and Cursed.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = Reaction, Ranks = EnemyRank.Plain | EnemyRank.God, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Last, Seconds = 1.5f } },
-                    new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = Reaction, Ranks = EnemyRank.Elite, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Last, Seconds = 0.6f } },
-                    new UpgradeEffect { On = UpgradeTrigger.ConditionDied, Condition = Last, Do = UpgradeAction.Push, Radius = 4f, Amount = 3f },
-                    new UpgradeEffect { On = UpgradeTrigger.ConditionDied, Condition = Last, Do = UpgradeAction.Afflict, Radius = 4f, Affliction = AfflictionKind.Cursed, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.Kill, InState = Reactions.Winded, Do = UpgradeAction.Push, Radius = 4f, Amount = 3f },
+                    new UpgradeEffect { On = UpgradeTrigger.Kill, InState = Reactions.Winded, Do = UpgradeAction.Afflict, Radius = 4f, Affliction = AfflictionKind.Cursed, Stacks = 1 },
                 },
             }, HeartPattern.Keystone));
 
@@ -161,9 +157,9 @@ namespace Clover.Player.Trees.Duo
             var effects = new List<UpgradeEffect>
             {
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Ranks = EnemyRank.Plain | EnemyRank.God, Do = UpgradeAction.Condition,
-                    State = new ConditionSpec { Id = id, Seconds = 1.5f, Flags = ConditionFlags.BeginsNoAttack | ConditionFlags.StaggerTakenShare, Scale = 1.3f } },
+                    State = new ConditionSpec { Id = id, Seconds = 1.5f, Flags = ConditionFlags.BeginsNoAttack | ConditionFlags.StaggerTakenShare, Scale = 1.3f, Is = Reactions.Winded } },
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Ranks = EnemyRank.Elite, Do = UpgradeAction.Condition,
-                    State = new ConditionSpec { Id = id, Seconds = 0.6f, Flags = ConditionFlags.BeginsNoAttack | ConditionFlags.StaggerTakenShare, Scale = 1.3f } },
+                    State = new ConditionSpec { Id = id, Seconds = 0.6f, Flags = ConditionFlags.BeginsNoAttack | ConditionFlags.StaggerTakenShare, Scale = 1.3f, Is = Reactions.Winded } },
             };
             effects.AddRange(more);
             return effects.ToArray();

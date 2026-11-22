@@ -40,7 +40,7 @@ namespace Clover.Player.Trees.Duo
                         Description = "For 6 s every weapon blow on it arcs from iron to iron as before, and the arcs magnetise: each enemy an arc reaches is drawn 1.5 m toward the one struck, plates clattering, so a crowd folds in onto the blade.",
                         Effects = new[]
                         {
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Drawn, Seconds = 6f } },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Drawn, Seconds = 6f, Is = Reactions.IronLive } },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Drawn, By = StruckBy.Weapon, Cooldown = 0.3f, Do = UpgradeAction.Arc,
                                 LeapsTo = AfflictionKind.Sundered, Count = 2, Reach = 8f, Amount = 0.35f, Affliction = AfflictionKind.Sundered, Stacks = 1 },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Drawn, By = StruckBy.Weapon, Cooldown = 0.3f, Do = UpgradeAction.Pull, Radius = 8f, Amount = 1.5f },
@@ -52,7 +52,7 @@ namespace Clover.Player.Trees.Duo
                         Description = "No arcs. For 6 s its Static holds, and each weapon blow on it hammers one into a glowing iron spike standing in it, three at most; your heavy blow tears them out as one thunderbolt thrown 10 m on: 12 a spike, 20 stagger and two Static to all on the line.",
                         Effects = new[]
                         {
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Forged, Seconds = 6f, Keeps = AfflictionKind.Static, EndsWith = ConditionBlow.Heavy } },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Forged, Seconds = 6f, Keeps = AfflictionKind.Static, EndsWith = ConditionBlow.Heavy, Is = Reactions.IronLive } },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Forged, By = StruckBy.Heavy, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Static, Count = 3 },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Forged, By = StruckBy.Heavy, Do = UpgradeAction.Lane, Reach = 10f, Radius = 0.6f, DamagePerSpent = 12f, Stagger = 20f,
                                 Affliction = AfflictionKind.Static, Stacks = 2 },
@@ -61,16 +61,15 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.Foot));
 
-            // Every third weapon blow on each enemy, counted on it, calls the bolt, at most every 0.3 s.
-            // NEEDS: the blows counted on an enemy in another mark's condition (condition-needs: a Live Iron enemy); now on an
-            // enemy both notched and charged.
+            // Every third weapon blow on each enemy, counted on it, calls the bolt, at most every 0.3 s: blows on an enemy whose
+            // iron is live from Live Iron, in whichever shape (UpgradeEffect.InState).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = ThreeSmiths, Name = "Three Smiths", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Hammer,
                 Description = "Every third weapon blow on a Live Iron enemy is answered from the sky: a bolt for 12, 15 stagger and a Static.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.AnyHit, Needs = AfflictionKind.Sundered, Needs2 = AfflictionKind.Static, EveryOnEnemy = 3, Do = UpgradeAction.Falling, Radius = 1f, Delay = 0.3f,
+                    new UpgradeEffect { On = UpgradeTrigger.AnyHit, InState = Reactions.IronLive, EveryOnEnemy = 3, Do = UpgradeAction.Falling, Radius = 1f, Delay = 0.3f,
                         Damage = 12f, Stagger = 15f, Affliction = AfflictionKind.Static, Stacks = 1, Cooldown = 0.3f },
                 },
             }, HeartPattern.LeftLow));

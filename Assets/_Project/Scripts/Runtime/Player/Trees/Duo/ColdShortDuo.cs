@@ -46,7 +46,7 @@ namespace Clover.Player.Trees.Duo
                         Description = "It goes brittle and your next heavy blow cracks the plates off, as before; and the cracked plate falls as a sheet of black ice 2 m across under it for 4 s. Enemies on it slip flat for 0.6 s.",
                         Effects = new[]
                         {
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = PlateBrittle, Seconds = 5f, Keeps = AfflictionKind.Sundered, EndsWith = ConditionBlow.Heavy } },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = PlateBrittle, Seconds = 5f, Keeps = AfflictionKind.Sundered, EndsWith = ConditionBlow.Heavy, Is = Reactions.Brittle } },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = PlateBrittle, By = StruckBy.Heavy, Do = UpgradeAction.Condition,
                                 State = new ConditionSpec { Id = PlateCracked, Seconds = 6f, Flags = ConditionFlags.WeaponTakenShare, Scale = 1.25f } },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = PlateBrittle, By = StruckBy.Heavy, Do = UpgradeAction.Condition,
@@ -64,7 +64,7 @@ namespace Clover.Player.Trees.Duo
                         Effects = new[]
                         {
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition,
-                                State = new ConditionSpec { Id = Snapped, Seconds = 5f, Keeps = AfflictionKind.Sundered, Flags = ConditionFlags.DamageDealtShare, Scale = 0.5f } },
+                                State = new ConditionSpec { Id = Snapped, Seconds = 5f, Keeps = AfflictionKind.Sundered, Flags = ConditionFlags.DamageDealtShare, Scale = 0.5f, Is = Reactions.Brittle } },
                         },
                     },
                 },
@@ -81,17 +81,16 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.LeftLow));
 
-            // NEEDS: an answer to an enemy in a condition another mark set (condition-needs): the brittle enemy; now Glass Bell
-            // keeps its own 5 s from each Cold Short, ended by a heavy blow as the plain brittleness is.
+            // Each weapon blow on an enemy brittle from Cold Short, in whichever shape (UpgradeEffect.InState); the heavy blow
+            // that cracks the brittleness still rings.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = GlassBell, Name = "Glass Bell", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Ring,
                 Description = "Each blow on a brittle enemy rings like glass: 3 mana, and 0.3 s off every running spell cooldown.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = Reaction, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Ringing, Seconds = 5f, EndsWith = ConditionBlow.Heavy } },
-                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Ringing, By = StruckBy.Weapon, Cooldown = 0.1f, Do = UpgradeAction.Mana, Amount = 3f },
-                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Ringing, By = StruckBy.Weapon, Cooldown = 0.1f, Do = UpgradeAction.CutCooldowns, Amount = 0.3f },
+                    new UpgradeEffect { On = UpgradeTrigger.AnyHit, InState = Reactions.Brittle, Cooldown = 0.1f, Do = UpgradeAction.Mana, Amount = 3f },
+                    new UpgradeEffect { On = UpgradeTrigger.AnyHit, InState = Reactions.Brittle, Cooldown = 0.1f, Do = UpgradeAction.CutCooldowns, Amount = 0.3f },
                 },
             }, HeartPattern.RightLow));
 

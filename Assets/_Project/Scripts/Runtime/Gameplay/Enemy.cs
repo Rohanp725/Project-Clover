@@ -651,8 +651,8 @@ namespace Clover.Gameplay
                 Vfx.Play(VfxKind.TintRing, transform.position + Vector3.up * 0.3f, Vector3.up, 1f, Gameplay.Afflictions.Spec(AfflictionKind.Chill).Colour);
             }
             // Read before this blow lays anything of its own: the blow is judged against what was already there.
-            float takes = Afflictions.DamageTakenMultiplier(hit.Spell) * harder;
-            float unsteadies = Afflictions.StaggerTakenMultiplier * harder;
+            float takes = Afflictions.DamageTakenMultiplier(hit.Spell, hit.Heavy) * harder;
+            float unsteadies = Afflictions.StaggerTakenFor(hit.Spell) * harder;
             float shoved = Afflictions.ShoveMultiplier;
             Afflictions.TakeFrom(hit, this, shattered);
             // Ground that only lays an affliction is not a blow: it does not shove, flinch, wear poise or meet the guard.

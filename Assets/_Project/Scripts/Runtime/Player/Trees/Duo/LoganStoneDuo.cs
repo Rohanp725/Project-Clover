@@ -75,18 +75,17 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.LeftLow));
 
-            // NEEDS: an answer to an enemy in a condition another mark set (condition-needs): the felled enemy; now New Face
-            // counts the rocking's weapon blows itself from each Logan Stone, and after the third (the fall) the next weapon blow
-            // on a plain enemy within 1.8 s is critical and gives you 6 mana back.
+            // The felled enemy read from the enemy, in whichever shape: at the rocking's third weapon blow (the fall, whoever's
+            // rocking it is: UpgradeEffect.AnyMark) the opening is set, and it lasts only while the enemy lies felled
+            // (ConditionSpec.WhileIn). The first weapon blow in it is critical and gives you 6 mana back.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = NewFace, Name = "New Face", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Star,
                 Description = "Your first blow on a felled enemy is critical and gives you 6 mana back.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = Reaction, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Counted, Seconds = 3f, Blows = 3 } },
-                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Counted, By = StruckBy.Weapon, AtCount = 3, Ranks = EnemyRank.Plain, Do = UpgradeAction.Condition,
-                        State = new ConditionSpec { Id = Face, Seconds = 1.8f, Flags = ConditionFlags.TakesCritical, EndsWith = ConditionBlow.Weapon } },
+                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Reactions.Rocking, AnyMark = true, By = StruckBy.Weapon, AtCount = 3, Ranks = EnemyRank.Plain, Do = UpgradeAction.Condition,
+                        State = new ConditionSpec { Id = Face, Seconds = 4f, Flags = ConditionFlags.TakesCritical, EndsWith = ConditionBlow.Weapon, WhileIn = Reactions.Felled } },
                     new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Face, By = StruckBy.Weapon, Do = UpgradeAction.Mana, Amount = 6f },
                 },
             }, HeartPattern.RightLow));
@@ -132,12 +131,12 @@ namespace Clover.Player.Trees.Duo
             string rocking = prefix + ".rocking", lean = prefix + ".lean";
             var effects = new List<UpgradeEffect>
             {
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = rocking, Seconds = 3f, Blows = 3 } },
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = rocking, Seconds = 3f, Blows = 3, Is = Reactions.Rocking } },
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = lean, Seconds = 3f, Flags = ConditionFlags.StaggerTakenShare, Scale = 1.25f } },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = rocking, By = StruckBy.Weapon, AtCount = 1, Do = UpgradeAction.Condition,
                     State = new ConditionSpec { Id = lean, Seconds = 2f, Flags = ConditionFlags.StaggerTakenShare, Scale = 1.5f } },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = rocking, By = StruckBy.Weapon, AtCount = 3, Ranks = EnemyRank.Plain, Do = UpgradeAction.Condition,
-                    State = new ConditionSpec { Id = prefix + ".felled", Seconds = felled, Flags = ConditionFlags.Down } },
+                    State = new ConditionSpec { Id = prefix + ".felled", Seconds = felled, Flags = ConditionFlags.Down, Is = Reactions.Felled } },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = rocking, By = StruckBy.Weapon, AtCount = 3, Ranks = EnemyRank.Plain, Do = UpgradeAction.Burst, Radius = 3f,
                     Damage = 20f, Stagger = 30f, Affliction = AfflictionKind.Tremor, Stacks = 1 },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = rocking, By = StruckBy.Weapon, AtCount = 3, Ranks = EnemyRank.Elite, Do = UpgradeAction.Burst, Radius = 0.5f,

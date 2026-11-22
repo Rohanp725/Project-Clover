@@ -57,16 +57,15 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.Foot));
 
-            // NEEDS: a mark's answer to an enemy in a condition (condition-needs: swollen); now a perfect guard against one
-            // both Soaked and Cursed, once a second.
+            // A perfect guard against an enemy swollen from Drowned Weight, in whichever shape (UpgradeEffect.InState).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = HeldUnder, Name = "Held Under", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Shield,
                 Description = "A perfect guard against a swollen enemy pushes it down knee-deep: held 1 s, and the attack it was making is lost.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Needs = AfflictionKind.Soaked, Needs2 = AfflictionKind.Cursed, Do = UpgradeAction.Flinch, Seconds = 0.4f, Cooldown = 1f },
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Needs = AfflictionKind.Soaked, Needs2 = AfflictionKind.Cursed, Do = UpgradeAction.Hold, Seconds = 1f, Cooldown = 1f },
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, InState = Reactions.Swollen, Do = UpgradeAction.Flinch, Seconds = 0.4f },
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, InState = Reactions.Swollen, Do = UpgradeAction.Hold, Seconds = 1f },
                 },
             }, HeartPattern.LeftLow));
 
@@ -143,7 +142,8 @@ namespace Clover.Player.Trees.Duo
             var effects = new List<UpgradeEffect>
             {
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition,
-                    State = new ConditionSpec { Id = prefix, Seconds = 5f, Flags = ConditionFlags.WeaponTakenShare, Scale = 1.15f, EndsWith = bursts ? ConditionBlow.Heavy : ConditionBlow.None } },
+                    State = new ConditionSpec { Id = prefix, Seconds = 5f, Flags = ConditionFlags.WeaponTakenShare, Scale = 1.15f, EndsWith = bursts ? ConditionBlow.Heavy : ConditionBlow.None,
+                        Is = Reactions.Swollen } },
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = prefix + ".heavy", Seconds = 5f, Pace = 0.8f } },
             };
             if (bursts)

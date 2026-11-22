@@ -27,5 +27,7 @@ namespace Clover.Gameplay
         public bool Shattered;
         /// <summary>For a blow: it was a critical hit.</summary>
         public bool Critical;
+        /// <summary>What it is beyond its own name (<see cref="ConditionSpec.Is"/>): the plain reaction's name for a shape's same state, or empty.</summary>
+        public string Is;
     }
 }

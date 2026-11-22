@@ -31,15 +31,13 @@ are both carried.
 ## chokedamp.lamp
 **What it does.** Your weapon breaks the balance of enemies standing in the poison gas a quarter faster.
 
-**When it happens.** For 5 seconds after each Chokedamp, on the enemy it went off on and on shaken enemies near it, while you carry both Earth and Poison.
+**When it happens.** While an enemy is in the damp from Chokedamp, while you carry both Earth and Poison. With Blackdamp, that means the enemies caught in the pool as it forms.
 
-**The numbers.** Mix, 3 Shards. A quarter more stagger on the enemy Chokedamp went off on, and on up to three shaken enemies within 7 metres, for 5 seconds.
+**The numbers.** Mix, 3 Shards. Your weapon breaks their balance a quarter faster. Spells do not. It ends when the damp leaves them.
 
 **Works with.** Chokedamp, Foul Ground, Seam of Ore.
 
 **Example.** Fill a pack with poison gas, then break their balance one after another.
-
-**Not built yet.** For now, it keeps its own 5-second timer from each Chokedamp, instead of checking who is standing in the gas. It also raises all the stagger those enemies take, even from spells, not only from your weapon.
 
 ## chokedamp.seam
 **What it does.** Each time poison bites a shaken enemy, the ground shakes under it. Every enemy within 2 metres gets a Tremor.

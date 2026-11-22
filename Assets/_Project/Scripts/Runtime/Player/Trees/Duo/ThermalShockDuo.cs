@@ -40,7 +40,7 @@ namespace Clover.Player.Trees.Duo
                         Effects = new[]
                         {
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Burst, Radius = 0.5f, Damage = 14f, Affliction = AfflictionKind.Chill },
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Shards, Seconds = 5f, EndsWith = ConditionBlow.Heavy } },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Shards, Seconds = 5f, EndsWith = ConditionBlow.Heavy, Is = Reactions.Cracked } },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Shards, By = StruckBy.Heavy, Do = UpgradeAction.Burst, Radius = 0.5f, Damage = 30f, Stagger = 40f, Affliction = AfflictionKind.Burn },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Shards, By = StruckBy.Heavy, Do = UpgradeAction.Burst, Radius = 3f, Damage = 8f, Affliction = AfflictionKind.Burn, Stacks = 1, Delay = 0.1f, Cascades = true },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Shards, By = StruckBy.Heavy, Do = UpgradeAction.Afflict, Radius = 3f, Affliction = AfflictionKind.Chill, Stacks = 1, Cascades = true },
@@ -53,7 +53,7 @@ namespace Clover.Player.Trees.Duo
                         Effects = new[]
                         {
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Burst, Radius = 0.5f, Damage = 14f, Affliction = AfflictionKind.Chill },
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Crazing, Seconds = 30f, Beat = 1.5f, While = AfflictionKind.Burn, While2 = AfflictionKind.Chill } },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Crazing, Seconds = 30f, Beat = 1.5f, While = AfflictionKind.Burn, While2 = AfflictionKind.Chill, Is = Reactions.Cracked } },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = Crazing, Do = UpgradeAction.Burst, Radius = 0.5f, Damage = 10f, Stagger = 12f, Affliction = AfflictionKind.Chill },
                         },
                     },
@@ -71,12 +71,18 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.LeftLow));
 
-            // NEEDS: an answer to an enemy in a condition (Cracked); now a perfect guard against one carrying both splits it.
+            // A perfect guard against a Cracked enemy (the plain crack, Hot Shards' or Crazing's) splits it at once: the crack
+            // takes the heavy blow it waits for, so it splits as its own shape splits and is spent. Crazing's crack waits for
+            // no blow; it splits once now, as at its beat.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = HotStoneColdWater, Name = "Hot Stone, Cold Water", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Shield,
                 Description = "A perfect guard against a Cracked enemy splits it at once.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Needs = AfflictionKind.Burn, Needs2 = AfflictionKind.Chill, Do = UpgradeAction.Burst, Radius = 0.5f, Damage = 30f, Stagger = 40f, Affliction = AfflictionKind.Burn } },
+                Effects = new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, InState = Reactions.Cracked, Do = UpgradeAction.StrikeCondition, Condition = Reactions.Cracked },
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, InState = Crazing, Do = UpgradeAction.Burst, Radius = 0.5f, Damage = 10f, Stagger = 12f, Affliction = AfflictionKind.Chill },
+                },
             }, HeartPattern.RightLow));
 
             // Each of the two kept from fading while the other is carried (AfflictionRules.KeepWhile).

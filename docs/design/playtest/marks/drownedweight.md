@@ -22,13 +22,11 @@ Dark are both carried.
 
 **When it happens.** Each perfect guard against a swollen enemy, while you carry both Water and Dark.
 
-**The numbers.** Mix, 3 Shards. The enemy flinches (whatever it had started is lost) and is held for 1 second (0.4 for elites), at most once a second.
+**The numbers.** Mix, 3 Shards. The enemy flinches (whatever it had started is lost) and is held for 1 second (0.4 for elites).
 
 **Works with.** Drowned Weight, The Debt Passes, Under the Black Water.
 
 **Example.** Block the swollen brute's swing perfectly, and it stands sunk in place for your heavy blow.
-
-**Not built yet.** For now, it works on any enemy that is both Soaked and Cursed, whether it is swollen or not.
 
 ## drownedweight.deepswell
 **What it does.** Drowned Weight keeps the enemy swollen 2 seconds longer, and its burst reaches 5 metres.

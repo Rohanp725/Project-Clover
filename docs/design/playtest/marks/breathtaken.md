@@ -35,18 +35,16 @@ both carried.
 
 **When it happens.** While an enemy is winded by Breath Taken (1.5 seconds; 0.6 for an elite), while you carry both Dark and Wind.
 
-**The numbers.** Mix, 3 Shards. Your weapon does 1.5 times its damage on the winded enemy. Each heavy blow takes 1 second off every spell's wait, at most once every 0.3 seconds.
+**The numbers.** Mix, 3 Shards. Your heavy blows do 1.5 times their damage on the winded enemy. Light blows hit as usual. Each heavy blow takes 1 second off every spell's wait, at most once every 0.3 seconds. It ends the moment the enemy gets its breath back.
 
 **Works with.** Breath Taken and its shapes, Ill Omen.
 
 **Example.** Wind the enemy, then hit it with a heavy blow while it gasps for air.
 
-**Not built yet.** For now, it keeps its own timer for how long each Breath Taken leaves the enemy winded. Every weapon blow hits harder during that time, not only heavy blows.
-
 ## breathtaken.lastbreath
 **What it does.** When a winded enemy dies, its last breath bursts out as a black gust. Every enemy within 4 metres is pushed 3 metres and Cursed.
 
-**When it happens.** When an enemy dies while it is still winded by Breath Taken (1.5 seconds; 0.6 for an elite), while you carry both Dark and Wind.
+**When it happens.** When an enemy dies while it is still winded by Breath Taken, in any shape (1.5 seconds; 0.6 for an elite), while you carry both Dark and Wind.
 
 **The numbers.** Mix, keystone, 5 Shards. A 3-metre push and a Curse on every enemy within 4 metres.
 

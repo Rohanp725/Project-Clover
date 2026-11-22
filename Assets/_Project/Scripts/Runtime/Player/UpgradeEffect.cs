@@ -69,6 +69,12 @@ namespace Clover.Player
         /// (Mirror to Mirror: on from each struck that carries Sundered).
         /// </summary>
         public AfflictionKind LeapsOnFrom = AfflictionKind.None;
+        /// <summary>
+        /// Not empty: the target (or the dead one, for a kill) must be in this enemy condition, whichever mark set it,
+        /// known by its name or by what it is (<see cref="ConditionSpec.Is"/>): Hot Stone, Cold Water asks for a Cracked
+        /// enemy, Hel's Half for one whose warmth is stolen. A blow that spent the condition still finds it.
+        /// </summary>
+        public string InState = "";
         /// <summary>The stacks it lays are as many as the trigger carried: what the dead enemy bore of <see cref="Needs"/>, or what a set-off spent.</summary>
         public bool CarriesDepth;
         /// <summary>Only while this state of the player holds.</summary>

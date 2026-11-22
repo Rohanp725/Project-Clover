@@ -43,6 +43,10 @@ namespace Clover.Gameplay
         public float SpellTakenScale { get; private set; } = 1f;
         /// <summary>What the stagger it takes is multiplied by.</summary>
         public float StaggerScale { get; private set; } = 1f;
+        /// <summary>What the damage it takes from heavy weapon blows is multiplied by, beyond the weapon's own share.</summary>
+        public float HeavyTakenScale { get; private set; } = 1f;
+        /// <summary>What the stagger it takes from weapon blows is multiplied by, beyond <see cref="StaggerScale"/>.</summary>
+        public float WeaponStaggerScale { get; private set; } = 1f;
         /// <summary>How far it sees while its sight is cut short; 0 when it is not.</summary>
         public float Sight { get; private set; }
         /// <summary>The afflictions kept from fading and from being spent by blows, as bits at <c>1 &lt;&lt; (int)kind</c>.</summary>
@@ -103,7 +107,68 @@ namespace Clover.Gameplay
 
         public ConditionRun Run(int slot) => runs[slot];
 
-        public bool Holds(string id) => Find(id, null, -2) >= 0;
+        /// <summary>True while a condition runs under this name, or is this by what it is (<see cref="ConditionSpec.Is"/>): Hot Shards' crack is a Cracked one.</summary>
+        public bool Holds(string id)
+        {
+            if (string.IsNullOrEmpty(id)) return false;
+            for (int i = 0; i < Slots; i++)
+                if (runs[i].Active && (runs[i].Id == id || runs[i].Is == id)) return true;
+            return false;
+        }
+
+        /// <summary>
+        /// True while it <see cref="Holds"/> the condition, or a blow spent it since the last step: the heavy blow that
+        /// cracks a brittle enemy still landed on a brittle one, for whoever asks after the blow (Glass Bell).
+        /// </summary>
+        public bool Held(string id)
+        {
+            if (Holds(id)) return true;
+            for (int i = 0; i < spentCount; i++)
+                if (spentNames[i] == id) return true;
+            return false;
+        }
+
+        /// <summary>
+        /// A weapon blow told to the conditions under this name (or that are this) alone, as if it landed on them now
+        /// (Hot Stone, Cold Water: a perfect guard splits the crack): each counts it and answers it, and one such a blow
+        /// spends ends. The enemy itself takes nothing. Returns how many it reached.
+        /// </summary>
+        public int StrikeWhere(string id, bool heavy)
+        {
+            if (Count == 0 || string.IsNullOrEmpty(id)) return 0;
+            int reached = 0;
+            bool spentAny = false;
+            for (int i = 0; i < Slots; i++)
+            {
+                if (!runs[i].Active || (runs[i].Id != id && runs[i].Is != id)) continue;
+                ref var run = ref runs[i];
+                reached++;
+                run.Blows++;
+                if (run.AnswersStruck) Tell(ConditionMoment.Struck, in run, 0f, heavy, false);
+                if (!SpentBy(in run, heavy, false)) continue;
+                NoteSpent(in run);
+                runs[i] = default;
+                spentAny = true;
+            }
+            if (spentAny) Recount();
+            return reached;
+        }
+
+        // The names of what a blow spent since the last step (each run's name and what it is).
+        private readonly string[] spentNames = new string[Slots * 2];
+        private int spentCount;
+
+        private void NoteSpent(in ConditionRun run)
+        {
+            if (spentCount < spentNames.Length) spentNames[spentCount++] = run.Id;
+            if (!string.IsNullOrEmpty(run.Is) && spentCount < spentNames.Length) spentNames[spentCount++] = run.Is;
+        }
+
+        private void ForgetSpent()
+        {
+            for (int i = 0; i < spentCount; i++) spentNames[i] = null;
+            spentCount = 0;
+        }
 
         /// <summary>Seconds the named condition has left (the longest, when it runs more than once); 0 when it does not run.</summary>
         public float Left(string id)
@@ -167,6 +232,8 @@ namespace Clover.Gameplay
             run.OnBite = spec.OnBite;
             run.EndsWith = spec.EndsWith;
             run.BlowLimit = Math.Max(0, spec.Blows);
+            run.Is = spec.Is;
+            run.WhileIn = spec.WhileIn;
             Recount();
             if (fresh) Tell(ConditionMoment.Began, in run, 0f, false, false);
             return slot;
@@ -175,6 +242,7 @@ namespace Clover.Gameplay
         /// <summary>Advances every running condition: beats come, and those whose time is up end.</summary>
         public void Tick(float deltaTime)
         {
+            if (spentCount > 0) ForgetSpent();
             if (Count == 0) return;
             int ended = 0;
             for (int i = 0; i < Slots; i++)
@@ -182,7 +250,8 @@ namespace Clover.Gameplay
                 if (!runs[i].Active) continue;
                 ref var run = ref runs[i];
                 run.Left -= deltaTime;
-                if (run.Left <= 0f)
+                // One that lasts only while another holds ends with it (New Face's opening, while the enemy lies felled).
+                if (run.Left <= 0f || (!string.IsNullOrEmpty(run.WhileIn) && !Holds(run.WhileIn)))
                 {
                     EndInto(i, ref ended);
                     continue;
@@ -240,6 +309,7 @@ namespace Clover.Gameplay
                 if (!spell) run.Blows++;
                 if (run.AnswersStruck) Tell(ConditionMoment.Struck, in run, damage, heavy, spell, shattered, critical);
                 if (!SpentBy(in run, heavy, spell)) continue;
+                NoteSpent(in run);
                 runs[i] = default;
                 spentAny = true;
             }
@@ -284,6 +354,7 @@ namespace Clover.Gameplay
         public void Clear()
         {
             for (int i = 0; i < Slots; i++) runs[i] = default;
+            ForgetSpent();
             Recount();
         }
 
@@ -336,7 +407,7 @@ namespace Clover.Gameplay
         {
             int count = 0, keeps = 0;
             var flags = ConditionFlags.None;
-            float pace = 1f, windup = 1f, taken = 1f, dealt = 1f, weapon = 1f, spellTaken = 1f, stagger = 1f, sight = 0f;
+            float pace = 1f, windup = 1f, taken = 1f, dealt = 1f, weapon = 1f, spellTaken = 1f, stagger = 1f, sight = 0f, heavyTaken = 1f, weaponStagger = 1f;
             for (int i = 0; i < Slots; i++)
             {
                 if (!runs[i].Active) continue;
@@ -351,6 +422,8 @@ namespace Clover.Gameplay
                 if ((run.Flags & ConditionFlags.WeaponTakenShare) != 0) weapon *= run.Scale;
                 if ((run.Flags & ConditionFlags.SpellTakenShare) != 0) spellTaken *= run.Scale;
                 if ((run.Flags & ConditionFlags.StaggerTakenShare) != 0) stagger *= run.Scale;
+                if ((run.Flags & ConditionFlags.HeavyTakenShare) != 0) heavyTaken *= run.Scale;
+                if ((run.Flags & ConditionFlags.WeaponStaggerShare) != 0) weaponStagger *= run.Scale;
                 if ((run.Flags & ConditionFlags.SightShort) != 0) sight = sight > 0f ? Math.Min(sight, run.Sight) : run.Sight;
             }
             Count = count;
@@ -363,6 +436,8 @@ namespace Clover.Gameplay
             WeaponTakenScale = weapon;
             SpellTakenScale = spellTaken;
             StaggerScale = stagger;
+            HeavyTakenScale = heavyTaken;
+            WeaponStaggerScale = weaponStagger;
             Sight = sight;
         }
 
@@ -371,7 +446,7 @@ namespace Clover.Gameplay
             var news = new ConditionNews
             {
                 Moment = moment, Id = run.Id, Mark = run.Mark, Count = run.Count, Blows = run.Blows, Flags = run.Flags, Scale = run.Scale, Link = run.Link,
-                Damage = damage, Heavy = heavy, Spell = spell, Shattered = shattered, Critical = critical,
+                Damage = damage, Heavy = heavy, Spell = spell, Shattered = shattered, Critical = critical, Is = run.Is,
             };
             if (Report != null) Report(Who, news);
             else CombatEvents.RaiseCondition(Who, news);

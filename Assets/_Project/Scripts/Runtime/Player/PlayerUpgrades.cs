@@ -1228,8 +1228,10 @@ namespace Clover.Player
             for (int i = 0; i < list.Count; i++)
             {
                 var effect = list[i];
-                if (!effect.AnyMark || effect.Condition != news.Id) continue;
+                // By its own name, or by what it is: a shape's rocking is a Logan Stone's rocking (New Face).
+                if (!effect.AnyMark || (effect.Condition != news.Id && effect.Condition != news.Is)) continue;
                 if (trigger == UpgradeTrigger.ConditionStruck && !PlayerReactions.Answers(effect.By, news)) continue;
+                if (effect.AtCount > 0 && effect.AtCount != (trigger == UpgradeTrigger.ConditionBeat ? news.Count : news.Blows)) continue;
                 Consider(effect, who, at, true);
                 any = true;
             }
@@ -1276,6 +1278,8 @@ namespace Clover.Player
                 }
                 if (effect.Needs2 != AfflictionKind.None && !carried.Has(effect.Needs2)) return;
             }
+            // In a condition another mark set (the ledger's condition-needs): asked of the dead one, or of the trigger's enemy.
+            if (!string.IsNullOrEmpty(effect.InState) && !InState(effect.InState, dead, target)) return;
             // A reaction's own numbers for an elite or a god (the ranks are read from what decides holding).
             if (effect.Ranks != EnemyRank.Any && !(target is IAfflictable ranked && (ranked.Afflictions.Rank & effect.Ranks) != 0)) return;
             // Weapon blows lay only the first element's affliction, except from a mark on a mixed branch (MarkRules.BlowMayLay
@@ -1317,6 +1321,16 @@ namespace Clover.Player
             if (effect.CooldownPerEnemy && kept != null) kept.Start(effect.Slot, Time.time, wait);
             else readyAt[effect.Slot] = Time.time + wait;
             Enqueue(new Pending { Effect = effect, Target = target, At = at, HasAt = hasAt, Spent = spent, Less = less, Source = source, Power = power, Ripe = ripeScale });
+        }
+
+        /// <summary>
+        /// True when what died carried the condition (by its name or what it is), or else the one struck does, or a blow
+        /// that just landed on it spent it (<see cref="EnemyConditions.Held"/>).
+        /// </summary>
+        public static bool InState(string state, AfflictionSet dead, Component target)
+        {
+            var set = dead ?? (target is IAfflictable afflicted ? afflicted.Afflictions : null);
+            return set != null && set.Conditions.Held(state);
         }
 
         private void Enqueue(in Pending pending)
@@ -1956,6 +1970,9 @@ namespace Clover.Player
                     break;
                 case UpgradeAction.Condition:
                     ConditionsSet += ConditionCaster.Cast(effect, subject, centre, combat, laying, conditionScratch, per);
+                    break;
+                case UpgradeAction.StrikeCondition:
+                    if (subject is IAfflictable split) split.Afflictions.Conditions.StrikeWhere(effect.Condition, true);
                     break;
                 case UpgradeAction.CutCooldowns:
                 case UpgradeAction.ResetCooldown:

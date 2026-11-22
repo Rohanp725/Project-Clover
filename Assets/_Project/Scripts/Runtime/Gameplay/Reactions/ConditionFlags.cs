@@ -46,5 +46,9 @@ namespace Clover.Gameplay
         /// drawn on the body as plain flame while this holds (the owner's word of 2026-11-20). The Burn still bites.
         /// </summary>
         FlameLive = 1 << 13,
+        /// <summary>The damage it takes from heavy weapon blows only is multiplied by the run's Scale (Short of Breath).</summary>
+        HeavyTakenShare = 1 << 14,
+        /// <summary>The stagger it takes from weapon blows only is multiplied by the run's Scale (The Lamp Goes Out).</summary>
+        WeaponStaggerShare = 1 << 15,
     }
 }

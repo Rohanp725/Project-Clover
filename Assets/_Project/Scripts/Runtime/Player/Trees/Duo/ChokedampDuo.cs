@@ -43,7 +43,7 @@ namespace Clover.Player.Trees.Duo
                         Effects = new[]
                         {
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Radius = 1.75f, Seconds = 7f, Interval = 1f, Affliction = AfflictionKind.Poison, Stacks = 1 },
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, Radius = 1.75f, State = new ConditionSpec { Id = Black, Seconds = 7f, Pace = 0.8f } },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, Radius = 1.75f, State = new ConditionSpec { Id = Black, Seconds = 7f, Pace = 0.8f, Is = Reactions.Damp } },
                         },
                     },
                     new ShapeDef
@@ -72,17 +72,17 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.LeftLow));
 
-            // NEEDS: an answer to an enemy in a condition another mark set (condition-needs): those standing in the damp; now
-            // The Lamp Goes Out keeps its own 5 s on the reacting enemy and the shaken ones within 7 m (three at most), as the
-            // plain damp runs, and the share is on every stagger they take, a spell's too.
+            // Those in the damp read from each enemy, in whichever shape: the share is set on all within 7 m of the reaction and
+            // lasts only while each is in the damp (ConditionSpec.WhileIn), so it leaves at once those the damp did not reach;
+            // it asks weapon blows alone (ConditionFlags.WeaponStaggerShare).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = TheLampGoesOut, Name = "The Lamp Goes Out", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Skull,
                 Description = "Your weapon breaks the balance of enemies standing in the damp a quarter harder.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = Reaction, Do = UpgradeAction.Condition, Radius = 7f, Count = 4, LeapsTo = AfflictionKind.Tremor,
-                        State = new ConditionSpec { Id = LampOut, Seconds = 5f, Flags = ConditionFlags.StaggerTakenShare, Scale = 1.25f } },
+                    new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = Reaction, Do = UpgradeAction.Condition, Radius = 7f, Count = 8,
+                        State = new ConditionSpec { Id = LampOut, Seconds = 7f, Flags = ConditionFlags.WeaponStaggerShare, Scale = 1.25f, WhileIn = Reactions.Damp } },
                 },
             }, HeartPattern.RightLow));
 

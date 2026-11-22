@@ -48,7 +48,7 @@ namespace Clover.Player.Trees.Duo
                         Description = "The notched armour glows red for 5 s and runs: every second it drips molten slag where it stands, a pool 0.8 m round that burns for 3 s, 3 and a Burn each second to whatever stands in it but its own wearer. Walk it through its friends.",
                         Effects = new[]
                         {
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Slag, Seconds = 5f, Beat = 1f, BitesHarder = AfflictionKind.Burn, BiteScale = 2f } },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Slag, Seconds = 5f, Beat = 1f, BitesHarder = AfflictionKind.Burn, BiteScale = 2f, Is = Reactions.Glowing } },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = Slag, Do = UpgradeAction.Hazard, Radius = 0.8f, Seconds = 3f, Interval = 1f, Damage = 3f,
                                 Affliction = AfflictionKind.Burn, Stacks = 1, SparesTarget = true },
                         },
@@ -59,7 +59,7 @@ namespace Clover.Player.Trees.Duo
                         Description = "No sparks: the hot plates cling. For 5 s it cannot guard, and every 1.5 s the metal sears it, a Burn deeper.",
                         Effects = new[]
                         {
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Shirt, Seconds = 5f, Beat = 1.5f, Flags = ConditionFlags.CannotGuard, BitesHarder = AfflictionKind.Burn, BiteScale = 2f } },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Shirt, Seconds = 5f, Beat = 1.5f, Flags = ConditionFlags.CannotGuard, BitesHarder = AfflictionKind.Burn, BiteScale = 2f, Is = Reactions.Glowing } },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = Shirt, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Burn, Stacks = 1 },
                         },
                     },
@@ -77,32 +77,29 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.LeftLow));
 
-            // NEEDS: an answer to an enemy in a condition another mark set (condition-needs): the red-hot enemy; now Strike While
-            // Hot keeps its own 5 s from each Red Hot.
+            // Each heavy blow on an enemy glowing red from Red Hot, in whichever shape (UpgradeEffect.InState).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = StrikeWhileHot, Name = "Strike While Hot", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Hammer,
                 Description = "Each heavy blow on a red-hot enemy gives 4 mana and takes 0.5 s off every running spell cooldown.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = Reaction, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Hot, Seconds = 5f } },
-                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Hot, By = StruckBy.Heavy, Do = UpgradeAction.Mana, Amount = 4f },
-                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Hot, By = StruckBy.Heavy, Do = UpgradeAction.CutCooldowns, Amount = 0.5f },
+                    new UpgradeEffect { On = UpgradeTrigger.HeavyHit, InState = Reactions.Glowing, Do = UpgradeAction.Mana, Amount = 4f },
+                    new UpgradeEffect { On = UpgradeTrigger.HeavyHit, InState = Reactions.Glowing, Do = UpgradeAction.CutCooldowns, Amount = 0.5f },
                 },
             }, HeartPattern.RightLow));
 
-            // NEEDS: a finisher as the blow a condition answers (finisher-only): now the first heavy blow on the red-hot enemy
-            // crumbles it, once for each Red Hot. And the red heat read from the enemy (condition-needs); now its own 5 s.
+            // Each finisher on an enemy glowing red from Red Hot, in whichever shape: the finisher itself (FinisherHit), not any
+            // heavy blow, and the red heat read from the enemy (UpgradeEffect.InState).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = RedShort, Name = "Red-Short", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { HeatedEdge, StrikeWhileHot }, Icon = UpgradeIcons.Burst,
                 Description = "A finisher on a red-hot enemy crumbles its armour: every notch is spent for 15 damage each, and for 10 s it takes 30% more from your weapon.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = Reaction, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Short, Seconds = 5f, EndsWith = ConditionBlow.Heavy } },
-                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Short, By = StruckBy.Heavy, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Sundered },
-                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Short, By = StruckBy.Heavy, Do = UpgradeAction.Burst, Radius = 0.5f, DamagePerSpent = 15f, Affliction = AfflictionKind.Sundered },
-                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Short, By = StruckBy.Heavy, Do = UpgradeAction.Condition,
+                    new UpgradeEffect { On = UpgradeTrigger.FinisherHit, InState = Reactions.Glowing, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Sundered },
+                    new UpgradeEffect { On = UpgradeTrigger.FinisherHit, InState = Reactions.Glowing, Do = UpgradeAction.Burst, Radius = 0.5f, DamagePerSpent = 15f, Affliction = AfflictionKind.Sundered },
+                    new UpgradeEffect { On = UpgradeTrigger.FinisherHit, InState = Reactions.Glowing, Do = UpgradeAction.Condition,
                         State = new ConditionSpec { Id = Crumbled, Seconds = 10f, Flags = ConditionFlags.WeaponTakenShare, Scale = 1.3f } },
                 },
             }, HeartPattern.Keystone));

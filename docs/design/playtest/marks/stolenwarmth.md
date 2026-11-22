@@ -20,15 +20,13 @@ are both carried.
 ## stolenwarmth.helshalf
 **What it does.** Killing an enemy whose warmth is being stolen Curses every enemy within 4 metres and gives each one two Chill.
 
-**When it happens.** Each kill, while you carry both Dark and Ice.
+**When it happens.** Each kill of an enemy whose warmth is being stolen by Stolen Warmth, in any shape, while you carry both Dark and Ice.
 
-**The numbers.** Mix, 3 Shards. For now: any enemy that dies while both Cursed and chilled puts a Curse and two Chill on everything within 4 metres, at most once every half second. Since this mark adds both at once, it starts Stolen Warmth on each of them.
+**The numbers.** Mix, 3 Shards. A Curse and two Chill on every enemy within 4 metres. Since this mark adds both at once, it can start Stolen Warmth on each of them.
 
 **Works with.** Stolen Warmth (it spreads from body to body), Three Winters, No Summer.
 
 **Example.** Kill one enemy in the pack, and the cold spreads into the rest.
-
-**Not built yet.** For now, it works on any enemy that dies Cursed and chilled, whether its warmth was being stolen or not.
 
 ## stolenwarmth.deepveins
 **What it does.** Each blow on an enemy whose warmth is being stolen draws 3 health instead of 2, up to 12 a second.

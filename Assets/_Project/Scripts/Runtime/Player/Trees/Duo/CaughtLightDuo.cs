@@ -45,7 +45,7 @@ namespace Clover.Player.Trees.Duo
                         Effects = new[]
                         {
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Radius = 2.5f, Seconds = 4f, Interval = 0.5f, Affliction = AfflictionKind.Marked, Stacks = 1 },
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, Radius = 2.5f, State = new ConditionSpec { Id = Hauled, Seconds = 4f, Pace = 0.75f } },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, Radius = 2.5f, State = new ConditionSpec { Id = Hauled, Seconds = 4f, Pace = 0.75f, Is = Reactions.LightNet } },
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Bearer, Seconds = 4f } },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Bearer, Do = UpgradeAction.Pull, Radius = 2.5f, Amount = 2f },
                         },
@@ -90,8 +90,8 @@ namespace Clover.Player.Trees.Duo
             }, HeartPattern.RightLow));
 
             // While the net lies, every blow on those in it is critical, as a mark of light makes it, and no mark is spent.
-            // NEEDS: those who walk onto the net later (ground-states) and an answer to the net another mark lays
-            // (condition-needs); now Seen in the Water opens those within 3 m as each Caught Light fires, for its 4 s.
+            // The net read from each enemy, in whichever shape: the opening lasts only while it is caught in the net
+            // (ConditionSpec.WhileIn). NEEDS: those who walk onto the net later (ground-states); now only those caught as it falls.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = SeenInTheWater, Name = "Seen in the Water", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { BrightWater, SunOnTheSpray }, Icon = UpgradeIcons.Eye,
@@ -99,7 +99,7 @@ namespace Clover.Player.Trees.Duo
                 Effects = new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = Reaction, Do = UpgradeAction.Condition, Radius = 3f,
-                        State = new ConditionSpec { Id = Open, Seconds = 4f, Flags = ConditionFlags.TakesCritical } },
+                        State = new ConditionSpec { Id = Open, Seconds = 4f, Flags = ConditionFlags.TakesCritical, WhileIn = Reactions.LightNet } },
                 },
             }, HeartPattern.Keystone));
 

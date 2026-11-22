@@ -29,15 +29,13 @@ both carried.
 ## thermalshock.hotstone
 **What it does.** A perfect guard against a cracked enemy splits it right away.
 
-**When it happens.** Each perfect guard (press the guard button just before a blow lands) against an enemy that has both Burn and Chill.
+**When it happens.** Each perfect guard (press the guard button just before a blow lands) against a Cracked enemy, in any shape of Thermal Shock.
 
-**The numbers.** Mix, 3 Shards. 30 damage and 40 stagger.
+**The numbers.** Mix, 3 Shards. The crack splits just as a heavy blow would split it: 30 damage and 40 stagger, and with Hot Shards the shards fly too. The crack is used up. With Crazing, the crack splits once more right away: 10 damage and 12 stagger.
 
 **Works with.** Thermal Shock, Kiln Stance, Spark and Rime.
 
 **Example.** A cracked brute swings. Guard it perfectly, and it splits without your heavy blow.
-
-**Not built yet.** For now, it works on any attacker that has both afflictions, not only a cracked one.
 
 ## thermalshock.neitherwins
 **What it does.** On an enemy that has both, neither the Burn nor the Chill fades.

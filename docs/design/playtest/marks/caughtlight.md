@@ -44,15 +44,15 @@ Light are both carried.
 ## caughtlight.seen
 **What it does.** While an enemy is on the net, your blows on any other enemy on the net are critical hits, as if that enemy were Marked. No Mark is used up.
 
-**When it happens.** For 4 seconds after each Caught Light, while you carry both Water and Light.
+**When it happens.** While an enemy is caught in the net of light from Caught Light (4 seconds), while you carry both Water and Light.
 
-**The numbers.** Mix, keystone, 5 Shards. When the net opens, every enemy within 3 metres of the enemy it started on takes critical hits for 4 seconds. No Mark is used up by these hits.
+**The numbers.** Mix, keystone, 5 Shards. When the net opens, every enemy caught in it takes critical hits until the net lets it go. No Mark is used up by these hits.
 
 **Works with.** Caught Light (its net), Bright Water, Sun on the Spray.
 
 **Example.** Catch a pack in the net and land critical hits on all of them, saving their Marks for later.
 
-**Not built yet.** It only works on enemies within 3 metres when the net forms, not on enemies who walk onto it later. It also works with any shape, even The Fish's Eye, which makes no net.
+**Not built yet.** It only works on enemies caught when the net forms, not on enemies who walk onto it later.
 
 ## caughtlight.road
 **What it does.** A rainbow of falling spray arches from you to the enemy you face, if it is within 10 metres. You run along it, and nothing can hit you. You come down on the enemy with a falling cut that deals 18 damage and 30 stagger and adds Soaked and a Mark. The road stays for 3 seconds and Soaks and Marks anything standing in it.

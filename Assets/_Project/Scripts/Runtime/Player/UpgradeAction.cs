@@ -115,5 +115,12 @@ namespace Clover.Player
         /// over about two seconds (Venom). Reads: Share (0.1).
         /// </summary>
         Mend,
+        /// <summary>
+        /// The condition named in Condition on the target (by its name or by what it is) takes a heavy weapon blow now, as
+        /// if one landed on it: its answers to a heavy blow are done, and one a heavy blow spends ends (Hot Stone, Cold
+        /// Water: a perfect guard splits the crack, in whichever shape cracked it). The enemy itself takes nothing. Reads:
+        /// Condition.
+        /// </summary>
+        StrikeCondition,
     }
 }
