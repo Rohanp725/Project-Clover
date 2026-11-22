@@ -888,7 +888,7 @@ namespace Clover.EditorTools
             ["wind_strike|m3_wind_comb"] = 2f,
             ["lightning_static|m3_bolt"] = 1.3f,
             // Round 4's crawling arcs on a castle soldier: half again as thick, so a crawl reads round the armour.
-            ["rd_lightning_static|rd_bolt_cyan"] = 1.5f, ["rd_lightning_static|rd_bolt_violet"] = 1.5f,
+            ["rd_lightning_static|rd_bolt_cyan"] = 2.2f, ["rd_lightning_static|rd_bolt_violet"] = 2.2f,
             ["lightning_overdrive|m3_bolt"] = 1.3f,
             // The brazier's crackling ball: its arcs thicker, so the storm reads at the game camera (notes.md: "the arcs ...
             // are thin at 12 m").
