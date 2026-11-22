@@ -97,6 +97,11 @@ namespace Clover.Gameplay
         /// carrying the dead one's doses (StruckBy.DeathNear; the ledger's jar-deaths: Shut in the Dark's ring, 4 m across).
         /// </summary>
         public float DeathsWithin;
+        /// <summary>
+        /// Above zero: a discharge or arc within this many metres of its carrier bends into it and is told to it as a blow of its
+        /// own kind (StruckBy.Discharge; the ledger's bending-discharges: Flashover's live flame, 6 m).
+        /// </summary>
+        public float DischargesWithin;
         /// <summary>Metres its body is drawn down into the floor while it runs, for the look (The Ground Gives' sand: to the knees).</summary>
         public float Sink;
         /// <summary>

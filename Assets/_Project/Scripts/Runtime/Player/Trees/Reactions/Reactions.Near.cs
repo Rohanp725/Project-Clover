@@ -40,14 +40,15 @@ namespace Clover.Player.Trees
             // Fire and Lightning (1). Flame carries current: the Static on it discharges through the fire at once, and
             // none of the Burn is spent. The discharge is Static's own set-off (7 a stack in 3 m) with 4 stagger a stack
             // (20 at full depth), and it flinches.
-            // NEEDS: discharges that bend toward one enemy: for 4 s every discharge or arc within 6 m bends into the live
-            // flame and bursts again (5 a Burn stack in 2.5 m, once every 0.8 s). The live flame is set as a condition so
-            // that piece has something to find.
+            // For 4 s every discharge or arc within 6 m bends into the live flame (ConditionSpec.DischargesWithin, told as
+            // StruckBy.Discharge) and bursts again there: 5 a Burn stack in 2.5 m, once every 0.8 s on each flame.
             to.Add(Reaction(AfflictionKind.Burn, AfflictionKind.Static,
                 "Static meets Burn: the flame on it goes live and the Static discharges through it at once, 7 a stack in 3 m. The Burn is not spent.",
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Static, Radius = 3f, Stagger = 4f },
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Flinch, Seconds = 0.4f },
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = LiveFlame, Seconds = 4f, Flags = ConditionFlags.FlameLive } }));
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = LiveFlame, Seconds = 4f, Flags = ConditionFlags.FlameLive, DischargesWithin = 6f } },
+                new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = LiveFlame, By = StruckBy.Discharge, Needs = AfflictionKind.Burn, CountsNeeds = true, PerStack = true,
+                    Do = UpgradeAction.Burst, Radius = 2.5f, Damage = 5f, Stagger = 0f, Stacks = 0, Cooldown = 0.8f, CooldownPerEnemy = true }));
 
             // Lightning and Wind (2). Thrown 3 m straight away from the player; where it stops (0.4 s on) its Static goes
             // off as a heavy blow sets it off: 7 damage and 5 stagger a stack in 4 m. What cannot be shoved is not thrown

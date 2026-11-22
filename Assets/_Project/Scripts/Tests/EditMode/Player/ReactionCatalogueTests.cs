@@ -153,7 +153,9 @@ namespace Clover.Tests
                     bool blowsTaken = effect.On == UpgradeTrigger.ConditionEnded && effect.SpentAtLeast > 0;
                     // A death near the condition carries the dead one's doses (Shut in the Dark's jar, StruckBy.DeathNear).
                     bool deathNear = effect.On == UpgradeTrigger.ConditionStruck && effect.By == StruckBy.DeathNear;
-                    Assert.IsTrue(spentBefore || (effect.PerStack && (deadDepth || blowsTaken || deathNear)), where + ": counts a depth nothing gave it");
+                    // Or the depth of what it Needs, counted as the moment comes (Flashover's flame bursting by its Burn).
+                    bool countedNeeds = effect.CountsNeeds && effect.Needs != AfflictionKind.None;
+                    Assert.IsTrue(spentBefore || (effect.PerStack && (deadDepth || blowsTaken || deathNear || countedNeeds)), where + ": counts a depth nothing gave it");
                 }
 
                 // A condition spent by a blow answers that same kind of blow, so the blow that spends it is the one answered.

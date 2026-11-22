@@ -214,6 +214,47 @@ namespace Clover.Player
             nearSkip.Clear();
         }
 
+        /// <summary>The most metres a condition draws a discharge from (ConditionSpec.DischargesWithin).</summary>
+        public const float DischargesHeardWithin = 6f;
+        /// <summary>Discharges and arcs that bent into a condition near them (Flashover's live flame), counted for probes.</summary>
+        public int DischargesBent { get; private set; }
+
+        /// <summary>
+        /// A discharge or arc at <paramref name="at"/> (from <paramref name="from"/>, left out): told to every condition near that
+        /// draws discharges, as a blow of its own kind (Flashover: every discharge within 6 m bends into the live flame).
+        /// </summary>
+        public void HearDischarge(Component from, Vector3 at)
+        {
+            if (combat == null || upgrades == null) return;
+            nearSkip.Clear();
+            if (from is IDamageable fromBody) nearSkip.Add(fromBody);
+            var all = Upgrade.All;
+            for (int guard = 0; guard < 16; guard++)
+            {
+                var near = combat.EnemyNear(at, DischargesHeardWithin, nearSkip);
+                if (!(near is IDamageable body)) break;
+                nearSkip.Add(body);
+                if (!(near is IAfflictable hearer) || !hearer.Afflictions.Conditions.Any) continue;
+                Vector3 offset = near.transform.position - at;
+                offset.y = 0f;
+                for (int slot = 0; slot < EnemyConditions.Slots; slot++)
+                {
+                    var run = hearer.Afflictions.Conditions.Run(slot);
+                    if (!run.Active || run.DischargesWithin <= 0f || offset.magnitude > run.DischargesWithin || run.Mark < 0 || run.Mark >= all.Count) continue;
+                    var news = new ConditionNews { Moment = ConditionMoment.Struck, Id = run.Id, Mark = run.Mark, Count = run.Count, Blows = run.Blows, Flags = run.Flags,
+                        Scale = run.Scale, Link = run.Link, Is = run.Is, DischargeNear = true, Side = -1f };
+                    var mark = all[run.Mark];
+                    var source = SourceOf(mark);
+                    AnswerFrom(OwnEffects(mark), UpgradeTrigger.ConditionStruck, news, near, near.transform.position, source, 0);
+                    if (ReactionTable.IsReactionShape(mark))
+                        for (int shape = 0; shape < mark.Shapes.Length; shape++)
+                            if (mark.Shapes[shape] != null) AnswerFrom(ShapeEffects(mark, shape), UpgradeTrigger.ConditionStruck, news, near, near.transform.position, source, 0);
+                    DischargesBent++;
+                }
+            }
+            nearSkip.Clear();
+        }
+
         private void Drift(Component dead, Vector3 at, in ConditionRun run)
         {
             if (combat == null) return;
@@ -553,7 +594,8 @@ namespace Clover.Player
         /// <summary>True when a condition's blow is one the answer asks for (<see cref="UpgradeEffect.By"/>).</summary>
         public static bool Answers(StruckBy by, in ConditionNews news) =>
             // A shove is no blow, nor a death near: only what answers that hears it.
-            news.DiedNear ? by == StruckBy.DeathNear
+            news.DischargeNear ? by == StruckBy.Discharge
+            : news.DiedNear ? by == StruckBy.DeathNear
             : news.Shoved ? by == StruckBy.Shove
             : by == StruckBy.Any || (by == StruckBy.Weapon && !news.Spell) || (by == StruckBy.Heavy && news.Heavy) || (by == StruckBy.Shatter && news.Shattered)
             || (by == StruckBy.Critical && news.Critical && !news.Spell) || (by == StruckBy.Finisher && news.Finisher && !news.Spell)

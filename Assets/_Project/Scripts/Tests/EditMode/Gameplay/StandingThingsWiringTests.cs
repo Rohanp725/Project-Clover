@@ -1835,5 +1835,29 @@ namespace Clover.Tests
             jar.Conditions.Set(sealedRot.State, null);
             Assert.IsFalse(jar.BalanceRecovers, "held while sealed");
         }
+
+        [Test]
+        public void FlashoversLiveFlameDrawsDischargesIntoIt()
+        {
+            var flashover = Upgrade.ById(AfflictionPairs.Id(AfflictionPairs.Index(AfflictionKind.Burn, AfflictionKind.Static))).Effects;
+            var live = flashover.Single(each => each.State != null && each.State.Id == Reactions.LiveFlame).State;
+            Assert.AreEqual(6f, live.DischargesWithin, 1e-5f, "every discharge within 6 m");
+            var bent = flashover.Single(each => each.On == UpgradeTrigger.ConditionStruck);
+            Assert.AreEqual(StruckBy.Discharge, bent.By);
+            Assert.AreEqual(5f, bent.Damage, 1e-5f, "5 a Burn stack");
+            Assert.IsTrue(bent.PerStack && bent.CountsNeeds && bent.Needs == AfflictionKind.Burn);
+            Assert.AreEqual(2.5f, bent.Radius, 1e-5f);
+            Assert.AreEqual(0.8f, bent.Cooldown, 1e-5f, "once every 0.8 s");
+            Assert.IsTrue(bent.CooldownPerEnemy, "on each flame");
+
+            var discharge = new ConditionNews { DischargeNear = true };
+            Assert.IsTrue(PlayerReactions.Answers(StruckBy.Discharge, discharge));
+            Assert.IsFalse(PlayerReactions.Answers(StruckBy.Weapon, discharge), "a discharge is no blow");
+            Assert.IsFalse(PlayerReactions.Answers(StruckBy.Discharge, new ConditionNews()), "a blow is no discharge");
+
+            var set = new AfflictionSet { Reactions = new ReactionEngine((who, pair, laid) => { }, () => 0) };
+            int slot = set.Conditions.Set(live, null);
+            Assert.AreEqual(6f, set.Conditions.Run(slot).DischargesWithin, 1e-5f, "the run keeps its reach");
+        }
     }
 }

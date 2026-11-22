@@ -3060,6 +3060,8 @@ namespace Clover.Player
                     ElementLook.Strike(look, centre, 0.3f);
                     // Whatever waits on an affliction being spent is told, with how deep it was.
                     Trigger(UpgradeTrigger.SetOff, subject, centre, true, depth, null, kind, "", laying, damage);
+                    // A discharge bends into any live flame near (Flashover).
+                    if (kind == AfflictionKind.Static && reactionsFound != null) reactionsFound.HearDischarge(subject, centre);
                     break;
                 }
                 case UpgradeAction.Hold:
@@ -5020,6 +5022,8 @@ namespace Clover.Player
         /// </summary>
         public void OnArcLeft(Component left, float damage)
         {
+            // An arc bends into any live flame near (Flashover).
+            if (left != null && reactionsFound != null) reactionsFound.HearDischarge(left, left.transform.position);
             if (left == null || answeringArc || byTrigger == null || byTrigger[(int)UpgradeTrigger.ArcLeft].Count == 0) return;
             ArcsLeft++;
             Trigger(UpgradeTrigger.ArcLeft, left, left.transform.position, true, 0, null, AfflictionKind.None, "", LaySource.Effect, damage);

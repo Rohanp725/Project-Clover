@@ -419,6 +419,7 @@ namespace Clover.Gameplay
             run.EndsOnFreeze = spec.EndsOnFreeze;
             run.DriftsTo = Math.Max(0f, spec.DriftsTo);
             run.DeathsWithin = Math.Max(0f, spec.DeathsWithin);
+            run.DischargesWithin = Math.Max(0f, spec.DischargesWithin);
             run.Sink = Math.Max(0f, spec.Sink);
             run.Leash = Math.Max(0f, spec.Leash);
             run.LeashToPlayer = spec.LeashToPlayer;

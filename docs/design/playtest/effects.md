@@ -449,7 +449,7 @@ Title: Flashover (Fire and Lightning)
 Group: Reactions
 **What it is.** Static meets Burn. Flame carries electricity: the fire on the enemy becomes electrified, and its Static goes off through it right away.
 
-**The numbers.** The Static is used up, dealing 7 damage per stack to everyone within 3 metres, and 4 stagger per stack (20 when full). The enemy flinches for 0.4 seconds, which breaks a wind-up (but not a steadfast enemy's). The Burn isn't used up and keeps burning. Then it waits 4 seconds.
+**The numbers.** The Static is used up, dealing 7 damage per stack to everyone within 3 metres, and 4 stagger per stack (20 when full). The enemy flinches for 0.4 seconds, which breaks a wind-up (but not a steadfast enemy's). The Burn isn't used up and keeps burning. For 4 seconds the flame is live: every burst of Static or arc of lightning within 6 metres of it bends into the flame and bursts again there, for 5 damage per Burn stack within 2.5 metres (at most once every 0.8 seconds). Then it waits 4 seconds.
 
 **What sets it off.** Burn landing on a charged enemy, or Static landing on a burning one.
 
@@ -457,7 +457,7 @@ Group: Reactions
 
 **Its shapes.** If you have Plasma's Shape mark (Flashover: Corona or Fulgurite, 3 Shards, in the middle of the chart) and carry both Fire and Lightning, Flashover uses the shape you picked at a rest fire instead. Corona: nothing is used up. Violet flame crawls over the enemy for 4 seconds, and every 0.7 seconds an arc jumps to the nearest enemy within 5 metres for 4 damage, a Burn and a Static. Fulgurite: a scorched patch 2.5 metres across appears under the enemy for 4 seconds, dealing 4 damage, a Burn and a Static every second.
 
-**How it looks.** Its name over the enemy, and a burst of lightning where it stands. Not built yet: the electrified flame pulling in other bursts of Static nearby.
+**How it looks.** Its name over the enemy, and a burst of lightning where it stands. Not built yet: the arcs drawn bending across the floor into the flame.
 
 ## reaction-thunder-gust
 Title: Thunder Gust (Lightning and Wind)

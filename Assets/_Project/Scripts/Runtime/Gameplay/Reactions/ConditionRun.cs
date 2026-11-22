@@ -67,6 +67,8 @@ namespace Clover.Gameplay
         public float DriftsTo;
         /// <summary>Metres round its carrier within which another's death is told to it (<see cref="ConditionSpec.DeathsWithin"/>).</summary>
         public float DeathsWithin;
+        /// <summary>Metres round its carrier within which a discharge or arc bends into it (<see cref="ConditionSpec.DischargesWithin"/>).</summary>
+        public float DischargesWithin;
         /// <summary>Metres the body is drawn down while it runs (<see cref="ConditionSpec.Sink"/>).</summary>
         public float Sink;
         /// <summary>The point it is turned to face (<see cref="ConditionFlags.FacesPoint"/>).</summary>

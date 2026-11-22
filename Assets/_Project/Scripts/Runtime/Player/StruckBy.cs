@@ -23,5 +23,7 @@ namespace Clover.Player
         Shove,
         /// <summary>Another enemy's death within the condition's reach of its carrier (Shut in the Dark: a death inside the jar's ring).</summary>
         DeathNear,
+        /// <summary>A discharge or arc within the condition's reach of its carrier, bending into it (Flashover's live flame).</summary>
+        Discharge,
     }
 }
