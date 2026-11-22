@@ -377,6 +377,8 @@ namespace Clover.Player
         /// ledger's seams: Earthlight).
         /// </summary>
         public int Seams;
+        /// <summary>For BurstGround: the Hazard effect whose standing patches it bursts.</summary>
+        public UpgradeEffect BurstsGround;
 
         /// <summary>True when a Hazard effect lays ground that keeps acting, told to the marks at each bite (Hazards.GroundActs).</summary>
         public bool ActsAsGround => Inside != null || Mends > 0f || InsideDo != null || InsideAtEnd != null || !string.IsNullOrEmpty(Ground);

@@ -41,6 +41,19 @@ namespace Clover.Player.Trees
         public const string RedPaper = "poison.needles.redpaper";
         public const string ShedSkin = "poison.coiled.skin";
         public const string WeepingSore = "poison.blister.weeping";
+
+        // Weeping Sore: the sore, the puddle it weeps at each bite, and the heavy blow that bursts every puddle still lying.
+        private static UpgradeEffect[] Weeping()
+        {
+            var puddle = new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = WeepingSore, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Radius = 0.75f, Seconds = 3f, Interval = 1f,
+                Damage = 0f, Stagger = 0f, Affliction = AfflictionKind.Poison, Stacks = 1 };
+            return new[]
+            {
+                new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = WeepingSore, Seconds = 12f, OnBite = true } },
+                puddle,
+                new UpgradeEffect { On = UpgradeTrigger.HeavyHit, Do = UpgradeAction.BurstGround, BurstsGround = puddle, Damage = 12f, Stagger = 0f, Affliction = AfflictionKind.Poison, Stacks = 2, Cooldown = 0.5f },
+            };
+        }
         public const string TheVessel = "poison.blister.vessel";
         public const string BrokenOnTheBeat = "poison.blister.beat";
         public const string EatenInTurn = "poison.onebyone.eaten";
@@ -90,17 +103,11 @@ namespace Clover.Player.Trees
                 // The roster's numbers alone (the owner's answer of 2026-11-20: an Empower may strengthen without a shorter wait).
                 new Empower { Damage = 50f },
                 "It breaks for 25, 50 or 85.",
-                // The blister set aside, never broken by a blow (SpellSpec.Quiet: the brand raises nothing). NEEDS: a heavy blow
-                // bursting every puddle where it lies (puddles-burst). Until then the sore weeps a puddle at each bite, and a heavy
-                // blow on the sore bursts round it for 12 and two doses.
+                // The blister set aside, never broken by a blow (SpellSpec.Quiet: the brand raises nothing). The sore weeps a puddle
+                // at each bite, and your heavy blow on any enemy bursts every puddle where it lies, all at once (UpgradeAction.BurstGround).
                 new ShapeDef { Name = "Weeping Sore", Spell = new SpellSpec { Reach = 8f, Seconds = 12f, Count = 1, Radius = 3f, Damage = 0f, Stagger = 0f, Stacks = 0, Quiet = true },
                     Description = "It never bursts by itself or by a heavy blow. Each time its poison bites it weeps a bubbling puddle a metre and a half across where the enemy stands, for three seconds, a dose a second, so a walking enemy lays your poison. Your heavy blow bursts every puddle at once: 12 damage and 2 doses to all in each.",
-                    Effects = new[]
-                    {
-                        new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = WeepingSore, Seconds = 12f, OnBite = true } },
-                        new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = WeepingSore, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Radius = 0.75f, Seconds = 3f, Interval = 1f, Damage = 0f, Stagger = 0f, Affliction = P, Stacks = 1 },
-                        new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = WeepingSore, By = StruckBy.Heavy, Do = UpgradeAction.Burst, Radius = 2f, Damage = 12f, Stagger = 0f, Affliction = P, Stacks = 2, Cooldown = 0.5f },
-                    } },
+                    Effects = Weeping() },
                 // The blister set aside (SpellSpec.Quiet: the brand raises nothing). The cloud at a full bite is data, once a cast.
                 new ShapeDef { Name = "The Vessel", Spell = new SpellSpec { Reach = 8f, Seconds = 12f, Count = 1, Radius = 3f, Damage = 0f, Stagger = 0f, Stacks = 0, Quiet = true },
                     Description = "The whole enemy swells. When its poison bites at full depth it bursts by itself into a cloud four metres across that doses everything in it three deep and hangs three seconds. You set it and leave it.",

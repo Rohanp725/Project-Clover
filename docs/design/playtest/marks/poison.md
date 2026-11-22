@@ -48,11 +48,9 @@ a blow or a cast "on the beat" comes within a fifth of a second of it.
 
 **When it happens.** Whenever you cast Blister, using the shape you picked. If you have not bought this, you cast the plain blister.
 
-**The numbers.** 3 Shards. Weeping Sore: for 12 seconds, each bite of the enemy's poison leaves a puddle 1.5 metres across for 3 seconds that gives a dose each second to whatever stands in it. A heavy blow on the sore bursts 2 metres around it for 12 damage and two doses, at most twice a second. The Vessel: for 12 seconds, the first bite while its poison is full puts three doses on everything within 2 metres, and leaves a cloud 4 metres across for 3 seconds that gives a dose each second. Once per cast. With either shape, no blister is raised, so no blow can pop one.
+**The numbers.** 3 Shards. Weeping Sore: for 12 seconds, each bite of the enemy's poison leaves a puddle 1.5 metres across for 3 seconds that gives a dose each second to whatever stands in it. Your heavy blow on any enemy bursts every puddle still lying, all at once, each where it lies: 12 damage and two doses to everything in each, and the puddles are gone. At most twice a second. The Vessel: for 12 seconds, the first bite while its poison is full puts three doses on everything within 2 metres, and leaves a cloud 4 metres across for 3 seconds that gives a dose each second. Once per cast. With either shape, no blister is raised, so no blow can pop one.
 
 **Works with.** Weeping Sore: an enemy that walks around, Catching, Low Mist. The Vessel: Venom's blows to fill it up, Catching, Slow Death (full is twenty, so it waits longer). Volatile stops the beat, and neither shape leaks or bursts without bites.
-
-**Not built yet.** Weeping Sore's heavy blow bursts around the sore, not at each puddle where it lies.
 
 **Example.** Use Weeping Sore on a charging brute. It leaves a trail of puddles as it comes, and the soldiers following it walk through them.
 

@@ -396,6 +396,20 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void YourHeavyBlowBurstsEveryPuddleTheSoreWept()
+        {
+            var sore = Upgrade.ById(SpellBranch.ShapeId(PoisonTree.Blister)).Shapes.Single(each => each.Name == "Weeping Sore").Effects;
+            var puddle = sore.Single(each => each.Do == UpgradeAction.Hazard);
+            var burst = sore.Single(each => each.Do == UpgradeAction.BurstGround);
+            Assert.AreSame(puddle, burst.BurstsGround, "it bursts the puddles the sore weeps");
+            Assert.AreEqual(UpgradeTrigger.HeavyHit, burst.On, "any heavy blow of yours, not only one on the sore");
+            Assert.AreEqual(12f, burst.Damage, 1e-5f);
+            Assert.AreEqual(2, burst.Stacks, "two doses to all in each");
+            Assert.IsFalse(sore.Any(each => each.Do == UpgradeAction.Burst), "not a burst round the sore");
+            Assert.AreEqual(0, Hazards.TakeAllOf(puddle, new Vector3[4], new float[4]), "nothing to burst with no hazards in the scene");
+        }
+
+        [Test]
         public void TheSeaComesInQuickensYouOnlyInYourOwnWater()
         {
             var sea = Upgrade.ById(WaterTree.TheSeaComesIn);

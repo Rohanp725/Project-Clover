@@ -228,6 +228,26 @@ namespace Clover.World
             return false;
         }
 
+        /// <summary>
+        /// Ends every settled patch laid by <paramref name="source"/>, writing where each lay and how wide it was, as many as fit;
+        /// returns how many were ended (a heavy blow bursting every puddle of Weeping Sore's).
+        /// </summary>
+        public static int TakeAllOf(object source, Vector3[] at, float[] radius)
+        {
+            if (instance == null || source == null) return 0;
+            int taken = 0;
+            for (int i = 0; i < instance.zones.Length && taken < at.Length && taken < radius.Length; i++)
+            {
+                ref var zone = ref instance.zones[i];
+                if (!zone.Active || zone.Delay > 0f || !ReferenceEquals(zone.Spec.Source, source)) continue;
+                at[taken] = zone.Position;
+                radius[taken] = zone.Spec.Radius;
+                taken++;
+                zone.Active = false;
+            }
+            return taken;
+        }
+
         /// <summary>How many things the player has grown stand now.</summary>
         public static int GrownCount
         {

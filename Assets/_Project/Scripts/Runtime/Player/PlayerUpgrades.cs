@@ -1964,7 +1964,7 @@ namespace Clover.Player
                         // A second affliction laid with each bite (the hollow trunk Seeding and Cursing what touches it).
                         AlsoLays = effect.BitesLay,
                         // Ground that keeps acting on whoever stands in it (the ledger's ground-states).
-                        Acts = effect.ActsAsGround ? effect : null, Pull = effect.Pull, LaidFor = pending.Target,
+                        Acts = effect.ActsAsGround ? effect : null, Pull = effect.Pull, LaidFor = pending.Target, Source = effect,
                         // A lane of foam carries what stands in it away from the player (the ledger's lane-shove).
                         Carry = effect.Carry > 0f ? aim * GroundRules.PullStep(effect.Carry, Or(effect.Interval, 0.5f)) : Vector3.zero,
                     };
@@ -2209,6 +2209,19 @@ namespace Clover.Player
                     break;
                 case UpgradeAction.PlayLook:
                     break;
+                case UpgradeAction.BurstGround:
+                {
+                    // Every patch the named ground still has bursts where it lies, all at once, and is gone.
+                    int burst = Hazards.TakeAllOf(effect.BurstsGround, groundBurstAt, groundBurstRadius);
+                    var blow = Blow(look, kind, eDamage, eStagger, eStacks);
+                    for (int i = 0; i < burst; i++)
+                    {
+                        combat.StrikeArea(groundBurstAt[i], groundBurstRadius[i], blow);
+                        ElementLook.Strike(look, groundBurstAt[i], 0.3f);
+                    }
+                    GroundsBurst += burst;
+                    break;
+                }
                 case UpgradeAction.LengthenOwn:
                     Forms.SpellWorks.LengthenRunsOf(effect.Owner, Or(effect.Seconds, 1f));
                     break;
@@ -3208,6 +3221,13 @@ namespace Clover.Player
         /// <summary>True when an effect answers ground of the given name told of one standing in it (UpgradeTrigger.InGround).</summary>
         public static bool AnswersGround(UpgradeEffect effect, string ground) =>
             effect != null && !string.IsNullOrEmpty(ground) && effect.Condition == ground;
+
+        // Where each patch a BurstGround took lay, and how wide.
+        private readonly Vector3[] groundBurstAt = new Vector3[16];
+        private readonly float[] groundBurstRadius = new float[16];
+
+        /// <summary>Patches of ground burst all at once by a mark (UpgradeAction.BurstGround): for probes.</summary>
+        public int GroundsBurst { get; private set; }
 
         /// <summary>Enemies carried along a lane by a gust (UpgradeEffect.Carry on a Lane): for probes.</summary>
         public int LanesShoved { get; private set; }

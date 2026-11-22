@@ -296,5 +296,11 @@ namespace Clover.Player
         LengthenOwn,
         /// <summary>Does nothing but play its UpgradeEffect.Look (a creature drawn by its recipe look as the spell is cast).</summary>
         PlayLook,
+        /// <summary>
+        /// Bursts every patch of ground the effect named by UpgradeEffect.BurstsGround has laid and still stands, all at once, each
+        /// where it lies: Damage, Stagger and Stacks of the Affliction to all in each, and the patch is gone (Weeping Sore's
+        /// puddles; the ledger's puddles-burst).
+        /// </summary>
+        BurstGround,
     }
 }
