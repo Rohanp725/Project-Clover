@@ -178,5 +178,11 @@ namespace Clover.Player
         /// Gale, the owner's answer of 2026-11-22). Reads: Affliction, Radius.
         /// </summary>
         ShareStore,
+        /// <summary>
+        /// The player's next light weapon blow within Seconds (1) lands as a heavy blow: the weapon's heavy stagger, and every
+        /// mark that answers a heavy blow answers it (Gone to Ash: the first blow behind the attacker; the ledger's
+        /// blow-made-heavy). Reads: Seconds.
+        /// </summary>
+        NextHeavy,
     }
 }

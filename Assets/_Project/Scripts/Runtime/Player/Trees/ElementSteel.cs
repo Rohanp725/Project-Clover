@@ -44,6 +44,9 @@ namespace Clover.Player
         /// <summary>True when a charged blow of this element passes any guard (Metal's: "a shield or a raised guard takes them in full").</summary>
         public static bool PassesGuard(string element) => element == Elements.Metal;
 
+        /// <summary>True when a blow charged with this element cannot be stopped once wound up: Earth's (the ledger's unshaken).</summary>
+        public static bool Unstoppable(string element) => element == Elements.Earth;
+
         /// <summary>How many stacks a charged blow lays: one, or two for Poison ("each charged blow doses twice").</summary>
         public static int Stacks(string element) => element == Elements.Poison ? 2 : 1;
 
@@ -118,7 +121,7 @@ namespace Clover.Player
                     }
                     break;
                 case Elements.Earth:
-                    // Each throws a short spray of gravel: a 2 m cone, 4 damage. NEEDS: the wound-up blow that cannot be stopped (unshaken).
+                    // Each throws a short spray of gravel: a 2 m cone, 4 damage. The wound-up blow cannot be stopped (Unstoppable).
                     combat.StrikeCone(2.6f, 60f, Blow(element, 4f, 4f, 0));
                     if (!own) Vfx.Play(VfxKind.Dust, Ground(at), forward, 1.2f);
                     break;

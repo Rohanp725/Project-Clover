@@ -68,6 +68,18 @@ namespace Clover.Player
         /// <summary>What the element's upgrades add: a standing share of damage (Heat), and a one-off multiplier the next blow that lands spends (Stored Charge).</summary>
         public float UpgradeDamage = 1f;
         public float NextBlowDamage = 1f;
+        // Until when the next light blow lands as a heavy one (UpgradeAction.NextHeavy); 0 for none.
+        private float heavyNextUntil;
+        /// <summary>The next light weapon blow within <paramref name="seconds"/> lands as a heavy blow (Gone to Ash's first blow behind the attacker).</summary>
+        public void MakeNextBlowHeavy(float seconds) => heavyNextUntil = Time.time + Mathf.Max(0.05f, seconds);
+        /// <summary>True while the next light blow would land as a heavy one.</summary>
+        public bool NextBlowHeavy => MadeHeavy(false, heavyNextUntil, Time.time);
+
+        /// <summary>True when a light blow is made heavy: it is not heavy already, and a mark's window for it runs at <paramref name="now"/>.</summary>
+        public static bool MadeHeavy(bool stepHeavy, float until, float now) => !stepHeavy && now < until;
+
+        /// <summary>The stagger a light blow made heavy breaks: the weapon's heavy blow's, never less than its own.</summary>
+        public static float HeavyStagger(float light, float heavy) => Mathf.Max(light, heavy);
         public float NextBlowStagger = 1f;
         /// <summary>How much deeper each blow of the weapon makes its target's burn, and for how long it then burns.</summary>
         public int BurnStacksOnHit;
@@ -460,6 +472,9 @@ namespace Clover.Player
         {
             if (HeavyUnbroken && InHeavySwing) return true;
             var step = Combo.Current;
+            // A blow charged with Earth cannot be stopped once it is wound up.
+            if (step != null && moveCharged && moveElement != null && ElementSteel.Unstoppable(moveElement.Name)
+                && (Combo.Phase == AttackPhase.Windup || Combo.Phase == AttackPhase.Active)) return true;
             return step != null && Way.BodyRules.Poised(step.Poise + StatPoise, damage)
                 && (Combo.Phase == AttackPhase.Windup || Combo.Phase == AttackPhase.Active);
         }
@@ -2029,6 +2044,10 @@ namespace Clover.Player
         {
             if (fresh) struck.Clear();
             int already = struck.Count;
+            // A light blow a mark made heavy (blow-made-heavy): the heavy's stagger, and every mark that answers a heavy blow.
+            bool madeHeavy = MadeHeavy(step.Heavy, heavyNextUntil, Time.time);
+            bool heavy = step.Heavy || madeHeavy;
+            float lightStagger = madeHeavy ? HeavyStagger(step.Stagger, Combo.Heavy != null ? Combo.Heavy.Stagger : 0f) : step.Stagger;
             if (fresh)
             {
                 // The carried aspect's part in the blow going out: the seventh drum's draw, the hanging cut.
@@ -2118,9 +2137,9 @@ namespace Clover.Player
                 else if (distance > 0.6f && Vector3.Angle(transform.forward, offset) > step.ArcDegrees * 0.5f) continue;
                 var afflictable = target as IAfflictable;
                 // A blow is critical by chance, or always on an enemy that is Marked.
-                bool promised = (step.Heavy && HeavyCriticalLeft > 0f) || step.Critical;
+                bool promised = (heavy && HeavyCriticalLeft > 0f) || step.Critical;
                 float chance = CritChance;
-                if (Stats != null) chance += Stats.Blow(PlayerStat.CritChance, step.Heavy, false) + (afflictable != null ? Stats.Against(PlayerStat.CritChance, afflictable.Afflictions) : 0f);
+                if (Stats != null) chance += Stats.Blow(PlayerStat.CritChance, heavy, false) + (afflictable != null ? Stats.Against(PlayerStat.CritChance, afflictable.Afflictions) : 0f);
                 // Counter Cut: a blow that lands on an enemy showing its own attack (winding up or striking) is critical.
                 bool countered = CounterCut && target is Enemy showing && showing.IsStriking;
                 if (countered) CounterCuts++;
@@ -2135,10 +2154,10 @@ namespace Clover.Player
                     var light = Combo.Steps;
                     bool endsChain = step == Combo.ChainHeavy || (light.Count > 0 && step == light[light.Count - 1]);
                     bool inAir = carried != null && carried.IsAirborne;
-                    damage *= Mathf.Max(0.1f, 1f + Stats.Blow(PlayerStat.WeaponDamage, step.Heavy, critical, endsChain) + Stats.Against(PlayerStat.WeaponDamage, carried)
-                        + (inAir ? Stats.InAir(PlayerStat.WeaponDamage) + (step.Heavy ? Stats.InAirHeavy(PlayerStat.WeaponDamage) : 0f) : 0f));
-                    staggerShare = Mathf.Max(0.1f, 1f + Stats.Blow(PlayerStat.StaggerDealt, step.Heavy, critical, endsChain) + Stats.Against(PlayerStat.StaggerDealt, carried)
-                        + (inAir ? Stats.InAir(PlayerStat.StaggerDealt) + (step.Heavy ? Stats.InAirHeavy(PlayerStat.StaggerDealt) : 0f) : 0f));
+                    damage *= Mathf.Max(0.1f, 1f + Stats.Blow(PlayerStat.WeaponDamage, heavy, critical, endsChain) + Stats.Against(PlayerStat.WeaponDamage, carried)
+                        + (inAir ? Stats.InAir(PlayerStat.WeaponDamage) + (heavy ? Stats.InAirHeavy(PlayerStat.WeaponDamage) : 0f) : 0f));
+                    staggerShare = Mathf.Max(0.1f, 1f + Stats.Blow(PlayerStat.StaggerDealt, heavy, critical, endsChain) + Stats.Against(PlayerStat.StaggerDealt, carried)
+                        + (inAir ? Stats.InAir(PlayerStat.StaggerDealt) + (heavy ? Stats.InAirHeavy(PlayerStat.StaggerDealt) : 0f) : 0f));
                 }
                 if (critical) damage *= CritMultiplier;
                 // A back is a back: the knives' blows count for more on it. The finisher has its own number.
@@ -2156,7 +2175,7 @@ namespace Clover.Player
                 // finisher) and strikes harder for each Burn it drinks.
                 if (DrinksBurn > 0f && afflictable != null && afflictable.Afflictions.Burn.IsBurning)
                 {
-                    int drunk = afflictable.Afflictions.Spend(AfflictionKind.Burn, Combo.IsFinishing ? int.MaxValue : step.Heavy ? 3 : 1);
+                    int drunk = afflictable.Afflictions.Spend(AfflictionKind.Burn, Combo.IsFinishing ? int.MaxValue : heavy ? 3 : 1);
                     if (drunk > 0)
                     {
                         damage += DrinksBurn * drunk;
@@ -2200,7 +2219,7 @@ namespace Clover.Player
                 if (carries)
                 {
                     damage *= Blade.DamageShare;
-                    damage += ElementSteel.BeforeChargedBlow(moveElement.Name, afflictable, step.Heavy);
+                    damage += ElementSteel.BeforeChargedBlow(moveElement.Name, afflictable, heavy);
                     var charged = moveElement.Affliction;
                     int add = ElementSteel.Stacks(moveElement.Name);
                     if (charged == kind && kind != AfflictionKind.None) stacks += add;
@@ -2217,10 +2236,10 @@ namespace Clover.Player
                 }
                 float lasts = kind != AfflictionKind.None && AfflictionSeconds != 1f ? Clover.Gameplay.Afflictions.Spec(kind).Seconds * AfflictionSeconds : 0f;
                 float secondLasts = second != AfflictionKind.None && AfflictionSeconds != 1f ? Clover.Gameplay.Afflictions.Spec(second).Seconds * AfflictionSeconds : 0f;
-                float dealtStagger = (step.Stagger + (counter ? counterStagger : 0f) + StaggerOnHit + aspectStagger) * NextBlowStagger * StatStagger * staggerShare * scale * step.BandStagger(distance);
+                float dealtStagger = (lightStagger + (counter ? counterStagger : 0f) + StaggerOnHit + aspectStagger) * NextBlowStagger * StatStagger * staggerShare * scale * step.BandStagger(distance);
                 if (fromBehind) dealtStagger *= Weapon.BackMultiplier;
                 if (boundTo != null && ReferenceEquals(target, boundTo)) dealtStagger *= BoundStagger;
-                var outcome = target.TakeHit(new Hit(damage, dealtStagger, transform.forward, step.Heavy, carries && ElementSteel.PassesGuard(moveElement.Name), transform.position,
+                var outcome = target.TakeHit(new Hit(damage, dealtStagger, transform.forward, heavy, carries && ElementSteel.PassesGuard(moveElement.Name), transform.position,
                     burn, burnStacks, false, kind, kind != AfflictionKind.None ? stacks : 0, lasts, AfflictionPower, false, critical, second, secondStacks, secondLasts, tint: struckTint,
                     finisher: step.Heavy && Combo.IsFinishing));
                 if (outcome == HitOutcome.Missed) continue;
@@ -2305,7 +2324,7 @@ namespace Clover.Player
                         afflictable.Afflictions.AirBlow(AirBlowSeconds, AirBlowsMost + more, more > 0 ? 0.85f : 1f);
                     }
                 }
-                if (upgrades != null && pays) upgrades.OnBlow(step, target, outcome, wasAfflicted);
+                if (upgrades != null && pays) upgrades.OnBlow(step, target, outcome, wasAfflicted, heavy);
                 if (pays && outcome != HitOutcome.Blocked) paidBlow = true;
                 // Spells that wait on the weapon (a brand, a copy of the player, blades at the shoulder) are told; they answer on their own next step.
                 if (outcome != HitOutcome.Blocked && pays)
@@ -2324,7 +2343,7 @@ namespace Clover.Player
                     var landing = SwingElement;
                     bool drawnByLook = landing != null && Clover.Player.Forms.ElementArt.Ready
                         && (SwingInfused ? Clover.Player.Forms.ElementMoves.HasStrike(landing.Index) : Clover.Player.Forms.ElementMoves.HasBlade(landing.Index));
-                    if (!drawnByLook) Vfx.Play(step.Heavy ? VfxKind.HeavySpark : VfxKind.HitSpark, contact, transform.forward);
+                    if (!drawnByLook) Vfx.Play(heavy ? VfxKind.HeavySpark : VfxKind.HitSpark, contact, transform.forward);
                     BladeMet?.Invoke(contact, transform.forward);
                 }
                 else
@@ -2332,7 +2351,7 @@ namespace Clover.Player
                     // Turned on the enemy's guard: steel on steel, and a jolt back up the arm.
                     BlowsTurned++;
                     // A heavy blow turned aside is no reason to recommend a heavy blow.
-                    if (!step.Heavy) Tips.BlowTurned();
+                    if (!heavy) Tips.BlowTurned();
                     Vfx.Play(VfxKind.Clang, other.ClosestPoint(origin));
                     if (shaker != null) shaker.Shake(0.06f, 0.1f);
                 }
@@ -2341,7 +2360,7 @@ namespace Clover.Player
                     // The cut line: which way the blade went through, drawn over the sparks.
                     Vector3 through = CutDirection(step);
                     if (outcome == HitOutcome.Finisher) CutMarks.Finisher(other.bounds.center, through, struckTint);
-                    else if (step.Heavy) CutMarks.Heavy(other.bounds.center, through, struckTint);
+                    else if (heavy) CutMarks.Heavy(other.bounds.center, through, struckTint);
                     else CutMarks.Light(other.bounds.center, through, struckTint);
                 }
                 if (reticle != null && target is Component struckThing) reticle.Struck(struckThing.transform);
@@ -2353,7 +2372,7 @@ namespace Clover.Player
                 }
                 // A heavy blow's star: white for a plain weapon, the element's hue at a moderate brightness under one (the
                 // swing films of 2026-11-20: a white starburst on every element's infused strike).
-                if (step.Heavy && outcome != HitOutcome.Blocked)
+                if (heavy && outcome != HitOutcome.Blocked)
                 {
                     if (StruckLook.Tinted(struckTint)) Vfx.Play(VfxKind.Impact, other.bounds.center, Vector3.up, 1f, StruckLook.Glow(struckTint, ImpactGlow));
                     else Vfx.Play(VfxKind.Impact, other.bounds.center);
@@ -2372,6 +2391,8 @@ namespace Clover.Player
             }
             if (fresh)
             {
+                // A blow made heavy is spent once it lands on someone.
+                if (MadeHeavy(step.Heavy, heavyNextUntil, Time.time) && struck.Count > already) heavyNextUntil = 0f;
                 if (upgrades != null) upgrades.OnSwing(step, struck.Count);
                 Clover.Player.Forms.SpellWorks.Swing(step, transform.position, transform.forward);
                 Swung?.Invoke(step);

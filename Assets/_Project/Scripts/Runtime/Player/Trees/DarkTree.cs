@@ -114,9 +114,8 @@ namespace Clover.Player.Trees
                 });
 
             // The counter: the parry form turns the first blow and answers with a Curse; you step behind the attacker, and your
-            // first blow on it heals; nothing struck, it waits 5 s (SpellSpec.MissedWait). NEEDS: the scattering as ash and
-            // standing again 0.4 s later (form-pieces), and the blow struck as a heavy (blow-made-heavy): for now it strikes
-            // twice as hard.
+            // first blow on it within a second is struck as a heavy (UpgradeAction.NextHeavy) and heals; nothing struck, it waits
+            // 5 s (SpellSpec.MissedWait). NEEDS: the scattering as ash and standing again 0.4 s later (form-pieces).
             SpellBranch.Add(to, E, GoneToAsh, "Gone to Ash", SpellRole.Counter, BranchPattern.MiddleB, Dread, SpellForms.Parry,
                 new SpellSpec { Seconds = 1.2f, Reach = 2.5f, Arc = 90f, Damage = 0f, Stagger = 0f, Stacks = 1, MissedWait = 0.5f },
                 "You stand with arms crossed as grey ash runs over you, for up to 1.2 seconds. The first blow to land scatters you as a cloud of ash, and you take nothing. A moment later you stand again behind the attacker. It is Cursed, and your first blow within a second is a heavy blow that heals you 10. If nothing strikes, it waits only half as long.",
@@ -150,7 +149,7 @@ namespace Clover.Player.Trees
                 learnEffects: new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Step, Reach = 4f, Amount = 1.5f, Cooldown = 0.5f },
-                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Boon, Stat = PlayerStat.WeaponDamage, Amount = 1f, Seconds = 1f, UntilBlow = true, Cooldown = 0.5f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.NextHeavy, Seconds = 1f, Cooldown = 0.5f },
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Ashen, Seconds = 1f, EndsWith = ConditionBlow.Weapon } },
                     new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Ashen, By = StruckBy.Weapon, Do = UpgradeAction.Heal, Amount = 10f },
                 });

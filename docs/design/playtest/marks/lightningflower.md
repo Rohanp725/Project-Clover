@@ -29,17 +29,15 @@ while Lightning and Life are both carried.
 **Example.** Land a heavy blow on each soldier in turn, and each one flowers.
 
 ## lightningflower.favouredoak
-**What it does.** A perfect guard against a Seeded enemy hangs a scorched oak leaf on your blade. Your next heavy blow sets off the enemy's Static at twice the strength.
+**What it does.** A perfect guard against a Seeded enemy hangs a scorched oak leaf on your blade. Your next heavy blow sets off Static at twice the strength, on any enemy.
 
 **When it happens.** Each perfect guard against a Seeded enemy, while you carry both Lightning and Life. Then your next heavy blow on that enemy within 8 seconds.
 
-**The numbers.** Mix, 3 Shards. The heavy blow uses up all the enemy's Static in a burst within 4 metres, dealing 14 damage and 10 stagger per stack: twice a normal burst. At most once a second.
+**The numbers.** Mix, 3 Shards. The leaf stays on your blade for 8 seconds, one at a time. When your next heavy blow sets off an enemy's Static, the burst hits a second time at the same strength, within 4 metres, with 10 more stagger: twice a normal burst. The leaf is then used up.
 
 **Works with.** Storm Season (every heavy blow Seeds and charges), Lightning Flower.
 
 **Example.** Block a seeded brute's swing perfectly, then hit it with a heavy blow for a double-strength burst.
-
-**Not built yet.** The leaf stays on the enemy you guarded instead of on your blade, so only a heavy blow on that enemy sets off the double burst.
 
 ## lightningflower.rain
 **What it does.** Each Lightning Flower heals you 3 for every bolt thrown into it, and every thing you grew that throws one stays 3 seconds longer.

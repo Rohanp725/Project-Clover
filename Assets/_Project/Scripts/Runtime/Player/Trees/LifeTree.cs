@@ -210,11 +210,11 @@ namespace Clover.Player.Trees
                     new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.BurstGrown, Damage = 12f, Stagger = 0f, Radius = 2f, Affliction = AfflictionKind.Seeded, Stacks = 1 },
                 });
 
-            // NEEDS: never thrown, pulled or knocked down, and plain blows not making you flinch, within 4 m of something you
-            // grew (unshaken). Until then wounds take a fifth less there.
+            // Within 4 m of something you grew you are unshaken (PlayerStat.Unshaken while StatWhen.NearGrown): never thrown or
+            // knocked down, and plain blows do not make you flinch. NEEDS: the roots drawn from the plant to your heels (looks).
             to.Add(BranchPattern.Put(new Upgrade { Id = TheGardenHoldsYou, Name = "The Garden Holds You", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Ripening }, Icon = UpgradeIcons.Shield,
                 Description = "Within four metres of something you grew you cannot be thrown, pulled or knocked down, and plain blows do not make you flinch. Roots run from the nearest plant to your heels. Fight in the garden.",
-                Stats = new[] { new StatMod(PlayerStat.DamageTaken, -0.2f, StatWhen.NearGrown) } },
+                Stats = new[] { new StatMod(PlayerStat.Unshaken, 1f, StatWhen.NearGrown) } },
                 BranchPattern.LeftMiddle));
 
             // The step form carries the walk: untouchable in it, and its roots strike along the line. NEEDS: going under the

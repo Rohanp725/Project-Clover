@@ -1226,7 +1226,7 @@ namespace Clover.Player
             Stats.SetWhen(StatWhen.Unhurt, sinceStruck >= UnhurtSeconds);
             Stats.SetWhen(StatWhen.Risen, Risen);
             Afflictions.TickBeat(deltaTime);
-            if (defence != null) defence.Unflinching = (hollowStrength && Risen) || Time.time < firmUntil;
+            if (defence != null) defence.Unflinching = (hollowStrength && Risen) || Time.time < firmUntil || IsUnshaken(Stats);
             if (deadAlready && defence != null && combat != null && !defence.IsDead)
             {
                 // Dead Already: the drain of the Risen in every fight, a point at a time, never the last.
@@ -2118,6 +2118,10 @@ namespace Clover.Player
                     gatherTaken.Clear();
                     break;
                 }
+                case UpgradeAction.NextHeavy:
+                    combat.MakeNextBlowHeavy(Or(effect.Seconds, 1f));
+                    ElementLook.Sparks(held, self + Vector3.up * 1.2f, transform.forward, 0.5f);
+                    break;
                 case UpgradeAction.ShareStore:
                 {
                     // Clouds and trails near are drunk, and half of each enemy's doses there; then the store is split evenly
@@ -2498,7 +2502,11 @@ namespace Clover.Player
         // ---- What the player's own systems tell this.
 
         /// <summary>A blow of the weapon has struck something. Nothing here may strike in turn: the swing is still being counted.</summary>
-        public void OnBlow(AttackStep step, IDamageable target, HitOutcome outcome, bool wasAfflicted = false)
+        public void OnBlow(AttackStep step, IDamageable target, HitOutcome outcome, bool wasAfflicted = false) =>
+            OnBlow(step, target, outcome, wasAfflicted, step != null && step.Heavy);
+
+        /// <summary>As above; <paramref name="heavy"/> also for a light blow a mark made heavy (UpgradeAction.NextHeavy).</summary>
+        public void OnBlow(AttackStep step, IDamageable target, HitOutcome outcome, bool wasAfflicted, bool heavy)
         {
             if (outcome == HitOutcome.Blocked) return;
             var struck = target as Component;
@@ -2523,10 +2531,10 @@ namespace Clover.Player
             if (step == combat.Combo.ChainHeavy || (chain.Count > 0 && step == chain[chain.Count - 1])) Trigger(UpgradeTrigger.ChainEnd, struck, at);
             if (finisher) Trigger(UpgradeTrigger.FinisherHit, struck, at);
             if (step == combat.Combo.Skill) Trigger(UpgradeTrigger.SkillHit, struck, at);
-            else if (step.Heavy || finisher) Trigger(UpgradeTrigger.HeavyHit, struck, at);
+            else if (heavy || finisher) Trigger(UpgradeTrigger.HeavyHit, struck, at);
             // Storm Front: the heavy blow or finisher that lands is owed a Gust, thrown in the next step once the swing has been reckoned.
             // The Gust's own short wait must not turn a heavy blow into a light one for the marks.
-            if (step.Heavy || finisher)
+            if (heavy || finisher)
             {
                 if (Time.time >= stormFrontAt) stormFrontOwed = true;
             }
@@ -2539,15 +2547,15 @@ namespace Clover.Player
             // What the edge carries (Carried on the Blade, Dust on the Blade) goes into what it strikes.
             if (afflictable != null && struck != null && Coat.Any)
             {
-                int coats = Coat.Blow(afflictable.Afflictions, step.Heavy || finisher, Time.time, coatKinds, coatStacks);
+                int coats = Coat.Blow(afflictable.Afflictions, heavy || finisher, Time.time, coatKinds, coatStacks);
                 for (int i = 0; i < coats; i++)
                     CombatEvents.Report(struck, coatKinds[i], coatStacks[i], afflictable.Afflictions.Lay(coatKinds[i], coatStacks[i], 0f, combat.AfflictionPower, LaySource.Weapon, struck), LaySource.Weapon);
             }
-            if (hasPlasma && (step.Heavy || finisher) && afflictable != null && afflictable.Afflictions.Burn.IsBurning)
+            if (hasPlasma && (heavy || finisher) && afflictable != null && afflictable.Afflictions.Burn.IsBurning)
                 toBurst.Add(target);
             if (!hasStatic || afflictable == null) return;
             int stacks = afflictable.Afflictions.Stacks(AfflictionKind.Static);
-            if (step.Heavy || finisher)
+            if (heavy || finisher)
             {
                 if (stacks > 0) toDischarge.Add(target);
                 return;
@@ -2786,6 +2794,9 @@ namespace Clover.Player
             }
             TheirBlow(combat != null ? combat.EnemyAt(attacker, 2.5f) : null, attacker);
         }
+
+        /// <summary>True while the marks in force, as their conditions hold now, keep the player unshaken (PlayerStat.Unshaken).</summary>
+        public static bool IsUnshaken(PlayerStats stats) => stats != null && stats.Sum(PlayerStat.Unshaken) > 0f;
 
         /// <summary>True when the marks in force count a blow turned by a ward as a perfect guard (PlayerStat.WardTurnsPerfect).</summary>
         public static bool WardIsPerfectGuard(PlayerStats stats) => stats != null && stats.Sum(PlayerStat.WardTurnsPerfect) > 0f;

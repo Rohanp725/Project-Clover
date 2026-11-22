@@ -186,11 +186,11 @@ ground: Briar Patch's bed, a thornbush, a sapling, a thicket, a tuft of briar.
 
 **When it happens.** Always on once you learn it, while something you grew stands within 4 metres of you.
 
-**The numbers.** 3 Shards. For now, you take 20% less damage while something you grew stands within 4 metres.
+**The numbers.** 3 Shards. It works while something you grew stands within 4 metres of you.
 
 **Works with.** Briar Patch and Fallen Seeds, for a garden to stand in; Root Walk and Wildwood, which come after it on the chart; Ripening.
 
-**Not built yet.** The footing itself (never thrown, pulled or knocked down, and no flinching from normal blows), and the roots running to your heels. For now, it only cuts the damage you take in the garden.
+**Not built yet.** The roots running from the plant to your heels aren't drawn yet.
 
 **Example.** Stand in your own bed of briars against a brute. Its blows land for a fifth less while you trade hits.
 

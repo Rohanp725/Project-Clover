@@ -72,19 +72,17 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.LeftLow));
 
-            // NEEDS: something hung on the blade for the next blow of a kind on any enemy (blade-carries): the leaf rides your
-            // blade to your next heavy blow wherever it lands; now it hangs on the attacker guarded, and your next heavy blow on
-            // that one spends all its Static in a discharge of twice the strength, 14 a stack in 4 m.
+            // The leaf rides your blade (a count of one the mark keeps, for 8 s) to your next heavy blow's discharge wherever it
+            // lands: that discharge strikes again at its own strength, twice in all (the ledger's blade-carries).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = TheFavouredOak, Name = "The Favoured Oak", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Shield,
                 Description = "A perfect guard against a Seeded enemy hangs a scorched oak leaf on your blade. Your next heavy blow discharges at twice the strength.",
+                Tally = new TallySpec { Name = "Leaf", Cap = 1 },
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Needs = AfflictionKind.Seeded, Cooldown = 1f, Do = UpgradeAction.Condition,
-                        State = new ConditionSpec { Id = Leaf, Seconds = 8f, EndsWith = ConditionBlow.Heavy } },
-                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Leaf, By = StruckBy.Heavy, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Static },
-                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Leaf, By = StruckBy.Heavy, Do = UpgradeAction.Burst, Affliction = AfflictionKind.Static, Radius = 4f, Damage = 14f, Stagger = 10f, PerStack = true },
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Needs = AfflictionKind.Seeded, Cooldown = 1f, Do = UpgradeAction.Bank, Count = 1, Seconds = 8f },
+                    new UpgradeEffect { On = UpgradeTrigger.SetOff, Spent = AfflictionKind.Static, Spends = 1, Do = UpgradeAction.Burst, ByPower = true, Affliction = AfflictionKind.Static, Stacks = 0, Radius = 4f, Stagger = 10f },
                 },
             }, HeartPattern.RightLow));
 

@@ -74,11 +74,11 @@ draining.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). Then let the enemies hit you.
 
-**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 9 seconds, and it lasts 1.5 seconds.) It lasts 1.2 seconds. The blow you counter does nothing to you. Then every enemy in front of you within 2.5 metres is Cursed, you step 1.5 metres past the attacker, and your first weapon blow within a second hits twice as hard and heals you 10. If nothing hits you, the wait is half as long: 5 seconds.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 9 seconds, and it lasts 1.5 seconds.) It lasts 1.2 seconds. The blow you counter does nothing to you. Then every enemy in front of you within 2.5 metres is Cursed, you step 1.5 metres past the attacker, and your first weapon blow within a second lands as a heavy blow and heals you 10. If nothing hits you, the wait is half as long: 5 seconds.
 
 **Works with.** The root mark, Dread, which it comes after on the chart, Devouring Maw (bite the enemy you came out behind), Near the Grave, and a heavy weapon.
 
-**Not built yet.** Scattering into ash and standing up again a moment later; for now, you step right away. The answering blow should count as a heavy blow; for now, it hits twice as hard.
+**Not built yet.** Scattering into ash and standing up again a moment later; for now, you step right away.
 
 **Example.** A captain swings at you. You scatter, stand up behind it, and your cut lands for double damage and gives you 10 health.
 

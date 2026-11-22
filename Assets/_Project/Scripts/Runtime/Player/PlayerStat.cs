@@ -202,5 +202,10 @@ namespace Clover.Player
         WardTurnsPerfect,
         /// <summary>Flat, percent: what Pawned Heart's heart returns of the damage dealt rises by this when it is touched during a perfect dodge (its Master: 30, so 60 in all; the ledger's heart-touch).</summary>
         HeartTouchMore,
+        /// <summary>
+        /// Flat, above zero: the player cannot be thrown or knocked down and plain blows do not make them flinch; the blow is
+        /// taken whole (The Garden Holds You, near something grown; the ledger's unshaken). Read with its StatWhen.
+        /// </summary>
+        Unshaken,
     }
 }
