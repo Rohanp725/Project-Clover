@@ -97,6 +97,41 @@ namespace Clover.Tests
             Assert.AreEqual(spellStagger, enemy.StaggerTakenFor(true), 1e-4f, "a spell's stagger as written");
         }
 
+        [Test]
+        public void AFinisherIsToldApartFromAnyOtherHeavyBlow()
+        {
+            var heard = new List<ConditionNews>();
+            var enemy = NewEnemy(heard);
+            enemy.Conditions.Set(new ConditionSpec { Id = "test.swollen", Seconds = 5f, EndsWith = ConditionBlow.Finisher }, null, 1, null, true);
+            var heavy = new Clover.Gameplay.Hit(20f, 10f, UnityEngine.Vector3.forward, true);
+            enemy.TakeFrom(heavy, null);
+            Assert.IsTrue(enemy.Conditions.Holds("test.swollen"), "a plain heavy blow does not burst it");
+            Assert.IsTrue(heard[heard.Count - 1].Heavy);
+            Assert.IsFalse(heard[heard.Count - 1].Finisher);
+            Assert.IsTrue(PlayerReactions.Answers(StruckBy.Heavy, heard[heard.Count - 1]));
+            Assert.IsFalse(PlayerReactions.Answers(StruckBy.Finisher, heard[heard.Count - 1]));
+            var finisher = new Clover.Gameplay.Hit(40f, 30f, UnityEngine.Vector3.forward, true, finisher: true);
+            Assert.IsTrue(finisher.Finisher);
+            enemy.TakeFrom(finisher, null);
+            Assert.IsTrue(heard[heard.Count - 1].Finisher);
+            Assert.IsTrue(PlayerReactions.Answers(StruckBy.Finisher, heard[heard.Count - 1]));
+            Assert.IsTrue(PlayerReactions.Answers(StruckBy.Heavy, heard[heard.Count - 1]), "a finisher is heavy too");
+            Assert.IsFalse(enemy.Conditions.Holds("test.swollen"), "the finisher bursts it");
+        }
+
+        [Test]
+        public void TheFinisherMarksAnswerTheFinisherAlone()
+        {
+            var swollen = EveryEffect().Where(effect => effect.State != null && (effect.State.Id == Reactions.Swollen || effect.State.Is == Reactions.Swollen)).ToList();
+            Assert.GreaterOrEqual(swollen.Count, 2, "the plain swelling and Drawn Under's");
+            Assert.IsTrue(swollen.All(effect => effect.State.EndsWith == ConditionBlow.Finisher || effect.State.EndsWith == ConditionBlow.None), "only a finisher bursts it");
+            var plain = ReactionTable.MarkFor(AfflictionPairs.Index(AfflictionKind.Soaked, AfflictionKind.Cursed));
+            Assert.IsTrue(plain.Effects.Where(effect => effect.On == UpgradeTrigger.ConditionStruck).All(effect => effect.By == StruckBy.Finisher));
+            var sowing = EffectsOf(LightningFlowerDuo.SowingThunder).Where(effect => effect.Do == UpgradeAction.Falling).ToList();
+            Assert.AreEqual(1, sowing.Count(effect => effect.By == StruckBy.Heavy));
+            Assert.AreEqual(1, sowing.Count(effect => effect.By == StruckBy.Finisher), "the finisher's second bolt");
+        }
+
         private static IEnumerable<UpgradeEffect> EveryEffect() => Upgrade.All.SelectMany(upgrade => upgrade.Effects
             .Concat(upgrade.Shapes == null ? Enumerable.Empty<UpgradeEffect>() : upgrade.Shapes.Where(shape => shape?.Effects != null).SelectMany(shape => shape.Effects)));
 

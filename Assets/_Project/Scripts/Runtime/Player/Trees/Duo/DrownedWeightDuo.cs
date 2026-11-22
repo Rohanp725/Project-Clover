@@ -45,7 +45,7 @@ namespace Clover.Player.Trees.Duo
                     new ShapeDef
                     {
                         Name = "Drawn Under",
-                        Description = "It swells as before, and the black water pulls down: it sinks knee-deep into a pool 3 m across, held 1.5 s, and every other enemy in the pool is drawn toward it. It bursts as before when it dies or a heavy blow lands.",
+                        Description = "It swells as before, and the black water pulls down: it sinks knee-deep into a pool 3 m across, held 1.5 s, and every other enemy in the pool is drawn toward it. It bursts as before when it dies or your finisher lands.",
                         Effects = under.ToArray(),
                     },
                     new ShapeDef
@@ -136,21 +136,21 @@ namespace Clover.Player.Trees.Duo
 
         // The swelling as the plain Drowned Weight's, under the shape's own names (prefix, prefix.heavy): 5 s, 15% more from
         // weapon blows and 20% slower; with the burst, it bursts in black water to 4 m (14, 20 stagger, Soaked and Cursed)
-        // when it dies or a heavy blow lands on it.
+        // when it dies or a finisher lands on it.
         private static UpgradeEffect[] Swell(string prefix, bool bursts)
         {
             var effects = new List<UpgradeEffect>
             {
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition,
-                    State = new ConditionSpec { Id = prefix, Seconds = 5f, Flags = ConditionFlags.WeaponTakenShare, Scale = 1.15f, EndsWith = bursts ? ConditionBlow.Heavy : ConditionBlow.None,
+                    State = new ConditionSpec { Id = prefix, Seconds = 5f, Flags = ConditionFlags.WeaponTakenShare, Scale = 1.15f, EndsWith = bursts ? ConditionBlow.Finisher : ConditionBlow.None,
                         Is = Reactions.Swollen } },
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = prefix + ".heavy", Seconds = 5f, Pace = 0.8f } },
             };
             if (bursts)
                 foreach (var on in new[] { UpgradeTrigger.ConditionStruck, UpgradeTrigger.ConditionDied })
                 {
-                    effects.Add(new UpgradeEffect { On = on, Condition = prefix, By = StruckBy.Heavy, Do = UpgradeAction.Burst, Radius = 4f, Damage = 14f, Stagger = 20f, Affliction = AfflictionKind.Soaked, Stacks = 1 });
-                    effects.Add(new UpgradeEffect { On = on, Condition = prefix, By = StruckBy.Heavy, Do = UpgradeAction.Burst, Radius = 4f, Affliction = AfflictionKind.Cursed, Stacks = 1 });
+                    effects.Add(new UpgradeEffect { On = on, Condition = prefix, By = StruckBy.Finisher, Do = UpgradeAction.Burst, Radius = 4f, Damage = 14f, Stagger = 20f, Affliction = AfflictionKind.Soaked, Stacks = 1 });
+                    effects.Add(new UpgradeEffect { On = on, Condition = prefix, By = StruckBy.Finisher, Do = UpgradeAction.Burst, Radius = 4f, Affliction = AfflictionKind.Cursed, Stacks = 1 });
                 }
             return effects.ToArray();
         }

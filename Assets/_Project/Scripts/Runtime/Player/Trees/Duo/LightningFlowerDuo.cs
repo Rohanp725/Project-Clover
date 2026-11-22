@@ -102,12 +102,12 @@ namespace Clover.Player.Trees.Duo
             // flowers, and holds the seed for 6 s: your next heavy blow on it calls lightning down on it, 12 and 20 stagger in
             // 1.5 m.
             // NEEDS: seven seeds flung in a fan, the ones that miss lying in the floor, and one heavy blow or discharge anywhere
-            // calling lightning onto every seed at once (form-pieces; now each seeded enemy answers your heavy blow on it); a
-            // finisher striking every bolt twice (finisher-only).
+            // calling lightning onto every seed at once (form-pieces; now each seeded enemy answers your heavy blow on it). A
+            // finisher strikes the bolt twice (StruckBy.Finisher).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = SowingThunder, Name = "Sowing Thunder", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Role = SpellRole.Detonator, Requires = new[] { StormSeason, TheFavouredOak }, Icon = UpgradeIcons.Bolt,
-                Description = "You fling seven seeds in a fan 6 m ahead, like a farmer sowing; each that strikes an enemy Seeds it. For 6 s your heavy blow on a seeded one calls lightning down onto its seed, 12 and 20 stagger round it.",
+                Description = "You fling seven seeds in a fan 6 m ahead, like a farmer sowing; each that strikes an enemy Seeds it. For 6 s your heavy blow on a seeded one calls lightning down onto its seed, 12 and 20 stagger round it; a finisher calls it twice.",
                 Form = SpellForms.Wave,
                 Spell = new SpellSpec { Reach = 6f, Arc = 70f, Damage = 4f, Stagger = 6f, Stacks = 1 },
                 Effects = new[]
@@ -115,6 +115,8 @@ namespace Clover.Player.Trees.Duo
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Seeded, Stacks = 1 },
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Sown, Seconds = 6f, EndsWith = ConditionBlow.Heavy } },
                     new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Sown, By = StruckBy.Heavy, Do = UpgradeAction.Falling, Delay = 0.1f, Radius = 1.5f, Damage = 12f, Stagger = 20f,
+                        Affliction = AfflictionKind.Static, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Sown, By = StruckBy.Finisher, Do = UpgradeAction.Falling, Delay = 0.45f, Radius = 1.5f, Damage = 12f, Stagger = 20f,
                         Affliction = AfflictionKind.Static, Stacks = 1 },
                 },
             }, HeartPattern.Spell));

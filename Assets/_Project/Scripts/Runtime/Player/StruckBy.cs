@@ -13,5 +13,7 @@ namespace Clover.Player
         Shatter,
         /// <summary>A weapon blow that was a critical hit (Blistered's weals).</summary>
         Critical,
+        /// <summary>The finisher's own blow, apart from any other heavy blow (the ledger's finisher-only).</summary>
+        Finisher,
     }
 }

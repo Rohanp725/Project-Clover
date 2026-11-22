@@ -31,6 +31,8 @@ namespace Clover.Gameplay
         public readonly bool Spell;
         /// <summary>True for a critical blow; its damage already includes what that adds.</summary>
         public readonly bool Critical;
+        /// <summary>The finisher's own blow, apart from other heavy blows (a finisher is heavy too).</summary>
+        public readonly bool Finisher;
         /// <summary>
         /// A second affliction laid by the same blow, with its stacks and seconds (zero: its usual time); it shares the
         /// first's strength. A charged blade's element rides here when it differs from what the blow lays already
@@ -62,8 +64,9 @@ namespace Clover.Gameplay
             AfflictionKind affliction = AfflictionKind.None, int afflictionStacks = 0, float afflictionSeconds = 0f, float afflictionPower = 1f,
             bool spell = false, bool critical = false,
             AfflictionKind affliction2 = AfflictionKind.None, int affliction2Stacks = 0, float affliction2Seconds = 0f,
-            bool fromReaction = false, Color tint = default)
+            bool fromReaction = false, Color tint = default, bool finisher = false)
         {
+            Finisher = finisher;
             FromReaction = fromReaction;
             Tint = tint;
             Damage = damage;

@@ -16,5 +16,7 @@ namespace Clover.Gameplay
         Heavy,
         /// <summary>No blow of the player's: the carrier's own blow aimed at the player, landing or turned (The Grudge's cloud).</summary>
         TheirBlow,
+        /// <summary>The finisher's own blow, not any other heavy blow (Drowned Weight's entry).</summary>
+        Finisher,
     }
 }

@@ -1169,15 +1169,15 @@ Title: Drowned Weight (Water and Dark)
 Group: Reactions
 **What it is.** Soaked meets Cursed. The Curse turns the water black and heavy, and the enemy swells up.
 
-**The numbers.** It is swollen for 5 seconds. It moves 20% slower (gods aren't slowed) and takes 15% more damage from your weapon. When it dies, or when a heavy blow lands while it is swollen, it bursts in black water, dealing 14 damage, 20 stagger, Soaked and Cursed to everyone within 4 metres. Then it waits 4 seconds.
+**The numbers.** It is swollen for 5 seconds. It moves 20% slower (gods aren't slowed) and takes 15% more damage from your weapon. When it dies, or when your finisher lands while it is swollen, it bursts in black water, dealing 14 damage, 20 stagger, Soaked and Cursed to everyone within 4 metres. Other heavy blows don't burst it. Then it waits 4 seconds.
 
 **What sets it off.** Water landing on a Cursed enemy, or a Curse landing on a Soaked one.
 
 **Its shapes.** If you have the Shape mark of Water and Dark's duo branch (Drowned Weight: Drawn Under or The Pull of Night, 3 Shards, in the middle of the chart) and carry both, Drowned Weight uses the shape you picked at a rest fire instead. Both swell the enemy for 5 seconds, like the plain one. Drawn Under: the enemy is held for 1.5 seconds, everything within 3 metres is pulled 2 metres toward it, and it bursts like the plain one. The Pull of Night: no burst. Instead, each of your weapon blows on it pulls every other Soaked enemy within 5 metres 1 metre toward it.
 
-**How to use it.** Kill it in a crowd, or hit it with a heavy blow there. The black water spreads both afflictions to the rest.
+**How to use it.** Kill it in a crowd, or finish it there. The black water spreads both afflictions to the rest.
 
-**How it looks.** Its name over the enemy, then the burst. Not built yet: only a finisher should burst it (for now, any heavy blow does).
+**How it looks.** Its name over the enemy, then the burst.
 
 ## reaction-rot-roots
 Title: Rot Roots (Life and Poison)

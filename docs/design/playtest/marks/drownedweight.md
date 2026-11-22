@@ -9,11 +9,11 @@ Dark are both carried.
 
 **When it happens.** Every time Drowned Weight goes off while you carry both Water and Dark. Drowned Weight goes off when a Curse lands on a Soaked enemy, or when water lands on a Cursed one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Drowned Weight.
 
-**The numbers.** Mix, 3 Shards. Both shapes: the enemy swells for 5 seconds. It moves a fifth slower and takes 15% more damage from weapon blows. Drawn Under: the enemy is held for 1.5 seconds, and everything within 3 metres is pulled 2 metres toward it. It bursts like the plain one when it dies or when a heavy blow lands: 14 damage, 20 stagger, Soaked and Cursed to everything within 4 metres. The Pull of Night: there is no burst. Each weapon blow on the enemy pulls every other Soaked enemy within 5 metres 1 metre toward it, at most once every 0.3 seconds. Enemies that aren't Soaked stay where they are. After Drowned Weight goes off on an enemy, it can't go off on that enemy again for 4 seconds.
+**The numbers.** Mix, 3 Shards. Both shapes: the enemy swells for 5 seconds. It moves a fifth slower and takes 15% more damage from weapon blows. Drawn Under: the enemy is held for 1.5 seconds, and everything within 3 metres is pulled 2 metres toward it. It bursts like the plain one when it dies or when your finisher lands: 14 damage, 20 stagger, Soaked and Cursed to everything within 4 metres. The Pull of Night: there is no burst. Each weapon blow on the enemy pulls every other Soaked enemy within 5 metres 1 metre toward it, at most once every 0.3 seconds. Enemies that aren't Soaked stay where they are. After Drowned Weight goes off on an enemy, it can't go off on that enemy again for 4 seconds.
 
 **Works with.** Held Under, Deep Swell, The Debt Passes, Under the Black Water.
 
-**Example.** Archers hanging back: use The Pull of Night, and every blow on the swollen enemy drags them in. A tight pack: use Drawn Under, then a heavy blow for the burst.
+**Example.** Archers hanging back: use The Pull of Night, and every blow on the swollen enemy drags them in. A tight pack: use Drawn Under, then a finisher for the burst.
 
 **Not built yet.** Drawn Under's pool isn't drawn yet, and it pulls the others 2 metres all at once instead of 1.5 metres a second.
 

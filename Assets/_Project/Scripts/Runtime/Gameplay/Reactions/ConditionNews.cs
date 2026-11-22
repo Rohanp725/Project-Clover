@@ -29,5 +29,7 @@ namespace Clover.Gameplay
         public bool Critical;
         /// <summary>What it is beyond its own name (<see cref="ConditionSpec.Is"/>): the plain reaction's name for a shape's same state, or empty.</summary>
         public string Is;
+        /// <summary>For a blow: it was the finisher's own blow (a finisher is heavy too).</summary>
+        public bool Finisher;
     }
 }

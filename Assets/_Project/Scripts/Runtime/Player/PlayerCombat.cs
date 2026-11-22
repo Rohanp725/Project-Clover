@@ -2098,7 +2098,8 @@ namespace Clover.Player
                 if (fromBehind) dealtStagger *= Weapon.BackMultiplier;
                 if (boundTo != null && ReferenceEquals(target, boundTo)) dealtStagger *= BoundStagger;
                 var outcome = target.TakeHit(new Hit(damage, dealtStagger, transform.forward, step.Heavy, carries && ElementSteel.PassesGuard(moveElement.Name), transform.position,
-                    burn, burnStacks, false, kind, kind != AfflictionKind.None ? stacks : 0, lasts, AfflictionPower, false, critical, second, secondStacks, secondLasts, tint: struckTint));
+                    burn, burnStacks, false, kind, kind != AfflictionKind.None ? stacks : 0, lasts, AfflictionPower, false, critical, second, secondStacks, secondLasts, tint: struckTint,
+                    finisher: step.Heavy && Combo.IsFinishing));
                 if (outcome == HitOutcome.Missed) continue;
                 struck.Add(target);
                 if (infused && infusedFirst == null && outcome != HitOutcome.Blocked && target is Component firstBody) infusedFirst = firstBody;

@@ -59,20 +59,19 @@ namespace Clover.Player.Trees
                 new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Suns, By = StruckBy.Weapon, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 2 }));
 
             // Water and Dark (49). Swollen 5 s: 20% slower (a god is not slowed) and 15% more from weapon blows. When it
-            // dies, or a heavy blow lands while it is swollen, it bursts in black water to 4 m: 14 damage, 20 stagger,
-            // Soaked and Cursed on everything reached.
-            // NEEDS: a finisher-only blow: the entry bursts it on a finisher, not on any heavy blow.
+            // dies, or a finisher lands while it is swollen (the finisher's own blow, not any heavy blow), it bursts in black
+            // water to 4 m: 14 damage, 20 stagger, Soaked and Cursed on everything reached.
             UpgradeEffect[] BlackWater(UpgradeTrigger on) => new[]
             {
-                new UpgradeEffect { On = on, Condition = Swollen, By = StruckBy.Heavy, Do = UpgradeAction.Burst, Radius = 4f, Damage = 14f, Stagger = 20f, Affliction = AfflictionKind.Soaked, Stacks = 1 },
-                new UpgradeEffect { On = on, Condition = Swollen, By = StruckBy.Heavy, Do = UpgradeAction.Burst, Radius = 4f, Affliction = AfflictionKind.Cursed, Stacks = 1 },
+                new UpgradeEffect { On = on, Condition = Swollen, By = StruckBy.Finisher, Do = UpgradeAction.Burst, Radius = 4f, Damage = 14f, Stagger = 20f, Affliction = AfflictionKind.Soaked, Stacks = 1 },
+                new UpgradeEffect { On = on, Condition = Swollen, By = StruckBy.Finisher, Do = UpgradeAction.Burst, Radius = 4f, Affliction = AfflictionKind.Cursed, Stacks = 1 },
             };
             var struck = BlackWater(UpgradeTrigger.ConditionStruck);
             var died = BlackWater(UpgradeTrigger.ConditionDied);
             to.Add(Reaction(AfflictionKind.Soaked, AfflictionKind.Cursed,
-                "Soaked meets Cursed: the water turns black and it swells for 5 s, slower and open to your weapon. When it dies or a heavy blow lands it bursts, 14 with Soaked and Cursed to all within 4 m.",
+                "Soaked meets Cursed: the water turns black and it swells for 5 s, slower and open to your weapon. When it dies or your finisher lands on it, it bursts, 14 with Soaked and Cursed to all within 4 m.",
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition,
-                    State = new ConditionSpec { Id = Swollen, Seconds = 5f, Flags = ConditionFlags.WeaponTakenShare, Scale = 1.15f, EndsWith = ConditionBlow.Heavy } },
+                    State = new ConditionSpec { Id = Swollen, Seconds = 5f, Flags = ConditionFlags.WeaponTakenShare, Scale = 1.15f, EndsWith = ConditionBlow.Finisher } },
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = SwollenHeavy, Seconds = 5f, Pace = 0.8f } },
                 struck[0], struck[1], died[0], died[1]));
 

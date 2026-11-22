@@ -298,7 +298,7 @@ namespace Clover.Gameplay
         /// each the blow spends, or that has had its last blow, ends without its end being told. A reaction's own blow is
         /// not one (the caller keeps those out).
         /// </summary>
-        public void Struck(float damage, bool heavy, bool spell, bool shattered = false, bool critical = false)
+        public void Struck(float damage, bool heavy, bool spell, bool shattered = false, bool critical = false, bool finisher = false)
         {
             if (Count == 0) return;
             bool spentAny = false;
@@ -307,8 +307,8 @@ namespace Clover.Gameplay
                 if (!runs[i].Active) continue;
                 ref var run = ref runs[i];
                 if (!spell) run.Blows++;
-                if (run.AnswersStruck) Tell(ConditionMoment.Struck, in run, damage, heavy, spell, shattered, critical);
-                if (!SpentBy(in run, heavy, spell)) continue;
+                if (run.AnswersStruck) Tell(ConditionMoment.Struck, in run, damage, heavy, spell, shattered, critical, finisher && !spell);
+                if (!SpentBy(in run, heavy, spell, finisher)) continue;
                 NoteSpent(in run);
                 runs[i] = default;
                 spentAny = true;
@@ -360,7 +360,7 @@ namespace Clover.Gameplay
 
         private static int Bit(AfflictionKind kind) => kind == AfflictionKind.None ? 0 : 1 << (int)kind;
 
-        private static bool SpentBy(in ConditionRun run, bool heavy, bool spell)
+        private static bool SpentBy(in ConditionRun run, bool heavy, bool spell, bool finisher = false)
         {
             if (run.BlowLimit > 0 && run.Blows >= run.BlowLimit) return true;
             switch (run.EndsWith)
@@ -368,6 +368,7 @@ namespace Clover.Gameplay
                 case ConditionBlow.Any: return true;
                 case ConditionBlow.Weapon: return !spell;
                 case ConditionBlow.Heavy: return heavy && !spell;
+                case ConditionBlow.Finisher: return finisher && !spell;
                 default: return false;
             }
         }
@@ -441,12 +442,12 @@ namespace Clover.Gameplay
             Sight = sight;
         }
 
-        private void Tell(ConditionMoment moment, in ConditionRun run, float damage, bool heavy, bool spell, bool shattered = false, bool critical = false)
+        private void Tell(ConditionMoment moment, in ConditionRun run, float damage, bool heavy, bool spell, bool shattered = false, bool critical = false, bool finisher = false)
         {
             var news = new ConditionNews
             {
                 Moment = moment, Id = run.Id, Mark = run.Mark, Count = run.Count, Blows = run.Blows, Flags = run.Flags, Scale = run.Scale, Link = run.Link,
-                Damage = damage, Heavy = heavy, Spell = spell, Shattered = shattered, Critical = critical, Is = run.Is,
+                Damage = damage, Heavy = heavy, Spell = spell, Shattered = shattered, Critical = critical, Is = run.Is, Finisher = finisher,
             };
             if (Report != null) Report(Who, news);
             else CombatEvents.RaiseCondition(Who, news);

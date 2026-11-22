@@ -59,10 +59,10 @@ while Lightning and Life are both carried.
 
 **When it happens.** Cast it from a spell slot while you carry both Lightning and Life. Press that slot's button (hold L2 and a face button, or press 1 to 4). The first time it lands, it charges your blade with Lightning.
 
-**The numbers.** Mix, duo spell, detonator, 5 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. It is a cone 6 metres long and 70 degrees wide. Each enemy in it takes 4 damage, 6 stagger, a Static and a Seed, so each one flowers. For 6 seconds, your first heavy blow on each one calls down a bolt, for 12 damage, 20 stagger and a Static within 1.5 metres.
+**The numbers.** Mix, duo spell, detonator, 5 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. It is a cone 6 metres long and 70 degrees wide. Each enemy in it takes 4 damage, 6 stagger, a Static and a Seed, so each one flowers. For 6 seconds, your first heavy blow on each one calls down a bolt, for 12 damage, 20 stagger and a Static within 1.5 metres. If that heavy blow is a finisher, a second bolt falls right after the first.
 
 **Works with.** Lightning Flower (every enemy it hits gets both afflictions), Rain on the Field, Storm Season.
 
 **Example.** Sow seeds across a line of soldiers, then go down the line with heavy blows.
 
-**Not built yet.** Seeds that miss don't stay in the floor yet. One heavy blow or burst of Static doesn't yet call lightning onto every seed at once. A finisher doesn't make each bolt hit twice yet.
+**Not built yet.** Seeds that miss don't stay in the floor yet. One heavy blow or burst of Static doesn't yet call lightning onto every seed at once.

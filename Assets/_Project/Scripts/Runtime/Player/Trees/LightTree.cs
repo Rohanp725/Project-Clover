@@ -103,12 +103,12 @@ namespace Clover.Player.Trees
                         new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Sentenced, Do = UpgradeAction.Spend, Affliction = M },
                     } },
                 "Opens two shapes of Reckoning, chosen at any rest fire: Witnessed, a seal that counts the blows struck at you, or Spoken Sentence, a seal your heavy blow breaks over every Marked enemy.",
-                // NEEDS: a finisher as the blow (finisher-only), and the count paid a second time (damage-tally). Until then a
-                // heavy blow on the sealed enemy strikes it for 40 and 40 stagger, once a seal.
+                // A finisher on the sealed enemy (StruckBy.Finisher), not any heavy blow. NEEDS: the count paid a second time
+                // (damage-tally); until then the finisher strikes it for 40 and 40 stagger, once a seal.
                 new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Owed, Seconds = 6f, EndsWith = ConditionBlow.Heavy } },
-                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Owed, By = StruckBy.Heavy, Do = UpgradeAction.Burst, Radius = 1.2f, Damage = 40f, Stagger = 40f, Stacks = 0 },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Owed, Seconds = 6f, EndsWith = ConditionBlow.Finisher } },
+                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Owed, By = StruckBy.Finisher, Do = UpgradeAction.Burst, Radius = 1.2f, Damage = 40f, Stagger = 40f, Stacks = 0 },
                 },
                 "A finisher on the sealed enemy pays the count twice.",
                 learnEffects: new[]
