@@ -98,8 +98,9 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.RightLow));
 
-            // NEEDS: the moment an arc leaves an enemy, and an arc that keeps its full damage from one to the next; now a
-            // discharge on a chilled enemy runs on as an arc through every chilled enemy within 5 m of the last, four at most.
+            // A discharge on a chilled enemy leaves it as an arc at the discharge's full strength (UpgradeEffect.Amount 1 of the
+            // discharge's damage), running on through every chilled enemy within 5 m of the last, a Static on each. NEEDS: every
+            // other arc leaving a chilled enemy as the moment, not only a discharge (arc-leaves).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = NothingResists, Name = "Nothing Resists", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { ChargedHail, ColdSnap }, Icon = UpgradeIcons.Chain,
@@ -107,7 +108,7 @@ namespace Clover.Player.Trees.Duo
                 Effects = new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.SetOff, Spent = AfflictionKind.Static, Needs = AfflictionKind.Chill, Do = UpgradeAction.Arc, FromTarget = true, LeapsTo = AfflictionKind.Chill,
-                        Count = 4, Reach = 5f, Damage = 7f, Stagger = 5f, Affliction = AfflictionKind.Static, Stacks = 1, Cooldown = 0.5f },
+                        LeapsOnFrom = AfflictionKind.Chill, Count = 24, Reach = 5f, Amount = 1f, Damage = 7f, Stagger = 5f, Affliction = AfflictionKind.Static, Stacks = 1, Cooldown = 0.5f },
                 },
             }, HeartPattern.Keystone));
 

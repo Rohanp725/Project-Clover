@@ -47,13 +47,13 @@ both are carried (in the playtest, whenever you pick Ice beside Lightning or Lig
 
 **When it happens.** Whenever Static is set off on an enemy that has Chill (by a heavy blow, the end of a Sleet Charge, or Cold Snap).
 
-**The numbers.** Mix, keystone, 5 Shards. An arc runs from the enemy through up to four chilled enemies, each within 5 metres of the last one, dealing 7 damage, 5 stagger and a Static to each, at most twice a second.
+**The numbers.** Mix, keystone, 5 Shards. When Static goes off on a chilled enemy, an arc runs from it through every chilled enemy within 5 metres of the last one. Each takes the discharge's full damage (7 for every Static that went off; 35 at five), 5 stagger and a Static. At most twice a second.
 
 **Works with.** Thundersnow, Cold Snap, Charged Hail, and Hoarfrost and Glass Storm to keep the pack chilled.
 
 **Example.** Glass Storm has chilled a pack of five. One heavy blow on a charged one, and the arc runs through the other four.
 
-**Not built yet.** For now, it only works when Static goes off, not on every arc that leaves a chilled enemy. Each arc after the first deals its own 7 damage, instead of carrying the full hit along.
+**Not built yet.** For now, it only works when Static goes off, not on every other arc that leaves a chilled enemy.
 
 ## sleetcharge.glassstorm
 **What it does.** Six shards of clear ice spin around you, 2 metres away, for 8 seconds, with threads of lightning jumping between them. Each shard that passes through an enemy cuts it and adds a Chill, and every other pass adds a Static too, so the ring sets up Sleet Charge on any enemy that pushes in.

@@ -2439,7 +2439,9 @@ namespace Clover.Player
                 int stacks = afflictable.Afflictions.Consume(AfflictionKind.Static);
                 if (stacks <= 0) continue;
                 Discharges++;
-                Trigger(UpgradeTrigger.SetOff, body, body.transform.position, true, stacks, null, AfflictionKind.Static);
+                // What it deals goes with it, for what carries the discharge on at its strength (Nothing Resists).
+                Trigger(UpgradeTrigger.SetOff, body, body.transform.position, true, stacks, null, AfflictionKind.Static, "", LaySource.Effect,
+                    StaticDamagePerStack * stacks * (hasStroke ? 2f : 1f));
                 if (hasStroke)
                 {
                     // Single Stroke: it does not arc. All of it lands on the one struck, twice as hard.
@@ -2542,7 +2544,7 @@ namespace Clover.Player
         {
             if (who == null || stacks <= 0) return;
             Discharges++;
-            Trigger(UpgradeTrigger.SetOff, who, who.transform.position, true, stacks, null, AfflictionKind.Static);
+            Trigger(UpgradeTrigger.SetOff, who, who.transform.position, true, stacks, null, AfflictionKind.Static, "", LaySource.Effect, StaticDamagePerStack * stacks);
         }
 
         // The nearest enemy within reach in the condition named (by its name or what it is), leaving out those given; null

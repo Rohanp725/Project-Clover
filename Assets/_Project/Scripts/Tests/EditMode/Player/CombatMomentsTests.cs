@@ -205,6 +205,16 @@ namespace Clover.Tests
             Assert.AreEqual(0.2f, PlayerUpgrades.BeatWindow, 1e-5f);
         }
 
+        [Test]
+        public void NothingResistsCarriesTheDischargeAtFullStrength()
+        {
+            var resists = Upgrade.ById(SleetChargeDuo.NothingResists).Effects.Single();
+            Assert.AreEqual(UpgradeAction.Arc, resists.Do);
+            Assert.AreEqual(1f, resists.Amount, 1e-5f, "the discharge's whole damage");
+            Assert.GreaterOrEqual(resists.Count, 12, "every chilled enemy within 5 m of the last");
+            Assert.AreEqual(AfflictionKind.Chill, resists.LeapsTo);
+        }
+
         private sealed class Afflicted : IAfflictable
         {
             public Afflicted(AfflictionSet set) => Afflictions = set;
