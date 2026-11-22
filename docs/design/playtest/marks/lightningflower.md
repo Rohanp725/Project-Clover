@@ -44,13 +44,11 @@ while Lightning and Life are both carried.
 
 **When it happens.** Every time Lightning Flower goes off, while you carry both Lightning and Life.
 
-**The numbers.** Mix, keystone, 5 Shards. 3 health for each Lightning Flower.
+**The numbers.** Mix, keystone, 5 Shards. 3 health for each bolt something you grew throws into a Lightning Flower, and that grown thing stays 3 seconds longer.
 
 **Works with.** Lightning Flower and its shapes, Storm Season, Sowing Thunder.
 
 **Example.** Fight a seeded pack among your briars, and every flower heals you.
-
-**Not built yet.** The things you grow don't throw bolts into the flower yet, so it only heals 3 for the fern's own bolt, and nothing stays longer.
 
 ## lightningflower.sowing
 **What it does.** You throw seven seeds in a fan 6 metres ahead, like a farmer planting a field. Each one that hits an enemy Seeds it. For 6 seconds, your heavy blow on a seeded enemy calls lightning down onto its seed, dealing 12 damage and 20 stagger around it.

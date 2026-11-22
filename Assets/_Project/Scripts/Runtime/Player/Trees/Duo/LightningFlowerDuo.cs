@@ -86,13 +86,16 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.RightLow));
 
-            // NEEDS: grown things as sources (grown-sources): 3 health for every bolt a grown thing throws into the flower, and
-            // each that throws one standing 3 s longer; now the fern's own bolt is the one bolt, so each Lightning Flower heals 3.
+            // 3 health for every bolt a grown thing throws into the flower, and each that throws one stands 3 s longer (GrownBolt).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = RainOnTheField, Name = "Rain on the Field", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { StormSeason, TheFavouredOak }, Icon = UpgradeIcons.Drop,
                 Description = "Each Lightning Flower mends you 3 for every bolt thrown into it, and every grown thing that throws one stands 3 s longer.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = Reaction, Do = UpgradeAction.Heal, Amount = 3f } },
+                Effects = new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.GrownBolt, Do = UpgradeAction.Heal, Amount = 3f },
+                    new UpgradeEffect { On = UpgradeTrigger.GrownBolt, Do = UpgradeAction.Tend, Radius = 0.5f, Seconds = 3f },
+                },
             }, HeartPattern.Keystone));
 
             // The duo spell, bought with 5 Shards once both are carried (no god gives it): a detonator on a 10 s cooldown

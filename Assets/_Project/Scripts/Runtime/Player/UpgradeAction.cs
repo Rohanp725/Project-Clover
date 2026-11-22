@@ -207,5 +207,10 @@ namespace Clover.Player
         /// stands when the effect has Damage, Stagger or Stacks (Reach: the flare's size). Nothing when nothing grown is that near.
         /// </summary>
         Tend,
+        /// <summary>
+        /// Every grown thing of the player's within Reach of the target, Count at most, throws a bolt into it (Damage,
+        /// Stagger, Affliction and Stacks); each bolt is a moment of its own (<see cref="UpgradeTrigger.GrownBolt"/>; the ledger's grown-sources).
+        /// </summary>
+        GrownBolts,
     }
 }

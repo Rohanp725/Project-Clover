@@ -44,13 +44,11 @@ carried.
 
 **When it happens.** Always on once you learn it, while you carry both Ice and Life and stand near something you grew.
 
-**The numbers.** Mix, keystone, 5 Shards. You get a ward every 6 seconds while you stand within 4 metres of something you grew.
+**The numbers.** Mix, keystone, 5 Shards. You get a ward every 6 seconds while you stand within 4 metres of something you grew. Every time something you grew hits enemies, each enemy it hits also gets a Chill.
 
 **Works with.** Briar Patch, Sapling and Elder Tree (things to grow), Late Frost.
 
 **Example.** Fight next to your sapling, and the first blow of each exchange glances off its bark.
-
-**Not built yet.** The things you grow don't chill what they hit yet.
 
 ## winterseed.green
 **What it does.** You strike the floor, and lines of green run through the frost to every enemy nearby. On each one that has both Chill and Seeded, the frost breaks and its sleeping seed wakes up right away.

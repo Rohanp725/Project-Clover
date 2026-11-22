@@ -83,6 +83,7 @@ namespace Clover.Player
                 case UpgradeTrigger.AfflictionLaid: return "an affliction is laid on an enemy";
                 case UpgradeTrigger.DanceInTime: return "every cut of a dance lands in time";
                 case UpgradeTrigger.GrownBurst: return "something you grew bursts";
+                case UpgradeTrigger.GrownBolt: return "something you grew throws a bolt";
                 default: return "its moment comes";
             }
         }

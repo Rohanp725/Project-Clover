@@ -959,7 +959,7 @@ Title: Lightning Flower (Lightning and Life)
 Group: Reactions
 **What it is.** Static meets Seeded. A red, fern-shaped pattern of lightning blooms on the enemy's skin.
 
-**The numbers.** The fern throws a bolt to the nearest other Seeded enemy within 8 metres, for 8 damage, 10 stagger and a Static. The enemy keeps both afflictions. Then it waits 4 seconds.
+**The numbers.** The fern throws a bolt to the nearest other Seeded enemy within 8 metres, for 8 damage, 10 stagger and a Static. Each thing you grew (briars, saplings, lilies) within 8 metres of the enemy also throws a bolt into it, up to four, with the same numbers. The enemy keeps both afflictions. Then it waits 4 seconds.
 
 **What sets it off.** Static landing on a Seeded enemy, or a seed landing on a charged one.
 
@@ -967,7 +967,7 @@ Group: Reactions
 
 **How to use it.** Seed two enemies, then charge one of them.
 
-**How it looks.** Its name over the enemy, and a hit where the bolt lands. Not built yet: the things you grew (briars, saplings, lilies) throwing bolts into it.
+**How it looks.** Its name over the enemy, and a hit where the bolt lands. Sparks fly from each thing you grew that throws a bolt.
 
 ## reaction-logan-stone
 Title: Logan Stone (Wind and Earth)

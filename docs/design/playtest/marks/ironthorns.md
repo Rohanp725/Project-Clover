@@ -33,7 +33,7 @@ both carried.
 
 **When it happens.** Always on once you learn it, while you carry both Life and Metal.
 
-**The numbers.** Mix, 3 Shards. For now: while you stand near something you grew, your blows add a notch, at most twice a second.
+**The numbers.** Mix, 3 Shards. Every time something you grew hits enemies, each enemy it hits also gets a notch (Sundered).
 
 **Works with.** Briar Patch, Sapling, Elder Tree, Iron Thorns (a notch on a seeded enemy starts it).
 

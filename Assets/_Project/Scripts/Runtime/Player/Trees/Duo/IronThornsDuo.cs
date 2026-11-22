@@ -65,13 +65,11 @@ namespace Clover.Player.Trees.Duo
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Kill, InState = Reactions.Thorns, Do = UpgradeAction.FlaskFill, Amount = 0.25f } },
             }, HeartPattern.LeftLow));
 
-            // NEEDS: grown things as sources that lay the other element's affliction when they bite (grown-sources); now your
-            // weapon blows lay a notch while you stand near one of them.
+            // Every grown thing lays a notch when it bites (Hazards.GrownBitesMask, set by PlayerUpgrades while this is owned).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = OreInTheRoot, Name = "Ore in the Root", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Leaf,
                 Description = "Things you grow draw iron from the ground: each grown thing lays a notch of Sundered when it bites.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.AnyHit, While = StatWhen.NearGrown, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Sundered, Stacks = 1, Cooldown = 0.5f } },
             }, HeartPattern.RightLow));
 
             // A notch laid on a Seeded enemy lays one more (UpgradeTrigger.AfflictionLaid; the second is not answered again).

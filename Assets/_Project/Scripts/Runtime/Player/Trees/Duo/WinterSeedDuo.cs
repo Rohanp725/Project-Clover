@@ -83,8 +83,8 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.RightLow));
 
-            // NEEDS: grown things laying the other element's affliction when they bite (now they bite as before); the bark
-            // turning a blow is a ward given every 6 s while you stand near one of them.
+            // Every grown thing lays a Chill when it bites (Hazards.GrownBitesMask), and the bark turning a blow is a ward given
+            // every 6 s while you stand near one of them.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = HiddenInTheTree, Name = "Hidden in the Tree", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { SeedUnderSnow, LateFrost }, Icon = UpgradeIcons.Tower,

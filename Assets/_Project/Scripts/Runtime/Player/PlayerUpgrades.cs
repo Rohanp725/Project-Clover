@@ -190,6 +190,8 @@ namespace Clover.Player
         public int DosesStored { get; private set; }
         private readonly HashSet<IDamageable> gatherTaken = new HashSet<IDamageable>();
         private readonly HashSet<IDamageable> stateScratch = new HashSet<IDamageable>();
+        /// <summary>Bolts thrown by grown things (Lightning Flower), counted for probes.</summary>
+        public int GrownBoltsThrown { get; private set; }
         /// <summary>Grown things tended by a mark (Kindled Guard, The Host), counted for probes.</summary>
         public int GrownTended { get; private set; }
         // The death a helper was last raised for, in which frame and by which mark: one death raises one.
@@ -1101,6 +1103,9 @@ namespace Clover.Player
             Hazards.GrownDamageScale = Stats.Multiplier(PlayerStat.GrownDamage);
             // Wood Grows Back: what you grow grows back six seconds after it is spent.
             Hazards.GrowsBackAfter = Has(Trees.LifeTree.WoodGrowsBack) ? Trees.LifeTree.GrowsBackSeconds : 0f;
+            // What every grown thing lays with its bites: a notch (Ore in the Root), a Chill (Hidden in the Tree).
+            Hazards.GrownBitesMask = (Has(Trees.Duo.IronThornsDuo.OreInTheRoot) ? 1 << (int)AfflictionKind.Sundered : 0)
+                | (Has(Trees.Duo.WinterSeedDuo.HiddenInTheTree) ? 1 << (int)AfflictionKind.Chill : 0);
             // Heat as the marks make it: sooner, slower to cool, higher.
             Heat.BlowsPerLevel = Mathf.Max(1, baseHeatBlows - Stats.Whole(PlayerStat.HeatBlows));
             Heat.CoolAfter = baseHeatCool * Stats.Multiplier(PlayerStat.HeatCooling);
@@ -2030,6 +2035,21 @@ namespace Clover.Player
                         Kind = ElementLook.Ground(held), Tint = held.Colour, Position = self, Radius = Or(effect.Radius, 2.3f), Seconds = 0.12f, BiteEvery = 0.1f, Once = true, Burst = true,
                         Delay = delay, Blow = Blow(held, kind, combat.LastBlowDamage * Or(effect.Amount, 0.6f), eStagger, 0),
                     });
+                    break;
+                }
+                case UpgradeAction.GrownBolts:
+                {
+                    if (subject == null || !PlayerReactions.Alive(subject)) break;
+                    int sources = Hazards.GrownWithin(subject.transform.position, Or(effect.Reach, 8f), grownBursts);
+                    sources = Mathf.Min(sources, Or(eCount, 4));
+                    for (int b = 0; b < sources; b++)
+                    {
+                        Vector3 from = grownBursts[b];
+                        if (!combat.StrikeOne(subject, Blow(look, kind, eDamage, eStagger, eStacks), from)) continue;
+                        ElementLook.Sparks(look, from + Vector3.up * 0.8f, (subject.transform.position - from).normalized, 0.8f);
+                        GrownBoltsThrown++;
+                        Trigger(UpgradeTrigger.GrownBolt, null, from);
+                    }
                     break;
                 }
                 case UpgradeAction.Tend:

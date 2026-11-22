@@ -106,5 +106,7 @@ namespace Clover.Player
         DanceInTime,
         /// <summary>A grown thing of the player's burst where it stood (a call, a withering: the ledger's grown-bursts). Target: none; the point is where it stood.</summary>
         GrownBurst,
+        /// <summary>A grown thing of the player's threw a bolt into an enemy (Lightning Flower). Target: none; the point is where the grown thing stands.</summary>
+        GrownBolt,
     }
 }

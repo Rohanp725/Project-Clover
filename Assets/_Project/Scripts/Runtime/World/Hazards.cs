@@ -121,6 +121,7 @@ namespace Clover.World
             FireSecondsScale = 1f;
             GrowsBackAfter = 0f;
             Regrowing.Clear();
+            GrownBitesMask = 0;
         }
 
         /// <summary>
@@ -128,6 +129,29 @@ namespace Clover.World
         /// (Wood Grows Back: 6; the ledger's grows-back). Set from the player's marks.
         /// </summary>
         public static float GrowsBackAfter;
+        /// <summary>
+        /// What every grown thing lays besides its own blow, one a bite, as bits at <c>1 &lt;&lt; (int)kind</c> (Ore in the Root:
+        /// a notch; Hidden in the Tree: a Chill; the ledger's grown-sources). Set from the player's marks.
+        /// </summary>
+        public static int GrownBitesMask;
+
+        /// <summary>
+        /// Writes where the player's grown things within <paramref name="metres"/> of <paramref name="at"/> stand, as many as
+        /// <paramref name="into"/> holds (Lightning Flower: each throws a bolt). Returns how many.
+        /// </summary>
+        public static int GrownWithin(Vector3 at, float metres, Vector3[] into)
+        {
+            if (instance == null || into == null) return 0;
+            int count = 0;
+            for (int i = 0; i < instance.zones.Length && count < into.Length; i++)
+            {
+                if (!instance.zones[i].Active || !instance.zones[i].Spec.Grown) continue;
+                if (!GrownRules.Within(instance.zones[i].Position, at, metres)) continue;
+                into[count++] = instance.zones[i].Position;
+            }
+            return count;
+        }
+
         /// <summary>The grown things waiting to grow back, each with its time.</summary>
         public static readonly RegrowQueue Regrowing = new RegrowQueue();
         /// <summary>Grown things grown back, counted for probes.</summary>
@@ -462,6 +486,10 @@ namespace Clover.World
                     zone.UntilBite = zone.Spec.BiteEvery;
                     int hits = owner.StrikeArea(zone.Position, zone.Spec.Radius, zone.Spec.Blow, LeftAlone(i, zone));
                     if (zone.Spec.AlsoLays != AfflictionKind.None) owner.AfflictArea(zone.Position, zone.Spec.Radius, zone.Spec.AlsoLays, 1);
+                    // What the player's marks make every grown thing lay with its bites (Ore in the Root, Hidden in the Tree).
+                    if (zone.Spec.Grown && GrownBitesMask != 0 && hits > 0)
+                        for (int k = 1; k < 32; k++)
+                            if ((GrownBitesMask & (1 << k)) != 0) owner.AfflictArea(zone.Position, zone.Spec.Radius, (AfflictionKind)k, 1);
                     zone.Bitten++;
                     // A standing storm drops a bolt somewhere in itself each time it bites, whether or not anyone is under it.
                     if (zone.Spec.Quiet) { }

@@ -38,11 +38,13 @@ namespace Clover.Player.Trees
 
             // Lightning and Life (35). The fern itself throws one bolt to the nearest other Seeded enemy within 8 m: 8
             // damage, 10 stagger and one Static. The enemy keeps both afflictions.
-            // NEEDS: grown things as sources: every grown thing of the player's within 8 m throws a bolt into it (four at
-            // most, the same numbers); the fern's own bolt is what happens with nothing grown near, built for every case.
+            // Every grown thing of the player's within 8 m throws a bolt into it too (UpgradeAction.GrownBolts: four at most, the
+            // same numbers).
             to.Add(Reaction(AfflictionKind.Static, AfflictionKind.Seeded,
                 "Static meets Seeded: a red fern of lightning flowers on its skin and throws a bolt to the nearest Seeded enemy within 8 m, 8 and a Static.",
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Arc, LeapsTo = AfflictionKind.Seeded, Count = 1, Reach = 8f, Damage = 8f, Stagger = 10f,
+                    Affliction = AfflictionKind.Static, Stacks = 1 },
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.GrownBolts, Count = 4, Reach = 8f, Damage = 8f, Stagger = 10f,
                     Affliction = AfflictionKind.Static, Stacks = 1 }));
 
             // Wind and Earth (36), rest 6 s. It rocks for 3 s: the first blow breaks its balance at 1.25 times, the next at

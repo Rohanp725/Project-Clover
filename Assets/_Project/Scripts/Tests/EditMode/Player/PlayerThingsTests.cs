@@ -68,6 +68,24 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void GrownThingsThrowBoltsAndBiteWithTheOtherElement()
+        {
+            var flower = Upgrade.ById(AfflictionPairs.Id(AfflictionPairs.Index(AfflictionKind.Static, AfflictionKind.Seeded))).Effects;
+            var bolts = flower.Single(each => each.Do == UpgradeAction.GrownBolts);
+            Assert.AreEqual(4, bolts.Count, "four at most");
+            Assert.AreEqual(8f, bolts.Reach, 1e-5f, "from within 8 m");
+            Assert.AreEqual(8f, bolts.Damage, 1e-5f, "the fern's own numbers");
+            Assert.AreEqual(AfflictionKind.Static, bolts.Affliction);
+            Assert.IsTrue(flower.Any(each => each.Do == UpgradeAction.Arc), "and the fern still throws its own");
+            var rain = Upgrade.ById(Clover.Player.Trees.Duo.LightningFlowerDuo.RainOnTheField).Effects;
+            Assert.IsTrue(rain.All(each => each.On == UpgradeTrigger.GrownBolt), "for every bolt a grown thing throws");
+            Assert.IsTrue(rain.Any(each => each.Do == UpgradeAction.Heal && each.Amount == 3f));
+            Assert.IsTrue(rain.Any(each => each.Do == UpgradeAction.Tend && each.Seconds == 3f), "the thrower stands 3 s longer");
+            Assert.IsEmpty(Upgrade.ById(Clover.Player.Trees.Duo.IronThornsDuo.OreInTheRoot).Effects, "Ore in the Root is a rule of the ground, not a blow of yours");
+            Assert.AreNotEqual("its moment comes", TriggerWords.Of(UpgradeTrigger.GrownBolt));
+        }
+
+        [Test]
         public void ReapReachesTheWholeFightAndSecondSowingAnswersEachBurst()
         {
             var learn = Upgrade.ById(LifeTree.ReapWhatIsSown);
