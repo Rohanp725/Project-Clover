@@ -348,6 +348,22 @@ namespace Clover.Player
         public ConditionSpec Inside;
         public float Pull;
         public float Mends;
+        /// <summary>
+        /// For a Hazard: effects done at each bite on each enemy standing in the ground, as that enemy's own, so their own tests
+        /// (Needs, Ranks, CooldownPerEnemy) are asked of it: an enemy in the slick dosed four deep floats up (the ledger's
+        /// ground-states). <see cref="InsideSpares"/> leaves out the enemy the ground was laid for, which its mark already answered.
+        /// </summary>
+        public UpgradeEffect[] InsideDo;
+        public bool InsideSpares;
+        /// <summary>
+        /// For a Hazard: the name its ground answers to. At each bite every enemy standing in it is told to the marks in force
+        /// as <see cref="UpgradeTrigger.InGround"/>, and those whose <see cref="Condition"/> names this ground answer (Seen in the
+        /// Water on the net of light).
+        /// </summary>
+        public string Ground = "";
+
+        /// <summary>True when a Hazard effect lays ground that keeps acting, told to the marks at each bite (Hazards.GroundActs).</summary>
+        public bool ActsAsGround => Inside != null || Mends > 0f || InsideDo != null || !string.IsNullOrEmpty(Ground);
 
         /// <summary>A copy with every number, its slot and its mark (an Empower's twin of its Learn's effect).</summary>
         internal UpgradeEffect Twin() => (UpgradeEffect)MemberwiseClone();

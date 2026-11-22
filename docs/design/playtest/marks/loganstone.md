@@ -9,13 +9,11 @@ are both carried.
 
 **When it happens.** Every time Logan Stone goes off while you carry both Wind and Earth. Logan Stone goes off when Unsteady lands on a shaken enemy, or when Tremor lands on an Unsteady one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Logan Stone.
 
-**The numbers.** Mix, 3 Shards. Both shapes: the enemy rocks for 3 seconds. Your first weapon blow breaks its balance 1.25 times as fast, the next 1.5 times, and the third knocks it flat. Its fall deals 20 damage, 30 stagger and a Tremor within 3 metres. An elite only staggers, taking 40 stagger. Sandblast: the enemy is down for 1.8 seconds, and the grit flies out of its far side, away from you, as a cone 5 metres long and 60 degrees wide: 6 damage, 15 stagger and an Unsteady to every other enemy in it. This is on purpose: the Unsteady may start a new Logan Stone. Drifted Over: the enemy is down for 2.8 seconds, and every enemy within 2 metres of it moves at 60% speed for those 2.8 seconds. After Logan Stone goes off on an enemy, it can't go off on that enemy again for 6 seconds.
+**The numbers.** Mix, 3 Shards. Both shapes: the enemy rocks for 3 seconds. Your first weapon blow breaks its balance 1.25 times as fast, the next 1.5 times, and the third knocks it flat. Its fall deals 20 damage, 30 stagger and a Tremor within 3 metres. An elite only staggers, taking 40 stagger. Sandblast: the enemy is down for 1.8 seconds, and the grit flies out of its far side, away from you, as a cone 5 metres long and 60 degrees wide: 6 damage, 15 stagger and an Unsteady to every other enemy in it. This is on purpose: the Unsteady may start a new Logan Stone. Drifted Over: the enemy is down for 2.8 seconds, and sand covers the floor 2 metres around it for those 2.8 seconds. Every enemy in the sand moves at 60% speed, even one that wades in later, for as long as it stands there. After Logan Stone goes off on an enemy, it can't go off on that enemy again for 6 seconds.
 
 **Works with.** Grit in the Wind to set it up, New Face, The Prophecy Broken, Walking Dune.
 
 **Example.** A line of soldiers: use Sandblast, and knock them down in a row. A pack around you: use Drifted Over, and finish the buried one while the rest wade through the sand.
-
-**Not built yet.** Drifted Over slows enemies who are near when it falls, but not enemies who wade in later.
 
 ## loganstone.grit
 **What it does.** Your light blows on a shaken enemy make it Unsteady. Your heavy blows on an Unsteady enemy shake it.

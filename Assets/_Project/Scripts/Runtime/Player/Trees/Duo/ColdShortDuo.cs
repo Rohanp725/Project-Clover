@@ -30,8 +30,8 @@ namespace Clover.Player.Trees.Duo
         {
             const string A = Elements.Ice, B = Elements.Metal;
 
-            // NEEDS: ground that acts on whoever walks in later (ground-states): Shed Plate's black ice throwing flat whoever
-            // steps on it in its 4 s; now those within 1.2 m as the plate falls slip. Snapped Blade: a plain guard against the
+            // Shed Plate's black ice throws flat whoever steps on it in its 4 s, once in 1.5 s each (UpgradeEffect.InsideDo), as well
+            // as those within 1.2 m as the plate falls. Snapped Blade: a plain guard against the
             // brittle enemy counts as perfect (ConditionFlags.GuardMadePerfect), and a perfect guard on it breaks its weapon for
             // 50 stagger and a 1 s hold; its blows deal half for the 5 s.
             to.Add(HeartPattern.Put(new Upgrade
@@ -52,7 +52,8 @@ namespace Clover.Player.Trees.Duo
                             new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = PlateBrittle, By = StruckBy.Heavy, Do = UpgradeAction.Condition,
                                 State = new ConditionSpec { Id = PlateBare, Seconds = 120f, Keeps = AfflictionKind.Sundered } },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = PlateBrittle, By = StruckBy.Heavy, Do = UpgradeAction.Hazard, Radius = 1f, Seconds = 4f, Interval = 1f,
-                                Affliction = AfflictionKind.Chill },
+                                Affliction = AfflictionKind.Chill, InsideDo = new[] { new UpgradeEffect { On = UpgradeTrigger.InGround, Do = UpgradeAction.Condition, CooldownPerEnemy = true, Cooldown = 1.5f,
+                                    State = new ConditionSpec { Id = Slip, Seconds = 0.6f, Flags = ConditionFlags.Down } } } },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = PlateBrittle, By = StruckBy.Heavy, Do = UpgradeAction.Condition, Radius = 1.2f,
                                 State = new ConditionSpec { Id = Slip, Seconds = 0.6f, Flags = ConditionFlags.Down } },
                         },

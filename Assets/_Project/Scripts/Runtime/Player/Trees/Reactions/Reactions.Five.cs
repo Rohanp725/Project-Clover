@@ -16,6 +16,23 @@ namespace Clover.Player.Trees
         public const string Draw = "stolenwarmth.draw";
         public const string Floating = "fishpoison.float";
 
+        /// <summary>
+        /// What a fouled slick does to each other enemy standing in it dosed <paramref name="doses"/> deep (UpgradeEffect.InsideDo):
+        /// it floats up stunned as the reacting one does, once in <paramref name="seconds"/> (the slick's time), and the
+        /// condition <paramref name="floating"/> opens it to the next weapon blow.
+        /// </summary>
+        public static UpgradeEffect[] FloatInside(string floating, int doses, float seconds) => new[]
+        {
+            new UpgradeEffect { On = UpgradeTrigger.InGround, Needs = AfflictionKind.Poison, NeedsAtLeast = doses, Ranks = EnemyRank.Plain, Do = UpgradeAction.Lift, Seconds = 1.5f,
+                CooldownPerEnemy = true, Cooldown = seconds },
+            new UpgradeEffect { On = UpgradeTrigger.InGround, Needs = AfflictionKind.Poison, NeedsAtLeast = doses, Ranks = EnemyRank.Elite, Do = UpgradeAction.Lift, Seconds = 0.83f,
+                CooldownPerEnemy = true, Cooldown = seconds },
+            new UpgradeEffect { On = UpgradeTrigger.InGround, Needs = AfflictionKind.Poison, NeedsAtLeast = doses, Ranks = EnemyRank.God, Do = UpgradeAction.Burst, Radius = 0.5f, Stagger = 30f,
+                Affliction = AfflictionKind.Poison, CooldownPerEnemy = true, Cooldown = seconds },
+            new UpgradeEffect { On = UpgradeTrigger.InGround, Needs = AfflictionKind.Poison, NeedsAtLeast = doses, Ranks = EnemyRank.Plain | EnemyRank.Elite, Do = UpgradeAction.Condition,
+                State = new ConditionSpec { Id = floating, Seconds = 1.5f, Flags = ConditionFlags.TakesCritical, EndsWith = ConditionBlow.Weapon }, CooldownPerEnemy = true, Cooldown = seconds },
+        };
+
         private static void AddFive(List<Upgrade> to)
         {
             // Fire and Life (45). The Seeded is spent: one burning seed for each stack it carried (one to three) is thrown
@@ -135,11 +152,13 @@ namespace Clover.Player.Trees
             // is Soaked. If it carries four doses or more as it reacts it floats up stunned: lifted and held 1.5 s (an
             // elite 0.5 s; a god takes 30 stagger instead), and the next weapon blow on it is critical and spends two
             // doses for 6 damage each.
-            // NEEDS: ground that answers depth: any enemy in the slick that comes to four doses floats up too.
+            // Any other enemy in the slick that comes to four doses floats up too, once a slick (UpgradeEffect.InsideDo, the same
+            // tests asked of each one standing in it).
             to.Add(Reaction(AfflictionKind.Poison, AfflictionKind.Soaked,
-                "Poisoned meets Soaked: the water runs off it fouled into a slick that soaks all in it. Dosed four deep it floats up stunned, and your next weapon blow on it is critical.",
+                "Poisoned meets Soaked: the water runs off it fouled into a slick that soaks all in it. Whatever in the slick is dosed four deep floats up stunned, and your next weapon blow on it is critical.",
                 6f,
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Radius = 1.5f, Seconds = 5f, Interval = 0.5f, Affliction = AfflictionKind.Soaked, Stacks = 1 },
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Radius = 1.5f, Seconds = 5f, Interval = 0.5f, Affliction = AfflictionKind.Soaked, Stacks = 1,
+                    InsideSpares = true, InsideDo = FloatInside(Floating, 4, 5f) },
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Needs = AfflictionKind.Poison, NeedsAtLeast = 4, Ranks = EnemyRank.Plain, Do = UpgradeAction.Lift, Seconds = 1.5f },
                 // An elite hangs 0.6 of a lift's time: 0.83 s asked is the entry's 0.5 s.
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Needs = AfflictionKind.Poison, NeedsAtLeast = 4, Ranks = EnemyRank.Elite, Do = UpgradeAction.Lift, Seconds = 0.83f },

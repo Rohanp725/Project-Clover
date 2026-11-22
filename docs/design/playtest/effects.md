@@ -674,13 +674,13 @@ Title: The Ground Gives (Water and Earth)
 Group: Reactions
 **What it is.** Tremor meets Soaked. Shaking wet ground turns to sand, and the enemy sinks to its knees.
 
-**The numbers.** For 4 seconds, it moves and acts at half speed (an elite at three-quarters speed; a god doesn't sink). A heavy blow while it is sunk holds it in place for 0.5 seconds. Then it waits 4 seconds.
+**The numbers.** For 4 seconds, it moves and acts at half speed (an elite at three-quarters speed; a god doesn't sink). A heavy blow while it is sunk holds it in place for 0.5 seconds. The sand stays on the floor 2 metres across for those 4 seconds, and any other enemy that wades into it moves 30% slower while it stands there. Then it waits 4 seconds.
 
 **What sets it off.** Tremor landing on a Soaked enemy, or Water landing on a shaken one.
 
-**Its shapes.** If you have the Shape mark of Water and Earth's duo branch (The Ground Gives: Quicksand or Sand Boil, 3 Shards, in the middle of the chart) and carry both, The Ground Gives uses the shape you picked at a rest fire instead. Quicksand: the enemy sinks for 4 seconds, and once a second everything within 1.5 metres is pulled 1 metre toward it. Sand Boil: the enemy sinks for 1.2 seconds, then is lifted for 1 second, and everything within 3 metres takes 12 damage, a Soaked and a Tremor.
+**Its shapes.** If you have the Shape mark of Water and Earth's duo branch (The Ground Gives: Quicksand or Sand Boil, 3 Shards, in the middle of the chart) and carry both, The Ground Gives uses the shape you picked at a rest fire instead. Quicksand: the enemy sinks for 4 seconds, and a pool of sand 3 metres across pulls everything standing in it toward its middle, 1 metre a second. Sand Boil: the enemy sinks for 1.2 seconds, then is lifted for 1 second, and everything within 3 metres takes 12 damage, a Soaked and a Tremor.
 
-**How to use it.** Sink it, then come in with heavy blows. Each one pins it for a moment. While it is sunk, it can't leap, lunge or step back, so it can't get away from you. Not built yet: other enemies wading into the sand should be slowed too.
+**How to use it.** Sink it, then come in with heavy blows. Each one pins it for a moment. While it is sunk, it can't leap, lunge or step back, so it can't get away from you. Fight the rest at the edge of the sand: they slow down as they wade in.
 
 **How it looks.** Its name over the enemy, and for a moment the floor sinks into a pit around it, wet at the edge. The enemy sinks into the floor up to its knees and rises back up when it's free. Not built yet: the ring of sand staying around its feet.
 
@@ -1004,7 +1004,7 @@ Title: Caught Light (Water and Light)
 Group: Reactions
 **What it is.** Soaked meets Marked. A net of light falls on the wet floor.
 
-**The numbers.** For 4 seconds, the net covers 3 metres around the enemy. Everyone in it is Marked, and everyone standing in it when it falls moves a quarter slower for the 4 seconds (gods aren't slowed). The Mark that made it isn't used up. Then it waits 6 seconds.
+**The numbers.** For 4 seconds, the net covers 3 metres around the enemy. Everyone in it is Marked. Everyone standing in it when it falls moves a quarter slower for the 4 seconds, and anyone who walks onto it later moves a quarter slower while it stands there (gods aren't slowed). The Mark that made it isn't used up. Then it waits 6 seconds.
 
 **What sets it off.** Water landing on a Marked enemy, or a Mark landing on a Soaked one.
 
@@ -1012,7 +1012,7 @@ Group: Reactions
 
 **How to use it.** Soak the crowd, then Mark one of them. All of them are Marked for your critical hits, and slowed.
 
-**How it looks.** Its name over the enemy, and the net on the floor. Not built yet: enemies who walk onto the net later being slowed too.
+**How it looks.** Its name over the enemy, and the net on the floor.
 
 ## reaction-girdled
 Title: Girdled (Life and Dark)
@@ -1032,9 +1032,9 @@ Group: Reactions
 ## reaction-chokedamp
 Title: Chokedamp (Earth and Poison)
 Group: Reactions
-**What it is.** Tremor meets Poisoned. The cracked ground breathes out a heavy poison gas that flows to the other shaken enemies.
+**What it is.** Tremor meets Poisoned. The cracked ground breathes out a heavy poison gas that pools on the floor under it and under the other shaken enemies.
 
-**The numbers.** The gas pools under the enemy and flows to up to three other shaken enemies within 7 metres. For 5 seconds, each one in it gets a dose every second and moves 20% slower (gods aren't slowed). Then it waits 6 seconds.
+**The numbers.** The gas pools on the floor, 2 metres across, under the enemy and under up to three other shaken enemies within 7 metres. For 5 seconds, anything standing in a pool, even an enemy that walks in later, gets a dose every second and moves 20% slower while it stays (gods aren't slowed). Then it waits 6 seconds.
 
 **What sets it off.** Tremor landing on a poisoned enemy, or poison landing on a shaken one.
 
@@ -1042,7 +1042,7 @@ Group: Reactions
 
 **How to use it.** Shake the crowd first, then poison one of them. The gas finds them all.
 
-**How it looks.** Its name over the enemy. Not built yet: the pools of gas staying on the floor where they settle.
+**How it looks.** Its name over the enemy, and the pools of gas on the floor. Not built yet: the pools' own dark, slowly bubbling look; for now, the plain poison ground shows them.
 
 ## reaction-red-hot
 Title: Red Hot (Metal and Fire)
@@ -1259,7 +1259,7 @@ Title: Fish Poison (Poison and Water)
 Group: Reactions
 **What it is.** Soaked meets Poisoned. The water runs off the enemy poisoned, and enemies with lots of doses float up, stunned, like poisoned fish.
 
-**The numbers.** A poisoned slick 3 metres across stays for 5 seconds and Soaks anyone standing in it. If the enemy has four or more doses when this happens, it floats up stunned: lifted and held for 1.5 seconds (an elite for 0.5 seconds; a god takes 30 stagger instead). Your next weapon blow on it is a critical hit and uses up two doses for 6 damage each. Then it waits 6 seconds.
+**The numbers.** A poisoned slick 3 metres across stays for 5 seconds and Soaks anyone standing in it. If the enemy has four or more doses when this happens, it floats up stunned: lifted and held for 1.5 seconds (an elite for 0.5 seconds; a god takes 30 stagger instead). Your next weapon blow on it is a critical hit and uses up two doses for 6 damage each. Any other enemy in the slick that reaches four doses floats up the same way, once for each slick. Then it waits 6 seconds.
 
 **What sets it off.** Poison landing on a Soaked enemy, or Water landing on a poisoned one.
 
@@ -1267,4 +1267,4 @@ Group: Reactions
 
 **How to use it.** Give it four doses before you soak it, then be ready with your blade.
 
-**How it looks.** Its name over the enemy, and the slick on the floor. Not built yet: other enemies in the slick floating up when they reach four doses.
+**How it looks.** Its name over the enemy, and the slick on the floor.

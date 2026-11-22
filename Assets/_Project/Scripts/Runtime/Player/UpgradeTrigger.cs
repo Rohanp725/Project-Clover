@@ -138,5 +138,10 @@ namespace Clover.Player
         PickedUp,
         /// <summary>A pickup lay untaken until its time ran out (Shining Herb's herb flowers). The point is where it lay.</summary>
         PickupLeft,
+        /// <summary>
+        /// An enemy stands in ground that keeps acting, at one of its bites: asked of the effects whose Condition names that
+        /// ground (UpgradeEffect.Ground). Target: the enemy standing in it; the point is where it stands.
+        /// </summary>
+        InGround,
     }
 }

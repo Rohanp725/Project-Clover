@@ -9,13 +9,11 @@ Water are both carried.
 
 **When it happens.** Every time Fish Poison goes off while you carry both Poison and Water. Fish Poison goes off when poison lands on a Soaked enemy, or when water lands on a poisoned one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Fish Poison.
 
-**The numbers.** Mix, 3 Shards. Rock Pool: a slick 1.5 metres across that lasts 5 seconds and soaks anything standing in it. An enemy with two or more doses floats up, stunned. The Ebb Takes It: four patches of slick run 6 metres past the enemy, away from you. Each is 1.5 metres across and lasts 5 seconds. An enemy with four doses floats up. The float works like the plain one: the enemy is lifted and held for 1.5 seconds (0.5 for elites; gods take 30 stagger instead). Your next weapon blow on it is a critical hit and uses up two doses for 6 damage each. After Fish Poison goes off on an enemy, it can't go off on that enemy again for 6 seconds.
+**The numbers.** Mix, 3 Shards. Rock Pool: a slick 1.5 metres across that lasts 5 seconds and soaks anything standing in it. An enemy with two or more doses floats up, stunned. The Ebb Takes It: four patches of slick run 6 metres past the enemy, away from you. Each is 1.5 metres across and lasts 5 seconds. An enemy with four doses floats up. The float works like the plain one: the enemy is lifted and held for 1.5 seconds (0.5 for elites; gods take 30 stagger instead). Your next weapon blow on it is a critical hit and uses up two doses for 6 damage each. Any other enemy in the slick or the stream that reaches the doses floats up the same way, once for each slick. After Fish Poison goes off on an enemy, it can't go off on that enemy again for 6 seconds.
 
 **Works with.** The Tide Brings It, Wide Slick, Fast Water, Poison the Lagoon.
 
 **Example.** A one-on-one fight with a brute: use Rock Pool, and float it up again and again. A line of soldiers: use The Ebb Takes It, and soak the whole line.
-
-**Not built yet.** Only the enemy where Fish Poison went off can float up. Other enemies that reach enough doses in the slick or along the stream don't float up yet.
 
 ## fishpoison.tide
 **What it does.** When Riptide's wave crosses a poisoned slick, it carries the poison with it. Everything the wave carries takes two doses.

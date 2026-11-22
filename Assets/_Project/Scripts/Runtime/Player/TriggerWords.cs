@@ -93,6 +93,7 @@ namespace Clover.Player
                 case UpgradeTrigger.StandingBurst: return "something you raised bursts";
                 case UpgradeTrigger.PickedUp: return "you pick something up off the floor";
                 case UpgradeTrigger.PickupLeft: return "something on the floor is left untaken";
+                case UpgradeTrigger.InGround: return "an enemy stands in the ground";
                 default: return "its moment comes";
             }
         }

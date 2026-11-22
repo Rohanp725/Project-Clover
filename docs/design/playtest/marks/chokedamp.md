@@ -9,13 +9,11 @@ are both carried.
 
 **When it happens.** Every time Chokedamp goes off while you carry both Earth and Poison. Chokedamp goes off when a dose of poison lands on a shaken enemy, or when Tremor lands on a poisoned one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Chokedamp.
 
-**The numbers.** Mix, 3 Shards. Blackdamp: a pool 3.5 metres wide that lasts 7 seconds. Once a second, it gives a dose of poison to everyone standing in it. Enemies in it when it forms move a fifth slower for the 7 seconds. Red Ore: for 4 seconds, your next heavy blow on the enemy bursts the ore within 3 metres. Each enemy it reaches takes 14 damage plus 3 more for each dose it has, 30 stagger, and three doses. After Chokedamp goes off on an enemy, it can't go off on that enemy again for 6 seconds.
+**The numbers.** Mix, 3 Shards. Blackdamp: a pool 3.5 metres wide that lasts 7 seconds. Once a second, it gives a dose of poison to everyone standing in it. Enemies in it when it forms move a fifth slower for the 7 seconds, and an enemy that wades in later moves a fifth slower for as long as it stands in it. Red Ore: for 4 seconds, your next heavy blow on the enemy bursts the ore within 3 metres. Each enemy it reaches takes 14 damage plus 3 more for each dose it has, 30 stagger, and three doses. After Chokedamp goes off on an enemy, it can't go off on that enemy again for 6 seconds.
 
 **Works with.** Foul Ground to set it up, The Lamp Goes Out, Seam of Ore, The Clay Rank.
 
 **Example.** A doorway the enemies must come through: use Blackdamp. A brute with lots of doses in a crowd: use Red Ore, and hit it with a heavy blow.
-
-**Not built yet.** Blackdamp's pool poisons anyone standing in it, but it only slows enemies who were in it when it formed.
 
 ## chokedamp.foulground
 **What it does.** Your heavy blows add a Tremor and a dose of poison at the same time.
@@ -33,7 +31,7 @@ are both carried.
 
 **When it happens.** While an enemy is in the damp from Chokedamp, while you carry both Earth and Poison. With Blackdamp, that means the enemies caught in the pool as it forms.
 
-**The numbers.** Mix, 3 Shards. Your weapon breaks their balance a quarter faster. Spells do not. It ends when the damp leaves them.
+**The numbers.** Mix, 3 Shards. Your weapon breaks their balance a quarter faster. Spells do not. It works on every enemy standing in a pool of the damp, even one that walks in later, and it ends soon after the enemy steps out.
 
 **Works with.** Chokedamp, Foul Ground, Seam of Ore.
 

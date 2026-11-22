@@ -19,6 +19,14 @@ namespace Clover.Player.Trees
         public const string Tight = "girdled.tight";
         public const string Damp = "chokedamp.damp";
         public const string DampHeavy = "chokedamp.heavy";
+
+        // A pool of Chokedamp's damp, 2 m across for 5 s, under the one that reacted or under each of three shaken enemies near it.
+        private static UpgradeEffect DampPool(bool others) => new UpgradeEffect
+        {
+            On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Radius = 1f, Seconds = 5f, Interval = 1f, Damage = 0f, Affliction = AfflictionKind.Poison, Stacks = 1,
+            EachWithin = others ? 7f : 0f, EachOther = others, OnlyCarrying = others ? AfflictionKind.Tremor : AfflictionKind.None, Count = others ? 3 : 0,
+            Inside = new ConditionSpec { Id = DampHeavy, Seconds = 0.5f, Pace = 0.8f, Is = Damp }, Ground = Damp,
+        };
         public const string Glowing = "redhot.glowing";
         public const string Thread = "boltrunstrue.thread";
         public const string Winded = "breathtaken.winded";
@@ -81,11 +89,13 @@ namespace Clover.Player.Trees
             // Water and Light (38), rest 6 s. A net of light on the wet floor 3 m round it for 4 s: what stands in it is
             // Marked, and what stood in it as it fell is 25% slower for the 4 s. The mark that made it is not spent: the
             // net renews it.
-            // NEEDS: ground that slows: an enemy that walks onto the net later is Marked but not slowed.
+            // An enemy that walks onto the net later is caught too while it stands there (UpgradeEffect.Inside), and the net is
+            // told as ground of its own name for the marks that answer it (Seen in the Water).
             to.Add(Reaction(AfflictionKind.Soaked, AfflictionKind.Marked,
                 "Soaked meets Marked: a net of light lies on the wet floor 3 m round it for 4 s. All in it are Marked and caught, a quarter slower.",
                 6f,
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Radius = 3f, Seconds = 4f, Interval = 0.5f, Affliction = AfflictionKind.Marked, Stacks = 1 },
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Radius = 3f, Seconds = 4f, Interval = 0.5f, Affliction = AfflictionKind.Marked, Stacks = 1,
+                    Inside = new ConditionSpec { Id = LightNet, Seconds = 0.5f, Pace = 0.75f }, Ground = LightNet },
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, Radius = 3f, State = new ConditionSpec { Id = LightNet, Seconds = 4f, Pace = 0.75f } }));
 
             // Life and Dark (39), rest 6 s. One coil at once: slowed 25%, and it takes 6% more from the weapon a coil.
@@ -117,18 +127,14 @@ namespace Clover.Player.Trees
 
             // Earth and Poison (40), rest 6 s. The damp pools under it and runs to each other shaken enemy within 7 m (three
             // at most): for 5 s each takes a dose every second and moves 20% slower (and, shaken, regains no balance).
-            // NEEDS: the pools as ground (2 m, left where they pool, dosing whatever stands in them); here the damp goes
-            // with the enemies it reached.
+            // The pools are ground, 2 m across and left where they pool (one under it, one under each of three shaken enemies
+            // within 7 m, UpgradeEffect.EachWithin): whatever stands in one takes a dose each second and is a fifth slower
+            // while it stays (UpgradeEffect.Inside, a damp by what it is), and the pools are told as the damp (The Lamp Goes Out).
             to.Add(Reaction(AfflictionKind.Tremor, AfflictionKind.Poison,
-                "Tremor meets Poisoned: the cracked ground breathes out a heavy damp that pools under it and runs to three shaken enemies near. In it they take a dose each second and move slower.",
+                "Tremor meets Poisoned: the cracked ground breathes out a heavy damp that pools under it and under three shaken enemies near. Whatever stands in a pool takes a dose each second and moves slower.",
                 6f,
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Damp, Seconds = 5f, Beat = 1f } },
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = DampHeavy, Seconds = 5f, Pace = 0.8f } },
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, Radius = 7f, Count = 3, LeapsTo = AfflictionKind.Tremor,
-                    State = new ConditionSpec { Id = Damp, Seconds = 5f, Beat = 1f, ToOthers = true } },
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, Radius = 7f, Count = 3, LeapsTo = AfflictionKind.Tremor,
-                    State = new ConditionSpec { Id = DampHeavy, Seconds = 5f, Pace = 0.8f, ToOthers = true } },
-                new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = Damp, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Poison, Stacks = 1 }));
+                DampPool(false),
+                DampPool(true)));
 
             // Metal and Fire (41), rest 5 s. The armour glows red 5 s; each heavy blow on it throws a spray of sparks out
             // of its far side, a cone 3 m long (two bursts on the player's line beyond it): 6 damage and a Burn to each.

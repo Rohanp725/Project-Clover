@@ -20,6 +20,7 @@ namespace Clover.Player.Trees
         public const string Capsized = "capsize.down";
         public const string Asleep = "winterseed.asleep";
         public const string SunkInSand = "groundgives.sunk";
+        public const string SandPool = "groundgives.pool";
         public const string Thorns = "ironthorns.thorns";
         public const string Chain = "blackchain.chain";
         public const string SapWaits = "burningsap.wait";
@@ -207,10 +208,13 @@ namespace Clover.Player.Trees
             // Water and Earth (16). Shaken wet ground turns to sand: it sinks to the knees for 4 s, slowed by half (an
             // elite by a quarter; a god takes only the Tremor), and a heavy blow on it while sunk holds it 0.5 s.
             // Sunk (ConditionFlags.Mired: no leap, blink, lunge or step back; Sink: the body drawn 0.35 m down into the sand).
-            // NEEDS: the pool itself (2 m across, slowing other enemies that wade in by 30%) (ground-states).
+            // The pool itself lies 2 m across for the 4 s, and the other enemies that wade into it are 30% slower while they
+            // stand in it (UpgradeEffect.InsideDo, sparing the sunk one, which is slowed by half already).
             to.Add(Reaction(AfflictionKind.Soaked, AfflictionKind.Tremor,
-                "Tremor meets Soaked: the wet floor under it turns to sand and it sinks to the knees for 4 s, slowed by half. A heavy blow holds it fast.",
+                "Tremor meets Soaked: the wet floor under it turns to sand and it sinks to the knees for 4 s, slowed by half. A heavy blow holds it fast. Others that wade into the sand are slowed too.",
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = SunkInSand, Seconds = 4f, Pace = 0.5f, Flags = ConditionFlags.Mired, Sink = 0.35f } },
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Radius = 1f, Seconds = 4f, Interval = 0.5f, Damage = 0f, Stacks = 0, Affliction = AfflictionKind.Soaked,
+                    InsideSpares = true, InsideDo = new[] { new UpgradeEffect { On = UpgradeTrigger.InGround, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = SandPool, Seconds = 0.75f, Pace = 0.7f } } } },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = SunkInSand, By = StruckBy.Heavy, Do = UpgradeAction.Hold, Seconds = 0.5f }));
 
             // Life and Metal (17). Iron thorns grow out of it for 6 s; each weapon blow snaps one off and it flies at the

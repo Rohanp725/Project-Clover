@@ -33,8 +33,8 @@ namespace Clover.Player.Trees.Duo
             const string A = Elements.Wind, B = Elements.Earth;
 
             // Sandblast's grit leaves its far side as a cone 5 m long and 60 degrees wide (UpgradeAction.Pieces, PieceAim.FarCone).
-            // NEEDS: ground that acts on whoever walks in later (ground-states): Drifted Over's
-            // sand slowing those who wade in after the fall; now those within 2 m as it falls.
+            // Drifted Over's sand is ground 2 m round it while it lies: whoever wades in, then or later, is slowed to 60% while it
+            // stands there (UpgradeEffect.Inside).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Logan Stone: Sandblast or Drifted Over", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -57,8 +57,8 @@ namespace Clover.Player.Trees.Duo
                         Description = "It rocks as before and your third blow throws it down, and the wind heaps sand over it: it lies buried to the shoulders 1 s longer, and enemies within 2 m of it wade at 60% speed while it lies.",
                         Effects = Rock(DriftedOver, 2.8f, new[]
                         {
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = DriftedOver + ".rocking", By = StruckBy.Weapon, AtCount = 3, Ranks = EnemyRank.Plain, Do = UpgradeAction.Condition, Radius = 2f,
-                                State = new ConditionSpec { Id = DriftedOver + ".wade", Seconds = 2.8f, Pace = 0.6f } },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = DriftedOver + ".rocking", By = StruckBy.Weapon, AtCount = 3, Ranks = EnemyRank.Plain, Do = UpgradeAction.Hazard,
+                                Radius = 2f, Seconds = 2.8f, Interval = 0.5f, Damage = 0f, Stacks = 0, Inside = new ConditionSpec { Id = DriftedOver + ".wade", Seconds = 0.5f, Pace = 0.6f } },
                         }),
                     },
                 },

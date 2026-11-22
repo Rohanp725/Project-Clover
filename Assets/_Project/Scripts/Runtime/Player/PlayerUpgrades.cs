@@ -1416,6 +1416,8 @@ namespace Clover.Player
                 // A pickup's own mark answers through the effects written beside the one that dropped it (AnswerPickup); here only
                 // the marks that answer any pickup of its kind.
                 if ((trigger == UpgradeTrigger.PickedUp || trigger == UpgradeTrigger.PickupLeft) && !(effect.AnyDrops && effect.Drops == pickupKind)) continue;
+                // Ground told of one standing in it is answered only by the effects that name that ground.
+                if (trigger == UpgradeTrigger.InGround && !AnswersGround(effect, groundTold)) continue;
                 // A mark that deepens one reaction answers that one only.
                 bool reactionMoment = trigger == UpgradeTrigger.Reacted || trigger == UpgradeTrigger.ReactionStruck;
                 if (reactionMoment && !string.IsNullOrEmpty(effect.Reaction) && effect.Reaction != reaction) continue;
@@ -1956,7 +1958,7 @@ namespace Clover.Player
                         // A second affliction laid with each bite (the hollow trunk Seeding and Cursing what touches it).
                         AlsoLays = effect.BitesLay,
                         // Ground that keeps acting on whoever stands in it (the ledger's ground-states).
-                        Acts = effect.Inside != null || effect.Mends > 0f ? effect : null, Pull = effect.Pull,
+                        Acts = effect.ActsAsGround ? effect : null, Pull = effect.Pull, LaidFor = pending.Target,
                     };
                     spec.Blow.Unseen = effect.Unseen || bespoke;
                     for (int i = 0; i < patches; i++)
@@ -3125,9 +3127,10 @@ namespace Clover.Player
 
         // Ground of a mark's that keeps acting, at one of its bites: its state on every enemy standing in it now, and the player
         // mended standing in it.
-        private void OnGroundActs(object source, Vector3 at, float radius, float biteEvery)
+        private void OnGroundActs(object source, Vector3 at, float radius, float biteEvery, object laidFor)
         {
             if (!(source is UpgradeEffect effect) || combat == null) return;
+            if (effect.InsideDo != null || !string.IsNullOrEmpty(effect.Ground)) ActOnStanding(effect, at, radius, laidFor);
             if (effect.Inside != null)
             {
                 if (!groundStates.TryGetValue(effect, out var inside))
@@ -3150,6 +3153,43 @@ namespace Clover.Player
         }
 
         private readonly Dictionary<UpgradeEffect, UpgradeEffect> groundStates = new Dictionary<UpgradeEffect, UpgradeEffect>();
+        private readonly HashSet<IDamageable> standingTaken = new HashSet<IDamageable>();
+        // The ground whose bite is told as InGround now, for the trigger's filter.
+        private string groundTold = "";
+
+        // Each enemy standing in the ground now: its own effects done on it, and the marks that answer the ground told of it.
+        private void ActOnStanding(UpgradeEffect effect, Vector3 at, float radius, object laidFor)
+        {
+            var owner = effect.Owner;
+            var source = owner != null && (owner.Kind == UpgradeKind.Reaction || ReactionTable.IsReactionShape(owner)) ? LaySource.Reaction : LaySource.Effect;
+            standingTaken.Clear();
+            for (int guard = 0; guard < 24; guard++)
+            {
+                var near = combat.EnemyNear(at, radius, standingTaken);
+                if (!(near is IDamageable one)) break;
+                standingTaken.Add(one);
+                if (near is Enemy fallen && fallen.IsDead) continue;
+                if (!GroundRules.Within(near.transform.position, at, radius)) continue;
+                if (effect.InsideDo != null && !(effect.InsideSpares && ReferenceEquals(near, laidFor)))
+                    foreach (var inner in effect.InsideDo)
+                        if (inner != null) Fire(inner, near, near.transform.position, source);
+                if (!string.IsNullOrEmpty(effect.Ground))
+                {
+                    groundTold = effect.Ground;
+                    try { Trigger(UpgradeTrigger.InGround, near, near.transform.position); }
+                    finally { groundTold = ""; }
+                }
+                GroundStood++;
+            }
+            standingTaken.Clear();
+        }
+
+        /// <summary>True when an effect answers ground of the given name told of one standing in it (UpgradeTrigger.InGround).</summary>
+        public static bool AnswersGround(UpgradeEffect effect, string ground) =>
+            effect != null && !string.IsNullOrEmpty(ground) && effect.Condition == ground;
+
+        /// <summary>Enemies found standing in acting ground with effects or answers of its own, counted at each bite: for probes.</summary>
+        public int GroundStood { get; private set; }
 
         /// <summary>States set by ground on those standing in it, and the times it mended you: for probes.</summary>
         public int GroundStatesSet { get; private set; }

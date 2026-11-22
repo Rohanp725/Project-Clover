@@ -250,5 +250,68 @@ namespace Clover.Tests
             var bed = Upgrade.ById(Clover.Player.Trees.Duo.FirebloomDuo.Shape).Shapes.Single(each => each.Name == "Ash Bed").Effects.Single(each => each.Do == UpgradeAction.Hazard);
             Assert.AreEqual(2f, bed.Mends, 1e-5f);
         }
+
+        private static UpgradeEffect[] ReactionOf(AfflictionKind one, AfflictionKind other) =>
+            Upgrade.ById(AfflictionPairs.Id(AfflictionPairs.Index(one, other))).Effects;
+
+        private static UpgradeEffect[] ShapeOf(string mark, string shape) => Upgrade.ById(mark).Shapes.Single(each => each.Name == shape).Effects;
+
+        [Test]
+        public void GroundActsOnWhoeverWadesInLater()
+        {
+            var answer = new UpgradeEffect { On = UpgradeTrigger.InGround, Condition = Reactions.LightNet };
+            Assert.IsTrue(PlayerUpgrades.AnswersGround(answer, Reactions.LightNet));
+            Assert.IsFalse(PlayerUpgrades.AnswersGround(answer, Reactions.Damp), "only the ground it names");
+            Assert.IsFalse(PlayerUpgrades.AnswersGround(answer, ""));
+            Assert.IsFalse(new UpgradeEffect { Do = UpgradeAction.Hazard }.ActsAsGround, "plain ground bites and is done");
+            Assert.IsTrue(new UpgradeEffect { Do = UpgradeAction.Hazard, Ground = "x" }.ActsAsGround);
+
+            // The sand pool slows the others that wade in, never the sunk one twice over.
+            var sand = ReactionOf(AfflictionKind.Soaked, AfflictionKind.Tremor).Single(each => each.Do == UpgradeAction.Hazard);
+            Assert.IsTrue(sand.InsideSpares);
+            Assert.AreEqual(0.7f, sand.InsideDo.Single().State.Pace, 1e-5f, "30% slower in the sand");
+            Assert.AreEqual(2f, sand.Radius * 2f, 1e-5f, "2 m across");
+            // The net catches whoever walks onto it later, and is told as the net.
+            var net = ReactionOf(AfflictionKind.Soaked, AfflictionKind.Marked).Single(each => each.Do == UpgradeAction.Hazard);
+            Assert.AreEqual(0.75f, net.Inside.Pace, 1e-5f);
+            Assert.AreEqual(Reactions.LightNet, net.Ground);
+            // The damp lies in pools under it and under three shaken ones near; they dose and slow what stands in them.
+            var damp = ReactionOf(AfflictionKind.Tremor, AfflictionKind.Poison);
+            Assert.AreEqual(2, damp.Count(each => each.Do == UpgradeAction.Hazard));
+            var others = damp.Single(each => each.EachWithin > 0f);
+            Assert.AreEqual(7f, others.EachWithin, 1e-5f);
+            Assert.AreEqual(3, others.Count);
+            Assert.AreEqual(AfflictionKind.Tremor, others.OnlyCarrying);
+            Assert.IsTrue(damp.All(each => each.Inside != null && each.Inside.Is == Reactions.Damp && each.Inside.Pace == 0.8f && each.Ground == Reactions.Damp));
+            Assert.IsFalse(damp.Any(each => each.Do == UpgradeAction.Condition), "the damp no longer goes with the enemies it reached");
+            // Whatever in the slick is dosed four deep floats up, once a slick.
+            var slick = ReactionOf(AfflictionKind.Poison, AfflictionKind.Soaked).Single(each => each.Do == UpgradeAction.Hazard);
+            Assert.IsTrue(slick.InsideSpares, "the reacting one floated as it reacted");
+            Assert.IsTrue(slick.InsideDo.Any(each => each.Do == UpgradeAction.Lift && each.NeedsAtLeast == 4 && each.CooldownPerEnemy && each.Cooldown == 5f));
+            Assert.IsTrue(slick.InsideDo.Any(each => each.Do == UpgradeAction.Condition && each.State.Id == Reactions.Floating));
+            Assert.IsTrue(slick.InsideDo.All(each => each.Slot >= 0 && each.Owner == Upgrade.ById(AfflictionPairs.Id(AfflictionPairs.Index(AfflictionKind.Poison, AfflictionKind.Soaked)))));
+
+            // The marks: walk-ins are caught, opened, slowed, thrown flat, blinded and floated as those there at first are.
+            Assert.AreEqual(Reactions.LightNet, ShapeOf(Clover.Player.Trees.Duo.CaughtLightDuo.Shape, "Thrown Wide").Single(each => each.Do == UpgradeAction.Hazard).Inside.Is);
+            var seen = Upgrade.ById(Clover.Player.Trees.Duo.CaughtLightDuo.SeenInTheWater).Effects;
+            Assert.IsTrue(seen.Any(each => each.On == UpgradeTrigger.InGround && each.Condition == Reactions.LightNet && (each.State.Flags & ConditionFlags.TakesCritical) != 0));
+            var black = ShapeOf(Clover.Player.Trees.Duo.ChokedampDuo.Shape, "Blackdamp").Single(each => each.Do == UpgradeAction.Hazard);
+            Assert.AreEqual(0.8f, black.Inside.Pace, 1e-5f);
+            Assert.IsTrue(Upgrade.ById(Clover.Player.Trees.Duo.ChokedampDuo.TheLampGoesOut).Effects.Single().On == UpgradeTrigger.InGround, "the lamp goes out for those standing in the damp");
+            var plate = ShapeOf(Clover.Player.Trees.Duo.ColdShortDuo.Shape, "Shed Plate").Single(each => each.Do == UpgradeAction.Hazard).InsideDo.Single();
+            Assert.AreEqual(ConditionFlags.Down, plate.State.Flags);
+            Assert.IsTrue(plate.CooldownPerEnemy);
+            var drift = ShapeOf(Clover.Player.Trees.Duo.LoganStoneDuo.Shape, "Drifted Over").Single(each => each.Do == UpgradeAction.Hazard);
+            Assert.AreEqual(0.6f, drift.Inside.Pace, 1e-5f);
+            var steam = ShapeOf(Clover.Player.Trees.Duo.SteamDuo.Shape, "Blind Steam");
+            Assert.IsTrue((steam.Single(each => each.Do == UpgradeAction.Hazard).Inside.Flags & ConditionFlags.SightShort) != 0);
+            Assert.IsFalse(steam.Any(each => each.Do == UpgradeAction.Condition), "blind only while in the cloud");
+            Assert.AreEqual(2, ShapeOf(Clover.Player.Trees.Duo.FishPoisonDuo.Shape, "Rock Pool").Single(each => each.Do == UpgradeAction.Hazard).InsideDo[0].NeedsAtLeast);
+            Assert.AreEqual(4, ShapeOf(Clover.Player.Trees.Duo.FishPoisonDuo.Shape, "The Ebb Takes It").Single(each => each.Do == UpgradeAction.Hazard).InsideDo[0].NeedsAtLeast);
+            var quick = ShapeOf(Clover.Player.Trees.Duo.TheGroundGivesDuo.Shape, "Quicksand");
+            Assert.AreEqual(1f, quick.Single(each => each.Do == UpgradeAction.Hazard).Pull, 1e-5f, "the pool draws in a metre a second");
+            Assert.AreEqual(3f, quick.Single(each => each.Do == UpgradeAction.Hazard).Radius * 2f, 1e-5f, "3 m across");
+            Assert.IsFalse(quick.Any(each => each.Do == UpgradeAction.Pull), "not a tug once a second from the sunk one");
+        }
     }
 }

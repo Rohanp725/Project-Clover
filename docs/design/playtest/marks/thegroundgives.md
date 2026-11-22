@@ -9,13 +9,11 @@ Earth are both carried.
 
 **When it happens.** Every time The Ground Gives goes off while you carry both Water and Earth. The Ground Gives goes off when Tremor lands on a soaked enemy, or when Soaked lands on a shaken one. If you have not bought this mark, or you carry only one of the two elements, you get the plain The Ground Gives. The plain one sinks the enemy to its knees for 4 seconds and slows it by half.
 
-**The numbers.** Mix, 3 Shards. Quicksand: the enemy sinks for 4 seconds and is slowed by half. Once a second, everything within 1.5 metres is pulled 1 metre toward it. A heavy blow holds it for 0.5 seconds. Sand Boil: the enemy sinks for 1.2 seconds, then is lifted up for 1 second, and everything within 3 metres takes 12 damage, a Soaked and a Tremor. After The Ground Gives goes off on an enemy, it can't go off on that enemy again for 4 seconds.
+**The numbers.** Mix, 3 Shards. Quicksand: the enemy sinks for 4 seconds and is slowed by half. Its pool of sand, 3 metres across, stays for those 4 seconds and pulls everything standing in it toward its middle, 1 metre a second. A heavy blow holds it for 0.5 seconds. Sand Boil: the enemy sinks for 1.2 seconds, then is lifted up for 1 second, and everything within 3 metres takes 12 damage, a Soaked and a Tremor. After The Ground Gives goes off on an enemy, it can't go off on that enemy again for 4 seconds.
 
 **Works with.** Riptide and Stone Rise to set it up, Driven Down, Given to the Bog, The Island Breathes.
 
 **Example.** Use Quicksand in a pack. The soldiers around the sunken one are pulled into a tight group for one big sweep. Use Sand Boil before a string of heavy blows: the enemy comes up right into your blows.
-
-**Not built yet.** The pool itself isn't shown as a spot on the ground yet. For now, Quicksand pulls in toward the sunken enemy, from 1.5 metres away.
 
 ## thegroundgives.bog
 **What it does.** An enemy that dies while sunk is swallowed up, and the bog gives something back: a quarter of a flask.

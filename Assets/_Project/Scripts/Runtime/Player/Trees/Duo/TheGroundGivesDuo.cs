@@ -26,8 +26,8 @@ namespace Clover.Player.Trees.Duo
         {
             const string A = Elements.Water, B = Elements.Earth;
 
-            // NEEDS: the pool itself (ground-states): a 3 m pool that draws what stands in it to its middle (Quicksand; now
-            // the sunk enemy draws in what is within 1.5 m once a second).
+            // Quicksand's pool is ground of its own, 3 m across for the 4 s, drawing what stands in it to its middle at a metre a
+            // second (UpgradeEffect.Pull on its ground).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "The Ground Gives: Quicksand or Sand Boil", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -40,8 +40,8 @@ namespace Clover.Player.Trees.Duo
                         Description = "It sinks for 4 s, slowed by half, and the sand drags everything within 1.5 m of it 1 m toward it each second, so enemies end up together. A heavy blow holds it fast for 0.5 s.",
                         Effects = new[]
                         {
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Quicksand, Seconds = 4f, Beat = 1f, Pace = 0.5f, Flags = ConditionFlags.Mired, Sink = 0.35f, Is = Reactions.SunkInSand } },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = Quicksand, Do = UpgradeAction.Pull, Radius = 1.5f, Amount = 1f },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Quicksand, Seconds = 4f, Pace = 0.5f, Flags = ConditionFlags.Mired, Sink = 0.35f, Is = Reactions.SunkInSand } },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Radius = 1.5f, Seconds = 4f, Interval = 0.5f, Damage = 0f, Stacks = 0, Affliction = AfflictionKind.Soaked, Pull = 1f },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Quicksand, By = StruckBy.Heavy, Do = UpgradeAction.Hold, Seconds = 0.5f },
                         },
                     },

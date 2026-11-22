@@ -73,5 +73,7 @@ namespace Clover.World
         public object Acts;
         /// <summary>Above zero: draws everything standing in it toward its middle at this many metres a second (the ledger's pull-to-point).</summary>
         public float Pull;
+        /// <summary>The enemy the ground was laid for (a reaction's own), told with each bite so its marks may leave it out; or null.</summary>
+        public object LaidFor;
     }
 }
