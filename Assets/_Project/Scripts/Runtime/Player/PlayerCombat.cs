@@ -1075,6 +1075,9 @@ namespace Clover.Player
         private readonly Component[] chainMates = new Component[MostChainMates];
         private readonly float[] chainShares = new float[MostChainMates];
         private bool sharingChains;
+        // The bodies whose loose shadow a swing reached, and how many such blows have landed (for probes).
+        private readonly Component[] shadowBodies = new Component[LooseShadows.Most];
+        public int ShadowBlows { get; private set; }
         /// <summary>Shares of blows dealt along chains, counted for probes.</summary>
         public int ChainShares { get; private set; }
 
@@ -2446,6 +2449,23 @@ namespace Clover.Player
                 Mana.Gain(earned);
                 BlowsLanded++;
                 if (defence != null && pays) defence.DealtDamage(damage);
+            }
+            // A shadow cut loose (Dark's charged blade): the swing that reaches it strikes its body too, with the swing's own
+            // damage and stagger, if the swing has not struck the body itself.
+            if (fresh)
+            {
+                int shadows = LooseShadows.Reached(transform.position, transform.forward, reach, step.ArcDegrees, shadowBodies);
+                for (int s = 0; s < shadows; s++)
+                {
+                    var body = shadowBodies[s];
+                    shadowBodies[s] = null;
+                    if (!(body is IDamageable shadowed) || struck.Contains(shadowed) || !PlayerReactions.Alive(body)) continue;
+                    float shadowDamage = step.Damage * scale * DamageMultiplier * UpgradeDamage * NextBlowDamage * StatDamage;
+                    var outcome = shadowed.TakeHit(new Hit(shadowDamage, lightStagger * scale * StatStagger, transform.forward, heavy, true, transform.position, tint: struckTint));
+                    if (outcome == HitOutcome.Missed) continue;
+                    struck.Add(shadowed);
+                    ShadowBlows++;
+                }
             }
             if (chargedTarget != null)
             {

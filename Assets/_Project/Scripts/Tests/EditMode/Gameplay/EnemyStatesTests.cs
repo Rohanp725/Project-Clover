@@ -273,6 +273,31 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void AShadowCutLooseLiesApartAndASwingThatReachesItCounts()
+        {
+            var spot = LooseShadows.SpotFor(Vector3.zero, new Vector3(0f, 0f, -3f));
+            Assert.AreEqual(new Vector3(0f, 0f, LooseShadows.Apart), spot, "2 m off, on the side away from you");
+            var enemy = NewEnemy();
+            Assert.IsFalse(enemy.Conditions.LooseShadow(out _));
+            var spec = ElementSteel.ShadowCutLoose;
+            Assert.AreEqual(4f, spec.Seconds, 1e-5f);
+            Assert.AreEqual(1.25f, spec.Scale, 1e-5f, "it takes 25% more");
+            int slot = enemy.Conditions.Set(spec, null);
+            enemy.Conditions.FaceToward(slot, spot);
+            Assert.IsTrue(enemy.Conditions.LooseShadow(out var lying));
+            Assert.AreEqual(spot, lying);
+            Assert.AreEqual(1.25f, enemy.Conditions.TakenScale, 1e-5f);
+            Assert.IsFalse(enemy.Conditions.TurnedToward(out _), "the shadow's spot turns nothing");
+            // A swing from 1.5 m behind the shadow, facing it, reaches it; one facing away does not.
+            var from = new Vector3(0f, 0f, 3.5f);
+            Assert.IsTrue(LooseShadows.Reaches(from, Vector3.back, 2.2f, 90f, spot));
+            Assert.IsFalse(LooseShadows.Reaches(from, Vector3.forward, 2.2f, 90f, spot));
+            Assert.IsFalse(LooseShadows.Reaches(new Vector3(0f, 0f, 8f), Vector3.back, 2.2f, 90f, spot), "too far");
+            enemy.Conditions.Tick(4.1f);
+            Assert.IsFalse(enemy.Conditions.LooseShadow(out _), "after four seconds its shadow is its own again");
+        }
+
+        [Test]
         public void WhirlpoolAndAshFallHoldTheBalance()
         {
             var churn = Upgrade.ById(WaterTree.Whirlpool).Effects.Single(each => each.Do == UpgradeAction.Condition);

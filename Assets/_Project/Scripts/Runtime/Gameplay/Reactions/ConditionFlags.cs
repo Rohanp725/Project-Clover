@@ -77,5 +77,7 @@ namespace Clover.Gameplay
         /// other too, and of spell blows as well when the spec says so (Black Chain, Shared Wound; <see cref="EnemyChains"/>).
         /// </summary>
         Chained = 1 << 24,
+        /// <summary>Its shadow is cut loose and lies apart from it at the run's point; a weapon blow on the shadow strikes the body (<see cref="LooseShadows"/>).</summary>
+        ShadowLoose = 1 << 25,
     }
 }

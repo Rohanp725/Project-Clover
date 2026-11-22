@@ -209,6 +209,20 @@ namespace Clover.Gameplay
         /// takes (an elite's is half), and of a root's time likewise. Returns the slot, or -1 when nothing was asked.
         /// </summary>
         /// <summary>Keeps a number on a run in place of its spec's <see cref="ConditionSpec.Scale"/>: what the trigger that set it carried (Collected Twice's damage).</summary>
+        /// <summary>Where its loose shadow lies (<see cref="ConditionFlags.ShadowLoose"/>, the run's point); false while its shadow is its own.</summary>
+        public bool LooseShadow(out Vector3 spot)
+        {
+            spot = Vector3.zero;
+            if (!Has(ConditionFlags.ShadowLoose)) return false;
+            for (int i = 0; i < Slots; i++)
+            {
+                if (!runs[i].Active || (runs[i].Flags & ConditionFlags.ShadowLoose) == 0) continue;
+                spot = runs[i].FacePoint;
+                return true;
+            }
+            return false;
+        }
+
         /// <summary>True when a chain it carries joins it to <paramref name="host"/>, with the share of blows it passes and whether spells pass.</summary>
         public bool ChainedTo(Component host, out float share, out bool spells)
         {
