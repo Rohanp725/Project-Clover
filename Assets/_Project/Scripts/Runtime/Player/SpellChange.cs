@@ -150,6 +150,8 @@ namespace Clover.Player
         /// spell of its own (Daybreak's 10 a ring is the beam's, not Red Before the Sun's wall or High Noon's column).
         /// </summary>
         public bool LearnOnly;
+        /// <summary>For a base spell's Empower: its numbers are not the kit's cast's own (Flung Blade's 16 is the drive's, not the throw's), so the kit takes only its wait.</summary>
+        public bool NotForKit;
 
         /// <summary>True when it changes nothing at all: no spell number, no wait or price, and no effect of its Learn.</summary>
         public bool DoesNothing => IsEmpty && (Effects == null || Effects.Length == 0);

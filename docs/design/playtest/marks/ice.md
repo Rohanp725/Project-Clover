@@ -270,11 +270,9 @@ The blocked blow also counts as a perfect guard for every other mark that answer
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). While you carry Ice, you can always put it in a slot.
 
-**The numbers.** Comes with Ice. It costs no mana. After you cast it, you must wait 7 seconds to cast it again. Fighting with your weapon makes the wait shorter. Its Empower makes the wait 5.5 seconds. Thirteen crystals grow over a fan 4.5 metres long and 110 degrees wide. They deal 10 damage, 15 stagger and two stacks of Chill. They stay for 4 seconds. A weapon blow among them shatters them all, dealing 5 damage, 8 stagger and one more Chill to everything nearby.
+**The numbers.** Comes with Ice. It costs no mana. After you cast it, you must wait 7 seconds to cast it again. Fighting with your weapon makes the wait shorter. Its Empower makes the wait 5.5 seconds and the Chill three stacks. Thirteen crystals grow over a fan 4.5 metres long and 110 degrees wide. They deal 10 damage, 15 stagger and two stacks of Chill. They stay for 4 seconds. A weapon blow among them shatters them all, dealing 5 damage, 8 stagger and one more Chill to everything nearby.
 
 **Works with.** Its Empower, its two shapes and its Master mark; Chill; Brittle; and the charged blade, which it charges with Ice when it lands.
-
-**Not built yet.** The Empower's third stack of Chill. For now, the spell only gets the Empower's shorter wait.
 
 **Example.** Cast it at three soldiers, then cut into the crystals. Every one of them has three stacks before your second blow.
 

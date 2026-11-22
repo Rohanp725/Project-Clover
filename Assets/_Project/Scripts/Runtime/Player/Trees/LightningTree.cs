@@ -105,7 +105,7 @@ namespace Clover.Player.Trees
             SpellBranch.Add(to, E, Thunderclap, "Thunderclap", SpellRole.Breaker, BranchPattern.LeftA, Upgrade.Static, "", null,
                 "Lightning's own spell, given with the element. A bolt falls on the enemy faced, up to ten metres away: 16 damage and 45 stagger, forking to two more.",
                 UpgradeIcons.Bolt,
-                // NEEDS: the 55 stagger. The base spell is cast by its kit, which takes only the Empower's wait.
+                // The 55 stagger. The Empower's numbers reach the kit's own cast too (PlayerUpgrades.BaseEmpower, read by PlayerElement).
                 new Empower { Cooldown = 7f, Stagger = 55f },
                 "Thunderclap waits 7 seconds, not 9, and breaks balance harder.",
                 new ShapeDef { Name = "Rolling Thunder", Form = SpellForms.Spikes,

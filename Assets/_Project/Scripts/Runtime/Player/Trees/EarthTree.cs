@@ -272,7 +272,7 @@ namespace Clover.Player.Trees
             SpellBranch.Add(to, E, StoneRise, "Stone Rise", SpellRole.Opener, BranchPattern.RightA, Root, "", null,
                 "Earth's own spell, given with the element. A quarter second after the cast the ground breaks under the enemy faced, within five metres: 14 damage, 30 stagger and Tremor, and it is knocked up into the air for a moment. Then the stones sink back. No wall is left behind.",
                 UpgradeIcons.Rock,
-                // NEEDS: 18 damage and 36 stagger (base-spell-marks). The base spell is cast by its kit, which takes only the Empower's wait.
+                // 18 damage and 36 stagger. The Empower's numbers reach the kit's own cast too (PlayerUpgrades.BaseEmpower, read by PlayerElement).
                 new Empower { Cooldown = 6f, Damage = 18f, Stagger = 36f },
                 "Stone Rise waits 6 seconds, not 7, and strikes for 18 damage and 36 stagger.",
                 // NEEDS: the pillar left beside the enemy for 6 s, blocking bodies and thrown attacks, and

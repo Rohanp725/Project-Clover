@@ -61,7 +61,7 @@ namespace Clover.Player.Trees
             SpellBranch.Add(to, E, FlameWave, "Flame Wave", SpellRole.Opener, BranchPattern.RightA, Cinder, "", null,
                 "Fire's own spell, given with the element. Fire runs out along the ground in a cone, 5.5 metres and 70 degrees, and three patches of it burn on for three seconds.",
                 UpgradeIcons.Wave,
-                // NEEDS: the patches burning 5 s. The base spell is cast by its kit, which takes only the Empower's wait.
+                // The patches burning 5 s. The Empower's numbers reach the kit's own cast too (PlayerUpgrades.BaseEmpower, read by PlayerElement).
                 new Empower { Cooldown = 5.5f, Seconds = 5f },
                 "Flame Wave waits 5.5 seconds, not 7, and its patches burn five seconds.",
                 new ShapeDef { Name = "Cinder Fan", Form = SpellForms.Wave,

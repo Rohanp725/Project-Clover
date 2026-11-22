@@ -272,11 +272,9 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). While you carry Wind, you can always put it in a slot.
 
-**The numbers.** Comes with Wind. It costs no mana. After you cast it, you must wait 6 seconds to cast it again. Fighting with your weapon makes the wait shorter. Its Empower makes the wait 4.5 seconds. It is a cone 5 metres long and 70 degrees wide. It deals 8 damage, 20 stagger and two stacks of Unsteady, and everything in it is thrown 3 metres.
+**The numbers.** Comes with Wind. It costs no mana. After you cast it, you must wait 6 seconds to cast it again. Fighting with your weapon makes the wait shorter. Its Empower makes the wait 4.5 seconds and the Unsteady three stacks. It is a cone 5 metres long and 70 degrees wide. It deals 8 damage, 20 stagger and two stacks of Unsteady, and everything in it is thrown 3 metres.
 
 **Works with.** Its Empower, its two shapes and its Master mark; Against the Wall; and the charged blade, which it charges with Wind when it lands.
-
-**Not built yet.** The Empower's third stack of Unsteady. For now, the spell only gets the Empower's shorter wait.
 
 **Example.** A soldier stands at the edge of a drop. Gust it, and it's gone.
 

@@ -33,11 +33,9 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). While you carry Fire, you can always put it in a slot.
 
-**The numbers.** Comes with Fire. It costs no mana. After you cast it, you must wait 7 seconds to cast it again. Fighting with your weapon makes the wait shorter. Its Empower makes the wait 5.5 seconds. The cone is 5.5 metres long and 70 degrees wide. It deals 20 damage, 24 stagger and a stack of Burn. Three patches keep burning for 3 seconds.
+**The numbers.** Comes with Fire. It costs no mana. After you cast it, you must wait 7 seconds to cast it again. Fighting with your weapon makes the wait shorter. Its Empower makes the wait 5.5 seconds and the patches burn for 5 seconds. The cone is 5.5 metres long and 70 degrees wide. It deals 20 damage, 24 stagger and a stack of Burn. Three patches keep burning for 3 seconds.
 
 **Works with.** Its Empower, its two shapes and its Master mark; Cinder, to add more Burn to what it set on fire; and the charged blade, which it charges with Fire when it lands.
-
-**Not built yet.** The Empower's longer-lasting patches (5 seconds). For now, the spell only gets the Empower's shorter wait.
 
 **Example.** Start a fight by casting it across a line of soldiers. Every one of them is burning before your first blow.
 

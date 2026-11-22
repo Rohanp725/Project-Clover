@@ -268,11 +268,9 @@ draining.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). While you carry Dark, you can always put it in a slot.
 
-**The numbers.** Comes with Dark. It costs no mana. After you cast it, you must wait 7 seconds to cast it again. Fighting with your weapon makes the wait shorter. Its Empower makes the wait 6 seconds. It reaches the enemy you face if it is within 6 metres, and deals 10 damage, 12 stagger and a Curse to everything within 1.7 metres of where it arrives.
+**The numbers.** Comes with Dark. It costs no mana. After you cast it, you must wait 7 seconds to cast it again. Fighting with your weapon makes the wait shorter. Its Empower makes the wait 6 seconds, the reach 8 metres and the damage 14. It reaches the enemy you face if it is within 6 metres, and deals 10 damage, 12 stagger and a Curse to everything within 1.7 metres of where it arrives.
 
 **Works with.** Its Empower, its two shapes and its Master mark; the root mark, Dread, Devouring Maw and Debts Called's Collected shape (they all want Cursed enemies), and the charged blade, which it charges with Dark.
-
-**Not built yet.** The Empower's 14 damage and 8-metre reach. For now, the spell only gets the Empower's shorter wait.
 
 **Example.** Grasp the archer at the back. It is dragged to your feet, Cursed, and the jaw finishes it.
 

@@ -64,6 +64,23 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void ABaseSpellsMasterAnswersOnlyItsOwnElementsKitCast()
+        {
+            var fireMaster = Upgrade.ById(SpellBranch.MasterId(Clover.Player.Magic.SpellSlots.BaseId(Elements.Fire)));
+            Assert.IsTrue(SpellBranches.OwnBranch(fireMaster, null, Elements.Fire), "Fire's own base spell");
+            Assert.IsFalse(SpellBranches.OwnBranch(fireMaster, null, Elements.Water), "not Water's, with both carried");
+            Assert.IsTrue(SpellBranches.OwnBranch(fireMaster, null, null), "an element not known: as before");
+            foreach (var element in new[] { Elements.Fire, Elements.Lightning, Elements.Ice, Elements.Life, Elements.Light, Elements.Dark, Elements.Water, Elements.Wind, Elements.Earth })
+            {
+                var empower = Upgrade.ById(SpellBranch.EmpowerId(Clover.Player.Magic.SpellSlots.BaseId(element))).Empower;
+                Assert.IsFalse(empower.NotForKit, element + "'s kit takes its Empower's numbers");
+                var numbers = new SpellChange { Damage = empower.Damage, Stagger = empower.Stagger, Reach = empower.Reach, Radius = empower.Radius, Seconds = empower.Seconds, Stacks = empower.Stacks };
+                Assert.IsFalse(numbers.IsEmpty, element + "'s Empower gives the kit more than its wait");
+            }
+            Assert.IsTrue(Upgrade.ById(SpellBranch.EmpowerId(MetalTree.FlungBlade)).Empower.NotForKit, "Flung Blade's 16 is the drive's, not the throw's");
+        }
+
+        [Test]
         public void EveryShapesSetAsideNamesARealEffect()
         {
             foreach (var mark in Upgrade.All.Where(mark => mark.Part == BranchPart.Shape && mark.Shapes != null))

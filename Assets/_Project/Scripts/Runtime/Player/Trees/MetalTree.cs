@@ -276,9 +276,9 @@ namespace Clover.Player.Trees
                 "Metal's own spell, given with the element. A blade flies into the enemy faced within nine metres, 4 damage, and stands in it six seconds. Your next weapon blow on that enemy drives it in: 12 damage, 15 stagger, a notch and a burst of sparks, and it flies back to your hand, cutting the lane for a third as much.",
                 UpgradeIcons.Blade,
                 // Buried Blades, once a major, folded in here. NEEDS: 16 when driven, up to three blades standing in one enemy
-                // and a heavy blow driving them all (base-spell-marks, planted-blades). The base spell is cast by its kit,
-                // which takes only the Empower's wait.
-                new Empower { Damage = 16f },
+                // and a heavy blow driving them all (planted-blades). The Empower's 16 is the drive's, not the throw's, so the
+                // kit's own cast takes none of it (Empower.NotForKit).
+                new Empower { Damage = 16f, NotForKit = true },
                 "It drives in for 16. Up to three blades may stand in one enemy, and a heavy blow drives them all.",
                 // NEEDS: three blades each standing in a different enemy, glowing as they cool (planted-blades). Until then two
                 // more blades fly in a fan beside the kit's and cut what they pass, and the kit's blade driven within 2 s

@@ -250,11 +250,9 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). While you carry Water, you can always put it in a slot.
 
-**The numbers.** Comes with Water. It costs no mana. After you cast it, you must wait 6 seconds to cast it again. Fighting with your weapon makes the wait shorter. Its Empower makes the wait 4.5 seconds. The wave rises 5 metres in front of you and is 90 degrees wide. It deals 8 damage, 18 stagger and Soaked, and whatever it hits is carried to your feet.
+**The numbers.** Comes with Water. It costs no mana. After you cast it, you must wait 6 seconds to cast it again. Fighting with your weapon makes the wait shorter. Its Empower makes the wait 4.5 seconds and the wave rise 6.5 metres away. The wave rises 5 metres in front of you and is 90 degrees wide. It deals 8 damage, 18 stagger and Soaked, and whatever it hits is carried to your feet.
 
 **Works with.** Its Empower, its two shapes and its Master mark; Soaked; Deep Crack and Heavy Water on what it brings; and the charged blade, which it charges with Water when it lands.
-
-**Not built yet.** The Empower's wave rising 6.5 metres away. For now, the spell only gets the Empower's shorter wait.
 
 **Example.** Three archers stand far away. Riptide brings all three to your feet, Soaked, for one wide swing.
 

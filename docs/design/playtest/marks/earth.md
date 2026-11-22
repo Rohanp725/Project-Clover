@@ -236,11 +236,9 @@ Rise's rocks, a pillar, a heap of rubble.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). While you carry Earth, you can always put it in a slot.
 
-**The numbers.** Comes with Earth. It costs no mana. After you cast it, you must wait 7 seconds to cast it again. Fighting with your weapon makes the wait shorter. Its Empower makes the wait 6 seconds. It hits an enemy within 5 metres, in a 1.3-metre circle around it, for 14 damage, 30 stagger and one Tremor.
+**The numbers.** Comes with Earth. It costs no mana. After you cast it, you must wait 7 seconds to cast it again. Fighting with your weapon makes the wait shorter. Its Empower makes the wait 6 seconds, the damage 18 and the stagger 36. It hits an enemy within 5 metres, in a 1.3-metre circle around it, for 14 damage, 30 stagger and one Tremor.
 
 **Works with.** Its Empower, its two shapes and its Master mark; Tremor and Cairn; Standing Stones (a pillar on what it hits); the charged blade, which it charges with Earth when it lands.
-
-**Not built yet.** The Empower's 18 damage and 36 stagger. For now, the spell only gets the Empower's shorter wait.
 
 **Example.** Raise the stone under the archer at the back. It is knocked into the air and shaken.
 

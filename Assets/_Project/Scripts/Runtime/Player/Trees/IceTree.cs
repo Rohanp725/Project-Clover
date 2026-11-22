@@ -233,7 +233,7 @@ namespace Clover.Player.Trees
             SpellBranch.Add(to, E, Hoarfrost, "Hoarfrost", SpellRole.Opener, BranchPattern.RightA, Root, "", null,
                 "Ice's own spell, given with the element. Thirteen crystals grow out over a fan four and a half metres ahead: 10 damage, 15 stagger and Chill two deep. They stand four seconds, and a weapon blow among them shatters them all for 5 damage and one more Chill.",
                 UpgradeIcons.Snowflake,
-                // NEEDS: Chill three deep. The base spell is cast by its kit, which takes only the Empower's wait.
+                // Chill three deep. The Empower's numbers reach the kit's own cast too (PlayerUpgrades.BaseEmpower, read by PlayerElement).
                 new Empower { Cooldown = 5.5f, Stacks = 3 },
                 "Hoarfrost waits 5.5 seconds, not 7, and chills three deep.",
                 // Black Ice, once a major, folded in. NEEDS: enemies on the sheet thrown half again as far, and a dodge on it

@@ -1295,7 +1295,7 @@ namespace Clover.Player
                 if (effect.OwnSpell && effect.Owner != castSource) continue;
                 // A base spell cast through its Learn mark (its shape) is still the base spell.
                 if (effect.BaseSpell && castSource != null && !castSource.IsBaseSpell) continue;
-                if (effect.OwnBranch && !SpellBranches.OwnBranch(effect.Owner, castSource)) continue;
+                if (effect.OwnBranch && !SpellBranches.OwnBranch(effect.Owner, castSource, baseElement)) continue;
                 if (effect.SpentAtLeast > 0 && spent < effect.SpentAtLeast) continue;
                 // A mark that deepens one reaction answers that one only.
                 bool reactionMoment = trigger == UpgradeTrigger.Reacted || trigger == UpgradeTrigger.ReactionStruck;
@@ -2537,13 +2537,21 @@ namespace Clover.Player
         }
 
         /// <summary>A spell struck something; once for each thing it struck.</summary>
-        public void OnSpellStruck(IDamageable target, bool wasAfflicted)
+        public void OnSpellStruck(IDamageable target, bool wasAfflicted) => OnSpellStruck(target, wasAfflicted, null);
+
+        /// <summary>As above, with the element of the spell that struck: a base spell's Master answers only its own element's.</summary>
+        public void OnSpellStruck(IDamageable target, bool wasAfflicted, string element)
         {
             var struck = target as Component;
             if (struck == null) return;
             Vector3 at = struck.transform.position;
-            Trigger(UpgradeTrigger.SpellHit, struck, at);
-            if (wasAfflicted) Trigger(UpgradeTrigger.AfflictedHit, struck, at);
+            baseElement = element;
+            try
+            {
+                Trigger(UpgradeTrigger.SpellHit, struck, at);
+                if (wasAfflicted) Trigger(UpgradeTrigger.AfflictedHit, struck, at);
+            }
+            finally { baseElement = null; }
         }
 
         /// <summary>A move carrying the charged blade landed on <paramref name="target"/>; <paramref name="third"/> for the charge's last.</summary>
@@ -2556,11 +2564,28 @@ namespace Clover.Player
         }
 
         /// <summary>The element's own spell has left the hand.</summary>
-        public void OnSpellCast()
+        public void OnSpellCast() => OnSpellCast(null);
+
+        /// <summary>An element's base spell, cast by its kit, has left the hand: <paramref name="element"/> is whose, so its Master answers only its own.</summary>
+        public void OnSpellCast(string element)
         {
             BeginCast();
-            Trigger(UpgradeTrigger.SpellCast, null, transform.position, false);
+            baseElement = element;
+            try { Trigger(UpgradeTrigger.SpellCast, null, transform.position, false); }
+            finally { baseElement = null; }
         }
+
+        /// <summary>The Empower of an element's base spell, when it is learned and in force; null otherwise (its numbers given to the kit's cast).</summary>
+        public Empower BaseEmpower(string element)
+        {
+            if (string.IsNullOrEmpty(element)) return null;
+            string id = SpellBranch.EmpowerId(Magic.SpellSlots.BaseId(element));
+            var empower = Has(id) ? Upgrade.ById(id)?.Empower : null;
+            return empower != null && !empower.NotForKit ? empower : null;
+        }
+
+        // While a base spell cast by its kit (or its blow) is being answered: whose element it is (the ledger's base-spell-element).
+        private string baseElement;
 
         // A new cast: none passed by it yet, no doses carried down its line, and whether it was cast on the poison's beat.
         private void BeginCast()

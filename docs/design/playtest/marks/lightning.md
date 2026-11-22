@@ -129,11 +129,9 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button. While you carry Lightning, you can always put it in a slot.
 
-**The numbers.** Comes with Lightning. It costs no mana. After you cast it, you must wait 9 seconds to cast it again (its Empower makes it 7). It reaches up to 10 metres and deals 16 damage and 45 stagger, splitting off to two more enemies. It doesn't add any Static of its own.
+**The numbers.** Comes with Lightning. It costs no mana. After you cast it, you must wait 9 seconds to cast it again (its Empower makes it 7, and the stagger 55). It reaches up to 10 metres and deals 16 damage and 45 stagger, splitting off to two more enemies. It doesn't add any Static of its own.
 
 **Works with.** Static (a heavy blow right after sets off whatever Static is there); its Master mark on a perfect guard; Stored Charge.
-
-**Not built yet.** The Empower's stronger clap (55 stagger). For now, the spell only gets the Empower's shorter wait.
 
 **Example.** A shield bearer won't open up. The clap breaks its balance, and your next blow lands.
 

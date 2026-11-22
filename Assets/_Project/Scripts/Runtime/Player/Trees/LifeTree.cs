@@ -267,7 +267,7 @@ namespace Clover.Player.Trees
             SpellBranch.Add(to, E, BriarPatch, "Briar Patch", SpellRole.Opener, BranchPattern.RightA, Root, "", null,
                 "Life's own spell, given with the element. A bed of thorned vines two and a half metres across grows three metres ahead and stands six seconds. It lashes twice a second for 4, Seeds what stands in it and slows it by a fifth. It counts as grown.",
                 UpgradeIcons.Leaf,
-                // NEEDS: the bed 3.3 m across (base-spell-marks). The base spell is cast by its kit, which takes only the Empower's wait.
+                // The bed 3.3 m across. The Empower's numbers reach the kit's own cast too (PlayerUpgrades.BaseEmpower, read by PlayerElement).
                 new Empower { Cooldown = 5.5f, Radius = 1.65f },
                 "Briar Patch waits 5.5 seconds, not 7, and its bed is 3.3 metres across.",
                 // Thorn Ring, once a spell, is cut; Burrs takes its shape slot. NEEDS: a seed dropped every 1.5 m the enemy moves,

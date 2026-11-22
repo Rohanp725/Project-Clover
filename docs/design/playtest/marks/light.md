@@ -236,11 +236,9 @@ the next blows on that enemy critical.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). While you carry Light, you can always put it in a slot.
 
-**The numbers.** Comes with Light. It costs no mana. After you cast it, you must wait 6 seconds to cast it again. Fighting with your weapon makes the wait shorter. Its Empower makes the wait 5 seconds. The ray is 5.5 metres long and about 1.4 metres wide. It deals 8 damage, 22 stagger and a Mark to each enemy on it.
+**The numbers.** Comes with Light. It costs no mana. After you cast it, you must wait 6 seconds to cast it again. Fighting with your weapon makes the wait shorter. Its Empower makes the wait 5 seconds, the reach 7 metres and the damage 12. The ray is 5.5 metres long and about 1.4 metres wide. It deals 8 damage, 22 stagger and a Mark to each enemy on it.
 
 **Works with.** Its Empower, its two shapes and its Master mark; the root mark, Weighed, Condemned, Spoken Sentence (Marked enemies for the blades), and the charged blade, which its ray charges with Light.
-
-**Not built yet.** The Empower's 12 damage and 7-metre reach. For now, the spell only gets the Empower's shorter wait.
 
 **Example.** Glare the soldier in front of the captain. It is Marked and staggering, and your next three cuts on it are critical hits.
 

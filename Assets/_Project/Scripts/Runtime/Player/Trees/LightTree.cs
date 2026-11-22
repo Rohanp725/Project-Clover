@@ -276,8 +276,8 @@ namespace Clover.Player.Trees
             SpellBranch.Add(to, E, Glare, "Glare", SpellRole.Opener, BranchPattern.RightA, Root, "", null,
                 "Light's own spell, given with the element. A narrow ray five and a half metres along your facing, the dust lit along it: 8 damage, 22 stagger and Marked to what it crosses. What it marks wears brackets of gold.",
                 UpgradeIcons.Sun,
-                // NEEDS: 12 damage and seven metres (base-spell-marks). The base spell is cast by its kit, which takes only the
-                // Empower's wait; Seven Horses, cast through the mark, does take them (empower-after-shape).
+                // 12 damage and seven metres. The Empower's numbers reach the kit's own cast too (PlayerUpgrades.BaseEmpower, read by PlayerElement), and Seven Horses, cast through the
+                // mark, takes them as its Learn's.
                 new Empower { Cooldown = 5f, Damage = 12f, Reach = 7f },
                 "Glare waits 5 seconds, not 6, strikes for 12 and reaches seven metres.",
                 // NEEDS: held for up to a second, the ray narrowing and the stagger rising with the hold (held-press). Until then

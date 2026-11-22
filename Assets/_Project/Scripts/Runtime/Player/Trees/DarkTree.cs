@@ -275,8 +275,8 @@ namespace Clover.Player.Trees
             SpellBranch.Add(to, E, Grasp, "Grasp", SpellRole.Opener, BranchPattern.RightA, Curse, "", null,
                 "Dark's own spell, given with the element. A black ball crawls along the ground to the enemy you face within six metres, drawing in what it passes. Where it arrives: 10 damage, 12 stagger and Cursed, and up to five bodies are dragged to your feet. What cannot be dragged drags you to it.",
                 UpgradeIcons.Claw,
-                // NEEDS: 14 damage and eight metres (base-spell-marks). The base spell is cast by its kit, which takes only the
-                // Empower's wait; The Pit, cast through the mark, does take them (empower-after-shape).
+                // 14 damage and eight metres. The Empower's numbers reach the kit's own cast too (PlayerUpgrades.BaseEmpower, read by PlayerElement), and The Pit, cast through the mark,
+                // takes them as its Learn's.
                 new Empower { Cooldown = 6f, Damage = 14f, Reach = 8f },
                 "Grasp waits 6 seconds, not 7, reaches eight metres and strikes for 14.",
                 // NEEDS: a rope thrown in place of the ball (form-pieces), and the enemy kept within five metres of you (links-pass-blows).

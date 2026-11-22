@@ -259,8 +259,8 @@ namespace Clover.Player.Trees
             SpellBranch.Add(to, E, Miasma, "Miasma", SpellRole.Opener, BranchPattern.RightA, Venom, "", null,
                 "Poison's own spell, given with the element. Eight clouds over a disc four metres ahead hang for four seconds, creep after the nearest enemy and give what stands in them a dose a second. A stain is left where they lay. You stand in it unharmed.",
                 UpgradeIcons.Drop,
-                // NEEDS: a cloud three metres across (base-spell-marks). The base spell is cast by its kit, which takes only the
-                // Empower's wait; a radius set here would also shrink the Censer's swing (empower-after-shape).
+                // NEEDS: a cloud three metres across (empower-after-shape): the Empower's numbers reach the kit's own cast
+                // (PlayerUpgrades.BaseEmpower), but a radius set here would also shrink the Censer's swing.
                 new Empower { Cooldown = 6f },
                 "Miasma waits 6 seconds, not 7, and its cloud is three metres across.",
                 // NEEDS: the cloud set aside (shape-sets-aside), the sheet stopping at walls and a dodge in it costing an enemy a

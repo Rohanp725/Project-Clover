@@ -299,7 +299,7 @@ namespace Clover.Player.Trees
             SpellBranch.Add(to, E, Riptide, "Riptide", SpellRole.Opener, BranchPattern.RightA, Root, "", null,
                 "Water's own spell, given with the element. A wave rises five metres ahead and rolls back toward you. Everything in its path takes 8 damage and 18 stagger, is Soaked, and is carried to your feet, within reach.",
                 UpgradeIcons.Wave,
-                // NEEDS: rising 6.5 m away. The base spell is cast by its kit, which takes only the Empower's wait.
+                // Rising 6.5 m away. The Empower's numbers reach the kit's own cast too (PlayerUpgrades.BaseEmpower, read by PlayerElement).
                 new Empower { Cooldown = 4.5f, Reach = 6.5f },
                 "Riptide waits 4.5 seconds, not 6, and rises six and a half metres away.",
                 // River Serpent, once a spell, folded in. NEEDS: the serpent going out and coming back, and the first enemy it

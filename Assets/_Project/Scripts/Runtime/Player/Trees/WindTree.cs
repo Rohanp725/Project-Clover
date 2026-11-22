@@ -236,7 +236,7 @@ namespace Clover.Player.Trees
             SpellBranch.Add(to, E, Gust, "Gust", SpellRole.Opener, BranchPattern.RightA, Unsteady, "", null,
                 "Wind's own spell, given with the element. A rush of air five metres ahead: 8 damage, 20 stagger and Unsteady two deep, and everything in it is thrown three metres straight down the wind.",
                 UpgradeIcons.Gust,
-                // NEEDS: Unsteady three deep. The base spell is cast by its kit, which takes only the Empower's wait.
+                // Unsteady three deep. The Empower's numbers reach the kit's own cast too (PlayerUpgrades.BaseEmpower, read by PlayerElement).
                 new Empower { Cooldown = 4.5f, Stacks = 3 },
                 "Gust waits 4.5 seconds, not 6, and leaves its enemies three deep in Unsteady.",
                 // NEEDS: the wind coming down on a point up to 6 m away. Until then it comes down on you, and throws everything

@@ -677,6 +677,15 @@ namespace Clover.Player
                 spec.Count = (string.IsNullOrEmpty(kit.SpellForm) ? kit.SpellLeaps : kit.SpellCount) + Mathf.Max(0, upgrades.Stats.Whole(PlayerStat.BaseSpellCount));
                 spec.Arc = kit.SpellArcDegrees * upgrades.Stats.Multiplier(PlayerStat.BaseSpellArc);
             }
+            // The base spell's Empower, once bought, gives the kit's cast all its numbers, not only its wait (the ledger's
+            // base-spell-marks: Glare strikes for 12 and reaches seven metres).
+            var empower = upgrades != null ? upgrades.BaseEmpower(kit.Name) : null;
+            if (empower != null)
+            {
+                SpellChange.Copy(spec, empoweredBase[index]);
+                empower.ApplyTo(empoweredBase[index]);
+                spec = empoweredBase[index];
+            }
             var cast = NewCast(spec, kit.SpellName, null, info);
             if (upgrades != null)
             {
@@ -697,8 +706,11 @@ namespace Clover.Player
             if (kit.SpellPull != 0f && string.IsNullOrEmpty(kit.SpellForm)) combat.Displace(transform.position, cast.Reach, Mathf.Abs(kit.SpellPull), kit.SpellPull > 0f);
             glowLevel = GlowWhenCasting;
             if (shaker != null) shaker.Shake(0.14f, 0.2f);
-            if (upgrades != null && !free) upgrades.OnSpellCast();
+            if (upgrades != null && !free) upgrades.OnSpellCast(kit.Name);
         }
+
+        // The base spells' numbers with their Empowers laid over, made at each cast (the kit's own are never changed).
+        private readonly SpellSpec[] empoweredBase = { new SpellSpec(), new SpellSpec() };
 
         private void BeginSurge()
         {

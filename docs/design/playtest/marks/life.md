@@ -262,11 +262,9 @@ ground: Briar Patch's bed, a thornbush, a sapling, a thicket, a tuft of briar.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). While you carry Life, you can always put it in a slot.
 
-**The numbers.** Comes with Life. It costs no mana. After you cast it, you must wait 7 seconds to cast it again. Fighting with your weapon makes the wait shorter. Its Empower makes the wait 5.5 seconds. The bed is 2.5 metres across, lands 3 metres ahead of you, and lasts 6 seconds. Twice a second, it lashes for 4 damage and Seeded, and it slows whatever stands in it by a fifth.
+**The numbers.** Comes with Life. It costs no mana. After you cast it, you must wait 7 seconds to cast it again. Fighting with your weapon makes the wait shorter. Its Empower makes the wait 5.5 seconds and the bed 3.3 metres across. The bed is 2.5 metres across, lands 3 metres ahead of you, and lasts 6 seconds. Twice a second, it lashes for 4 damage and Seeded, and it slows whatever stands in it by a fifth.
 
 **Works with.** Its Empower, its two shapes and its Master mark; Seeded; Reap What Is Sown and Drawn From the Wood, which use up the bed; The Garden Holds You and Root Walk; and the charged blade, which it charges with Life when it lands.
-
-**Not built yet.** The Empower's bigger bed, 3.3 metres across. For now, the spell only gets the Empower's shorter wait.
 
 **Example.** Put the bed in a doorway and fight at its edge. Everything that comes through is Seeded and slowed.
 

@@ -80,12 +80,16 @@ namespace Clover.Player
         /// branch's. <paramref name="castSource"/> is the mark whose spell it is (null: an element's base spell cast by its
         /// kit, which answers the base spells' branches).
         /// </summary>
-        public static bool OwnBranch(Upgrade owner, Upgrade castSource)
+        public static bool OwnBranch(Upgrade owner, Upgrade castSource) => OwnBranch(owner, castSource, null);
+
+        /// <summary>
+        /// As above; <paramref name="element"/>, when known, is the element of a base spell cast by its kit, so with two elements
+        /// carried a base spell's Master answers only its own element's (the ledger's base-spell-element).
+        /// </summary>
+        public static bool OwnBranch(Upgrade owner, Upgrade castSource, string element)
         {
             if (owner == null || string.IsNullOrEmpty(owner.Branch)) return false;
-            // NEEDS (base-spell-element): the element of a base spell cast by its kit. Until then, with two elements carried, a base spell's
-            // Master answers either element's base spell.
-            if (castSource == null) return SpellSlots.IsBase(owner.Branch);
+            if (castSource == null) return SpellSlots.IsBase(owner.Branch) && (string.IsNullOrEmpty(element) || owner.Branch == SpellSlots.BaseId(element));
             return castSource.Id == owner.Branch || castSource.Branch == owner.Branch;
         }
 
