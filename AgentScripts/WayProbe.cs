@@ -201,6 +201,7 @@ public class WayProbeRunner : MonoBehaviour
         string onlyPath = "AgentScripts/way_only.txt";
         if (File.Exists(onlyPath))
             only = new HashSet<string>(File.ReadAllText(onlyPath).Split(',').Select(part => part.Trim().ToLowerInvariant()).Where(part => part.Length > 0));
+        framesMode = only != null && only.Contains("frames");
         Judge("saved progress is sandboxed", Progress.Sandboxed);
 
         // 1. The title guide opens on arrival; the back key closes it, and time must run again.
@@ -581,6 +582,8 @@ public class WayProbeRunner : MonoBehaviour
             player.Stamina.Fill();
             yield return AtDummy(family.Item4);
             int strikes = combat.InfusedStrikes;
+            // Night filming: every frame at 20 a second from the press (the Fire lies 6 s).
+            if (framesMode) StartCoroutine(Frames($"way_{family.Item3}", family.Item1 == Elements.Fire ? 6.8f : 3f));
             for (int attempt = 0; attempt < 3 && combat.InfusedStrikes == strikes; attempt++)
             {
                 if (attempt > 0) Say($"  (no strike on press {attempt}: {defence.LastCallout}, mana {combat.Mana.Current:0}, element {element.Info?.Name}, check {spells.CheckStrike(false, out _, out _)}, layer {player.Buttons?.LayerHeld}, refused {combat.StrikesRefused}, phase {combat.Combo.Phase}, away {combat.WeaponAway})");
@@ -597,7 +600,7 @@ public class WayProbeRunner : MonoBehaviour
             }
             float start = Time.time;
             var bend = combat.LastInfusion;
-            for (int i = 0; i < family.Item5.Length; i++)
+            for (int i = 0; i < family.Item5.Length && !framesMode; i++)
             {
                 float wait = family.Item5[i] - (Time.time - start);
                 if (wait > 0f) yield return Game(wait);
@@ -612,6 +615,7 @@ public class WayProbeRunner : MonoBehaviour
                     $"strikes +{combat.InfusedStrikes - strikes}, family {bend.Family}, whole {bend.WholeCut}, lies {bend.LieSeconds:0.#} s");
             yield return WhenFree();
             yield return Real(1.0f);
+            while (filming) yield return null;
         }
 
         // The finisher's held pose, 0.2 s on the Katana, on a staggered soldier: from the camera's side, from the left and
@@ -634,6 +638,7 @@ public class WayProbeRunner : MonoBehaviour
             yield return null;
             int holds = combat.FinisherHolds;
             Vector3 cameFrom = player.transform.position - soldier.transform.position;
+            if (framesMode) StartCoroutine(Frames($"way_finisher_{label}", 2.4f));
             yield return Tap(Key.K);
             yield return Until(() => combat.IsFinishing, 1f);
             yield return Until(() => combat.Combo.Phase == AttackPhase.Active, 1f);
@@ -644,16 +649,37 @@ public class WayProbeRunner : MonoBehaviour
             // Behind: on the far side from where the player came in.
             float side = Vector3.Dot(rel.normalized, Flat(cameFrom).normalized);
             float backTurned = Vector3.Angle(player.transform.forward, Flat(soldier.transform.position - player.transform.position));
-            yield return Still($"way_finisher_hold_{label}_1");
+            if (!framesMode) yield return Still($"way_finisher_hold_{label}_1");
             Judge($"from the {label} side the finisher holds its pose 0.2 s behind the soldier, its back to it", combat.FinisherHolds == holds + 1 && held != null && Mathf.Abs(held.PoseHold - 0.2f) < 0.01f && side < -0.5f && backTurned > 120f,
                 held != null ? $"{held.Name}, hold {held.PoseHold:0.00} s; {gapAtBlow:0.0} m apart at the blow, {rel.magnitude:0.0} m {(side < 0f ? "behind" : "in front of")} it at the hold (dot {side:0.00}), facing {backTurned:0} deg off it" : "no step");
             yield return Until(() => !combat.IsAttacking || Vector3.Angle(player.transform.forward, Flat(soldier.transform.position - player.transform.position)) < 30f, 1f);
             Judge($"from the {label} side, after the hold the player turns to face the fallen", Vector3.Angle(player.transform.forward, Flat(soldier.transform.position - player.transform.position)) < 30f,
                 $"{Vector3.Angle(player.transform.forward, Flat(soldier.transform.position - player.transform.position)):0} deg off");
             yield return Real(1.5f);
+            while (filming) yield return null;
             yield return WhenFree();
         }
         castle.Clear();
+    }
+
+    // Night filming (way_only.txt holds "frames" with "film"): every frame at 20 a second, game time fixed, for this long.
+    private bool framesMode, filming;
+
+    private IEnumerator Frames(string name, float seconds)
+    {
+        filming = true;
+        string folder = $"review/gifs/way/frames/{name}";
+        Directory.CreateDirectory(folder);
+        foreach (var old in Directory.GetFiles(folder, "*.png")) File.Delete(old);
+        Time.captureFramerate = 20;
+        int count = Mathf.RoundToInt(seconds * 20f);
+        for (int i = 0; i < count; i++)
+        {
+            ScreenCapture.CaptureScreenshot($"{folder}/{i:000}.png");
+            yield return null;
+        }
+        Time.captureFramerate = 0;
+        filming = false;
     }
 
     private void Finish()
