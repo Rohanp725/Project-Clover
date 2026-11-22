@@ -169,6 +169,7 @@ namespace Clover.Player
             into.OnlyCarrying = from.OnlyCarrying;
             into.OnlyCarrying2 = from.OnlyCarrying2;
             into.Seal = from.Seal;
+            into.Swells = from.Swells;
             into.PerDose = from.PerDose;
             into.PassReach = from.PassReach;
             into.StepReach = from.StepReach;

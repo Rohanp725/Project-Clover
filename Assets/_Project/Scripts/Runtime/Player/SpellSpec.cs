@@ -81,6 +81,12 @@ namespace Clover.Player
         /// <see cref="PassReach"/>. If its Seconds run out first, the thunder falls at half.
         /// </summary>
         public bool Seal;
+        /// <summary>
+        /// For the brand form: the blister. It swells a size at each bite of its bearer's poison, three sizes at most, and only a
+        /// heavy blow breaks it (BrandForm.BlisterDamage and its kin: half, the whole and 1.75 times its Damage, its Radius a
+        /// metre less to a metre more, half, the whole and half again its Stacks as doses on everyone else it reaches).
+        /// </summary>
+        public bool Swells;
         public float PerDose;
         public float PassReach;
         /// <summary>Above zero: the caster steps up to the enemy faced, this far at most, before the spell lands on it (Paper Seal's 3 m step).</summary>

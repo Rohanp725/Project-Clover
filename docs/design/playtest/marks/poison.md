@@ -35,11 +35,9 @@ a blow or a cast "on the beat" comes within a fifth of a second of it.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). If you aren't facing an enemy, no blister is raised, and you still have to wait.
 
-**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes it 50 damage.) It targets an enemy within 8 metres. Only one blister can be up at a time, and it lasts 12 seconds. The burst has a 3-metre radius around the enemy and deals 40 damage, 30 stagger and four doses.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. It targets an enemy within 8 metres. Only one blister can be up at a time, and it lasts 12 seconds; if no heavy blow pops it by then, it withers away. It starts small and grows one size each time the enemy's poison bites, three sizes in all. Only a heavy blow pops it. Small: 20 damage within 2 metres. Middle: 40 within 3 metres. Large: 70 within 4 metres. Each pop deals 30 stagger, and puts 2, 4 or 6 doses on everyone else it reaches. (Its Empower makes the three sizes 25, 50 and 85.)
 
 **Works with.** The root mark, Rupture, which it comes after on the chart (four doses toward full), Coiled Strike (step in and pop it from behind), In Time, and the charged blade.
-
-**Not built yet.** Swelling through three sizes: 20, 40 and 70 damage, within 2, 3 and 4 metres, with 2, 4 and 6 doses. For now, it bursts at the middle size. Only a heavy blow should pop it; for now, any weapon blow on it pops it.
 
 **Example.** Put a blister on the brute in the middle of a group and cut it once. Everyone around it gets four doses.
 
@@ -59,11 +57,9 @@ a blow or a cast "on the beat" comes within a fifth of a second of it.
 
 **When it happens.** The first heavy blow on the blistered enemy, while Blister is in a spell slot.
 
-**The numbers.** 3 Shards. For 12 seconds after you cast it, the first heavy blow on that enemy, if it lands within a fifth of a second of its bite, sets off a second burst just as big around it: 40 damage, 30 stagger and four doses within 3 metres.
+**The numbers.** 3 Shards. Pop the blister with a heavy blow within a fifth of a second of its poison's bite, and its burst is doubled: twice the damage, twice the stagger and twice the doses, at whatever size it has grown to.
 
 **Works with.** In Time (the same moment), Coiled Strike's heavy blow made into a critical hit, a heavy weapon.
-
-**Not built yet.** The blister's own burst should double. For now, a second burst lands with it, and only if the heavy blow is the one that pops it (a light blow pops the plain blister first).
 
 **Example.** Watch the bubbles on the blistered captain. As they pop, bring the heavy blow down: two bursts, 80 damage to everything around it.
 

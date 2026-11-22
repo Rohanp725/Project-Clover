@@ -941,6 +941,30 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void TheBlisterSwellsAtEachBiteAndBreaksOnlyOnAHeavyBlow()
+        {
+            Assert.AreEqual(20f, Clover.Player.Forms.BrandForm.BlisterDamage(40f, 0), 1e-4f);
+            Assert.AreEqual(40f, Clover.Player.Forms.BrandForm.BlisterDamage(40f, 1), 1e-4f);
+            Assert.AreEqual(70f, Clover.Player.Forms.BrandForm.BlisterDamage(40f, 2), 1e-4f);
+            Assert.AreEqual(85f, Clover.Player.Forms.BrandForm.BlisterDamage(50f, 2), 1e-4f, "the Empower's 25, 50, 85");
+            Assert.AreEqual(2f, Clover.Player.Forms.BrandForm.BlisterRadius(3f, 0), 1e-4f);
+            Assert.AreEqual(4f, Clover.Player.Forms.BrandForm.BlisterRadius(3f, 2), 1e-4f);
+            Assert.AreEqual(2, Clover.Player.Forms.BrandForm.BlisterDoses(4, 0));
+            Assert.AreEqual(4, Clover.Player.Forms.BrandForm.BlisterDoses(4, 1));
+            Assert.AreEqual(6, Clover.Player.Forms.BrandForm.BlisterDoses(4, 2));
+            Assert.AreEqual(1, Clover.Player.Forms.BrandForm.Swell(0));
+            Assert.AreEqual(2, Clover.Player.Forms.BrandForm.Swell(2), "three sizes at most");
+            var blister = Upgrade.ById(PoisonTree.Blister).Spell;
+            Assert.IsTrue(blister.Swells);
+            var copy = new SpellSpec();
+            SpellChange.Copy(blister, copy);
+            Assert.IsTrue(copy.Swells, "kept through the Learn's copy");
+            var master = Upgrade.ById(SpellBranch.MasterId(PoisonTree.Blister)).Effects;
+            Assert.AreEqual(Clover.Player.Forms.BrandForm.DoublesOnBeat, master.Single().State.Is, "the form doubles its own burst on the beat");
+            Assert.IsFalse(master.Any(each => each.Do == UpgradeAction.Burst), "no second burst of a set size");
+        }
+
+        [Test]
         public void TheDelayedTouchHoldsPoisonsReactionsAndLandsThemDoubled()
         {
             var touch = Upgrade.ById(PoisonTree.TheDelayedTouch).Effects;

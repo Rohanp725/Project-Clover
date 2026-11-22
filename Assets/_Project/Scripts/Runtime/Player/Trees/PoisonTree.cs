@@ -93,11 +93,11 @@ namespace Clover.Player.Trees
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.HeavyHit, Do = UpgradeAction.SetOff, Needs = P, NeedsFull = true, Affliction = P, Stagger = 4f, Radius = 1f, Cooldown = 0.3f } } },
                 BranchPattern.MiddleFoot));
 
-            // The detonator: the brand form raises the blister on the enemy faced, and the next weapon blow on it breaks it.
-            // NEEDS: the blister swelling at each bite through three sizes, broken by a heavy blow alone (blister-swells). Until
-            // then it breaks at its middle size, 40 in three metres, on any weapon blow.
+            // The detonator: the brand form raises the blister on the enemy faced (SpellSpec.Swells). It swells at each bite of its
+            // poison through three sizes, and only a heavy blow breaks it: 20, 40 or 70 in 2, 3 or 4 m, and 2, 4 or 6 doses on
+            // everyone else it reaches. Left 12 s, it withers.
             SpellBranch.Add(to, E, Blister, "Blister", SpellRole.Detonator, BranchPattern.MiddleA, Rupture, SpellForms.Brand,
-                new SpellSpec { Reach = 8f, Seconds = 12f, Count = 1, Radius = 3f, Damage = 40f, Stagger = 30f, Stacks = 4 },
+                new SpellSpec { Reach = 8f, Seconds = 12f, Count = 1, Radius = 3f, Damage = 40f, Stagger = 30f, Stacks = 4, Swells = true },
                 "You raise a blister on the enemy you face. It swells each time its poison bites, through three sizes. A heavy blow breaks it: 20, 40 or 70 damage in two, three or four metres, and 2, 4 or 6 doses on everyone else it reaches. Left too long, it withers.",
                 UpgradeIcons.Orb,
                 // The roster's numbers alone (the owner's answer of 2026-11-20: an Empower may strengthen without a shorter wait).
@@ -118,12 +118,11 @@ namespace Clover.Player.Trees
                         new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = TheVessel, Needs = P, NeedsFull = true, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Radius = 2f, Seconds = 3f, Interval = 1f, Damage = 0f, Stagger = 0f, Affliction = P, Stacks = 1, Cooldown = 12f },
                     } },
                 "Opens two shapes of Blister, chosen at any rest fire: Weeping Sore, a sore that leaves a trail of puddles, or The Vessel, an enemy that bursts by itself when full.",
-                // NEEDS: the blister's own burst doubled (blister-swells). Until then a heavy blow on the blistered enemy within a
-                // fifth of a second of its bite strikes round it with a second burst as large, once a blister.
+                // The blister's own burst doubled when a heavy blow breaks it within a fifth of a second of its poison's bite: the
+                // condition is what the brand form asks for (BrandForm.DoublesOnBeat).
                 new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = BrokenOnTheBeat, Seconds = 12f, EndsWith = ConditionBlow.Heavy } },
-                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = BrokenOnTheBeat, By = StruckBy.Heavy, OnBeat = 0.2f, Do = UpgradeAction.Burst, Radius = 3f, Damage = 40f, Stagger = 30f, Affliction = P, Stacks = 4 },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = BrokenOnTheBeat, Seconds = 12f, Is = Clover.Player.Forms.BrandForm.DoublesOnBeat } },
                 },
                 "Break it with a heavy blow as its poison bites, within a fifth of a second, and the burst doubles.");
 
