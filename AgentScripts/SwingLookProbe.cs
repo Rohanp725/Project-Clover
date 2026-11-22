@@ -52,7 +52,8 @@ public static class SwingLookProbe
 
 public class SwingLookProbeRunner : MonoBehaviour
 {
-    private const int Rate = 20, Before = 3, After = 8, MostFrames = 260, Width = 960, Height = 540;
+    // The cap is 17 s: Light's Marked lasts 8 s after the bow's late shot, so bow_light ran past 13 s (the films of 2026-11-22).
+    private const int Rate = 20, Before = 3, After = 8, MostFrames = 340, Width = 960, Height = 540;
     // Clips with the enemies stood off (swing_gif_alone.txt) go to their own folder, so the grid on the enemies is kept.
     private string Root => alone ? "review/gifs/swings/alone/" : "review/gifs/swings/frames/";
     // The weapons in the order they are filmed and set out on the sheet, with the name each folder takes.
