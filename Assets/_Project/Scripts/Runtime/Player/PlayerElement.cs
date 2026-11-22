@@ -720,6 +720,7 @@ namespace Clover.Player
             }
             // Life's bed of thorns is something grown.
             Clover.World.Hazards.Growing = kit.Name == Elements.Life && !string.IsNullOrEmpty(kit.SpellForm);
+            if (upgrades != null && !free) upgrades.EchoLater(form, cast);
             SpellHits += form.Cast(cast);
             Clover.World.Hazards.Growing = false;
             // The pull of a tide or a grasping hand, or the push of a gust, on what stands within its reach.

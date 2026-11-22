@@ -168,29 +168,33 @@ namespace Clover.Player.Trees
             to.Add(BranchPattern.Put(new Upgrade { Id = Upgrade.Blink, Name = "Blink", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Upgrade.Static }, Icon = UpgradeIcons.Boot,
                 Description = "Each dodge sends a line of lightning down its path that shocks whatever it crosses." }, BranchPattern.RightFoot));
 
-            // NEEDS (press-on-standing-thing): a second press while the rod stands stepping you to it in a flash (a 2.5 m shock, 14 damage, 20
-            // stagger), the rod spent. Until then the rod strikes round itself.
-            SpellBranch.Add(to, E, Upgrade.LightningRod, "Lightning Rod", SpellRole.Movement, BranchPattern.RightA, Upgrade.Blink, SpellForms.Rod,
+            // A second press while the rod stands steps you to it in a flash (UpgradeAction.StepToStanding: a 2.5 m shock, 14 damage, 20
+            // stagger, a Static), the rod spent.
+            var rod = SpellBranch.Add(to, E, Upgrade.LightningRod, "Lightning Rod", SpellRole.Movement, BranchPattern.RightA, Upgrade.Blink, SpellForms.Rod,
                 new SpellSpec { Reach = 2f, Radius = 3.5f, Seconds = 8f, Interval = 0.9f, Damage = 12f, Stagger = 12f, Delay = 0.2f, Stacks = 1 },
                 "You plant a sword point-up two metres ahead, and for eight seconds bolts fall on enemies near it, each laying Static.",
                 UpgradeIcons.Tower,
                 new Empower { Cooldown = 8f, Radius = 4.5f },
                 "Lightning Rod waits 8 seconds, not 10, and strikes further round itself.",
                 // NEEDS: the pull toward the rod, not toward you.
-                new ShapeDef { Name = "Lodestone", Form = SpellForms.Lodestone,
+                new ShapeDef { Name = "Lodestone", Form = SpellForms.Lodestone, Presses = new[] { new UpgradeEffect[0] },
                     Description = "The rod draws every enemy within seven metres toward it, further for each Static they carry, then discharges all of them. There is no step.",
                     Spell = new SpellSpec { Reach = 2f, Radius = 7f, Delay = 0.3f, Damage = 14f, Stagger = 30f, Stacks = 0 } },
                 new ShapeDef { Name = "Thrown Rod",
                     Description = "The rod is thrown up to ten metres, into a far enemy or the ground, so the step goes that far.",
                     Change = new SpellChange { Reach = 10f } },
                 "Opens two shapes of Lightning Rod, chosen at any rest fire: Lodestone, a rod that pulls, or Thrown Rod, a rod planted far.",
-                // Cast as a blow would land (UpgradeEffect.BlowLanding), it is a perfect dodge (UpgradeAction.PerfectDodgeNow). NEEDS: the rod
-                // not spent by the step (press-on-standing-thing).
+                // Cast as a blow would land (UpgradeEffect.BlowLanding), it is a perfect dodge (UpgradeAction.PerfectDodgeNow); and the rod is
+                // not spent by the step (UpgradeAction.KeepStanding, read by the step).
                 new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, BlowLanding = 0.3f, Do = UpgradeAction.PerfectDodgeNow },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellPressed, OwnBranch = true, Do = UpgradeAction.KeepStanding },
                 },
                 "Cast in the instant a blow would land on you, it counts as a perfect dodge, and the rod is not spent by the step.");
+            // The step: pressed again while the rod stands (its eight seconds).
+            rod.PressWindow = 8.2f;
+            rod.Presses = new[] { new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, Do = UpgradeAction.StepToStanding, Radius = 2.5f, Damage = 14f, Stagger = 20f, Affliction = AfflictionKind.Static, Stacks = 1 } } };
 
             // BESPOKE (as built). Still to add: the copy repeats the player's last blow and lays its Static.
             to.Add(BranchPattern.Put(new Upgrade { Id = Upgrade.Afterimage, Name = "Afterimage", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Upgrade.Blink }, Icon = UpgradeIcons.Eye,

@@ -182,24 +182,22 @@ design yet, its **Not built yet** line says what is missing.
 **Example.** A soldier thrusts at you. Guard just before it lands, and the fire knocks it off balance. At five Burn, its burn goes off at the same moment.
 
 ## fire.kiln
-**What it does.** You stand ready, wrapped in flame. The first blow that reaches you, from any side, red attack or not, does nothing to you, and you answer it with fire. The blocked blow counts as a perfect guard, so it gives you that mana and sets off every mark that needs a perfect guard. If no blow comes, the stance goes out and the cast is used up.
+**What it does.** Shut Door. Hold the button, and you stand ready, wrapped in flame. Every blow that reaches you while you hold it, from any side, red attack or not, does nothing to you. Each one counts as a perfect guard, so it gives you that mana and sets off every mark that needs a perfect guard. Each is stored as smoke under a hood. Let go, and the door opens: a cone of flame that grows with every blow you stored. If no blow came, nothing comes out.
 
-**When it happens.** Cast it from a spell slot. Press that slot's button. Then it works on any blow in the next 1.2 seconds.
+**When it happens.** Cast it from a spell slot and keep holding that slot's button. It lasts while you hold it, up to 3 seconds. A quick tap still holds for a quarter of a second.
 
-**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 9 seconds to cast it again (its Empower makes it 7 and adds a fourth Burn). It stays ready for 1.2 seconds. The answer is a pillar of fire with a 1.7-metre radius under the attacker. It deals 30 damage, 50 stagger, counts as a heavy blow, and adds three stacks of Burn.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 9 seconds to cast it again (its Empower makes it 7 and adds a fourth Burn). It stores up to three blows. When you let go, the door is a cone 6 metres long and 90 degrees wide. It deals 20 damage plus 15 for each stored blow (65 with three), 50 stagger and three Burn, as a heavy blow.
 
 **Works with.** Breath of the Lioness, which it comes after on the chart, and its Master mark on a burning attacker.
 
-**Not built yet.** Shut Door, the planned version: you hold it for up to 3 seconds, every blow you block is stored as smoke under a hood (up to three), and when you let go, the door opens in a cone of flame that deals 20 damage plus 15 more for each stored blow. The game needs spells you can hold down on their button first. For now, the Learn mark is the stance as it was first built, The Kiln.
-
-**Example.** A brute winds up a red overhead swing you can't guard. Cast this just before it comes down, and the pillar answers it.
+**Example.** A duellist starts a string of three cuts. Hold the stance through all three, then let go: the door opens on it for 65 damage.
 
 ## fire.kiln.shape
 **What it does.** Unlocks two shapes for Kiln Stance. You pick one at any rest fire. **The Kiln**: the stance as it was first built. A pillar of fire answers the first blow right away; it's best for single blows. **Firewalker**: a stance you can walk in, for a shorter time. Walk into the enemy's swing.
 
 **When it happens.** Whenever you cast Kiln Stance, using the shape you picked.
 
-**The numbers.** 3 Shards. The Kiln: ready for 1.2 seconds. The pillar deals 30 damage, 50 stagger and three Burn. Firewalker: ready for 0.6 seconds, and you can walk at half speed while it lasts.
+**The numbers.** 3 Shards. The Kiln: a tap, not a hold. It is ready for 1.2 seconds. The first blow is answered at once by a pillar of fire that deals 30 damage, 50 stagger and three Burn. Firewalker: the held stance, but it lasts only 0.6 seconds before the door opens, and you can walk at half speed while it lasts.
 
 **Works with.** Breath of the Lioness; Uraeus's Coiled shape.
 

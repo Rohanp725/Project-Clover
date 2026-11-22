@@ -333,14 +333,14 @@ the next blows on that enemy critical.
 **Example.** Light Clarity, then guard and cut for eight seconds without getting hit. You dealt 200 and took none, so a sword falls for 120 on every Marked enemy.
 
 ## light.twosuns
-**What it does.** Two Suns, a keystone. Every enemy your spell hits is hit again a moment later by a burst of light, and Marked. Your spells have to wait a fifth longer between casts.
+**What it does.** Two Suns, a keystone. When you cast a spell at an enemy, a figure of light that looks like you appears on the far side of that enemy and, a moment later, casts the same spell back toward you, a little weaker. The enemy is caught between two suns. Your spells have to wait a fifth longer between casts.
 
-**When it happens.** Whenever one of your spells hits an enemy, while you carry Light.
+**When it happens.** Whenever you cast a spell at an enemy, while you carry Light. Spells that move your own body (a rush, a leap, a dive through enemies), spells you hold or gather, and stances have no figure.
 
-**The numbers.** 6 Shards. The second burst comes 0.4 seconds later and is 2.5 metres across. It deals 12 damage, 10 stagger and one Mark, at most once every 0.2 seconds. Every spell's wait is 1.2 times as long.
+**The numbers.** 6 Shards. The figure stands as far past the enemy as you stand in front of it, between 1.5 and 6 metres. It casts 0.4 seconds after you, at 60% of the spell's damage and stagger. Its spell can't hurt you, and it doesn't charge your blade. Every spell's wait is 1.2 times as long.
 
-**Works with.** Ring of Spears, which it comes after on the chart (from its Master mark), Reckoning, Weighed and Condemned (more Marks to finish with), and Daybreak's long line (every enemy on it is hit twice).
+**Works with.** Ring of Spears, which it comes after on the chart (from its Master mark), Glare and Daybreak (lines of light crossing from both sides), Reckoning, Weighed and Condemned.
 
-**Not built yet.** A figure of light should cast the spell again from the far side of the enemy you face. For now, each enemy hit takes a second burst of light where it stands.
+**Not built yet.** The figure is a glowing copy of your body; its own look (a figure of sunlight with a halo) is still owed.
 
-**Example.** Drive Ring of Spears into a soldier with two others next to it. A moment later the light bursts over it again, and all three are Marked for your next blows.
+**Example.** Throw Glare at a soldier with two more behind it. A figure of light appears behind them and throws Glare back, and the line of soldiers is struck from both sides.

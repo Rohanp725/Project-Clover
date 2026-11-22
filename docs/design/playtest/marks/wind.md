@@ -127,11 +127,9 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Only while you carry Wind twice (all in). It is always on then.
 
-**The numbers.** 6 Shards. A spell cast during a dodge carries you 2 metres farther. Buying this also gives you the deep strike, Whirl Cut. Use it with L2 and R2 while you carry Wind alone or twice. The crescent becomes a small whirlwind that holds the first enemy it reaches in the air for a second.
+**The numbers.** 6 Shards. Your Wind spell (Gust) leaves your hand at once, with no wind-up. Every spell can be cast while you dodge or swing, and neither stops. A spell cast during a dodge carries you 2 metres farther along the dodge. Buying this also gives you the deep strike, Whirl Cut. Use it with L2 and R2 while you carry Wind alone or twice. The crescent becomes a small whirlwind that holds the first enemy it reaches in the air for a second.
 
 **Works with.** Every spell in the Wind tree; Passing Cut and Leaf on the Wind; the deep strike.
-
-**Not built yet.** Spells with no wind-up, cast during a dodge or a swing without stopping it, and the 2 metres added to a dodge you cast in. For now, every dodge carries you 30% farther.
 
 **Example.** Roll at a pack, cast Indrawn Breath during the roll, and come out of it with the pack piled up in front of you.
 
@@ -203,41 +201,39 @@ design yet, its **Not built yet** line says what is missing.
 ## wind.bag
 **What it does.** You untie a bag of wind at your hip. Each blow you perfectly guard or perfectly dodge is caught in it, up to three, and thrown things that come near are caught too. Press again, and it opens: a cone that hits harder for each wind inside, and every thrown thing flies back at whoever threw it.
 
-**When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). Then it works on each perfect guard or perfect dodge while the bag holds a wind.
+**When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). The bag stays open for 8 seconds. Press the same button again in that time to open it. If you don't, it opens by itself when the time is up.
 
-**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again (its Empower makes it 8). The bag holds three winds, shown on the screen as Winds. Each perfect guard or perfect dodge lets one out as a cone 7 metres long and 60 degrees wide, dealing 12 damage, 25 stagger and a stack of Unsteady.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again (its Empower makes it 8 and lets the bag hold four winds). While the bag is open, each perfect guard or perfect dodge catches a wind, up to three, and throws that attacker back 2 metres. When it opens, it throws one cone 7 metres long and 60 degrees wide. For each wind inside it deals 12 damage, 25 stagger and a stack of Unsteady: 36 damage and 75 stagger with three. Opened empty, it does nothing.
 
 **Works with.** Turned Aside, which it comes after on the chart; the Master marks of Lifting Wind and Closing Circle (more perfect dodges); Indrawn Breath.
 
-**Not built yet.** The planned bag: it stays open for 8 seconds, each caught blow throws its attacker back 2 metres and is kept, thrown things are caught, and a second press (or the end of the time) opens it as one cone dealing 12 damage and 25 stagger for each wind inside, with the thrown things flying back. For now, casting it fills the bag, and each perfect guard or dodge lets a wind out right away. The Empower's fourth wind.
+**Not built yet.** Thrown things that come near aren't caught yet, so nothing flies back at whoever threw it.
 
-**Example.** Cast it as a brute starts its string of blows. Guard three blows perfectly, and three cones throw it back down the hall.
+**Example.** Cast it as a brute starts its string of blows. Guard three blows perfectly, then press again: one great cone throws it back down the hall.
 
 ## wind.bag.shape
 **What it does.** Unlocks two shapes for Bag of Winds. You pick one at any rest fire. **Kept Wind**: the bag doesn't open on its own. It keeps its winds for a long time, so you can open it when you choose, like on a staggered enemy. **Loose Neck**: nothing is kept. Each wind leaves right away as a free Gust toward the enemy you face next.
 
-**When it happens.** Whenever you cast Bag of Winds, using the shape you picked. Loose Neck works on every perfect guard and perfect dodge while it is in a slot.
+**When it happens.** Whenever you cast Bag of Winds, using the shape you picked. Loose Neck works on every perfect guard and perfect dodge in the 8 seconds after you cast it.
 
-**The numbers.** 3 Shards. Kept Wind: 20 seconds. Loose Neck: each perfect guard or perfect dodge throws a Gust, a cone 5 metres long and 70 degrees wide, dealing 8 damage, 20 stagger and two Unsteady. An attacker you guarded against is also thrown 3 metres.
+**The numbers.** 3 Shards. Kept Wind: the bag stays open for 20 seconds and only opens when you press again. If you never do, the winds are lost. Loose Neck: each perfect guard or perfect dodge throws a free Gust the way you face: a cone 5 metres long and 70 degrees wide, dealing 8 damage, 20 stagger and two Unsteady.
 
 **Works with.** Turned Aside and Rising Cut (Loose Neck's Unsteady); a staggered enemy (Kept Wind).
 
-**Not built yet.** Kept Wind does nothing beyond the bag yet. It is waiting for a bag that keeps its winds. Loose Neck's gust should aim at the enemy you face next (for now, it aims at the one that was caught).
+**Not built yet.** Loose Neck's gust should aim at the enemy you face next. For now, it goes the way you face when the wind is caught.
 
 **Example.** Use Loose Neck against a pack of duellists. Every perfect guard throws a gust into them.
 
 ## wind.bag.master
 **What it does.** Catch three winds within three seconds, and the bag bursts on its own as a whirlwind. Everything within six metres goes into the air.
 
-**When it happens.** For now, on a perfect dodge, at most once every 10 seconds. Bag of Winds must be in a spell slot.
+**When it happens.** When the bag catches its third wind within 3 seconds of the first of those three. Bag of Winds must be in a spell slot.
 
-**The numbers.** 3 Shards. Everything within 6 metres of you goes into the air for a second.
+**The numbers.** 3 Shards. Everything within 6 metres of you goes into the air for a second, and the bag is used up (no cone after).
 
 **Works with.** Rising Cut and Nothing Beneath, for the enemies in the air; Lifting Wind.
 
-**Not built yet.** It should need three winds caught within 3 seconds to burst the bag. For now, a perfect dodge raises the whirlwind.
-
-**Example.** Dodge a brute's swing perfectly in a crowd. Everything around you goes up, ready for your cuts.
+**Example.** Open the bag in a crowd and dodge three quick blows perfectly. Everything around you goes up, ready for your cuts.
 
 ## wind.leaf
 **What it does.** Dodging costs no stamina. Instead, it uses a breath of wind. You can hold three, and you get them back over time and by landing blows. With no breath left, you can't dodge. The cost: you take more damage.

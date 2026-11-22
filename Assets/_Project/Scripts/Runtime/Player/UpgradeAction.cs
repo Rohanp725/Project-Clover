@@ -230,5 +230,43 @@ namespace Clover.Player
         /// toward where they began the ebb, reaching on past it by the spell's Reach less the ebb (The Tide Turns' second press).
         /// </summary>
         Flood,
+        /// <summary>Ends its own branch's gathered spell where it is, loosing nothing (Bag of Winds' Master: the bag burst as a whirlwind instead).</summary>
+        Spill,
+        /// <summary>Throws the base spell of its mark's element at no cost, the way the player faces, as Storm Front's Gust is (Loose Neck: each wind a free Gust).</summary>
+        FreeBase,
+        /// <summary>The player and the copy their spell left standing change places (Second Shadow's second press). Nothing when none stands.</summary>
+        SwapWithShadow,
+        /// <summary>
+        /// The player sinks into the copy their spell left standing and rises where it lies, the copy gone, and every wound taken
+        /// since it was cast comes back as grey health to win back (Return to the Shadow; the ledger's wounds-returned).
+        /// </summary>
+        ReturnToShadow,
+        /// <summary>The health the last blow that landed on the player took, given back, when it landed within CastWindow (1) seconds (Second Shadow's Master).</summary>
+        UndoWound,
+        /// <summary>
+        /// Steps the player in a flash to the thing its own branch's spell left standing (Lightning Rod's rod), with a shock round
+        /// where they land (Radius 2.5, Damage, Stagger, Affliction, Stacks), and the thing is spent, unless a KeepStanding of the
+        /// same branch is in force. Nothing when none stands.
+        /// </summary>
+        StepToStanding,
+        /// <summary>A mark of a branch whose StepToStanding leaves its thing standing (Lightning Rod's Master). Nothing is done when its moment comes.</summary>
+        KeepStanding,
+        /// <summary>
+        /// Wins back Amount grey health at once, as blows do; with Seconds, for that long each weapon blow landed within Reach of
+        /// something its mark's effects of the same Kin grew wins it back (Corpse Flowers: 3 a blow within 3 m of a flower, 8 s).
+        /// </summary>
+        Regain,
+        /// <summary>Drives every blade of yours standing in the target at once (PlantedBlades; Flung Blade's Master on the attacker).</summary>
+        DriveBlades,
+        /// <summary>
+        /// Throws Count more of the element's own blades, each into a different enemy within Reach of you, never the one faced
+        /// nor one already holding a blade (Cherry Red's fan). Each is planted and driven as the kit's own blade is.
+        /// </summary>
+        PlantBlades,
+        /// <summary>
+        /// Calls every blade of yours home at once (All Blades Home on the surge): each strikes every enemy on its line to you
+        /// for Damage, Stagger and the affliction, and each adds Seconds to the surge.
+        /// </summary>
+        CallBladesHome,
     }
 }

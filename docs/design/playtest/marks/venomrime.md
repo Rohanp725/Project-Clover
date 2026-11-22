@@ -38,17 +38,17 @@ are both carried.
 **Example.** A frozen, poisoned soldier stays frozen while the poison works.
 
 ## venomrime.drops
-**What it does.** A frosted enemy that dies leaves behind a drop of poisoned frost. It rises as a small frost creature, hits the nearest enemy three times for 6 damage, a dose and a Chill each, then melts.
+**What it does.** A frosted enemy that dies leaves behind a drop of poisoned frost. It rises as a small frost creature where the enemy fell, walks to the nearest other enemy, hits it three times for 6 damage, a dose and a Chill each, then melts.
 
 **When it happens.** Each time an enemy dies with both poison and Chill on it, while you carry both Poison and Ice.
 
-**The numbers.** Mix, keystone, 5 Shards. For now: three hits 0.6 seconds apart, each dealing 6 damage, 6 stagger and a dose. The frost it rises from adds a Chill to everything within 3 metres. At most once every half second.
+**The numbers.** Mix, keystone, 5 Shards. The creature looks for an enemy within 10 metres and walks to it at 4 metres a second, hitting nothing on the way. Then it hits three times, 0.6 seconds apart, each dealing 6 damage, 6 stagger, a dose and a Chill. If no other enemy is within 10 metres, nothing rises. At most once every half second.
 
 **Works with.** Bitter Frost, Six Levels Down, Venom Rime.
 
 **Example.** Kill one enemy in the frost, and its drop goes after the enemy next to it.
 
-**Not built yet.** For now, the creature's hits only add the dose. The Chill comes from the frost around where the enemy fell.
+**Not built yet.** Its own look: for now, the creature is shown as a small patch of frost and poison that moves along the floor.
 
 ## venomrime.rimeoverrime
 **What it does.** A drop of venom falls on the ground where you aim, within 8 metres, and frost grows out from it, layer over layer, out to 4.5 metres. Each time it grows, it gives every enemy it reaches a dose and a Chill, three times in all.

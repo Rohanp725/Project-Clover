@@ -17,7 +17,10 @@ namespace Clover.Player.Forms
             ElementLook.Strike(cast.Element, at, 0.6f);
             var storm = cast.Ground(at, cast.Spec.Radius, cast.Spec.Seconds, cast.Spec.Interval, cast.Blow(cast.Damage, cast.Stagger));
             storm.Delay = cast.Spec.Delay;
+            // One group, so the step to the rod can spend it whole; the rod is told to the marks as the thing the spell left standing.
+            storm.Group = Hazards.NewGroup();
             Hazards.Lay(storm);
+            if (cast.Upgrades != null) cast.Upgrades.NoteStanding(cast.Source, at, storm.Group, cast.Spec.Delay + cast.Spec.Seconds);
             if (cast.Defence != null) cast.Defence.Callout(cast.Name);
             return 0;
         }

@@ -28,8 +28,8 @@ namespace Clover.Player.Trees.Duo
         {
             const string A = Elements.Life, B = Elements.Dark;
 
-            // NEEDS: blows near a grown thing (at-grown): Corpse Flowers' 3 grey health made real for each weapon blow landed
-            // within 3 m of a flower; now the flowers only stand. As the plain reaction, the hollow trunk (standing-things).
+            // Corpse Flowers' 3 grey health made real for each weapon blow landed within 3 m of one of its flowers, for their 8 s
+            // (UpgradeAction.Regain armed as the flowers stand, with the flowers' Kin). NEEDS: as the plain reaction, the hollow trunk (standing-things).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Girdled: Corpse Flowers or Fig in the Crown", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -43,7 +43,8 @@ namespace Clover.Player.Trees.Duo
                         Effects = Coil(CorpseFlowers, new[]
                         {
                             new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = CorpseFlowers + ".tight", Do = UpgradeAction.Hazard, Shape = HazardShape.Ring, Count = 3, Reach = 1f, Radius = 0.6f,
-                                Seconds = 8f, Interval = 1f, Grown = true, Limit = 3, Affliction = AfflictionKind.Seeded },
+                                Seconds = 8f, Interval = 1f, Grown = true, Limit = 3, Kin = 1, Affliction = AfflictionKind.Seeded },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = CorpseFlowers + ".tight", Do = UpgradeAction.Regain, Seconds = 8f, Reach = 3f, Kin = 1, Amount = 3f },
                         }),
                     },
                     new ShapeDef

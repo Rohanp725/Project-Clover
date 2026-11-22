@@ -57,10 +57,10 @@ both carried.
 
 **When it happens.** Cast it from a spell slot while you carry both Life and Metal. Press that slot's button (hold L2 and a face button, or press 1 to 4). The first time it lands, it charges your blade with Life.
 
-**The numbers.** Mix, duo spell, opener, 5 Shards, 45 mana: the larger spell of this pair. Five warriors fight for 6 seconds. Each one hits about every 0.7 seconds for 8 damage, 4 stagger and a Seeded. About one hit in three also adds a notch.
+**The numbers.** Mix, duo spell, opener, 5 Shards, 45 mana: the larger spell of this pair. Five warriors fight for 6 seconds. Each one hits about every 0.7 seconds for 8 damage, 4 stagger and a Seeded. About one hit in three also adds a notch. Each heavy blow you land is answered right away: every warrior fighting that same enemy, within 1.6 metres of it, hits it once more.
 
 **Works with.** Iron Thorns (a seeded, notched enemy grows thorns), Sap of Iron, Grafted Edge.
 
 **Example.** Sow them into a pack and fight next to them.
 
-**Not built yet.** The teeth aren't thrown in a fan yet, and the warriors don't rise from the floor yet. The notch comes by chance instead of on every third hit. Your heavy blow doesn't yet call every warrior to hit the same enemy.
+**Not built yet.** The teeth aren't thrown in a fan yet, and the warriors don't rise from the floor yet. The notch comes by chance instead of on every third hit.

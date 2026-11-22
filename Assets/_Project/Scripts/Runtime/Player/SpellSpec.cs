@@ -1,5 +1,16 @@
 namespace Clover.Player
 {
+    /// <summary>Where Pawned Heart's heart is set.</summary>
+    public enum HeartPlace
+    {
+        /// <summary>Behind the player: walk away and back onto it to redeem it.</summary>
+        Behind,
+        /// <summary>Under where the player stands (Buried Heart): its strength only within the ring, and it rises whole, redeemed, when the ring closes.</summary>
+        Buried,
+        /// <summary>Over the enemy faced, following it (Hung From the Tree): fight in under it to touch it.</summary>
+        Hung,
+    }
+
     /// <summary>
     /// The numbers of a spell, as its form reads them. Each form says which of these it uses; the rest are ignored.
     /// Distances are in metres, times in seconds.
@@ -123,6 +134,9 @@ namespace Clover.Player
         /// </summary>
         public int Rings;
         public int RingsFor = 6;
+        /// <summary>What adds a ring (weapon blows landed, or blows turned), and true when the window's end loses them rather than loosing them (Kept Wind).</summary>
+        public RingSource RingsBy;
+        public bool RingsLapse;
         /// <summary>
         /// Above zero: the first press draws the player this many metres straight back from the enemy faced, untouchable for
         /// the moment, and the spell's form is loosed only by its second press (UpgradeAction.Flood), from wherever they stand
@@ -130,6 +144,42 @@ namespace Clover.Player
         /// 3 m past). Pressed once, the ebb alone.
         /// </summary>
         public float Ebb;
+        /// <summary>
+        /// For the parry form: the stance is kept while its button is held, up to Seconds (a tap still stands it a quarter of a
+        /// second), and every blow that reaches it is turned and banked, <see cref="Bank"/> at most (0: no limit), not only the
+        /// first. Fire's stance counts each as a perfect guard; any other answers each with its small cone (Damage, Stagger,
+        /// Stacks). On letting go: a door of the element's cone, <see cref="BankDamage"/> for each blow banked over Damage
+        /// (Kiln Stance's Shut Door), and the next heavy blow within a second carries <see cref="BankStagger"/> more stagger for
+        /// each (Mountain Stance). Nothing banked: the spell waits only its MissedWait share (the ledger's held-press stances).
+        /// </summary>
+        public bool HeldStance;
+        /// <summary>For the clone form: the copy is left standing where the spell was cast, and repeats each blow on the nearest enemy within a sword's reach of it (Second Shadow).</summary>
+        public bool StaysPut;
+        /// <summary>For the heart form: where the pawned heart is set (Pawned Heart's shapes; the ledger's heart-places).</summary>
+        public HeartPlace HeartAt;
+        /// <summary>
+        /// For the drill form: above zero, it flies to the nearest blade of yours standing within this many metres (in an
+        /// enemy or the ground, PlantedBlades), ahead of you first, and drives that blade as it arrives (To the Blade: 12 m,
+        /// its Empower 14). With none standing it goes its own Reach straight ahead.
+        /// </summary>
+        public float BladeReach;
+        /// <summary>For the turning blade: how many times a perfect guard as it comes home sends it out again (Bat It Home: 3).</summary>
+        public int BatsBack;
+        /// <summary>
+        /// For the turning blade: it stops at the end of its flight and spins there for Seconds, biting what touches it for
+        /// LingerDamage every Interval, until the caster's next dodge calls it home through everything between for
+        /// <see cref="HomeDamage"/> and <see cref="HomeStagger"/> (Through the Line). Uncalled, it falls.
+        /// </summary>
+        public bool WaitsOut;
+        public float HomeDamage;
+        public float HomeStagger;
+        /// <summary>For the minions form: each heavy blow you land is answered at once by every helper on that same enemy (The Sown Men).</summary>
+        public bool AnswersHeavy;
+        /// <summary>For the burrow form: the grown thing it comes up at goes to where the caster went down (Changeling).</summary>
+        public bool SwapsGrown;
+        public int Bank;
+        public float BankDamage;
+        public float BankStagger;
 
         /// <summary>The share of a full hold, 0 to 1, held for <paramref name="held"/> seconds of at most <paramref name="most"/>.</summary>
         public static float HeldShare(float held, float most) => most <= 0f ? 0f : UnityEngine.Mathf.Clamp01(held / most);

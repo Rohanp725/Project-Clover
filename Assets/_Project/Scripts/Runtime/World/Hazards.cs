@@ -96,6 +96,22 @@ namespace Clover.World
             return set;
         }
 
+        /// <summary>Ends every patch laid in one group at once (a rod spent by the step to it). Returns how many ended.</summary>
+        public static int EndGroup(int group)
+        {
+            if (instance == null || group == 0) return 0;
+            int ended = 0;
+            for (int i = 0; i < instance.zones.Length; i++)
+            {
+                ref var zone = ref instance.zones[i];
+                if (!zone.Active || zone.Spec.Group != group) continue;
+                zone.Active = false;
+                Puff(zone.Spec, zone.Position, 1.5f);
+                ended++;
+            }
+            return ended;
+        }
+
         /// <summary>How many patches are alive now, so probes can see them without the screen.</summary>
         public static int Alive
         {
@@ -210,12 +226,78 @@ namespace Clover.World
         }
 
         /// <summary>True when something the player has grown stands within this many metres of a place.</summary>
-        public static bool GrownNear(Vector3 at, float metres)
+        public static bool GrownNear(Vector3 at, float metres) => GrownNear(at, metres, 0);
+
+        /// <summary>The place of the thing the player grew nearest <paramref name="at"/> within <paramref name="metres"/>; false when none stands that near.</summary>
+        public static bool NearestGrown(Vector3 at, float metres, out Vector3 where)
+        {
+            where = at;
+            if (instance == null) return false;
+            float best = metres * metres;
+            bool found = false;
+            for (int i = 0; i < instance.zones.Length; i++)
+            {
+                if (!instance.zones[i].Active || !instance.zones[i].Spec.Grown) continue;
+                Vector3 offset = instance.zones[i].Position - at;
+                offset.y = 0f;
+                if (offset.sqrMagnitude > best) continue;
+                best = offset.sqrMagnitude;
+                where = instance.zones[i].Position;
+                found = true;
+            }
+            return found;
+        }
+
+        /// <summary>As above, only things grown in <paramref name="family"/> (0: any; Corpse Flowers' own flowers).</summary>
+        /// <summary>
+        /// The thing the player grew within <paramref name="reach"/> of <paramref name="from"/> that stands nearest
+        /// <paramref name="aim"/> (Root Walk: the one nearest where you aim, within twelve metres of you); false for none.
+        /// </summary>
+        public static bool NearestGrownTo(Vector3 aim, Vector3 from, float reach, out Vector3 where)
+        {
+            where = from;
+            if (instance == null) return false;
+            bool found = false;
+            float best = float.MaxValue;
+            for (int i = 0; i < instance.zones.Length; i++)
+            {
+                if (!instance.zones[i].Active || !instance.zones[i].Spec.Grown) continue;
+                Vector3 position = instance.zones[i].Position;
+                if (!GrownRules.Within(position, from, reach)) continue;
+                Vector3 offset = position - aim;
+                offset.y = 0f;
+                if (offset.sqrMagnitude >= best) continue;
+                best = offset.sqrMagnitude;
+                where = position;
+                found = true;
+            }
+            return found;
+        }
+
+        /// <summary>Moves the grown thing standing at <paramref name="at"/> (within half a metre) to <paramref name="to"/> (Changeling's change of places). True when one moved.</summary>
+        public static bool MoveGrown(Vector3 at, Vector3 to)
         {
             if (instance == null) return false;
             for (int i = 0; i < instance.zones.Length; i++)
             {
                 if (!instance.zones[i].Active || !instance.zones[i].Spec.Grown) continue;
+                Vector3 offset = instance.zones[i].Position - at;
+                offset.y = 0f;
+                if (offset.sqrMagnitude > 0.25f) continue;
+                instance.zones[i].Position = new Vector3(to.x, instance.zones[i].Position.y, to.z);
+                instance.zones[i].Spec.Position = instance.zones[i].Position;
+                return true;
+            }
+            return false;
+        }
+
+        public static bool GrownNear(Vector3 at, float metres, int family)
+        {
+            if (instance == null) return false;
+            for (int i = 0; i < instance.zones.Length; i++)
+            {
+                if (!instance.zones[i].Active || !instance.zones[i].Spec.Grown) continue;
+                if (family != 0 && instance.zones[i].Spec.Family != family) continue;
                 Vector3 offset = instance.zones[i].Position - at;
                 offset.y = 0f;
                 if (offset.sqrMagnitude <= metres * metres) return true;
@@ -430,6 +512,20 @@ namespace Clover.World
             {
                 if (!zones[i].Active) continue;
                 ref var zone = ref zones[i];
+                // A helper walking to its enemy bites nothing on the way, and keeps to it once there.
+                if (zone.Spec.WalksTo > 0f && zone.Delay <= 0f && zone.Spec.Target != null && zone.Spec.Target.gameObject.activeInHierarchy
+                    && !WalkedTo(ref zone.Position, zone.Spec.Target.position, zone.Spec.Radius, zone.Spec.WalksTo * deltaTime))
+                {
+                    zone.Left -= deltaTime;
+                    zone.UntilShow -= deltaTime;
+                    if (zone.UntilShow <= 0f && !zone.Spec.Quiet)
+                    {
+                        zone.UntilShow = ShowMovingEvery;
+                        Puff(zone.Spec, zone.Position + Vector3.up * 0.3f, 1.5f);
+                    }
+                    if (zone.Left <= 0f) zone.Active = false;
+                    continue;
+                }
                 if (zone.Spec.Follow && zone.Spec.Target != null) zone.Position = zone.Spec.Target.position;
                 if (zone.Delay > 0f)
                 {
@@ -510,6 +606,20 @@ namespace Clover.World
                 }
                 if (zone.Left <= 0f) zone.Active = false;
             }
+        }
+
+        /// <summary>
+        /// One step of a helper walking to its enemy: moves <paramref name="at"/> up to <paramref name="step"/> toward
+        /// <paramref name="target"/>, and is true once it stands within reach of it (a little inside its own bite).
+        /// </summary>
+        public static bool WalkedTo(ref Vector3 at, Vector3 target, float radius, float step)
+        {
+            Vector3 gap = target - at;
+            gap.y = 0f;
+            float reach = Mathf.Max(0.5f, radius * 0.6f);
+            if (gap.magnitude <= reach) return true;
+            at += Vector3.ClampMagnitude(gap, Mathf.Min(step, gap.magnitude - reach * 0.9f));
+            return false;
         }
 
         // A thing in flight: it may turn toward the enemy it was thrown at, or come home to the hand that threw it.

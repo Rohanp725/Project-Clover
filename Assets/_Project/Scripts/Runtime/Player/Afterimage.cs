@@ -114,6 +114,35 @@ namespace Clover.Player
             Paint(copy, 1f);
         }
 
+        /// <summary>
+        /// Leaves a copy of the body as it is now somewhere else: stood at <paramref name="at"/> and turned to face
+        /// <paramref name="facing"/>, in a light of the caller's choosing (Two Suns' figure of light on the enemy's far side).
+        /// </summary>
+        public void LeaveAt(float seconds, Color colour, Vector3 at, Vector3 facing)
+        {
+            if (material == null || bodies.Length == 0 || seconds <= 0f || renderers == null) return;
+            facing.y = 0f;
+            if (facing.sqrMagnitude < 0.0001f) facing = transform.forward;
+            Quaternion from = Quaternion.Inverse(transform.rotation);
+            Quaternion turn = Quaternion.LookRotation(facing.normalized, Vector3.up);
+            int copy = next;
+            next = (next + 1) % Copies;
+            for (int i = 0; i < bodies.Length; i++)
+            {
+                if (bodies[i] == null) continue;
+                bodies[i].BakeMesh(meshes[copy][i], true);
+                var place = renderers[copy][i].transform;
+                Vector3 local = from * (bodies[i].transform.position - transform.position);
+                place.SetPositionAndRotation(at + turn * local, turn * (from * bodies[i].transform.rotation));
+                renderers[copy][i].enabled = true;
+            }
+            left[copy] = seconds;
+            lasts[copy] = seconds;
+            colours[copy] = colour;
+            Shown++;
+            Paint(copy, 1f);
+        }
+
         private void Update()
         {
             for (int copy = 0; copy < Copies; copy++)

@@ -82,14 +82,14 @@ namespace Clover.Player.Trees.Duo
 
             // The duo spell, bought with Shards once both are carried (no god gives it): its pair's larger spell, 45 mana (SpellTimings). The minions form sends helpers that
             // run at enemies and strike them; each strike seeds (the branch's first element), and one in three notches.
-            // NEEDS: the teeth thrown in a fan and the warriors rising 0.8 s later; each heavy blow you land answered by every
-            // sown man still standing on that same enemy (helpers-answer).
+            // Each heavy blow you land is answered at once by every sown man on that same enemy (SpellSpec.AnswersHeavy).
+            // NEEDS: the teeth thrown in a fan and the warriors rising 0.8 s later (form-pieces).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = TheSownMen, Name = "The Sown Men", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Role = SpellRole.Opener, Requires = new[] { SapOfIron, OreInTheRoot }, Icon = UpgradeIcons.Fist,
                 Description = "You throw five teeth ahead; they sink, and warriors of bronze and root rise from the soil. Each goes to the nearest enemy and strikes it again and again, seeding it, and every third strike notches. After 6 s they crumble to rust and leaves. 45 mana.",
                 Form = SpellForms.Minions,
-                Spell = new SpellSpec { Cost = 45f, Count = 5, Seconds = 6f, Damage = 8f, Stagger = 4f, Stacks = 1, Interval = 0.7f },
+                Spell = new SpellSpec { Cost = 45f, Count = 5, Seconds = 6f, Damage = 8f, Stagger = 4f, Stacks = 1, Interval = 0.7f, AnswersHeavy = true },
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Sundered, Stacks = 1, Chance = 0.34f } },
             }, HeartPattern.Spell));
         }

@@ -125,9 +125,9 @@ namespace Clover.Player.Trees
                     Description = "No growing. It comes up full in an instant and stands only six seconds. Setup becomes burst.",
                     Spell = new SpellSpec { Reach = 0.5f, Radius = 3f, Seconds = 6f, Interval = 3f, Damage = 16f, Stagger = 45f, Delay = 0f, Stacks = 1 } },
                 "Opens two shapes of Elder Tree, chosen at any rest fire: Walking Tree, a tree that follows you, or Grown at Once, no growing and a short stand.",
-                // NEEDS: planted on something you grew (at-grown), the whole tree grown at once. Until then, cast within four
-                // metres of something you grew, its first root comes up at once.
-                new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, While = StatWhen.NearGrown, Do = UpgradeAction.Burst, At = EffectAt.Self, Damage = 16f, Stagger = 45f, Radius = 3f, Affliction = AfflictionKind.Seeded, Stacks = 1 } },
+                // Planted within a metre of something you grew, the whole tree is grown at once (UpgradeAction.Quicken with NearGrown:
+                // its growing Delay made nothing before the form).
+                new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, NearGrown = 1f, Do = UpgradeAction.Quicken } },
                 "Plant it on something you grew, and it grows at once.",
                 tally: new TallySpec { Name = "Shade", Cap = 15 },
                 learnEffects: new[]
@@ -225,26 +225,27 @@ namespace Clover.Player.Trees
                 Stats = new[] { new StatMod(PlayerStat.Unshaken, 1f, StatWhen.NearGrown) } },
                 BranchPattern.LeftMiddle));
 
-            // The step form carries the walk: untouchable in it, and its roots strike along the line. NEEDS: going under the
-            // ground to a grown thing of yours within 12 m (at-grown), coming up 0.5 s later, and the burst of roots round you
-            // as you come up, not along the way (form-pieces). Until then a step toward the enemy faced, six metres with none.
-            SpellBranch.Add(to, E, RootWalk, "Root Walk", SpellRole.Movement, BranchPattern.LeftB, TheGardenHoldsYou, SpellForms.Step,
-                new SpellSpec { Reach = 8f, Damage = 10f, Stagger = 15f, Stacks = 1 },
+            // The burrow form: down into the ground, untouchable, and up 0.5 s later at the grown thing of yours within 12 m nearest
+            // where you aim (Hazards.NearestGrownTo), six metres ahead with none, roots bursting round you as you come up.
+            // NEEDS: a clip of the body sinking into the ground and rising out of it (form-pieces: now the body vanishes in leaves
+            // and stands again).
+            SpellBranch.Add(to, E, RootWalk, "Root Walk", SpellRole.Movement, BranchPattern.LeftB, TheGardenHoldsYou, SpellForms.Burrow,
+                new SpellSpec { Reach = 12f, Radius = 2.5f, Damage = 10f, Stagger = 15f, Stacks = 1 },
                 "You sink into the ground in a swirl of leaves and come up half a second later at a grown thing of yours within twelve metres, the one nearest where you aim, or six metres ahead if there is none. Nothing can touch you under the ground. Where you went down a sapling sprouts for six seconds. As you come up roots burst round you: 10 damage, 15 stagger and Seeded within two and a half metres.",
                 UpgradeIcons.Boot,
                 new Empower { Cooldown = 6f, Stacks = 2 },
                 "Root Walk waits 6 seconds, not 8, and its roots lay two Seeded.",
-                // NEEDS: going to the nearest Seeded enemy, not the one faced (form-pieces).
+                // Aimed at the nearest Seeded enemy within twelve metres (SpellSpec.AimAt), up under it, and lifted as the roots burst.
                 new ShapeDef { Name = "Up Through Them",
                     Description = "You go to a Seeded enemy instead, and come up under it, lifting it on roots for a moment.",
+                    Spell = new SpellSpec { Reach = 12f, Radius = 2.5f, Damage = 10f, Stagger = 15f, Stacks = 1, AimAt = AfflictionKind.Seeded },
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = AfflictionKind.Seeded, Do = UpgradeAction.Lift, Seconds = 0.6f } } },
-                // NEEDS: changing places with the grown thing (form-pieces). Until then a thornbush rises where you stood and
-                // the enemies beside it lose track of you a moment, striking at it.
+                // The grown thing goes to where you went down (SpellSpec.SwapsGrown), and the enemies beside it lose track of you a moment.
                 new ShapeDef { Name = "Changeling",
                     Description = "You change places with the grown thing, so it stands where you stood, in the path of the blow aimed at you.",
+                    Spell = new SpellSpec { Reach = 12f, Radius = 2.5f, Damage = 10f, Stagger = 15f, Stacks = 1, SwapsGrown = true },
                     Effects = new[]
                     {
-                        new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Hazard, At = EffectAt.Self, Shape = HazardShape.Patch, Grown = true, Limit = 2, Radius = 2f, Seconds = 8f, Interval = 0.5f, Damage = 4f, Affliction = AfflictionKind.Seeded, Stacks = 1 },
                         new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Condition, At = EffectAt.Self, Radius = 2.5f, State = new ConditionSpec { Id = Changeling, Seconds = 1.5f, Flags = ConditionFlags.SightShort, Sight = 0.5f } },
                     } },
                 "Opens two shapes of Root Walk, chosen at any rest fire: Up Through Them, up under a Seeded enemy, or Changeling, a grown thing left in the blow's path.",
@@ -298,12 +299,12 @@ namespace Clover.Player.Trees
                     Spell = new SpellSpec { Count = 3, Reach = 6f, Radius = 1.5f, Delay = 1f, Damage = 12f, Stagger = 10f, Stacks = 2 },
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Grown = true, Limit = 3, Radius = 1f, Seconds = 6f, Interval = 0.5f, Damage = 4f, Affliction = AfflictionKind.Seeded, Stacks = 1 } } },
                 "Opens two shapes of Briar Patch, chosen at any rest fire: Burrs, seeds the enemy carries for you, or Seed Pods, three pods that burst and leave bushes.",
-                // NEEDS: cast within 1 m of something you grew, the thicket grown round that thing (at-grown). Until then, cast
-                // within four metres of something you grew, a thicket grows where the bed lands and roots what stands in it.
+                // Cast within 1 m of something you grew (NearGrown), the thicket grows round that thing (AtGrown): four metres across
+                // for ten seconds, rooting what stands in it as it grows.
                 new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, While = StatWhen.NearGrown, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Grown = true, Limit = 2, Radius = 2f, Seconds = 10f, Interval = 0.5f, Damage = 4f, Affliction = AfflictionKind.Seeded, Stacks = 1 },
-                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, While = StatWhen.NearGrown, Do = UpgradeAction.Condition, Radius = 2f, State = new ConditionSpec { Id = Thicket, Seconds = 1f, Flags = ConditionFlags.Rooted } },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, NearGrown = 1f, AtGrown = true, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Grown = true, Limit = 2, Radius = 2f, Seconds = 10f, Interval = 0.5f, Damage = 4f, Affliction = AfflictionKind.Seeded, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, NearGrown = 1f, AtGrown = true, Do = UpgradeAction.Condition, Radius = 2f, State = new ConditionSpec { Id = Thicket, Seconds = 1f, Flags = ConditionFlags.Rooted } },
                 },
                 "Cast it on something you grew, within a metre of it, and the bed grows into a thicket round it: four metres across, standing ten seconds, and whatever stands in it as it grows is rooted for a second.");
 

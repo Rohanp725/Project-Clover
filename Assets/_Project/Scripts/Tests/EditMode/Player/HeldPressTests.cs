@@ -172,5 +172,132 @@ namespace Clover.Tests
                 "a flood loosed as a blow would land starts no wait");
             Assert.IsFalse(master.Any(each => each.On == UpgradeTrigger.PerfectDodge), "the stand-in is gone");
         }
+
+        [Test]
+        public void TheBagCatchesAWindForEachBlowTurnedAndOpensAsOneCone()
+        {
+            var learn = Upgrade.ById(WindTree.BagOfWinds);
+            Assert.AreEqual(RingSource.Turned, learn.Spell.RingsBy, "winds come from blows turned, not landed");
+            Assert.AreEqual(3, learn.Spell.Rings);
+            Assert.AreEqual(1, learn.Spell.RingsFor, "12 damage and 25 stagger for each wind");
+            var bag = new RingGather();
+            bag.Begin(learn, learn.Spell, 3, 8f);
+            Assert.IsTrue(bag.Add(1f));
+            Assert.IsTrue(bag.Add(2f));
+            Assert.IsFalse(bag.LastWithin(3, 3f, 2f), "two winds only");
+            Assert.IsTrue(bag.Add(3.5f));
+            Assert.IsTrue(bag.LastWithin(3, 3f, 3.5f), "three within three seconds");
+            Assert.IsFalse(bag.LastWithin(3, 2f, 3.5f));
+            var cone = new SpellSpec();
+            bag.Loose(cone);
+            Assert.AreEqual(36f, cone.Damage, 1e-4f, "three winds");
+            Assert.AreEqual(75f, cone.Stagger, 1e-4f);
+            Assert.AreEqual(7f, cone.Reach, 1e-5f, "a cone of seven metres");
+            var empowered = new SpellSpec();
+            SpellChange.Copy(learn.Spell, empowered);
+            Upgrade.ById(SpellBranch.EmpowerId(WindTree.BagOfWinds)).Empower.ApplyTo(empowered);
+            Assert.AreEqual(4, empowered.Rings, "a fourth wind");
+            Assert.AreEqual(8f, PlayerUpgrades.PressesOf(learn, null, out float window) != null ? window : 0f, 1e-5f, "opened by the second press within 8 s");
+            Assert.IsTrue(learn.Effects.All(each => each.WhileGathering && each.Do == UpgradeAction.Push && each.Amount == 2f), "each attacker thrown back two metres while the bag is open");
+
+            var shapes = Upgrade.ById(SpellBranch.ShapeId(WindTree.BagOfWinds)).Shapes;
+            var kept = shapes.Single(each => each.Name == "Kept Wind");
+            Assert.IsTrue(kept.Spell.RingsLapse, "never opens by itself");
+            Assert.AreEqual(20f, kept.PressWindow, 1e-5f, "kept twenty seconds");
+            var loose = shapes.Single(each => each.Name == "Loose Neck");
+            Assert.AreEqual(0, loose.Spell.Rings, "nothing kept");
+            Assert.IsTrue(loose.Effects.All(each => each.Do == UpgradeAction.FreeBase && each.WithinOwnCast == 8f), "each wind a free Gust while it is untied");
+
+            var master = Upgrade.ById(SpellBranch.MasterId(WindTree.BagOfWinds)).Effects;
+            Assert.IsTrue(master.All(each => each.On == UpgradeTrigger.RingAdded && each.SpentAtLeast == 3 && each.RingsWithin == 3f));
+            Assert.IsTrue(master.Any(each => each.Do == UpgradeAction.Lift && each.Radius == 6f), "everything within six metres into the air");
+            Assert.IsTrue(master.Any(each => each.Do == UpgradeAction.Spill), "the bag bursts, no cone after");
+        }
+
+        [Test]
+        public void SecondShadowStandsWhereLeftAndItsPressesChangePlacesOrGiveTheWoundsBack()
+        {
+            var learn = Upgrade.ById(DarkTree.SecondShadow);
+            Assert.IsTrue(learn.Spell.StaysPut, "the shadow is left where you stand");
+            var swap = PlayerUpgrades.PressesOf(learn, null, out float window);
+            Assert.AreEqual(8f, window, 1e-5f, "within its eight seconds");
+            Assert.AreEqual(1, swap.Length, "once");
+            Assert.AreEqual(UpgradeAction.SwapWithShadow, swap[0].Single().Do);
+            var shapes = Upgrade.ById(SpellBranch.ShapeId(DarkTree.SecondShadow)).Shapes;
+            var back = shapes.Single(each => each.Name == "Return to the Shadow");
+            Assert.AreEqual(UpgradeAction.ReturnToShadow, PlayerUpgrades.PressesOf(learn, back, out _)[0].Single().Do, "sunk into it, not swapped");
+            Assert.IsTrue(back.Effects == null || back.Effects.Length == 0, "the stand-in quarter less taken is gone");
+            Assert.AreEqual(0, PlayerUpgrades.PressesOf(learn, shapes.Single(each => each.Name == "Long Shadow"), out _)[0].Length, "Long Shadow leaves no shadow to press");
+
+            Assert.AreEqual(30f, PlayerUpgrades.WoundsSince(80f, 50f), 1e-5f);
+            Assert.AreEqual(0f, PlayerUpgrades.WoundsSince(50f, 70f), 1e-5f, "healed since: nothing to give back");
+            var health = new RegainHealth { Maximum = 100f };
+            health.Fill();
+            health.Damage(30f);
+            Assert.AreEqual(30f, health.Return(30f), 1e-5f, "every wound since comes back grey");
+            Assert.AreEqual(70f, health.Current, 1e-5f, "grey, to be won back, not healed");
+            Assert.AreEqual(30f, health.Grey, 1e-5f);
+            Assert.AreEqual(0f, health.Return(10f), 1e-5f, "never past the maximum");
+            Assert.AreEqual(10f, health.Regain(10f), 1e-5f, "won back by blows");
+
+            var master = Upgrade.ById(SpellBranch.MasterId(DarkTree.SecondShadow)).Effects.Single();
+            Assert.AreEqual(UpgradeTrigger.SpellPressed, master.On, "as you change places");
+            Assert.AreEqual(CastMoment.Struck, master.After);
+            Assert.AreEqual(1f, master.AfterWindow, 1e-5f, "within a second of being struck");
+            Assert.AreEqual(UpgradeAction.UndoWound, master.Do, "the health it took comes back");
+            Assert.AreEqual(2.5f, Clover.Player.Forms.CloneForm.ShadowReach, 1e-5f);
+        }
+
+        [Test]
+        public void LightningRodsSecondPressStepsToTheRodAndSpendsItUnlessItsMasterKeepsIt()
+        {
+            var rod = Upgrade.ById(Upgrade.LightningRod);
+            var step = PlayerUpgrades.PressesOf(rod, null, out float window)[0].Single();
+            Assert.AreEqual(UpgradeAction.StepToStanding, step.Do);
+            Assert.GreaterOrEqual(window, 8f, "while the rod stands");
+            Assert.AreEqual(2.5f, step.Radius, 1e-5f, "a 2.5 m shock");
+            Assert.AreEqual(14f, step.Damage, 1e-5f);
+            Assert.AreEqual(20f, step.Stagger, 1e-5f);
+            var lodestone = Upgrade.ById(SpellBranch.ShapeId(Upgrade.LightningRod)).Shapes.Single(each => each.Name == "Lodestone");
+            Assert.AreEqual(0, PlayerUpgrades.PressesOf(rod, lodestone, out _)[0].Length, "Lodestone has no step");
+            var master = Upgrade.ById(SpellBranch.MasterId(Upgrade.LightningRod)).Effects;
+            var inForce = master.Where(each => each.On == UpgradeTrigger.SpellPressed).ToList();
+            Assert.IsTrue(PlayerUpgrades.KeepsStanding(inForce, Upgrade.LightningRod), "the Master keeps the rod past the step");
+            Assert.IsFalse(PlayerUpgrades.KeepsStanding(new System.Collections.Generic.List<UpgradeEffect>(), Upgrade.LightningRod), "without it the rod is spent");
+        }
+
+        [Test]
+        public void AHeldStanceStandsWhileHeldBanksEveryBlowAndPaysOnLettingGo()
+        {
+            Assert.IsTrue(Clover.Player.Forms.ParryForm.StanceHolds(true, 2.9f, 3f), "held, within its most");
+            Assert.IsFalse(Clover.Player.Forms.ParryForm.StanceHolds(true, 3f, 3f), "held to its most");
+            Assert.IsFalse(Clover.Player.Forms.ParryForm.StanceHolds(false, 0.6f, 3f), "let go");
+            Assert.IsTrue(Clover.Player.Forms.ParryForm.StanceHolds(false, 0.1f, 3f), "a tap still stands a moment");
+            Assert.AreEqual(3, Clover.Player.Forms.ParryForm.Banked(3, 3), "three at most under the hood");
+            Assert.AreEqual(5, Clover.Player.Forms.ParryForm.Banked(4, 0), "no limit");
+            Assert.AreEqual(65f, Clover.Player.Forms.ParryForm.DoorDamage(20f, 15f, 3), 1e-4f, "20 and 15 for each blow banked");
+
+            var kiln = Upgrade.ById(FireTree.KilnStance).Spell;
+            Assert.IsTrue(kiln.HeldStance);
+            Assert.AreEqual(3f, kiln.Seconds, 1e-5f, "held up to three seconds");
+            Assert.AreEqual(3, kiln.Bank);
+            Assert.AreEqual(15f, kiln.BankDamage, 1e-5f);
+            Assert.AreEqual(6f, kiln.Reach, 1e-5f, "a cone of six metres");
+            var kilnShapes = Upgrade.ById(SpellBranch.ShapeId(FireTree.KilnStance)).Shapes;
+            Assert.IsFalse(kilnShapes.Single(each => each.Name == "The Kiln").Spell.HeldStance, "The Kiln is the stance as it was");
+            Assert.AreEqual(0.6f, kilnShapes.Single(each => each.Name == "Firewalker").Change.Seconds, 1e-5f);
+
+            var mountain = Upgrade.ById(EarthTree.MountainStance).Spell;
+            Assert.IsTrue(mountain.HeldStance);
+            Assert.AreEqual(20f, mountain.BankStagger, 1e-5f, "20 stagger a blow turned");
+            Assert.AreEqual(0.5f, mountain.MissedWait, 1e-5f, "five seconds, not ten, when nothing struck");
+            var empowered = new SpellSpec();
+            SpellChange.Copy(mountain, empowered);
+            Upgrade.ById(SpellBranch.EmpowerId(EarthTree.MountainStance)).Empower.ApplyTo(empowered);
+            Assert.AreEqual(25f, empowered.BankStagger, 1e-5f, "the Empower's 25 a blow");
+            Assert.AreEqual(3f, empowered.Seconds, 1e-5f);
+            Assert.IsFalse(Upgrade.ById(EarthTree.MountainStance).Effects.Any(each => each.Do == UpgradeAction.Boon), "the stand-in boon is gone");
+            Assert.AreEqual(1f, Clover.Player.Forms.ParryForm.LoadSeconds, 1e-5f, "the heavy blow within a second of letting go");
+        }
     }
 }

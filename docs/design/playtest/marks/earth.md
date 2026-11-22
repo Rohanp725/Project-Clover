@@ -169,15 +169,13 @@ Rise's rocks, a pillar, a heap of rubble.
 ## earth.stance
 **What it does.** Mountain Stance, a counter (Grey Stone: the Cailleach turning to stone each summer). You turn completely to stone and can't move. A blow that hits the stone is blocked, red ones too, and it jolts the attacker: it is shaken, and its next attack comes late. The blows the stone blocks power up your next heavy blow.
 
-**When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). Then it works on any blow while you stand as stone.
+**When it happens.** Cast it from a spell slot and keep holding that slot's button (hold L2 and a face button, or press 1 to 4). You stand as stone while you hold it.
 
-**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower lets you stand for up to 3 seconds.) For now, it works like this: you stand as stone for up to 2.5 seconds. The first blow to land does nothing to you. You answer with a jolt of stone toward the attacker, 3 metres long and 120 degrees wide, for 6 damage, 10 stagger and two Tremor. For 3 seconds, the attacker's wind-ups go at 0.7 times their normal speed, and for 3.5 seconds your next blow that lands breaks 50% more balance.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again, or only 5 if nothing hit the stone. Fighting with your weapon makes the wait shorter. You stand as stone for as long as you hold the button, up to 2.5 seconds (3 with its Empower). Every blow that lands does nothing to you. Each one is answered with a jolt of stone toward the attacker, 3 metres long and 120 degrees wide, for 6 damage, 10 stagger and two Tremor, and for 3 seconds that attacker's wind-ups go at 0.7 times their normal speed. When you let go, your next heavy blow within a second carries 20 more stagger for each blow the stone blocked (25 with the Empower).
 
 **Works with.** Rooted (standing still counts), Immovable, which comes after it on the chart, Heavy Hand, Cairn's Master mark, Buckled on the Forge branch.
 
-**Not built yet.** Every blow should be blocked for as long as you stand, not only the first. Each blocked blow should add 20 stagger (25 with the Empower) to your next heavy blow within a second of letting go. The wait should be only 5 seconds if nothing hit the stone. For now, the first blow is blocked, and your next blow of any kind is powered up.
-
-**Example.** A duellist starts its string of blows. Turn to stone and take the first cut on the stone. Its next swing comes slowly enough for you to guard.
+**Example.** A duellist starts its string of blows. Hold the stance through all four cuts, let go, and your heavy blow carries 80 more stagger.
 
 ## earth.stance.shape
 **What it does.** Unlocks two shapes for Mountain Stance. You pick one at any rest fire. **Stone Skin**: the blow is blocked but not answered. Instead, two plates of stone grow on your shoulders. Each one takes most of one blow and stops you from flinching, then breaks in a burst around you. **Fist of Rock** (the stance as it was first built): you stand as stone for a short while. The first blow to land does nothing to you, and a fist of rock rises under the enemy that hit you. One blow, answered right away.

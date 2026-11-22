@@ -532,13 +532,20 @@ namespace Clover.Player
             }
         }
 
+        /// <summary>What the last blow that landed took, and when (Second Shadow's Master gives it back).</summary>
+        public float LastWound { get; private set; }
+        public float LastWoundAt { get; private set; } = -100f;
+
         private void Land(in Hit hit, float seconds, bool guardBroken = false)
         {
             BlowsTaken++;
             float wound = hit.Damage * DamageTaken;
             // Shared Roots: a share of the wound is carried by the Seeded enemies near, as much as they can take of it.
             if (WoundShare > 0f && ShareWound != null && wound > 0f) wound -= Mathf.Clamp(ShareWound(wound * WoundShare), 0f, wound);
+            float before = Health.Current;
             Health.Damage(wound);
+            LastWound = before - Health.Current;
+            LastWoundAt = Time.time;
             // With Dark's gift the blow that kills is not the end, once.
             if (IsDead && upgrades != null && upgrades.Rise(hit.HasOrigin ? hit.Origin : transform.position - hit.Direction)) Callout("Risen");
             if (upgrades != null) upgrades.OnStruck(hit.HasOrigin ? hit.Origin : transform.position - hit.Direction);

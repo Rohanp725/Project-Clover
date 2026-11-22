@@ -11,6 +11,8 @@ namespace Clover.Player.Forms
         public override string Id => SpellForms.Clone;
 
         private const float Beat = 0.2f;
+        /// <summary>How far a copy left standing reaches for an enemy to repeat a blow on: a sword's reach.</summary>
+        public const float ShadowReach = 2.5f;
 
         public override int Cast(in SpellCast cast)
         {
@@ -22,6 +24,8 @@ namespace Clover.Player.Forms
             if (clone != null)
             {
                 clone.Show(FormKit.Lit(cast.Colour, 4.4f, 1f));
+                // Left where you stood (Second Shadow), not at your shoulder.
+                if (cast.Spec.StaysPut) clone.AnchorAt(cast.Origin);
                 SpellWorks.Marks(run)[0] = FormFx.HoldMark(FormMark.Brackets, FormKit.Lit(cast.Colour, 3f));
                 SpellWorks.Marks(run)[1] = FormFx.HoldMark(FormMark.Ring, FormKit.Lit(cast.Colour, 1.6f));
                 FormKit.Gather(cast, clone.Position, 2f);
@@ -63,6 +67,8 @@ namespace Clover.Player.Forms
                 if (times[k] > 0f) continue;
                 Component victim = things[k];
                 things[k] = null;
+                // A copy left standing repeats the blow on whoever is nearest it, within its reach.
+                if (clone != null && clone.Anchored) victim = cast.Combat.EnemyNear(from, ShadowReach, null);
                 if (!FormKit.Alive(victim)) continue;
                 bool heavy = points[k].y > 0.5f;
                 if (!cast.Combat.StrikeOne(victim, cast.Blow(points[k].x, 0f), from)) continue;

@@ -190,6 +190,11 @@ namespace Clover.Player
         /// <summary>True while a gathered spell waits to be loosed, and the rings it holds, for the HUD and probes.</summary>
         public bool Gathering => rings.Active;
         public int RingsHeld => rings.Rings;
+        /// <summary>Counts for probes: grey health given back by Return to the Shadow, and wounds undone by Second Shadow's Master.</summary>
+        public float WoundsReturned { get; private set; }
+        public int WoundsUndone { get; private set; }
+        /// <summary>Counts for probes: gathered spells ended with nothing loosed (Bag of Winds burst as a whirlwind).</summary>
+        public int RingsSpilled { get; private set; }
         /// <summary>Counts for probes: gathered spells loosed, and the rings the last one held.</summary>
         public int RingsLoosed { get; private set; }
         public int LastRingsLoosed { get; private set; }
@@ -257,6 +262,11 @@ namespace Clover.Player
         private int triggerPair = -1;
 
         private readonly HashSet<IDamageable> fanTaken = new HashSet<IDamageable>();
+        // Cherry Red's fan: the enemies already given a blade, or passed over, this throw; and where each blade called home stood.
+        private readonly HashSet<IDamageable> plantExcept = new HashSet<IDamageable>();
+        // The enemy a walking helper rose from: it goes to another.
+        private readonly HashSet<IDamageable> helperExcept = new HashSet<IDamageable>();
+        private readonly Vector3[] bladePlaces = new Vector3[PlantedBlades.Most];
 
         // One copy of the effect for each enemy near the target carrying what it asks, nearest first.
         private void FanOut(in Pending pending)
@@ -944,6 +954,8 @@ namespace Clover.Player
             // Flash Freeze is retired (task 4.15): Supercooled freezes a soaked enemy now, so no mark lowers the freeze.
             Afflictions.FlashFreezeAt = 0;
             hasAnswer = On(Trees.MetalTree.MastersAnswer);
+            hasTwoSuns = On(Trees.LightTree.TwoSuns);
+            if (!hasTwoSuns) echoForm = null;
             bool wellNow = On(Trees.WaterTree.DeepWell);
             if (wellNow != hasWell)
             {
@@ -1172,8 +1184,13 @@ namespace Clover.Player
         private void Update()
         {
             if (toFinish.Count > 0) FinishBroken();
-            // A gathered spell nobody loosed goes by itself when its press window is over.
-            if (rings.Due(Time.time)) LooseRings();
+            if (echoForm != null && Time.time >= echoAt) CastEcho();
+            // A gathered spell nobody loosed goes by itself when its press window is over, or is lost when it lapses (Kept Wind).
+            if (rings.Due(Time.time))
+            {
+                if (rings.Lapses) rings.End();
+                else LooseRings();
+            }
             if (mending.Owed > 0f && defence != null && !defence.IsDead) defence.Heal(mending.Take(Time.deltaTime), false);
             sinceBlowLanded += Time.deltaTime;
             if (hasWell && well > 0f && sinceBlowLanded < WellBlowSeconds && defence != null && !defence.IsDead && defence.Health.Fraction < 0.999f)
@@ -1464,6 +1481,17 @@ namespace Clover.Player
             if (effect.WithinOwnCast > 0f && !InCastWindow(LastCastOf(effect.Owner), Time.time, effect.WithinOwnCast)) return;
             // Only for a cast begun in the window after its moment (the ledger's spell-windows).
             if (effect.CastAfter != CastMoment.None && !Moments.Within(effect.CastAfter, effect.CastWindow, castBeganAt, effect.CastAfterCarrying)) return;
+            // Only beside something grown (of its own kin, when it names one).
+            if (effect.NearGrown > 0f && !Hazards.GrownNear(transform.position, effect.NearGrown, effect.Kin > 0 ? FamilyOf(effect) : 0)) return;
+            if (effect.AtGrown && Hazards.NearestGrown(transform.position, Or(effect.NearGrown, 4f), out Vector3 grownAt))
+            {
+                at = grownAt;
+                hasAt = true;
+                target = null;
+            }
+            // Only while its own branch's spell gathers (Bag of Winds open), and with its rings come quickly enough.
+            if (effect.WhileGathering && !(rings.Active && effect.Owner != null && rings.Mark.Branch == effect.Owner.Branch)) return;
+            if (effect.RingsWithin > 0f && !rings.LastWithin(Mathf.Max(1, effect.SpentAtLeast), effect.RingsWithin, Time.time)) return;
             // Only within a moment's window as the trigger comes (Waiting Thunder's Master).
             if (effect.After != CastMoment.None && !Moments.Within(effect.After, effect.AfterWindow, Time.time)) return;
             if (effect.NeedsAttacker && !IsAttacker(target, turnedBy != null ? turnedBy : null, turnedAt, Time.time)) return;
@@ -2015,6 +2043,129 @@ namespace Clover.Player
                 case UpgradeAction.Flood:
                     if (Ebbing) LooseFlood();
                     break;
+                case UpgradeAction.SwapWithShadow:
+                case UpgradeAction.ReturnToShadow:
+                {
+                    var shadow = Forms.SpellWorks.Clone;
+                    if (shadow == null || !shadow.Showing || !shadow.Anchored) break;
+                    Vector3 mine = transform.position;
+                    Vector3 theirs = shadow.Position;
+                    ElementLook.Puff(held, mine + Vector3.up * 0.4f, Vector3.up, 1.1f);
+                    ElementLook.Puff(held, theirs + Vector3.up * 0.4f, Vector3.up, 1.1f);
+                    player.PassTo(theirs);
+                    if (effect.Do == UpgradeAction.SwapWithShadow)
+                    {
+                        shadow.AnchorAt(mine);
+                        PlacesSwapped++;
+                        break;
+                    }
+                    // Sunk into it: the copy is gone, and the wounds since it was left come back as grey.
+                    if (SpellForms.Get(SpellForms.Clone) is Forms.RunningForm copy) Forms.SpellWorks.EndRunsOf(copy);
+                    if (defence != null) WoundsReturned += defence.Health.Return(WoundsSince(shadowHealth, defence.Health.Current));
+                    break;
+                }
+                case UpgradeAction.StepToStanding:
+                {
+                    string branch = effect.Owner != null ? effect.Owner.Branch : "";
+                    if (!StandingOf(branch)) break;
+                    Vector3 to = standingAt;
+                    to.y = self.y;
+                    Vector3 way = to - self;
+                    way.y = 0f;
+                    if (afterimage != null) afterimage.Leave(0.35f);
+                    ElementLook.Sparks(held, self + Vector3.up, way, 1f);
+                    // Beside the rod, not on its point: half a metre short, along the way.
+                    Vector3 landing = way.sqrMagnitude > 0.36f ? to - way.normalized * 0.5f : self;
+                    player.PassTo(landing);
+                    if (eDamage > 0f || eStagger > 0f)
+                        combat.StrikeArea(landing, Or(effect.Radius, 2.5f), Blow(look, kind, eDamage, eStagger, effect.Affliction != AfflictionKind.None ? eStacks : 0));
+                    ElementLook.Strike(look, landing, 0.5f);
+                    if (!KeepsStanding(byTrigger[(int)UpgradeTrigger.SpellPressed], branch))
+                    {
+                        Hazards.EndGroup(standingGroup);
+                        standingMark = null;
+                    }
+                    StepsToStanding++;
+                    break;
+                }
+                case UpgradeAction.DriveBlades:
+                    if (target != null) PlantedBlades.DriveAllIn(target.GetComponentInParent<IDamageable>() as Component);
+                    break;
+                case UpgradeAction.PlantBlades:
+                {
+                    var tap = SpellForms.Get(SpellForms.Tap);
+                    if (tap == null) break;
+                    // Each into a different enemy: never the one faced (the kit's own blade goes there), nor one already holding a blade.
+                    plantExcept.Clear();
+                    var faced = combat.EnemyAhead(Or(effect.Reach, 9f));
+                    if (faced != null && faced.GetComponentInParent<IDamageable>() is IDamageable facedBody) plantExcept.Add(facedBody);
+                    int thrownBlades = 0;
+                    for (int guard = 0; guard < 12 && thrownBlades < Or(eCount, 2); guard++)
+                    {
+                        var next = combat.EnemyNear(self, Or(effect.Reach, 9f), plantExcept);
+                        if (!(next is IDamageable body)) break;
+                        plantExcept.Add(body);
+                        if (PlantedBlades.CountIn(next) > 0 || !PlayerReactions.Alive(next)) continue;
+                        var cast = element.NewCast(effect.Spell ?? plainSpell, effect.Owner != null ? effect.Owner.Name : "", effect.Owner);
+                        cast.Element = held;
+                        cast.Colour = held.Colour;
+                        cast.Affliction = held.Affliction;
+                        cast.Cast = 0;
+                        cast.Target = next.transform;
+                        cast.Aim = next.transform.position;
+                        tap.Cast(cast);
+                        thrownBlades++;
+                        BladesPlanted++;
+                    }
+                    plantExcept.Clear();
+                    break;
+                }
+                case UpgradeAction.CallBladesHome:
+                {
+                    int called = PlantedBlades.RecallAll(bladePlaces);
+                    var home = Blow(look, kind, eDamage, eStagger, eStacks);
+                    for (int i = 0; i < called && i < bladePlaces.Length; i++)
+                    {
+                        Vector3 from = bladePlaces[i];
+                        from.y = self.y;
+                        Vector3 line = self - from;
+                        line.y = 0f;
+                        // Through whatever stands between: every enemy on the blade's straight line home.
+                        if (line.sqrMagnitude > 0.04f) combat.StrikeLane(from, line.normalized, line.magnitude, Or(effect.Radius, 0.7f), home);
+                        ElementLook.Sparks(look, from + Vector3.up, line, 0.8f);
+                    }
+                    if (called > 0 && element.SurgeActive) element.SurgeKit.Lengthen(called * Or(effect.Seconds, 0.4f));
+                    BladesCalledHome += called;
+                    break;
+                }
+                case UpgradeAction.Regain:
+                    if (effect.Seconds > 0f)
+                    {
+                        // Armed for a while: each weapon blow landed beside what its kin grew wins it back (OnBlow).
+                        regainUntil = Time.time + effect.Seconds;
+                        regainAmount = Or(effect.Amount, 3f);
+                        regainNear = Or(effect.Reach, 3f);
+                        regainFamily = effect.Kin > 0 ? FamilyOf(effect) : 0;
+                    }
+                    else if (defence != null) defence.Health.Regain(Or(effect.Amount, 3f));
+                    break;
+                case UpgradeAction.UndoWound:
+                    if (defence != null && !defence.IsDead && Time.time - defence.LastWoundAt <= Or(effect.CastWindow, 1f) && defence.LastWound > 0f)
+                    {
+                        defence.Heal(defence.LastWound, false);
+                        WoundsUndone++;
+                    }
+                    break;
+                case UpgradeAction.Spill:
+                    if (rings.Active && effect.Owner != null && rings.Mark.Branch == effect.Owner.Branch)
+                    {
+                        rings.End();
+                        RingsSpilled++;
+                    }
+                    break;
+                case UpgradeAction.FreeBase:
+                    if (element != null) element.CastBaseFree(OwnElement(effect.Owner).Name);
+                    break;
                 case UpgradeAction.CarryOn:
                 {
                     // The wave goes out again the way it came, through the player's place, and sets what it brought down beyond.
@@ -2133,12 +2284,28 @@ namespace Clover.Player
                     helperOwner = effect.Owner;
                     int strikes = Or(eCount, 3);
                     float interval = Or(effect.Interval, 0.6f);
+                    float walk = 0f;
+                    // A helper that walks (Speed): it rises where its moment was and goes to the nearest other enemy, then strikes it
+                    // (The Drops Quicken: from where the rimed enemy fell).
+                    if (effect.Speed > 0f)
+                    {
+                        helperExcept.Clear();
+                        if (target != null && target.GetComponentInParent<IDamageable>() is IDamageable fell) helperExcept.Add(fell);
+                        var nearest = combat.EnemyNear(centre, Or(effect.Reach, 10f), helperExcept);
+                        helperExcept.Clear();
+                        if (nearest == null) break;
+                        target = nearest.transform;
+                        walk = effect.Speed;
+                    }
                     Hazards.Lay(new HazardSpec
                     {
-                        Kind = ElementLook.Ground(look), Tint = look.Colour, Position = centre, Radius = Or(effect.Radius, 2f), Seconds = strikes * interval + 0.2f, BiteEvery = interval,
+                        Kind = ElementLook.Ground(look), Tint = look.Colour, Position = centre, Radius = Or(effect.Radius, 2f), BiteEvery = interval,
+                        // A walker's time to get there is its own: as long as the walk at most, then its strikes.
+                        Seconds = strikes * interval + 0.2f + (walk > 0f ? Or(effect.Reach, 10f) / walk : 0f),
                         Bites = strikes, Burst = !bespoke, Quiet = bespoke, Follow = target != null, Target = target, Blow = Unseen(Blow(look, kind, eDamage, eStagger, eStacks), bespoke),
                         // Its helpers at once, at most (Nothing Stays Buried: three); one more takes the place of the one nearest its end.
                         Family = effect.Limit > 0 ? FamilyOf(effect) : 0, Limit = effect.Limit,
+                        WalksTo = walk, AlsoLays = effect.BitesLay,
                     });
                     break;
                 }
@@ -2585,11 +2752,59 @@ namespace Clover.Player
                 if (effect.Do == UpgradeAction.Flood && !Ebbing) continue;
                 Consider(effect, null, transform.position, false);
             }
-            castSource = null;
-            if (queued == before) return false;
+            if (queued == before)
+            {
+                castSource = null;
+                return false;
+            }
             PressesDone++;
+            // The press is a moment of its own branch's (Second Shadow's Master answers its change of places).
+            Trigger(UpgradeTrigger.SpellPressed, null, transform.position, false);
+            castSource = null;
             return true;
         }
+
+        // Grey won back by each weapon blow beside what a mark grew, until when (Corpse Flowers).
+        private float regainUntil = -100f, regainAmount, regainNear;
+        private int regainFamily;
+        /// <summary>Grey health won back by blows beside what was grown (Corpse Flowers), for probes.</summary>
+        public float GreyWonBeside { get; private set; }
+
+        // The thing a spell left standing (Lightning Rod's rod): whose, where, its ground's group, and until when.
+        private Upgrade standingMark;
+        private Vector3 standingAt;
+        private int standingGroup;
+        private float standingUntil;
+
+        /// <summary>A spell of <paramref name="mark"/>'s left a thing standing at <paramref name="at"/> for <paramref name="seconds"/>, its ground laid as <paramref name="group"/>.</summary>
+        public void NoteStanding(Upgrade mark, Vector3 at, int group, float seconds)
+        {
+            standingMark = mark;
+            standingAt = at;
+            standingGroup = group;
+            standingUntil = Time.time + seconds;
+        }
+
+        /// <summary>True while a thing of <paramref name="branch"/>'s spell still stands.</summary>
+        public bool StandingOf(string branch) => standingMark != null && Time.time < standingUntil && standingMark.Branch == branch;
+
+        /// <summary>True when an effect in force of <paramref name="branch"/> keeps its standing thing past the step to it (UpgradeAction.KeepStanding).</summary>
+        public static bool KeepsStanding(List<UpgradeEffect> inForce, string branch)
+        {
+            if (inForce == null) return false;
+            for (int i = 0; i < inForce.Count; i++)
+                if (inForce[i].Do == UpgradeAction.KeepStanding && inForce[i].Owner != null && inForce[i].Owner.Branch == branch) return true;
+            return false;
+        }
+
+        /// <summary>Counts for probes: steps taken to a thing a spell left standing.</summary>
+        public int StepsToStanding { get; private set; }
+
+        // The player's health as a spell left its copy standing (Return to the Shadow gives back what was lost since).
+        private float shadowHealth;
+
+        /// <summary>The wounds taken since a moment: what health was then less what it is now, never below nothing.</summary>
+        public static float WoundsSince(float then, float now) => Mathf.Max(0f, then - now);
 
         /// <summary>
         /// The later presses of a mark's spell as it is cast now: the worn shape's, when it adds any (ShapeDef.Presses), else the
@@ -2604,6 +2819,101 @@ namespace Clover.Player
             string masterId = SpellBranch.MasterId(branch);
             return PressesOf(mark, worn, Has(masterId) ? Upgrade.ById(masterId) : null, out window);
         }
+
+        /// <summary>
+        /// The rules a Flung Blade thrown now is planted and driven by: its Empower (16, three in one enemy, a heavy blow driving
+        /// all), its shape (Cherry Red, The Nail) and All Blades Home (never fading). Plain for any other spell's blade.
+        /// </summary>
+        public BladeOrders BladeOrdersFor(in SpellCast cast)
+        {
+            var orders = BladeOrders.Plain;
+            string branch = Trees.MetalTree.FlungBlade;
+            bool flung = cast.Source == null ? cast.Element != null && cast.Element.Name == Elements.Metal : cast.Source.Id == branch || cast.Source.Branch == branch;
+            if (!flung) return orders;
+            orders = OrdersOf(SpellBranches.WornShape(branch, RunState.Unlocked, ReadLoadout()), Has(SpellBranch.EmpowerId(branch)), Has(Trees.MetalTree.AllBladesHome));
+            return orders;
+        }
+
+        /// <summary>A Flung Blade's orders, with its shape worn, its Empower and All Blades Home given.</summary>
+        public static BladeOrders OrdersOf(ShapeDef worn, bool empowered, bool neverFades)
+        {
+            var orders = BladeOrders.Plain;
+            if (empowered)
+            {
+                orders.Drive = BladeRules.EmpoweredDrive;
+                orders.MostInOne = BladeRules.EmpoweredMostInOne;
+                orders.HeavyDrivesAll = true;
+            }
+            if (worn != null && worn.Name == Trees.MetalTree.CherryRedName) orders.Kind = PlantedKind.CherryRed;
+            else if (worn != null && worn.Name == Trees.MetalTree.NailName) orders.Kind = PlantedKind.Nail;
+            orders.NeverFades = neverFades;
+            return orders;
+        }
+
+        /// <summary>A blade of yours was driven into <paramref name="host"/> (null: in the ground) for the <paramref name="drives"/>th time.</summary>
+        public void OnBladeDriven(Component host, int drives)
+        {
+            BladesDriven++;
+            if (host != null) Trigger(UpgradeTrigger.BladeDriven, host, host.transform.position, true, drives);
+        }
+
+        // ---- Two Suns: a figure of light on the enemy's far side casts the spell again back toward you.
+        private bool hasTwoSuns;
+        private ISpellForm echoForm;
+        private SpellCast echoCast;
+        private float echoAt;
+
+        /// <summary>Two Suns' figures of light that have cast: for probes.</summary>
+        public int SunsEchoed { get; private set; }
+
+        /// <summary>
+        /// A spell has just been cast by <paramref name="form"/> at an enemy: with Two Suns, a figure of light stands now on
+        /// the enemy's far side and casts the same spell back toward you a moment later, at a share of its damage. A spell
+        /// that moves your own body, or is held or gathered, has no figure (TwoSunsRules.Echoes).
+        /// </summary>
+        public void EchoLater(ISpellForm form, in SpellCast cast)
+        {
+            if (!hasTwoSuns || form == null || cast.Target == null || !TwoSunsRules.Echoes(form.Id, cast.Spec)) return;
+            Vector3 at = TwoSunsRules.FarSide(transform.position, cast.Target.position, out Vector3 facing);
+            echoForm = form;
+            echoCast = cast;
+            echoCast.Origin = at;
+            echoCast.Forward = facing;
+            echoCast.Aim = transform.position;
+            echoCast.Damage *= TwoSunsRules.Share;
+            echoCast.Stagger *= TwoSunsRules.Share;
+            // The figure's spell is no slot cast: its blows never charge the blade, nor are counted as the cast's own.
+            echoCast.Cast = 0;
+            echoAt = Time.time + TwoSunsRules.Delay;
+            if (afterimage != null) afterimage.LeaveAt(TwoSunsRules.Delay + 0.5f, SunFigure, at, facing);
+            ElementLook.Sparks(lookOf[(int)AfflictionKind.Marked] ?? OwnElement(null), at + Vector3.up, facing, 0.8f);
+        }
+
+        // Light the colour of the sun at noon, strong enough to glow.
+        private static readonly Color SunFigure = new Color(2.2f, 1.8f, 0.9f, 0.85f);
+
+        private void CastEcho()
+        {
+            var form = echoForm;
+            echoForm = null;
+            if (form == null || combat == null) return;
+            SunsEchoed++;
+            form.Cast(echoCast);
+        }
+
+        /// <summary>A turning blade of yours was met by a perfect guard as it came home to the hand.</summary>
+        public void OnBladeCaught(Vector3 at)
+        {
+            BladesCaught++;
+            Trigger(UpgradeTrigger.BladeCaught, null, at);
+        }
+
+        public int BladesCaught { get; private set; }
+
+        /// <summary>Counts for probes: blades of yours driven, thrown by a mark, and called home.</summary>
+        public int BladesDriven { get; private set; }
+        public int BladesPlanted { get; private set; }
+        public int BladesCalledHome { get; private set; }
 
         /// <summary>As above, with the shape worn given: its presses stand in place of the mark's.</summary>
         public static UpgradeEffect[][] PressesOf(Upgrade mark, ShapeDef worn, out float window) => PressesOf(mark, worn, null, out window);
@@ -2791,8 +3101,10 @@ namespace Clover.Player
             var struck = target as Component;
             Vector3 at = struck != null ? struck.transform.position : transform.position;
             bool finisher = outcome == HitOutcome.Finisher;
+            // Corpse Flowers: a blow landed beside one of the flowers wins back grey health.
+            if (Time.time < regainUntil && defence != null && Hazards.GrownNear(transform.position, regainNear, regainFamily)) GreyWonBeside += defence.Health.Regain(regainAmount);
             // Each blow landed adds a ring of light up the blade to a gathered spell (Daybreak).
-            if (rings.Add() && element != null) ElementLook.Sparks(OwnElement(rings.Mark), transform.position + Vector3.up * 1.2f, Vector3.up, 0.3f);
+            if (rings.By == RingSource.Blows) AddRing();
             if (hasHeat && Heat.Landed())
             {
                 Vfx.Play(VfxKind.Embers, transform.position + Vector3.up * 1.2f, Vector3.up, 0.8f);
@@ -3024,7 +3336,10 @@ namespace Clover.Player
         /// True when an effect in force of <paramref name="mark"/>'s own branch quickens its cast now (UpgradeAction.Quicken):
         /// its CastAfter window holds at <paramref name="now"/>.
         /// </summary>
-        public static bool Quickens(List<UpgradeEffect> inForce, Upgrade mark, CastMoments moments, float now)
+        public static bool Quickens(List<UpgradeEffect> inForce, Upgrade mark, CastMoments moments, float now) => Quickens(inForce, mark, moments, now, null);
+
+        /// <summary>As above; an effect with NearGrown quickens only a cast within that many metres of something grown (<paramref name="grownWithin"/>: Elder Tree's Master).</summary>
+        public static bool Quickens(List<UpgradeEffect> inForce, Upgrade mark, CastMoments moments, float now, System.Func<float, bool> grownWithin)
         {
             if (inForce == null || mark == null || moments == null) return false;
             string branch = !string.IsNullOrEmpty(mark.Branch) ? mark.Branch : mark.Id;
@@ -3032,10 +3347,14 @@ namespace Clover.Player
             {
                 var effect = inForce[i];
                 if (effect.Do != UpgradeAction.Quicken || effect.Owner == null || effect.Owner.Branch != branch) continue;
+                if (effect.NearGrown > 0f && (grownWithin == null || !grownWithin(effect.NearGrown))) continue;
                 if (moments.Within(effect.CastAfter, effect.CastWindow, now, effect.CastAfterCarrying)) return true;
             }
             return false;
         }
+        // True when something the player grew stands within that many metres of them.
+        private bool GrownWithin(float metres) => Hazards.GrownNear(transform.position, metres);
+
         // When the cast now running began, asked against the moments.
         private float castBeganAt = -1000f;
 
@@ -3175,6 +3494,8 @@ namespace Clover.Player
         {
             Moments.Note(CastMoment.PerfectGuard, Time.time);
             NoteGuard(attacker);
+            // A bag open catches the attacker's wind (Bag of Winds).
+            if (rings.By == RingSource.Turned) AddRing();
             // Open Furnace sets off every burning enemy near, the attacker among them, so the one detonation is not also made.
             bool detonate = hasDetonate && !hasFurnace;
             if (hasFurnace) OpenFurnace();
@@ -3456,6 +3777,7 @@ namespace Clover.Player
         public void OnPerfectDodge(Vector3 attacker)
         {
             Moments.Note(CastMoment.PerfectDodge, Time.time);
+            if (rings.By == RingSource.Turned) AddRing();
             // The attacker is the target, as with a perfect guard; a thrown bolt leaves only the place it came from.
             var dodged = combat != null ? combat.EnemyAt(attacker, 2.5f) : null;
             NoteTurned(dodged);
@@ -3934,12 +4256,13 @@ namespace Clover.Player
             // A spell may ask health in place of mana, or as well: it is left grey, to be won back.
             float blood = SpellSpec.HealthPrice(spec.HealthCost, spec.HealthShare, defence != null ? defence.Health.Current : 0f) * Stats.Multiplier(PlayerStat.HealthPrices);
             // Cast in its Master's moment, it lands with no stillness after it (UpgradeAction.Quicken: Seven Flashes).
-            if (Quickens(byTrigger[(int)UpgradeTrigger.SpellCast], mark, Moments, Time.time))
+            if (Quickens(byTrigger[(int)UpgradeTrigger.SpellCast], mark, Moments, Time.time, GrownWithin))
             {
                 spec.Delay = 0f;
                 Quickened++;
             }
             var cast = element.NewCast(spec, mark.Name, mark);
+            if (spec.StaysPut && defence != null) shadowHealth = defence.Health.Current;
             // A form that can do nothing just now says so before anything is paid.
             if (form is ISpellGate gate && !gate.CanCast(cast)) return false;
             float price = PriceOf(mark);
@@ -4024,6 +4347,7 @@ namespace Clover.Player
             castOrigin = transform.position;
             castFrom = transform.position;
             BeginCast();
+            EchoLater(form, cast);
             form.Cast(cast);
             castSource = mark;
             // Its own moment knows its number, for what only this cast is given (UpgradeEffect.ThisCast, ShareStore).
@@ -4032,6 +4356,17 @@ namespace Clover.Player
             finally { answeringCast = 0; }
             castSource = null;
             return true;
+        }
+
+        // One more ring to the spell gathering (a blow landed, a blow turned): shown, and told to its own branch's marks.
+        private void AddRing()
+        {
+            if (!rings.Add(Time.time)) return;
+            var mark = rings.Mark;
+            if (element != null) ElementLook.Sparks(OwnElement(mark), transform.position + Vector3.up * 1.2f, Vector3.up, 0.3f);
+            castSource = mark;
+            try { Trigger(UpgradeTrigger.RingAdded, null, transform.position, false, rings.Rings); }
+            finally { castSource = null; }
         }
 
         // Looses an ebb's flood: its form cast from here back along the line toward where the ebb began and on past it.

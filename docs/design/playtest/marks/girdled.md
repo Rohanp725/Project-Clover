@@ -9,13 +9,13 @@ both carried.
 
 **When it happens.** Every time Girdled goes off while you carry both Life and Dark. Girdled goes off when a Seed lands on a Cursed enemy, or when a Curse lands on a Seeded one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Girdled.
 
-**The numbers.** Mix, 3 Shards. Both shapes work like the plain one: one coil of roots wraps the enemy right away. It moves a quarter slower and takes 6% more damage from your weapon. Each weapon blow heals you 1 and pulls the roots one coil tighter (6% more damage each time). The third blow girdles it: it is held for 1.5 seconds and takes 20 damage and 40 stagger, and you heal 4. The roots hold for 8 seconds. Corpse Flowers: when the roots let go, three flowers grow within 1 metre of where the enemy stood. They count as things you grew and last 8 seconds (up to three). Fig in the Crown: an enemy that dies in the roots Seeds and Curses the nearest enemy within 5 metres. This is on purpose: it may start Girdled on that enemy. After Girdled goes off on an enemy, it can't go off on that enemy again for 6 seconds.
+**The numbers.** Mix, 3 Shards. Both shapes work like the plain one: one coil of roots wraps the enemy right away. It moves a quarter slower and takes 6% more damage from your weapon. Each weapon blow heals you 1 and pulls the roots one coil tighter (6% more damage each time). The third blow girdles it: it is held for 1.5 seconds and takes 20 damage and 40 stagger, and you heal 4. The roots hold for 8 seconds. Corpse Flowers: when the roots let go, three flowers grow within 1 metre of where the enemy stood. They count as things you grew and last 8 seconds (up to three). While you stand within 3 metres of one of them, each weapon blow you land wins back 3 grey health. Fig in the Crown: an enemy that dies in the roots Seeds and Curses the nearest enemy within 5 metres. This is on purpose: it may start Girdled on that enemy. After Girdled goes off on an enemy, it can't go off on that enemy again for 6 seconds.
 
 **Works with.** Bitter Seed to set it up, Held Down, What the Yew Keeps, Death Turned Back.
 
 **Example.** Holding your ground: use Corpse Flowers, and fight on top of the flowers. A pack: use Fig in the Crown, and the roots move from one body to the next.
 
-**Not built yet.** Corpse Flowers' flowers only stand there. Your blows near them don't win back grey health yet. The hollow tree trunk isn't left standing yet, just like with the plain Girdled.
+**Not built yet.** The hollow tree trunk isn't left standing yet, just like with the plain Girdled.
 
 ## girdled.bitterseed
 **What it does.** Your finishers put a Seed and a Curse on every enemy within 3 metres.

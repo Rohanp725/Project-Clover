@@ -6,8 +6,30 @@ namespace Clover.Player.Forms
     /// Small helpers of the element: they rise beside the player, each runs at the enemy nearest it and jabs it at
     /// intervals, and when their time is up they go out. With no enemy near they keep by the player.
     /// </summary>
+    /// <summary>The plain rule of a helper answering your heavy blow (The Sown Men).</summary>
+    public static class MinionRules
+    {
+        /// <summary>A helper answers when it is on that same enemy, alive, and close enough to strike it.</summary>
+        public const float AnswerReach = 1.6f;
+
+        public static bool Answers(bool sameEnemy, bool alive, Vector3 helperAt, Vector3 enemyAt)
+        {
+            if (!sameEnemy || !alive) return false;
+            Vector3 gap = enemyAt - helperAt;
+            gap.y = 0f;
+            return gap.magnitude <= AnswerReach;
+        }
+    }
+
     public class MinionsForm : RunningForm
     {
+        /// <summary>Helpers' strikes made in answer to your heavy blows: for probes.</summary>
+        public static int MinionsAnswered { get; private set; }
+
+        // Domain reload is off: the count starts again with each play.
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => MinionsAnswered = 0;
+
         public override string Id => SpellForms.Minions;
 
         private const int Most = 6;
@@ -38,6 +60,14 @@ namespace Clover.Player.Forms
             return 0;
         }
 
+        // A heavy blow of yours: noted here and answered on the next step, since the swing is still being reckoned.
+        public override void Struck(ref SpellRun run, AttackStep step, Component target, float damage)
+        {
+            if (!run.Cast.Spec.AnswersHeavy || step == null || !step.Heavy || target == null) return;
+            run.Flag = true;
+            run.Victim = target;
+        }
+
         public override bool Tick(ref SpellRun run, float deltaTime)
         {
             var cast = run.Cast;
@@ -64,6 +94,23 @@ namespace Clover.Player.Forms
             var taken = SpellWorks.Once(run);
             if (look) taken.Clear();
             float rise = Mathf.Clamp01(run.Age / 0.25f);
+            // The Sown Men: every helper on the enemy your heavy blow just landed on strikes it at once.
+            if (run.Flag)
+            {
+                run.Flag = false;
+                for (int i = 0; i < run.Count && rise >= 1f; i++)
+                {
+                    bool same = things[i] != null && ReferenceEquals(things[i], run.Victim);
+                    if (!MinionRules.Answers(same, same && FormKit.Alive(things[i]), points[i], same ? things[i].transform.position : points[i])) continue;
+                    cast.Combat.StrikeOne(things[i], cast.Blow(cast.Damage, cast.Stagger), points[i]);
+                    times[Most + i] = 0f;
+                    Vector3 facingIt = things[i].transform.position - points[i];
+                    facingIt.y = 0f;
+                    FormFx.Cut(things[i].transform.position + Vector3.up * 0.9f, Quaternion.Euler(0f, 60f + i * 40f, 0f) * (facingIt.sqrMagnitude > 0.01f ? facingIt.normalized : Vector3.forward), 2.2f, 0.32f, FormKit.Lit(cast.Colour, 3.4f), 0.12f);
+                    MinionsAnswered++;
+                }
+                run.Victim = null;
+            }
             for (int i = 0; i < run.Count; i++)
             {
                 if (look)

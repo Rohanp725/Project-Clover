@@ -109,5 +109,184 @@ namespace Clover.Tests
             Assert.IsTrue(sowing.Any(each => each.On == UpgradeTrigger.GrownBurst && each.Do == UpgradeAction.Afflict && each.Affliction == AfflictionKind.Seeded), "each grown thing's burst sows");
             Assert.AreNotEqual("its moment comes", TriggerWords.Of(UpgradeTrigger.GrownBurst), "the moment has words of its own");
         }
+
+        [Test]
+        public void CorpseFlowersWinBackGreyForBlowsBesideTheirOwnFlowers()
+        {
+            var shape = Upgrade.ById(Clover.Player.Trees.Duo.GirdledDuo.Shape).Shapes.Single(each => each.Name == "Corpse Flowers");
+            var flowers = shape.Effects.Single(each => each.Do == UpgradeAction.Hazard && each.Grown);
+            var regain = shape.Effects.Single(each => each.Do == UpgradeAction.Regain);
+            Assert.AreEqual(flowers.On, regain.On, "armed as the flowers stand");
+            Assert.AreEqual(flowers.Condition, regain.Condition);
+            Assert.AreEqual(8f, regain.Seconds, 1e-5f, "for the flowers' eight seconds");
+            Assert.AreEqual(3f, regain.Reach, 1e-5f, "within three metres");
+            Assert.AreEqual(3f, regain.Amount, 1e-5f, "three grey made real");
+            Assert.AreEqual(PlayerUpgrades.FamilyOf(flowers), PlayerUpgrades.FamilyOf(regain), "beside its own flowers, not any grown thing");
+            Assert.AreNotEqual(0, PlayerUpgrades.FamilyOf(regain));
+            var health = new RegainHealth { Maximum = 100f };
+            health.Fill();
+            health.Chip(10f);
+            Assert.AreEqual(3f, health.Regain(3f), 1e-5f);
+            Assert.AreEqual(93f, health.Current, 1e-5f);
+        }
+
+        [Test]
+        public void BriarPatchsMasterGrowsTheThicketRoundTheThingYouGrew()
+        {
+            var master = Upgrade.ById(SpellBranch.MasterId(LifeTree.BriarPatch)).Effects;
+            Assert.AreEqual(2, master.Length);
+            Assert.IsTrue(master.All(each => each.NearGrown == 1f && each.AtGrown && each.While == StatWhen.Always), "cast within a metre of it, round it");
+            Assert.IsTrue(master.Any(each => each.Do == UpgradeAction.Hazard && each.Radius == 2f && each.Seconds == 10f), "four metres across, ten seconds");
+            Assert.IsTrue(master.Any(each => each.Do == UpgradeAction.Condition && (each.State.Flags & ConditionFlags.Rooted) != 0), "rooted as it grows");
+            Assert.IsFalse(Hazards.NearestGrown(Vector3.zero, 1f, out _), "nothing grown in an empty world");
+        }
+
+        [Test]
+        public void StandingThingsTakeBlowsBreakAndBurstAfterTheirFirstBlow()
+        {
+            StandingThings.Clear();
+            int wall = StandingThings.Raise(StandingKind.IceWall, new Vector3(0f, 0f, 2f), Vector3.forward, 6f, 60f, 10f, 7, 1.5f);
+            Assert.AreEqual(1, StandingThings.Count(7));
+            Assert.AreEqual(StandingStruck.FirstStruck, StandingThings.Strike(wall, 20f, 11f), "its first blow starts the burst's clock");
+            Assert.AreEqual(StandingStruck.Standing, StandingThings.Strike(wall, 20f, 11.5f));
+            StandingThings.Tick(12.4f, out int burst);
+            Assert.AreEqual(-1, burst, "not yet: a second and a half after the first blow");
+            StandingThings.Tick(12.5f, out burst);
+            Assert.AreEqual(wall, burst, "it bursts by itself");
+            Assert.AreEqual(0, StandingThings.Count());
+
+            int stone = StandingThings.Raise(StandingKind.StonePillar, Vector3.zero, Vector3.forward, 6f, 60f, 0f);
+            StandingThings.Strike(stone, 30f, 1f);
+            Assert.AreEqual(StandingStruck.Broken, StandingThings.Strike(stone, 30f, 2f), "60 health: two blows of 30");
+            Assert.AreEqual(StandingStruck.None, StandingThings.Strike(stone, 30f, 3f), "nothing left to strike");
+
+            int lasting = StandingThings.Raise(StandingKind.AnvilStone, new Vector3(0f, 0f, 3f), Vector3.back, 5f, 0f, 0f);
+            Assert.AreEqual(StandingStruck.FirstStruck, StandingThings.Strike(lasting, 999f, 1f), "no health: blows cannot break it");
+            Assert.AreEqual(lasting, StandingThings.Nearest(new Vector3(0f, 0f, 2.5f), 1f));
+            Assert.IsTrue(StandingRules.AtItsBack(StandingThings.Get(lasting), Vector3.zero, new Vector3(0f, 0f, 2f), 1.5f), "the enemy pushed back into the stone behind it");
+            Assert.IsFalse(StandingRules.AtItsBack(StandingThings.Get(lasting), new Vector3(0f, 0f, 6f), new Vector3(0f, 0f, 2f), 1.5f), "pushed away from it");
+            StandingThings.Tick(5f, out _);
+            Assert.AreEqual(-1, StandingThings.Nearest(new Vector3(0f, 0f, 2.5f), 1f), "gone at its time's end");
+
+            for (int i = 0; i < StandingThings.Most + 3; i++) StandingThings.Raise(StandingKind.RimedMound, new Vector3(i, 0f, 0f), Vector3.forward, 0f, 0f, 0f);
+            Assert.AreEqual(StandingThings.Most, StandingThings.Count(), "a few at a time; the longest-standing give way");
+            StandingThings.Clear();
+        }
+
+        [Test]
+        public void EachStandingKindNamesItsModelAndCollider()
+        {
+            var anvil = StandingShape.For(StandingKind.AnvilStone);
+            Assert.IsTrue(anvil.Box && anvil.Faces, "a box, its iron face to the player");
+            Assert.AreEqual(1.5f, anvil.Size.y, 1e-5f);
+            Assert.AreEqual("anvil_stone", anvil.Model);
+            var wall = StandingShape.For(StandingKind.IceWall);
+            Assert.AreEqual(5f, wall.Size.x, 1e-5f);
+            Assert.AreEqual("ice_wall_5m_cracked_lod0", wall.Cracked, "swapped in when first struck");
+            Assert.AreEqual("ice_wall_3m_lod0", StandingShape.For(StandingKind.ShieldWall).Whole);
+            var trunk = StandingShape.For(StandingKind.HollowTrunk);
+            Assert.IsFalse(trunk.Box);
+            Assert.AreEqual(0.55f, trunk.Carve, 1e-5f);
+            Assert.AreEqual("stone_pillar", StandingShape.For(StandingKind.StonePillar).Model);
+            Assert.AreEqual("rimed_mound", StandingShape.For(StandingKind.RimedMound).Model);
+            Vector3 thrown = StandingThingBody.Thrown(new Vector3(1f, 0.5f, 0f), 0);
+            Assert.Greater(thrown.x, 0f, "out from where it sat");
+            Assert.Greater(thrown.y, 0f, "and up");
+        }
+
+        [Test]
+        public void PawnedHeartsShapesSetTheHeartUnderYouOrOverTheEnemy()
+        {
+            var shapes = Upgrade.ById(SpellBranch.ShapeId(DarkTree.PawnedHeart)).Shapes;
+            var buried = shapes.Single(each => each.Name == "Buried Heart").Spell;
+            var hung = shapes.Single(each => each.Name == "Hung From the Tree").Spell;
+            Assert.AreEqual(HeartPlace.Buried, buried.HeartAt);
+            Assert.AreEqual(HeartPlace.Hung, hung.HeartAt);
+            Assert.AreEqual(HeartPlace.Behind, Upgrade.ById(DarkTree.PawnedHeart).Spell.HeartAt, "the Learn's heart is behind you");
+            Assert.IsTrue(Clover.Player.Forms.HeartForm.Strong(HeartPlace.Buried, 2.9f, 3f), "within three metres of it");
+            Assert.IsFalse(Clover.Player.Forms.HeartForm.Strong(HeartPlace.Buried, 3.2f, 3f), "its strength only near it");
+            Assert.IsTrue(Clover.Player.Forms.HeartForm.Strong(HeartPlace.Behind, 9f, 3f));
+            Assert.IsFalse(Clover.Player.Forms.HeartForm.Touched(HeartPlace.Buried, true, 0.2f), "it rises by itself");
+            Assert.IsTrue(Clover.Player.Forms.HeartForm.RisesWhenClosed(HeartPlace.Buried), "whole, when the ring closes");
+            Assert.IsFalse(Clover.Player.Forms.HeartForm.RisesWhenClosed(HeartPlace.Behind));
+            Assert.IsTrue(Clover.Player.Forms.HeartForm.Touched(HeartPlace.Hung, false, 1.4f), "in under the enemy, no leaving first");
+            Assert.IsFalse(Clover.Player.Forms.HeartForm.Touched(HeartPlace.Hung, true, 2f));
+            Assert.IsFalse(Clover.Player.Forms.HeartForm.Touched(HeartPlace.Behind, false, 0.5f), "behind: leave it first");
+            Assert.IsTrue(Clover.Player.Forms.HeartForm.Touched(HeartPlace.Behind, true, 0.5f));
+            Assert.IsTrue(shapes.All(each => each.Effects == null || each.Effects.Length == 0), "the stand-in ash ring and kept Curse are gone");
+        }
+
+        [Test]
+        public void TwoSunsFigureStandsOnTheFarSideAndCastsBackWeaker()
+        {
+            Vector3 at = TwoSunsRules.FarSide(Vector3.zero, new Vector3(0f, 0f, 4f), out Vector3 facing);
+            Assert.AreEqual(new Vector3(0f, 0f, 8f), at, "as far beyond the enemy as you stand before it");
+            Assert.AreEqual(Vector3.back, facing, "casting back toward you");
+            Assert.AreEqual(16f, TwoSunsRules.FarSide(Vector3.zero, new Vector3(0f, 0f, 10f), out _).z, 1e-4f, "six metres beyond at most");
+            Assert.AreEqual(0.4f, TwoSunsRules.Delay, 1e-5f);
+            Assert.AreEqual(0.6f, TwoSunsRules.Share, 1e-5f);
+            Assert.IsTrue(TwoSunsRules.Echoes(SpellForms.Tap, new SpellSpec()));
+            Assert.IsTrue(TwoSunsRules.Echoes(SpellForms.Wave, new SpellSpec()));
+            Assert.IsFalse(TwoSunsRules.Echoes(SpellForms.Drill, new SpellSpec()), "a figure cannot fly your own body");
+            Assert.IsFalse(TwoSunsRules.Echoes(SpellForms.Parry, new SpellSpec { HeldStance = true }), "nor hold your stance");
+            Assert.IsFalse(TwoSunsRules.Echoes(SpellForms.Wave, new SpellSpec { Rings = 8 }), "nor a gathered spell");
+            var suns = Upgrade.ById(LightTree.TwoSuns);
+            Assert.IsEmpty(suns.Effects, "no stand-in burst of light on each enemy struck");
+        }
+
+        [Test]
+        public void TheDropsQuickenWalksToTheNearestAndTheSownMenAnswerYourHeavyBlow()
+        {
+            Vector3 at = Vector3.zero;
+            Assert.IsFalse(Hazards.WalkedTo(ref at, new Vector3(0f, 0f, 6f), 1.5f, 1f), "six metres off: still walking");
+            Assert.AreEqual(1f, at.z, 1e-4f, "a step of its walk");
+            for (int i = 0; i < 10 && !Hazards.WalkedTo(ref at, new Vector3(0f, 0f, 6f), 1.5f, 1f); i++) { }
+            Assert.IsTrue(Hazards.WalkedTo(ref at, new Vector3(0f, 0f, 6f), 1.5f, 1f), "there, it stops and strikes");
+            Assert.Less(6f - at.z, 1f, "within reach of it");
+            var drops = Upgrade.ById(Clover.Player.Trees.Duo.VenomRimeDuo.TheDropsQuicken).Effects;
+            var helper = drops.Single();
+            Assert.AreEqual(UpgradeAction.Helper, helper.Do);
+            Assert.AreEqual(4f, helper.Speed, 1e-5f, "it walks");
+            Assert.AreEqual(AfflictionKind.Poison, helper.Affliction);
+            Assert.AreEqual(AfflictionKind.Chill, helper.BitesLay, "a dose and a Chill each strike");
+            Assert.AreEqual(3, helper.Count);
+            Assert.IsTrue(Upgrade.ById(Clover.Player.Trees.Duo.IronThornsDuo.TheSownMen).Spell.AnswersHeavy);
+            Assert.IsTrue(Clover.Player.Forms.MinionRules.Answers(true, true, Vector3.zero, new Vector3(1.2f, 0f, 0f)));
+            Assert.IsFalse(Clover.Player.Forms.MinionRules.Answers(false, true, Vector3.zero, Vector3.right), "only on that same enemy");
+            Assert.IsFalse(Clover.Player.Forms.MinionRules.Answers(true, true, Vector3.zero, new Vector3(3f, 0f, 0f)), "and close enough to strike it");
+        }
+
+        [Test]
+        public void ElderTreeGrowsAtOnceOnSomethingYouGrew()
+        {
+            var master = Upgrade.ById(SpellBranch.MasterId(LifeTree.ElderTree));
+            var quicken = master.Effects.Single();
+            Assert.AreEqual(UpgradeAction.Quicken, quicken.Do, "the whole tree grown at once, not a first root");
+            Assert.AreEqual(1f, quicken.NearGrown, 1e-5f, "planted within a metre of it");
+            var list = new System.Collections.Generic.List<UpgradeEffect> { quicken };
+            var moments = new CastMoments();
+            var learn = Upgrade.ById(LifeTree.ElderTree);
+            Assert.IsTrue(PlayerUpgrades.Quickens(list, learn, moments, 5f, metres => metres >= 1f), "something grown within a metre");
+            Assert.IsFalse(PlayerUpgrades.Quickens(list, learn, moments, 5f, metres => false), "nothing grown near");
+            Assert.IsFalse(PlayerUpgrades.Quickens(list, learn, moments, 5f), "with no way to ask, not quickened");
+        }
+
+        [Test]
+        public void RootWalkComesUpBesideAGrownThingOrSixMetresAhead()
+        {
+            Vector3 up = Clover.Player.Forms.BurrowRules.ComeUp(Vector3.zero, Vector3.forward, true, new Vector3(10f, 0f, 0f));
+            Assert.AreEqual(9.2f, up.x, 1e-4f, "beside it, not inside it");
+            Assert.AreEqual(new Vector3(0f, 0f, 6f), Clover.Player.Forms.BurrowRules.ComeUp(Vector3.zero, Vector3.forward, false, Vector3.zero), "six metres ahead with none");
+            Assert.AreEqual(0.5f, Clover.Player.Forms.BurrowRules.Under, 1e-5f, "up half a second later");
+            var walk = Upgrade.ById(LifeTree.RootWalk);
+            Assert.AreEqual(SpellForms.Burrow, walk.Form);
+            Assert.AreEqual(12f, walk.Spell.Reach, 1e-5f, "a grown thing within twelve metres");
+            Assert.AreEqual(2.5f, walk.Spell.Radius, 1e-5f, "roots within two and a half metres as you come up");
+            var shapes = Upgrade.ById(SpellBranch.ShapeId(LifeTree.RootWalk)).Shapes;
+            Assert.AreEqual(AfflictionKind.Seeded, shapes.Single(each => each.Name == "Up Through Them").Spell.AimAt, "under a Seeded enemy");
+            var changeling = shapes.Single(each => each.Name == "Changeling");
+            Assert.IsTrue(changeling.Spell.SwapsGrown, "the grown thing goes where you stood");
+            Assert.IsFalse(changeling.Effects.Any(each => each.Do == UpgradeAction.Hazard), "no stand-in thornbush");
+        }
     }
 }

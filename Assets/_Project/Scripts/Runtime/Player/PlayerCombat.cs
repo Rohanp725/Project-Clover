@@ -131,6 +131,17 @@ namespace Clover.Player
         /// <summary>For this many seconds the next heavy blow that lands is a critical one.</summary>
         public void PromiseHeavyCritical(float seconds) => HeavyCriticalLeft = Mathf.Max(HeavyCriticalLeft, seconds);
 
+        /// <summary>Stagger the next heavy blow that lands carries on top of its own, and the seconds left for it (Mountain Stance's load).</summary>
+        public float HeavyStaggerLoaded { get; private set; }
+        private float heavyLoadLeft;
+
+        /// <summary>The next heavy blow to land within <paramref name="seconds"/> carries <paramref name="stagger"/> more.</summary>
+        public void LoadNextHeavy(float stagger, float seconds)
+        {
+            HeavyStaggerLoaded = Mathf.Max(0f, stagger);
+            heavyLoadLeft = HeavyStaggerLoaded > 0f ? seconds : 0f;
+        }
+
         /// <summary>Blows that fell in a weapon's tip band, blows taken on a counter's stance, and blows shrugged off inside a swing.</summary>
         public int SweetBlows { get; private set; }
         public int Counters { get; private set; }
@@ -571,6 +582,7 @@ namespace Clover.Player
             TickAspect(deltaTime);
             TurnZanshin(deltaTime);
             if (HeavyCriticalLeft > 0f) HeavyCriticalLeft -= deltaTime;
+            if (heavyLoadLeft > 0f && (heavyLoadLeft -= deltaTime) <= 0f) HeavyStaggerLoaded = 0f;
             if (lightAction == null || heavyAction == null) return;
             // The element's strike follows the carrier's blow once the swing is out (or was cut short).
             if (infusedPending && (Combo.Current != infusedStep || Combo.Phase != AttackPhase.Active)) FireInfused();
@@ -2510,7 +2522,9 @@ namespace Clover.Player
                 }
                 float lasts = kind != AfflictionKind.None && AfflictionSeconds != 1f ? Clover.Gameplay.Afflictions.Spec(kind).Seconds * AfflictionSeconds : 0f;
                 float secondLasts = second != AfflictionKind.None && AfflictionSeconds != 1f ? Clover.Gameplay.Afflictions.Spec(second).Seconds * AfflictionSeconds : 0f;
-                float dealtStagger = (lightStagger + (counter ? counterStagger : 0f) + StaggerOnHit + aspectStagger) * NextBlowStagger * StatStagger * staggerShare * scale * step.BandStagger(distance);
+                // A heavy blow takes what a stance loaded on it (Mountain Stance).
+                float loaded = heavy ? HeavyStaggerLoaded : 0f;
+                float dealtStagger = (lightStagger + (counter ? counterStagger : 0f) + StaggerOnHit + aspectStagger + loaded) * NextBlowStagger * StatStagger * staggerShare * scale * step.BandStagger(distance);
                 if (fromBehind) dealtStagger *= Weapon.BackMultiplier;
                 if (boundTo != null && ReferenceEquals(target, boundTo)) dealtStagger *= BoundStagger;
                 var outcome = target.TakeHit(new Hit(damage, dealtStagger, transform.forward, heavy, carries && ElementSteel.PassesGuard(moveElement.Name), transform.position,
@@ -2606,6 +2620,7 @@ namespace Clover.Player
                 if (outcome != HitOutcome.Blocked && pays)
                 {
                     if (promised) HeavyCriticalLeft = 0f;
+                    if (loaded > 0f) LoadNextHeavy(0f, 0f);
                     Clover.Player.Forms.SpellWorks.Blow(step, target as Component, damage);
                 }
                 finisher |= outcome == HitOutcome.Finisher;

@@ -82,7 +82,14 @@ namespace Clover.Player.Forms
                 off.y = 0f;
                 if (off.magnitude <= run.Cast.Reach * 0.6f + 1f) run.Flag = true;
             }
-            if (run.Count == ElementSubstance.Metal && target != null && ReferenceEquals(target, run.Victim)) run.Flag = true;
+        }
+
+        // Flung Blade's planted blade leaves the list with the run, however the run ends.
+        public override void End(ref SpellRun run)
+        {
+            if (run.Count != ElementSubstance.Metal || run.Done < 0) return;
+            PlantedBlades.Remove(run.Done);
+            run.Done = -1;
         }
 
         private static Vector3 Hand(in SpellRun run) => run.A + Vector3.up * 1.1f + run.B * 0.5f;
@@ -736,6 +743,7 @@ namespace Clover.Player.Forms
         {
             var cast = run.Cast;
             run.Victim = FormKit.Victim(cast);
+            run.Done = -1;
             // The element art: a xiphos with a chrome stripe, and no sign of light over the one it stands in.
             int xiphos = ElementArt.Ready ? ElementArt.Hold(ElementArt.Piece("metal_xiphos_spell")) : -1;
             run.Flag2 = xiphos >= 0;
@@ -792,6 +800,9 @@ namespace Clover.Player.Forms
                 if (t < 1f) return true;
                 run.Phase = 1;
                 run.T1 = run.Age;
+                // Planted: a blade of yours standing in the one it struck, or in the ground, that blows, marks and flights find and drive.
+                run.Done = PlantedBlades.Plant(OrdersOf(cast), alive ? run.Victim : null, alive ? run.Victim.transform.position : new Vector3(run.C.x, run.A.y, run.C.z), Time.time);
+                if (PlantedBlades.Get(run.Done).Kind == PlantedKind.CherryRed) SpellWorks.Marks(run)[1] = FormFx.HoldMark(FormMark.Ring, CherryGlow(1f));
                 // It bites as it lands, lightly: the weight of it comes when it is driven in.
                 if (alive) cast.Combat.StrikeOne(run.Victim, cast.Blow(cast.Damage * 0.25f, 0f, 0), run.A);
                 // The look's own sparks spit off it as it sticks.
@@ -813,30 +824,67 @@ namespace Clover.Player.Forms
                 Vector3 way = run.C - hand;
                 way.y = 0f;
                 way = way.sqrMagnitude > 0.01f ? way.normalized : run.B;
-                if (alive)
+                int planted = run.Done;
+                bool driven = PlantedBlades.TakeDrive(planted, out var held);
+                // Called home with no drive: the oldest in its enemy making way, or every blade called by All Blades Home.
+                bool called = !driven && !PlantedBlades.Standing(planted);
+                int glow = SpellWorks.Marks(run)[1];
+                if (glow >= 0)
+                {
+                    // Cherry Red: a ring of heat round the blade, red as it lands and cooled to dark by six seconds.
+                    FormFx.TintMark(glow, CherryGlow(BladeRules.Glow(held.PlantedAt, Time.time)));
+                    FormFx.PlaceMarkFacing(glow, run.C + Vector3.up * (BladeHover * 0.6f), 0.7f);
+                }
+                if (!alive && !ReferenceEquals(run.Victim, null) && !called && held.NeverFades)
+                {
+                    // Its enemy fell: a blade that never fades stands in the ground where it was.
+                    run.Victim = null;
+                    run.C = new Vector3(run.C.x, run.A.y + 0.3f, run.C.z);
+                    PlantedBlades.ToGround(planted, new Vector3(run.C.x, run.A.y, run.C.z));
+                }
+                if (alive && !called)
                 {
                     run.C = run.Victim.transform.position + Vector3.up * 1.1f;
-                    // It hangs over them point down, bobbing and turning slowly, shivering a moment as it stops.
+                    PlantedBlades.SetPlace(planted, run.Victim.transform.position);
+                    // It hangs over them point down, bobbing and turning slowly, shivering a moment as it stops; the Nail
+                    // hangs lower with each drive, sinking toward the body.
                     float shiver = Mathf.Sin(stuck * 60f) * 9f * Mathf.Exp(-stuck * 6f);
-                    Vector3 over = run.C + Vector3.up * (BladeHover + 0.06f * Mathf.Sin(stuck * 3.2f));
+                    float sunk = held.Kind == PlantedKind.Nail ? 0.45f * held.Drives : 0f;
+                    Vector3 over = run.C + Vector3.up * (BladeHover - sunk + 0.06f * Mathf.Sin(stuck * 3.2f));
                     if (run.Look >= 0) ElementLooks.MoveHeld(run.Look, run.Victim.transform.position);
                     else FormFx.Place(blade, over, Blade(run, Quaternion.LookRotation(Vector3.down, way) * Quaternion.Euler(shiver, 0f, stuck * 50f)), Vector3.one * BladeSize(run, 1.9f));
                     FormFx.PlaceMarkFacing(sign, run.C + Vector3.up * 1.7f, 0.8f * (1f + 0.12f * Mathf.Sin(run.Age * 9f)));
-                    if (run.Flag)
+                    if (driven)
                     {
                         Vector3 foot = run.Victim.transform.position;
-                        cast.Combat.StrikeArea(foot, cast.Spec.Radius, cast.Blow(cast.Damage, cast.Stagger));
+                        cast.Combat.StrikeArea(foot, cast.Spec.Radius, cast.Blow(BladeRules.DriveDamage(held, cast.Damage, Time.time), cast.Stagger));
                         FormKit.Impact(cast, foot, cast.Spec.Radius * 0.75f, 1.1f);
                         if (run.Flag2) ElementArt.Sheet(ElementArt.SheetOf("metal_clang_v2"), run.C, 3.6f, 0.55f);
                         else FormFx.Face(FormMark.Cross, run.C, 3f, FormKit.Lit(cast.Colour, 3.6f), 0.14f, 4.4f, 30f);
+                        if (cast.Upgrades != null) cast.Upgrades.OnBladeDriven(run.Victim, held.Drives);
+                        // The Nail stays for the next heavy blow, until its third.
+                        if (!BladeRules.SpentByDrive(held)) return true;
+                        run.Flag = true;
                     }
-                    else if (stuck < Mathf.Max(0.5f, cast.Spec.Seconds)) return true;
+                    else if (held.NeverFades || stuck < Mathf.Max(0.5f, held.Kind == PlantedKind.Nail ? BladeRules.NailSeconds : cast.Spec.Seconds)) return true;
                 }
-                else if (run.Victim == null && stuck < 0.45f)
+                else if (run.Victim == null && !called)
                 {
-                    // No one was faced: it stands in the ground a moment before it comes back.
-                    FormFx.Place(blade, run.C + Vector3.up * 0.35f - way * 0.3f, Blade(run, Quaternion.LookRotation(way + Vector3.down * 1.2f)), Vector3.one * BladeSize(run, 1.5f));
-                    return true;
+                    Vector3 ground = new Vector3(run.C.x, run.A.y, run.C.z);
+                    if (driven)
+                    {
+                        // Driven where it stands in the ground (To the Blade arriving at it): it strikes round itself.
+                        cast.Combat.StrikeArea(ground, cast.Spec.Radius, cast.Blow(BladeRules.DriveDamage(held, cast.Damage, Time.time), cast.Stagger));
+                        FormKit.Impact(cast, ground, cast.Spec.Radius * 0.75f, 1.1f);
+                        if (cast.Upgrades != null) cast.Upgrades.OnBladeDriven(null, held.Drives);
+                        run.Flag = true;
+                    }
+                    else if (held.NeverFades || stuck < BladeRules.GroundSeconds)
+                    {
+                        // No one was faced, or its enemy fell: it stands in the ground, a moment, or for good when it never fades.
+                        FormFx.Place(blade, run.C + Vector3.up * 0.35f - way * 0.3f, Blade(run, Quaternion.LookRotation(way + Vector3.down * 1.2f)), Vector3.one * BladeSize(run, 1.5f));
+                        return true;
+                    }
                 }
                 run.Phase = 2;
                 run.T1 = run.Age;
@@ -845,17 +893,24 @@ namespace Clover.Player.Forms
                 run.Look = -1;
                 FormFx.ReleaseMark(sign, 0.1f);
                 SpellWorks.Marks(run)[0] = -1;
-                // Called back: it cuts everything on the line home.
+                FormFx.ReleaseMark(glow, 0.1f);
+                SpellWorks.Marks(run)[1] = -1;
+                PlantedBlades.Remove(planted);
+                run.Done = -1;
+                // The Nail is spent where it was driven: it sinks out of sight and does not come home.
+                // (T2 2, apart from the 1 that marks a blade the look holds in the chest.)
+                if (held.Kind == PlantedKind.Nail && run.Flag) run.T2 = 2f;
+                // Called back: it cuts everything on the line home (All Blades Home's call strikes its own line as it is made).
                 Vector3 home = cast.Player.transform.position - run.C;
                 home.y = 0f;
                 Vector3 from = run.C;
                 from.y = run.A.y;
-                cast.Combat.StrikeLane(from, home, home.magnitude, 0.7f, cast.Blow(cast.Damage * 0.35f, 0f, 0), SpellWorks.Once(run));
-                if (!run.Flag2) FormFx.Cut(Vector3.Lerp(run.C, cast.Player.transform.position + Vector3.up * 1.1f, 0.5f), home, home.magnitude, 0.35f, FormKit.Lit(cast.Colour, 3f), 0.2f);
+                if (!called) cast.Combat.StrikeLane(from, home, home.magnitude, 0.7f, cast.Blow(cast.Damage * 0.35f, 0f, 0), SpellWorks.Once(run));
+                if (!run.Flag2 && run.T2 < 1.5f) FormFx.Cut(Vector3.Lerp(run.C, cast.Player.transform.position + Vector3.up * 1.1f, 0.5f), home, home.magnitude, 0.35f, FormKit.Lit(cast.Colour, 3f), 0.2f);
                 return true;
             }
             float sinceCalled = run.Age - run.T1;
-            if (run.Flag && run.T2 < 0.5f && sinceCalled < BladeDrop)
+            if (run.Flag && (run.T2 < 0.5f || run.T2 > 1.5f) && sinceCalled < BladeDrop)
             {
                 // Driven in: it falls point first from over the head into the body before it tears free.
                 float drop = sinceCalled / BladeDrop;
@@ -865,6 +920,8 @@ namespace Clover.Player.Forms
                     Blade(run, Quaternion.LookRotation(Vector3.down, downWay.sqrMagnitude > 0.01f ? downWay.normalized : run.B)), Vector3.one * BladeSize(run, 1.9f));
                 return true;
             }
+            // The Nail driven home for the last time stays in the body: gone with it, not back to the hand.
+            if (run.T2 > 1.5f) return false;
             float back = Mathf.Clamp01((sinceCalled - (run.Flag && run.T2 < 0.5f ? BladeDrop : 0f)) / 0.2f);
             Vector3 to = cast.Player.transform.position + Vector3.up * 1.1f;
             Vector3 flight = to - run.C;
@@ -887,6 +944,11 @@ namespace Clover.Player.Forms
 
         /// <summary>Seconds round 4's flung blade flies before it sticks in the chest (its look's flight, 0.12 to 0.5 s in the recipe).</summary>
         public const float FlungSticks = 0.38f;
+
+        private static BladeOrders OrdersOf(in SpellCast cast) => cast.Upgrades != null ? cast.Upgrades.BladeOrdersFor(cast) : BladeOrders.Plain;
+
+        // Cherry Red's heat: bright cherry as it lands, darkening to a dull glow as it cools.
+        private static Color CherryGlow(float heat) => FormKit.Lit(Color.Lerp(new Color(0.25f, 0.04f, 0.02f), new Color(1f, 0.12f, 0.06f), heat), 1f + 2.5f * heat);
 
         // ---- Light: Glare. A ray from the hand, narrow and straight, with a flare where it starts and on everything it crosses; what it crosses is marked, and the mark is seen.
 
