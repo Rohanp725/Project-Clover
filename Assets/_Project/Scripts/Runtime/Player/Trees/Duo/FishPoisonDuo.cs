@@ -50,15 +50,16 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.Foot));
 
-            // NEEDS: Riptide's wave carrying a slick it crosses (ground-states); now any spell of yours striking an enemy both
-            // Soaked and poisoned doses it two more, once in half a second.
+            // Riptide's wave carries the fouled slicks lying on its lane 7 m on with it (UpgradeAction.CarryGround, Hazards.Drift),
+            // and what the wave strikes Soaked and poisoned takes two doses, once in half a second (CastOf Riptide).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = TheTideBringsIt, Name = "The Tide Brings It", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Wave,
                 Description = "Riptide's wave, crossing a fouled slick, carries it: everything the wave carries takes two doses.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, Needs = AfflictionKind.Soaked, Needs2 = AfflictionKind.Poison, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Poison, Stacks = 2, Cooldown = 0.5f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, CastOf = WaterTree.Riptide, At = EffectAt.Self, Do = UpgradeAction.CarryGround, ThroughGround = Reactions.FouledSlick, Reach = 7f, Radius = 1.5f, Speed = 8f, Seconds = 0.8f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, CastOf = WaterTree.Riptide, Needs = AfflictionKind.Soaked, Needs2 = AfflictionKind.Poison, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Poison, Stacks = 2, Cooldown = 0.5f },
                 },
             }, HeartPattern.LeftLow));
 

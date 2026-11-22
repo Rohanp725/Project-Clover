@@ -18,15 +18,13 @@ Water are both carried.
 ## fishpoison.tide
 **What it does.** When Riptide's wave crosses a poisoned slick, it carries the poison with it. Everything the wave carries takes two doses.
 
-**When it happens.** For now, each time one of your spells hits an enemy that is both Soaked and poisoned, while you carry both Poison and Water.
+**When it happens.** Each time you cast Riptide, while you carry both Poison and Water.
 
-**The numbers.** Mix, 3 Shards. Two doses, at most once every half second.
+**The numbers.** Mix, 3 Shards. Every fouled slick lying in the wave's path, up to 7 metres ahead of you, rides along with the wave for 0.8 seconds, about 6 metres, and stays where it stops. It still soaks and floats what stands in it on the way. Each enemy the wave hits that is Soaked and poisoned takes two doses, at most once every half second.
 
 **Works with.** Fish Poison (more doses means more floats), Fast Water, Water's Riptide.
 
 **Example.** Wash a poisoned pack toward you, and each one arrives sicker.
-
-**Not built yet.** Riptide doesn't pick up the slick it crosses yet. For now, any spell that hits a Soaked, poisoned enemy adds the two doses.
 
 ## fishpoison.wideslick
 **What it does.** Fish Poison's slick is 4 metres across and lasts 2 seconds longer.

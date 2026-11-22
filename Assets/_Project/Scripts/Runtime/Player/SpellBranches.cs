@@ -89,8 +89,18 @@ namespace Clover.Player
         public static bool OwnBranch(Upgrade owner, Upgrade castSource, string element)
         {
             if (owner == null || string.IsNullOrEmpty(owner.Branch)) return false;
-            if (castSource == null) return SpellSlots.IsBase(owner.Branch) && (string.IsNullOrEmpty(element) || owner.Branch == SpellSlots.BaseId(element));
-            return castSource.Id == owner.Branch || castSource.Branch == owner.Branch;
+            return CastOf(owner.Branch, castSource, element);
+        }
+
+        /// <summary>
+        /// True when what was cast (<paramref name="castSource"/>; null for a base spell cast by its kit of <paramref name="element"/>)
+        /// is the spell of <paramref name="branch"/> (its Learn id), through any of its marks (UpgradeEffect.CastOf).
+        /// </summary>
+        public static bool CastOf(string branch, Upgrade castSource, string element)
+        {
+            if (string.IsNullOrEmpty(branch)) return false;
+            if (castSource == null) return SpellSlots.IsBase(branch) && (string.IsNullOrEmpty(element) || branch == SpellSlots.BaseId(element));
+            return castSource.Id == branch || castSource.Branch == branch;
         }
 
         // ---- What is cast.

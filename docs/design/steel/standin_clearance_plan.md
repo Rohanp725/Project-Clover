@@ -491,3 +491,21 @@ default.
     - c) Drop it.
 
     **Recommended: a.** The rule exists and the foam is only 6 s.
+14. **Does The Closed Ring hold a god?** (pass 8, closed-ring). The ring is a wall nothing walks or is thrown across for its 10 s.
+    - a) A god walks through it; every other enemy is held (built so).
+    - b) A god is held too.
+    - c) A god is held, but its leaps still cross.
+
+    **Recommended: a.** A god's fight should not stall for ten seconds on one keystone.
+15. **Low Mist's "a dodge or roll in it costs them a dose"** (pass 8, ground-states). Whose dodge?
+    - a) Your own dodge begun in the mist doses every enemy in it once (built so).
+    - b) An enemy's own leap or step back in the mist doses it.
+    - c) Drop it.
+
+    **Recommended: a.** Enemies rarely leap or step back, and your dodge is the thing you choose to do in the mist.
+16. **Eagle's Sight's cut at the end of the carried dodge** (pass 8, dodge-path).
+    - a) A burst of light at arm's length, 10 damage, 10 stagger and a Mark, and your next weapon blow is critical (built so).
+    - b) A real sword cut played as you arrive (a new clip, roll_cut).
+    - c) No cut: the carry alone, and the critical next blow.
+
+    **Recommended: a.** It needs no new clip and reads as the eagle striking.

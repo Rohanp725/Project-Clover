@@ -1445,6 +1445,8 @@ namespace Clover.Player
                 // A base spell cast through its Learn mark (its shape) is still the base spell.
                 if (effect.BaseSpell && castSource != null && !castSource.IsBaseSpell) continue;
                 if (effect.OwnBranch && !SpellBranches.OwnBranch(effect.Owner, castSource, baseElement)) continue;
+                // Only another branch's casts (The Tide Brings It answers Riptide's).
+                if (!string.IsNullOrEmpty(effect.CastOf) && !SpellBranches.CastOf(effect.CastOf, castSource, baseElement)) continue;
                 if (effect.SpentAtLeast > 0 && spent < effect.SpentAtLeast) continue;
                 // A standing thing's moment is its own mark's alone.
                 if ((trigger == UpgradeTrigger.StandingStruck || trigger == UpgradeTrigger.StandingBurst) && !AnswersStanding(effect, standingOwner, standingHeavy)) continue;
@@ -2367,6 +2369,13 @@ namespace Clover.Player
                     }
                     fanTaken.Clear();
                     coatStruck.Clear();
+                    break;
+                }
+                case UpgradeAction.CarryGround:
+                {
+                    // The named ground lying on the lane ahead rides on with the spell (Riptide's wave carrying the slicks).
+                    Vector3 way = new Vector3(aim.x, 0f, aim.z).normalized;
+                    GroundsCarried += Hazards.Drift(effect.ThroughGround, self, way, Or(effect.Reach, 7f) * spread, Or(effect.Radius, 1.5f), way * Or(effect.Speed, 8f), Or(effect.Seconds, 0.8f));
                     break;
                 }
                 case UpgradeAction.FreeDodge:
@@ -3354,6 +3363,8 @@ namespace Clover.Player
         /// <summary>Coated enemies that went up (UpgradeAction.LightCoat), and grounds whose standers were dosed at once (Low Mist): for probes.</summary>
         public int CoatsLit { get; private set; }
         public int GroundsDosed { get; private set; }
+        /// <summary>Patches of ground carried on by a spell (UpgradeAction.CarryGround): for probes.</summary>
+        public int GroundsCarried { get; private set; }
         private readonly HashSet<IDamageable> coatStruck = new HashSet<IDamageable>();
 
         /// <summary>Enemies driven against your ring's stones and stopped there (The Closed Ring): for probes.</summary>

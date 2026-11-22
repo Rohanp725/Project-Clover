@@ -41,6 +41,8 @@ namespace Clover.World
             public HazardSpec Spec;
             public Vector3 Position, Velocity;
             public float Delay, Left, UntilBite, UntilShow;
+            // Seconds it rides on before it settles again (a slick carried by a wave).
+            public float DriftLeft;
             public bool Burst, Turned;
             public int Bitten;
         }
@@ -246,6 +248,29 @@ namespace Clover.World
                 zone.Active = false;
             }
             return taken;
+        }
+
+        /// <summary>
+        /// Every settled patch of the named ground lying on the lane <paramref name="length"/> long from <paramref name="from"/> along
+        /// <paramref name="way"/>, <paramref name="half"/> either side, rides on at <paramref name="velocity"/> for <paramref name="seconds"/>,
+        /// then settles where it was brought (The Tide Brings It: Riptide's wave carrying the slicks it crosses). Returns how many.
+        /// </summary>
+        public static int Drift(string name, Vector3 from, Vector3 way, float length, float half, Vector3 velocity, float seconds)
+        {
+            if (instance == null || string.IsNullOrEmpty(name) || seconds <= 0f) return 0;
+            int carried = 0;
+            velocity.y = 0f;
+            for (int i = 0; i < instance.zones.Length; i++)
+            {
+                ref var zone = ref instance.zones[i];
+                if (!zone.Active || zone.Delay > 0f || zone.Spec.Name != name || zone.Velocity.sqrMagnitude > 0.01f) continue;
+                if (!GroundRules.OnLane(zone.Position, from, way, length, half + zone.Spec.Radius)) continue;
+                zone.Velocity = velocity;
+                zone.DriftLeft = seconds;
+                zone.Left = Mathf.Max(zone.Left, seconds);
+                carried++;
+            }
+            return carried;
         }
 
         /// <summary>True when <paramref name="at"/> stands in a settled patch of the player's ground of the given name (Wet Ground's sand, Low Mist's sheet).</summary>
@@ -629,6 +654,12 @@ namespace Clover.World
                             for (int puff = 0; puff < 5; puff++)
                                 Vfx.Play(VfxKind.Fire, centre + Quaternion.Euler(0f, puff * 72f, 0f) * Vector3.forward * (zone.Spec.Radius * 0.55f), Vector3.up, 0.8f);
                     }
+                }
+                // Carried for a while (a slick on a wave), then it settles where it was brought.
+                if (zone.DriftLeft > 0f)
+                {
+                    zone.DriftLeft -= deltaTime;
+                    if (zone.DriftLeft <= 0f) zone.Velocity = Vector3.zero;
                 }
                 bool moving = zone.Velocity.sqrMagnitude > 0.01f;
                 if (moving) Steer(ref zone, i, deltaTime);

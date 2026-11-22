@@ -319,6 +319,11 @@ namespace Clover.Player
         /// </summary>
         LightCoat,
         /// <summary>
+        /// Every settled patch of the named ground (ThroughGround) lying on a lane Reach long and Radius either side ahead of you
+        /// rides on along your aim at Speed for Seconds, then settles (The Tide Brings It: Riptide's wave carrying the slicks).
+        /// </summary>
+        CarryGround,
+        /// <summary>
         /// You scatter for Seconds: the body is not drawn and nothing can touch you, then you stand again where you are by then
         /// (Gone to Ash: scattered as ash, standing again 0.4 s later, behind the attacker or where you were).
         /// </summary>

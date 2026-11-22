@@ -10,6 +10,8 @@ namespace Clover.Player.Trees
         public const string Cracked = "thermalshock.cracked";
         /// <summary>Seized's live film by name (UpgradeEffect.Ground): what Grounded's discharge runs through.</summary>
         public const string LiveWater = "seized.livewater";
+        /// <summary>Fish Poison's fouled slick by name (UpgradeEffect.Ground): what The Tide Brings It's wave carries.</summary>
+        public const string FouledSlick = "fishpoison.slick";
         public const string WindRooted = "windthrow.rooted";
         public const string Bulge = "frostheave.bulge";
         public const string Rusting = "rust.rusting";

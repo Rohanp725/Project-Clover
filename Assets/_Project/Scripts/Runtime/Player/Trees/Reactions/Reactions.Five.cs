@@ -158,7 +158,7 @@ namespace Clover.Player.Trees
                 "Poisoned meets Soaked: the water runs off it fouled into a slick that soaks all in it. Whatever in the slick is dosed four deep floats up stunned, and your next weapon blow on it is critical.",
                 6f,
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Radius = 1.5f, Seconds = 5f, Interval = 0.5f, Affliction = AfflictionKind.Soaked, Stacks = 1,
-                    InsideSpares = true, InsideDo = FloatInside(Floating, 4, 5f) },
+                    Ground = FouledSlick, InsideSpares = true, InsideDo = FloatInside(Floating, 4, 5f) },
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Needs = AfflictionKind.Poison, NeedsAtLeast = 4, Ranks = EnemyRank.Plain, Do = UpgradeAction.Lift, Seconds = 1.5f },
                 // An elite hangs 0.6 of a lift's time: 0.83 s asked is the entry's 0.5 s.
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Needs = AfflictionKind.Poison, NeedsAtLeast = 4, Ranks = EnemyRank.Elite, Do = UpgradeAction.Lift, Seconds = 0.83f },

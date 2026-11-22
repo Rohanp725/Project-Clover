@@ -234,6 +234,21 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void RiptidesWaveCarriesTheFouledSlicksItCrosses()
+        {
+            var tide = Upgrade.ById(Clover.Player.Trees.Duo.FishPoisonDuo.TheTideBringsIt).Effects;
+            var carry = tide.Single(each => each.Do == UpgradeAction.CarryGround);
+            Assert.AreEqual(WaterTree.Riptide, carry.CastOf, "only Riptide's wave");
+            Assert.AreEqual(Reactions.FouledSlick, carry.ThroughGround);
+            Assert.AreEqual(Reactions.FouledSlick, ReactionOf(AfflictionKind.Poison, AfflictionKind.Soaked).Single(each => each.Do == UpgradeAction.Hazard).Ground, "the slick is named");
+            Assert.IsTrue(tide.All(each => each.CastOf == WaterTree.Riptide), "not any spell of yours");
+            Assert.IsTrue(SpellBranches.CastOf(WaterTree.Riptide, null, Elements.Water), "the kit's own cast is Riptide");
+            Assert.IsFalse(SpellBranches.CastOf(WaterTree.Riptide, null, Elements.Fire), "Fire's kit is not");
+            Assert.IsFalse(SpellBranches.CastOf("", null, Elements.Water));
+            Assert.AreEqual(0, Hazards.Drift(Reactions.FouledSlick, Vector3.zero, Vector3.forward, 7f, 1.5f, Vector3.forward, 0.8f), "nothing to carry with no hazards in the scene");
+        }
+
+        [Test]
         public void TheDrawnLineStandsAcrossYourFrontHoldingWhoCrosses()
         {
             var shape = Upgrade.ById(SpellBranch.ShapeId(LightTree.RingOfSpears)).Shapes.Single(each => each.Name == "The Drawn Line");
