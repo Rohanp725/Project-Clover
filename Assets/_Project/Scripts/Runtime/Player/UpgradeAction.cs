@@ -304,5 +304,10 @@ namespace Clover.Player
         BurstGround,
         /// <summary>For Seconds, nothing interrupts your heavy blow being wound up or swung (The Wreck: struck from inside it).</summary>
         HeavyUnbroken,
+        /// <summary>
+        /// You scatter for Seconds: the body is not drawn and nothing can touch you, then you stand again where you are by then
+        /// (Gone to Ash: scattered as ash, standing again 0.4 s later, behind the attacker or where you were).
+        /// </summary>
+        Scatter,
     }
 }

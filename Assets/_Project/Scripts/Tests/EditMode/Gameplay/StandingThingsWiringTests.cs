@@ -538,6 +538,18 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void GoneToAshScattersAndStandsAgain()
+        {
+            var learn = Upgrade.ById(DarkTree.GoneToAsh).Effects;
+            Assert.AreEqual(UpgradeAction.Step, learn[0].Do, "the step behind stays first, for the shapes that set it aside");
+            var scatter = learn.Single(each => each.Do == UpgradeAction.Scatter);
+            Assert.AreEqual(0.4f, scatter.Seconds, 1e-5f, "standing again 0.4 s later");
+            Assert.AreEqual(learn.Length - 1, System.Array.IndexOf(learn, scatter), "last, so the shapes keep it");
+            foreach (var shape in Upgrade.ById(SpellBranch.ShapeId(DarkTree.GoneToAsh)).Shapes)
+                if (shape.SetsAside != null) CollectionAssert.DoesNotContain(shape.SetsAside, learn.Length - 1, shape.Name + " still scatters");
+        }
+
+        [Test]
         public void TheSeaComesInQuickensYouOnlyInYourOwnWater()
         {
             var sea = Upgrade.ById(WaterTree.TheSeaComesIn);

@@ -1338,6 +1338,14 @@ namespace Clover.Player
             Stats.SetWhen(StatWhen.InOwnFire, inFire);
             Stats.SetWhen(StatWhen.InOwnWater, Hazards.OwnGroundUnder(transform.position, AfflictionKind.Soaked));
             if (combat != null) combat.HeavyUnbroken = heavyUnbrokenByMarks || Time.time < heavyUnbrokenUntil;
+            // Scattered (Gone to Ash): stand again where you are now, out of the ash.
+            if (scatteredUntil > 0f && Time.time >= scatteredUntil)
+            {
+                scatteredUntil = 0f;
+                if (player != null) player.Hidden = false;
+                var standing = OwnElement(null);
+                for (int i = 0; i < 4; i++) ElementLook.Puff(standing, transform.position + Vector3.up * (0.4f + 0.4f * i), Vector3.down, 0.8f);
+            }
             SurgeHeld = inFire;
             if (hasTideClock)
             {
@@ -2222,6 +2230,16 @@ namespace Clover.Player
                     break;
                 case UpgradeAction.PlayLook:
                     break;
+                case UpgradeAction.Scatter:
+                {
+                    float scattered = Or(effect.Seconds, 0.4f);
+                    if (player != null) player.Hidden = true;
+                    if (defence != null) defence.UntouchableUntil = Mathf.Max(defence.UntouchableUntil, Time.time + scattered);
+                    scatteredUntil = Time.time + scattered;
+                    for (int i = 0; i < 4; i++) ElementLook.Puff(held, self + Vector3.up * (0.4f + 0.4f * i), Vector3.up, 0.8f);
+                    Scatters++;
+                    break;
+                }
                 case UpgradeAction.HeavyUnbroken:
                     heavyUnbrokenUntil = Mathf.Max(heavyUnbrokenUntil, Time.time + Or(effect.Seconds, 1f));
                     combat.HeavyUnbroken = true;
@@ -3277,6 +3295,12 @@ namespace Clover.Player
         /// <summary>True when an effect answers ground of the given name told of one standing in it (UpgradeTrigger.InGround).</summary>
         public static bool AnswersGround(UpgradeEffect effect, string ground) =>
             effect != null && !string.IsNullOrEmpty(ground) && effect.Condition == ground;
+
+        // Until when you are scattered (Gone to Ash): the body comes back then; 0 when not scattered.
+        private float scatteredUntil;
+
+        /// <summary>Times you scattered and stood again (UpgradeAction.Scatter): for probes.</summary>
+        public int Scatters { get; private set; }
 
         // Heavy blows unbroken by the marks in force, and until when by ground stood in (The Wreck).
         private bool heavyUnbrokenByMarks;

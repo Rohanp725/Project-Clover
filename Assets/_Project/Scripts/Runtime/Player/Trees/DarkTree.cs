@@ -116,7 +116,8 @@ namespace Clover.Player.Trees
 
             // The counter: the parry form turns the first blow and answers with a Curse; you step behind the attacker, and your
             // first blow on it within a second is struck as a heavy (UpgradeAction.NextHeavy) and heals; nothing struck, it waits
-            // 5 s (SpellSpec.MissedWait). NEEDS: the scattering as ash and standing again 0.4 s later (form-pieces).
+            // 5 s (SpellSpec.MissedWait). You scatter as ash and stand again 0.4 s later, untouchable meanwhile (UpgradeAction.Scatter,
+            // last of the Learn's effects so the shapes that set aside its step stand again where you were).
             SpellBranch.Add(to, E, GoneToAsh, "Gone to Ash", SpellRole.Counter, BranchPattern.MiddleB, Dread, SpellForms.Parry,
                 new SpellSpec { Seconds = 1.2f, Reach = 2.5f, Arc = 90f, Damage = 0f, Stagger = 0f, Stacks = 1, MissedWait = 0.5f },
                 "You stand with arms crossed as grey ash runs over you, for up to 1.2 seconds. The first blow to land scatters you as a cloud of ash, and you take nothing. A moment later you stand again behind the attacker. It is Cursed, and your first blow within a second is a heavy blow that heals you 10. If nothing strikes, it waits only half as long.",
@@ -153,6 +154,7 @@ namespace Clover.Player.Trees
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.NextHeavy, Seconds = 1f, Cooldown = 0.5f },
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Ashen, Seconds = 1f, EndsWith = ConditionBlow.Weapon } },
                     new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Ashen, By = StruckBy.Weapon, Do = UpgradeAction.Heal, Amount = 10f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Scatter, Seconds = 0.4f, Cooldown = 0.5f },
                 });
 
             // The print is laid on everything the reaction struck (UpgradeTrigger.ReactionStruck), keeping the damage its blow dealt
