@@ -34,8 +34,8 @@ namespace Clover.Player.Trees.Duo
             const string A = Elements.Dark, B = Elements.Wind;
 
             // NEEDS: things thrown from an enemy riding downwind body to body (thrown-from-enemy): Black Storm's streak running
-            // on from one to the next; now the two nearest within 6 m are winded, Cursed and Unsteady at once. A boon that ends
-            // with the next dodge (until-dodge): Second Wind's next dodge free; now every dodge in the 3 s.
+            // on from one to the next; now the two nearest within 6 m are winded, Cursed and Unsteady at once. Second Wind's free
+            // dodge ends with the next dodge (UpgradeEffect.UntilDodge).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Breath Taken: Black Storm or Second Wind", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -63,7 +63,7 @@ namespace Clover.Player.Trees.Duo
                         {
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Stamina, Amount = 25f },
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Mana, Amount = 8f },
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Boon, Stat = PlayerStat.DodgeStamina, Amount = -1f, Seconds = 3f },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Boon, Stat = PlayerStat.DodgeStamina, Amount = -1f, Seconds = 3f, UntilDodge = true },
                         }),
                     },
                 },

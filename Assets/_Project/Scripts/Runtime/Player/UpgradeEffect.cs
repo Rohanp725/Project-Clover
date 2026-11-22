@@ -120,6 +120,8 @@ namespace Clover.Player
         public float OnBeat;
         /// <summary>For Boon: it ends with the next swing of the weapon that lands, if that comes before its time is up.</summary>
         public bool UntilBlow;
+        /// <summary>For Boon: it ends with the player's next dodge, if that comes before its time is up (Second Wind's next dodge free; the ledger's until-dodge).</summary>
+        public bool UntilDodge;
         /// <summary>It happens only if its mark's count holds this many, and spends them.</summary>
         public int Spends;
         /// <summary>It happens only if its mark's count holds any, spends them all, and carries how many were spent (for <see cref="PerStack"/>).</summary>

@@ -400,6 +400,8 @@ namespace Clover.Player
         private bool wasLow, wasFull;
         private float baseGuardChip = 0.35f;
         private readonly UpgradeEffect[] untilBlow = new UpgradeEffect[8];
+        private readonly UpgradeEffect[] untilDodge = new UpgradeEffect[4];
+        private int untilDodgeCount;
         private int untilBlowCount;
         private readonly HashSet<IDamageable> passExcept = new HashSet<IDamageable>();
         /// <summary>Doses passed on by the Pass action, counted for probes.</summary>
@@ -1877,6 +1879,7 @@ namespace Clover.Player
                 case UpgradeAction.Boon:
                     Stats.AddBoon(effect.Stat, effect.Amount, Or(effect.Seconds, 5f) * Stats.Multiplier(PlayerStat.BoonSeconds));
                     if (effect.UntilBlow && untilBlowCount < untilBlow.Length) untilBlow[untilBlowCount++] = effect;
+                    if (effect.UntilDodge && untilDodgeCount < untilDodge.Length) untilDodge[untilDodgeCount++] = effect;
                     ElementLook.Sparks(held, self + Vector3.up * 1.2f, Vector3.up, 0.6f);
                     break;
                 case UpgradeAction.Ward:
@@ -3001,6 +3004,13 @@ namespace Clover.Player
         /// <summary>A dodge has begun from this place, in this direction.</summary>
         public void OnDodge(Vector3 from, Vector3 direction, float distance, float seconds)
         {
+            // Boons that were for one dodge have had it (Second Wind).
+            for (int i = 0; i < untilDodgeCount; i++)
+            {
+                Stats.EndBoon(untilDodge[i].Stat, untilDodge[i].Amount);
+                untilDodge[i] = null;
+            }
+            untilDodgeCount = 0;
             dodgeFrom = from;
             DodgeCount++;
             LastDodgeFrom = from;

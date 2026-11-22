@@ -270,6 +270,14 @@ namespace Clover.Tests
             Assert.AreEqual(Afflictions.Depth(AfflictionKind.Poison) + 4, set.DepthOf(AfflictionKind.Poison));
         }
 
+        [Test]
+        public void SecondWindsFreeDodgeIsForOneDodge()
+        {
+            var wind = Upgrade.ById(BreathTakenDuo.Shape).Shapes.SelectMany(shape => shape.Effects).Single(effect => effect.Stat == PlayerStat.DodgeStamina);
+            Assert.IsTrue(wind.UntilDodge, "the next dodge free, not every dodge in 3 s");
+            Assert.AreEqual(3f, wind.Seconds, 1e-5f, "within 3 s");
+        }
+
         private sealed class Afflicted : IAfflictable
         {
             public Afflicted(AfflictionSet set) => Afflictions = set;

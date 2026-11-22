@@ -9,13 +9,13 @@ both carried.
 
 **When it happens.** Every time Breath Taken goes off while you carry both Dark and Wind. Breath Taken goes off when a Curse lands on an Unsteady enemy, or when Unsteady lands on a cursed one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Breath Taken.
 
-**The numbers.** Mix, 3 Shards. Both shapes, same as the plain one: the enemy is winded for 1.5 seconds (0.6 for an elite). While winded, it can't start an attack, and it takes 30% more stagger. Black Storm: the two nearest other enemies within 6 metres are also winded for 1.5 seconds, and each gets a Curse and an Unsteady. Second Wind: you get 25 stamina and 8 mana, and your dodges cost no stamina for 3 seconds. After Breath Taken goes off on an enemy, it can't go off on that enemy again for 6 seconds.
+**The numbers.** Mix, 3 Shards. Both shapes, same as the plain one: the enemy is winded for 1.5 seconds (0.6 for an elite). While winded, it can't start an attack, and it takes 30% more stagger. Black Storm: the two nearest other enemies within 6 metres are also winded for 1.5 seconds, and each gets a Curse and an Unsteady. Second Wind: you get 25 stamina and 8 mana, and your next dodge within 3 seconds costs no stamina. After Breath Taken goes off on an enemy, it can't go off on that enemy again for 6 seconds.
 
 **Works with.** Ill Omen to set it up, Short of Breath, The Last Breath, Blown Through, Wind From the Grave.
 
-**Example.** A pack is about to swing. Use Black Storm, and three of them double over. A long fight on your own: use Second Wind, and dodge as much as you like.
+**Example.** A pack is about to swing. Use Black Storm, and three of them double over. A long fight on your own: use Second Wind, and get a free dodge each time it goes off.
 
-**Not built yet.** Black Storm's streak doesn't yet travel with the wind from one enemy to the next. For now, the two nearest enemies are winded at the same time. Second Wind makes every dodge free for its 3 seconds, instead of only the next one.
+**Not built yet.** Black Storm's streak doesn't yet travel with the wind from one enemy to the next. For now, the two nearest enemies are winded at the same time.
 
 ## breathtaken.illomen
 **What it does.** A perfect dodge Curses the enemy you dodged and gives it two stacks of Unsteady.
