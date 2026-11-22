@@ -30,6 +30,54 @@ namespace Clover.Player
             Cooldown == 0f && Mana == 0f && Damage == 0f && Stagger == 0f && Reach == 0f && Radius == 0f && Arc == 0f && Seconds == 0f
             && Interval == 0f && Count == 0 && Stacks == 0 && Delay == 0f && Speed == 0f && LingerDamage == 0f && AfflictionSeconds == 0f;
 
+        /// <summary>
+        /// Writes what it adds to <paramref name="learn"/>'s numbers onto <paramref name="spec"/>'s (an Empower over a shape that
+        /// takes its rise: <see cref="EmpowerOverShape.Adds"/>). Its wait and price are set as written.
+        /// </summary>
+        public void AddOver(SpellSpec spec, SpellSpec learn)
+        {
+            if (spec == null) return;
+            if (learn == null)
+            {
+                ApplyTo(spec);
+                return;
+            }
+            if (Cooldown > 0f) spec.Cooldown = Cooldown;
+            if (Mana > 0f) spec.Cost = Mana;
+            if (Damage > 0f) spec.Damage = System.Math.Max(0f, spec.Damage + Damage - learn.Damage);
+            if (Stagger > 0f) spec.Stagger = System.Math.Max(0f, spec.Stagger + Stagger - learn.Stagger);
+            if (Reach > 0f) spec.Reach = System.Math.Max(0.1f, spec.Reach + Reach - learn.Reach);
+            if (Radius > 0f) spec.Radius = System.Math.Max(0.1f, spec.Radius + Radius - learn.Radius);
+            if (Arc > 0f) spec.Arc = System.Math.Max(1f, spec.Arc + Arc - learn.Arc);
+            if (Seconds > 0f) spec.Seconds = System.Math.Max(0.05f, spec.Seconds + Seconds - learn.Seconds);
+            if (Interval > 0f) spec.Interval = System.Math.Max(0.05f, spec.Interval + Interval - learn.Interval);
+            if (Count > 0) spec.Count = System.Math.Max(1, spec.Count + Count - learn.Count);
+            if (Stacks > 0) spec.Stacks = System.Math.Max(0, spec.Stacks + Stacks - learn.Stacks);
+            if (Delay > 0f) spec.Delay = System.Math.Max(0f, spec.Delay + Delay - learn.Delay);
+            if (Speed > 0f) spec.Speed = System.Math.Max(0.1f, spec.Speed + Speed - learn.Speed);
+            if (LingerDamage > 0f) spec.LingerDamage = System.Math.Max(0f, spec.LingerDamage + LingerDamage - learn.LingerDamage);
+            if (AfflictionSeconds > 0f) spec.AfflictionSeconds = System.Math.Max(0f, spec.AfflictionSeconds + AfflictionSeconds - learn.AfflictionSeconds);
+        }
+
+        /// <summary>Puts back from <paramref name="before"/> every number this change sets (a shape keeping its own under an Empower).</summary>
+        public void KeepOwn(SpellSpec spec, SpellSpec before)
+        {
+            if (spec == null || before == null) return;
+            if (Damage > 0f) spec.Damage = before.Damage;
+            if (Stagger > 0f) spec.Stagger = before.Stagger;
+            if (Reach > 0f) spec.Reach = before.Reach;
+            if (Radius > 0f) spec.Radius = before.Radius;
+            if (Arc > 0f) spec.Arc = before.Arc;
+            if (Seconds > 0f) spec.Seconds = before.Seconds;
+            if (Interval > 0f) spec.Interval = before.Interval;
+            if (Count > 0) spec.Count = before.Count;
+            if (Stacks > 0) spec.Stacks = before.Stacks;
+            if (Delay > 0f) spec.Delay = before.Delay;
+            if (Speed > 0f) spec.Speed = before.Speed;
+            if (LingerDamage > 0f) spec.LingerDamage = before.LingerDamage;
+            if (AfflictionSeconds > 0f) spec.AfflictionSeconds = before.AfflictionSeconds;
+        }
+
         /// <summary>Writes every number it sets over <paramref name="spec"/>'s.</summary>
         public void ApplyTo(SpellSpec spec)
         {

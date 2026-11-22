@@ -163,7 +163,7 @@ design yet, its **Not built yet** line says what is missing.
 
 **Works with.** Deep Crack and Heavy Water on the crowd King Tide knocks down; Blowhole and your blade on the one Out to Sea brings to you.
 
-**Not built yet.** King Tide should keep its own 5 metres when you buy the Empower (for now, the Empower's 10 metres wins). Out to Sea should pull you back along with the enemy.
+**Not built yet.** Out to Sea should pull you back along with the enemy.
 
 **Example.** An archer stands behind three shields. Out to Sea brings it to your feet, alone.
 

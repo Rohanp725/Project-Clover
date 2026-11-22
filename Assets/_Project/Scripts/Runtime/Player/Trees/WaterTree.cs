@@ -205,8 +205,8 @@ namespace Clover.Player.Trees
                 UpgradeIcons.Boot,
                 new Empower { Cooldown = 6f, Reach = 10f },
                 "The Tide Turns waits 6 seconds, not 8, and its flood runs five metres past.",
-                // NEEDS: the Empower's longer flood not reaching past this shape's own (an Empower sets its numbers after the shape's).
-                new ShapeDef { Name = "King Tide",
+                // The Empower's longer flood does not reach past this shape's own (EmpowerOverShape.KeepsOwn); its shorter wait does.
+                new ShapeDef { Name = "King Tide", Empowered = EmpowerOverShape.KeepsOwn,
                     Description = "The flood comes in four metres wide and throws what it carries down for a moment, but it stops where you began. For a crowd.",
                     Change = new SpellChange { Radius = 2f, Reach = 5f },
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = KingTideDown, Seconds = 0.6f, Flags = ConditionFlags.Down } } } },

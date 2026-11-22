@@ -172,7 +172,7 @@ design yet, its **Not built yet** line says what is missing.
 
 **Works with.** Cold Read and Splinter Ward (Breath on the Steel); Winter Wall and Hanging Ice, to keep enemies in the fog (Freezing Fog).
 
-**Not built yet.** Breath on the Steel should only work for six seconds after you cast it. For now, every guard chills and every perfect guard freezes while you have the shape picked, whether you cast it or not. With the Empower, Freezing Fog reaches a 4-metre radius instead of its own 2.5 (the Empower's numbers are applied after the shape's).
+**Not built yet.** Breath on the Steel should only work for six seconds after you cast it. For now, every guard chills and every perfect guard freezes while you have the shape picked, whether you cast it or not.
 
 **Example.** A hallway and a pack: put Freezing Fog in the doorway, and they reach you with three or four stacks.
 

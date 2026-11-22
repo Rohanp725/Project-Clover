@@ -149,8 +149,8 @@ namespace Clover.Player.Trees
                 UpgradeIcons.Shield,
                 new Empower { Cooldown = 7f, Radius = 4f },
                 "Rime Guard waits 7 seconds, not 9, and its fog reaches four metres.",
-                // NEEDS: the Empower's wider fog not reaching past this shape's own (an Empower sets its numbers after the shape's).
-                new ShapeDef { Name = "Freezing Fog",
+                // The Empower's wider fog does not reach past this shape's own (EmpowerOverShape.KeepsOwn); its shorter wait does.
+                new ShapeDef { Name = "Freezing Fog", Empowered = EmpowerOverShape.KeepsOwn,
                     Description = "The fog stays where it was breathed, five metres wide, and everything in it gains a Chill a second. Hold a door.",
                     Change = new SpellChange { Radius = 2.5f, Stacks = 1 } },
                 // NEEDS: the rime on the guard for 6 s after the cast. Until then, while this shape is worn, every guard chills and

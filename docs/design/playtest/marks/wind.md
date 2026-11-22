@@ -174,7 +174,7 @@ design yet, its **Not built yet** line says what is missing.
 
 **Works with.** Turned About (another way to get behind an enemy); Indrawn Breath and Against the Wall (Wide Circle around a crowd).
 
-**Not built yet.** Half Circle should run half the circle (for now, it steps through the enemy). The Empower's longer hang time also applies to Wide Circle's short one (the Empower's numbers are applied after the shape's, so with the Empower, enemies hang for 1.5 seconds).
+**Not built yet.** Half Circle should run half the circle (for now, it steps through the enemy). With the Empower, Wide Circle's short hang grows by the same 0.3 seconds the plain circle's does (0.9 seconds in all).
 
 **Example.** A shield bearer is facing you. Use Half Circle, and the first cut lands as a critical hit on its unguarded back.
 

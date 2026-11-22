@@ -157,8 +157,8 @@ namespace Clover.Player.Trees
                     Description = "You run only half the ring and end on its far side, behind it. Nothing is lifted, and your first blow on its back is critical.",
                     Spell = new SpellSpec { Reach = 5f, Damage = 6f, Stagger = 10f, Stacks = 1, Seconds = 1.5f },
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Boon, Stat = PlayerStat.CritChance, Amount = 1f, Seconds = 1.5f, UntilBlow = true } } },
-                // NEEDS: the Empower's longer hang reaching this shape too (an Empower sets its numbers after the shape's).
-                new ShapeDef { Name = "Wide Circle",
+                // The Empower's longer hang reaches this shape too, added to its own short one (EmpowerOverShape.Adds).
+                new ShapeDef { Name = "Wide Circle", Empowered = EmpowerOverShape.Adds,
                     Description = "You run round a group up to six metres across. The column takes everyone inside, but lifts each for only a moment.",
                     Change = new SpellChange { Reach = 7f, Radius = 4f, Seconds = 0.6f } },
                 "Opens two shapes of Closing Circle, chosen at any rest fire: Half Circle, ending behind it, or Wide Circle, a ring round a group.",

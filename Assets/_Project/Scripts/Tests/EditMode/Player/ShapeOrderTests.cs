@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.Linq;
 using Clover.Player;
+using Clover.Player.Build;
 using Clover.Player.Trees;
 using NUnit.Framework;
 
@@ -32,6 +34,33 @@ namespace Clover.Tests
             SetsAside(LifeTree.DrawnFromTheWood, "Feed the Ground", UpgradeAction.BurstGrown);
             Assert.IsFalse(ShapeDef.SetAside(null, 0), "no shape worn: everything runs");
             Assert.IsFalse(ShapeDef.SetAside(new ShapeDef(), 0));
+        }
+
+        private static SpellSpec Worn(string element, string branch, int shape)
+        {
+            var learned = new HashSet<string> { branch, SpellBranch.EmpowerId(branch), SpellBranch.ShapeId(branch) };
+            var loadout = new Loadout();
+            loadout.Attune(element, "");
+            loadout.Slots[0] = branch;
+            loadout.Shapes.Add(new IdChoice(branch, shape));
+            return new SpellBranches().SpecOf(Upgrade.ById(branch), learned, loadout);
+        }
+
+        [Test]
+        public void AnEmpowerMeetsAShapesNumbersAsTheShapeSays()
+        {
+            var fog = Worn(Elements.Ice, IceTree.RimeGuard, 0);
+            Assert.AreEqual(2.5f, fog.Radius, 1e-4f, "Freezing Fog keeps its own 2.5 m under the Empower's 4");
+            Assert.AreEqual(7f, fog.Cooldown, 1e-4f, "and still takes the Empower's shorter wait");
+            var tide = Worn(Elements.Water, WaterTree.TheTideTurns, 0);
+            Assert.AreEqual(5f, tide.Reach, 1e-4f, "King Tide stops where you began");
+            var circle = Worn(Elements.Wind, WindTree.ClosingCircle, 1);
+            Assert.AreEqual(0.6f + (1.5f - 1.2f), circle.Seconds, 1e-4f, "Wide Circle's short hang made longer by the Empower's rise");
+            var change = new SpellChange { Radius = 5f, Cooldown = 3f };
+            var spec = new SpellSpec { Radius = 2f };
+            change.AddOver(spec, new SpellSpec { Radius = 4f });
+            Assert.AreEqual(3f, spec.Radius, 1e-5f, "a metre more, as the Empower gives the Learn");
+            Assert.AreEqual(3f, spec.Cooldown, 1e-5f, "its wait set as written");
         }
 
         [Test]

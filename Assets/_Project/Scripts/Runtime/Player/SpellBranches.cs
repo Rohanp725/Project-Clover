@@ -114,6 +114,9 @@ namespace Clover.Player
         /// The numbers the spell is cast with now, written into this instance's own spec for it (do not keep it past the
         /// cast). Null when the spell has none: a base spell its kit casts, or a mark with no spec.
         /// </summary>
+        // What a spec held before an Empower, for a shape that keeps its own numbers under it.
+        private readonly SpellSpec kept = new SpellSpec();
+
         public SpellSpec SpecOf(Upgrade learn, ICollection<string> learned, Loadout loadout)
         {
             if (learn == null) return null;
@@ -143,6 +146,14 @@ namespace Clover.Player
                 {
                     if (empower.Cooldown > 0f) spec.Cooldown = empower.Cooldown;
                     if (empower.Mana > 0f) spec.Cost = empower.Mana;
+                }
+                else if (empower != null && shape != null && shape.Empowered == EmpowerOverShape.Adds) empower.AddOver(spec, learn.Spell);
+                else if (empower != null && shape != null && shape.Empowered == EmpowerOverShape.KeepsOwn && shape.Change != null)
+                {
+                    // The shape's own numbers stand: the Empower changes the rest (its wait among them).
+                    SpellChange.Copy(spec, kept);
+                    empower.ApplyTo(spec);
+                    shape.Change.KeepOwn(spec, kept);
                 }
                 else empower?.ApplyTo(spec);
             }
