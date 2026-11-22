@@ -42,7 +42,8 @@ namespace Clover.World
 
         public override void Use(PlayerInteraction who)
         {
-            if (Taken || who == null) return;
+            // One with no key could never be told apart from another: it gives nothing and is left as it is.
+            if (Taken || who == null || string.IsNullOrEmpty(Key)) return;
             Taken = true;
             if (shown != null) shown.SetActive(false);
             if (!BodyPieces.Take(Key, Progress.Data.Found)) return;

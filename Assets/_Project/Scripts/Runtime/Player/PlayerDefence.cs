@@ -500,7 +500,7 @@ namespace Clover.Player
                 if (shaker != null) shaker.Shake(0.1f, 0.12f);
                 return;
             }
-            if (!IsDead && !guardBroken && Way.BodyRules.ShrugsOff(combat != null && combat.IsAttacking, Steadiness, hit.Damage))
+            if (!IsDead && !guardBroken && Way.BodyRules.ShrugsOff(combat != null && combat.InSwingMoment, Steadiness, hit.Damage))
             {
                 // Steady: a small blow outside a swing hurts, and the player stands through it.
                 SteadiedBlows++;

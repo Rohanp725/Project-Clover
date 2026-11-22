@@ -45,7 +45,8 @@ namespace Clover.World
 
         public override void Use(PlayerInteraction who)
         {
-            if (Taken || who == null) return;
+            // One with no key could never be told apart from another: it gives nothing and is left as it is.
+            if (Taken || who == null || string.IsNullOrEmpty(Key)) return;
             Taken = true;
             Paid = MemoryPayout.Found(income, Key, DuoLand, transform.position + Vector3.up, who.transform);
             if (shown != null) shown.SetActive(false);

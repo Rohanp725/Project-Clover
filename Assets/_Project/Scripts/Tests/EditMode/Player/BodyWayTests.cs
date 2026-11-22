@@ -94,6 +94,7 @@ namespace Clover.Tests
             var light = Summed(new[] { BodyWay.LightBody });
             Assert.AreEqual(1, light.Whole(PlayerStat.DodgeFlow));
             Assert.AreEqual(-0.1f, light.Sum(PlayerStat.DodgeRecovery), 1e-5f);
+            Assert.AreEqual(System.Enum.GetValues(typeof(PlayerStat)).Length, PlayerStats.Count, "the stat table holds every stat, the Body's new ones last");
             foreach (var stat in new[] { PlayerStat.StaminaMost, PlayerStat.Poise, PlayerStat.DodgeMetres, PlayerStat.GreyDelay })
                 Assert.IsTrue(PlayerStats.IsFlat(stat), stat + " is a plain amount");
             Assert.IsFalse(PlayerStats.IsFlat(PlayerStat.KnockbackTaken));

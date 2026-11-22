@@ -346,7 +346,7 @@ namespace Clover.Player
         public void Rearm()
         {
             if (Weapon == null) return;
-            if (IsAttacking)
+            if (BusyWithWeapon)
             {
                 rearmPending = true;
                 return;
@@ -358,6 +358,16 @@ namespace Clover.Player
 
         /// <summary>What the Way's family mark did to the last infused strike, for probes and the engine pieces still to come.</summary>
         public Way.InfusionBend LastInfusion { get; private set; }
+        // Equip drops all of these, so a re-arm waits for them: a swing or a charge, a weapon thrown or a dash out, the
+        // infused strike's element still to come, a follow to what was thrown.
+        private bool BusyWithWeapon => IsAttacking || IsCharging || WeaponAway || IsDashing || infusedPending || followFor != null;
+
+        /// <summary>
+        /// True in a swing's wind-up and blow, when its poise holds (<see cref="Poised"/>); not in its recovery, where the
+        /// Body's Steady decides as it does outside a swing.
+        /// </summary>
+        public bool InSwingMoment => Combo.Current != null && (Combo.Phase == AttackPhase.Windup || Combo.Phase == AttackPhase.Active);
+
         /// <summary>True while a re-arm waits for the swing in progress to end.</summary>
         public bool RearmPending => rearmPending;
         /// <summary>Re-arms done, for probes.</summary>
@@ -509,7 +519,7 @@ namespace Clover.Player
         {
             Step = Vector3.zero;
             PassingThrough = false;
-            if (rearmPending && !IsAttacking) Rearm();
+            if (rearmPending && !BusyWithWeapon) Rearm();
             if (HeavyCriticalLeft > 0f) HeavyCriticalLeft -= deltaTime;
             if (lightAction == null || heavyAction == null) return;
             // The element's strike follows the carrier's blow once the swing is out (or was cut short).
