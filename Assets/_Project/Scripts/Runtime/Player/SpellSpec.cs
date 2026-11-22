@@ -130,6 +130,18 @@ namespace Clover.Player
         /// 3 m past). Pressed once, the ebb alone.
         /// </summary>
         public float Ebb;
+        /// <summary>
+        /// For the parry form: the stance is kept while its button is held, up to Seconds (a tap still stands it a quarter of a
+        /// second), and every blow that reaches it is turned and banked, <see cref="Bank"/> at most (0: no limit), not only the
+        /// first. Fire's stance counts each as a perfect guard; any other answers each with its small cone (Damage, Stagger,
+        /// Stacks). On letting go: a door of the element's cone, <see cref="BankDamage"/> for each blow banked over Damage
+        /// (Kiln Stance's Shut Door), and the next heavy blow within a second carries <see cref="BankStagger"/> more stagger for
+        /// each (Mountain Stance). Nothing banked: the spell waits only its MissedWait share (the ledger's held-press stances).
+        /// </summary>
+        public bool HeldStance;
+        public int Bank;
+        public float BankDamage;
+        public float BankStagger;
 
         /// <summary>The share of a full hold, 0 to 1, held for <paramref name="held"/> seconds of at most <paramref name="most"/>.</summary>
         public static float HeldShare(float held, float most) => most <= 0f ? 0f : UnityEngine.Mathf.Clamp01(held / most);

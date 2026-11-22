@@ -129,11 +129,11 @@ namespace Clover.Player.Trees
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Burn, Stacks = 2 } } },
                 BranchPattern.LeftFoot));
 
-            // NEEDS: Shut Door as designed: the stance held up to 3 s, every blow turned banked as smoke under a hood (three at
-            // most), and the door opened on letting go (a cone of 6 m, 20 damage and 15 for each blow banked). Until a held
-            // press is built, the Learn is the stance as built (The Kiln).
+            // Shut Door (SpellSpec.HeldStance): the stance held up to 3 s, every blow turned counted as a perfect guard and banked as
+            // smoke under a hood (three at most), and the door opened on letting go: a cone of 6 m, 20 damage and 15 for each
+            // blow banked, three Burn.
             SpellBranch.Add(to, E, KilnStance, "Kiln Stance", SpellRole.Counter, BranchPattern.LeftA, Upgrade.Backdraft, SpellForms.Parry,
-                new SpellSpec { Seconds = 1.2f, Reach = 4f, Arc = 90f, Damage = 30f, Stagger = 50f, Stacks = 3 },
+                new SpellSpec { Seconds = 3f, Reach = 6f, Arc = 90f, Damage = 20f, Stagger = 50f, Stacks = 3, HeldStance = true, Bank = 3, BankDamage = 15f },
                 "Shut Door: you stand ready in flame. Every blow that reaches you, red or not, is turned and counts as a perfect guard, and the door opens on them in a cone of flame.",
                 UpgradeIcons.Tower,
                 new Empower { Cooldown = 7f, Stacks = 4 },

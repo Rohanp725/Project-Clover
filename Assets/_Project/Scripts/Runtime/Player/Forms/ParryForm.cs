@@ -12,6 +12,19 @@ namespace Clover.Player.Forms
         public override string Id => SpellForms.Parry;
 
         private const float AnswerSeconds = 0.32f;
+        /// <summary>The least a held stance stands, so a tap of its button still guards a moment.</summary>
+        public const float LeastStance = 0.25f;
+        /// <summary>The seconds after letting go of a held stance in which the next heavy blow takes its load.</summary>
+        public const float LoadSeconds = 1f;
+
+        /// <summary>True while a held stance stands: within its most, and held (or not yet its least).</summary>
+        public static bool StanceHolds(bool held, float age, float most) => age < Mathf.Max(0.2f, most) && (held || age < LeastStance);
+
+        /// <summary>One more blow banked, up to <paramref name="cap"/> (0: no limit).</summary>
+        public static int Banked(int banked, int cap) => cap > 0 ? Mathf.Min(cap, banked + 1) : banked + 1;
+
+        /// <summary>What the door opened on letting go deals: its own damage and <paramref name="each"/> for each blow banked.</summary>
+        public static float DoorDamage(float own, float each, int banked) => own + each * Mathf.Max(0, banked);
 
         public override int Cast(in SpellCast cast)
         {
@@ -80,6 +93,37 @@ namespace Clover.Player.Forms
                 player.FormPoseProgress = Mathf.Lerp(0.3f, 0.98f, (run.Age - run.T0) / AnswerSeconds);
                 return run.Age < run.T0 + AnswerSeconds;
             }
+            if (player.FormParried && cast.Spec.HeldStance)
+            {
+                // A held stance turns every blow and banks it, and stands on.
+                player.FormParried = false;
+                Vector3 back = player.FormParriedFrom - body.position;
+                back.y = 0f;
+                if (back.sqrMagnitude > 0.01f) body.rotation = Quaternion.LookRotation(back, Vector3.up);
+                run.Done = Banked(run.Done, cast.Spec.Bank);
+                Vector3 chest = body.position + Vector3.up * 1.2f;
+                if (cast.Affliction == Clover.Gameplay.AfflictionKind.Burn)
+                {
+                    // Fire's: counted as a perfect guard, and the blow kept as smoke under the hood until the door opens.
+                    if (cast.Defence != null)
+                    {
+                        cast.Combat.Mana.Gain(cast.Defence.PerfectGuardMana);
+                        cast.Defence.Callout("Perfect guard");
+                    }
+                    cast.Combat.PerfectGuarded(player.FormParriedFrom);
+                    if (cast.Upgrades != null) cast.Upgrades.OnPerfectGuard(player.FormParriedFrom);
+                    FormFx.Erupt(FormMesh.Cloud, chest + body.forward * 0.3f, Quaternion.Euler(0f, run.Done * 70f, 0f), new Vector3(0.9f, 0.7f, 0.9f), FormKit.Stain(cast.Colour, 0.5f), 0.1f, 0.4f, 0.5f);
+                }
+                else
+                {
+                    // Any other: each blow jars its attacker with the stance's small cone.
+                    var jar = cast.Blow(cast.Damage, cast.Stagger);
+                    cast.Combat.StrikeCone(cast.Reach, cast.Spec.Arc, jar);
+                    ElementLook.Sparks(cast.Element, chest + body.forward * 0.6f, body.forward, 0.7f);
+                }
+                if (cast.Upgrades != null) cast.Upgrades.Jolt(0.05f, 0.2f, 0.12f);
+                return true;
+            }
             if (player.FormParried)
             {
                 // Turned: face whoever struck and give it back.
@@ -137,6 +181,45 @@ namespace Clover.Player.Forms
                 return true;
             }
             float seconds = Mathf.Max(0.2f, cast.Spec.Seconds);
+            if (cast.Spec.HeldStance && !StanceHolds(cast.Caster != null && cast.Caster.SpellHeld, run.Age, seconds))
+            {
+                // Let go (or held to its most): what was banked is given back.
+                int banked = run.Done;
+                if (banked <= 0)
+                {
+                    if (cast.Spec.MissedWait > 0f)
+                    {
+                        var waits = player.GetComponent<PlayerSpells>();
+                        if (waits != null) waits.NothingAnswered(cast.Source, cast.Spec.MissedWait);
+                    }
+                    ElementLook.Puff(cast.Element, body.position + Vector3.up * 1.2f + body.forward * 0.7f, Vector3.up, 0.5f);
+                    return false;
+                }
+                if (cast.Spec.BankStagger > 0f) cast.Combat.LoadNextHeavy(cast.Spec.BankStagger * banked, LoadSeconds);
+                FormFx.ReleaseMark(marks[0]);
+                FormFx.ReleaseMark(marks[1], 0.1f);
+                marks[0] = marks[1] = -1;
+                if (cast.Spec.BankDamage > 0f)
+                {
+                    // The door opens: the element's cone, stronger for each blow banked.
+                    var door = cast.Blow(DoorDamage(cast.Damage, cast.Spec.BankDamage, banked), cast.Stagger);
+                    door.Heavy = true;
+                    cast.Combat.StrikeCone(cast.Reach, cast.Spec.Arc, door);
+                    Vector3 mouth = body.position + Vector3.up * 1.1f;
+                    cast.Caster.ShowArc(cast.Reach, cast.Spec.Arc, 1f, cast.Element != null ? cast.Element.Glow : cast.Colour);
+                    for (int i = 0; i < 7; i++)
+                    {
+                        Vector3 ray = Quaternion.Euler(0f, FormRules.InFan(i, 7, cast.Spec.Arc * 0.9f), 0f) * body.forward;
+                        FormFx.Erupt(FormMesh.Flame, mouth + ray * (1f + 0.35f * cast.Reach), Quaternion.LookRotation(ray), new Vector3(1f, 2.2f, 1f) * (1f + 0.15f * banked), cast.Colour, 0.06f + 0.02f * i, 0.35f, 0.35f);
+                    }
+                    FormKit.Flash(cast, 0.3f, 0.07f);
+                }
+                else ElementLook.Sparks(cast.Element, body.position + Vector3.up * 0.4f, Vector3.up, 0.8f);
+                if (cast.Upgrades != null) cast.Upgrades.Jolt(0.1f, 0.4f, 0.25f);
+                run.Phase = 1;
+                run.T0 = run.Age;
+                return true;
+            }
             if (run.Age >= seconds)
             {
                 // Nothing struck: a counter that says so waits only part of its time (Circle of Steel, Gone to Ash).

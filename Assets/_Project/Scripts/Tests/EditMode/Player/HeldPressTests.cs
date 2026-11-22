@@ -172,5 +172,39 @@ namespace Clover.Tests
                 "a flood loosed as a blow would land starts no wait");
             Assert.IsFalse(master.Any(each => each.On == UpgradeTrigger.PerfectDodge), "the stand-in is gone");
         }
+
+        [Test]
+        public void AHeldStanceStandsWhileHeldBanksEveryBlowAndPaysOnLettingGo()
+        {
+            Assert.IsTrue(Clover.Player.Forms.ParryForm.StanceHolds(true, 2.9f, 3f), "held, within its most");
+            Assert.IsFalse(Clover.Player.Forms.ParryForm.StanceHolds(true, 3f, 3f), "held to its most");
+            Assert.IsFalse(Clover.Player.Forms.ParryForm.StanceHolds(false, 0.6f, 3f), "let go");
+            Assert.IsTrue(Clover.Player.Forms.ParryForm.StanceHolds(false, 0.1f, 3f), "a tap still stands a moment");
+            Assert.AreEqual(3, Clover.Player.Forms.ParryForm.Banked(3, 3), "three at most under the hood");
+            Assert.AreEqual(5, Clover.Player.Forms.ParryForm.Banked(4, 0), "no limit");
+            Assert.AreEqual(65f, Clover.Player.Forms.ParryForm.DoorDamage(20f, 15f, 3), 1e-4f, "20 and 15 for each blow banked");
+
+            var kiln = Upgrade.ById(FireTree.KilnStance).Spell;
+            Assert.IsTrue(kiln.HeldStance);
+            Assert.AreEqual(3f, kiln.Seconds, 1e-5f, "held up to three seconds");
+            Assert.AreEqual(3, kiln.Bank);
+            Assert.AreEqual(15f, kiln.BankDamage, 1e-5f);
+            Assert.AreEqual(6f, kiln.Reach, 1e-5f, "a cone of six metres");
+            var kilnShapes = Upgrade.ById(SpellBranch.ShapeId(FireTree.KilnStance)).Shapes;
+            Assert.IsFalse(kilnShapes.Single(each => each.Name == "The Kiln").Spell.HeldStance, "The Kiln is the stance as it was");
+            Assert.AreEqual(0.6f, kilnShapes.Single(each => each.Name == "Firewalker").Change.Seconds, 1e-5f);
+
+            var mountain = Upgrade.ById(EarthTree.MountainStance).Spell;
+            Assert.IsTrue(mountain.HeldStance);
+            Assert.AreEqual(20f, mountain.BankStagger, 1e-5f, "20 stagger a blow turned");
+            Assert.AreEqual(0.5f, mountain.MissedWait, 1e-5f, "five seconds, not ten, when nothing struck");
+            var empowered = new SpellSpec();
+            SpellChange.Copy(mountain, empowered);
+            Upgrade.ById(SpellBranch.EmpowerId(EarthTree.MountainStance)).Empower.ApplyTo(empowered);
+            Assert.AreEqual(25f, empowered.BankStagger, 1e-5f, "the Empower's 25 a blow");
+            Assert.AreEqual(3f, empowered.Seconds, 1e-5f);
+            Assert.IsFalse(Upgrade.ById(EarthTree.MountainStance).Effects.Any(each => each.Do == UpgradeAction.Boon), "the stand-in boon is gone");
+            Assert.AreEqual(1f, Clover.Player.Forms.ParryForm.LoadSeconds, 1e-5f, "the heavy blow within a second of letting go");
+        }
     }
 }

@@ -205,17 +205,16 @@ namespace Clover.Player.Trees
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, NeedsWindup = 99f, Do = UpgradeAction.Flinch, Seconds = 0.4f },
                 });
 
-            // Grey Stone, re-aimed as the Learn: the parry form stands up to 2.5 s and turns the first blow, answering with a
-            // light jar of stone that shakes, slows the attacker's next wind-up and loads the next heavy blow. NEEDS: every blow
-            // turned, not only the first, the load counted for each and given to the next heavy blow alone within 1 s of
-            // letting go, and the 5 s wait when nothing struck (held-press).
+            // Grey Stone, re-aimed as the Learn: the stance is held up to 2.5 s (SpellSpec.HeldStance) and turns every blow, each
+            // answered with a light jar of stone that shakes and slows the attacker's next wind-up. Let go, and the next heavy
+            // blow within a second carries 20 stagger for each blow turned (BankStagger); nothing struck, it waits 5 s, not 10.
             SpellBranch.Add(to, E, MountainStance, "Mountain Stance", SpellRole.Counter, BranchPattern.LeftB, Rooted, SpellForms.Parry,
-                new SpellSpec { Seconds = 2.5f, Reach = 3f, Arc = 120f, Damage = 6f, Stagger = 10f, Stacks = 2 },
+                new SpellSpec { Seconds = 2.5f, Reach = 3f, Arc = 120f, Damage = 6f, Stagger = 10f, Stacks = 2, HeldStance = true, BankStagger = 20f, MissedWait = 0.5f },
                 "You go wholly to stone for up to two and a half seconds, unable to move or answer. Every blow is turned, red ones too, and each one that strikes the stone jars its attacker: two Tremor, and its next attack comes late. Let go, and your next heavy blow within a second carries 20 more stagger for each blow the stone turned.",
                 UpgradeIcons.Fist,
                 // The roster's numbers alone (the owner's answer of 2026-11-20: an Empower may strengthen without a shorter wait).
-                // NEEDS: 25 stagger a blow turned (held-press).
-                new Empower { Seconds = 3f },
+                // 25 stagger a blow turned (BankStagger).
+                new Empower { Seconds = 3f, BankStagger = 25f },
                 "You stand as stone for up to three seconds, and each blow you turn loads 25 stagger.",
                 // Stone Skin, once a major, folded in with Aftershock. The answer set aside: the turned blow is told for nothing
                 // (SpellSpec.Quiet). NEEDS: a plate taking 60% of one blow, not the whole of it (plates). Until then the plates
@@ -243,7 +242,6 @@ namespace Clover.Player.Trees
                 learnEffects: new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Jarred, Seconds = 3f, Flags = ConditionFlags.WindupSlowed, Scale = 0.7f } },
-                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Boon, Stat = PlayerStat.StaggerDealt, Amount = 0.5f, Seconds = 3.5f, UntilBlow = true },
                 });
 
             // BESPOKE: the dodge button becomes a brace that moves nowhere; its first 0.2 s is a perfect guard against any blow, red ones too; Rooted never ends.
