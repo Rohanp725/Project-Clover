@@ -93,13 +93,11 @@ ground: Briar Patch's bed, a thornbush, a sapling, a thicket, a tuft of briar.
 ## life.tree.master
 **What it does.** Plant it on something you grew, and it grows right away.
 
-**When it happens.** For now, when you cast it within 4 metres of something you grew. Elder Tree must be in a spell slot.
+**When it happens.** When you cast Elder Tree within 1 metre of something you grew. Elder Tree must be in a spell slot.
 
-**The numbers.** 3 Shards. For now, a root bursts up right away within 3 metres of you, for 16 damage, 45 stagger and Seeded, before the tree's own first root.
+**The numbers.** 3 Shards. The tree skips its 3 seconds of growing (2 with its Empower) and stands full right away, so its ring, its mending and its roots start at once.
 
 **Works with.** Fallen Seeds and Sapling, for something to plant it on; Briar Patch's bed; Wildwood.
-
-**Not built yet.** The whole tree growing at once on the thing you grew. For now, the first root comes right away, and the tree still grows.
 
 **Example.** Cast Briar Patch, step into the bed, and plant the tree on it. The roots answer right away.
 
@@ -195,11 +193,11 @@ ground: Briar Patch's bed, a thornbush, a sapling, a thicket, a tuft of briar.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4).
 
-**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 8 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 6 seconds and adds two Seeded.) For now, it is a step: up to 8 metres toward and past the enemy you face, or 6 metres ahead if there is none, and you can't be hit during it. Whatever it passes takes 10 damage, 15 stagger and Seeded, and your next heavy blow within half a second is a critical hit. The sapling where you went down reaches 3.5 metres and stays for 6 seconds. Every 1.5 seconds, it hits for 6 damage, 8 stagger and Seeded.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 8 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 6 seconds and adds two Seeded.) You go to the thing you grew within 12 metres of you that is nearest to where you aim, and come up 0.8 metres short of it, half a second after going down. If nothing you grew is within 12 metres, you come up 6 metres ahead. Nothing can touch you under the ground. As you come up, roots burst out within 2.5 metres of you for 10 damage, 15 stagger and Seeded. The sapling where you went down reaches 3.5 metres and stays for 6 seconds. Every 1.5 seconds, it hits for 6 damage, 8 stagger and Seeded.
 
 **Works with.** Fallen Seeds, Sapling and Briar Patch, for places to come up; The Garden Holds You, which it comes after on the chart; Wood Grows Back (use up the garden, and it comes back).
 
-**Not built yet.** Going under the ground to something you grew within 12 metres, the one nearest to where you aim, and coming up half a second later. The roots should burst out around you as you come up, not along the way.
+**Not built yet.** Your body sinking into the ground and climbing out of it: for now, you vanish in a swirl of leaves and stand up at the other end.
 
 **Example.** You're surrounded. Root Walk out through the soldier in front of you. The sapling you leave keeps the rest busy.
 
@@ -208,11 +206,9 @@ ground: Briar Patch's bed, a thornbush, a sapling, a thicket, a tuft of briar.
 
 **When it happens.** Whenever you cast Root Walk, using the shape you picked. If you have not bought this, you cast the plain walk.
 
-**The numbers.** 3 Shards. Up Through Them: a Seeded enemy the walk hits is thrown into the air for 0.6 seconds (less for elites and gods). Changeling: a thornbush with a 2-metre radius rises where you stood and lasts 8 seconds. Every half second, it deals 4 damage and Seeded. Enemies within 2.5 metres lose track of you for 1.5 seconds.
+**The numbers.** 3 Shards. Up Through Them: you go to the nearest Seeded enemy within 12 metres instead, and come up right beside it; every Seeded enemy the roots hit is thrown into the air for 0.6 seconds (less for elites and gods). Changeling: the thing you grew that you come up at moves to the spot where you went down, and enemies within 2.5 metres of that spot lose track of you for 1.5 seconds.
 
 **Works with.** Up Through Them: Seeded, the charged blade, and every mark that works on a lifted enemy. Changeling: Fallen Seeds' bushes, and Reap What Is Sown to burst what you left behind.
-
-**Not built yet.** Up Through Them should go to the nearest Seeded enemy, not the one you face. Changeling should swap places with something you grew; for now, a bush rises where you stood, and enemies near it attack it.
 
 **Example.** Use Changeling to escape two soldiers closing in from both sides. Both of them swing at the bush you leave behind.
 

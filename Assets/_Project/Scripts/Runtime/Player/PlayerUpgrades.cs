@@ -3336,7 +3336,10 @@ namespace Clover.Player
         /// True when an effect in force of <paramref name="mark"/>'s own branch quickens its cast now (UpgradeAction.Quicken):
         /// its CastAfter window holds at <paramref name="now"/>.
         /// </summary>
-        public static bool Quickens(List<UpgradeEffect> inForce, Upgrade mark, CastMoments moments, float now)
+        public static bool Quickens(List<UpgradeEffect> inForce, Upgrade mark, CastMoments moments, float now) => Quickens(inForce, mark, moments, now, null);
+
+        /// <summary>As above; an effect with NearGrown quickens only a cast within that many metres of something grown (<paramref name="grownWithin"/>: Elder Tree's Master).</summary>
+        public static bool Quickens(List<UpgradeEffect> inForce, Upgrade mark, CastMoments moments, float now, System.Func<float, bool> grownWithin)
         {
             if (inForce == null || mark == null || moments == null) return false;
             string branch = !string.IsNullOrEmpty(mark.Branch) ? mark.Branch : mark.Id;
@@ -3344,10 +3347,14 @@ namespace Clover.Player
             {
                 var effect = inForce[i];
                 if (effect.Do != UpgradeAction.Quicken || effect.Owner == null || effect.Owner.Branch != branch) continue;
+                if (effect.NearGrown > 0f && (grownWithin == null || !grownWithin(effect.NearGrown))) continue;
                 if (moments.Within(effect.CastAfter, effect.CastWindow, now, effect.CastAfterCarrying)) return true;
             }
             return false;
         }
+        // True when something the player grew stands within that many metres of them.
+        private bool GrownWithin(float metres) => Hazards.GrownNear(transform.position, metres);
+
         // When the cast now running began, asked against the moments.
         private float castBeganAt = -1000f;
 
@@ -4249,7 +4256,7 @@ namespace Clover.Player
             // A spell may ask health in place of mana, or as well: it is left grey, to be won back.
             float blood = SpellSpec.HealthPrice(spec.HealthCost, spec.HealthShare, defence != null ? defence.Health.Current : 0f) * Stats.Multiplier(PlayerStat.HealthPrices);
             // Cast in its Master's moment, it lands with no stillness after it (UpgradeAction.Quicken: Seven Flashes).
-            if (Quickens(byTrigger[(int)UpgradeTrigger.SpellCast], mark, Moments, Time.time))
+            if (Quickens(byTrigger[(int)UpgradeTrigger.SpellCast], mark, Moments, Time.time, GrownWithin))
             {
                 spec.Delay = 0f;
                 Quickened++;

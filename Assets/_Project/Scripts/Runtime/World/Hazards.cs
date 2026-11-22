@@ -249,6 +249,48 @@ namespace Clover.World
         }
 
         /// <summary>As above, only things grown in <paramref name="family"/> (0: any; Corpse Flowers' own flowers).</summary>
+        /// <summary>
+        /// The thing the player grew within <paramref name="reach"/> of <paramref name="from"/> that stands nearest
+        /// <paramref name="aim"/> (Root Walk: the one nearest where you aim, within twelve metres of you); false for none.
+        /// </summary>
+        public static bool NearestGrownTo(Vector3 aim, Vector3 from, float reach, out Vector3 where)
+        {
+            where = from;
+            if (instance == null) return false;
+            bool found = false;
+            float best = float.MaxValue;
+            for (int i = 0; i < instance.zones.Length; i++)
+            {
+                if (!instance.zones[i].Active || !instance.zones[i].Spec.Grown) continue;
+                Vector3 position = instance.zones[i].Position;
+                if (!GrownRules.Within(position, from, reach)) continue;
+                Vector3 offset = position - aim;
+                offset.y = 0f;
+                if (offset.sqrMagnitude >= best) continue;
+                best = offset.sqrMagnitude;
+                where = position;
+                found = true;
+            }
+            return found;
+        }
+
+        /// <summary>Moves the grown thing standing at <paramref name="at"/> (within half a metre) to <paramref name="to"/> (Changeling's change of places). True when one moved.</summary>
+        public static bool MoveGrown(Vector3 at, Vector3 to)
+        {
+            if (instance == null) return false;
+            for (int i = 0; i < instance.zones.Length; i++)
+            {
+                if (!instance.zones[i].Active || !instance.zones[i].Spec.Grown) continue;
+                Vector3 offset = instance.zones[i].Position - at;
+                offset.y = 0f;
+                if (offset.sqrMagnitude > 0.25f) continue;
+                instance.zones[i].Position = new Vector3(to.x, instance.zones[i].Position.y, to.z);
+                instance.zones[i].Spec.Position = instance.zones[i].Position;
+                return true;
+            }
+            return false;
+        }
+
         public static bool GrownNear(Vector3 at, float metres, int family)
         {
             if (instance == null) return false;

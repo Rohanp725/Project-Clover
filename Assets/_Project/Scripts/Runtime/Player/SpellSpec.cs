@@ -175,6 +175,8 @@ namespace Clover.Player
         public float HomeStagger;
         /// <summary>For the minions form: each heavy blow you land is answered at once by every helper on that same enemy (The Sown Men).</summary>
         public bool AnswersHeavy;
+        /// <summary>For the burrow form: the grown thing it comes up at goes to where the caster went down (Changeling).</summary>
+        public bool SwapsGrown;
         public int Bank;
         public float BankDamage;
         public float BankStagger;

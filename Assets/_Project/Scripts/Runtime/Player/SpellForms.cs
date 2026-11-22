@@ -137,6 +137,8 @@ namespace Clover.Player
         public const string Rush = "rush";
         /// <summary>Metal's Returning Edge: a turning blade out and back to the hand, met by a perfect guard as it arrives.</summary>
         public const string TurningBlade = "turningblade";
+        /// <summary>Life's Root Walk: down into the ground and up half a second later at a grown thing of yours.</summary>
+        public const string Burrow = "burrow";
 
         private static readonly ISpellForm[] all =
         {
@@ -202,6 +204,7 @@ namespace Clover.Player
             new WaitingThunderForm(),
             new RushForm(),
             new TurningBladeForm(),
+            new BurrowForm(),
         };
 
         private static readonly Dictionary<string, ISpellForm> byId = Index();

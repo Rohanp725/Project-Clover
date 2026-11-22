@@ -255,5 +255,38 @@ namespace Clover.Tests
             Assert.IsFalse(Clover.Player.Forms.MinionRules.Answers(false, true, Vector3.zero, Vector3.right), "only on that same enemy");
             Assert.IsFalse(Clover.Player.Forms.MinionRules.Answers(true, true, Vector3.zero, new Vector3(3f, 0f, 0f)), "and close enough to strike it");
         }
+
+        [Test]
+        public void ElderTreeGrowsAtOnceOnSomethingYouGrew()
+        {
+            var master = Upgrade.ById(SpellBranch.MasterId(LifeTree.ElderTree));
+            var quicken = master.Effects.Single();
+            Assert.AreEqual(UpgradeAction.Quicken, quicken.Do, "the whole tree grown at once, not a first root");
+            Assert.AreEqual(1f, quicken.NearGrown, 1e-5f, "planted within a metre of it");
+            var list = new System.Collections.Generic.List<UpgradeEffect> { quicken };
+            var moments = new CastMoments();
+            var learn = Upgrade.ById(LifeTree.ElderTree);
+            Assert.IsTrue(PlayerUpgrades.Quickens(list, learn, moments, 5f, metres => metres >= 1f), "something grown within a metre");
+            Assert.IsFalse(PlayerUpgrades.Quickens(list, learn, moments, 5f, metres => false), "nothing grown near");
+            Assert.IsFalse(PlayerUpgrades.Quickens(list, learn, moments, 5f), "with no way to ask, not quickened");
+        }
+
+        [Test]
+        public void RootWalkComesUpBesideAGrownThingOrSixMetresAhead()
+        {
+            Vector3 up = Clover.Player.Forms.BurrowRules.ComeUp(Vector3.zero, Vector3.forward, true, new Vector3(10f, 0f, 0f));
+            Assert.AreEqual(9.2f, up.x, 1e-4f, "beside it, not inside it");
+            Assert.AreEqual(new Vector3(0f, 0f, 6f), Clover.Player.Forms.BurrowRules.ComeUp(Vector3.zero, Vector3.forward, false, Vector3.zero), "six metres ahead with none");
+            Assert.AreEqual(0.5f, Clover.Player.Forms.BurrowRules.Under, 1e-5f, "up half a second later");
+            var walk = Upgrade.ById(LifeTree.RootWalk);
+            Assert.AreEqual(SpellForms.Burrow, walk.Form);
+            Assert.AreEqual(12f, walk.Spell.Reach, 1e-5f, "a grown thing within twelve metres");
+            Assert.AreEqual(2.5f, walk.Spell.Radius, 1e-5f, "roots within two and a half metres as you come up");
+            var shapes = Upgrade.ById(SpellBranch.ShapeId(LifeTree.RootWalk)).Shapes;
+            Assert.AreEqual(AfflictionKind.Seeded, shapes.Single(each => each.Name == "Up Through Them").Spell.AimAt, "under a Seeded enemy");
+            var changeling = shapes.Single(each => each.Name == "Changeling");
+            Assert.IsTrue(changeling.Spell.SwapsGrown, "the grown thing goes where you stood");
+            Assert.IsFalse(changeling.Effects.Any(each => each.Do == UpgradeAction.Hazard), "no stand-in thornbush");
+        }
     }
 }

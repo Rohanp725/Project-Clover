@@ -183,6 +183,7 @@ namespace Clover.Player
             into.HomeDamage = from.HomeDamage;
             into.HomeStagger = from.HomeStagger;
             into.AnswersHeavy = from.AnswersHeavy;
+            into.SwapsGrown = from.SwapsGrown;
             into.Bank = from.Bank;
             into.BankDamage = from.BankDamage;
             into.BankStagger = from.BankStagger;
