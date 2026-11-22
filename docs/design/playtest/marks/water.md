@@ -270,15 +270,13 @@ design yet, its **Not built yet** line says what is missing.
 ## water.base.master
 **What it does.** Press again within a second of the wave reaching you, and it goes back out the way it came, carrying what it brought past you and on another four metres, with their backs turned. It's the tide going back out, in your hand.
 
-**When it happens.** For now, on everything the wave hits. Riptide must be in a spell slot.
+**When it happens.** When you press Riptide's button again within a second of the wave breaking at your feet. Riptide must be in a spell slot.
 
-**The numbers.** 3 Shards. For now, whatever the wave hits stands with its back to you for 1.2 seconds. It can't start anything, and your first weapon blow on it is a critical hit and ends the effect.
+**The numbers.** 3 Shards. Every enemy the wave brought in is carried on past you, to 4 metres behind you. Each stands with its back to you for 1.2 seconds. It can't start anything, and your first weapon blow on it is a critical hit and ends the effect. The second press doesn't start Riptide's wait again.
 
 **Works with.** The charged blade; Heavy Water; every mark that works on a critical hit.
 
-**Not built yet.** The second press, sending the wave back out with what it brought. For now, what it brings is left turned away.
-
-**Example.** Pull in two soldiers with Riptide and cut the nearer one right away. The first blow lands on its back as a critical hit.
+**Example.** Pull in two soldiers with Riptide and press again: they wash past you and land behind you, turned away. Spin round, and your first blow is a critical hit.
 
 ## water.drowned
 **What it does.** When a Soaked enemy dies, its water runs across the floor to you as a line of foam and refills part of an empty flask. Soak, then kill.

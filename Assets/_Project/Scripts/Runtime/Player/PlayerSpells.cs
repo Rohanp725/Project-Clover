@@ -564,7 +564,7 @@ namespace Clover.Player
             }
             // A spell of several presses (Three Weasels): pressed again within its window it does its next press, waiting
             // on no clock, rather than casting again.
-            if (pressSlot == slot && pressMark != null && Time.time < pressUntil && MarkIn(slot) == pressMark && upgrades != null)
+            if (pressSlot == slot && pressMark != null && Time.time < pressUntil && (MarkIn(slot) == pressMark || id == pressMark.Id) && upgrades != null)
             {
                 player.FacePointer();
                 if (upgrades.Press(pressMark, pressNext))
@@ -615,6 +615,15 @@ namespace Clover.Player
                     }
                     // A slot made instant by a mark (Thunderclap's Master) is loosed with no wind-up.
                     else if (!element.CastBase(castIn, Cooldowns.IsInstant(slot))) return false;
+                    // A base spell's later presses (its Master's: Riptide's wave sent on again) wait for their press now.
+                    var baseLearn = upgrades != null ? Upgrade.ById(id) : null;
+                    if (baseLearn != null && upgrades.PressesOf(baseLearn, out float baseWindow) != null)
+                    {
+                        pressSlot = slot;
+                        pressMark = baseLearn;
+                        pressNext = 0;
+                        pressUntil = Time.time + baseWindow;
+                    }
                     // Its own element's marks may shorten the wait (Near to Hand for Stone Rise), and its branch's Empower; every spell's rate is applied below.
                     seconds = SpellTimings.BaseCooldown(castIn, upgrades != null ? upgrades.BaseCooldownShare(castIn) : 0f);
                     if (upgrades != null) seconds = upgrades.BaseCooldownOf(id, seconds);

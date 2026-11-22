@@ -2012,6 +2012,26 @@ namespace Clover.Player
                 case UpgradeAction.Loose:
                     if (rings.Active) LooseRings();
                     break;
+                case UpgradeAction.CarryOn:
+                {
+                    // The wave goes out again the way it came, through the player's place, and sets what it brought down beyond.
+                    for (int i = 0; i < broughtCount; i++)
+                    {
+                        var body = brought[i];
+                        brought[i] = null;
+                        if (!PlayerReactions.Alive(body)) continue;
+                        Vector3 to = CarriedOnTo(transform.position, broughtWay, Or(effect.Reach, 4f));
+                        Vector3 shove = to - body.transform.position;
+                        shove.y = 0f;
+                        // A shove is spent over a moment and moves two thirds of its length: half as much again sets it down there.
+                        if (body is IShovable carried) carried.Push(shove * 1.5f);
+                        if (effect.State != null) ConditionsSet += ConditionCaster.Cast(effect, body, to, combat, laying, conditionScratch);
+                        ElementLook.Sparks(look, body.transform.position + Vector3.up * 0.4f, shove, 1f);
+                        CarriedOn++;
+                    }
+                    broughtCount = 0;
+                    break;
+                }
                 case UpgradeAction.Ward:
                     if (defence != null) defence.GiveWards(Or(eCount, 1));
                     Vfx.Play(VfxKind.TintRing, self + Vector3.up * 0.2f, Vector3.up, 1f, new Color(0.7f, 0.92f, 1f));
@@ -2575,21 +2595,68 @@ namespace Clover.Player
         {
             window = 0f;
             if (mark == null) return null;
-            var worn = SpellBranches.WornShape(!string.IsNullOrEmpty(mark.Branch) ? mark.Branch : mark.Id, RunState.Unlocked, ReadLoadout());
-            return PressesOf(mark, worn, out window);
+            string branch = !string.IsNullOrEmpty(mark.Branch) ? mark.Branch : mark.Id;
+            var worn = SpellBranches.WornShape(branch, RunState.Unlocked, ReadLoadout());
+            string masterId = SpellBranch.MasterId(branch);
+            return PressesOf(mark, worn, Has(masterId) ? Upgrade.ById(masterId) : null, out window);
         }
 
         /// <summary>As above, with the shape worn given: its presses stand in place of the mark's.</summary>
-        public static UpgradeEffect[][] PressesOf(Upgrade mark, ShapeDef worn, out float window)
+        public static UpgradeEffect[][] PressesOf(Upgrade mark, ShapeDef worn, out float window) => PressesOf(mark, worn, null, out window);
+
+        /// <summary>
+        /// As above, with the Master in force given: the shape's presses, else the mark's own, else the Master's (Riptide's
+        /// Master: the wave sent on again by a second press).
+        /// </summary>
+        public static UpgradeEffect[][] PressesOf(Upgrade mark, ShapeDef worn, Upgrade master, out float window)
         {
             if (worn != null && worn.Presses != null && worn.Presses.Length > 0)
             {
                 window = worn.PressWindow;
                 return worn.Presses;
             }
+            if (mark != null && mark.Presses != null && mark.Presses.Length > 0)
+            {
+                window = mark.PressWindow;
+                return mark.Presses;
+            }
+            if (master != null && master.Presses != null && master.Presses.Length > 0)
+            {
+                window = master.PressWindow;
+                return master.Presses;
+            }
             window = mark != null ? mark.PressWindow : 0f;
-            return mark != null && mark.Presses != null && mark.Presses.Length > 0 ? mark.Presses : null;
+            return null;
         }
+
+        // What the last wave brought in to the player's feet (Riptide), and the way it was rolling.
+        private readonly Component[] brought = new Component[12];
+        private int broughtCount;
+        private Vector3 broughtWay;
+
+        /// <summary>A wave has come in rolling along <paramref name="way"/>: what it brings is noted next (NoteBrought).</summary>
+        public void BeginBrought(Vector3 way)
+        {
+            broughtCount = 0;
+            way.y = 0f;
+            broughtWay = way.sqrMagnitude > 0.0001f ? way.normalized : transform.forward;
+        }
+
+        /// <summary>The wave brought this enemy in.</summary>
+        public void NoteBrought(Component body)
+        {
+            if (body != null && broughtCount < brought.Length) brought[broughtCount++] = body;
+        }
+
+        /// <summary>Where a body is carried on to: <paramref name="beyond"/> metres past <paramref name="from"/> along <paramref name="way"/> (Riptide's Master).</summary>
+        public static Vector3 CarriedOnTo(Vector3 from, Vector3 way, float beyond)
+        {
+            way.y = 0f;
+            return from + (way.sqrMagnitude > 0.0001f ? way.normalized : Vector3.forward) * beyond;
+        }
+
+        /// <summary>Counts for probes: enemies a wave carried on past the player (Riptide's Master).</summary>
+        public int CarriedOn { get; private set; }
 
         // Where the player stood as the slot spell now running was cast (a later press steps back to it).
         private Vector3 castFrom;

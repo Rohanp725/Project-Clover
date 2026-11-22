@@ -220,5 +220,10 @@ namespace Clover.Player
         Quicken,
         /// <summary>Looses the spell its own branch began and gathered (SpellSpec.Rings) now, with the rings it holds: Daybreak's second press.</summary>
         Loose,
+        /// <summary>
+        /// Each enemy the last wave brought in (Riptide: PlayerUpgrades.NoteBrought) is carried on past the player along the
+        /// wave's way, to Reach metres beyond them (4), and given the effect's State (backs turned): Riptide's Master, pressed again.
+        /// </summary>
+        CarryOn,
     }
 }

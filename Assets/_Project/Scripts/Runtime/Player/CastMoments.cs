@@ -17,6 +17,8 @@ namespace Clover.Player
         Death,
         /// <summary>The last of Waiting Thunder's bolts was sent down by a light blow (its Master: a heavy blow within a second of it).</summary>
         LastBolt,
+        /// <summary>Riptide's wave came all the way in and broke at the caster's feet (its Master: pressed again within a second of it).</summary>
+        WaveIn,
     }
 
     /// <summary>

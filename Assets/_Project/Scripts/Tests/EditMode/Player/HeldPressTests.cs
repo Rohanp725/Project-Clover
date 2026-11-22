@@ -123,5 +123,30 @@ namespace Clover.Tests
             Assert.AreEqual(8, noon.Spell.Rings, "the column is gathered too");
             Assert.AreEqual(UpgradeTrigger.SpellLoosed, noon.Effects.Single().On, "cleansed as it comes down");
         }
+
+        [Test]
+        public void RiptidesMasterAddsAPressThatSendsTheWaveOnPastYou()
+        {
+            var riptide = Upgrade.ById(WaterTree.Riptide);
+            var master = Upgrade.ById(SpellBranch.MasterId(WaterTree.Riptide));
+            Assert.IsNull(PlayerUpgrades.PressesOf(riptide, null, null, out _), "no press without the Master");
+            var presses = PlayerUpgrades.PressesOf(riptide, null, master, out float window);
+            Assert.IsNotNull(presses, "the Master's press");
+            Assert.AreEqual(2f, window, 1e-5f);
+            var carry = presses[0].Single();
+            Assert.AreEqual(UpgradeAction.CarryOn, carry.Do);
+            Assert.AreEqual(CastMoment.WaveIn, carry.After, "only once the wave has come in");
+            Assert.AreEqual(1f, carry.AfterWindow, 1e-5f, "within a second of it");
+            Assert.AreEqual(4f, carry.Reach, 1e-5f, "four metres past you");
+            Assert.AreEqual(WaterTree.BacksTurned, carry.State.Id, "backs turned");
+            Assert.AreEqual(master, carry.Owner, "the press is the Master's own");
+            Assert.IsEmpty(master.Effects, "nothing else: the stand-in on every hit is gone");
+            var to = PlayerUpgrades.CarriedOnTo(new UnityEngine.Vector3(1f, 0f, 1f), new UnityEngine.Vector3(0f, 0.5f, -2f), 4f);
+            Assert.AreEqual(1f, to.x, 1e-4f);
+            Assert.AreEqual(-3f, to.z, 1e-4f, "on along the way the wave rolled, level");
+            var shaped = new ShapeDef { Presses = new[] { new UpgradeEffect[0] }, PressWindow = 3f };
+            PlayerUpgrades.PressesOf(riptide, shaped, master, out float shapeWindow);
+            Assert.AreEqual(3f, shapeWindow, 1e-5f, "a shape's own presses come first");
+        }
     }
 }

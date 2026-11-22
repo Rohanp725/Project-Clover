@@ -327,11 +327,19 @@ namespace Clover.Player.Trees
                         new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = ThrownDown, Seconds = 0.6f, Flags = ConditionFlags.Down } },
                     } },
                 "Opens two shapes of Riptide, chosen at any rest fire: River Serpent, one enemy brought from further, or Breaking Swell, a wave that rolls away and makes room.",
-                // NEEDS: the second press within 1 s of the wave reaching you, sending it out again and carrying what it brought
-                // 4 m past you (second-press). Until then what the wave brings stands with its back to you a moment: it begins
-                // nothing, and your first blow on it is critical.
-                new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = BacksTurned, Seconds = 1.2f, Flags = ConditionFlags.BeginsNoAttack | ConditionFlags.TakesCritical, EndsWith = ConditionBlow.Weapon } } },
+                // A press the Master adds (its Presses, found by PlayerUpgrades.PressesOf when the Master is in force): pressed again
+                // within a second of the wave breaking at your feet (After WaveIn, noted by the kit's wave), what it brought is carried
+                // on past you four metres (UpgradeAction.CarryOn), its back to you a moment: it begins nothing, and your first blow on
+                // it is critical.
+                null,
                 "Press again within a second of the wave reaching you, and it goes out again the way it came, carrying what it brought past you and on four metres, backs turned.");
+            var riptideMaster = to[to.Count - 1];
+            riptideMaster.PressWindow = 2f;
+            riptideMaster.Presses = new[]
+            {
+                new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, After = CastMoment.WaveIn, AfterWindow = 1f, Do = UpgradeAction.CarryOn, Reach = 4f,
+                    State = new ConditionSpec { Id = BacksTurned, Seconds = 1.2f, Flags = ConditionFlags.BeginsNoAttack | ConditionFlags.TakesCritical, EndsWith = ConditionBlow.Weapon } } },
+            };
 
             // NEEDS: the line of foam seen running over the floor to you.
             to.Add(BranchPattern.Put(new Upgrade { Id = DrawnFromTheDrowned, Name = "Drawn From the Drowned", Element = E, Kind = UpgradeKind.Major, Requires = new[] { BrokenGourd }, Icon = UpgradeIcons.Flask,
