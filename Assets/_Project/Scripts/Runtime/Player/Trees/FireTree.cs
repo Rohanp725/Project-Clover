@@ -80,9 +80,9 @@ namespace Clover.Player.Trees
                 new[] { new UpgradeEffect { On = UpgradeTrigger.ChargedBlowThird, Do = UpgradeAction.InstantNext, Seconds = 0.5f } },
                 "Cast Flame Wave in the same instant as the charged blade's third blow lands, and its cooldown does not start.");
 
-            // NEEDS: a trigger on an enemy beginning an attack (the spit on its wind-up), and the venom burning at its feet for
-            // 2 s. Until then the cobra is a phalanx of fire that spits by itself.
-            SpellBranch.Add(to, E, Uraeus, "Uraeus", SpellRole.Opener, BranchPattern.MiddleA, Upgrade.Heat, SpellForms.Phalanx,
+            // The cobra form: on the shoulder, it spits at what begins an attack within reach (read off the enemy's wind-up), and
+            // the venom burns at its feet for 2 s (CobraForm, CobraRules).
+            SpellBranch.Add(to, E, Uraeus, "Uraeus", SpellRole.Opener, BranchPattern.MiddleA, Upgrade.Heat, SpellForms.Cobra,
                 new SpellSpec { Count = 6, Seconds = 8f, Reach = 8f, Damage = 8f, Stagger = 6f, Stacks = 2, Speed = 12f },
                 "A cobra of flame rises from your shoulder and stands eight seconds. Whatever comes within eight metres to strike, it spits burning venom at: 8 damage and two Burn, six spits at most.",
                 UpgradeIcons.Fang,
@@ -92,12 +92,16 @@ namespace Clover.Player.Trees
                 new ShapeDef { Name = "Coiled",
                     Description = "It stays coiled close and spits only at what attacks you from within three metres. Each spit lays three Burn and holds the enemy's wind-up a moment, so you have longer to read it.",
                     Change = new SpellChange { Reach = 3f, Stacks = 3 } },
-                new ShapeDef { Name = "Set Down", Form = SpellForms.Rod,
+                new ShapeDef { Name = "Set Down", Form = SpellForms.Cobra,
                     Description = "It is planted where you cast it, two metres tall, and guards a circle of nine metres round itself whether you are there or not. Fight beside it, or leave it on a door.",
-                    Spell = new SpellSpec { Reach = 0.5f, Radius = 9f, Seconds = 8f, Interval = 1.2f, Damage = 8f, Stagger = 6f, Delay = 0.2f, Stacks = 2 } },
+                    Spell = new SpellSpec { Reach = 0.5f, Radius = 9f, Seconds = 8f, Interval = 1.2f, Damage = 8f, Stagger = 6f, Delay = 0.2f, Stacks = 2, Count = 7, Planted = true } },
                 "Opens two shapes of Uraeus, chosen at any rest fire: Coiled, close and holding, or Set Down, a cobra left to guard a place.",
-                // NEEDS: the cobra standing a second longer for each.
-                new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = AfflictionKind.Burn, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Burn, Stacks = 2 } },
+                // And the cobra stands a second longer for each (UpgradeAction.LengthenOwn).
+                new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = AfflictionKind.Burn, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Burn, Stacks = 2 },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = AfflictionKind.Burn, Do = UpgradeAction.LengthenOwn, Seconds = 1f },
+                },
                 "Each spit that lands on an enemy already burning lays twice the Burn: the fire is fed.");
 
             to.Add(BranchPattern.Put(new Upgrade { Id = FuelToIt, Name = "Fuel to It", Element = E, Kind = UpgradeKind.Major, Lifts = E, Requires = new[] { Upgrade.Heat }, Icon = UpgradeIcons.Burst,

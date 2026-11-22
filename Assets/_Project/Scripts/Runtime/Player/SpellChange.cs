@@ -190,6 +190,7 @@ namespace Clover.Player
             into.WallHealth = from.WallHealth;
             into.BurstAfterStruck = from.BurstAfterStruck;
             into.TouchStacks = from.TouchStacks;
+            into.Planted = from.Planted;
             into.Bank = from.Bank;
             into.BankDamage = from.BankDamage;
             into.BankStagger = from.BankStagger;

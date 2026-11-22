@@ -39,13 +39,15 @@ Rock does.
 **Example.** Kill a seeded soldier in the middle of the pack. The rest have to wade through briars, slowed and Seeded, and their stagger stops going down.
 
 ## overgrowth.stoneoak
-**What it does.** You plant a stone oak a little in front of you. For twenty seconds, its roots hit everything in a wide circle around it, again and again, Seeding what they hit.
+**What it does.** You plant a stone sapling a little in front of you. It grows as you fight near it, through three ages. The young tree's roots hit the nearest enemy; the old oak's roots hit everything around it and Seed it, and its shade heals you.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4).
 
-**The numbers.** Mix, 5 Shards, 45 mana. It is planted 2 metres in front of you; the circle has a 5-metre radius. It first hits half a second after planting, then every 2 seconds for 20 seconds, for 10 damage, 15 stagger and one stack of Seeded each time. For now, it hits like a fully grown tree from the start. It doesn't grow with blows, heal you in its shade, or block the way, and it doesn't count as something you grew for Shade or Reap What Is Sown.
+**The numbers.** Mix, 5 Shards, 45 mana. It is planted 2 metres in front of you and lives 20 seconds. Every six of your weapon blows that land within 8 metres of it grow it one age. The sapling hits nothing. The young tree's roots hit the nearest enemy within 5 metres every 2 seconds, for 10 damage, 15 stagger and a Tremor. The old oak's roots hit every enemy within 6 metres every 2 seconds, for 10 damage, 15 stagger, a Tremor and a Seeded, and you heal 3 health a second while you stand within 4 metres of it. It blocks the way like a stone pillar: enemies walk around it.
 
 **Works with.** Seeded, Moss on Stone or Thorns Take Root (it comes after either on the chart), Split Rock, and the charged blade: its first hit charges your weapon with Life.
+
+**Not built yet.** The oak is a trunk and a crown of rock until its model is brought into the game (it waits in staging for the owner). It doesn't count as something you grew for Shade or Reap What Is Sown.
 
 **Example.** Plant it in the middle of a room and fight inside its circle. Everything there is Seeded every two seconds, and every cut heals you.
 

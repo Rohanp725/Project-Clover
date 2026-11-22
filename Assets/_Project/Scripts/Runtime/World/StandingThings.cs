@@ -298,7 +298,8 @@ namespace Clover.World
         /// (0: until broken) with <paramref name="health"/> (0: it cannot be broken by blows). Its body is made from the kind's
         /// prefab when one is wired. Returns its place in the list.
         /// </summary>
-        public static int Raise(StandingKind kind, Vector3 at, Vector3 forward, float seconds, float health, float now, int owner = -1, float burstAfterStruck = 0f, float draws = 0f)
+        public static int Raise(StandingKind kind, Vector3 at, Vector3 forward, float seconds, float health, float now, int owner = -1, float burstAfterStruck = 0f, float draws = 0f,
+            bool showBody = true)
         {
             int slot = FreeSlot();
             End(slot, false);
@@ -308,7 +309,8 @@ namespace Clover.World
                 Active = true, Kind = kind, Position = at, Forward = forward.sqrMagnitude > 0.0001f ? forward.normalized : Vector3.forward,
                 Health = health, Until = seconds > 0f ? now + seconds : 0f, BurstAfterStruck = burstAfterStruck, Owner = owner, FirstStruckAt = -100f, Draws = draws, RaisedAt = now,
             };
-            var prefab = prefabs[(int)kind];
+            // A thing drawn by its own form (Stone Oak's tree stands in the way as a pillar would) takes no body of its kind.
+            var prefab = showBody ? prefabs[(int)kind] : null;
             if (prefab != null)
             {
                 var body = Object.Instantiate(prefab, at, Quaternion.LookRotation(things[slot].Forward, Vector3.up));

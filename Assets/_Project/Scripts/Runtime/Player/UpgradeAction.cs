@@ -292,5 +292,7 @@ namespace Clover.Player
         DrawPickups,
         /// <summary>Your next weapon blow within Seconds is critical, light or heavy (a Shining Herb picked).</summary>
         CriticalNext,
+        /// <summary>The spell of its own branch now standing lasts Seconds longer (Uraeus' Master: the cobra a second longer for each spit on a burning enemy).</summary>
+        LengthenOwn,
     }
 }

@@ -214,6 +214,20 @@ namespace Clover.Player.Forms
             return false;
         }
 
+        /// <summary>Asks every run of <paramref name="owner"/>'s branch now in progress to last longer (Uraeus' Master: the cobra a second longer). Returns how many were asked.</summary>
+        public static int LengthenRunsOf(Upgrade owner, float seconds)
+        {
+            if (instance == null || owner == null) return 0;
+            int asked = 0;
+            for (int i = 0; i < instance.runs.Length; i++)
+            {
+                if (!instance.runs[i].Active || !SpellBranches.OwnBranch(owner, instance.runs[i].Cast.Source)) continue;
+                instance.runs[i].Form.Lengthen(ref instance.runs[i], seconds);
+                asked++;
+            }
+            return asked;
+        }
+
         /// <summary>How many runs of the form of this name are in progress.</summary>
         public static int RunningOf(string id)
         {

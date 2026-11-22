@@ -186,6 +186,8 @@ namespace Clover.Player
         public float WallHealth;
         public float BurstAfterStruck;
         public int TouchStacks;
+        /// <summary>For the cobra form: set down where it was cast, Reach ahead, guarding Radius round itself on its Interval (Uraeus' Set Down).</summary>
+        public bool Planted;
         public int Bank;
         public float BankDamage;
         public float BankStagger;

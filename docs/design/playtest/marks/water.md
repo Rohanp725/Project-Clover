@@ -255,11 +255,11 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Whenever you cast Riptide, using the shape you picked. If you have not bought this, you cast the plain wave.
 
-**The numbers.** 3 Shards. River Serpent: a path 8 metres long and 2.4 metres wide, moving at 16 metres a second. It deals 12 damage, 30 stagger and Soaked. The first enemy it hits is pulled 4 metres back toward you and can't guard for 1 second. Breaking Swell: a wave 6 metres long and 90 degrees wide. It deals 8 damage, 18 stagger and Soaked. Whatever it hits is thrown 3 metres away and knocked down for 0.6 seconds (half as long for elites; gods not at all).
+**The numbers.** 3 Shards. River Serpent: the serpent swims 8 metres out along a path 2.4 metres wide at 16 metres a second. The first enemy its head reaches is bitten for 12 damage, 30 stagger and Soaked, held in its jaws, and carried back with it. The serpent sets it down 1.5 metres in front of you, wherever you are, and it can't guard for 1.5 seconds from the bite. It takes no other enemy. Breaking Swell: a wave 6 metres long and 90 degrees wide. It deals 8 damage, 18 stagger and Soaked. Whatever it hits is thrown 3 metres away and knocked down for 0.6 seconds (half as long for elites; gods not at all).
 
 **Works with.** Blowhole and your blade on the enemy River Serpent brings; Deep Crack's String of Bubbles shape down the line Breaking Swell clears.
 
-**Not built yet.** River Serpent should go out and come back, and drop its enemy 1.5 metres in front of you. For now, the serpent runs its path, and its first enemy is pulled back 4 metres.
+**Not built yet.** The serpent is a run of water drops until its model is brought into the game (it waits in staging for the owner).
 
 **Example.** A shaman stands behind its guards. River Serpent grabs it alone, guard down, and brings it to your blade.
 

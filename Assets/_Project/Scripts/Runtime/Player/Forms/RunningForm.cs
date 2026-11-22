@@ -27,5 +27,8 @@ namespace Clover.Player.Forms
 
         /// <summary>A blow of the weapon landed on something for this much. Nothing may be struck from here: note it and act in <see cref="Tick"/>.</summary>
         public virtual void Struck(ref SpellRun run, AttackStep step, Component target, float damage) { }
+
+        /// <summary>The run is asked to last <paramref name="seconds"/> longer (a Master's reward); a form that cannot, ignores it.</summary>
+        public virtual void Lengthen(ref SpellRun run, float seconds) { }
     }
 }

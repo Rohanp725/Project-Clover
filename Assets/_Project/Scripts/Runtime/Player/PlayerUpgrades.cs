@@ -2188,6 +2188,9 @@ namespace Clover.Player
                 case UpgradeAction.DrawPickups:
                     Pickups.DrawAll(effect.Drops);
                     break;
+                case UpgradeAction.LengthenOwn:
+                    Forms.SpellWorks.LengthenRunsOf(effect.Owner, Or(effect.Seconds, 1f));
+                    break;
                 case UpgradeAction.CriticalNext:
                     combat.PromiseCritical(Or(effect.Seconds, 4f));
                     ElementLook.Sparks(held, self + Vector3.up * 1.2f, Vector3.up, 0.6f);

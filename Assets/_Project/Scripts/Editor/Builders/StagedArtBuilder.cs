@@ -180,8 +180,86 @@ namespace Clover.EditorTools
             }
             library.Prefabs = entries.ToArray();
             EditorUtility.SetDirty(library);
+            // The spell creatures' prefabs, on the same object.
+            var creatures = library.GetComponent<CreatureLibrary>();
+            if (creatures == null) creatures = library.gameObject.AddComponent<CreatureLibrary>();
+            var made = new List<CreatureLibrary.Entry>();
+            foreach (CreatureKind kind in Enum.GetValues(typeof(CreatureKind)))
+            {
+                var prefab = AssetDatabase.LoadAssetAtPath<CreatureRig>($"{PrefabFolder}/{kind}.prefab");
+                if (prefab != null) made.Add(new CreatureLibrary.Entry { Kind = kind, Prefab = prefab });
+            }
+            creatures.Prefabs = made.ToArray();
+            EditorUtility.SetDirty(creatures);
             UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(library.gameObject.scene);
-            Debug.Log($"[Clover.Build] Standing Library in {library.gameObject.scene.name} wired with {entries.Count} prefabs.");
+            Debug.Log($"[Clover.Build] Standing Library in {library.gameObject.scene.name} wired with {entries.Count} standing and {made.Count} creature prefabs.");
+        }
+
+        /// <summary>The creature model files, by kind.</summary>
+        public static string CreatureModel(CreatureKind kind) => kind == CreatureKind.Cobra ? "cobra" : kind == CreatureKind.RiverSerpent ? "river_serpent" : "stone_oak";
+
+        /// <summary>
+        /// Builds a prefab for each spell creature from its imported model: the toon materials, an animator controller with one
+        /// state for each take in the file (named as the take: cobra_spit, serpent_bite, oak_grow...), its CreatureRig with the
+        /// mouth point its notes give (the cobra's snout 0.15 m before its head bone, the serpent's jaws 0.45 m before it) and the
+        /// oak's three ages.
+        /// </summary>
+        [MenuItem("Clover/Standing Things/Build Creature Prefabs")]
+        public static void BuildCreaturePrefabs()
+        {
+            BuildKit.EnsureFolder(PrefabFolder);
+            int built = 0;
+            foreach (CreatureKind kind in Enum.GetValues(typeof(CreatureKind)))
+                if (CreaturePrefab(kind) != null) built++;
+            AssetDatabase.SaveAssets();
+            Debug.Log($"[Clover.Build] Built {built} creature prefabs under {PrefabFolder}.");
+        }
+
+        public static CreatureRig CreaturePrefab(CreatureKind kind)
+        {
+            string model = CreatureModel(kind);
+            string path = $"{ModelFolder}/{model}.fbx";
+            var source = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+            if (source == null)
+            {
+                Debug.LogWarning($"[Clover.Build] {kind}: no model at {path}; run Intake Staged Models first.");
+                return null;
+            }
+            var root = (GameObject)PrefabUtility.InstantiatePrefab(source);
+            PrefabUtility.UnpackPrefabInstance(root, PrefabUnpackMode.Completely, InteractionMode.AutomatedAction);
+            root.name = kind.ToString();
+            foreach (var renderer in root.GetComponentsInChildren<Renderer>(true))
+                renderer.sharedMaterials = renderer.sharedMaterials.Select(slot => SlotMaterial(slot != null ? slot.name : "")).ToArray();
+            // One state for each take the file carries ("cobra_rig|cobra_spit" is the state cobra_spit).
+            var controller = UnityEditor.Animations.AnimatorController.CreateAnimatorControllerAtPath($"{PrefabFolder}/{kind}.controller");
+            var machine = controller.layers[0].stateMachine;
+            foreach (var clip in AssetDatabase.LoadAllAssetsAtPath(path).OfType<AnimationClip>().Where(clip => !clip.name.StartsWith("__preview__")))
+            {
+                string take = clip.name.Contains("|") ? clip.name.Substring(clip.name.LastIndexOf('|') + 1) : clip.name;
+                var state = machine.AddState(take);
+                state.motion = clip;
+                if (take.EndsWith("_idle") || take.EndsWith("_swim")) machine.defaultState = state;
+            }
+            var animator = root.GetComponentInChildren<Animator>();
+            if (animator == null) animator = root.AddComponent<Animator>();
+            animator.runtimeAnimatorController = controller;
+            var rig = root.AddComponent<CreatureRig>();
+            rig.Kind = kind;
+            rig.Animator = animator;
+            var bones = root.GetComponentsInChildren<Transform>(true);
+            Transform head = bones.FirstOrDefault(bone => bone.name == "head"), jaw = bones.FirstOrDefault(bone => bone.name == "jaw");
+            if (head != null && kind != CreatureKind.StoneOak)
+            {
+                var mouth = new GameObject("mouth").transform;
+                mouth.SetParent(kind == CreatureKind.RiverSerpent && jaw != null ? jaw : head, true);
+                mouth.position = head.position + root.transform.forward * (kind == CreatureKind.Cobra ? 0.15f : 0.45f);
+                rig.Mouth = mouth;
+            }
+            if (kind == CreatureKind.StoneOak)
+                rig.Ages = new[] { 1, 2, 3 }.Select(age => bones.FirstOrDefault(bone => bone.name == $"stone_oak_age{age}_lod0")).Select(age => age != null ? age.gameObject : null).ToArray();
+            var prefab = PrefabUtility.SaveAsPrefabAsset(root, $"{PrefabFolder}/{kind}.prefab");
+            UnityEngine.Object.DestroyImmediate(root);
+            return prefab != null ? prefab.GetComponent<CreatureRig>() : null;
         }
 
         /// <summary>The toon material for an imported slot name ("m_anvil_stone_iron", perhaps with a ".001" after it).</summary>

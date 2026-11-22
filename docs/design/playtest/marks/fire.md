@@ -64,15 +64,15 @@ design yet, its **Not built yet** line says what is missing.
 **Example.** Wave, three blows, and wave again right away: a burning crowd that never gets back on its feet.
 
 ## fire.uraeus
-**What it does.** A cobra made of flame rises from your shoulder and stays for a while, spitting burning venom at enemies near you.
+**What it does.** A cobra made of flame rises on your left shoulder and stays for a while. Whenever an enemy near you starts an attack, the cobra spits burning venom at it as it winds up.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button. It spits on its own while it is there.
 
-**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again (its Empower makes it 8). It stays for 8 seconds and spits at enemies within 8 metres, up to six times (its Empower makes it eight). Each spit deals 8 damage, 6 stagger and two Burn.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again (its Empower makes it 8). It stays for 8 seconds and spits at enemies within 8 metres that start an attack, at most once a second each, up to six times (its Empower makes it eight). Each spit deals 8 damage, 6 stagger and two Burn, and the venom burns on the floor at the enemy's feet for 2 seconds.
 
 **Works with.** Heat, which it comes after on the chart; Cinder; and its Master mark on enemies that are already burning.
 
-**Not built yet.** The spit should answer an enemy that starts an attack (the game needs a way to notice an enemy's wind-up), and the venom should burn at the enemy's feet. For now, the cobra spits on its own, like a guard made of fire.
+**Not built yet.** The cobra is a tongue of flame until its model is brought into the game (it waits in staging for the owner).
 
 **Example.** Cast it before a pack closes in. Every enemy that comes near gets hit with venom while you fight the first one.
 
@@ -81,7 +81,7 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Whenever you cast Uraeus, using the shape you picked.
 
-**The numbers.** 3 Shards. Coiled: it reaches 3 metres, and adds three Burn per spit. Set Down: it spits every 1.2 seconds at an enemy within 9 metres of the cobra, for 8 damage and two Burn, for 8 seconds.
+**The numbers.** 3 Shards. Coiled: it only spits at enemies that start an attack within 3 metres, and adds three Burn per spit. Set Down: the cobra is planted half a metre in front of where you cast it, full size, and spits every 1.2 seconds at the nearest enemy within 9 metres of it, attacking or not, for 8 damage and two Burn, up to seven times in its 8 seconds.
 
 **Works with.** Kiln Stance and Breath of the Lioness (Coiled, for fighting up close). Black Pitch and Catching Fire (Set Down next to a crowd).
 
@@ -94,11 +94,9 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** When your Uraeus's spit hits an enemy that is already burning. Uraeus must be in a spell slot.
 
-**The numbers.** 3 Shards. Two more stacks of Burn on top of the spit's own.
+**The numbers.** 3 Shards. Two more stacks of Burn on top of the spit's own, and the cobra stays one second longer for each such spit.
 
 **Works with.** Cinder and Flame Wave, which set enemies on fire first.
-
-**Not built yet.** The cobra should stay a second longer for each spit that feeds the fire.
 
 **Example.** Set a pack on fire with Flame Wave, then cast Uraeus. Every spit brings them a step closer to five stacks.
 

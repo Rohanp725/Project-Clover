@@ -310,16 +310,15 @@ namespace Clover.Player.Trees
                 // Rising 6.5 m away. The Empower's numbers reach the kit's own cast too (PlayerUpgrades.BaseEmpower, read by PlayerElement).
                 new Empower { Cooldown = 4.5f, Reach = 6.5f },
                 "Riptide waits 4.5 seconds, not 6, and rises six and a half metres away.",
-                // River Serpent, once a spell, folded in. NEEDS: the serpent going out and coming back, and the first enemy it
-                // takes dropped 1.5 m in front of you. Until then the dragon runs its lane and the first enemy it strikes is
-                // drawn four metres back toward you with its guard down.
-                new ShapeDef { Name = "River Serpent", Form = SpellForms.Dragon,
+                // River Serpent, once a spell, folded in: the serpent form goes out along its lane and back, and carries the first
+                // enemy it bites to 1.5 m in front of you (SerpentForm). Its guard is down 1.5 s from the bite, a second after it is
+                // set down.
+                new ShapeDef { Name = "River Serpent", Form = SpellForms.Serpent,
                     Description = "A serpent of water goes eight metres out along a lane and back, and brings only the first enemy it takes, dropping it in front of you with its guard down for a second. One target, from further.",
                     Spell = new SpellSpec { Reach = 8f, Radius = 1.2f, Damage = 12f, Stagger = 30f, Stacks = 1, Speed = 16f },
                     Effects = new[]
                     {
-                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Pull, Shape = HazardShape.Downwind, Amount = 4f, Cooldown = 0.5f },
-                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = GuardDown, Seconds = 1f, Flags = ConditionFlags.CannotGuard }, Cooldown = 0.5f },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = GuardDown, Seconds = 1.5f, Flags = ConditionFlags.CannotGuard }, Cooldown = 0.5f },
                     } },
                 new ShapeDef { Name = "Breaking Swell", Form = SpellForms.Wave,
                     Description = "The wave does not come back. It rolls six metres away from you and breaks, throwing everything in it down three metres off. The shape that makes room.",
