@@ -149,7 +149,9 @@ namespace Clover.Player
         /// <summary>
         /// The reaction whose moment this answers strikes again on the target: its own striking effects re-run at Amount
         /// (0.5) of their damage after Delay, laying and setting nothing (Strikes Twice: half, 0.5 s later where it happened;
-        /// Spreading Water: on each other Soaked enemy near, with EachWithin). Reads: Amount, Delay.
+        /// Spreading Water: on each other Soaked enemy near, with EachWithin). With Reaction named, that reaction, in the shape
+        /// worn and past its rest, where the trigger's enemy is or fell (Kettle: steam at full where a Soaked enemy died
+        /// burning). Reads: Amount, Delay, Reaction.
         /// </summary>
         EchoReaction,
         /// <summary>

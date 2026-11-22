@@ -246,9 +246,11 @@ namespace Clover.Player
             for (int i = 0; i < echoCount; i++)
             {
                 if (Time.time < echoAt[i]) continue;
-                acted |= StrikeAgain(echoWho[i], echoPair[i], echoShare[i]);
+                acted |= StrikeAgain(echoWho[i], echoWhere[i], echoPair[i], echoShare[i], echoCarried[i]);
                 echoCount--;
                 echoWho[i] = echoWho[echoCount];
+                echoWhere[i] = echoWhere[echoCount];
+                echoCarried[i] = echoCarried[echoCount];
                 echoPair[i] = echoPair[echoCount];
                 echoShare[i] = echoShare[echoCount];
                 echoAt[i] = echoAt[echoCount];
@@ -264,6 +266,8 @@ namespace Clover.Player
         private readonly int[] echoPair = new int[MostEchoes];
         private readonly float[] echoShare = new float[MostEchoes];
         private readonly float[] echoAt = new float[MostEchoes];
+        private readonly Vector3[] echoWhere = new Vector3[MostEchoes];
+        private readonly int[] echoCarried = new int[MostEchoes];
         private int echoCount;
         /// <summary>Reactions struck again, counted for probes.</summary>
         public int Echoed { get; private set; }
@@ -274,10 +278,18 @@ namespace Clover.Player
         /// their damage, nothing it lays or sets (ReactionRules.StrikesAgain), and nothing that answers a reaction is told.
         /// False when the line is full.
         /// </summary>
-        public bool Echo(Component who, int pair, float share, float delay)
+        public bool Echo(Component who, int pair, float share, float delay) => who != null && Echo(who, who.transform.position, pair, share, delay);
+
+        /// <summary>
+        /// As above, where it happened: on <paramref name="who"/> while it lives, or where it stood once it is gone (Kettle: a
+        /// Soaked enemy that dies burning goes up as steam where it fell; the ledger's death-reaction).
+        /// </summary>
+        public bool Echo(Component who, Vector3 at, int pair, float share, float delay, int carried = 0)
         {
-            if (who == null || pair < 0 || pair >= AfflictionPairs.Count || echoCount >= MostEchoes) return false;
+            if (pair < 0 || pair >= AfflictionPairs.Count || echoCount >= MostEchoes) return false;
             echoWho[echoCount] = who;
+            echoWhere[echoCount] = at;
+            echoCarried[echoCount] = carried;
             echoPair[echoCount] = pair;
             echoShare[echoCount] = share;
             echoAt[echoCount] = Time.time + Mathf.Max(0f, delay);
@@ -285,17 +297,22 @@ namespace Clover.Player
             return true;
         }
 
-        private bool StrikeAgain(Component who, int pair, float share)
+        private bool StrikeAgain(Component who, Vector3 where, int pair, float share, int carried)
         {
-            if (!Alive(who) || upgrades == null || ReactionTable.MarkFor(pair) == null) return false;
-            Vector3 at = who.transform.position;
-            ReactionLook.Play(pair, at, who.transform, at - transform.position, transform);
+            if (upgrades == null || ReactionTable.MarkFor(pair) == null) return false;
+            // On the enemy while it lives; once it is gone, where it stood, its look left to the blows themselves.
+            if (!Alive(who)) who = null;
+            Vector3 at = who != null ? who.transform.position : where;
+            if (who != null) ReactionLook.Play(pair, at, who.transform, at - transform.position, transform);
             int worn = ReactionTable.WornShapeIndex(pair, Loadout(), RunState.Unlocked);
             var effects = upgrades.ReactionEffects(pair, worn);
             upgrades.ReactingOn(who, pair);
             upgrades.ScaleReaction(share);
+            // What its spending would have counted goes with each blow, when it is known (Kettle: all the Burn the dead one carried).
+            upgrades.StrikingAgain(true);
             for (int i = 0; i < effects.Length; i++)
-                if (effects[i].On == UpgradeTrigger.Reacted && ReactionRules.StrikesAgain(effects[i].Do)) upgrades.Fire(effects[i], who, at, LaySource.Reaction);
+                if (effects[i].On == UpgradeTrigger.Reacted && ReactionRules.StrikesAgain(effects[i].Do)) upgrades.Fire(effects[i], who, at, LaySource.Reaction, 0f, carried);
+            upgrades.StrikingAgain(false);
             upgrades.ReactedOn();
             Echoed++;
             return true;

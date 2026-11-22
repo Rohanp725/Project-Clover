@@ -226,6 +226,16 @@ namespace Clover.Tests
             Assert.IsTrue(master.Stats.Any(mod => mod.Stat == PlayerStat.HeartTouchMore && mod.Amount == 30f));
         }
 
+        [Test]
+        public void KettleSetsSteamOffWhereTheEnemyFell()
+        {
+            var kettle = Upgrade.ById(SteamDuo.Kettle).Effects.Single();
+            Assert.AreEqual(UpgradeTrigger.Kill, kettle.On);
+            Assert.AreEqual(UpgradeAction.EchoReaction, kettle.Do);
+            Assert.AreEqual(AfflictionPairs.Index(AfflictionKind.Burn, AfflictionKind.Soaked), ReactionTable.PairOf(kettle.Reaction), "the Steam reaction itself");
+            Assert.AreEqual(1f, kettle.Amount, 1e-5f, "at full strength");
+        }
+
         private sealed class Afflicted : IAfflictable
         {
             public Afflicted(AfflictionSet set) => Afflictions = set;

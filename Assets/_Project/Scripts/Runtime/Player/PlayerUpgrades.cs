@@ -163,6 +163,8 @@ namespace Clover.Player
             public Component Link;
             // For an answer to a reaction (Reacted, ReactionStruck): which reaction, by its pair; -1 for none.
             public int Pair;
+            // A reaction's blow struck again (StrikingAgain): what the trigger carried stands for what its Spend would count.
+            public bool Again;
         }
 
         // ---- Depth moved between enemies (the ledger's depth-moved).
@@ -1415,7 +1417,7 @@ namespace Clover.Player
             if (effect.CooldownPerEnemy && kept != null) kept.Start(effect.Slot, Time.time, wait);
             else readyAt[effect.Slot] = Time.time + wait;
             Enqueue(new Pending { Effect = effect, Target = target, At = at, HasAt = hasAt, Spent = spent, Less = less, Source = source, Power = power, Ripe = ripeScale,
-                ReactionOf = reactionPair + 1, ReactionCast = reactionPair >= 0 ? reactionCast : 0, Link = link, Pair = triggerPair });
+                ReactionOf = reactionPair + 1, ReactionCast = reactionPair >= 0 ? reactionCast : 0, Link = link, Pair = triggerPair, Again = strikingAgain });
         }
 
         /// <summary>
@@ -1611,7 +1613,8 @@ namespace Clover.Player
             }
             bool byCount = effect.Do == UpgradeAction.Projectile || effect.Do == UpgradeAction.Falling || effect.Do == UpgradeAction.Ward
                 || (effect.Do == UpgradeAction.Hazard && effect.PerStack && effect.Shape != HazardShape.Patch);
-            int spentHere = effect.DamagePerSpent > 0f ? counted : 0;
+            // With no Spend of its own before it, what the trigger carried (a reaction struck again where its enemy fell: Kettle).
+            int spentHere = effect.DamagePerSpent > 0f ? (counted > 0 || !pending.Again ? counted : pending.Spent) : 0;
             float eDamage = (byCount ? effect.Damage : effect.Damage * per) + effect.DamagePerSpent * spentHere;
             // A reaction's own blows, by the stat ReactionDamage (Fuel to It, Left in Rubble, Every Crack Rings).
             float reactionScale = ReactionScale(effect.Owner);
@@ -2001,9 +2004,15 @@ namespace Clover.Player
                     if (subject is IAfflictable ending && ending.Afflictions.Conditions.EndNow(effect.Condition) > 0) ConditionsEnded++;
                     break;
                 case UpgradeAction.EchoReaction:
-                    // The reaction that answered strikes again on this enemy, at a share, a moment later (Strikes Twice, Spreading Water).
-                    if (pending.Pair >= 0 && subject != null && reactionsFound != null && reactionsFound.Echo(subject, pending.Pair, Or(effect.Amount, 0.5f), effect.Delay)) Echoes++;
+                {
+                    // The reaction that answered strikes again on this enemy, at a share, a moment later (Strikes Twice, Spreading
+                    // Water); or the one the effect names, where an enemy died (Kettle).
+                    int pair = !string.IsNullOrEmpty(effect.Reaction) ? ReactionTable.PairOf(effect.Reaction) : pending.Pair;
+                    Vector3 where = subject != null ? subject.transform.position : pending.HasAt ? pending.At : centre;
+                    // What the trigger carried (the dead one's depth of Needs) stands in for what its spending would count.
+                    if (pair >= 0 && reactionsFound != null && reactionsFound.Echo(subject, where, pair, Or(effect.Amount, 0.5f), effect.Delay, pending.Spent)) Echoes++;
                     break;
+                }
                 case UpgradeAction.Gather:
                 {
                     // Every dose near runs into the next burst of this cast that carries doses on, with no limit.
@@ -3114,6 +3123,10 @@ namespace Clover.Player
             if (mark == null || byTrigger == null || !(who is IAfflictable afflicted)) return 1f;
             return ReactionRules.Boost(byTrigger[(int)UpgradeTrigger.Reacted], mark.Id, afflicted.Afflictions, out spares);
         }
+
+        /// <summary>While true, the effects put in the line are a reaction's blows struck again (PlayerReactions' echo).</summary>
+        public void StrikingAgain(bool on) => strikingAgain = on;
+        private bool strikingAgain;
 
         /// <summary>While a reaction struck again is put in the line: its damage is this share of the first time's.</summary>
         public void ScaleReaction(float share) => ripeScale *= Mathf.Max(0f, share);
