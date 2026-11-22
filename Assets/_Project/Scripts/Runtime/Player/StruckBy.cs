@@ -15,5 +15,7 @@ namespace Clover.Player
         Critical,
         /// <summary>The finisher's own blow, apart from any other heavy blow (the ledger's finisher-only).</summary>
         Finisher,
+        /// <summary>For ConditionAttacked: its carrier's blow turned by a perfect guard, not one that landed or was plainly blocked (Snapped Blade).</summary>
+        Turned,
     }
 }

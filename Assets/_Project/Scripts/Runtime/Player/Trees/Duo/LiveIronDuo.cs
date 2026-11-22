@@ -25,8 +25,7 @@ namespace Clover.Player.Trees.Duo
         {
             const string A = Elements.Metal, B = Elements.Lightning;
 
-            // NEEDS: afflicted-only (Drawn Iron drawing only the enemies its arcs reach; now every enemy within 8 m, once in 0.3
-            // s); planted-blades (Forged Bolt's spikes seen standing in it, one hammered in by each weapon blow; now your heavy
+            // Drawn Iron draws in only the enemies its arcs reach (UpgradeEffect.DrawsIn). NEEDS: planted-blades (Forged Bolt's spikes seen standing in it, one hammered in by each weapon blow; now your heavy
             // blow tears out up to three of its Static as the bolt).
             to.Add(HeartPattern.Put(new Upgrade
             {
@@ -42,8 +41,7 @@ namespace Clover.Player.Trees.Duo
                         {
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Drawn, Seconds = 6f, Is = Reactions.IronLive } },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Drawn, By = StruckBy.Weapon, Cooldown = 0.3f, Do = UpgradeAction.Arc,
-                                LeapsTo = AfflictionKind.Sundered, Count = 2, Reach = 8f, Amount = 0.35f, Affliction = AfflictionKind.Sundered, Stacks = 1 },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Drawn, By = StruckBy.Weapon, Cooldown = 0.3f, Do = UpgradeAction.Pull, Radius = 8f, Amount = 1.5f },
+                                LeapsTo = AfflictionKind.Sundered, Count = 2, Reach = 8f, Amount = 0.35f, Affliction = AfflictionKind.Sundered, Stacks = 1, DrawsIn = 1.5f },
                         },
                     },
                     new ShapeDef

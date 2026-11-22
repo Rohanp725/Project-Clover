@@ -58,18 +58,15 @@ namespace Clover.Player.Trees
                 },
             }, HeartPattern.Foot));
 
-            // Re-aimed by the pair file: at full depth of poison, Fire Medicine spends nothing and strikes twice as hard.
-            // NEEDS: the reaction's own numbers changed only on an enemy that meets a test as it fires (reaction-numbers-when);
-            // now a second bang of the same size and the spent doses laid
-            // back, on an enemy whose poison is full as it reacts.
+            // Re-aimed by the pair file: at full depth of poison, Fire Medicine spends nothing and strikes twice as hard, asked of
+            // the enemy as the reaction fires (UpgradeAction.BoostReaction).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = GoesUp, Name = "Goes Up", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Burst,
                 Description = "When Fire Medicine goes off on an enemy at full depth of poison, it strikes twice as hard and spends nothing.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = "react.firemedicine", Needs = Poisoned, NeedsFull = true, Do = UpgradeAction.Burst, Radius = 2.5f, Delay = 0.65f, Damage = 32f, Stagger = 30f, Affliction = Burn, Stacks = 1 },
-                    new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = "react.firemedicine", Needs = Poisoned, NeedsFull = true, Do = UpgradeAction.Afflict, Affliction = Poisoned, Stacks = 4 },
+                    new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = "react.firemedicine", Needs = Poisoned, NeedsFull = true, Do = UpgradeAction.BoostReaction, Amount = 2f, SparesSpend = true },
                 },
             }, HeartPattern.LeftLow));
 

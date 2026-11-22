@@ -31,9 +31,9 @@ namespace Clover.Player.Trees.Duo
             const string A = Elements.Ice, B = Elements.Metal;
 
             // NEEDS: ground that acts on whoever walks in later (ground-states): Shed Plate's black ice throwing flat whoever
-            // steps on it in its 4 s; now those within 1.2 m as the plate falls slip. A plain guard against a brittle enemy
-            // counted as perfect, breaking its weapon for 50 stagger and a 1 s hold (guard-made-perfect); now Snapped Blade's
-            // brittle weapon deals half for the 5 s from the reaction.
+            // steps on it in its 4 s; now those within 1.2 m as the plate falls slip. Snapped Blade: a plain guard against the
+            // brittle enemy counts as perfect (ConditionFlags.GuardMadePerfect), and a perfect guard on it breaks its weapon for
+            // 50 stagger and a 1 s hold; its blows deal half for the 5 s.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Cold Short: Shed Plate or Snapped Blade", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -60,11 +60,13 @@ namespace Clover.Player.Trees.Duo
                     new ShapeDef
                     {
                         Name = "Snapped Blade",
-                        Description = "The armour does not crack under your blow; its own weapon goes brittle instead. For 5 s its notches do not fade and its blows deal half, as a weapon that snaps on your guard.",
+                        Description = "The armour does not crack under your blow; its own weapon goes brittle instead. For 5 s its notches do not fade and its blows deal half, and any guard against it counts as perfect: its weapon snaps on your guard for 50 stagger and a 1 s hold.",
                         Effects = new[]
                         {
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition,
-                                State = new ConditionSpec { Id = Snapped, Seconds = 5f, Keeps = AfflictionKind.Sundered, Flags = ConditionFlags.DamageDealtShare, Scale = 0.5f, Is = Reactions.Brittle } },
+                                State = new ConditionSpec { Id = Snapped, Seconds = 5f, Keeps = AfflictionKind.Sundered, Flags = ConditionFlags.DamageDealtShare | ConditionFlags.GuardMadePerfect, Scale = 0.5f, Is = Reactions.Brittle } },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionAttacked, Condition = Snapped, By = StruckBy.Turned, Do = UpgradeAction.Burst, Radius = 0.6f, Damage = 0f, Stagger = 50f, Stacks = 0 },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionAttacked, Condition = Snapped, By = StruckBy.Turned, Do = UpgradeAction.Hold, Seconds = 1f },
                         },
                     },
                 },

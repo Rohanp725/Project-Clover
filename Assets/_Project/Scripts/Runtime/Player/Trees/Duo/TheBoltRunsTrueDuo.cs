@@ -119,8 +119,8 @@ namespace Clover.Player.Trees.Duo
             // The duo surge, worn in the Hand's surge slot with its own 45 mana and 10 s (DuoSurge). NEEDS: threads linking every
             // Marked enemy within 12 m (six at most) that carry a discharge or a bolt on one to all the others for half
             // (links-pass-blows); now a discharge on a Marked enemy arcs on through up to five Marked enemies within 12 m,
-            // half a discharge's 7 a stack each, and each critical blow on a Marked enemy lays a Static on every enemy within
-            // 12 m, Marked or not (afflicted-only).
+            // half a discharge's 7 a stack each; and each critical blow on a Marked enemy lays a Static on every Marked enemy within
+            // 12 m alone (UpgradeEffect.OnlyCarrying).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = TheNetOfJewels, Name = "The Net of Jewels", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { DiamondThunder }, Icon = UpgradeIcons.Chain,
@@ -130,7 +130,8 @@ namespace Clover.Player.Trees.Duo
                 {
                     new UpgradeEffect { On = UpgradeTrigger.SetOff, WhileSurge = true, Spent = AfflictionKind.Static, Needs = AfflictionKind.Marked, Cooldown = 0.5f, Do = UpgradeAction.Arc, FromTarget = true,
                         LeapsTo = AfflictionKind.Marked, Count = 5, Reach = 12f, Damage = 3.5f, Stagger = 2.5f, PerStack = true, Affliction = AfflictionKind.Static },
-                    new UpgradeEffect { On = UpgradeTrigger.CritHit, WhileSurge = true, Needs = AfflictionKind.Marked, Cooldown = 0.3f, Do = UpgradeAction.Afflict, Radius = 12f, Affliction = AfflictionKind.Static, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.CritHit, WhileSurge = true, Needs = AfflictionKind.Marked, Cooldown = 0.3f, Do = UpgradeAction.Afflict, Radius = 12f, Affliction = AfflictionKind.Static, Stacks = 1,
+                        OnlyCarrying = AfflictionKind.Marked },
                 },
             }, HeartPattern.RightTop));
         }

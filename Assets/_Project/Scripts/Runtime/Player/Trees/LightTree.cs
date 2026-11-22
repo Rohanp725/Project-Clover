@@ -301,10 +301,11 @@ namespace Clover.Player.Trees
                 },
                 "Cast it in the perfect dodge's moment, and the attacker is blinded and cannot turn for two seconds, one for a god or an elite.");
 
-            // The mark is laid on what the reaction struck (UpgradeTrigger.ReactionStruck). NEEDS: every reaction with Marked
-            // in it critical (reaction-stats).
+            // Every reaction with Marked in it strikes critically (PlayerStat.ReactionCritical), and the mark is laid on what it
+            // struck (UpgradeTrigger.ReactionStruck).
             to.Add(BranchPattern.Put(new Upgrade { Id = SeenPlainly, Name = "Seen Plainly", Element = E, Kind = UpgradeKind.Major, Lifts = E, Requires = new[] { Brimming }, Icon = UpgradeIcons.Eye,
                 Description = "Every reaction Marked takes part in is critical, and Marks everything it reaches.",
+                Stats = new[] { new StatMod(PlayerStat.ReactionCritical, 1f, M) },
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.ReactionStruck, ReactionWith = M, Do = UpgradeAction.Afflict, Affliction = M, Stacks = 1 } } },
                 BranchPattern.RightMiddle));
 

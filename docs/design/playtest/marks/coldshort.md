@@ -9,13 +9,13 @@ are both carried.
 
 **When it happens.** Every time Cold Short goes off while you carry both Ice and Metal. Cold Short goes off when Chill lands on a notched enemy, or when a notch lands on a chilled one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Cold Short.
 
-**The numbers.** Mix, 3 Shards. Shed Plate: the enemy is brittle for 5 seconds, and its notches stay. Your next heavy blow cracks the plates: your weapon deals 25% more to it for 6 seconds, and its notches stay for the rest of the fight. The black ice is 2 metres across and lasts 4 seconds. Every enemy within 1.2 metres slips and falls flat for 0.6 seconds. Snapped Blade: for 5 seconds, the enemy's notches don't fade and its blows deal half damage. After Cold Short goes off on an enemy, it can't go off on that enemy again for 5 seconds.
+**The numbers.** Mix, 3 Shards. Shed Plate: the enemy is brittle for 5 seconds, and its notches stay. Your next heavy blow cracks the plates: your weapon deals 25% more to it for 6 seconds, and its notches stay for the rest of the fight. The black ice is 2 metres across and lasts 4 seconds. Every enemy within 1.2 metres slips and falls flat for 0.6 seconds. Snapped Blade: for 5 seconds, the enemy's notches don't fade and its blows deal half damage. Any guard you raise against it counts as a perfect guard, costing no stamina, and each one breaks its weapon: 50 stagger and a 1-second hold. After Cold Short goes off on an enemy, it can't go off on that enemy again for 5 seconds.
 
 **Works with.** Rimed Edge to set it up, Glass Bell, Brittle to the Core, Cold Chisel.
 
 **Example.** A wall of shields: use Shed Plate, and the ice under the first enemy knocks down the ones next to it. An enemy that hits hard: use Snapped Blade, and block its blows with your guard.
 
-**Not built yet.** Shed Plate's ice knocks down enemies nearby when it falls, but not enemies who step on it later. Snapped Blade doesn't yet turn a normal guard against the enemy into a perfect guard that breaks its weapon (50 stagger, held for 1 second). For now, its blows deal half damage from the moment it turns brittle.
+**Not built yet.** Shed Plate's ice knocks down enemies nearby when it falls, but not enemies who step on it later.
 
 ## coldshort.rimededge
 **What it does.** Your heavy blows add a Chill and a notch at the same time.

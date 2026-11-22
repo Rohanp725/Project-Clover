@@ -18,17 +18,15 @@ carried. Its reaction is Fire Medicine; its Shape mark lets you choose what Fire
 **Not built yet.** For now, Fire Lance's jet is a straight path instead of a cone 40 degrees wide.
 
 ## pyre.flashpoint
-**What it does.** When Fire Medicine goes off on an enemy whose poison is full, it hits twice as hard and uses nothing up. A second bang of the same size follows the first, and the doses it used are put back.
+**What it does.** When Fire Medicine goes off on an enemy whose poison is full, it hits twice as hard and uses nothing up.
 
 **When it happens.** Each time Fire Medicine goes off on an enemy with full poison (eight doses), while you carry both Poison and Fire.
 
-**The numbers.** Mix, 3 Shards. A second bang 2.5 metres around the enemy, 0.65 seconds after the reaction. It deals 32 damage, 30 stagger and a Burn to everything it reaches. Four doses are put back on the enemy.
+**The numbers.** Mix, 3 Shards. The game checks the enemy's poison as the reaction goes off. At full depth, every blow of Fire Medicine deals double damage, and none of its doses are used up.
 
 **Works with.** Miasma and Venom (eight doses fast), Fire Medicine's shapes, Funeral Fire, Slow Burn.
 
-**Example.** Give a soldier eight doses, then set it on fire. Two bangs go off, and it still has eight doses.
-
-**Not built yet.** The reaction itself isn't doubled yet. For now, a second bang takes its place, and the doses are put back after half are used up.
+**Example.** Give a soldier eight doses, then set it on fire. Fire Medicine hits twice as hard, and it still has eight doses.
 
 ## pyre.funeralfire
 **What it does.** An enemy that dies while poisoned and burning explodes, and leaves the ground burning where it fell.

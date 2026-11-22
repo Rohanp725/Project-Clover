@@ -33,5 +33,7 @@ namespace Clover.Gameplay
         public bool Finisher;
         /// <summary>For a blow: the side it came from, in degrees from the face (0) to the back (180); -1 when not known (<see cref="EnemyConditions.SideDegrees"/>).</summary>
         public float Side;
+        /// <summary>For its carrier's blow on the player: the blow was turned by a perfect guard.</summary>
+        public bool Turned;
     }
 }

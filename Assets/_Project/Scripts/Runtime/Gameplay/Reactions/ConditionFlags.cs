@@ -50,5 +50,7 @@ namespace Clover.Gameplay
         HeavyTakenShare = 1 << 14,
         /// <summary>The stagger it takes from weapon blows only is multiplied by the run's Scale (The Lamp Goes Out).</summary>
         WeaponStaggerShare = 1 << 15,
+        /// <summary>A plain guard against its blows counts as a perfect guard (Snapped Blade's brittle weapon; the ledger's guard-made-perfect).</summary>
+        GuardMadePerfect = 1 << 16,
     }
 }

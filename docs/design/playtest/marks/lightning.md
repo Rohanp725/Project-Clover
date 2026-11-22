@@ -22,11 +22,9 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Whenever Static reacts on an enemy with another affliction it has (Flashover with Burn, and the rest).
 
-**The numbers.** 3 Shards. Half a second after the reaction, a bolt hits within 2 metres of the enemy, for 10 damage, 10 stagger and a stack of Static.
+**The numbers.** 3 Shards. Half a second after the reaction, it hits the same enemy again at half strength: every blow it deals comes again for half the damage. What it adds or uses up isn't done a second time.
 
 **Works with.** Carrying a second element: every one of Lightning's ten reactions. Chain Lance and Waiting Thunder, which come after it on the chart.
-
-**Not built yet.** The reaction itself should happen again at half strength. For now, a bolt falls there.
 
 **Example.** Burn and Static meet on a soldier. Flashover goes off, and a moment later the bolt follows it down.
 

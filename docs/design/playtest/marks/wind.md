@@ -105,15 +105,13 @@ design yet, its **Not built yet** line says what is missing.
 **Example.** Land five perfect cuts and throw the enemy into a pack. You land and roll right through them, farther and safer.
 
 ## wind.lift
-**What it does.** Carried Far. Every reaction with Unsteady in it throws whatever it hits away from where it happened.
+**What it does.** Carried Far. Every reaction with Unsteady in it reaches half again as far, and throws whatever it hits away from where it happened.
 
 **When it happens.** Whenever Unsteady reacts on an enemy with another affliction it has (Carried Embers with Burn, Windthrow, and the rest).
 
-**The numbers.** 3 Shards. Every enemy within 2.5 metres of the reaction is thrown 1.5 metres away from it.
+**The numbers.** 3 Shards. The reaction's bursts, ground, arcs and pulls reach 50% farther. Every enemy within 2.5 metres of the reaction is thrown 1.5 metres away from it.
 
 **Works with.** Carrying a second element: every one of Wind's ten reactions; Against the Wall, for throwing enemies into things.
-
-**Not built yet.** The reactions should reach 50% farther (the game needs a number for how far a reaction reaches first).
 
 **Example.** Wind and Fire on a soldier in a crowd. Carried Embers goes off, and the soldiers around it are thrown back.
 

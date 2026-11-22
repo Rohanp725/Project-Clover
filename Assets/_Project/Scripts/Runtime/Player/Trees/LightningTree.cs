@@ -41,10 +41,10 @@ namespace Clover.Player.Trees
                 BranchPattern.Root));
 
             // ---- The middle bough: Thunder.
-            // NEEDS: the reaction itself struck again at half strength where it happened. Until then a bolt falls there.
+            // The reaction itself struck again at half strength half a second later (UpgradeAction.EchoReaction).
             to.Add(BranchPattern.Put(new Upgrade { Id = StrikesTwice, Name = "Strikes Twice", Element = E, Kind = UpgradeKind.Major, Lifts = E, Requires = new[] { Upgrade.Static }, Icon = UpgradeIcons.Burst,
                 Description = "Every reaction with Static in it strikes again half a second later where it happened, as lightning comes back down its own channel.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Reacted, Needs = AfflictionKind.Static, Do = UpgradeAction.Burst, Delay = 0.5f, Damage = 10f, Stagger = 10f, Radius = 2f, Affliction = AfflictionKind.Static, Stacks = 1 } } },
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Reacted, ReactionWith = AfflictionKind.Static, Do = UpgradeAction.EchoReaction, Amount = 0.5f, Delay = 0.5f } } },
                 BranchPattern.MiddleFoot));
 
             SpellBranch.Add(to, E, ChainLance, "Chain Lance", SpellRole.Opener, BranchPattern.MiddleA, StrikesTwice, SpellForms.Bolt,

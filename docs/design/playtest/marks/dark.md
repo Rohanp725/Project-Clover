@@ -115,13 +115,13 @@ draining.
 
 **When it happens.** Whenever a reaction with Cursed in it happens, on any enemy. The print goes on everything the reaction hit: the enemy where it happened and every enemy its blows reached. It lasts 4 seconds, or until your next weapon blow on that enemy.
 
-**The numbers.** 3 Shards. A weapon blow on a printed enemy within 4 seconds hits it for 15 more damage.
+**The numbers.** 3 Shards. The print keeps the damage the reaction's blow dealt to that enemy. Your next weapon blow on it within 4 seconds hits it again for that much.
 
 **Works with.** Every element pair with Cursed in it (Dark's reactions with its neighbours and the rest), the root mark, Dread, which it comes after on the chart, and Never Sated and Nothing Stays Buried, which come after it.
 
-**Not built yet.** It should repeat the reaction's own damage; for now, it is always 15, no matter what the reaction did. The black print isn't drawn on the head yet.
+**Not built yet.** The black print isn't drawn on the head yet.
 
-**Example.** A Curse reaction goes off on a soldier. Your next cut on it does 15 more damage.
+**Example.** A Curse reaction hits a soldier for 24. Your next cut on it does 24 more damage.
 
 ## dark.neversated
 **What it does.** You carry no flasks at all. Instead, every blow you land heals you a little, every Cursed kill heals you a lot, and every finisher heals you even more.
@@ -178,11 +178,11 @@ draining.
 
 **When it happens.** Whenever you cast Debts Called, using the shape you picked. If you have not bought this, you cast the plain call.
 
-**The numbers.** 3 Shards. The Black Buffalo: it charges 8 metres down a path about 2.4 metres wide, dealing 18 damage, 35 stagger and a Curse to everything it runs through. Collected: everything within 10 metres is pulled in and takes 20 stagger and no damage. Each Cursed enemy heals you 4.
+**The numbers.** 3 Shards. The Black Buffalo: it charges 8 metres down a path about 2.4 metres wide, dealing 18 damage, 35 stagger and a Curse to everything it runs through. Collected: only Cursed enemies within 10 metres are pulled in. Each takes 20 stagger and no damage, and heals you 4. Enemies without a Curse aren't moved or hit.
 
 **Works with.** The Black Buffalo: a heavy weapon to follow its path, Dread, Devouring Maw's path. Collected: the root mark and Grasp (Curse them first), Never Sated, Near the Grave.
 
-**Not built yet.** The buffalo should carry only Cursed enemies and throw them down at the far end, and it should look like a buffalo made of smoke; for now, it lunges down the path in the shape of the jaw. Collected should call only Cursed enemies; for now, it pulls in every enemy, and only the Cursed ones heal you.
+**Not built yet.** The buffalo should carry only Cursed enemies and throw them down at the far end, and it should look like a buffalo made of smoke; for now, it lunges down the path in the shape of the jaw.
 
 **Example.** Use Collected on a pack of five Cursed soldiers. They come to your feet staggering, and you get 20 health.
 

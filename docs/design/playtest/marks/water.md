@@ -111,11 +111,9 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Whenever Soaked reacts on an enemy with another affliction it has (Steam with Burn, The Ground Gives with Tremor, and the rest).
 
-**The numbers.** 3 Shards. For now, an arc of water runs from where the reaction happened to up to four other Soaked enemies, each within 4 metres of the last, dealing 10 damage and 15 stagger to each.
+**The numbers.** 3 Shards. The reaction hits again on every other Soaked enemy within 4 metres of where it happened, at half strength: every blow it deals comes again there for half the damage. What it adds or uses up isn't done again.
 
 **Works with.** Carrying a second element: every one of Water's ten reactions; Soaked, to soak a crowd; Ebb and Flood, which it comes after on the chart; The Sea Comes In above it.
-
-**Not built yet.** The reaction itself should spread at half strength. For now, it is a plain arc of water.
 
 **Example.** Water and Fire on a group of soaked soldiers. Steam goes off on one, and the water carries it on to the rest.
 

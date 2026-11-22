@@ -212,6 +212,10 @@ namespace Clover.Player
         }
 
         /// <summary>Gives wards, up to the most that can be held.</summary>
+        /// <summary>True when the attacker is in a condition that turns a plain guard against it into a perfect one (ConditionFlags.GuardMadePerfect).</summary>
+        public static bool GuardMadePerfect(Component attacker) =>
+            attacker is Clover.Gameplay.IAfflictable carrier && carrier.Afflictions.Conditions.Has(Clover.Gameplay.ConditionFlags.GuardMadePerfect);
+
         public void GiveWards(int count)
         {
             if (count > 0) Wards = Mathf.Min(MaximumWards, Wards + count);
@@ -452,7 +456,9 @@ namespace Clover.Player
             float chip = 0f;
             // The RuleBook may hold the guard whatever the stamina (The Guard Holds).
             bool unbreakable = upgrades != null && upgrades.Rules.Guard == Growth.GuardMode.Unbreakable;
-            switch (covered ? Guard.Resolve(hit.Damage, hit.Unblockable, player.Stamina, out chip, unbreakable) : GuardResult.NotGuarded)
+            // A plain guard against an attacker whose condition makes it perfect (Snapped Blade).
+            bool madePerfect = covered && combat != null && GuardMadePerfect(combat.EnemyAt(hit.HasOrigin ? hit.Origin : transform.position - hit.Direction, 2.5f));
+            switch (covered ? Guard.Resolve(hit.Damage, hit.Unblockable, player.Stamina, out chip, unbreakable, madePerfect) : GuardResult.NotGuarded)
             {
                 case GuardResult.Perfect:
                     PerfectGuards++;

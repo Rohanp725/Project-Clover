@@ -186,5 +186,17 @@ namespace Clover.Player
         GreyDelay,
         /// <summary>Share. How long afflictions laid on the player last (Tremor, Earth's root: -0.5, half as long).</summary>
         AfflictionsOnYou,
+        /// <summary>
+        /// Share: how far every reaction's own blows, ground and pulls reach. Tied to an affliction, only the reactions with
+        /// that affliction in them (Carried Far: Unsteady, half again as far; the ledger's reaction-stats).
+        /// </summary>
+        ReactionReach,
+        /// <summary>Above zero for a reaction: its own blows are critical. Tied to an affliction, only the reactions with it in them (Seen Plainly: Marked).</summary>
+        ReactionCritical,
+        /// <summary>
+        /// Share: a reaction's own blow on an enemy carrying the affliction it is tied to strikes this much harder, and on
+        /// no other (Every Crack Rings: 25% on the notched alone).
+        /// </summary>
+        ReactionDamageOn,
     }
 }

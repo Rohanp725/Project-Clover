@@ -95,6 +95,8 @@ namespace Clover.Player
             Array.Clear(conditionNews, 0, conditionNews.Length);
             Array.Clear(bitHost, 0, bitHost.Length);
             Array.Clear(links, 0, links.Length);
+            echoCount = 0;
+            Array.Clear(echoWho, 0, echoWho.Length);
         }
 
         // ---- Heard in the middle of a blow: only noted.
@@ -224,7 +226,63 @@ namespace Clover.Player
                 bitHost[i] = null;
             }
             bitCount = 0;
+            // The reactions owed a second strike whose time has come.
+            for (int i = 0; i < echoCount; i++)
+            {
+                if (Time.time < echoAt[i]) continue;
+                acted |= StrikeAgain(echoWho[i], echoPair[i], echoShare[i]);
+                echoCount--;
+                echoWho[i] = echoWho[echoCount];
+                echoPair[i] = echoPair[echoCount];
+                echoShare[i] = echoShare[echoCount];
+                echoAt[i] = echoAt[echoCount];
+                echoWho[echoCount] = null;
+                i--;
+            }
             if (acted && upgrades != null) upgrades.FlushNow();
+        }
+
+        // ---- A reaction struck again (the ledger's reaction-stats): Strikes Twice, Spreading Water.
+        private const int MostEchoes = 8;
+        private readonly Component[] echoWho = new Component[MostEchoes];
+        private readonly int[] echoPair = new int[MostEchoes];
+        private readonly float[] echoShare = new float[MostEchoes];
+        private readonly float[] echoAt = new float[MostEchoes];
+        private int echoCount;
+        /// <summary>Reactions struck again, counted for probes.</summary>
+        public int Echoed { get; private set; }
+
+        /// <summary>
+        /// The reaction of <paramref name="pair"/> strikes again on <paramref name="who"/> after <paramref name="delay"/>
+        /// seconds: its own striking effects (bursts, lanes, arcs, falls, throws, helpers) at <paramref name="share"/> of
+        /// their damage, nothing it lays or sets (ReactionRules.StrikesAgain), and nothing that answers a reaction is told.
+        /// False when the line is full.
+        /// </summary>
+        public bool Echo(Component who, int pair, float share, float delay)
+        {
+            if (who == null || pair < 0 || pair >= AfflictionPairs.Count || echoCount >= MostEchoes) return false;
+            echoWho[echoCount] = who;
+            echoPair[echoCount] = pair;
+            echoShare[echoCount] = share;
+            echoAt[echoCount] = Time.time + Mathf.Max(0f, delay);
+            echoCount++;
+            return true;
+        }
+
+        private bool StrikeAgain(Component who, int pair, float share)
+        {
+            if (!Alive(who) || upgrades == null || ReactionTable.MarkFor(pair) == null) return false;
+            Vector3 at = who.transform.position;
+            ReactionLook.Play(pair, at, who.transform, at - transform.position, transform);
+            int worn = ReactionTable.WornShapeIndex(pair, Loadout(), RunState.Unlocked);
+            var effects = upgrades.ReactionEffects(pair, worn);
+            upgrades.ReactingOn(who, pair);
+            upgrades.ScaleReaction(share);
+            for (int i = 0; i < effects.Length; i++)
+                if (effects[i].On == UpgradeTrigger.Reacted && ReactionRules.StrikesAgain(effects[i].Do)) upgrades.Fire(effects[i], who, at, LaySource.Reaction);
+            upgrades.ReactedOn();
+            Echoed++;
+            return true;
         }
 
         private bool Act(Component who, int pair)
@@ -252,10 +310,13 @@ namespace Clover.Player
             if (shape != null) ShapedCount++;
             // As written, or with the numbers of the duo branch's marks in force that change this reaction (Dry Pods, Deep Swell).
             var effects = upgrades.ReactionEffects(pair, worn);
+            // What a mark makes of it on this enemy now, asked before anything is spent (Goes Up: at full depth, twice as hard, spending nothing).
+            float boost = upgrades.ReactionBoost(who, pair, out bool spares);
             // A ripe seed in the pair makes the reaction's blows stronger, an unripe one softer (In Its Season).
             upgrades.ReactingOn(who, pair);
+            if (boost != 1f) upgrades.ScaleReaction(boost);
             for (int i = 0; i < effects.Length; i++)
-                if (effects[i].On == UpgradeTrigger.Reacted) upgrades.Fire(effects[i], who, at, LaySource.Reaction);
+                if (effects[i].On == UpgradeTrigger.Reacted && !(spares && effects[i].Do == UpgradeAction.Spend)) upgrades.Fire(effects[i], who, at, LaySource.Reaction);
             upgrades.ReactedOn();
             // The marks in force that answer this reaction (or any): lifts and duo marks.
             upgrades.Fire(UpgradeTrigger.Reacted, who, at, mark.Id, LaySource.Reaction);
@@ -297,8 +358,11 @@ namespace Clover.Player
             {
                 if (effect.On != trigger || effect.Condition != news.Id) continue;
                 if (trigger == UpgradeTrigger.ConditionStruck && (!Answers(effect.By, news) || !FromSide(effect, news))) continue;
+                // Its carrier's blow turned by a perfect guard, when that is what is asked (Snapped Blade).
+                if (trigger == UpgradeTrigger.ConditionAttacked && effect.By == StruckBy.Turned && !news.Turned) continue;
                 if (effect.AtCount > 0 && effect.AtCount != (trigger == UpgradeTrigger.ConditionBeat ? news.Count : news.Blows)) continue;
-                upgrades.Fire(effect, who, at, source, news.Damage, spent, null, news.Link);
+                // An answer that repeats what the condition kept takes its kept number, not the blow's (Collected Twice).
+                upgrades.Fire(effect, who, at, source, effect.ByPower ? news.Scale : news.Damage, spent, null, news.Link);
                 ConditionAnswers++;
                 any = true;
             }

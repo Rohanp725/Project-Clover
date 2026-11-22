@@ -66,13 +66,16 @@ namespace Clover.Player
         /// stamina cannot pay for: what stamina there is goes, and the share of the blow it could not pay comes through
         /// whole, as grey health, on top of the usual chip. A blow that cannot be blocked still lands.
         /// </summary>
-        public GuardResult Resolve(float damage, bool unblockable, StaminaPool stamina, out float chip, bool unbreakable = false)
+        public GuardResult Resolve(float damage, bool unblockable, StaminaPool stamina, out float chip, bool unbreakable = false, bool madePerfect = false)
         {
             chip = 0f;
             if (!IsRaised) return GuardResult.NotGuarded;
             // A perfect guard turns even a blow that cannot be blocked.
             if (IsPerfect || (unblockable && IsPerfectAgainstRed)) return GuardResult.Perfect;
             if (unblockable) return GuardResult.NotGuarded;
+            // A plain guard against an attacker in a condition that makes it so counts as perfect (Snapped Blade's brittle
+            // weapon snapping on the guard; the ledger's guard-made-perfect): nothing is paid and nothing comes through.
+            if (madePerfect) return GuardResult.Perfect;
             float cost = damage * StaminaPerDamage;
             if (!stamina.TrySpend(cost))
             {

@@ -146,5 +146,17 @@ namespace Clover.Player
         /// Reads: Affliction, Radius.
         /// </summary>
         Gather,
+        /// <summary>
+        /// The reaction whose moment this answers strikes again on the target: its own striking effects re-run at Amount
+        /// (0.5) of their damage after Delay, laying and setting nothing (Strikes Twice: half, 0.5 s later where it happened;
+        /// Spreading Water: on each other Soaked enemy near, with EachWithin). Reads: Amount, Delay.
+        /// </summary>
+        EchoReaction,
+        /// <summary>
+        /// Done as the reaction named in Reaction fires, not after: on an enemy that meets Needs (NeedsFull, NeedsAtLeast)
+        /// then, the reaction's own damage is multiplied by Amount, and with SparesSpend it spends nothing (Goes Up; the
+        /// ledger's reaction-numbers-when). Nothing is done at its own moment. Reads: Reaction, Needs, Amount, SparesSpend.
+        /// </summary>
+        BoostReaction,
     }
 }

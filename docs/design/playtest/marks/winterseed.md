@@ -59,10 +59,10 @@ carried.
 
 **When it happens.** Cast it from a spell slot while you carry both Ice and Life. Press that slot's button (hold L2 and a face button, or press 1 to 4). The first time it lands, it charges your blade with Ice.
 
-**The numbers.** Mix, duo spell, detonator, 5 Shards. It costs no mana. After you cast it, you must wait 14 seconds to cast it again. Fighting with your weapon makes the wait shorter. Everything within 9 metres takes 4 damage and 4 stagger. On enemies that have both afflictions, the Chill is used up, so Winter Seed (plain or with a shape) wakes up.
+**The numbers.** Mix, duo spell, detonator, 5 Shards. It costs no mana. After you cast it, you must wait 14 seconds to cast it again. Fighting with your weapon makes the wait shorter. The lines reach only enemies within 9 metres that have both Chill and Seeded, eight at most, nearest first. Each one takes 4 damage and 4 stagger. A frozen one is shattered first. Then its Chill is used up, so Winter Seed (plain or with a shape) wakes up. If no enemy has both, nothing is hit and you get half the wait back.
 
 **Works with.** Winter Seed and its shapes, Seed Under Snow, Late Frost.
 
 **Example.** Put five soldiers to sleep under the frost, then wake them all up at once.
 
-**Not built yet.** For now, the lines reach every enemy within 9 metres, not only those with both afflictions. A frozen enemy isn't shattered yet. If no one is reached, you don't get half the wait back yet. An enemy your weapon hit in the last 2 seconds doesn't wake up harder yet.
+**Not built yet.** An enemy your weapon hit in the last 2 seconds doesn't wake up harder yet.

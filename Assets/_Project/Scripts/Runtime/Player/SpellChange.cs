@@ -79,6 +79,7 @@ namespace Clover.Player
             into.AimFarthest = from.AimFarthest;
             into.AimMissShare = from.AimMissShare;
             into.OnlyCarrying = from.OnlyCarrying;
+            into.OnlyCarrying2 = from.OnlyCarrying2;
             into.Seal = from.Seal;
             into.PerDose = from.PerDose;
             into.PassReach = from.PassReach;

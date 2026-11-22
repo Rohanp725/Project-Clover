@@ -117,9 +117,10 @@ namespace Clover.Player.Trees
                 },
                 "Land all five cuts in time, and you come down with Tailwind lit for four seconds at no cost.");
 
-            // NEEDS: every reaction with Unsteady in it reaching half again as far (a reaction-reach stat). The throw is data.
+            // Every reaction with Unsteady in it reaches half again as far (PlayerStat.ReactionReach). The throw is data.
             to.Add(BranchPattern.Put(new Upgrade { Id = CarriedFar, Name = "Carried Far", Element = E, Kind = UpgradeKind.Major, Lifts = E, Requires = new[] { RisingCut }, Icon = UpgradeIcons.Gust,
                 Description = "Every reaction with Unsteady in it reaches half again as far and throws what it strikes a metre and a half out from where it happened.",
+                Stats = new[] { new StatMod(PlayerStat.ReactionReach, 0.5f, AfflictionKind.Unsteady) },
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Reacted, Needs = AfflictionKind.Unsteady, Do = UpgradeAction.Push, Radius = 2.5f, Amount = 1.5f } } },
                 BranchPattern.MiddleCrown));
             to.Add(BranchPattern.Put(new Upgrade { Id = NothingBeneath, Name = "Nothing Beneath", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { CarriedFar }, Icon = UpgradeIcons.Spiral,

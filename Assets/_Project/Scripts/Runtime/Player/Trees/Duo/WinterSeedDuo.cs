@@ -91,17 +91,22 @@ namespace Clover.Player.Trees.Duo
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.EverySeconds, Every = 6f, While = StatWhen.NearGrown, Do = UpgradeAction.Ward, Count = 1 } },
             }, HeartPattern.Keystone));
 
-            // The duo spell, bought with Shards once both are carried (no god gives it): a detonator on a 14 s cooldown (SpellTimings). A burst round you; on each enemy it
-            // strikes that carries both, the Chill is spent, so its sleeping seed wakes at once (Winter Seed's or a shape's).
-            // NEEDS: lines that reach only those carrying both (eight at most) and shatter any Frozen; half the cooldown back
-            // with no one reached; one struck by your weapon in the last 2 s waking at one and a half times.
+            // The duo spell, bought with Shards once both are carried (no god gives it): a detonator on a 14 s cooldown (SpellTimings). Lines run only to the
+            // enemies within 9 m carrying both, eight at most (SpellSpec.OnlyCarrying, OnlyCarrying2); on each the Chill is spent, so its sleeping
+            // seed wakes at once (Winter Seed's or a shape's), and a Frozen one is shattered first; with none reached half the wait comes
+            // back (SpellSpec.MissedWait). NEEDS: one struck by your weapon in the last 2 s waking at one and a half times (count-rules).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = GreenUnderTheIce, Name = "Green Under the Ice", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Role = SpellRole.Detonator, Requires = new[] { SeedUnderSnow, LateFrost }, Icon = UpgradeIcons.Leaf,
                 Description = "You strike the floor and lines of green run through the frost to every enemy within 9 m: on each that carries both Chill and Seeded, the frost breaks and its sleeping seed wakes at once.",
                 Form = SpellForms.Nova,
-                Spell = new SpellSpec { Radius = 9f, Delay = 0.2f, Damage = 4f, Stagger = 4f, Stacks = 0 },
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Needs = AfflictionKind.Chill, Needs2 = AfflictionKind.Seeded, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Chill } },
+                Spell = new SpellSpec { Radius = 9f, Delay = 0.2f, Damage = 4f, Stagger = 4f, Stacks = 0, Count = 8, MissedWait = 0.5f,
+                    OnlyCarrying = AfflictionKind.Chill, OnlyCarrying2 = AfflictionKind.Seeded },
+                Effects = new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Shatter },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Needs = AfflictionKind.Chill, Needs2 = AfflictionKind.Seeded, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Chill },
+                },
             }, HeartPattern.Spell));
         }
 

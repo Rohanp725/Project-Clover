@@ -57,6 +57,13 @@ namespace Clover.Player
         /// </summary>
         public Clover.Gameplay.AfflictionKind OnlyCarrying = Clover.Gameplay.AfflictionKind.None;
         /// <summary>
+        /// Not None, with <see cref="OnlyCarrying"/>: they must carry this as well (the ledger's reach-only-afflicted: Green
+        /// Under the Ice reaches only those carrying both Chill and Seeded). The burst round you then reaches
+        /// <see cref="Count"/> of them at most, the nearest first, and with none reached its slot gives back its
+        /// <see cref="MissedWait"/> share of the wait.
+        /// </summary>
+        public Clover.Gameplay.AfflictionKind OnlyCarrying2 = Clover.Gameplay.AfflictionKind.None;
+        /// <summary>
         /// For the brand form: a seal (Paper Seal; the ledger's seal-thunder). The blows only burn it down; at the last,
         /// thunder falls on the sealed enemy: Damage and <see cref="PerDose"/> a dose of the cast's affliction it carries, all
         /// its Static discharged, Stagger in Radius, and each dose it carries passing one to every enemy within

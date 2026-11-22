@@ -222,6 +222,15 @@ namespace Clover.Player
         public bool Overflow;
         /// <summary>For Pass: not empty, the nearest other enemy in this condition (by its name or what it is) takes the doses before any other (the next on Eaten in Turn's line).</summary>
         public string ToState = "";
+        /// <summary>For an Arc from the target: each enemy the arc reaches is drawn this many metres toward the target, and no one else (Drawn Iron; the ledger's afflicted-only).</summary>
+        public float DrawsIn;
+        /// <summary>
+        /// For a Condition: the condition keeps what the trigger carried (a reaction's blow's damage) as its number. For a
+        /// condition's answer: its damage is that kept number, by Share (1: all of it) (Collected Twice repeats the reaction's damage).
+        /// </summary>
+        public bool ByPower;
+        /// <summary>For BoostReaction: the reaction spends nothing when it fires (its own Spend effects are not done).</summary>
+        public bool SparesSpend;
 
         /// <summary>A copy with every number, its slot and its mark (an Empower's twin of its Learn's effect).</summary>
         internal UpgradeEffect Twin() => (UpgradeEffect)MemberwiseClone();

@@ -161,6 +161,8 @@ namespace Clover.Player
             public bool Fanned;
             // For a condition's answer: the enemy the condition is joined to (Rot Roots' host), or null.
             public Component Link;
+            // For an answer to a reaction (Reacted, ReactionStruck): which reaction, by its pair; -1 for none.
+            public int Pair;
         }
 
         // ---- Depth moved between enemies (the ledger's depth-moved).
@@ -180,6 +182,12 @@ namespace Clover.Player
         public int DepthsRaised { get; private set; }
         public int DosesGathered { get; private set; }
         public int Overflows { get; private set; }
+        /// <summary>Reactions struck again by a mark (Strikes Twice, Spreading Water), counted for probes.</summary>
+        public int Echoes { get; private set; }
+        // The reactions' adapter, which strikes a reaction again; looked up once.
+        private PlayerReactions reactionsFound;
+        // The reaction whose moment the trigger now being answered is (-1: none), put on each answer's line.
+        private int triggerPair = -1;
 
         private readonly HashSet<IDamageable> fanTaken = new HashSet<IDamageable>();
 
@@ -416,6 +424,7 @@ namespace Clover.Player
             element = GetComponent<PlayerElement>();
             combat = GetComponent<PlayerCombat>();
             defence = GetComponent<PlayerDefence>();
+            reactionsFound = GetComponent<PlayerReactions>();
             if (combat != null) combat.Stats = Stats;
             hitStop = GetComponent<HitStop>();
             afterimage = GetComponent<Afterimage>();
@@ -587,12 +596,12 @@ namespace Clover.Player
             return MarkRules.CanBuyInItsCurrency(upgrade, RunState.Unlocked, RunState.Points, null, Open(upgrade), PlaytestMode.On, null, 0);
         }
 
-        // What a reaction's own damage is multiplied by: 1 for an effect that is no reaction's (its plain mark or a duo shape).
-        private float ReactionScale(Upgrade owner)
+        // What a reaction's own damage (or reach) is multiplied by: 1 for an effect that is no reaction's (its plain mark or a duo shape).
+        private float ReactionScale(Upgrade owner, PlayerStat stat = PlayerStat.ReactionDamage)
         {
             if (owner == null) return 1f;
             int pair = owner.Kind == UpgradeKind.Reaction ? ReactionTable.PairOf(owner.Id) : ReactionTable.IsReactionShape(owner) ? HeartLayout.PairOf(owner) : -1;
-            return pair < 0 ? 1f : Stats.ReactionMultiplier(PlayerStat.ReactionDamage, AfflictionPairs.First(pair), AfflictionPairs.Second(pair));
+            return pair < 0 ? 1f : Stats.ReactionMultiplier(stat, AfflictionPairs.First(pair), AfflictionPairs.Second(pair));
         }
 
         /// <summary>True when What the Yew Keeps is in force and the dead carried both its seed and its curse: no thorns burst.</summary>
@@ -1256,7 +1265,9 @@ namespace Clover.Player
                 if (reactionMoment && !string.IsNullOrEmpty(effect.Reaction) && effect.Reaction != reaction) continue;
                 // Every reaction with a given affliction in it (Cold Settles: with Chill).
                 if (reactionMoment && effect.ReactionWith != AfflictionKind.None && !ReactionHas(ReactionTable.PairOf(reaction), effect.ReactionWith)) continue;
+                triggerPair = reactionMoment ? ReactionTable.PairOf(reaction) : -1;
                 Consider(effect, target, at, hasAt, spent, dead, source != LaySource.Reaction || !effect.Cascades ? source : LaySource.Effect, power);
+                triggerPair = -1;
             }
         }
 
@@ -1298,6 +1309,7 @@ namespace Clover.Player
                 // By its own name, or by what it is: a shape's rocking is a Logan Stone's rocking (New Face).
                 if (!effect.AnyMark || (effect.Condition != news.Id && effect.Condition != news.Is)) continue;
                 if (trigger == UpgradeTrigger.ConditionStruck && (!PlayerReactions.Answers(effect.By, news) || !PlayerReactions.FromSide(effect, news))) continue;
+                if (trigger == UpgradeTrigger.ConditionAttacked && effect.By == StruckBy.Turned && !news.Turned) continue;
                 if (effect.AtCount > 0 && effect.AtCount != (trigger == UpgradeTrigger.ConditionBeat ? news.Count : news.Blows)) continue;
                 Consider(effect, who, at, true);
                 any = true;
@@ -1388,7 +1400,7 @@ namespace Clover.Player
             if (effect.CooldownPerEnemy && kept != null) kept.Start(effect.Slot, Time.time, wait);
             else readyAt[effect.Slot] = Time.time + wait;
             Enqueue(new Pending { Effect = effect, Target = target, At = at, HasAt = hasAt, Spent = spent, Less = less, Source = source, Power = power, Ripe = ripeScale,
-                ReactionOf = reactionPair + 1, ReactionCast = reactionPair >= 0 ? reactionCast : 0, Link = link });
+                ReactionOf = reactionPair + 1, ReactionCast = reactionPair >= 0 ? reactionCast : 0, Link = link, Pair = triggerPair });
         }
 
         /// <summary>
@@ -1451,7 +1463,13 @@ namespace Clover.Player
             // And whom it strikes is told as struck by that reaction (ReactionStruck).
             ReactionOf = layingReaction,
             ReactionCast = layingCast,
+            // Critical when a mark makes this reaction's blows so (Seen Plainly: every reaction with Marked in it).
+            Critical = layingReaction > 0 && ReactionCritical(layingReaction - 1),
         };
+
+        /// <summary>True when the marks in force make the reaction of this pair strike critically (PlayerStat.ReactionCritical).</summary>
+        public bool ReactionCritical(int pair) =>
+            pair >= 0 && pair < AfflictionPairs.Count && Stats.ReactionMultiplier(PlayerStat.ReactionCritical, AfflictionPairs.First(pair), AfflictionPairs.Second(pair)) > 1.0001f;
 
         // A blow drawn by its reaction's own look throws no hit art of its element (Sickle Wind's whirl threw a wind strike's
         // white crescents at every enemy every bite, the film of 2026-11-20), and the body it lands on flashes in the
@@ -1583,6 +1601,10 @@ namespace Clover.Player
             // A reaction's own blows, by the stat ReactionDamage (Fuel to It, Left in Rubble, Every Crack Rings).
             float reactionScale = ReactionScale(effect.Owner);
             eDamage *= reactionScale;
+            // A reaction's own blows, ground and pulls reach further by the stat ReactionReach (Carried Far).
+            float spread = ReactionScale(effect.Owner, PlayerStat.ReactionReach);
+            // A condition's kept number as the damage (Collected Twice: the reaction's own damage, repeated).
+            if (effect.ByPower && effect.Do != UpgradeAction.Condition) eDamage = pending.Power * Or(effect.Share, 1f);
             // A reaction's blow on a ripe seed is stronger, on an unripe one softer (In Its Season).
             if (pending.Ripe > 0f) eDamage *= pending.Ripe;
             float eStagger = byCount ? effect.Stagger : effect.Stagger * per;
@@ -1606,7 +1628,7 @@ namespace Clover.Player
                     if (effect.Radius > 0f)
                     {
                         // Sparing the trigger's own enemy, or only those carrying an affliction, when the mark says so.
-                        combat.AfflictArea(centre, effect.Radius, kind, stacks, effect.SparesTarget ? subject : null, laying, effect.OnlyCarrying);
+                        combat.AfflictArea(centre, effect.Radius * spread, kind, stacks, effect.SparesTarget ? subject : null, laying, effect.OnlyCarrying);
                         // A reaction with its own bespoke look shows what it lays in that look (Smoulder's black flare).
                         if (!bespoke) ElementLook.Ring(look, centre + Vector3.up * 0.2f);
                     }
@@ -1622,7 +1644,7 @@ namespace Clover.Player
                 {
                     var burst = new HazardSpec
                     {
-                        Kind = ElementLook.Ground(look), Tint = look.Colour, Position = centre, Radius = Or(effect.Radius, 2.5f), Seconds = 0.12f, BiteEvery = 0.1f,
+                        Kind = ElementLook.Ground(look), Tint = look.Colour, Position = centre, Radius = Or(effect.Radius, 2.5f) * spread, Seconds = 0.12f, BiteEvery = 0.1f,
                         Once = true, Burst = !effect.Unseen && !bespoke, Quiet = bespoke, Delay = effect.Delay, Blow = Unseen(Blow(look, kind, eDamage, eStagger, eStacks), bespoke), FromReaction = laying == LaySource.Reaction,
                         // A burst that starts from the one struck may leave that one alone (Earthed's fern).
                         Spares = effect.SparesTarget ? pending.Target as IDamageable : null,
@@ -1640,7 +1662,7 @@ namespace Clover.Player
                 }
                 case UpgradeAction.Lane:
                 {
-                    float length = Or(effect.Reach, 8f), half = Or(effect.Radius, 0.6f), every = Or(effect.Interval, 0.03f);
+                    float length = Or(effect.Reach, 8f) * spread, half = Or(effect.Radius, 0.6f), every = Or(effect.Interval, 0.03f);
                     if (effect.AimAt != AfflictionKind.None)
                     {
                         // To the nearest other enemy carrying what it seeks, and no farther; with none, the target alone.
@@ -1701,10 +1723,10 @@ namespace Clover.Player
                 case UpgradeAction.Hazard:
                 {
                     int patches = effect.Shape == HazardShape.Patch ? 1 : Or(eCount, 4);
-                    float reach = Or(effect.Reach, 4f);
+                    float reach = Or(effect.Reach, 4f) * spread;
                     var spec = new HazardSpec
                     {
-                        Kind = ElementLook.Ground(look), Tint = look.Colour, Radius = Or(effect.Radius, 1f) * Stats.Multiplier(PlayerStat.GroundSize), Seconds = Or(effect.Seconds, 3f) * Stats.Multiplier(PlayerStat.GroundSeconds), BiteEvery = Or(effect.Interval, 0.5f),
+                        Kind = ElementLook.Ground(look), Tint = look.Colour, Radius = Or(effect.Radius, 1f) * spread * Stats.Multiplier(PlayerStat.GroundSize), Seconds = Or(effect.Seconds, 3f) * Stats.Multiplier(PlayerStat.GroundSeconds), BiteEvery = Or(effect.Interval, 0.5f),
                         Grown = effect.Grown, Family = effect.Slot + 1, Limit = effect.Grown && effect.Limit > 0 ? effect.Limit + Mathf.Max(0, Stats.Whole(PlayerStat.GrownLimit)) : 0,
                         Blow = Blow(look, kind, eDamage, eStagger, eStacks), FromReaction = laying == LaySource.Reaction,
                         Spares = effect.SparesTarget ? pending.Target as IDamageable : null,
@@ -1730,10 +1752,12 @@ namespace Clover.Player
                         // Answering a blow, it carries a share of that blow (Amount); else its own Damage.
                         float arcDamage = effect.Amount > 0f && pending.Power > 0f ? pending.Power * effect.Amount : eDamage;
                         ArcsLeapt += combat.StrikeChainFrom(target, Blow(look, kind, arcDamage, eStagger, eStacks), Or(eCount, 2),
-                            Or(effect.Reach, 5f) * Stats.Multiplier(PlayerStat.LeapReach), look, effect.LeapsTo, effect.LeapsOnFrom);
+                            Or(effect.Reach, 5f) * spread * Stats.Multiplier(PlayerStat.LeapReach), look, effect.LeapsTo, effect.LeapsOnFrom);
+                        // What the arcs reached, and only that, folds in toward the one struck (Drawn Iron).
+                        if (effect.DrawsIn > 0f) combat.DrawStruckToward(target.position, effect.DrawsIn);
                         break;
                     }
-                    combat.StrikeChain(0f, Blow(look, kind, eDamage, eStagger, eStacks), Or(eCount, 2), Or(effect.Reach, 5f) * Stats.Multiplier(PlayerStat.LeapReach), look, target);
+                    combat.StrikeChain(0f, Blow(look, kind, eDamage, eStagger, eStacks), Or(eCount, 2), Or(effect.Reach, 5f) * spread * Stats.Multiplier(PlayerStat.LeapReach), look, target);
                     break;
                 }
                 case UpgradeAction.Projectile:
@@ -1840,7 +1864,7 @@ namespace Clover.Player
                         ElementLook.Ring(look, centre + Vector3.up * 0.2f);
                         break;
                     }
-                    combat.Displace(centre, Or(effect.Radius, 5f), Or(effect.Amount, 3f), effect.Do == UpgradeAction.Pull, effect.OnlyCarrying);
+                    combat.Displace(centre, Or(effect.Radius, 5f) * spread, Or(effect.Amount, 3f), effect.Do == UpgradeAction.Pull, effect.OnlyCarrying);
                     ElementLook.Ring(held, centre + Vector3.up * 0.2f);
                     break;
                 case UpgradeAction.SlowTime:
@@ -1947,6 +1971,10 @@ namespace Clover.Player
                     ElementLook.Sparks(look, self + Vector3.up * 1.1f + transform.forward * 0.5f, transform.forward, 0.6f);
                     break;
                 }
+                case UpgradeAction.EchoReaction:
+                    // The reaction that answered strikes again on this enemy, at a share, a moment later (Strikes Twice, Spreading Water).
+                    if (pending.Pair >= 0 && subject != null && reactionsFound != null && reactionsFound.Echo(subject, pending.Pair, Or(effect.Amount, 0.5f), effect.Delay)) Echoes++;
+                    break;
                 case UpgradeAction.Gather:
                 {
                     // Every dose near runs into the next burst of this cast that carries doses on, with no limit.
@@ -2004,7 +2032,7 @@ namespace Clover.Player
                 {
                     // PerStack: held for each stack counted (Poured Bronze's 0.4 s a notch).
                     float seconds = Or(effect.Seconds, 1.5f) * per;
-                    if (effect.Radius > 0f) Holds += combat.HoldArea(centre, effect.Radius, seconds, effect.OnlyCarrying);
+                    if (effect.Radius > 0f) Holds += combat.HoldArea(centre, effect.Radius * spread, seconds, effect.OnlyCarrying);
                     else if (subject is IAfflictable gripped && gripped.Afflictions.Hold(seconds)) Holds++;
                     // An unseen hold is drawn by its reaction's look alone: no ring (Seized, the owner's "remove the circles").
                     if (!effect.Unseen)
@@ -2090,7 +2118,7 @@ namespace Clover.Player
                 case UpgradeAction.Lift:
                 {
                     float seconds = Or(effect.Seconds, 1f) + Stats.Sum(PlayerStat.AirSeconds);
-                    if (effect.Radius > 0f) Lifts += combat.LiftArea(centre, effect.Radius, Or(effect.Seconds, 1f));
+                    if (effect.Radius > 0f) Lifts += combat.LiftArea(centre, effect.Radius * spread, Or(effect.Seconds, 1f));
                     else if (subject is IAfflictable thrown)
                     {
                         if (thrown.Afflictions.Lift(seconds)) Lifts++;
@@ -2157,7 +2185,7 @@ namespace Clover.Player
                     if (subject is IFlinchable flinching && flinching.Flinch(Or(effect.Seconds, 0.4f))) Flinches++;
                     break;
                 case UpgradeAction.Condition:
-                    ConditionsSet += ConditionCaster.Cast(effect, subject, centre, combat, laying, conditionScratch, per);
+                    ConditionsSet += ConditionCaster.Cast(effect, subject, centre, combat, laying, conditionScratch, per, effect.ByPower ? pending.Power : -1f, spread);
                     break;
                 case UpgradeAction.Shatter:
                 {
@@ -2517,10 +2545,10 @@ namespace Clover.Player
         /// An enemy's blow aimed at the player landed or was turned (the ledger's their-blow-moment): the conditions on the
         /// attacker that answer it are told (The Grudge's cloud strikes), and the marks on <see cref="UpgradeTrigger.TheirBlow"/> answer.
         /// </summary>
-        private void TheirBlow(Component attacker, Vector3 at)
+        private void TheirBlow(Component attacker, Vector3 at, bool turned = false)
         {
             TheirBlows++;
-            if (attacker is IAfflictable carrier) carrier.Afflictions.Conditions.Attacked();
+            if (attacker is IAfflictable carrier) carrier.Afflictions.Conditions.Attacked(turned);
             Trigger(UpgradeTrigger.TheirBlow, attacker, at);
         }
 
@@ -2589,7 +2617,7 @@ namespace Clover.Player
             if (struckBy is IAfflictable both && both.Afflictions.Has(AfflictionKind.Burn) && both.Afflictions.Has(AfflictionKind.Static) && Has(Trees.PlasmaTree.TwinBreak))
                 TwinBreak(struckBy, both.Afflictions);
             Trigger(UpgradeTrigger.PerfectGuard, struckBy, attacker);
-            TheirBlow(struckBy, attacker);
+            TheirBlow(struckBy, attacker, true);
         }
 
         /// <summary>How many times Twin Break has spent Burn and Static together, and how many enemies have melted down: for probes.</summary>
@@ -2996,13 +3024,29 @@ namespace Clover.Player
         /// A reaction's own blow landed on <paramref name="who"/> (or it went off on it): whatever answers what a reaction
         /// struck is told, once for each enemy each time a reaction goes off (the ledger's reaction-struck).
         /// </summary>
-        public void OnReactionStruck(Component who, int pair, int cast)
+        public void OnReactionStruck(Component who, int pair, int cast, float damage = 0f)
         {
             if (who == null || pair < 0 || cast <= 0 || !struckOnce.First(cast, who)) return;
             var mark = ReactionTable.MarkFor(pair);
             if (mark == null) return;
-            Trigger(UpgradeTrigger.ReactionStruck, who, who.transform.position, true, 0, null, AfflictionKind.None, mark.Id, LaySource.Reaction);
+            // The blow's damage goes with it, for what repeats it (Collected Twice).
+            Trigger(UpgradeTrigger.ReactionStruck, who, who.transform.position, true, 0, null, AfflictionKind.None, mark.Id, LaySource.Reaction, damage);
         }
+
+        /// <summary>
+        /// What the marks in force make of the reaction of <paramref name="pair"/> as it fires on <paramref name="who"/>: its own
+        /// damage multiplied, and whether it spends nothing (ReactionRules.Boost).
+        /// </summary>
+        public float ReactionBoost(Component who, int pair, out bool spares)
+        {
+            spares = false;
+            var mark = ReactionTable.MarkFor(pair);
+            if (mark == null || byTrigger == null || !(who is IAfflictable afflicted)) return 1f;
+            return ReactionRules.Boost(byTrigger[(int)UpgradeTrigger.Reacted], mark.Id, afflicted.Afflictions, out spares);
+        }
+
+        /// <summary>While a reaction struck again is put in the line: its damage is this share of the first time's.</summary>
+        public void ScaleReaction(float share) => ripeScale *= Mathf.Max(0f, share);
 
         /// <summary>True when the reaction's pair has <paramref name="kind"/> in it, or none is asked.</summary>
         public static bool ReactionHas(int pair, AfflictionKind kind) =>

@@ -148,12 +148,12 @@ namespace Clover.Player.Trees
                 "Let go in the same instant as a blow lands on the vent, and the spout is doubled and the vent stays for a second round.",
                 learnEffects: new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = ThrownOpen, Seconds = 0.8f, Flags = ConditionFlags.BeginsNoAttack | ConditionFlags.CannotGuard } } });
 
-            // NEEDS: every reaction with Soaked in it running on itself, at half strength, to the other Soaked enemies (a
-            // reaction struck again elsewhere, reaction-stats). Until then an arc of its water runs from where it happened to
-            // each Soaked enemy within four metres.
+            // Every reaction with Soaked in it runs on itself, at half strength, to each other Soaked enemy within four metres
+            // (UpgradeAction.EchoReaction, done on each of them: UpgradeEffect.EachWithin).
             to.Add(BranchPattern.Put(new Upgrade { Id = SpreadingWater, Name = "Spreading Water", Element = E, Kind = UpgradeKind.Major, Lifts = E, Requires = new[] { EbbAndFlood }, Icon = UpgradeIcons.Drop,
                 Description = "Every reaction with Soaked in it runs on at half strength to every other Soaked enemy within four metres.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Reacted, Needs = AfflictionKind.Soaked, Do = UpgradeAction.Arc, LeapsTo = AfflictionKind.Soaked, Count = 4, Reach = 4f, Damage = 10f, Stagger = 15f, Stacks = 0 } } },
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Reacted, ReactionWith = AfflictionKind.Soaked, Do = UpgradeAction.EchoReaction, Amount = 0.5f,
+                    EachWithin = 4f, EachOther = true, OnlyCarrying = AfflictionKind.Soaked } } },
                 BranchPattern.MiddleCrown));
             // The Current bough's keystone (the owner's pick of 2026-11-20). The tide clock is kept by hand (PlayerUpgrades:
             // States turns it every six seconds and sets StatWhen.HighWater or LowWater, tide-clock); what each half does and

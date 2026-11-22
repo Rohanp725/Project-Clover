@@ -15,20 +15,21 @@ namespace Clover.Player
     public static class ConditionCaster
     {
         /// <summary>Sets it; returns on how many it was set.</summary>
-        public static int Cast(UpgradeEffect effect, Component subject, Vector3 centre, PlayerCombat combat, LaySource source, HashSet<IDamageable> scratch, int stacks = 1)
+        public static int Cast(UpgradeEffect effect, Component subject, Vector3 centre, PlayerCombat combat, LaySource source, HashSet<IDamageable> scratch, int stacks = 1,
+            float scale = -1f, float spread = 1f)
         {
             var spec = effect != null ? effect.State : null;
             if (spec == null || string.IsNullOrEmpty(spec.Id) || combat == null) return 0;
             float pace = PaceFor(spec, stacks);
             AnswersOf(effect, spec.Id, out bool struck, out bool ended, out bool died, out bool attacked);
             int mark = effect.Owner != null ? effect.Owner.Index : -1;
-            if (!spec.ToOthers && effect.Radius <= 0f) return Set(effect, spec, subject, null, mark, struck, ended, died, attacked, combat, source, pace) ? 1 : 0;
+            if (!spec.ToOthers && effect.Radius <= 0f) return Set(effect, spec, subject, null, mark, struck, ended, died, attacked, combat, source, pace, scale) ? 1 : 0;
 
             // Round the trigger's enemy: the nearest first, as many as the effect allows (all within the radius when it names none).
             scratch.Clear();
             if (spec.ToOthers && subject is IDamageable self) scratch.Add(self);
             int most = effect.Count > 0 ? effect.Count : 12;
-            float radius = effect.Radius > 0f ? effect.Radius : 5f;
+            float radius = (effect.Radius > 0f ? effect.Radius : 5f) * Mathf.Max(0.1f, spread);
             int set = 0;
             while (set < most && scratch.Count < 24)
             {
@@ -37,7 +38,7 @@ namespace Clover.Player
                 scratch.Add(one);
                 // Only those carrying what the effect seeks (Chokedamp's damp runs to the shaken alone).
                 if (effect.LeapsTo != AfflictionKind.None && !(near is IAfflictable seeker && seeker.Afflictions.Has(effect.LeapsTo))) continue;
-                if (Set(effect, spec, near, spec.ToOthers ? subject : null, mark, struck, ended, died, attacked, combat, source, pace)) set++;
+                if (Set(effect, spec, near, spec.ToOthers ? subject : null, mark, struck, ended, died, attacked, combat, source, pace, scale)) set++;
             }
             scratch.Clear();
             return set;
@@ -51,12 +52,15 @@ namespace Clover.Player
             spec != null && spec.SlowPerStack > 0f ? Mathf.Max(0.05f, 1f - spec.SlowPerStack * Mathf.Max(1, stacks)) : -1f;
 
         private static bool Set(UpgradeEffect effect, ConditionSpec spec, Component who, Component link, int mark, bool struck, bool ended, bool died, bool attacked,
-            PlayerCombat combat, LaySource source, float pace)
+            PlayerCombat combat, LaySource source, float pace, float scale = -1f)
         {
             if (!(who is IAfflictable afflictable)) return false;
             var set = afflictable.Afflictions;
             if (!Takes(spec, set)) return false;
-            if (set.Conditions.Set(spec, who, mark, link, struck, ended, ShareOf(set), died, attacked, pace) < 0) return false;
+            int slot = set.Conditions.Set(spec, who, mark, link, struck, ended, ShareOf(set), died, attacked, pace);
+            if (slot < 0) return false;
+            // The trigger's own number kept as the run's (Collected Twice: the damage the reaction dealt).
+            if (scale >= 0f) set.Conditions.Keep(slot, scale);
             if (effect.Affliction != AfflictionKind.None && effect.Stacks > 0)
                 CombatEvents.Report(who, effect.Affliction, effect.Stacks, set.Lay(effect.Affliction, effect.Stacks + combat.ExtraStacks, 0f, combat.AfflictionPower, source, who), source);
             return true;

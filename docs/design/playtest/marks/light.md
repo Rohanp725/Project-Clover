@@ -275,11 +275,9 @@ the next blows on that enemy critical.
 
 **When it happens.** Whenever a reaction with Marked in it happens, on any enemy.
 
-**The numbers.** 3 Shards. One Mark on everything the reaction hit: the enemy where it happened and every enemy its blows reached.
+**The numbers.** 3 Shards. Every blow of the reaction is a critical hit, for 1.5 times the damage. One Mark on everything the reaction hit: the enemy where it happened and every enemy its blows reached.
 
 **Works with.** Every element pair with Marked in it (Light's reactions with its neighbours and the rest), the root mark (each Mark gives three critical hits), Weighed, and Daybreak and Full Daylight, which come after it on the chart.
-
-**Not built yet.** The reaction itself should be a critical hit; for now, only the Marks spread.
 
 **Example.** A reaction goes off on one Marked soldier in a pack. The two next to it come away Marked, and your next cuts on all of them are critical hits.
 

@@ -66,10 +66,10 @@ while Light and Lightning are both carried.
 
 **When it happens.** At a rest fire, pick it for your surge slot in the Hand while you carry both Light and Lightning. Light it with the surge button.
 
-**The numbers.** Mix, duo surge, 5 Shards. 45 mana, lasts 10 seconds. For now: when Static goes off on a Marked enemy, it arcs through up to five Marked enemies within 12 metres, for 3.5 damage per stack each, at most once every half second. A critical hit on a Marked enemy adds a Static to every enemy within 12 metres, at most once every 0.3 seconds.
+**The numbers.** Mix, duo surge, 5 Shards. 45 mana, lasts 10 seconds. For now: when Static goes off on a Marked enemy, it arcs through up to five Marked enemies within 12 metres, for 3.5 damage per stack each, at most once every half second. A critical hit on a Marked enemy adds a Static to every Marked enemy within 12 metres, and to no other enemy, at most once every 0.3 seconds.
 
 **Works with.** Charged Light, Diamond Thunder, The Bolt Runs True.
 
 **Example.** Mark a pack, light your surge, and one burst of Static runs through all of them.
 
-**Not built yet.** There are no threads yet, so the Static arcs from one enemy to the next, and a critical hit charges every enemy nearby, Marked or not.
+**Not built yet.** There are no threads yet, so the Static arcs from one enemy to the next instead of running along them.

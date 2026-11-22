@@ -49,5 +49,7 @@ namespace Clover.Player
         /// white flash sheet on every enemy in it every half second; the owner, 2026-11-20: "less flickery").
         /// </summary>
         public bool Unseen;
+        /// <summary>A critical blow: its damage multiplied as a weapon's critical is, and told as critical (Seen Plainly's reactions).</summary>
+        public bool Critical;
     }
 }

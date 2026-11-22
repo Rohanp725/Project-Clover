@@ -204,6 +204,13 @@ namespace Clover.Gameplay
         /// free slot, or the place of the one nearest its end. <paramref name="slowShare"/> is how much of the slowing
         /// takes (an elite's is half), and of a root's time likewise. Returns the slot, or -1 when nothing was asked.
         /// </summary>
+        /// <summary>Keeps a number on a run in place of its spec's <see cref="ConditionSpec.Scale"/>: what the trigger that set it carried (Collected Twice's damage).</summary>
+        public void Keep(int slot, float scale)
+        {
+            if (slot < 0 || slot >= Slots || !runs[slot].Active) return;
+            runs[slot].Scale = scale;
+        }
+
         public int Set(ConditionSpec spec, Component who, int mark = -1, Component link = null, bool answersStruck = false, bool answersEnd = false, float slowShare = 1f,
             bool answersDeath = false, bool answersAttack = false, float pace = -1f)
         {
@@ -354,7 +361,7 @@ namespace Clover.Gameplay
         /// The enemy struck at the player and the blow landed or was turned: each condition that answers it is told, and
         /// each that such a blow spends (<see cref="ConditionBlow.TheirBlow"/>) ends without its end being told.
         /// </summary>
-        public void Attacked()
+        public void Attacked(bool turned = false)
         {
             if (Count == 0) return;
             bool spentAny = false;
@@ -362,7 +369,7 @@ namespace Clover.Gameplay
             {
                 if (!runs[i].Active) continue;
                 ref var run = ref runs[i];
-                if (run.AnswersAttack) Tell(ConditionMoment.Attacked, in run, 0f, false, false);
+                if (run.AnswersAttack) Tell(ConditionMoment.Attacked, in run, 0f, false, false, turned: turned);
                 if (run.EndsWith != ConditionBlow.TheirBlow) continue;
                 runs[i] = default;
                 spentAny = true;
@@ -480,12 +487,14 @@ namespace Clover.Gameplay
             Sight = sight;
         }
 
-        private void Tell(ConditionMoment moment, in ConditionRun run, float damage, bool heavy, bool spell, bool shattered = false, bool critical = false, bool finisher = false)
+        private void Tell(ConditionMoment moment, in ConditionRun run, float damage, bool heavy, bool spell, bool shattered = false, bool critical = false, bool finisher = false,
+            bool turned = false)
         {
             var news = new ConditionNews
             {
                 Moment = moment, Id = run.Id, Mark = run.Mark, Count = run.Count, Blows = run.Blows, Flags = run.Flags, Scale = run.Scale, Link = run.Link,
                 Damage = damage, Heavy = heavy, Spell = spell, Shattered = shattered, Critical = critical, Is = run.Is, Finisher = finisher, Side = blowSide,
+                Turned = turned,
             };
             if (Report != null) Report(Who, news);
             else CombatEvents.RaiseCondition(Who, news);

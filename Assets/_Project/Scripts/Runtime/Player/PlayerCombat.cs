@@ -1016,18 +1016,21 @@ namespace Clover.Player
             var carrier = target as IAfflictable;
             if (StatAfflicted != 1f && carrier != null && carrier.Afflictions.Any) damage *= StatAfflicted;
             if (Stats != null && carrier != null) damage *= Mathf.Max(0.1f, 1f + Stats.Against(PlayerStat.SpellDamage, carrier.Afflictions));
+            // A reaction's own blow, harder on what carries what a mark asks (Every Crack Rings: the notched), and critical when a mark makes it so.
+            if (blow.ReactionOf > 0 && Stats != null && carrier != null) damage *= Mathf.Max(0.1f, 1f + Stats.Against(PlayerStat.ReactionDamageOn, carrier.Afflictions));
+            if (blow.Critical) damage *= CritMultiplier;
             if (blow.Affliction == AfflictionKind.Burn)
             {
                 // A burn is given in seconds, with or without depth.
                 float seconds = (blow.AfflictionSeconds > 0f ? blow.AfflictionSeconds : Clover.Gameplay.Afflictions.Spec(AfflictionKind.Burn).Seconds) * AfflictionSeconds;
                 return new Hit(damage, blow.Stagger, direction, blow.Heavy, true, origin, seconds, blow.Stacks > 0 ? blow.Stacks + ExtraStacks : 0, blow.Detonate,
-                    AfflictionKind.None, 0, 0f, AfflictionPower, blow.Spell, fromReaction: blow.FromReaction, tint: blow.Struck);
+                    AfflictionKind.None, 0, 0f, AfflictionPower, blow.Spell, blow.Critical, fromReaction: blow.FromReaction, tint: blow.Struck);
             }
             bool lays = blow.Affliction != AfflictionKind.None && blow.Stacks > 0;
             float lasts = !lays ? 0f : blow.AfflictionSeconds > 0f ? blow.AfflictionSeconds * AfflictionSeconds
                 : AfflictionSeconds != 1f ? Clover.Gameplay.Afflictions.Spec(blow.Affliction).Seconds * AfflictionSeconds : 0f;
             return new Hit(damage, blow.Stagger, direction, blow.Heavy, true, origin, 0f, 0, blow.Detonate,
-                lays ? blow.Affliction : AfflictionKind.None, lays ? blow.Stacks + ExtraStacks : 0, lasts, AfflictionPower, blow.Spell, fromReaction: blow.FromReaction, tint: blow.Struck);
+                lays ? blow.Affliction : AfflictionKind.None, lays ? blow.Stacks + ExtraStacks : 0, lasts, AfflictionPower, blow.Spell, blow.Critical, fromReaction: blow.FromReaction, tint: blow.Struck);
         }
 
         // What every spell's blow does once it has landed: its effect, what it earns, and word to the upgrades.
@@ -1047,7 +1050,7 @@ namespace Clover.Player
         // A reaction's own blow tells the upgrades whom that reaction struck (the ledger's reaction-struck).
         private void ReactionStruck(in SpellBlow blow, IDamageable target)
         {
-            if (blow.ReactionOf > 0 && upgrades != null && target is Component body) upgrades.OnReactionStruck(body, blow.ReactionOf - 1, blow.ReactionCast);
+            if (blow.ReactionOf > 0 && upgrades != null && target is Component body) upgrades.OnReactionStruck(body, blow.ReactionOf - 1, blow.ReactionCast, blow.Damage);
         }
 
         /// <summary>
@@ -1344,6 +1347,30 @@ namespace Clover.Player
             }
             return spellStruck.Count;
         }
+
+        /// <summary>
+        /// Draws what the last spell strike reached (<see cref="LastStruck"/>) toward a point, this many metres at most and
+        /// never past it; the one standing on the point stays. Returns how many were moved.
+        /// </summary>
+        public int DrawStruckToward(Vector3 point, float metres)
+        {
+            int moved = 0;
+            foreach (var target in spellStruck)
+            {
+                if (!(target is IShovable shovable) || !(target is Component body) || body == null) continue;
+                Vector3 offset = point - body.transform.position;
+                offset.y = 0f;
+                float distance = offset.magnitude;
+                float step = PullStep(distance, metres);
+                if (step <= 0f) continue;
+                shovable.Push(offset / distance * step);
+                moved++;
+            }
+            return moved;
+        }
+
+        /// <summary>How far a pull of <paramref name="metres"/> moves one this far from its point: never past arm's length of it.</summary>
+        public static float PullStep(float distance, float metres) => Mathf.Clamp(distance - 1f, 0f, Mathf.Max(0f, metres));
 
         /// <summary>True when no affliction is asked for, or the target carries it.</summary>
         public static bool Carries(object target, AfflictionKind kind) =>

@@ -157,14 +157,14 @@ namespace Clover.Player.Trees
                     new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Ashen, By = StruckBy.Weapon, Do = UpgradeAction.Heal, Amount = 10f },
                 });
 
-            // The print is laid on everything the reaction struck (UpgradeTrigger.ReactionStruck). NEEDS: the reaction's own
-            // damage repeated (reaction-stats); until then the blow strikes 15 more.
+            // The print is laid on everything the reaction struck (UpgradeTrigger.ReactionStruck), keeping the damage its blow dealt
+            // there (UpgradeEffect.ByPower); the next weapon blow on it repeats that damage.
             to.Add(BranchPattern.Put(new Upgrade { Id = CollectedTwice, Name = "Collected Twice", Element = E, Kind = UpgradeKind.Major, Lifts = E, Requires = new[] { Dread }, Icon = UpgradeIcons.Target,
                 Description = "Every reaction the Curse takes part in leaves a black thumbprint on the brow of what it struck for four seconds. The next weapon blow on it repeats the reaction's damage. The debt is collected by the blade.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.ReactionStruck, ReactionWith = C, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Thumbprint, Seconds = 4f, EndsWith = ConditionBlow.Weapon } },
-                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Thumbprint, By = StruckBy.Weapon, Do = UpgradeAction.Burst, Radius = 0.6f, Damage = 15f, Stagger = 0f, Stacks = 0 },
+                    new UpgradeEffect { On = UpgradeTrigger.ReactionStruck, ReactionWith = C, Do = UpgradeAction.Condition, ByPower = true, State = new ConditionSpec { Id = Thumbprint, Seconds = 4f, EndsWith = ConditionBlow.Weapon } },
+                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Thumbprint, By = StruckBy.Weapon, Do = UpgradeAction.Burst, ByPower = true, Radius = 0.6f, Stagger = 0f, Stacks = 0 },
                 } },
                 BranchPattern.MiddleCrown));
 
@@ -215,11 +215,10 @@ namespace Clover.Player.Trees
                 new ShapeDef { Name = "The Black Buffalo", Form = SpellForms.Dragon,
                     Description = "No pull. A buffalo of sinking black smoke charges eight metres through the point before you, carrying everything Cursed on its horns to the far end and throwing it down: 18 damage, rising to 36 at one point of your health, and 35 stagger. Follow the lane and cut what it threw. Dark's one push.",
                     Spell = new SpellSpec { Reach = 8f, Radius = 1.2f, Damage = 18f, Stagger = 35f, Stacks = 1, Speed = 16f } },
-                // NEEDS: only the Cursed called (afflicted-only). The call from ten metres without a burst is a whole spec; each
-                // Cursed one it reaches heals 4.
+                // Only the Cursed called (SpellSpec.OnlyCarrying), from ten metres, with no burst; each Cursed one it reaches heals 4.
                 new ShapeDef { Name = "Collected",
                     Description = "Only the Cursed are called, from up to ten metres, and each one that reaches you gives back 4 health. There is no burst; the pull does 20 stagger.",
-                    Spell = new SpellSpec { Reach = 1f, Radius = 10f, Delay = 0.5f, Damage = 0f, Stagger = 20f, Stacks = 0 },
+                    Spell = new SpellSpec { Reach = 1f, Radius = 10f, Delay = 0.5f, Damage = 0f, Stagger = 20f, Stacks = 0, OnlyCarrying = C },
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = C, Do = UpgradeAction.Heal, Amount = 4f } } },
                 "Opens two shapes of Debts Called, chosen at any rest fire: The Black Buffalo, a charge of smoke down a lane, or Collected, a call that brings only the Cursed and feeds you.",
                 // Spells strike twice as hard for the second the burst or the charge takes, cast below a third of your health.
