@@ -77,10 +77,8 @@ both carried.
 
 **When it happens.** At a rest fire, pick it for your surge slot in the Hand while you carry both Fire and Ice. Light it with the surge button.
 
-**The numbers.** Mix, duo surge, 5 Shards. 40 mana, lasts 10 seconds. For now: each blow adds a Chill, and each Thermal Shock heals you 2.
+**The numbers.** Mix, duo surge, 5 Shards. 40 mana, lasts 10 seconds. While it is lit, your swings take turns: one adds a Burn, the next a Chill, then a Burn again. Every enemy a swing hits gets the same one. Thermal Shock can go off again on the same enemy after only 2 seconds, instead of 6, and each one heals you 2.
 
 **Works with.** Thermal Shock, Spark and Rime, Cinder.
 
 **Example.** Light your surge in a crowd, and every second blow cracks something.
-
-**Not built yet.** Your blows don't really take turns yet; for now, each blow adds a Chill. Thermal Shock still has to wait 6 seconds on each enemy, instead of 2.

@@ -124,9 +124,9 @@ namespace Clover.Player.Trees.Duo
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 3 } },
             }, HeartPattern.Spell));
 
-            // The duo surge, worn in the Hand's surge slot with its own 40 mana and 10 s (DuoSurge). NEEDS: blows that alternate
-            // affliction, Thermal Shock once per enemy every 2 s while it lasts (alternate-blows); now while it burns each blow
-            // lays a Chill, and each Thermal Shock heals you 2.
+            // The duo surge, worn in the Hand's surge slot with its own 40 mana and 10 s (DuoSurge). While it burns the weapon's
+            // swings take turns (UpgradeEffect.TakesTurns), a Burn then a Chill; Thermal Shock rests only 2 s on each enemy
+            // (UpgradeAction.ShortenRest), and each one heals you 2.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = TheYawningGap, Name = "The Yawning Gap", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { FireSetting }, Icon = UpgradeIcons.Sun,
@@ -134,7 +134,9 @@ namespace Clover.Player.Trees.Duo
                 Surge = new DuoSurge { Mana = 40f, Seconds = 10f },
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.AnyHit, WhileSurge = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.AnyHit, WhileSurge = true, TakesTurns = 2, Turn = 0, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Burn, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.AnyHit, WhileSurge = true, TakesTurns = 2, Turn = 1, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = Reaction, WhileSurge = true, Do = UpgradeAction.ShortenRest, Seconds = 2f },
                     new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = Reaction, WhileSurge = true, Do = UpgradeAction.Heal, Amount = 2f },
                 },
             }, HeartPattern.RightTop));

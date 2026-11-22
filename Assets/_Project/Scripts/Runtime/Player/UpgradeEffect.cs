@@ -93,6 +93,12 @@ namespace Clover.Player
         /// </summary>
         public bool InOrder;
         /// <summary>
+        /// Above one: weapon blows take turns, and this effect is done only on its <see cref="Turn"/> (0 up to TakesTurns - 1) of
+        /// every TakesTurns swings that land; the hits of one swing share a turn (The Yawning Gap: burning, then chilling).
+        /// </summary>
+        public int TakesTurns;
+        public int Turn;
+        /// <summary>
         /// For ForceReaction, or a Pass that sets <see cref="Reaction"/> off on the enemy it reaches: the counts of blows the
         /// reaction's conditions keep there start this many blows along (Held Down, What the Yew Keeps: the fig at two coils).
         /// </summary>

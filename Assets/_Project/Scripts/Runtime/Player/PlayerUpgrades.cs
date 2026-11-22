@@ -1530,6 +1530,8 @@ namespace Clover.Player
             // A dodge's way against the enemy faced (Into the Fire, Drawn Back to Break).
             if (effect.Way != DodgeWay.Any && effect.Way != lastDodgeWay) return;
             if (effect.WhileSurge && !(element != null && element.SurgeActive)) return;
+            // Blows that take turns (The Yawning Gap): only on this effect's turn.
+            if (!MarkRules.OnTurn(blowTurn, effect.TakesTurns, effect.Turn)) return;
             if (effect.While != StatWhen.Always && !Stats.Holds(effect.While)) return;
             if (effect.WhileOwnStands && !Forms.SpellWorks.StandsOf(effect.Owner, transform.position, effect.WithinOwn)) return;
             if (effect.While2 != StatWhen.Always && !Stats.Holds(effect.While2)) return;
@@ -2539,6 +2541,12 @@ namespace Clover.Player
                     if (resting >= 0 && subject is IAfflictable rester) rester.Afflictions.RestReaction(resting, Or(effect.Seconds, AfflictionPairs.Rest(resting)));
                     break;
                 }
+                case UpgradeAction.ShortenRest:
+                {
+                    int shortened = ReactionTable.PairOf(effect.Reaction);
+                    if (shortened >= 0 && subject is IAfflictable quick) quick.Afflictions.ShortenRest(shortened, effect.Seconds);
+                    break;
+                }
                 case UpgradeAction.PayNow:
                     if (reactionsFound != null && reactionsFound.PayAsEnded(subject, effect.ToState)) PaidNow++;
                     break;
@@ -3534,6 +3542,9 @@ namespace Clover.Player
             standingTaken.Clear();
         }
 
+        // The swings landed, counted for blows that take turns (UpgradeEffect.TakesTurns), and the frame the last one landed in.
+        private int blowTurn, blowTurnFrame = -1;
+
         /// <summary>True when a Kill effect answers a death told with <paramref name="reaction"/>'s id: any death, or only one dealt by the reaction it names.</summary>
         public static bool KillAnswers(string killedBy, string reaction) => string.IsNullOrEmpty(killedBy) || killedBy == reaction;
 
@@ -3851,6 +3862,12 @@ namespace Clover.Player
             var struck = target as Component;
             Vector3 at = struck != null ? struck.transform.position : transform.position;
             bool finisher = outcome == HitOutcome.Finisher;
+            // A new swing landing is the next turn; the hits of one swing land in one frame and share it.
+            if (Time.frameCount != blowTurnFrame)
+            {
+                blowTurnFrame = Time.frameCount;
+                blowTurn++;
+            }
             // Corpse Flowers: a blow landed beside one of the flowers wins back grey health.
             if (Time.time < regainUntil && defence != null && Hazards.GrownNear(transform.position, regainNear, regainFamily)) GreyWonBeside += defence.Health.Regain(regainAmount);
             // Each blow landed adds a ring of light up the blade to a gathered spell (Daybreak).

@@ -176,6 +176,13 @@ namespace Clover.Gameplay
         /// <summary>Seconds until the pair (numbered as in <see cref="AfflictionPairs"/>) may react on this one again.</summary>
         public float ReactionRest(int pair) => reactionRest[pair];
 
+        /// <summary>The pair rests here no longer than the seconds given (The Yawning Gap: Thermal Shock every 2 s while it burns).</summary>
+        public void ShortenRest(int pair, float seconds)
+        {
+            if (pair < 0 || pair >= reactionRest.Length) return;
+            reactionRest[pair] = Math.Min(reactionRest[pair], Math.Max(0f, seconds));
+        }
+
         /// <summary>Rests a pair here for the seconds given, or for what it has left if that is longer.</summary>
         public void RestReaction(int pair, float seconds)
         {

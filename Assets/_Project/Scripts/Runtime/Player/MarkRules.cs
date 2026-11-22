@@ -125,6 +125,9 @@ namespace Clover.Player
         /// Way's rules (<see cref="Way.WayRules.InForce"/>): its weapon kind carried, its bough the active aspect, its
         /// keystone the one set. The rules for Heresies, Bond and Evolutions join here as their fields are added (phase 6).
         /// </summary>
+        /// <summary>True when swing number <paramref name="swing"/> is the turn <paramref name="turn"/> of blows that take <paramref name="every"/> turns (fewer than two: every swing).</summary>
+        public static bool OnTurn(int swing, int every, int turn) => every < 2 || ((swing % every) + every) % every == turn;
+
         public static bool InForce(Upgrade mark, Build.Loadout loadout)
         {
             // A hidden mark (a spare spell kept for the Evolutions, a plain reaction) is never in force as a mark: a

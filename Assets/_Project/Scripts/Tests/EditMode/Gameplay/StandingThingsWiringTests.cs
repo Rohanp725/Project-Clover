@@ -941,6 +941,33 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void TheYawningGapsBlowsTakeTurnsAndThermalShockRestsTwoSeconds()
+        {
+            Assert.IsTrue(MarkRules.OnTurn(5, 0, 0), "no turns: every swing");
+            Assert.IsTrue(MarkRules.OnTurn(4, 2, 0));
+            Assert.IsFalse(MarkRules.OnTurn(5, 2, 0));
+            Assert.IsTrue(MarkRules.OnTurn(5, 2, 1));
+            Assert.IsTrue(MarkRules.OnTurn(-1, 2, 1), "never a bad turn");
+            var gap = Upgrade.ById(Clover.Player.Trees.Duo.ThermalShockDuo.TheYawningGap).Effects;
+            var burn = gap.Single(each => each.On == UpgradeTrigger.AnyHit && each.Affliction == AfflictionKind.Burn);
+            var chill = gap.Single(each => each.On == UpgradeTrigger.AnyHit && each.Affliction == AfflictionKind.Chill);
+            Assert.AreEqual(2, burn.TakesTurns);
+            Assert.AreEqual(2, chill.TakesTurns);
+            Assert.AreNotEqual(burn.Turn, chill.Turn, "burning, then chilling");
+            var rest = gap.Single(each => each.Do == UpgradeAction.ShortenRest);
+            Assert.AreEqual(2f, rest.Seconds, 1e-5f);
+            Assert.IsTrue(rest.WhileSurge);
+
+            int shock = AfflictionPairs.Index(AfflictionKind.Burn, AfflictionKind.Chill);
+            var enemy = new AfflictionSet { Reactions = new ReactionEngine((who, pair, laid) => { }, () => 0) };
+            enemy.RestReaction(shock, 4f);
+            enemy.ShortenRest(shock, 2f);
+            Assert.AreEqual(2f, enemy.ReactionRest(shock), 1e-5f, "once every 2 s on each enemy");
+            enemy.ShortenRest(shock, 3f);
+            Assert.AreEqual(2f, enemy.ReactionRest(shock), 1e-5f, "never made longer");
+        }
+
+        [Test]
         public void WastingGripDosesAllInsideTheJarsRingEachSecond()
         {
             var grip = Upgrade.ById(BlightTree.WastingGrip).Effects.Single(each => each.InState == Reactions.Jar);

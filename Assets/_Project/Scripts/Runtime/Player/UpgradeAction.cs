@@ -346,5 +346,7 @@ namespace Clover.Player
         /// does not set it off (Stone Underfoot: the stone is set at once, and the Curse it lays starts no slow climb).
         /// </summary>
         RestReaction,
+        /// <summary>The pair named by Reaction rests on the target no longer than Seconds from now (The Yawning Gap: Thermal Shock once every 2 s on each enemy).</summary>
+        ShortenRest,
     }
 }
