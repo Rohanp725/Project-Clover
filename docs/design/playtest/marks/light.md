@@ -49,11 +49,11 @@ the next blows on that enemy critical.
 
 **When it happens.** Whenever you cast Reckoning, using the shape you picked. If you have not bought this, you cast the plain seal.
 
-**The numbers.** 3 Shards. Witnessed: when the six seconds end, a column falls on the sealed enemy within 1.2 metres, for 30 damage, 40 stagger and a Mark. Spoken Sentence: for 8 seconds, your next heavy blow on the sealed enemy makes a blade fall a moment later on every Marked enemy within 8 metres. Each blade deals 32 damage and 40 stagger within 1.2 metres, and uses up their Marks.
+**The numbers.** 3 Shards. Witnessed: when the six seconds end, a column falls on the sealed enemy within 1.2 metres, for 30 damage, 40 stagger and a Mark. Spoken Sentence: for 8 seconds, your next heavy blow on the sealed enemy makes a blade fall a moment later on every Marked enemy within 8 metres. Each blade deals 20 damage, plus 12 more for each stack of Mark, and 40 stagger within 1.2 metres, and uses up their Marks. With either shape, the plain seal's own count doesn't pay out.
 
 **Works with.** Witnessed: a build that counters attacks, perfect guards, Standing Light, the root mark (perfect guards Mark the attacker). Spoken Sentence: Weighed (stacked Marks), Ring of Spears and Glare's Seven Horses shape (lots of Marked enemies at once), Brimming, heavy weapons.
 
-**Not built yet.** Witnessed should count the enemy's blows on you, at 30 per blow, plus 15 more for each one you perfectly guarded. For now, the column is worth one blow. Spoken Sentence should do 12 more for each Mark stack; for now, it is 32 no matter how many stacks. Both shapes still keep the plain seal's count alongside their own, because a shape can't turn off its spell's own rule yet.
+**Not built yet.** Witnessed should count the enemy's blows on you, at 30 per blow, plus 15 more for each one you perfectly guarded. For now, the column is worth one blow.
 
 **Example.** Use Spoken Sentence on a captain with three Marked soldiers around it. One heavy blow, and four blades fall.
 

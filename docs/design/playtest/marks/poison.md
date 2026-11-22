@@ -48,11 +48,11 @@ a blow or a cast "on the beat" comes within a fifth of a second of it.
 
 **When it happens.** Whenever you cast Blister, using the shape you picked. If you have not bought this, you cast the plain blister.
 
-**The numbers.** 3 Shards. Weeping Sore: for 12 seconds, each bite of the enemy's poison leaves a puddle 1.5 metres across for 3 seconds that gives a dose each second to whatever stands in it. A heavy blow on the sore bursts 2 metres around it for 12 damage and two doses, at most twice a second. The Vessel: for 12 seconds, the first bite while its poison is full puts three doses on everything within 2 metres, and leaves a cloud 4 metres across for 3 seconds that gives a dose each second. Once per cast.
+**The numbers.** 3 Shards. Weeping Sore: for 12 seconds, each bite of the enemy's poison leaves a puddle 1.5 metres across for 3 seconds that gives a dose each second to whatever stands in it. A heavy blow on the sore bursts 2 metres around it for 12 damage and two doses, at most twice a second. The Vessel: for 12 seconds, the first bite while its poison is full puts three doses on everything within 2 metres, and leaves a cloud 4 metres across for 3 seconds that gives a dose each second. Once per cast. With either shape, no blister is raised, so no blow can pop one.
 
 **Works with.** Weeping Sore: an enemy that walks around, Catching, Low Mist. The Vessel: Venom's blows to fill it up, Catching, Slow Death (full is twenty, so it waits longer). Volatile stops the beat, and neither shape leaks or bursts without bites.
 
-**Not built yet.** Both shapes still raise the plain blister alongside them, which any weapon blow pops, because a shape can't turn off its spell's own effect yet. Weeping Sore's heavy blow bursts around the sore, not at each puddle where it lies.
+**Not built yet.** Weeping Sore's heavy blow bursts around the sore, not at each puddle where it lies.
 
 **Example.** Use Weeping Sore on a charging brute. It leaves a trail of puddles as it comes, and the soldiers following it walk through them.
 
@@ -144,11 +144,11 @@ a blow or a cast "on the beat" comes within a fifth of a second of it.
 
 **When it happens.** Whenever you cast Five Needles, using the shape you picked. If you have not bought this, you cast the plain fan.
 
-**The numbers.** 3 Shards. Spread: a fan 60 degrees wide. It deals 3 damage, 10 stagger and two doses to each enemy in it, and each one's poison bites right away. Red Paper: the first enemy hit can't raise its guard for 6 seconds.
+**The numbers.** 3 Shards. Spread: a fan 60 degrees wide. It deals 3 damage, 10 stagger and two doses to each enemy in it, and each one's poison bites right away. Nothing is pinned. Red Paper: the first enemy hit can't raise its guard for 6 seconds.
 
 **Works with.** Spread: a crowd, Catching (every bite throws a dose onward), In Time. Red Paper: enemies that guard and captains, a heavy weapon, Blister.
 
-**Not built yet.** Spread is one fan, not five needles, and it still pins the first enemy it hits. Red Paper should stop the enemy from blocking blows and let your blows go through shields.
+**Not built yet.** Spread is one fan, not five needles. Red Paper should stop the enemy from blocking blows and let your blows go through shields.
 
 **Example.** Use Red Paper on a captain who guards everything. For six seconds, your whole chain of blows lands.
 
@@ -244,11 +244,11 @@ a blow or a cast "on the beat" comes within a fifth of a second of it.
 
 **When it happens.** Whenever you cast Miasma, using the shape you picked. If you have not bought this, you cast the plain cloud.
 
-**The numbers.** 3 Shards. Low Mist: a strip of mist 8 metres long and 2.5 metres wide from your feet, lasting 5 seconds, giving a dose each second to whatever stands in it. Censer: one censer swings around you 3 metres away for 8 seconds, going around once every 1.2 seconds. It hits whatever is within 1 metre of it for 4 damage, 4 stagger and a dose.
+**The numbers.** 3 Shards. Low Mist: a strip of mist 8 metres long and 2.5 metres wide from your feet, lasting 5 seconds, giving a dose each second to whatever stands in it. The plain cloud is not cast. Censer: one censer swings around you 3 metres away for 8 seconds, going around once every 1.2 seconds. It hits whatever is within 1 metre of it for 4 damage, 4 stagger and a dose.
 
 **Works with.** Low Mist: a hallway, Weeping Sore, Tasted Every Herb. Censer: a pack that crowds you, Catching, holding your guard while it swings.
 
-**Not built yet.** Low Mist still casts the plain cloud alongside the strip, and it doesn't stop at walls or take a dose when an enemy dodges. Censer's smoke should hang in the air for 2 seconds after each pass.
+**Not built yet.** Low Mist doesn't stop at walls or take a dose when an enemy dodges. Censer's smoke should hang in the air for 2 seconds after each pass.
 
 **Example.** Use Censer and hold your ground in a doorway. Anything that crowds you gets poisoned with every swing while you guard.
 

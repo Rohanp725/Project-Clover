@@ -110,20 +110,20 @@ namespace Clover.Player.Trees
                 // The stones landing for 14 is the Learn's own fall, set by the Empower (empower-effects).
                 new Empower { Mana = 35f, Effects = new[] { new EffectChange { Index = 1, Damage = 14f } } },
                 "Cairn costs 35 mana, not 40, and each stone lands for 14.",
-                // NEEDS: the stones landing soft and waiting, so nothing falls at the cast (shape-sets-aside), and the burst as 18
-                // a stone (count-from-depth). Until then the stones still fall, and the heavy blow bursts the heap for 36.
-                new ShapeDef { Name = "Unbroken Cairn",
+                // The stones land soft and wait: nothing falls at the cast (ShapeDef.SetsAside: the Learn's fall and heap burst),
+                // and the heap keeps its stones (CountsNeeds), burst by the heavy blow at 18 a stone (ByPower).
+                new ShapeDef { Name = "Unbroken Cairn", SetsAside = new[] { 1, 2 },
                     Description = "The stones land soft and wait. Your next heavy blow on a heaped enemy breaks its cairn outward: 18 damage a stone to everything within two and a half metres. The burst waits for your blow.",
                     Effects = new[]
                     {
-                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = T, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Unbroken, Seconds = 4f, EndsWith = ConditionBlow.Heavy } },
-                        new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Unbroken, By = StruckBy.Heavy, Do = UpgradeAction.Burst, Radius = 2.5f, Damage = 36f, Stagger = 20f, Stacks = 0 },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = T, CountsNeeds = true, PerStack = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Unbroken, Seconds = 4f, EndsWith = ConditionBlow.Heavy } },
+                        new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Unbroken, By = StruckBy.Heavy, Do = UpgradeAction.Burst, ByPower = true, Share = 18f, Radius = 2.5f, Stagger = 20f, Stacks = 0 },
                     } },
-                // NEEDS: the heap flung in place of staying (shape-sets-aside), a stone for each depth (count-from-depth). Until
-                // then the stones still fall and heap, and two stones' worth is flung on.
-                new ShapeDef { Name = "Thrown Stones",
+                // The heap flung in place of staying (ShapeDef.SetsAside: the Learn's fall and heap burst), a stone for each depth
+                // counted as it is cast (CountsNeeds, PerStack): 12 damage, 5 stagger and a Tremor a stone.
+                new ShapeDef { Name = "Thrown Stones", SetsAside = new[] { 1, 2 },
                     Description = "The stones do not stay. Each enemy's heap is flung at once at the nearest other enemy within five metres: 12 damage and Tremor a stone. One shaken enemy shakes the next.",
-                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = T, Do = UpgradeAction.Arc, FromTarget = true, Count = 1, Reach = 5f, Damage = 24f, Stagger = 10f, Affliction = T, Stacks = 2 } } },
+                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = T, CountsNeeds = true, PerStack = true, Do = UpgradeAction.Arc, FromTarget = true, Count = 1, Reach = 5f, Damage = 12f, Stagger = 5f, Affliction = T, Stacks = 1 } } },
                 "Opens two shapes of Cairn, chosen at any rest fire: Unbroken Cairn, heaps your heavy blow bursts, or Thrown Stones, heaps flung on to the next enemy.",
                 // Cast after standing still for a second (StatWhen.StoodStill): half the mana back. NEEDS: every stone striking twice
                 // (count-from-depth); until then a second fall of two stones' worth lands on each.
@@ -217,10 +217,10 @@ namespace Clover.Player.Trees
                 // NEEDS: 25 stagger a blow turned (held-press).
                 new Empower { Seconds = 3f },
                 "You stand as stone for up to three seconds, and each blow you turn loads 25 stagger.",
-                // Stone Skin, once a major, folded in with Aftershock. NEEDS: the answer set aside (shape-sets-aside), and a plate
-                // taking 60% of one blow, not the whole of it (plates). Until then the plates are wards, given when the stance
-                // turns a blow.
-                new ShapeDef { Name = "Stone Skin",
+                // Stone Skin, once a major, folded in with Aftershock. The answer set aside: the turned blow is told for nothing
+                // (SpellSpec.Quiet). NEEDS: a plate taking 60% of one blow, not the whole of it (plates). Until then the plates
+                // are wards, given when the stance turns a blow.
+                new ShapeDef { Name = "Stone Skin", Spell = new SpellSpec { Seconds = 2.5f, Reach = 3f, Arc = 120f, Damage = 0f, Stagger = 0f, Stacks = 0, Quiet = true },
                     Description = "The blow is turned but not answered. Two plates of stone grow on your shoulders instead. Each takes most of one blow and stops its flinch, then breaks in a burst three metres round you: 14 damage, 24 stagger and Tremor.",
                     Effects = new[]
                     {

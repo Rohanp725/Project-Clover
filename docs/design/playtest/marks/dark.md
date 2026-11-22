@@ -87,11 +87,11 @@ draining.
 
 **When it happens.** Whenever you cast Gone to Ash, using the shape you picked. If you have not bought this, you cast the plain counter.
 
-**The numbers.** 3 Shards. Ash on the Brow: the attacker's Curse doesn't fade for 6 seconds, and you get one ward that blocks the next blow that would land. Ash Hangs: a cloud 3 metres across sits on the attacker for 3 seconds, Cursing whatever stands in it each second.
+**The numbers.** 3 Shards. Ash on the Brow: the attacker's Curse doesn't fade for 6 seconds, and you get one ward that blocks the next blow that would land. Ash Hangs: a cloud 3 metres across sits on the attacker for 3 seconds, Cursing whatever stands in it each second. With either shape, you stand up again where you were, not behind the attacker.
 
 **Works with.** Ash on the Brow: a one-on-one fight with a strong enemy, Dread, Collected Twice. Ash Hangs: a pack, Dread, Debts Called's Collected shape.
 
-**Not built yet.** Both shapes still move you behind the attacker; a shape can't yet turn off its spell's step. Ash on the Brow's ward blocks any blow, not only the attacker's, and its grey smear isn't drawn yet. Ash Hangs should stop enemies inside it from turning their attacks; for now, they are only Cursed.
+**Not built yet.** Ash on the Brow's ward blocks any blow, not only the attacker's, and its grey smear isn't drawn yet. Ash Hangs should stop enemies inside it from turning their attacks; for now, they are only Cursed.
 
 **Example.** Use Ash Hangs in a ring of soldiers. The one that hit you and the two next to it come away Cursed.
 

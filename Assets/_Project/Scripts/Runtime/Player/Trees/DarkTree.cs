@@ -124,19 +124,19 @@ namespace Clover.Player.Trees
                 // The heal of 15 is the Learn's own heal, set by the Empower (empower-effects).
                 new Empower { Cooldown = 9f, Seconds = 1.5f, Effects = new[] { new EffectChange { Index = 3, Amount = 15f } } },
                 "Gone to Ash waits 9 seconds, not 10, holds for a second and a half, and its blow heals you 15.",
-                // NEEDS: standing again where you were, the step behind set aside (shape-sets-aside), the ward kept for that
-                // attacker's blow alone, and the grey stripe across its head (looks). The Curse held six seconds and one blow
+                // Standing again where you were: the Learn's step behind set aside (ShapeDef.SetsAside). NEEDS: the ward kept for
+                // that attacker's blow alone, and the grey stripe across its head (looks). The Curse held six seconds and one blow
                 // turned are data.
-                new ShapeDef { Name = "Ash on the Brow",
+                new ShapeDef { Name = "Ash on the Brow", SetsAside = new[] { 0 },
                     Description = "You stand again where you were. The ash settles on the attacker's brow as a grey smear: for six seconds it is Cursed, the next blow it lands on you scatters you for nothing once more, and your first blow on it is a heavy. The ash marks the one who struck.",
                     Effects = new[]
                     {
                         new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = AshOnTheBrow, Seconds = 6f, Keeps = C } },
                         new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Ward, Count = 1, Cooldown = 1f },
                     } },
-                // NEEDS: standing again where you were (shape-sets-aside), and an attack begun inside going where it already
-                // faced (cannot-turn). The cloud that Curses is data, laid on the attacker.
-                new ShapeDef { Name = "Ash Hangs",
+                // Standing again where you were: the Learn's step behind set aside (ShapeDef.SetsAside). NEEDS: an attack begun
+                // inside going where it already faced (cannot-turn). The cloud that Curses is data, laid on the attacker.
+                new ShapeDef { Name = "Ash Hangs", SetsAside = new[] { 0 },
                     Description = "You stand again where you were. The ash stays as a sinking cloud three metres across for three seconds. Enemies inside it are Cursed, and an attack they begin inside goes where they already faced.",
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Radius = 1.5f, Seconds = 3f, Interval = 1f, Damage = 0f, Stagger = 0f, Affliction = C, Stacks = 1, Cooldown = 1f } } },
                 "Opens two shapes of Gone to Ash, chosen at any rest fire: Ash on the Brow, a smear that marks the one who struck, or Ash Hangs, a cloud that Curses all inside.",

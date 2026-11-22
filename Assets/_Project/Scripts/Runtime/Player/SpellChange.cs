@@ -150,6 +150,7 @@ namespace Clover.Player
             into.Between = from.Between;
             into.Glow = from.Glow;
             into.Walk = from.Walk;
+            into.Quiet = from.Quiet;
         }
     }
 

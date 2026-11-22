@@ -90,10 +90,10 @@ namespace Clover.Player.Trees
                 // The roster's numbers alone (the owner's answer of 2026-11-20: an Empower may strengthen without a shorter wait).
                 new Empower { Damage = 50f },
                 "It breaks for 25, 50 or 85.",
-                // NEEDS: the blister set aside, never broken by a blow (shape-sets-aside), and a heavy blow bursting every
-                // puddle where it lies (puddles-burst). Until then the sore weeps a puddle at each bite, and a heavy blow on the
-                // sore bursts round it for 12 and two doses.
-                new ShapeDef { Name = "Weeping Sore",
+                // The blister set aside, never broken by a blow (SpellSpec.Quiet: the brand raises nothing). NEEDS: a heavy blow
+                // bursting every puddle where it lies (puddles-burst). Until then the sore weeps a puddle at each bite, and a heavy
+                // blow on the sore bursts round it for 12 and two doses.
+                new ShapeDef { Name = "Weeping Sore", Spell = new SpellSpec { Reach = 8f, Seconds = 12f, Count = 1, Radius = 3f, Damage = 0f, Stagger = 0f, Stacks = 0, Quiet = true },
                     Description = "It never bursts by itself or by a heavy blow. Each time its poison bites it weeps a bubbling puddle a metre and a half across where the enemy stands, for three seconds, a dose a second, so a walking enemy lays your poison. Your heavy blow bursts every puddle at once: 12 damage and 2 doses to all in each.",
                     Effects = new[]
                     {
@@ -101,8 +101,8 @@ namespace Clover.Player.Trees
                         new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = WeepingSore, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Radius = 0.75f, Seconds = 3f, Interval = 1f, Damage = 0f, Stagger = 0f, Affliction = P, Stacks = 1 },
                         new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = WeepingSore, By = StruckBy.Heavy, Do = UpgradeAction.Burst, Radius = 2f, Damage = 12f, Stagger = 0f, Affliction = P, Stacks = 2, Cooldown = 0.5f },
                     } },
-                // NEEDS: the blister set aside (shape-sets-aside). The cloud at a full bite is data, once a cast.
-                new ShapeDef { Name = "The Vessel",
+                // The blister set aside (SpellSpec.Quiet: the brand raises nothing). The cloud at a full bite is data, once a cast.
+                new ShapeDef { Name = "The Vessel", Spell = new SpellSpec { Reach = 8f, Seconds = 12f, Count = 1, Radius = 3f, Damage = 0f, Stagger = 0f, Stacks = 0, Quiet = true },
                     Description = "The whole enemy swells. When its poison bites at full depth it bursts by itself into a cloud four metres across that doses everything in it three deep and hangs three seconds. You set it and leave it.",
                     Effects = new[]
                     {
@@ -193,9 +193,9 @@ namespace Clover.Player.Trees
                 // own burst (empower-effects); the needles' 14 is laid on the fan alone, not on Spread's own needles (LearnOnly).
                 new Empower { Stagger = 70f, LearnOnly = true, Effects = new[] { new EffectChange { Index = 1, Stagger = 50f } } },
                 "Its needles break 14 stagger each, and an enemy struck by all five takes 50 more.",
-                // NEEDS: one needle for each enemy (form-pieces), and the Learn's pin set aside (shape-sets-aside). Until then the
-                // wide fan strikes all in it, each for one needle and two doses, and its poison bites at once.
-                new ShapeDef { Name = "Spread",
+                // The Learn's pin set aside (ShapeDef.SetsAside: its hold and its 40 stagger). NEEDS: one needle for each enemy
+                // (form-pieces). Until then the wide fan strikes all in it, each for one needle and two doses, and its poison bites at once.
+                new ShapeDef { Name = "Spread", SetsAside = new[] { 0, 1 },
                     Description = "A wide fan of 60 degrees, so each needle finds a different enemy. Each enemy pierced takes two doses, and its poison bites at once.",
                     Change = new SpellChange { Arc = 60f, Damage = 3f, Stagger = 10f, Stacks = 2 },
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Bite } } },
@@ -263,10 +263,10 @@ namespace Clover.Player.Trees
                 // (PlayerUpgrades.BaseEmpower), but a radius set here would also shrink the Censer's swing.
                 new Empower { Cooldown = 6f },
                 "Miasma waits 6 seconds, not 7, and its cloud is three metres across.",
-                // NEEDS: the cloud set aside (shape-sets-aside), the sheet stopping at walls and a dodge in it costing an enemy a
-                // dose (form-pieces, ground-states). Until then a row of mist eight metres long is laid from your feet beside the
-                // cloud, dosing what stands in it each second.
-                new ShapeDef { Name = "Low Mist",
+                // The cloud set aside: cast through its mark by a quiet form (SpellSpec.Quiet), so the kit's cloud is not laid,
+                // only the sheet. NEEDS: the sheet stopping at walls and a dodge in it costing an enemy a dose (form-pieces,
+                // ground-states). Until then a row of mist eight metres long is laid from your feet, dosing what stands in it each second.
+                new ShapeDef { Name = "Low Mist", Form = SpellForms.Brand, Spell = new SpellSpec { Reach = 8f, Damage = 0f, Stagger = 0f, Stacks = 0, Quiet = true },
                     Description = "The cloud is heavier than air. It pours out from your feet along the floor the way you face, a low sheet two and a half metres wide and eight long with a hard top edge, and lies five seconds, stopping at walls. Enemies in it are dosed once a second, and a dodge or roll in it costs them a dose. A lane where the plain cloud is a disc.",
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Hazard, At = EffectAt.Self, Shape = HazardShape.Line, Reach = 8f, Count = 6, Radius = 1.25f, Seconds = 5f, Interval = 1f, Damage = 0f, Stagger = 0f, Affliction = P, Stacks = 1 } } },
                 // Swinging Censer, once a spell, folded in here. NEEDS: the smoke left hanging two seconds after each pass

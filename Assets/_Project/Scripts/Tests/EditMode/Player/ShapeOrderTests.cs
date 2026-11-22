@@ -170,6 +170,56 @@ namespace Clover.Tests
             Assert.AreEqual(Clover.Gameplay.EnemyRank.Plain, swallow.Ranks, "an elite or a god is only bitten");
         }
 
+        private static ShapeDef ShapeOf(string branch, string name) =>
+            Upgrade.ById(SpellBranch.ShapeId(branch)).Shapes.First(each => each.Name == name);
+
+        // Every Learn effect the shape sets aside, by what it does.
+        private static UpgradeAction[] AsideOf(string branch, string name) =>
+            ShapeOf(branch, name).SetsAside.Select(index => Upgrade.ById(branch).Effects[index].Do).ToArray();
+
+        [Test]
+        public void AShapeSetsAsideWhatItsLearnWouldDo()
+        {
+            CollectionAssert.AreEqual(new[] { UpgradeAction.Step }, AsideOf(DarkTree.GoneToAsh, "Ash on the Brow"), "you stand again where you were");
+            CollectionAssert.AreEqual(new[] { UpgradeAction.Step }, AsideOf(DarkTree.GoneToAsh, "Ash Hangs"));
+            CollectionAssert.AreEqual(new[] { UpgradeAction.Hold, UpgradeAction.Burst }, AsideOf(PoisonTree.FiveNeedles, "Spread"), "no pin");
+            CollectionAssert.AreEqual(new[] { UpgradeAction.Falling, UpgradeAction.Burst }, AsideOf(EarthTree.Cairn, "Unbroken Cairn"), "nothing falls at the cast");
+            CollectionAssert.AreEqual(new[] { UpgradeAction.Falling, UpgradeAction.Burst }, AsideOf(EarthTree.Cairn, "Thrown Stones"), "the heap is flung, not left");
+            foreach (var name in new[] { "Witnessed", "Spoken Sentence" })
+                CollectionAssert.AreEqual(new[] { UpgradeAction.Condition, UpgradeAction.Burst, UpgradeAction.Burst }, AsideOf(LightTree.Reckoning, name), name + ": the Learn's clock and its payouts");
+        }
+
+        [Test]
+        public void AQuietFormRaisesNothingOfItsOwn()
+        {
+            foreach (var name in new[] { "Weeping Sore", "The Vessel" })
+                Assert.IsTrue(ShapeOf(PoisonTree.Blister, name).Spell.Quiet, name + " raises no blister");
+            Assert.IsTrue(ShapeOf(EarthTree.MountainStance, "Stone Skin").Spell.Quiet, "Stone Skin turns the blow but does not answer");
+            var mist = ShapeOf(PoisonTree.Miasma, "Low Mist");
+            Assert.IsTrue(mist.CastsItsOwn && mist.Spell.Quiet, "Low Mist is cast through its mark, and the kit's cloud is not laid");
+            var into = new SpellSpec();
+            SpellChange.Copy(new SpellSpec { Quiet = true }, into);
+            Assert.IsTrue(into.Quiet, "quiet goes with the spell's numbers");
+        }
+
+        [Test]
+        public void AShapeCountsItsStonesAndMarksAsTheyAre()
+        {
+            var unbroken = ShapeOf(EarthTree.Cairn, "Unbroken Cairn").Effects;
+            Assert.IsTrue(unbroken[0].CountsNeeds && unbroken[0].PerStack, "the heap keeps its stones");
+            Assert.IsTrue(unbroken[1].ByPower);
+            Assert.AreEqual(18f, unbroken[1].Share, 1e-5f, "18 a stone");
+            var thrown = ShapeOf(EarthTree.Cairn, "Thrown Stones").Effects.Single();
+            Assert.IsTrue(thrown.CountsNeeds && thrown.PerStack, "a stone flung for each depth");
+            Assert.AreEqual(12f, thrown.Damage, 1e-5f);
+            Assert.AreEqual(1, thrown.Stacks, "and a Tremor a stone");
+            var blade = ShapeOf(LightTree.Reckoning, "Spoken Sentence").Effects.Single(each => each.Do == UpgradeAction.Falling);
+            Assert.IsTrue(blade.CountsNeeds);
+            Assert.AreEqual(Clover.Gameplay.AfflictionKind.Marked, blade.Needs);
+            Assert.AreEqual(20f, blade.Damage, 1e-5f);
+            Assert.AreEqual(12f, blade.DamagePerSpent, 1e-5f, "12 more for each depth of mark");
+        }
+
         [Test]
         public void EveryShapesSetAsideNamesARealEffect()
         {

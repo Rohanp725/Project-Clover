@@ -1689,6 +1689,8 @@ namespace Clover.Player
                 || (effect.Do == UpgradeAction.Hazard && effect.PerStack && effect.Shape != HazardShape.Patch);
             // With no Spend of its own before it, what the trigger carried (a reaction struck again where its enemy fell: Kettle).
             int spentHere = effect.DamagePerSpent > 0f ? (counted > 0 || !pending.Again ? counted : pending.Spent) : 0;
+            // The depth counted as the moment came (CountsNeeds) is what each point of it adds to (Spoken Sentence: 12 a mark).
+            if (effect.CountsNeeds && effect.DamagePerSpent > 0f) spentHere = pending.Spent;
             float eDamage = (byCount ? effect.Damage : effect.Damage * per) + effect.DamagePerSpent * spentHere;
             // A reaction's own blows, by the stat ReactionDamage (Fuel to It, Left in Rubble, Every Crack Rings).
             float reactionScale = ReactionScale(effect.Owner);

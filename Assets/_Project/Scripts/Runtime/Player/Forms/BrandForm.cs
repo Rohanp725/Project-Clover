@@ -13,6 +13,12 @@ namespace Clover.Player.Forms
 
         public override int Cast(in SpellCast cast)
         {
+            // A shape that sets the brand aside: only the hand's gesture, and the shape's own effects do the rest.
+            if (cast.Spec.Quiet)
+            {
+                SpellWorks.Gesture(cast, FormKit.Cast, 0.3f);
+                return 0;
+            }
             var victim = FormKit.Victim(cast);
             if (victim == null)
             {

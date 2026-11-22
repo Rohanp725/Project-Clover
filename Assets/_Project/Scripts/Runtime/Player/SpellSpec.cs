@@ -94,6 +94,12 @@ namespace Clover.Player
         public float Glow;
         /// <summary>Above zero: the share of the run's pace the player may walk at while the form's stance holds (Firewalker: half); zero roots them.</summary>
         public float Walk;
+        /// <summary>
+        /// The form's own thing is set aside by the shape worn (the ledger's shape-sets-aside): no blister or seal is raised
+        /// (the brand form), and a stance's answer strikes for nothing, unseen, only so the turned blow is told (Stone Skin).
+        /// The cast is still made and its moments still come, for the shape's own effects.
+        /// </summary>
+        public bool Quiet;
 
         /// <summary>The health a cast takes: its fixed price and its share of the present health.</summary>
         public static float HealthPrice(float fixedCost, float share, float present) => System.Math.Max(0f, fixedCost) + System.Math.Max(0f, share) * System.Math.Max(0f, present);

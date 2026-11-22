@@ -86,11 +86,9 @@ Rise's rocks, a pillar, a heap of rubble.
 
 **When it happens.** Whenever you cast Cairn, using the shape you picked. If you have not bought this, the plain stones fall.
 
-**The numbers.** 3 Shards. Unbroken Cairn: a heavy blow on an enemy under a pile within 4 seconds bursts in a 2.5-metre circle around it, for 36 damage and 20 stagger. Thrown Stones: a stone flies from each enemy under a pile to the nearest other enemy within 5 metres, for 24 damage, 10 stagger and two Tremor.
+**The numbers.** 3 Shards. Unbroken Cairn: nothing falls when you cast. A heavy blow on a shaken enemy within 4 seconds bursts its pile in a 2.5-metre circle around it, for 18 damage for each stone (each stack of Tremor it had) and 20 stagger. Thrown Stones: nothing falls or stays. The pile flies from each shaken enemy to the nearest other enemy within 5 metres, for 12 damage, 5 stagger and one Tremor for each stone.
 
 **Works with.** Unbroken Cairn: Heavy Hand and The Slow Hand. Thrown Stones: cast Cairn again on the enemies the stones shook.
-
-**Not built yet.** Unbroken Cairn's stones should land softly (for now they still fall when you cast), and its burst should be 18 for each stone (for now it is 36 no matter how many stacks). Thrown Stones' piles should be thrown instead of staying (for now they still fall and pile up), with a stone for each stack (for now it is two stones' worth).
 
 **Example.** Use Unbroken Cairn on a pack around a brute. One heavy blow on the brute breaks its pile through all of them.
 
@@ -186,11 +184,11 @@ Rise's rocks, a pillar, a heap of rubble.
 
 **When it happens.** Whenever you cast Mountain Stance, using the shape you picked. If you have not bought this, you cast Grey Stone.
 
-**The numbers.** 3 Shards. Stone Skin: when the stance blocks a blow, you get two wards, up to three. Each one blocks one blow and breaks in a burst 3 metres around you, for 14 damage, 24 stagger and one Tremor. Fist of Rock: you stand for up to 1.5 seconds. The answer is a cone 4 metres long and 90 degrees wide, for 30 damage, 60 stagger and two Tremor.
+**The numbers.** 3 Shards. Stone Skin: when the stance blocks a blow, it does not hit back. You get two wards instead, up to three. Each one blocks one blow and breaks in a burst 3 metres around you, for 14 damage, 24 stagger and one Tremor. Fist of Rock: you stand for up to 1.5 seconds. The answer is a cone 4 metres long and 90 degrees wide, for 30 damage, 60 stagger and two Tremor.
 
 **Works with.** Stone Skin: Glaze's ward if you carry Ice, Heavy Hand, Immovable. Fist of Rock: Tremor and Cairn, and Unbroken Cairn's heavy blow after it.
 
-**Not built yet.** Stone Skin's plates should take 60% of one blow (for now, a ward takes all of it), and the stance's jolt should be turned off while you use this shape. Fist of Rock's answer should rise under the enemy that hit you; for now, it is a cone thrown at it.
+**Not built yet.** Stone Skin's plates should take 60% of one blow (for now, a ward takes all of it). Fist of Rock's answer should rise under the enemy that hit you; for now, it is a cone thrown at it.
 
 **Example.** Use Stone Skin before a pack closes in. The first two blows that reach you each throw stone back at the whole ring.
 

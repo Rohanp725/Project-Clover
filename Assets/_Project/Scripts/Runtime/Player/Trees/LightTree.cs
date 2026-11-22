@@ -80,26 +80,26 @@ namespace Clover.Player.Trees
                 // on the Learn's own burst (empower-effects).
                 new Empower { Effects = new[] { new EffectChange { Index = 1, Damage = 10f, PerMost = 18 } } },
                 "Reckoning pays back 10 for each blow, not 8, up to 180.",
-                // NEEDS: the bearer's blows on you and your guard counted, 15 more for each turned with a perfect guard
-                // (seal-counts-bearer), and the Learn's own count set aside (shape-sets-aside). Until then a column falls on
-                // the sealed enemy for one blow's worth as the seal ends, beside the Learn's count.
-                new ShapeDef { Name = "Witnessed",
+                // The Learn's own count set aside (ShapeDef.SetsAside: its clock and both its payouts). NEEDS: the bearer's blows
+                // on you and your guard counted, 15 more for each turned with a perfect guard (seal-counts-bearer). Until then a
+                // column falls on the sealed enemy for one blow's worth as the seal ends.
+                new ShapeDef { Name = "Witnessed", SetsAside = new[] { 0, 1, 2 },
                     Description = "The seal counts the bearer's deeds, not yours. For six seconds every blow it lands on you or your guard is scratched in gold on the clock's rim. On the last tick a column falls on it: 30 for each blow written and 15 more for each you turned with a perfect guard, 150 at most, and 40 stagger. Guard well and the sun judges for you.",
                     Effects = new[]
                     {
                         new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Witnessed, Seconds = 6f } },
                         new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Witnessed, Do = UpgradeAction.Falling, Radius = 1.2f, Delay = 0.3f, Damage = 30f, Stagger = 40f, Affliction = M, Stacks = 1 },
                     } },
-                // Sentence and What It Owes, once majors, folded in here. NEEDS: no clock (shape-sets-aside), and 12 more for each
-                // depth of mark (count-from-depth). Until then the Learn's clock still pays, and the heavy blow sets a short
-                // sentence on every Marked enemy within eight metres whose end drops a blade for 32 and spends the marks.
-                new ShapeDef { Name = "Spoken Sentence",
+                // Sentence and What It Owes, once majors, folded in here. No clock (ShapeDef.SetsAside: the Learn's clock and its
+                // payouts): the heavy blow sets a short sentence on every Marked enemy within eight metres whose end drops a blade
+                // for 20 and 12 more for each depth of mark, counted before the marks are spent (CountsNeeds, DamagePerSpent).
+                new ShapeDef { Name = "Spoken Sentence", SetsAside = new[] { 0, 1, 2 },
                     Description = "No clock. The seal waits up to eight seconds for your next heavy blow on its bearer, then a blade of beaten gold falls on every Marked enemy within eight metres: 20 damage and 12 more for each depth of mark, 40 stagger, and the marks are spent. Many enemies, at the moment you choose.",
                     Effects = new[]
                     {
                         new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Spoken, Seconds = 8f, EndsWith = ConditionBlow.Heavy } },
                         new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Spoken, By = StruckBy.Heavy, Do = UpgradeAction.Condition, Radius = 8f, LeapsTo = M, State = new ConditionSpec { Id = Sentenced, Seconds = 0.4f } },
-                        new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Sentenced, Do = UpgradeAction.Falling, Radius = 1.2f, Delay = 0.2f, Damage = 32f, Stagger = 40f, Stacks = 0 },
+                        new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Sentenced, Needs = M, CountsNeeds = true, Do = UpgradeAction.Falling, Radius = 1.2f, Delay = 0.2f, Damage = 20f, DamagePerSpent = 12f, Stagger = 40f, Stacks = 0 },
                         new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Sentenced, Do = UpgradeAction.Spend, Affliction = M },
                     } },
                 "Opens two shapes of Reckoning, chosen at any rest fire: Witnessed, a seal that counts the blows struck at you, or Spoken Sentence, a seal your heavy blow breaks over every Marked enemy.",
