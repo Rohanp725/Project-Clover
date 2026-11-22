@@ -71,6 +71,9 @@ namespace Clover.UI
                 words[i].fontSize = 12;
                 words[i].alignment = TextAnchor.UpperCenter;
                 words[i].raycastTarget = false;
+                // The font's line is taller than the label (18.5 against 16 at size 12): truncated, the words were never drawn.
+                words[i].horizontalOverflow = HorizontalWrapMode.Overflow;
+                words[i].verticalOverflow = VerticalWrapMode.Overflow;
                 words[i].color = Color.white;
                 square.SetActive(false);
                 shownSeconds[i] = -1;
