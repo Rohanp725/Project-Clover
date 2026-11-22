@@ -1136,6 +1136,10 @@ namespace Clover.Gameplay
                 fallSpeed = body.isGrounded ? 1f : fallSpeed + Gravity * deltaTime;
                 step.y = -fallSpeed * deltaTime;
             }
+            // On a leash (Black Chain, Tethered): never farther from what holds it than the leash, and drawn back to it if
+            // beyond. A god is never leashed.
+            if (!Afflictions.IsGod && EnemyChains.LeashOf(this, target != null ? target.position : transform.position, out Vector3 leashAnchor, out float leash))
+                step = EnemyChains.Leash(transform.position, step, leashAnchor, leash, deltaTime);
             if (body.enabled) body.Move(step);
 
             // Its guard is up only while it stands ready and knows the player is there: the band going out is the opening.

@@ -104,5 +104,19 @@ namespace Clover.Gameplay
         public bool FaceAway;
         /// <summary>Above zero: the seconds it lasts on an elite or boss, in place of the usual share (Turned About: 0.5 of 1.2).</summary>
         public float EliteSeconds;
+        /// <summary>
+        /// Above zero: metres it may go from what holds it (the far end of its chain, the player, or the spot it was set on)
+        /// while this runs; never on a god (Black Chain: 4; Tethered: 5 from the player).
+        /// </summary>
+        public float Leash;
+        /// <summary>With <see cref="Leash"/>: the player holds the leash (Grasp's Tethered).</summary>
+        public bool LeashToPlayer;
+        /// <summary>
+        /// Above zero, for a chain set on others (<see cref="ToOthers"/>): with no one near to chain it to, the enemy is
+        /// chained to the floor within this many metres of where it stands instead (Black Chain: 2).
+        /// </summary>
+        public float AloneLeash;
+        /// <summary>With <see cref="ConditionFlags.Chained"/>: spell blows pass along the chain too, not only weapon blows (Shared Wound).</summary>
+        public bool SharesSpells;
     }
 }

@@ -277,13 +277,14 @@ namespace Clover.Player.Trees
                 // takes them as its Learn's.
                 new Empower { Cooldown = 6f, Damage = 14f, Reach = 8f },
                 "Grasp waits 6 seconds, not 7, reaches eight metres and strikes for 14.",
-                // NEEDS: a rope thrown in place of the ball (form-pieces), and the enemy kept within five metres of you (links-pass-blows).
+                // Kept within five metres of you for its four seconds (ConditionSpec.Leash, LeashToPlayer).
+                // NEEDS: a rope thrown in place of the ball (form-pieces).
                 // The yank of the first heavy blow is data.
                 new ShapeDef { Name = "Tethered",
                     Description = "A rope of black is thrown instead and binds the enemy you face to you for four seconds. It cannot go more than five metres from you, and your first heavy blow on it yanks it to your feet with 20 stagger. You keep it close.",
                     Effects = new[]
                     {
-                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Tethered, Seconds = 4f, EndsWith = ConditionBlow.Heavy } },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Tethered, Seconds = 4f, EndsWith = ConditionBlow.Heavy, Leash = 5f, LeashToPlayer = true } },
                         new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Tethered, By = StruckBy.Heavy, Do = UpgradeAction.Pull, Shape = HazardShape.Downwind, Amount = 4f },
                         new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Tethered, By = StruckBy.Heavy, Do = UpgradeAction.Burst, Radius = 0.5f, Damage = 0f, Stagger = 20f, Stacks = 0 },
                     } },

@@ -725,9 +725,9 @@ Group: Reactions
 
 **Its shapes.** If you have Hidden Chain, the Shape mark of Metal and Dark's duo branch (Black Chain: Drawn Tight or Shared Wound, 3 Shards, in the middle of the chart), and carry both, Black Chain uses the shape you picked at a rest fire instead. Drawn Tight: the chain pulls tight right away, dealing 12 damage and 25 stagger to the enemy and to the nearest other enemy within 6 metres, then falls off. Shared Wound: no leash, but the chain lasts 8 seconds, and half of every blow is shared.
 
-**How to use it.** Not built yet: what the chain does. It will pass 30% of your weapon damage on either enemy to the other, and keep the two within 4 metres of each other.
+**How to use it.** Hit either one of the pair. 30% of your weapon damage on one is dealt to the other too (gods included). The two can't get more than 4 metres apart; if they start farther, they are drawn together. If no other enemy is near, the enemy is chained to the floor instead and can't go more than 2 metres from that spot. Gods are never held by the chain.
 
-**How it looks.** Its name over the enemy. Not built yet: the chain between them.
+**How it looks.** Its name over the enemy. Not built yet: the chain between them, and the chain to the floor when it is alone.
 
 ## reaction-burning-sap
 Title: Burning Sap (Light and Poison)

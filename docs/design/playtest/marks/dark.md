@@ -277,11 +277,11 @@ draining.
 
 **When it happens.** Whenever you cast Grasp, using the shape you picked. If you have not bought this, you cast the plain ball.
 
-**The numbers.** 3 Shards. Tethered: for 4 seconds after Grasp hits an enemy, your first heavy blow on it drags it 4 metres toward you and gives it 20 stagger. The Pit: a pool 3 metres across, 6 metres ahead of you, that lasts 4 seconds. Each second, it deals 2 damage and a Curse to whatever stands in it.
+**The numbers.** 3 Shards. Tethered: for 4 seconds after Grasp hits an enemy, it can't go more than 5 metres from you; if it is farther, it is dragged back toward you. Your first heavy blow on it in that time drags it 4 metres toward you, gives it 20 stagger, and ends the tether. Gods can't be tied. The Pit: a pool 3 metres across, 6 metres ahead of you, that lasts 4 seconds. Each second, it deals 2 damage and a Curse to whatever stands in it.
 
 **Works with.** Tethered: a one-on-one fight, Devouring Maw's From Its Own Shadow shape, a heavy weapon. The Pit: Dread, Debts Called, Ash Hangs, a pack.
 
-**Not built yet.** Tethered should throw a rope instead of the ball, and keep the enemy within 5 metres of you; for now, the ball is cast, and only the heavy blow's yank is built. The Pit should drag everything to its middle; for now, it only deals damage and Curses. If you buy the Empower, The Pit uses its numbers too, and lands 8 metres ahead.
+**Not built yet.** Tethered should throw a rope instead of the ball; for now, the ball is cast. The Pit should drag everything to its middle; for now, it only deals damage and Curses. If you buy the Empower, The Pit uses its numbers too, and lands 8 metres ahead.
 
 **Example.** Put The Pit under a pack in a doorway. In four seconds they are all Cursed, and Dread is ready for the first death.
 

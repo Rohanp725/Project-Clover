@@ -232,13 +232,13 @@ namespace Clover.Player.Trees
 
             // Metal and Dark (19). A chain to the nearest other enemy within 6 m for 5 s, set as a condition on that one,
             // joined to this.
-            // NEEDS: links that pass blows: 30% of weapon damage dealt to either is dealt to the other (gods too); and the
-            // leash: the two cannot move more than 4 m apart (gods never leashed); with no one near, chained to the floor
-            // within 2 m of the spot. The link is not the poison-passing kind, so Rot Roots' bites do not run along it.
+            // 30% of each weapon blow on either is dealt to the other, gods too (ConditionFlags.Chained, EnemyChains); the two
+            // cannot move more than 4 m apart (Leash: gods are never leashed); with no one near, it is chained to the floor
+            // within 2 m of the spot (AloneLeash). The link is not the poison-passing kind, so Rot Roots' bites do not run along it.
             to.Add(Reaction(AfflictionKind.Sundered, AfflictionKind.Cursed,
                 "Cursed meets Sundered: a black chain binds it to the nearest enemy within 6 m for 5 s.",
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, Radius = 6f, Count = 1,
-                    State = new ConditionSpec { Id = Chain, Seconds = 5f, Scale = 0.3f, ToOthers = true } }));
+                    State = new ConditionSpec { Id = Chain, Seconds = 5f, Scale = 0.3f, ToOthers = true, Flags = ConditionFlags.Chained, Leash = 4f, AloneLeash = 2f } }));
 
             // Light and Poison (20), rest 6 s. The sun wakes the sap for 3 s; each weapon blow in that time (each is
             // critical while the Mark lasts) raises a weal. At the end the poison bites at once, and each weal bursts,

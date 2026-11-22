@@ -72,5 +72,10 @@ namespace Clover.Gameplay
         FacesPoint = 1 << 22,
         /// <summary>A weapon blow that lands on its back is critical (Turned to the Sun, Turned About).</summary>
         BackCritical = 1 << 23,
+        /// <summary>
+        /// It is chained to another enemy (the run's Link): the run's Scale of every weapon blow on either is dealt to the
+        /// other too, and of spell blows as well when the spec says so (Black Chain, Shared Wound; <see cref="EnemyChains"/>).
+        /// </summary>
+        Chained = 1 << 24,
     }
 }

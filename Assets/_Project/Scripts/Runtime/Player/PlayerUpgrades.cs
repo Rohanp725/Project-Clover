@@ -1495,6 +1495,15 @@ namespace Clover.Player
             }
             // Asked again here for what came with no trigger to filter it (a condition's weals, a dead enemy's depth).
             if (effect.SpentAtLeast > 0 && spent < effect.SpentAtLeast) return;
+            // Done to the chain-mate, found now (a dead one's chain is still on its mate, and its own is cleared after).
+            if (effect.ToChainMate)
+            {
+                var mate = EnemyChains.MateOf(target);
+                if (mate == null || !PlayerReactions.Alive(mate)) return;
+                at = target.transform.position;
+                hasAt = true;
+                target = mate;
+            }
             // Things that can set themselves off again are held to a few times a second at most.
             float least = effect.On == UpgradeTrigger.AfflictionFull || effect.On == UpgradeTrigger.Kill ? 0.2f : 0f;
             float wait = Mathf.Max(effect.Cooldown, least);
@@ -1975,6 +1984,14 @@ namespace Clover.Player
                 }
                 case UpgradeAction.Pull:
                 case UpgradeAction.Push:
+                    // The chain-mate drawn to the place of the one the chain is on (Dead Weight: to where it fell).
+                    if (effect.ToChainMate && pending.HasAt && subject is IShovable drawn && target != null)
+                    {
+                        Vector3 toFallen = pending.At - target.position;
+                        toFallen.y = 0f;
+                        drawn.Push(toFallen * (effect.Do == UpgradeAction.Pull ? 1f : -1f));
+                        break;
+                    }
                     if (effect.Shape == HazardShape.Downwind)
                     {
                         // The target alone, along the player's line to it: thrown straight away from them, or drawn in.

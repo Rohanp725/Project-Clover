@@ -66,5 +66,11 @@ namespace Clover.Gameplay
         public float Sink;
         /// <summary>The point it is turned to face (<see cref="ConditionFlags.FacesPoint"/>).</summary>
         public Vector3 FacePoint;
+        /// <summary>The leash's length, whether the player holds it, and the spot it was set on (<see cref="ConditionSpec.Leash"/>).</summary>
+        public float Leash;
+        public bool LeashToPlayer;
+        public Vector3 Anchor;
+        /// <summary>Spell blows pass along its chain too (<see cref="ConditionSpec.SharesSpells"/>).</summary>
+        public bool SharesSpells;
     }
 }

@@ -42,6 +42,16 @@ namespace Clover.Player
                 if (Set(effect, spec, near, spec.ToOthers ? subject : null, mark, struck, ended, died, attacked, combat, source, pace, scale, toward)) set++;
             }
             scratch.Clear();
+            // No one near to chain it to: it is chained to the floor where it stands (Black Chain's 2 m).
+            if (set == 0 && spec.ToOthers && spec.AloneLeash > 0f)
+            {
+                var alone = spec.Copy();
+                alone.ToOthers = false;
+                alone.Leash = spec.AloneLeash;
+                alone.LeashToPlayer = false;
+                alone.Flags &= ~ConditionFlags.Chained;
+                if (Set(effect, alone, subject, null, mark, struck, ended, died, attacked, combat, source, pace, scale, toward)) set++;
+            }
             return set;
         }
 

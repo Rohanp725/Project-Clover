@@ -220,6 +220,11 @@ namespace Clover.Player
         /// <summary>For Pass: the doses go to the enemy the condition is joined to (Rot Roots' host), as deep as it can take, not to the nearest.</summary>
         public bool ToLink;
         /// <summary>
+        /// Done to the enemy chained to the trigger's (its chain-mate: <see cref="Clover.Gameplay.EnemyChains"/>), with the
+        /// trigger's enemy's place kept as the point (Dead Weight drags the mate there); nothing when it is chained to no one.
+        /// </summary>
+        public bool ToChainMate;
+        /// <summary>
         /// For Pass: what is pushed past the taker's depth bursts it at once (its own set-off) and passes on to the next, a
         /// few times at most (Eaten in Turn). Without it, what does not fit is lost.
         /// </summary>

@@ -181,6 +181,54 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void ALeashHoldsItNearAndDrawsItBack()
+        {
+            var anchor = Vector3.zero;
+            var inside = EnemyChains.Leash(new Vector3(2f, 0f, 0f), new Vector3(0.5f, -0.1f, 0f), anchor, 4f, 0.1f);
+            Assert.AreEqual(new Vector3(0.5f, -0.1f, 0f), inside, "inside its leash it goes where it will");
+            var outward = EnemyChains.Leash(new Vector3(3.9f, 0f, 0f), new Vector3(0.5f, -0.1f, 0f), anchor, 4f, 0.1f);
+            Assert.AreEqual(4f, 3.9f + outward.x, 1e-4f, "stopped at the leash's end");
+            Assert.AreEqual(-0.1f, outward.y, 1e-5f, "its fall its own");
+            var beyond = EnemyChains.Leash(new Vector3(6f, 0f, 0f), Vector3.zero, anchor, 4f, 0.5f);
+            Assert.AreEqual(-EnemyChains.DrawRate * 0.5f, beyond.x, 1e-4f, "set beyond its leash, it is drawn back");
+            Assert.AreEqual(new Vector3(1f, 0f, 0f), EnemyChains.Leash(new Vector3(6f, 0f, 0f), new Vector3(1f, 0f, 0f), anchor, 0f, 0.5f), "no leash: free");
+
+            // Tethered: the player holds the leash, five metres.
+            var tether = Upgrade.ById(SpellBranch.ShapeId(DarkTree.Grasp)).Shapes.Single(each => each.Name == "Tethered").Effects.First(each => each.Do == UpgradeAction.Condition).State;
+            var enemy = NewEnemy();
+            Assert.IsFalse(enemy.Conditions.Leashed(out _, out _, out _, out _));
+            enemy.Conditions.Set(tether, null, 1);
+            Assert.IsTrue(enemy.Conditions.Leashed(out var link, out _, out float leash, out bool toPlayer));
+            Assert.IsTrue(toPlayer && link == null);
+            Assert.AreEqual(5f, leash, 1e-5f);
+            enemy.Conditions.Tick(tether.Seconds + 0.1f);
+            Assert.IsFalse(enemy.Conditions.Leashed(out _, out _, out _, out _), "free after four seconds");
+        }
+
+        [Test]
+        public void BlackChainPassesBlowsAndItsMarksFindTheMate()
+        {
+            var chain = ReactionOf(AfflictionKind.Sundered, AfflictionKind.Cursed).Effects.Single(each => each.Do == UpgradeAction.Condition).State;
+            Assert.IsTrue((chain.Flags & ConditionFlags.Chained) != 0 && chain.ToOthers);
+            Assert.AreEqual(0.3f, chain.Scale, 1e-5f, "30% of each weapon blow");
+            Assert.IsFalse(chain.SharesSpells, "weapon blows only");
+            Assert.AreEqual(4f, chain.Leash, 1e-5f);
+            Assert.AreEqual(2f, chain.AloneLeash, 1e-5f, "alone, chained to the floor");
+            var wound = Upgrade.ById(Clover.Player.Trees.Duo.BlackChainDuo.Shape).Shapes.Single(each => each.Name == "Shared Wound").Effects.Single().State;
+            Assert.IsTrue((wound.Flags & ConditionFlags.Chained) != 0 && wound.SharesSpells, "half of every blow, spells too");
+            Assert.AreEqual(0f, wound.Leash, 1e-5f, "and no leash");
+            var dead = Upgrade.ById(Clover.Player.Trees.Duo.BlackChainDuo.DeadWeight).Effects;
+            Assert.IsTrue(dead.All(each => each.On == UpgradeTrigger.Kill && each.ToChainMate), "the chain-mate answers the death");
+            Assert.IsTrue(dead.Any(each => each.Do == UpgradeAction.Pull) && dead.Any(each => each.Do == UpgradeAction.Hold) && dead.Any(each => each.Do == UpgradeAction.Afflict));
+            var noose = Upgrade.ById(Clover.Player.Trees.Duo.BlackChainDuo.OneNooseForTwo).Effects.Single();
+            Assert.IsTrue(noose.ToChainMate && noose.ByPower);
+            Assert.AreEqual(0.5f, noose.Share, 1e-5f, "half the finisher");
+            var enemy = NewEnemy();
+            Assert.IsNull(enemy.Conditions.ChainMate(out _, out _), "chained to no one");
+            Assert.IsNull(EnemyChains.MateOf(null));
+        }
+
+        [Test]
         public void WhirlpoolAndAshFallHoldTheBalance()
         {
             var churn = Upgrade.ById(WaterTree.Whirlpool).Effects.Single(each => each.Do == UpgradeAction.Condition);

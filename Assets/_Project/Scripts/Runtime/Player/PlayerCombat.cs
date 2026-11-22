@@ -1062,8 +1062,47 @@ namespace Clover.Player
             else Vfx.Play(blow.Effect, other.bounds.center, direction);
             if (defence != null && PaysBack(target)) defence.DealtDamage(blow.Damage);
             if (blow.Spell && upgrades != null) upgrades.OnSpellStruck(target, wasAfflicted, blow.Look != null ? blow.Look.Name : null, blow.Cast); ReactionStruck(blow, target);
-            if (blow.Spell && target is Component spellBody) SpellBlowLanded?.Invoke(spellBody, blow.Cast);
+            if (blow.Spell && target is Component spellBody)
+            {
+                SpellBlowLanded?.Invoke(spellBody, blow.Cast);
+                ShareAlongChains(spellBody, blow.Damage, true);
+            }
         }
+
+        // Chained enemies (Black Chain, Shared Wound): each chain's share of a blow on one is dealt to the other, once, with
+        // nothing more: it is not a blow of its own, so it passes no further and answers nothing.
+        private const int MostChainMates = 8;
+        private readonly Component[] chainMates = new Component[MostChainMates];
+        private readonly float[] chainShares = new float[MostChainMates];
+        private bool sharingChains;
+        /// <summary>Shares of blows dealt along chains, counted for probes.</summary>
+        public int ChainShares { get; private set; }
+
+        private void ShareAlongChains(Component struck, float damage, bool spell)
+        {
+            if (sharingChains || damage <= 0f || struck == null || !(struck is IAfflictable)) return;
+            int mates = EnemyChains.Mates(struck, spell, chainMates, chainShares);
+            if (mates == 0) return;
+            sharingChains = true;
+            try
+            {
+                for (int i = 0; i < mates; i++)
+                {
+                    var mate = chainMates[i];
+                    chainMates[i] = null;
+                    if (!PlayerReactions.Alive(mate) || !(mate is IDamageable joined)) continue;
+                    Vector3 along = mate.transform.position - struck.transform.position;
+                    along.y = 0f;
+                    var shared = new Hit(damage * chainShares[i], 0f, along.sqrMagnitude > 0.01f ? along.normalized : transform.forward, false, true, struck.transform.position,
+                        fromReaction: true, tint: ChainTint);
+                    if (joined.TakeHit(shared) != HitOutcome.Missed) ChainShares++;
+                }
+            }
+            finally { sharingChains = false; }
+        }
+
+        // The colour a shared blow flashes on the chained one: the chain's dark iron, not a plain blow's white.
+        private static readonly Color ChainTint = new Color(0.42f, 0.36f, 0.5f, 1f);
 
         // A reaction's own blow tells the upgrades whom that reaction struck (the ledger's reaction-struck).
         private void ReactionStruck(in SpellBlow blow, IDamageable target)
@@ -1200,7 +1239,11 @@ namespace Clover.Player
             else Vfx.Play(blow.Effect, at, direction);
             if (defence != null && PaysBack(target)) defence.DealtDamage(blow.Damage);
             if (blow.Spell && upgrades != null) upgrades.OnSpellStruck(target, wasAfflicted, blow.Look != null ? blow.Look.Name : null, blow.Cast); ReactionStruck(blow, target);
-            if (blow.Spell && target is Component spellBody) SpellBlowLanded?.Invoke(spellBody, blow.Cast);
+            if (blow.Spell && target is Component spellBody)
+            {
+                SpellBlowLanded?.Invoke(spellBody, blow.Cast);
+                ShareAlongChains(spellBody, blow.Damage, true);
+            }
             return true;
         }
 
@@ -2279,6 +2322,8 @@ namespace Clover.Player
                     }
                 }
                 LastBlowDamage = damage;
+                // Chained to another (Black Chain): a share of the blow is dealt along the chain.
+                if (outcome != HitOutcome.Blocked && target is Component chainedBody) ShareAlongChains(chainedBody, damage, false);
                 if (fromBehind && outcome != HitOutcome.Blocked)
                 {
                     BackBlows++;

@@ -209,6 +209,62 @@ namespace Clover.Gameplay
         /// takes (an elite's is half), and of a root's time likewise. Returns the slot, or -1 when nothing was asked.
         /// </summary>
         /// <summary>Keeps a number on a run in place of its spec's <see cref="ConditionSpec.Scale"/>: what the trigger that set it carried (Collected Twice's damage).</summary>
+        /// <summary>True when a chain it carries joins it to <paramref name="host"/>, with the share of blows it passes and whether spells pass.</summary>
+        public bool ChainedTo(Component host, out float share, out bool spells)
+        {
+            share = 0f;
+            spells = false;
+            if (host == null || !Has(ConditionFlags.Chained)) return false;
+            for (int i = 0; i < Slots; i++)
+            {
+                if (!runs[i].Active || (runs[i].Flags & ConditionFlags.Chained) == 0 || runs[i].Link != host) continue;
+                share = runs[i].Scale;
+                spells = runs[i].SharesSpells;
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>The other end of the chain it carries (the newest), or null, with the share of blows it passes and whether spells pass.</summary>
+        public Component ChainMate(out float share, out bool spells)
+        {
+            share = 0f;
+            spells = false;
+            if (!Has(ConditionFlags.Chained)) return null;
+            Component mate = null;
+            float most = -1f;
+            for (int i = 0; i < Slots; i++)
+            {
+                if (!runs[i].Active || (runs[i].Flags & ConditionFlags.Chained) == 0 || runs[i].Link == null || runs[i].Left <= most) continue;
+                most = runs[i].Left;
+                mate = runs[i].Link;
+                share = runs[i].Scale;
+                spells = runs[i].SharesSpells;
+            }
+            return mate;
+        }
+
+        /// <summary>
+        /// True while a run holds it on a leash: its length, and what holds it (the run's link, the player, or the spot the
+        /// run was set on when it has neither). The shortest leash wins.
+        /// </summary>
+        public bool Leashed(out Component link, out Vector3 spot, out float leash, out bool toPlayer)
+        {
+            link = null;
+            spot = Vector3.zero;
+            leash = 0f;
+            toPlayer = false;
+            for (int i = 0; i < Slots; i++)
+            {
+                if (!runs[i].Active || runs[i].Leash <= 0f || (leash > 0f && runs[i].Leash >= leash)) continue;
+                leash = runs[i].Leash;
+                link = runs[i].Link;
+                spot = runs[i].Anchor;
+                toPlayer = runs[i].LeashToPlayer;
+            }
+            return leash > 0f;
+        }
+
         /// <summary>Sets the point a run that turns its carrier (<see cref="ConditionFlags.FacesPoint"/>) turns it to face.</summary>
         public void FaceToward(int slot, Vector3 point)
         {
@@ -293,6 +349,12 @@ namespace Clover.Gameplay
             run.DriftsTo = Math.Max(0f, spec.DriftsTo);
             run.DeathsWithin = Math.Max(0f, spec.DeathsWithin);
             run.Sink = Math.Max(0f, spec.Sink);
+            run.Leash = Math.Max(0f, spec.Leash);
+            run.LeashToPlayer = spec.LeashToPlayer;
+            run.SharesSpells = spec.SharesSpells;
+            if (fresh) run.Anchor = who != null ? who.transform.position : Vector3.zero;
+            // A chain to another enemy is kept where its other end can find it.
+            if ((spec.Flags & ConditionFlags.Chained) != 0 && link != null && who != null) EnemyChains.Note(who);
             run.FreezeLonger = Math.Max(0f, spec.FreezeLonger);
             run.ShatterHarder = Math.Max(1f, spec.ShatterHarder);
             // The way it faced as it was set, for a condition whose side is the side it showed then (Rime's crust).
