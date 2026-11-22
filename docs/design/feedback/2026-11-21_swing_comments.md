@@ -159,3 +159,16 @@ The owner noticed that the infused strike plays the same arc look on every weapo
   - Wind: a gust burst of curls.
 - **Order:** slam first, then thrust, then shot and lash. The owner sees each shape's strips before Unity builds it.
 - **Twin Knives grip, fix now.** The knives sit at wrong angles and the hands don't close on the handles. Re-angle them into a proper grip, close the fingers, and check close-ups through the whole moveset.
+
+## The hammer slam, the owner's verdicts (2026-11-21, evening)
+
+- **Approved:** Earth (a stone spike), Ice (a frozen spike) and Life (a curved thorn).
+- **Fire:** "one big flame that erupts then dissapears".
+- **Water:** "a big splash".
+- **Metal:** a bigger, sharper forged blade with a steel glint.
+- **Dark, an implosion:** the shadows lurch inward, a black pit forms for a beat, then a smoky ripple of darkness bursts out and knocks the enemies back.
+- **Wind, a downdraft burst:** curls race out low along the ground, with dust and grit, and shove the enemies back.
+- **Lightning, the hammer as conductor:** one huge bolt hits the hammer head; on landing it forks through the cracks into the struck enemies.
+- **Light, light from the cracks:** gold light bleeds out of the cracks, then a short column bursts up from the ground and fades into motes.
+- **Poison, a venom geyser:** a liquid eruption of dark green venom, raining round drops that pool and bubble.
+- **Unity note:** the slam lands 2.5 m ahead (`PlayerCombat.cs:1475`). Remove the hammer's white glow ring (`PlayerCombat.cs:1476-1477`).
