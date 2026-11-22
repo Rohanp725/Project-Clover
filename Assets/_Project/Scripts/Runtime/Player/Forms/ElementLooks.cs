@@ -684,6 +684,18 @@ namespace Clover.Player.Forms
             if (one.Active && one.Fixed && one.Stamp == handle / MostShowings) one.Ground = at;
         }
 
+        /// <summary>
+        /// Ends a look played by <see cref="Held"/> now: it goes as any look goes, over a quarter of a second (the shot's
+        /// trace when its arrow stops in someone short of where the trace was drawn to). Nothing once it has ended.
+        /// </summary>
+        public static void EndHeld(int handle)
+        {
+            if (instance == null || instance.showings == null || handle < 0) return;
+            int showing = handle % MostShowings;
+            ref var one = ref instance.showings[showing];
+            if (one.Active && one.Fixed && one.Stamp == handle / MostShowings) one.Ending = true;
+        }
+
         private static bool PlayAtShowing(int look, Vector3 at, float yaw, float size, out int showing)
         {
             showing = -1;

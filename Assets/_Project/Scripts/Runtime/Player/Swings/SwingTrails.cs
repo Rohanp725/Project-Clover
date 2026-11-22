@@ -453,13 +453,17 @@ namespace Clover.Player.Swings
                 landedThisSwing = 0;
                 swingElement = step != null ? combat.SwingElement : null;
                 swingInfused = step != null && combat.SwingInfused;
+                shotLook = false;
                 if (swingElement != null && On)
                 {
                     SwingsDrawn++;
                     glintFrom = now;
                     // An infused strike's element grows onto the weapon through its own wind-up.
                     if (swingInfused) chargedSince = now;
-                    if (step.Shot != null)
+                    // The Great Bow's infused shot draws its own trace along the flight (ElementLookBuilder.Shots): no
+                    // element trail thrown after the arrow beside it.
+                    shotLook = swingInfused && step.Shot != null && PlayerCombat.ShapeOf(combat.Weapon) == ElementMoves.Shot && ElementMoves.HasShape(ElementMoves.Shot, swingElement.Index);
+                    if (step.Shot != null && !shotLook)
                     {
                         thrownElement = swingElement;
                         thrownUntil = now + 1.6f;
@@ -472,7 +476,8 @@ namespace Clover.Player.Swings
             // A Light swing keeps Marked's sun-wheels off the floor about it while it plays: the soldiers it marks wear
             // the shaft and glint on the body, not cream rings under the swing's gold.
             if (On && step != null && swingElement != null && swingElement.Index == ElementSubstance.Light) Forms.AfflictionArt.SwingQuiet(transform.position);
-            bool drawing = On && swingElement != null && step != null && combat.Combo.Phase != AttackPhase.Charge && InWindow(step, elapsed);
+            // The bow's stave does not sweep on its infused shot: the element is the shot's own trace, not a trail off the stave.
+            bool drawing = On && swingElement != null && step != null && !shotLook && combat.Combo.Phase != AttackPhase.Charge && InWindow(step, elapsed);
             if (drawing && deltaTime > 0f) Emit(swingElement, swingInfused ? InfusedWeight : 1f, false, view, now, deltaTime);
             else if (!drawing) StopEmitting(now, false);
             bool throwing = On && thrownElement != null && now < thrownUntil;
@@ -753,6 +758,9 @@ namespace Clover.Player.Swings
         }
 
         // Where a blow of the weapon landed (PlayerCombat's own hit test): the element's landing, a few to a swing.
+        // True while the move is the Great Bow's infused shot drawn in its own look (ElementLookBuilder.Shots).
+        private bool shotLook;
+
         private void Met(Vector3 point, Vector3 way)
         {
             if (!On || !enabled) return;

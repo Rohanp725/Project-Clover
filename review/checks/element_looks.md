@@ -1,6 +1,6 @@
 # Element looks (batches 1 and 2)
 
-310 looks, 7147 parts (2662 ribbons), 43078 keys, from Assets/_Project/Art/VFX/Combos/elements2_recipe.json.
+339 looks, 7621 parts (2908 ribbons), 45492 keys, from Assets/_Project/Art/VFX/Combos/elements2_recipe.json.
 
 | Look | Length | On | Parts | Ribbons | Repeats from | Shell |
 |---|---|---|---|---|---|---|
@@ -463,3 +463,36 @@
 | e3_lash_light@b | 1.3 s | body | 5 | 0 | 1.30 s | - |
 | e3_lash_wind | 1.4 s | body | 10 | 10 | 0.00 s | - |
 | e3_lash_wind@b | 1.3 s | body | 4 | 4 | -0.05 s | - |
+| e3_shot_earth | 1.5 s | body | 7 | 7 | 0.00 s | - |
+| e3_shot_earth@i | 1.3 s | body | 0 | 0 | 1.31 s | - |
+| e3_shot_earth@b | 1.3 s | body | 16 | 0 | 0.03 s | - |
+| e3_shot_ice | 1.5 s | body | 21 | 21 | 0.00 s | - |
+| e3_shot_ice@i | 1.3 s | body | 11 | 4 | 0.00 s | - |
+| e3_shot_ice@b | 1.3 s | body | 10 | 0 | 0.03 s | - |
+| e3_shot_fire | 1.5 s | body | 8 | 7 | 0.00 s | - |
+| e3_shot_fire@i | 1.3 s | body | 39 | 3 | 0.01 s | - |
+| e3_shot_fire@b | 1.3 s | body | 2 | 0 | 1.30 s | - |
+| e3_shot_water | 1.5 s | body | 19 | 14 | 0.00 s | - |
+| e3_shot_water@i | 1.3 s | body | 44 | 4 | 0.00 s | - |
+| e3_shot_water@b | 1.3 s | body | 6 | 0 | 1.30 s | - |
+| e3_shot_lightning | 1.5 s | body | 16 | 16 | 0.00 s | - |
+| e3_shot_lightning@i | 1.3 s | body | 0 | 0 | 1.31 s | - |
+| e3_shot_lightning@b | 1.3 s | body | 24 | 24 | 0.01 s | - |
+| e3_shot_metal | 1.5 s | body | 12 | 12 | 0.00 s | - |
+| e3_shot_metal@i | 1.3 s | body | 0 | 0 | 1.31 s | - |
+| e3_shot_metal@b | 1.3 s | body | 26 | 8 | 0.01 s | - |
+| e3_shot_life | 1.5 s | body | 21 | 21 | 0.00 s | - |
+| e3_shot_life@i | 1.3 s | body | 14 | 4 | 0.00 s | - |
+| e3_shot_life@b | 1.3 s | body | 7 | 1 | 1.30 s | - |
+| e3_shot_dark | 1.5 s | body | 14 | 14 | 0.00 s | - |
+| e3_shot_dark@i | 1.3 s | body | 10 | 4 | 0.00 s | - |
+| e3_shot_dark@b | 1.3 s | body | 4 | 0 | 0.49 s | - |
+| e3_shot_poison | 1.5 s | body | 7 | 7 | 0.00 s | - |
+| e3_shot_poison@i | 1.3 s | body | 40 | 2 | 0.00 s | - |
+| e3_shot_poison@b | 1.3 s | body | 54 | 54 | 1.30 s | - |
+| e3_shot_light | 1.5 s | body | 5 | 5 | 0.00 s | - |
+| e3_shot_light@i | 1.3 s | body | 20 | 2 | 0.03 s | - |
+| e3_shot_light@b | 1.3 s | body | 5 | 0 | 1.30 s | - |
+| e3_shot_wind | 1.5 s | body | 5 | 5 | 0.00 s | - |
+| e3_shot_wind@i | 1.3 s | body | 0 | 0 | 1.31 s | - |
+| e3_shot_wind@b | 1.3 s | body | 7 | 7 | 0.01 s | - |

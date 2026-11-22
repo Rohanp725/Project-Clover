@@ -94,6 +94,10 @@ namespace Clover.Tests
             Assert.AreEqual(ElementMoves.Thrust, PlayerCombat.ShapeOf(Weapons.GreatSpear()));
             Assert.AreEqual(ElementMoves.Dash, PlayerCombat.ShapeOf(Weapons.TwinKnives()));
             Assert.AreEqual(ElementMoves.Lash, PlayerCombat.ShapeOf(Weapons.ChainSickle()));
+            Assert.AreEqual(ElementMoves.Shot, PlayerCombat.ShapeOf(Weapons.GreatBow()));
+            // The shot's impact, drawn where the arrow stops in someone: Fire's flame and Water's sheets tear off it.
+            Assert.GreaterOrEqual(set.Find(ElementMoves.ShotImpactKey(0)), 0, "shot fire impact");
+            Assert.GreaterOrEqual(set.Find(ElementMoves.ShotImpactKey(4)), 0, "shot water impact");
             Assert.AreEqual(-1, PlayerCombat.ShapeOf(Weapons.Katana()), "an arc weapon keeps the arc strikes");
             // Dash and lash draw Dark's open hands beside each one struck.
             Assert.GreaterOrEqual(set.Find(ElementMoves.ShapeKey(ElementMoves.Dash, DarkIndex, true)), 0);
@@ -119,7 +123,7 @@ namespace Clover.Tests
         public void TheShapeWeaponsStrikeInPlaceWithLightningAndTheArcWeaponsLunge()
         {
             // The owner's answer, 2026-11-22: Scythe, Great Spear, Twin Knives and Chain Sickle strike where they stand, like the hammer.
-            foreach (var weapon in new[] { Weapons.Scythe(), Weapons.GreatSpear(), Weapons.TwinKnives(), Weapons.ChainSickle() })
+            foreach (var weapon in new[] { Weapons.Scythe(), Weapons.GreatSpear(), Weapons.TwinKnives(), Weapons.ChainSickle(), Weapons.GreatBow() })
                 Assert.IsTrue(PlayerCombat.StrikesInPlace(weapon, weapon.CarrierStep, LightningIndex), weapon.Name + " strikes in place");
             foreach (var weapon in new[] { Weapons.Katana(), Weapons.MassiveSword() })
                 Assert.IsFalse(PlayerCombat.StrikesInPlace(weapon, weapon.CarrierStep, LightningIndex), weapon.Name + " keeps Flash Cut's lunge");

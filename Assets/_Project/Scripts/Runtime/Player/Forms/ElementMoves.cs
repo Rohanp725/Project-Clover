@@ -167,9 +167,9 @@ namespace Clover.Player.Forms
 
         // The strike shapes the Blender worker drew for the weapons whose infused strike is not an arc (ElementLookBuilder.Slams):
         // each element's look about the shape's origin and on each body it reaches, by the element's place on the ring.
-        /// <summary>The strike shapes, in order: the Great Hammer's slam, the Scythe's spin, the Great Spear's thrust, the Twin Knives' dash-through, the Chain Sickle's lash.</summary>
-        public static readonly string[] Shapes = { "slam", "spin", "thrust", "dash", "lash" };
-        public const int Slam = 0, Spin = 1, Thrust = 2, Dash = 3, Lash = 4;
+        /// <summary>The strike shapes, in order: the Great Hammer's slam, the Scythe's spin, the Great Spear's thrust, the Twin Knives' dash-through, the Chain Sickle's lash, the Great Bow's shot.</summary>
+        public static readonly string[] Shapes = { "slam", "spin", "thrust", "dash", "lash", "shot" };
+        public const int Slam = 0, Spin = 1, Thrust = 2, Dash = 3, Lash = 4, Shot = 5;
         private static readonly string[] RingWords = { "fire", "lightning", "wind", "ice", "water", "life", "earth", "metal", "light", "dark", "poison" };
         private static readonly string[][] ShapeKeys = MakeShapeKeys();
 
@@ -207,6 +207,30 @@ namespace Clover.Player.Forms
             string key = ShapeKey(shape, element, true);
             for (int i = 0; struck != null && i < count && i < struck.Length; i++)
                 if (struck[i] != null) OnBody(key, struck[i].transform, forward);
+        }
+
+        /// <summary>The shot's trace about the player as the arrow is loosed, turned along its flight; a handle to end it by (ElementLooks.EndHeld), -1 for none.</summary>
+        public static int PlayShotTrace(int element, Vector3 at, Vector3 forward) =>
+            ElementArt.Ready ? ElementLooks.Held(ElementLooks.Find(ShapeKey(Shot, element, false)), at, Yaw(forward), 1f, 0f) : -1;
+
+        /// <summary>The key of the shot's impact look, about where the arrow stopped in someone (ElementLookBuilder.Shots); null for none.</summary>
+        public static string ShotImpactKey(int element)
+        {
+            string about = ShapeKey(Shot, element, false);
+            return about != null ? about + "@i" : null;
+        }
+
+        /// <summary>
+        /// The shot's arrow has stopped in someone at <paramref name="at"/>, flying <paramref name="forward"/>: its impact
+        /// there and its look on each one struck. False when the element has no shot built.
+        /// </summary>
+        public static bool ShotLands(int element, Vector3 at, Vector3 forward, Component[] struck, int count)
+        {
+            if (!ElementArt.Ready || !HasShape(Shot, element)) return false;
+            int impact = ElementLooks.Find(ShotImpactKey(element));
+            if (impact >= 0) ElementLooks.PlayAt(impact, at, Yaw(forward));
+            ShapeStruck(Shot, element, struck, count, forward);
+            return true;
         }
 
         /// <summary>The slam's (the Great Hammer's) keys and plays, as <see cref="ShapeKey"/> and its fellows.</summary>

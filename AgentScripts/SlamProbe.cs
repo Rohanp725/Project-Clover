@@ -44,7 +44,7 @@ public class SlamProbeRunner : MonoBehaviour
 
     private static string WeaponOf(string shape) =>
         shape == "spin" ? Weapons.ScytheName : shape == "thrust" ? Weapons.GreatSpearName : shape == "dash" ? Weapons.TwinKnivesName
-        : shape == "lash" ? Weapons.ChainSickleName : Weapons.GreatHammerName;
+        : shape == "lash" ? Weapons.ChainSickleName : shape == "shot" ? Weapons.GreatBowName : Weapons.GreatHammerName;
 
     // The recipe's bodies about its player, turned so the player faces north, and each look's third strip beat.
     private void ReadRecipe()
@@ -218,7 +218,7 @@ public class SlamProbeRunner : MonoBehaviour
             int built = System.Array.IndexOf(ElementMoves.Shapes, shape);
             Judge($"{name}: its {shape} is built", ElementMoves.HasShape(built, index), $"lead {ElementMoves.ShapeLead(built, index):0.00} s");
             // A lane or a dash is turned across the screen, as the strips turned it, so what runs down it is not hidden behind the bodies.
-            var facingWay = shape == "thrust" || shape == "dash" || shape == "lash" ? Quaternion.Euler(0f, 60f, 0f) : Quaternion.identity;
+            var facingWay = shape == "thrust" || shape == "dash" || shape == "lash" || shape == "shot" ? Quaternion.Euler(0f, 60f, 0f) : Quaternion.identity;
             player.Teleport(stand, facingWay);
             // Fresh each time: nothing carried over from the last element (no reaction between two strikes), and none
             // staggered, so no finish mark is drawn over the look.
@@ -263,6 +263,13 @@ public class SlamProbeRunner : MonoBehaviour
                 continue;
             }
             Vector3 landed = player.transform.position + player.transform.forward * combat.Combo.Current.Reach;
+            // The shot's beats are counted from the arrow stopping in its target, not from the loosing.
+            if (shape == "shot")
+            {
+                int impactsWere = combat.ShotImpacts;
+                yield return Until(() => combat.ShotImpacts > impactsWere, 1.5f);
+                Say($"{name}: shot impacts +{combat.ShotImpacts - impactsWere}, misses {combat.ShotMisses}, at {Vector3.Distance(player.transform.position, combat.LastShotImpact):0.0} m");
+            }
             yield return Game(shape == "slam" ? peak : beats.TryGetValue(name.ToLowerInvariant(), out float beat) ? Mathf.Max(0.02f, beat) : 0.2f);
             yield return Still($"{shape}_{name.ToLowerInvariant()}{tag}");
             yield return Real(0.2f);

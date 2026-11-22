@@ -316,6 +316,7 @@ namespace Clover.EditorTools
             BuildBlasts(Elements3Looks(), lists, elementArt, glow);
             // The Great Hammer's slams (ElementLookBuilder.Slams).
             BuildSlams(lists, elementArt, glow);
+            BuildShots(lists, elementArt, glow);
             lists.Flat = false;
         }
 

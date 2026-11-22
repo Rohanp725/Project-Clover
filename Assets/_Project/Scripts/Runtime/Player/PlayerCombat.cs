@@ -895,6 +895,9 @@ namespace Clover.Player
             if (step.Shot == null || shots == null) return;
             Vector3 forward = transform.forward;
             int handle = shots.Fire(this, step.Shot, (step.Shot.FromStepStart ? stageOrigin : transform.position) + forward * 0.4f, forward, EffectColour, element != null ? element.Info : null, StruckTint);
+            // The infused shot's arrow: told where it stops, so its impact is drawn there.
+            if (shotWatchPending && handle >= 0) shots.Watch(handle);
+            shotWatchPending = false;
             if (handle < 0 || !(step.Shot.Returns || step.Shot.RaysBack || step.FollowStep != null)) return;
             WeaponAway = true;
             awayShot = handle;
@@ -1885,6 +1888,7 @@ namespace Clover.Player
                 case Weapons.GreatSpearName: return Clover.Player.Forms.ElementMoves.Thrust;
                 case Weapons.TwinKnivesName: return Clover.Player.Forms.ElementMoves.Dash;
                 case Weapons.ChainSickleName: return Clover.Player.Forms.ElementMoves.Lash;
+                case Weapons.GreatBowName: return Clover.Player.Forms.ElementMoves.Shot;
                 default: return -1;
             }
         }
@@ -1907,6 +1911,7 @@ namespace Clover.Player
             if (step == null || step != infusedStep || infusedElement == null) return false;
             int shape = ShapeOf(Weapon);
             if (shape < 0 || (shape == Clover.Player.Forms.ElementMoves.Slam && step.Effect != StepEffect.GroundSlam)) return false;
+            if (shape == Clover.Player.Forms.ElementMoves.Shot && step.Shot == null) return false;
             return Clover.Player.Forms.ElementMoves.HasShape(shape, infusedElement.Index);
         }
 
@@ -1942,6 +1947,11 @@ namespace Clover.Player
         private void SlamLands(AttackStep step)
         {
             int shape = ShapeOf(Weapon);
+            if (shape == Clover.Player.Forms.ElementMoves.Shot)
+            {
+                ShotLoosed(step);
+                return;
+            }
             if (!slamDrawn) Clover.Player.Forms.ElementMoves.PlayShape(shape, infusedElement.Index, ShapeSpot(step, shape, false), transform.forward);
             slamDrawn = true;
             drawnShape = shape;
@@ -1949,6 +1959,55 @@ namespace Clover.Player
             if (shape == Clover.Player.Forms.ElementMoves.Slam) ShapeStruckNow();
             else shapeBodiesPending = true;
         }
+
+        // The Great Bow's shot: its trace about the player as the arrow leaves; its impact waits for the arrow to stop
+        // in someone (ShotStopped), so nothing is drawn on a miss.
+        private int shotTrace = -1;
+        private ElementInfo shotElement;
+        private bool shotWatchPending;
+        /// <summary>Counts for probes: shot impacts drawn where the arrow stopped in someone, and shots that stopped in no one.</summary>
+        public int ShotImpacts { get; private set; }
+        public int ShotMisses { get; private set; }
+        /// <summary>Where the last infused shot's impact was drawn, for probes.</summary>
+        public Vector3 LastShotImpact { get; private set; }
+
+        private void ShotLoosed(AttackStep step)
+        {
+            int shape = Clover.Player.Forms.ElementMoves.Shot;
+            slamDrawn = true;
+            drawnShape = shape;
+            Clover.Player.Forms.StrikeArt.Drawn();
+            shapeBodiesPending = false;
+            shotTrace = Clover.Player.Forms.ElementMoves.PlayShotTrace(infusedElement.Index, ShapeSpot(step, shape, false), transform.forward);
+            shotElement = infusedElement;
+            shotWatchPending = true;
+        }
+
+        /// <summary>
+        /// A watched shot has stopped (<see cref="WeaponShots.Watch"/>) at <paramref name="at"/> after <paramref name="flown"/>
+        /// metres, in someone when <paramref name="inSomeone"/>: the infused shot's impact is drawn there and on whom it struck.
+        /// </summary>
+        public void ShotStopped(Vector3 at, Vector3 direction, bool inSomeone, float flown)
+        {
+            var carried = shotElement;
+            shotElement = null;
+            if (carried == null) return;
+            if (!inSomeone)
+            {
+                ShotMisses++;
+                return;
+            }
+            int count = CopyLastStruck(out var bodies);
+            if (!Clover.Player.Forms.ElementMoves.ShotLands(carried.Index, at, direction, bodies, count)) return;
+            ShotImpacts++;
+            LastShotImpact = at;
+            // Stopped well short of where the trace is drawn to: the trace goes with it rather than running on past.
+            if (flown < ShotTraceMetres - 1f) Clover.Player.Forms.ElementLooks.EndHeld(shotTrace);
+            shotTrace = -1;
+        }
+
+        /// <summary>How far out the shot's trace is drawn (the recipe's arrow stopped 6.5 m out).</summary>
+        public const float ShotTraceMetres = 6.5f;
 
         private void ShapeStruckNow()
         {

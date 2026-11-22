@@ -33,6 +33,8 @@ namespace Clover.Player
             public Vector3 At, Direction;
             public float Flown, HangLeft, BiteIn, Age, Turn;
             public bool Hanging, Stuck, InEnemy, Returning, Harmless, Ray;
+            // The thrower is told where this one stopped (the Great Bow's infused shot: its impact is drawn there).
+            public bool Watched;
             public float StuckLeft, PauseLeft, ReturnSpeed;
             public int Prop;
             public Transform Owner;
@@ -85,6 +87,12 @@ namespace Clover.Player
         public int PropCount => props != null ? props.Length : 0;
         public Transform PropAt(int index) => props != null && index >= 0 && index < props.Length ? props[index] : null;
         public string PropName(int index) => propNames != null && index >= 0 && index < propNames.Length ? propNames[index] : "";
+
+        /// <summary>The thrower is told where this shot stops (<see cref="PlayerCombat.ShotStopped"/>), once.</summary>
+        public void Watch(int handle)
+        {
+            if (IsOut(handle)) flying[handle].Watched = true;
+        }
 
         public bool IsOut(int handle) => flying != null && handle >= 0 && handle < flying.Length && flying[handle].Live;
         public bool IsStuck(int handle) => IsOut(handle) && flying[handle].Stuck;
@@ -313,6 +321,11 @@ namespace Clover.Player
                     Struck += hit;
                     if (f.Flown >= shot.Range - 0.001f || (hit > 0 && !shot.Pierce))
                     {
+                        if (f.Watched && f.Combat != null)
+                        {
+                            f.Watched = false;
+                            f.Combat.ShotStopped(f.At, f.Direction, hit > 0 && !shot.Pierce, f.Flown);
+                        }
                         if (shot.Plants)
                         {
                             // One that stopped in no one stands in the ground where its flight ended.
