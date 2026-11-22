@@ -224,6 +224,8 @@ namespace Clover.Player
         /// trigger's enemy's place kept as the point (Dead Weight drags the mate there); nothing when it is chained to no one.
         /// </summary>
         public bool ToChainMate;
+        /// <summary>For Tend: what the tended grown thing lays with every bite from then on (The Host: a dose of poison).</summary>
+        public AfflictionKind BitesLay = AfflictionKind.None;
         /// <summary>
         /// For Pass: what is pushed past the taker's depth bursts it at once (its own set-off) and passes on to the next, a
         /// few times at most (Eaten in Turn). Without it, what does not fit is lost.

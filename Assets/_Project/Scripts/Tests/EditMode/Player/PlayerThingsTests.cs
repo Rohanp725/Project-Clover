@@ -52,6 +52,22 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void KindledGuardAndTheHostTendWhatYouGrew()
+        {
+            var guard = Upgrade.ById(Clover.Player.Trees.Duo.FirebloomDuo.KindledGuard).Effects.Single();
+            Assert.AreEqual(UpgradeAction.Tend, guard.Do, "the lily itself flares");
+            Assert.AreEqual(3f, guard.Radius, 1e-5f, "within 3 m of you");
+            Assert.AreEqual(3f, guard.Seconds, 1e-5f, "and stands 3 s longer");
+            Assert.AreEqual(12f, guard.Damage, 1e-5f);
+            Assert.AreEqual(StatWhen.Always, guard.While, "no longer a flare round you while near");
+            var host = Upgrade.ById(Clover.Player.Trees.Duo.RotRootsDuo.TheHost).Effects.Single();
+            Assert.AreEqual(UpgradeAction.Tend, host.Do);
+            Assert.AreEqual(AfflictionKind.Poison, host.BitesLay, "every bite doses");
+            Assert.AreEqual(AfflictionKind.Poison, host.Needs, "fed by a poisoned death");
+            Assert.AreEqual(0f, host.Damage, 1e-5f, "it does not flare");
+        }
+
+        [Test]
         public void ReapReachesTheWholeFightAndSecondSowingAnswersEachBurst()
         {
             var learn = Upgrade.ById(LifeTree.ReapWhatIsSown);

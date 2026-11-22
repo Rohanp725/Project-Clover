@@ -82,16 +82,14 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.RightLow));
 
-            // NEEDS: a death answered by the player's grown things near where it fell (at-grown): the grown thing within 3 m
-            // standing 3 s longer and dosing with every bite; now a poisoned enemy that dies while something you grew stands
-            // within 4 m of you doses everything within 3 m of where it fell, once a second.
+            // The grown thing nearest where a poisoned enemy fell, within 3 m, stands 3 s longer and doses with every bite (Tend, BitesLay).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = TheHost, Name = "The Host", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { Tasting, DeepThreads }, Icon = UpgradeIcons.Leaf,
                 Description = "Whatever you grow feeds on the poisoned: a poisoned enemy that dies within 3 m of something grown makes it stand 3 s longer and lay a dose of poison with every bite.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Poison, While = StatWhen.NearGrown, Do = UpgradeAction.Afflict, Radius = 3f, Affliction = AfflictionKind.Poison, Stacks = 1, Cooldown = 1f },
+                    new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Poison, Do = UpgradeAction.Tend, Radius = 3f, Seconds = 3f, BitesLay = AfflictionKind.Poison, Cooldown = 0.2f },
                 },
             }, HeartPattern.Keystone));
 

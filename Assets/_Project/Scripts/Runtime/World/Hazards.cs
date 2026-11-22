@@ -200,6 +200,35 @@ namespace Clover.World
         }
 
         /// <summary>
+        /// Tends the grown thing of the player's nearest <paramref name="at"/> within <paramref name="metres"/> (the ledger's
+        /// at-grown): it stands <paramref name="longer"/> seconds more, lays <paramref name="alsoLays"/> with every bite from
+        /// now on when that names one, and where it stands is given back. False when nothing grown stands that near.
+        /// </summary>
+        public static bool Tend(Vector3 at, float metres, float longer, AfflictionKind alsoLays, out Vector3 where)
+        {
+            where = Vector3.zero;
+            if (instance == null) return false;
+            int best = -1;
+            float bestDistance = float.MaxValue;
+            for (int i = 0; i < instance.zones.Length; i++)
+            {
+                if (!instance.zones[i].Active || !instance.zones[i].Spec.Grown) continue;
+                Vector3 offset = instance.zones[i].Position - at;
+                offset.y = 0f;
+                float distance = offset.sqrMagnitude;
+                if (distance > metres * metres || distance >= bestDistance) continue;
+                best = i;
+                bestDistance = distance;
+            }
+            if (best < 0) return false;
+            ref var zone = ref instance.zones[best];
+            zone.Left += Mathf.Max(0f, longer);
+            if (alsoLays != AfflictionKind.None) zone.Spec.AlsoLays = alsoLays;
+            where = zone.Position;
+            return true;
+        }
+
+        /// <summary>
         /// Drinks up every patch that lays <paramref name="kind"/> within <paramref name="radius"/> of a place (a cloud, a trail),
         /// and it is gone. Returns the doses it held: each patch's own, at least one.
         /// </summary>
@@ -432,6 +461,7 @@ namespace Clover.World
                 {
                     zone.UntilBite = zone.Spec.BiteEvery;
                     int hits = owner.StrikeArea(zone.Position, zone.Spec.Radius, zone.Spec.Blow, LeftAlone(i, zone));
+                    if (zone.Spec.AlsoLays != AfflictionKind.None) owner.AfflictArea(zone.Position, zone.Spec.Radius, zone.Spec.AlsoLays, 1);
                     zone.Bitten++;
                     // A standing storm drops a bolt somewhere in itself each time it bites, whether or not anyone is under it.
                     if (zone.Spec.Quiet) { }

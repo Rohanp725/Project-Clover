@@ -46,13 +46,11 @@ are both carried.
 
 **When it happens.** Each poisoned enemy that dies, while you carry both Life and Poison.
 
-**The numbers.** Mix, keystone, 5 Shards. For now: while something you grew stands within 4 metres of you, a poisoned enemy that dies gives a dose to everything within 3 metres of where it fell, at most once a second.
+**The numbers.** Mix, keystone, 5 Shards. The thing you grew nearest the body, within 3 metres, stays 3 seconds longer, and from then on each of its hits also gives one dose of poison to everything it hits.
 
 **Works with.** Rot Roots, the things Life grows (Briar Patch and the rest), The Stalks Rise.
 
 **Example.** Fight next to your briars, and each poisoned death spreads its rot.
-
-**Not built yet.** The grown thing near the death doesn't stay longer or start poisoning with its hits yet. For now, the dose goes to the enemies near where it fell, and only while something you grew stands near you.
 
 ## rotroots.stalks
 **What it does.** Every enemy within 9 metres that is both Seeded and Poisoned grows a dark stalk from its head. After 1.2 seconds, each stalk bursts, using up both: it deals 5 damage per dose and 8 per seed within 2.5 metres, and the spores give two doses to everything nearby.

@@ -57,5 +57,7 @@ namespace Clover.World
         /// (the owner, 2026-11-20: "make it less flickery so it doesnt hurt peoples eyes").
         /// </summary>
         public bool Quiet;
+        /// <summary>Laid besides its own blow, a dose a bite on all it bites (The Host: a grown thing fed on the poisoned doses too).</summary>
+        public AfflictionKind AlsoLays;
     }
 }

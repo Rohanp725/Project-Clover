@@ -201,5 +201,11 @@ namespace Clover.Player
         /// and Back: the flight back, cutting the line again). Reads: Damage, Stagger, Radius, Affliction, Stacks.
         /// </summary>
         ReturnToCast,
+        /// <summary>
+        /// Tends the grown thing of the player's nearest the effect's place within its Radius (the ledger's at-grown): it stands
+        /// Seconds longer, lays <see cref="UpgradeEffect.BitesLay"/> with every bite when that names one, and flares where it
+        /// stands when the effect has Damage, Stagger or Stacks (Reach: the flare's size). Nothing when nothing grown is that near.
+        /// </summary>
+        Tend,
     }
 }

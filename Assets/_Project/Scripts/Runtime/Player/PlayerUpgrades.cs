@@ -190,6 +190,8 @@ namespace Clover.Player
         public int DosesStored { get; private set; }
         private readonly HashSet<IDamageable> gatherTaken = new HashSet<IDamageable>();
         private readonly HashSet<IDamageable> stateScratch = new HashSet<IDamageable>();
+        /// <summary>Grown things tended by a mark (Kindled Guard, The Host), counted for probes.</summary>
+        public int GrownTended { get; private set; }
         // The death a helper was last raised for, in which frame and by which mark: one death raises one.
         private Transform helperFor;
         private int helperFrame = -1;
@@ -2028,6 +2030,17 @@ namespace Clover.Player
                         Kind = ElementLook.Ground(held), Tint = held.Colour, Position = self, Radius = Or(effect.Radius, 2.3f), Seconds = 0.12f, BiteEvery = 0.1f, Once = true, Burst = true,
                         Delay = delay, Blow = Blow(held, kind, combat.LastBlowDamage * Or(effect.Amount, 0.6f), eStagger, 0),
                     });
+                    break;
+                }
+                case UpgradeAction.Tend:
+                {
+                    if (!Hazards.Tend(centre, Or(effect.Radius, 3f), effect.Seconds, effect.BitesLay, out Vector3 tended)) break;
+                    GrownTended++;
+                    if (eDamage > 0f || eStagger > 0f || eStacks > 0)
+                    {
+                        combat.StrikeArea(tended, Or(effect.Reach, 2f), Blow(look, kind, eDamage, eStagger, eStacks));
+                        ElementLook.Ring(look, tended + Vector3.up * 0.2f);
+                    }
                     break;
                 }
                 case UpgradeAction.Helper:
