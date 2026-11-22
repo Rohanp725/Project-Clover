@@ -292,11 +292,11 @@ a blow or a cast "on the beat" comes within a fifth of a second of it.
 
 **When it happens.** Whenever you cast Share Alike, using the shape you picked. If you have not bought this, you cast the plain rush.
 
-**The numbers.** 3 Shards. Carried on the Blade: your blade takes the sickest number of doses among the enemies you rushed through. Your next five weapon blows, on any enemy, each raise what they hit to that number. A blow on an enemy that already has that many still counts as one of the five. Shed Tail: where you stood, for 2 seconds, everything within 2 metres gets three doses every half second.
+**The numbers.** 3 Shards. Carried on the Blade: your blade takes the sickest number of doses among the enemies you rushed through. Your next five weapon blows, on any enemy, each raise what they hit to that number. A blow on an enemy that already has that many still counts as one of the five. Shed Tail: you rush 6 metres straight back, away from what you face, and where you stood, for 2 seconds, everything within 2 metres gets three doses every half second.
 
 **Works with.** Carried on the Blade: a fast weapon, Rupture, In Time. Shed Tail: enemies that chase you, Catching, Low Mist.
 
-**Not built yet.** Shed Tail should rush you backward; for now, you rush forward like the plain spell, and the tail is left where you started. The heavy venom dripping from the edge isn't drawn yet.
+**Not built yet.** The heavy venom dripping from the edge isn't drawn yet.
 
 **Example.** Use Carried on the Blade through a pack where one soldier has seven doses, then turn on the captain. Each of your next five blows brings what it hits up to seven.
 

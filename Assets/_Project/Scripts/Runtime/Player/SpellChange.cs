@@ -44,12 +44,14 @@ namespace Clover.Player
         public float Pull;
         /// <summary>The field draws nothing in (Rip Current: the foam carries them away instead).</summary>
         public bool NoPull;
+        /// <summary>The drill rushes straight back, away from the way you face (<see cref="SpellSpec.Backward"/>: Shed Tail).</summary>
+        public bool Backward;
 
         /// <summary>True when it changes nothing.</summary>
         public bool IsEmpty =>
             Cooldown == 0f && Mana == 0f && Damage == 0f && Stagger == 0f && Reach == 0f && Radius == 0f && Arc == 0f && Seconds == 0f
             && Interval == 0f && Count == 0 && Stacks == 0 && Delay == 0f && Speed == 0f && LingerDamage == 0f && AfflictionSeconds == 0f && ChargeBlows == 0 && Lasts == 0f && Walk == 0f && !Carries && BankStagger == 0f && Rings == 0
-            && BladeReach == 0f && BurstAfterStruck == 0f && Pull == 0f && !NoPull;
+            && BladeReach == 0f && BurstAfterStruck == 0f && Pull == 0f && !NoPull && !Backward;
 
         /// <summary>
         /// Writes what it adds to <paramref name="learn"/>'s numbers onto <paramref name="spec"/>'s (an Empower over a shape that
@@ -130,6 +132,7 @@ namespace Clover.Player
             if (BurstAfterStruck > 0f) spec.BurstAfterStruck = BurstAfterStruck;
             if (Pull > 0f) spec.Pull = Pull;
             if (NoPull) spec.Pull = 0f;
+            if (Backward) spec.Backward = true;
         }
 
         /// <summary>Copies every number of one spec into another (no allocation): how a spell's own numbers are taken before changes are laid over them.</summary>
@@ -173,6 +176,7 @@ namespace Clover.Player
             into.InLine = from.InLine;
             into.GrowsOut = from.GrowsOut;
             into.Rays = from.Rays;
+            into.Backward = from.Backward;
             into.Glow = from.Glow;
             into.Walk = from.Walk;
             into.Quiet = from.Quiet;

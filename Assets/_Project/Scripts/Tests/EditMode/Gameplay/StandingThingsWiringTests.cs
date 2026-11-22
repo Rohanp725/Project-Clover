@@ -511,6 +511,22 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void ShedTailRushesBackward()
+        {
+            var tail = Upgrade.ById(SpellBranch.ShapeId(PoisonTree.ShareAlike)).Shapes.Single(each => each.Name == "Shed Tail");
+            Assert.IsTrue(tail.Change.Backward);
+            Assert.AreEqual(6f, tail.Change.Reach, 1e-5f, "six metres");
+            var spec = new SpellSpec { Reach = 7f };
+            tail.Change.ApplyTo(spec);
+            Assert.IsTrue(spec.Backward);
+            Assert.AreEqual(6f, spec.Reach, 1e-5f);
+            var copy = new SpellSpec();
+            SpellChange.Copy(spec, copy);
+            Assert.IsTrue(copy.Backward);
+            Assert.IsFalse(new SpellChange { Backward = true }.IsEmpty);
+        }
+
+        [Test]
         public void TheSeaComesInQuickensYouOnlyInYourOwnWater()
         {
             var sea = Upgrade.ById(WaterTree.TheSeaComesIn);

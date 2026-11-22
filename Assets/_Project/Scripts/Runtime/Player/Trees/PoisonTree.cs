@@ -320,9 +320,9 @@ namespace Clover.Player.Trees
                 new ShapeDef { Name = "Carried on the Blade",
                     Description = "You rush through as learned, but take the sickest one's depth onto your blade: your next five weapon blows each set what they strike to that depth. The rush loads the weapon.",
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.CoatBlade, Affliction = P, SetsDepth = true, Count = 5 } } },
-                // NEEDS: the rush backward, away from the enemies (form-pieces). Until then you rush forward as learned, and the
-                // tail lashes where you stood.
-                new ShapeDef { Name = "Shed Tail",
+                // The rush runs six metres backward, away from the enemies (SpellChange.Backward on the drill), and the tail lashes
+                // where you stood.
+                new ShapeDef { Name = "Shed Tail", Change = new SpellChange { Backward = true, Reach = 6f },
                     Description = "You rush six metres backward, away. A thrashing tail is left where you stood for two seconds, lashing everything within two metres every half second for three doses. Away from them, and what follows you pays.",
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Hazard, At = EffectAt.Self, Shape = HazardShape.Patch, Radius = 2f, Seconds = 2f, Interval = 0.5f, Damage = 0f, Stagger = 0f, Affliction = P, Stacks = 3 } } },
                 "Opens two shapes of Share Alike, chosen at any rest fire: Carried on the Blade, the sickness loaded on your weapon, or Shed Tail, a rush away that leaves a lashing tail.",

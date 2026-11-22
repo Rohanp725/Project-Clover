@@ -28,6 +28,12 @@ namespace Clover.Player.Forms
             run.A = cast.Origin;
             run.B = cast.Forward;
             run.T0 = cast.Player.ClearRun(cast.Forward, cast.Reach);
+            // A rush straight back, away from what you face (Shed Tail): the body is hidden in the drill either way.
+            if (cast.Spec.Backward)
+            {
+                run.B = -cast.Forward;
+                run.T0 = cast.Player.ClearRun(run.B, cast.Reach);
+            }
             // To the Blade: to a blade of yours standing within reach, in an enemy or the ground, ahead of you first; it stops
             // just short of the body a blade stands in, and drives that blade as it arrives.
             if (cast.Spec.BladeReach > 0f)
