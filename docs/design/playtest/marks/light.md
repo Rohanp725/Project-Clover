@@ -60,11 +60,9 @@ the next blows on that enemy critical.
 
 **When it happens.** While the seal is on its enemy, during the six seconds after you cast it, while Reckoning is in a spell slot.
 
-**The numbers.** 3 Shards. For now, your finisher on the sealed enemy hits it again for 40 damage and 40 stagger, once per seal. Other heavy blows do nothing.
+**The numbers.** 3 Shards. Your finisher on the sealed enemy makes the seal pay out right away: 8 damage for each weapon blow you have landed on it so far (10 with Reckoning's Empower, up to 180), and 40 stagger. The seal keeps running and pays out again when it breaks. With Witnessed, it pays that seal's count instead. Once per seal. Other heavy blows do nothing.
 
 **Works with.** Heavy weapons, Condemned (the full Mark's stagger sets up the finisher), Ring of Spears (holds it still to be finished).
-
-**Not built yet.** It should pay out the count a second time. For now, it is a flat 40.
 
 **Example.** Stagger the sealed brute with a full Mark and finish it. The seal pays out right away, and again when it breaks.
 

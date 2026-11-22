@@ -336,5 +336,10 @@ namespace Clover.Player
         /// still lands (Stone Skin).
         /// </summary>
         Plate,
+        /// <summary>
+        /// The condition named by ToState on the target (or one that is it, by ConditionSpec.Is) pays out now as it would at
+        /// its end, its count as it stands, and runs on to pay again at its end (Reckoning's Master: the count paid on a finisher).
+        /// </summary>
+        PayNow,
     }
 }

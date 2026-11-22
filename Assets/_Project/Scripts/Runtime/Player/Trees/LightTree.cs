@@ -89,7 +89,7 @@ namespace Clover.Player.Trees
                     Description = "The seal counts the bearer's deeds, not yours. For six seconds every blow it lands on you or your guard is scratched in gold on the clock's rim. On the last tick a column falls on it: 30 for each blow written and 15 more for each you turned with a perfect guard, 150 at most, and 40 stagger. Guard well and the sun judges for you.",
                     Effects = new[]
                     {
-                        new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Witnessed, Seconds = 6f, TheirBlowPoints = 2, TurnedPoints = 1 } },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Witnessed, Seconds = 6f, TheirBlowPoints = 2, TurnedPoints = 1, Is = Sealed } },
                         new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Witnessed, SpentAtLeast = 1, Do = UpgradeAction.Burst, PerStack = true, PerMost = 10, Unseen = true, Radius = 0.6f, Damage = 15f, Stagger = 0f, Stacks = 0 },
                         new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Witnessed, Do = UpgradeAction.Falling, Radius = 1.2f, Delay = 0.3f, Damage = 0f, Stagger = 40f, Affliction = M, Stacks = 1 },
                     } },
@@ -106,12 +106,13 @@ namespace Clover.Player.Trees
                         new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Sentenced, Do = UpgradeAction.Spend, Affliction = M },
                     } },
                 "Opens two shapes of Reckoning, chosen at any rest fire: Witnessed, a seal that counts the blows struck at you, or Spoken Sentence, a seal your heavy blow breaks over every Marked enemy.",
-                // A finisher on the sealed enemy (StruckBy.Finisher), not any heavy blow. NEEDS: the count paid a second time
-                // (damage-tally); until then the finisher strikes it for 40 and 40 stagger, once a seal.
+                // A finisher on the sealed enemy (StruckBy.Finisher), not any heavy blow, once a seal: the seal pays its count now, as
+                // it stands, as it would at its end (UpgradeAction.PayNow: with the Empower's numbers, or Witnessed's count in that
+                // shape, which is a seal by what it is), and pays again as it breaks.
                 new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Owed, Seconds = 6f, EndsWith = ConditionBlow.Finisher } },
-                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Owed, By = StruckBy.Finisher, Do = UpgradeAction.Burst, Radius = 1.2f, Damage = 40f, Stagger = 40f, Stacks = 0 },
+                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Owed, By = StruckBy.Finisher, Do = UpgradeAction.PayNow, ToState = Sealed },
                 },
                 "A finisher on the sealed enemy pays the count twice.",
                 learnEffects: new[]

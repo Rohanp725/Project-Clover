@@ -258,7 +258,10 @@ namespace Clover.Player
         /// few times at most (Eaten in Turn). Without it, what does not fit is lost.
         /// </summary>
         public bool Overflow;
-        /// <summary>For Pass: not empty, the nearest other enemy in this condition (by its name or what it is) takes the doses before any other (the next on Eaten in Turn's line).</summary>
+        /// <summary>
+        /// For Pass: not empty, the nearest other enemy in this condition (by its name or what it is) takes the doses before any
+        /// other (the next on Eaten in Turn's line). For PayNow: the condition that pays out.
+        /// </summary>
         public string ToState = "";
         /// <summary>For an Arc from the target: each enemy the arc reaches is drawn this many metres toward the target, and no one else (Drawn Iron; the ledger's afflicted-only).</summary>
         public float DrawsIn;

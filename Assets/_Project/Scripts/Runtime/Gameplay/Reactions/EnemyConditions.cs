@@ -114,6 +114,29 @@ namespace Clover.Gameplay
 
         public ConditionRun Run(int slot) => runs[slot];
 
+        /// <summary>
+        /// The news a running condition named <paramref name="id"/> (or that is it, by <see cref="ConditionSpec.Is"/>) would carry
+        /// at <paramref name="moment"/> now, its count as it stands, without that moment coming: a payout made early (Reckoning's
+        /// Master pays the seal's count on a finisher, and the seal pays again as it breaks). False when none runs.
+        /// </summary>
+        public bool NewsOf(string id, ConditionMoment moment, out ConditionNews news)
+        {
+            news = default;
+            if (string.IsNullOrEmpty(id)) return false;
+            for (int i = 0; i < Slots; i++)
+            {
+                ref var run = ref runs[i];
+                if (!run.Active || (run.Id != id && run.Is != id)) continue;
+                news = new ConditionNews
+                {
+                    Moment = moment, Id = run.Id, Mark = run.Mark, Count = run.Count, Blows = run.Blows, Flags = run.Flags, Scale = run.Scale, Link = run.Link,
+                    Is = run.Is, Side = -1f,
+                };
+                return true;
+            }
+            return false;
+        }
+
         /// <summary>True while a condition runs under this name, or is this by what it is (<see cref="ConditionSpec.Is"/>): Hot Shards' crack is a Cracked one.</summary>
         public bool Holds(string id)
         {

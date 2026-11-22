@@ -400,6 +400,20 @@ namespace Clover.Player
             return true;
         }
 
+        /// <summary>
+        /// The condition named <paramref name="id"/> on <paramref name="who"/> pays out now as it would at its end, with its count as
+        /// it stands, and runs on (Reckoning's Master: the seal's count paid on a finisher, and again as it breaks). True when it did.
+        /// </summary>
+        public bool PayAsEnded(Component who, string id)
+        {
+            if (!(who is IAfflictable carrier) || !carrier.Afflictions.Conditions.NewsOf(id, ConditionMoment.Ended, out var news)) return false;
+            PaidEarly++;
+            return Answer(who, news);
+        }
+
+        /// <summary>Conditions paid out before their end (PayAsEnded): for probes.</summary>
+        public int PaidEarly { get; private set; }
+
         private bool Answer(Component who, in ConditionNews news)
         {
             if (!Alive(who) || upgrades == null) return false;

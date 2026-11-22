@@ -941,6 +941,34 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void ReckoningsMasterPaysTheSealsCountOnAFinisher()
+        {
+            var enemy = new AfflictionSet { Reactions = new ReactionEngine((who, pair, laid) => { }, () => 0) };
+            Assert.IsFalse(enemy.Conditions.NewsOf(LightTree.Sealed, ConditionMoment.Ended, out _), "no seal, nothing to pay");
+            enemy.Conditions.Set(new ConditionSpec { Id = LightTree.Sealed, Seconds = 6f }, null, 3, null, false, true);
+            enemy.Conditions.Struck(10f, false, false);
+            enemy.Conditions.Struck(10f, true, false, finisher: true);
+            Assert.IsTrue(enemy.Conditions.NewsOf(LightTree.Sealed, ConditionMoment.Ended, out var news));
+            Assert.AreEqual(ConditionMoment.Ended, news.Moment);
+            Assert.AreEqual(2, news.Blows, "the count as it stands, the finisher among it");
+            Assert.AreEqual(3, news.Mark, "answered by the mark that set it, with its Empower");
+            Assert.IsTrue(enemy.Conditions.Holds(LightTree.Sealed), "it runs on, to pay again as it breaks");
+
+            var witnessed = new AfflictionSet { Reactions = new ReactionEngine((who, pair, laid) => { }, () => 0) };
+            witnessed.Conditions.Set(new ConditionSpec { Id = LightTree.Witnessed, Seconds = 6f, Is = LightTree.Sealed, TheirBlowPoints = 2 }, null, 4, null, false, true);
+            witnessed.Conditions.Attacked(false);
+            Assert.IsTrue(witnessed.Conditions.NewsOf(LightTree.Sealed, ConditionMoment.Ended, out var seen), "Witnessed is a seal too");
+            Assert.AreEqual(LightTree.Witnessed, seen.Id);
+            Assert.AreEqual(2, seen.Blows);
+
+            var master = Upgrade.ById(SpellBranch.MasterId(LightTree.Reckoning)).Effects.Single(each => each.On == UpgradeTrigger.ConditionStruck);
+            Assert.AreEqual(StruckBy.Finisher, master.By);
+            Assert.AreEqual(UpgradeAction.PayNow, master.Do, "the count, not a flat 40");
+            Assert.AreEqual(LightTree.Sealed, master.ToState);
+            Assert.AreEqual(LightTree.Sealed, Upgrade.ById(SpellBranch.ShapeId(LightTree.Reckoning)).Shapes.Single(each => each.Name == "Witnessed").Effects[0].State.Is);
+        }
+
+        [Test]
         public void WitnessedCountsTheBearersBlowsOnYou()
         {
             Assert.AreEqual(0, EnemyConditions.TheirBlowCount(0, 1, true), "a condition that does not count them");

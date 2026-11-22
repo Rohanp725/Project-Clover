@@ -2528,6 +2528,9 @@ namespace Clover.Player
                     broughtCount = 0;
                     break;
                 }
+                case UpgradeAction.PayNow:
+                    if (reactionsFound != null && reactionsFound.PayAsEnded(subject, effect.ToState)) PaidNow++;
+                    break;
                 case UpgradeAction.Plate:
                     if (defence != null) defence.GivePlates(Or(eCount, 1), Or(effect.Amount, PlayerDefence.PlainPlateShare));
                     Vfx.Play(VfxKind.TintRing, self + Vector3.up * 0.2f, Vector3.up, 1f, new Color(0.62f, 0.55f, 0.45f));
@@ -5234,6 +5237,9 @@ namespace Clover.Player
 
         /// <summary>A ward turned a blow and is gone.</summary>
         public void OnWardSpent() => Trigger(UpgradeTrigger.WardSpent, null, transform.position, false);
+
+        /// <summary>Conditions paid out early (UpgradeAction.PayNow): for probes.</summary>
+        public int PaidNow { get; private set; }
 
         /// <summary>A plate of stone took its share of a blow and broke (Stone Skin).</summary>
         public void OnPlateBroken() => Trigger(UpgradeTrigger.PlateBroken, null, transform.position, false);
