@@ -412,6 +412,7 @@ namespace Clover.Gameplay
                 case ConditionBlow.Weapon: return !spell;
                 case ConditionBlow.Heavy: return heavy && !spell;
                 case ConditionBlow.Finisher: return finisher && !spell;
+                case ConditionBlow.Shove: return heavy && !spell;
                 default: return false;
             }
         }
@@ -457,6 +458,33 @@ namespace Clover.Gameplay
             runs[slot] = from;
             Recount();
             return slot;
+        }
+
+        /// <summary>
+        /// The enemy was shoved or thrown, not struck (the ledger's shove-moment): each condition that answers a blow is told
+        /// of it as a shove, and one a shove ends (<see cref="ConditionBlow.Shove"/>) ends. Returns how many were told.
+        /// </summary>
+        public int Shoved()
+        {
+            if (Count == 0) return 0;
+            int told = 0;
+            bool spentAny = false;
+            for (int i = 0; i < Slots; i++)
+            {
+                if (!runs[i].Active) continue;
+                ref var run = ref runs[i];
+                if (run.AnswersStruck)
+                {
+                    Tell(ConditionMoment.Struck, in run, 0f, false, false, shoved: true);
+                    told++;
+                }
+                if (run.EndsWith != ConditionBlow.Shove) continue;
+                NoteSpent(in run);
+                runs[i] = default;
+                spentAny = true;
+            }
+            if (spentAny) Recount();
+            return told;
         }
 
         /// <summary>
@@ -541,13 +569,13 @@ namespace Clover.Gameplay
         }
 
         private void Tell(ConditionMoment moment, in ConditionRun run, float damage, bool heavy, bool spell, bool shattered = false, bool critical = false, bool finisher = false,
-            bool turned = false, bool frozen = false)
+            bool turned = false, bool frozen = false, bool shoved = false)
         {
             var news = new ConditionNews
             {
                 Moment = moment, Id = run.Id, Mark = run.Mark, Count = run.Count, Blows = run.Blows, Flags = run.Flags, Scale = run.Scale, Link = run.Link,
                 Damage = damage, Heavy = heavy, Spell = spell, Shattered = shattered, Critical = critical, Is = run.Is, Finisher = finisher, Side = blowSide,
-                Turned = turned, Frozen = frozen,
+                Turned = turned, Frozen = frozen, Shoved = shoved,
             };
             if (Report != null) Report(Who, news);
             else CombatEvents.RaiseCondition(Who, news);

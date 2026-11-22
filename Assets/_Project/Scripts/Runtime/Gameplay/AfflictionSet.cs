@@ -499,6 +499,8 @@ namespace Clover.Gameplay
             }
             reeling = false;
             AirLeft = Math.Max(AirLeft, seconds * (FreezeScale < 1f ? SturdyAirShare : 1f));
+            // A throw into the air is a shove too: what answers a shove is told (Ill Wind sheds).
+            Conditions.Shoved();
             return true;
         }
 

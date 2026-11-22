@@ -9,13 +9,13 @@ are both carried.
 
 **When it happens.** Every time Ill Wind goes off while you carry both Poison and Wind. Ill Wind goes off when poison lands on an Unsteady enemy, or when Unsteady lands on a poisoned one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Ill Wind.
 
-**The numbers.** Mix, 3 Shards. Both shapes: the poison stays loose while the enemy has both afflictions, and your heavy blow on it knocks all of it loose. Dust on the Blade: no cloud. The grit coats your blade, and your next three light blows, on any enemy, each add a dose and an Unsteady. Heavy blows don't use it up. Dust Bank: a cloud like the plain one (3 seconds, a dose every second), plus a line of dust 8 metres long and 1.2 metres wide, blowing with the wind. It lasts 4 seconds and makes whatever stands in it Unsteady once a second. After Ill Wind goes off on an enemy, it can't go off on that enemy again for 6 seconds.
+**The numbers.** Mix, 3 Shards. Both shapes: the poison stays loose while the enemy has both afflictions, and any shove or throw (your heavy blow, a Gust, a lift) knocks all of it loose. Dust on the Blade: no cloud. The grit coats your blade, and your next three light blows, on any enemy, each add a dose and an Unsteady. Heavy blows don't use it up. Dust Bank: a cloud like the plain one (3 seconds, a dose every second), plus a line of dust 8 metres long and 1.2 metres wide, blowing with the wind. It lasts 4 seconds and makes whatever stands in it Unsteady once a second. After Ill Wind goes off on an enemy, it can't go off on that enemy again for 6 seconds.
 
 **Works with.** Spring Dust to set it up, Gust at the Heel, No Still Air, The Yellow Gale.
 
 **Example.** One brute: use Dust on the Blade, and keep hitting it. A line of soldiers: use Dust Bank, and knock the first one down the line with a heavy blow.
 
-**Not built yet.** Only a heavy blow knocks the poison loose, not every shove and throw. Dust Bank's trail appears all at once instead of drifting 2 metres a second.
+**Not built yet.** Dust Bank's trail appears all at once instead of drifting 2 metres a second.
 
 ## illwind.springdust
 **What it does.** Heavy blows poison whatever they shove, and make it Unsteady.
@@ -57,7 +57,7 @@ are both carried.
 
 **When it happens.** After each Ill Wind, for as long as that enemy has both afflictions, while you carry both Poison and Wind.
 
-**The numbers.** Mix, keystone, 5 Shards. Every 2 seconds: a 1-metre shove straight away from you. All its poison is knocked loose into a cloud behind it. The cloud lasts 2 seconds and gives a dose once a second to everyone standing in it.
+**The numbers.** Mix, keystone, 5 Shards. Every 2 seconds: a 1-metre shove straight away from you. The shove knocks all its poison loose, like any shove on a loose-dusted enemy: Ill Wind's own cloud (or your shape's) drops behind it.
 
 **Works with.** Ill Wind, Spring Dust (which keeps it Unsteady and poisoned), The Yellow Gale.
 

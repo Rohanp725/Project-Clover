@@ -18,5 +18,7 @@ namespace Clover.Gameplay
         TheirBlow,
         /// <summary>The finisher's own blow, not any other heavy blow (Drowned Weight's entry).</summary>
         Finisher,
+        /// <summary>A shove or a throw (a Gust, a ram, Riptide, a lift), or a heavy blow of the weapon, which shoves (Windthrow's tearing out).</summary>
+        Shove,
     }
 }

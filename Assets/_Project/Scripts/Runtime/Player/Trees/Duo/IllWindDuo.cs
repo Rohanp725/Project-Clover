@@ -30,8 +30,8 @@ namespace Clover.Player.Trees.Duo
             const string A = Elements.Poison, B = Elements.Wind;
 
             // Dust on the Blade's grit coats your own edge (UpgradeAction.CoatBlade) for your next three light blows on any enemy.
-            // NEEDS: every shove and throw shedding (shove-moment; now a heavy blow, as the plain reaction); Dust Bank's trail
-            // drifting on 2 m a second (plume-along-path; now a longer line of Unsteady ground laid at once downwind).
+            // Every shove and throw sheds it (StruckBy.Shove), as the plain reaction. NEEDS: Dust Bank's trail drifting on 2 m a second
+            // (plume-along-path; now a longer line of Unsteady ground laid at once downwind).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Ill Wind: Dust on the Blade or Dust Bank", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -45,9 +45,9 @@ namespace Clover.Player.Trees.Duo
                         Effects = new[]
                         {
                             Loose(BladeDust),
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = BladeDust, By = StruckBy.Heavy, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Poison },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = BladeDust, By = StruckBy.Heavy, Do = UpgradeAction.CoatBlade, Affliction = AfflictionKind.Poison, Stacks = 1, Count = 3, LightOnly = true },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = BladeDust, By = StruckBy.Heavy, Do = UpgradeAction.CoatBlade, Affliction = AfflictionKind.Unsteady, Stacks = 1, Count = 3, LightOnly = true },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = BladeDust, By = StruckBy.Shove, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Poison },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = BladeDust, By = StruckBy.Shove, Do = UpgradeAction.CoatBlade, Affliction = AfflictionKind.Poison, Stacks = 1, Count = 3, LightOnly = true },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = BladeDust, By = StruckBy.Shove, Do = UpgradeAction.CoatBlade, Affliction = AfflictionKind.Unsteady, Stacks = 1, Count = 3, LightOnly = true },
                         },
                     },
                     new ShapeDef
@@ -57,9 +57,9 @@ namespace Clover.Player.Trees.Duo
                         Effects = new[]
                         {
                             Loose(BankDust),
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = BankDust, By = StruckBy.Heavy, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Poison },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = BankDust, By = StruckBy.Shove, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Poison },
                             Plume(UpgradeTrigger.ConditionStruck, BankDust, 3f),
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = BankDust, By = StruckBy.Heavy, Do = UpgradeAction.Hazard, Shape = HazardShape.Downwind, Count = 5,
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = BankDust, By = StruckBy.Shove, Do = UpgradeAction.Hazard, Shape = HazardShape.Downwind, Count = 5,
                                 Reach = 8f, Amount = 1.2f, Radius = 0.6f, Seconds = 4f, Interval = 1f, Affliction = AfflictionKind.Unsteady, Stacks = 1, SparesTarget = true },
                         },
                     },
@@ -99,8 +99,8 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.LeftHigh));
 
-            // The restless wind: while an enemy carries both after Ill Wind fires, every 2 s it is shoved 1 m away from you and
-            // sheds its poison in a short plume. NEEDS: the shove itself setting off the shed (shove-moment).
+            // The restless wind: while an enemy carries both after Ill Wind fires, every 2 s it is shoved 1 m away from you, and the
+            // shove itself sheds its poison (StruckBy.Shove on Ill Wind's own loose dust).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = NoStillAir, Name = "No Still Air", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { SpringDust, GustAtTheHeel }, Icon = UpgradeIcons.Gust,
@@ -110,8 +110,6 @@ namespace Clover.Player.Trees.Duo
                     new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = Reaction, Do = UpgradeAction.Condition,
                         State = new ConditionSpec { Id = Restless, Seconds = 30f, Beat = 2f, While = AfflictionKind.Poison, While2 = AfflictionKind.Unsteady } },
                     new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = Restless, Do = UpgradeAction.Push, Shape = HazardShape.Downwind, Amount = 1f },
-                    new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = Restless, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Poison },
-                    Plume(UpgradeTrigger.ConditionBeat, Restless, 2f),
                 },
             }, HeartPattern.Keystone));
 
@@ -146,7 +144,7 @@ namespace Clover.Player.Trees.Duo
         // answering a blow, or on the condition's beat; so many seconds long.
         private static UpgradeEffect Plume(UpgradeTrigger on, string id, float seconds) => new UpgradeEffect
         {
-            On = on, Condition = id, By = on == UpgradeTrigger.ConditionStruck ? StruckBy.Heavy : StruckBy.Any, Do = UpgradeAction.Hazard, Shape = HazardShape.Downwind, Count = 3,
+            On = on, Condition = id, By = on == UpgradeTrigger.ConditionStruck ? StruckBy.Shove : StruckBy.Any, Do = UpgradeAction.Hazard, Shape = HazardShape.Downwind, Count = 3,
             Reach = 2.2f, Amount = 1.2f, Radius = 0.6f, Seconds = seconds, Interval = 1f, Affliction = AfflictionKind.Poison, Stacks = 1, SparesTarget = true,
         };
     }

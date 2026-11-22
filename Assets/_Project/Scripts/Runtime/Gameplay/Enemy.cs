@@ -765,7 +765,15 @@ namespace Clover.Gameplay
             if (IsDead) return;
             impulse.y = 0f;
             shove += impulse * (Kind.IsBoss ? 0.3f : Kind.IsElite ? 0.6f : 1f);
+            // A real shove, not a pull's steady drag, is a moment its conditions answer (Windthrow tears out, Ill Wind sheds).
+            if (ShoveRules.IsMoment(impulse.magnitude, Time.time, lastShoveMoment))
+            {
+                lastShoveMoment = Time.time;
+                Afflictions.Conditions.Shoved();
+            }
         }
+
+        private float lastShoveMoment = -100f;
 
         /// <summary>Times an effect (a reaction) has made it flinch, for probes.</summary>
         public int EffectFlinches { get; private set; }

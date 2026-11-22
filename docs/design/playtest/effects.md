@@ -809,7 +809,7 @@ Title: Windthrow (Wind and Life)
 Group: Reactions
 **What it is.** Unsteady meets Seeded. The seed roots the enemy to the ground, and your next heavy blow tears it out.
 
-**The numbers.** The enemy is rooted for 2 seconds (an elite for 1 second; a god not at all). It can't walk or be shoved, but it can still turn and swing. Your heavy blow while it is rooted tears it out: 14 damage and 35 stagger, it is thrown 6 metres away from you, and a torn-up pit 1.5 metres across stays for 5 seconds where it stood, Seeding anything that walks in. The pit counts as something you grew. Then it waits 6 seconds.
+**The numbers.** The enemy is rooted for 2 seconds (an elite for 1 second; a god not at all). It can't walk or be shoved, but it can still turn and swing. Any shove or throw while it is rooted (your heavy blow, a Gust, a charge, a lift) tears it out: 14 damage and 35 stagger, it is thrown 6 metres away from you, and a torn-up pit 1.5 metres across stays for 5 seconds where it stood, Seeding anything that walks in. The pit counts as something you grew. Then it waits 6 seconds.
 
 **What sets it off.** Unsteady landing on a Seeded enemy, or a seed landing on an Unsteady one.
 
@@ -817,7 +817,7 @@ Group: Reactions
 
 **How to use it.** Root it, step around so it gets thrown where you want, then land a heavy blow.
 
-**How it looks.** Its name over the enemy, then a burst of earth as it is torn out. Not built yet: any shove (a Gust, a charge) tearing it out, not only a heavy blow.
+**How it looks.** Its name over the enemy, then a burst of earth as it is torn out.
 
 ## reaction-frost-heave
 Title: Frost Heave (Ice and Earth)
@@ -929,7 +929,7 @@ Title: Ill Wind (Poison and Wind)
 Group: Reactions
 **What it is.** Poisoned meets Unsteady. The enemy's poison comes loose like dust.
 
-**The numbers.** While the enemy has both, your heavy blow on it shoves it, and all its poison comes off at once in a cloud behind it, away from you. The cloud is poisoned grit 1.2 metres wide that stays for 3 seconds and gives a dose once a second to everyone in it. Then it waits 6 seconds.
+**The numbers.** While the enemy has both, any shove or throw (your heavy blow, a Gust, a lift) knocks all its poison off at once in a cloud behind it, away from you. The cloud is poisoned grit 1.2 metres wide that stays for 3 seconds and gives a dose once a second to everyone in it. Then it waits 6 seconds.
 
 **What sets it off.** Poison landing on an Unsteady enemy, or Unsteady landing on a poisoned one.
 
@@ -937,7 +937,7 @@ Group: Reactions
 
 **How to use it.** Stand so the cloud lands on the other enemies, then land a heavy blow.
 
-**How it looks.** Its name over the enemy, then the cloud on the floor. Not built yet: every shove and throw knocking the poison loose, the cloud spreading along the enemy's path, and the doses shared among the enemies it settles on.
+**How it looks.** Its name over the enemy, then the cloud on the floor. Not built yet: the cloud spreading along the enemy's path, and the doses shared among the enemies it settles on.
 
 ## reaction-steam
 Title: Steam (Fire and Water)

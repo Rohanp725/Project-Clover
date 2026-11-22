@@ -139,6 +139,37 @@ namespace Clover.Tests
             Assert.IsTrue(Upgrade.All.Any(mark => mark.Effects != null && mark.Effects.Any(effect => effect.Do == UpgradeAction.RaiseHeat && effect.Count == 5 && effect.BlowLanding > 0f)), "Wildfire Rush: Heat to five");
         }
 
+        [Test]
+        public void AShoveIsAMomentOnlyWhatAnswersAShoveHears()
+        {
+            Assert.IsTrue(ShoveRules.IsMoment(1f, 5f, -100f), "a Gust's metre");
+            Assert.IsFalse(ShoveRules.IsMoment(0.1f, 5f, -100f), "a pull's drag each step");
+            Assert.IsFalse(ShoveRules.IsMoment(3f, 5.1f, 5f), "the same shove");
+            var set = Quiet();
+            var heard = new System.Collections.Generic.List<ConditionNews>();
+            set.Conditions.Report = (who, news) => heard.Add(news);
+            set.Conditions.Set(new ConditionSpec { Id = "test.rooted", Seconds = 2f, EndsWith = ConditionBlow.Shove }, null, -1, null, true);
+            set.Conditions.Set(new ConditionSpec { Id = "test.loose", Seconds = 30f }, null, -1, null, true);
+            heard.Clear();
+            Assert.AreEqual(2, set.Conditions.Shoved());
+            Assert.IsTrue(heard.Count == 2 && heard.All(news => news.Shoved && news.Moment == ConditionMoment.Struck), "both told, as shoves");
+            bool Running(string id) => Enumerable.Range(0, EnemyConditions.Slots).Any(slot => set.Conditions.Run(slot).Active && set.Conditions.Run(slot).Id == id);
+            Assert.IsFalse(Running("test.rooted"), "torn out by the shove");
+            Assert.IsTrue(Running("test.loose"));
+            var shove = new ConditionNews { Shoved = true };
+            Assert.IsTrue(PlayerReactions.Answers(StruckBy.Shove, shove));
+            Assert.IsFalse(PlayerReactions.Answers(StruckBy.Weapon, shove), "a shove is no weapon blow");
+            Assert.IsFalse(PlayerReactions.Answers(StruckBy.Any, shove));
+            Assert.IsTrue(PlayerReactions.Answers(StruckBy.Shove, new ConditionNews { Heavy = true }), "a heavy blow shoves");
+            Assert.IsFalse(PlayerReactions.Answers(StruckBy.Shove, new ConditionNews { Heavy = true, Spell = true }));
+            var ill = ReactionTable.MarkFor(AfflictionPairs.Index(AfflictionKind.Poison, AfflictionKind.Unsteady)).Effects;
+            Assert.IsTrue(ill.Where(effect => effect.On == UpgradeTrigger.ConditionStruck).All(effect => effect.By == StruckBy.Shove), "Ill Wind sheds on every shove");
+            var wind = ReactionTable.MarkFor(AfflictionPairs.Index(AfflictionKind.Unsteady, AfflictionKind.Seeded)).Effects;
+            Assert.IsTrue(wind.Where(effect => effect.On == UpgradeTrigger.ConditionStruck).All(effect => effect.By == StruckBy.Shove), "Windthrow tears out on every shove");
+            var still = Upgrade.ById(IllWindDuo.NoStillAir).Effects;
+            Assert.IsFalse(still.Any(effect => effect.Do == UpgradeAction.Spend), "the shove itself sheds");
+        }
+
         private sealed class Afflicted : IAfflictable
         {
             public Afflicted(AfflictionSet set) => Afflictions = set;

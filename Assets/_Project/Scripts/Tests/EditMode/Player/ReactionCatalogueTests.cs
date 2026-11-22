@@ -156,7 +156,7 @@ namespace Clover.Tests
                 foreach (var setter in effects.Where(effect => effect.Do == UpgradeAction.Condition && effect.State.EndsWith != ConditionBlow.None))
                 {
                     var by = setter.State.EndsWith == ConditionBlow.Heavy ? StruckBy.Heavy : setter.State.EndsWith == ConditionBlow.Weapon ? StruckBy.Weapon
-                        : setter.State.EndsWith == ConditionBlow.Finisher ? StruckBy.Finisher : StruckBy.Any;
+                        : setter.State.EndsWith == ConditionBlow.Finisher ? StruckBy.Finisher : setter.State.EndsWith == ConditionBlow.Shove ? StruckBy.Shove : StruckBy.Any;
                     foreach (var answer in effects.Where(effect => effect.On == UpgradeTrigger.ConditionStruck && effect.Condition == setter.State.Id))
                         Assert.AreEqual(by, answer.By, $"{mark.Id}: {setter.State.Id} is spent by one blow and answers another");
                 }

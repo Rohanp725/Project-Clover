@@ -19,5 +19,7 @@ namespace Clover.Player
         Turned,
         /// <summary>For ConditionEnded: only an end the enemy's freezing brought (<see cref="Clover.Gameplay.ConditionSpec.EndsOnFreeze"/>).</summary>
         Frozen,
+        /// <summary>A shove or a throw (a Gust, a ram, Riptide, a lift), or a heavy weapon blow, which shoves (the ledger's shove-moment).</summary>
+        Shove,
     }
 }

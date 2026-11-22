@@ -9,13 +9,13 @@ both carried.
 
 **When it happens.** Every time Windthrow goes off while you carry both Wind and Life. Windthrow goes off when Seeded lands on an Unsteady enemy, or when Unsteady lands on a seeded one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Windthrow.
 
-**The numbers.** Mix, 3 Shards. Blown Seed: the enemy is rooted for 2 seconds. Your heavy blow throws its seeds up to 6 metres past it, away from you, giving two Seeded to everything they reach. This is on purpose: it may root them too. Deep Roots: the enemy is rooted for 4 seconds, and each blow on it heals you 2. The heavy blow tears it out for 14 damage and 60 stagger, throws it 6 metres, and leaves a torn-up pit. After Windthrow goes off on an enemy, it can't go off on that enemy again for 6 seconds.
+**The numbers.** Mix, 3 Shards. Blown Seed: the enemy is rooted for 2 seconds. Any shove or throw (your heavy blow, a Gust, a charge, a lift) throws its seeds up to 6 metres past it, away from you, giving two Seeded to everything they reach. This is on purpose: it may root them too. Deep Roots: the enemy is rooted for 4 seconds, and each blow on it heals you 2. Any shove or throw tears it out for 14 damage and 60 stagger, throws it 6 metres, and leaves a torn-up pit. After Windthrow goes off on an enemy, it can't go off on that enemy again for 6 seconds.
 
 **Works with.** Gust and Briar Patch to set it up, Seed on the Wind, The Fairy Wind, Thistledown.
 
 **Example.** Use Blown Seed on the front soldier of a line, and the line behind it gets rooted.
 
-**Not built yet.** For now, only a heavy blow tears the enemy out or blows its seeds, not any shove. Deep Roots heals a flat 2 per blow.
+**Not built yet.** Deep Roots heals a flat 2 per blow, not twice the seed's own healing.
 
 ## windthrow.seedonwind
 **What it does.** A dodge that passes within 2 metres of an enemy leaves it Seeded and Unsteady.

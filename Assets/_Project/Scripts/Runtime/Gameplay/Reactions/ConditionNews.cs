@@ -37,5 +37,7 @@ namespace Clover.Gameplay
         public bool Turned;
         /// <summary>For an end: the enemy froze, and that ended it (<see cref="ConditionSpec.EndsOnFreeze"/>).</summary>
         public bool Frozen;
+        /// <summary>For a blow: it was a shove or a throw, not a blow (a Gust, a ram, Riptide, a lift; the ledger's shove-moment).</summary>
+        public bool Shoved;
     }
 }
