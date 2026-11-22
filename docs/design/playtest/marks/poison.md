@@ -144,11 +144,11 @@ a blow or a cast "on the beat" comes within a fifth of a second of it.
 
 **When it happens.** Whenever you cast Five Needles, using the shape you picked. If you have not bought this, you cast the plain fan.
 
-**The numbers.** 3 Shards. Spread: a fan 60 degrees wide. It deals 3 damage, 10 stagger and two doses to each enemy in it, and each one's poison bites right away. Nothing is pinned. Red Paper: the first enemy hit can't raise its guard for 6 seconds.
+**The numbers.** 3 Shards. Spread: a fan 60 degrees wide. It deals 3 damage, 10 stagger and two doses to each enemy in it, and each one's poison bites right away. Nothing is pinned. Red Paper: for 6 seconds the first enemy hit can't guard at all. Every blow on it lands, light or heavy, from the front or not. A soldier in a shield wall can't use its shield either.
 
 **Works with.** Spread: a crowd, Catching (every bite throws a dose onward), In Time. Red Paper: enemies that guard and captains, a heavy weapon, Blister.
 
-**Not built yet.** Spread is one fan, not five needles. Red Paper should stop the enemy from blocking blows and let your blows go through shields.
+**Not built yet.** Spread is one fan, not five needles.
 
 **Example.** Use Red Paper on a captain who guards everything. For six seconds, your whole chain of blows lands.
 

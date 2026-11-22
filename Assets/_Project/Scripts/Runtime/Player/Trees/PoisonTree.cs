@@ -199,7 +199,8 @@ namespace Clover.Player.Trees
                     Description = "A wide fan of 60 degrees, so each needle finds a different enemy. Each enemy pierced takes two doses, and its poison bites at once.",
                     Change = new SpellChange { Arc = 60f, Damage = 3f, Stagger = 10f, Stacks = 2 },
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Bite } } },
-                // NEEDS: a blow it cannot turn, and blows that pass any shield (shield-pass). Its guard is taken away, as data.
+                // Its guard is taken away (ConditionFlags.CannotGuard, read by Enemy.TurnsAside): no blow is turned on it, light or
+                // heavy, from the front or not, and a levy's shield in a shield wall is that same guard, so blows pass it.
                 new ShapeDef { Name = "Red Paper",
                     Description = "All five needles pin one sheet of red paper to the enemy you face. For six seconds it cannot guard or turn a blow, and your blows on it pass any shield. The breaker for what hides behind a guard.",
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = RedPaper, Seconds = 6f, Flags = ConditionFlags.CannotGuard }, Cooldown = 1f } } },

@@ -107,6 +107,21 @@ namespace Clover.Gameplay
             float peak = Mathf.Max(0.001f, Mathf.Max(hue.r, Mathf.Max(hue.g, hue.b)));
             return new Color(hue.r / peak * 0.95f, hue.g / peak * 0.95f, hue.b / peak * 0.95f, 1f);
         }
+        /// <summary>
+        /// Whether its guard turns this blow (the ledger's shield-pass): only one that guards, with its guard not held open
+        /// and not taken away by a condition (Red Paper's <see cref="ConditionFlags.CannotGuard"/>), standing ready, struck
+        /// from the front by a blow that may be guarded. A levy's shield in a shield wall is this same guard, so a blow on
+        /// one that cannot guard passes its shield too.
+        /// </summary>
+        public static bool TurnsAside(bool guards, float guardOpenFor, EnemyConditions conditions, in Hit hit, float heavyGuardedDamage, bool staggered, EnemyState state, float angleFromFront)
+        {
+            if (!guards || guardOpenFor > 0f || hit.Unblockable || staggered) return false;
+            if (conditions != null && conditions.Has(ConditionFlags.CannotGuard)) return false;
+            if (hit.Heavy && heavyGuardedDamage >= 1f) return false;
+            if (state != EnemyState.Stalk && state != EnemyState.Idle) return false;
+            return angleFromFront < 75f;
+        }
+
         public bool IsStaggered => Brain.State == EnemyState.Staggered;
         public bool IsDead => Brain.State == EnemyState.Dead;
         public bool IsCharged => chargedLeft > 0f;
@@ -659,8 +674,7 @@ namespace Clover.Gameplay
             if (hit.OnlyLays && detonated <= 0f) return HitOutcome.Landed;
 
             // Its guard: a light blow from the front, while it stands ready, is turned on its weapon.
-            if (Kind.Guards && GuardOpenFor <= 0f && !Afflictions.Conditions.Has(ConditionFlags.CannotGuard) && (!hit.Heavy || Kind.HeavyGuardedDamage < 1f) && !hit.Unblockable && !IsStaggered && (Brain.State == EnemyState.Stalk || Brain.State == EnemyState.Idle)
-                && Vector3.Angle(transform.forward, -hit.Direction) < 75f)
+            if (TurnsAside(Kind.Guards, GuardOpenFor, Afflictions.Conditions, hit, Kind.HeavyGuardedDamage, IsStaggered, Brain.State, Vector3.Angle(transform.forward, -hit.Direction)))
             {
                 BlowsGuarded++;
                 if (guardArc != null) guardArc.Pulse(GuardFlash(hit), 0.18f, 0.25f);
