@@ -85,23 +85,23 @@ namespace Clover.Player.Trees.Duo
             }, HeartPattern.RightLow));
 
             // A ring of feathers round you on each perfect dodge; laying both at once, by a mark, it may set Golden Feathers off.
-            // NEEDS: a half ring raised behind you and flying out (form-pieces); now everything within 4 m of you, all round,
-            // once in half a second.
+            // A half ring raised behind you and flying out 4 m (UpgradeEffect.Behind on a cone of 180 degrees), once in half a
+            // second; the feathers' own look is the looks row's.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = WingsBehind, Name = "Wings Behind", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { BaneOfSerpents, RidingHigh }, Icon = UpgradeIcons.Wing,
                 Description = "Every perfect dodge raises a half ring of golden feathers behind you that flies out 4 m, Marking and laying Unsteady on what it reaches.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, At = EffectAt.Self, Do = UpgradeAction.Afflict, Radius = 4f, Affliction = AfflictionKind.Marked, Stacks = 1, Cooldown = 0.5f },
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, At = EffectAt.Self, Do = UpgradeAction.Afflict, Radius = 4f, Affliction = AfflictionKind.Unsteady, Stacks = 1, Cooldown = 0.5f },
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, At = EffectAt.Self, Do = UpgradeAction.Cone, Behind = true, Reach = 4f, Arc = 180f, Damage = 0f, Affliction = AfflictionKind.Marked, Stacks = 1, Cooldown = 0.5f },
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, At = EffectAt.Self, Do = UpgradeAction.Cone, Behind = true, Reach = 4f, Arc = 180f, Damage = 0f, Affliction = AfflictionKind.Unsteady, Stacks = 1, Cooldown = 0.5f },
                 },
             }, HeartPattern.Keystone));
 
             // The duo spell, an opener on a 9 s cooldown (SpellTimings), bought with 5 Shards once both are carried. The wave
             // form sweeps the wing through 160 degrees, 6 m out, Marking (the branch's first element) and unsteadying two deep
             // what it strikes and throwing it 3 m; for 3 s each weapon blow on one it threw lays another Unsteady.
-            // NEEDS: the throw along the sweep, sideways, not away from you (form-pieces).
+            // The throw goes along the sweep, sideways across your front, not away from you (UpgradeEffect.Sideways).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = SweepOfWings, Name = "Sweep of Wings", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Role = SpellRole.Opener, Requires = new[] { BaneOfSerpents, RidingHigh }, Icon = UpgradeIcons.Wing,
@@ -111,7 +111,7 @@ namespace Clover.Player.Trees.Duo
                 Effects = new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Unsteady, Stacks = 2 },
-                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Push, Shape = HazardShape.Downwind, Amount = 3f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Push, Shape = HazardShape.Downwind, Sideways = true, Amount = 3f },
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Swept, Seconds = 3f } },
                     new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Swept, By = StruckBy.Weapon, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Unsteady, Stacks = 1 },
                 },

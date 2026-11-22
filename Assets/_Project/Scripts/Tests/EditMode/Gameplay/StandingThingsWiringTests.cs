@@ -485,6 +485,18 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void TheWingsRiseBehindAndTheSweepThrowsSideways()
+        {
+            Assert.AreEqual(-1f, PushRules.Sideways(Vector3.forward).x, 1e-5f, "facing ahead, to the left");
+            Assert.AreEqual(1f, PushRules.Sideways(new Vector3(2f, 0f, 0f)).z, 1e-5f, "facing right, still to its left");
+            var wings = Upgrade.ById(Clover.Player.Trees.Duo.GoldenFeathersDuo.WingsBehind).Effects;
+            Assert.AreEqual(2, wings.Length);
+            Assert.IsTrue(wings.All(each => each.Do == UpgradeAction.Cone && each.Behind && each.Arc == 180f && each.Reach == 4f), "a half ring behind you, 4 m");
+            var sweep = Upgrade.ById(Clover.Player.Trees.Duo.GoldenFeathersDuo.SweepOfWings).Effects.Single(each => each.Do == UpgradeAction.Push);
+            Assert.IsTrue(sweep.Sideways, "along the sweep, not away from you");
+        }
+
+        [Test]
         public void TheSeaComesInQuickensYouOnlyInYourOwnWater()
         {
             var sea = Upgrade.ById(WaterTree.TheSeaComesIn);

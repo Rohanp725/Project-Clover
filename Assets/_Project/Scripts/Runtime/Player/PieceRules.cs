@@ -2,6 +2,19 @@ using UnityEngine;
 
 namespace Clover.Player
 {
+    /// <summary>The plain rules of which way a shove goes, kept apart from the scene.</summary>
+    public static class PushRules
+    {
+        /// <summary>Flat and to the left of <paramref name="aim"/>, as a sweep from your right carries what it strikes.</summary>
+        public static Vector3 Sideways(Vector3 aim)
+        {
+            aim.y = 0f;
+            if (aim.sqrMagnitude < 0.0001f) return Vector3.left;
+            aim.Normalize();
+            return new Vector3(-aim.z, 0f, aim.x);
+        }
+    }
+
     /// <summary>How the pieces of an UpgradeAction.Pieces leave the enemy the moment names (the ledger's thrown pieces, pass 11).</summary>
     public enum PieceAim
     {

@@ -1931,8 +1931,17 @@ namespace Clover.Player
                 }
                 case UpgradeAction.Cone:
                 {
-                    transform.rotation = Quaternion.LookRotation(aim, Vector3.up);
                     float reach = Or(effect.Reach, 4.5f);
+                    if (effect.Behind)
+                    {
+                        // A half ring behind you flying out (Wings Behind): you keep facing as you were.
+                        Vector3 back = -transform.forward;
+                        back.y = 0f;
+                        combat.StrikeConeFrom(self, back, reach, Or(effect.Arc, 180f), Blow(look, kind, eDamage, eStagger, eStacks));
+                        for (int i = 1; i <= 3; i++) ElementLook.Puff(look, self + Vector3.up * 1.1f + back.normalized * (reach * i / 3.5f), back, 0.7f);
+                        break;
+                    }
+                    transform.rotation = Quaternion.LookRotation(aim, Vector3.up);
                     combat.StrikeCone(reach, Or(effect.Arc, 90f), Blow(look, kind, eDamage, eStagger, eStacks));
                     // Amount: each enemy the cone struck is thrown straight away from the player (Drawn Back to Break's breaker),
                     // that many metres beyond the blow's own shove. A shove dies away as it goes, so it is sized by how far
@@ -2388,8 +2397,10 @@ namespace Clover.Player
                     if (effect.Shape == HazardShape.Downwind)
                     {
                         // The target alone, along the player's line to it: thrown straight away from them, or drawn in.
+                        // Sideways: across your front to your left, along a sweep from your right (Sweep of Wings).
+                        Vector3 along = effect.Sideways ? PushRules.Sideways(aim) : aim;
                         if (subject is IShovable shoved)
-                            shoved.Push((effect.Do == UpgradeAction.Pull ? -aim : aim * combat.StatPush) * Or(eAmount, 3f));
+                            shoved.Push((effect.Do == UpgradeAction.Pull ? -along : along * combat.StatPush) * Or(eAmount, 3f));
                         ElementLook.Ring(look, centre + Vector3.up * 0.2f);
                         break;
                     }

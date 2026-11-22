@@ -396,6 +396,10 @@ namespace Clover.Player
         /// all in each in full, not a circle round its enemy; with none standing, only round its enemy (Grounded: live water).
         /// </summary>
         public string ThroughGround = "";
+        /// <summary>For a Cone: it opens behind you, the way you face turned about, and you do not turn (Wings Behind's half ring of feathers).</summary>
+        public bool Behind;
+        /// <summary>For a Push along the line (Shape Downwind): thrown sideways across your front, to your left, along a sweep from your right (Sweep of Wings), not away from you.</summary>
+        public bool Sideways;
         /// <summary>For BurstGround: the Hazard effect whose standing patches it bursts.</summary>
         public UpgradeEffect BurstsGround;
 
