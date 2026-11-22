@@ -20,15 +20,13 @@ both carried.
 ## ironthorns.sap
 **What it does.** An enemy that dies with thorns in it gives its iron to the ground, and the ground gives it to you. A quarter of a flask fills up right away, the way plants draw metal up through their roots.
 
-**When it happens.** Each time an enemy dies with both Seeded and Sundered on it, while you carry both Life and Metal.
+**When it happens.** Each time an enemy dies with Iron Thorns' thorns still in it, in any shape, while you carry both Life and Metal.
 
-**The numbers.** Mix, 3 Shards. A quarter of a flask, at most twice a second.
+**The numbers.** Mix, 3 Shards. A quarter of a flask for each such kill.
 
 **Works with.** Iron Thorns, Grafted Edge, The Sown Men.
 
 **Example.** A pack of seeded, notched soldiers falls, and a flask comes back full.
-
-**Not built yet.** For now, it works on any enemy that dies seeded and notched, not only one that still has thorns in it.
 
 ## ironthorns.ore
 **What it does.** Things you grow draw iron out of the ground. Each thing you grew adds a notch of Sundered when it bites.

@@ -324,6 +324,10 @@ namespace Clover.Tests
             Assert.AreEqual(Reactions.Felled, face.State.WhileIn);
             Assert.IsTrue((face.State.Flags & ConditionFlags.TakesCritical) != 0);
 
+            var sap = EffectsOf(IronThornsDuo.SapOfIron).Single();
+            Assert.AreEqual(UpgradeTrigger.Kill, sap.On);
+            Assert.AreEqual(Reactions.Thorns, sap.InState, "Sap of Iron: a death with the thorns in it");
+
             var lamp = EffectsOf(ChokedampDuo.TheLampGoesOut).Single().State;
             Assert.AreEqual(ConditionFlags.WeaponStaggerShare, lamp.Flags);
             Assert.AreEqual(Reactions.Damp, lamp.WhileIn);
