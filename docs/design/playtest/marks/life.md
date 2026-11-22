@@ -225,11 +225,11 @@ ground: Briar Patch's bed, a thornbush, a sapling, a thicket, a tuft of briar.
 
 **When it happens.** For now, every time you cast it. Root Walk must be in a spell slot.
 
-**The numbers.** 3 Shards. Each cast gives you a perfect dodge's mana (12) and takes 1.5 seconds off the wait on every spell and strike that is waiting. A thornbush with a 2-metre radius grows where you went down and lasts 8 seconds. Every half second, it deals 4 damage and Seeded.
+**The numbers.** 3 Shards. It only counts if you start it in the last 0.3 seconds before an enemy's blow (one within 6 metres) lands on you. Then it is a perfect dodge: you get 12 mana, the game slows for a moment, the blow misses, and every mark that answers a perfect dodge answers this one. A thornbush with a 2-metre radius then grows where you went down and lasts 8 seconds. Every half second, it deals 4 damage and Seeded.
 
 **Works with.** Every mark that uses mana; Reap What Is Sown (one more thing to burst); The Garden Holds You.
 
-**Not built yet.** The timing (starting it right as a blow would land), and the thornbush replacing the sapling; for now, it grows next to it.
+**Not built yet.** The thornbush doesn't replace the sapling yet; for now, it grows next to it.
 
 **Example.** Root Walk out of a brute's swing, then walk again sooner. Each walk leaves a bush and a sapling behind.
 

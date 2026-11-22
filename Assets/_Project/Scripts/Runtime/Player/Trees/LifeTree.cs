@@ -241,14 +241,12 @@ namespace Clover.Player.Trees
                         new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Condition, At = EffectAt.Self, Radius = 2.5f, State = new ConditionSpec { Id = Changeling, Seconds = 1.5f, Flags = ConditionFlags.SightShort, Sight = 0.5f } },
                     } },
                 "Opens two shapes of Root Walk, chosen at any rest fire: Up Through Them, up under a Seeded enemy, or Changeling, a grown thing left in the blow's path.",
-                // NEEDS: the shared movement rule's timing (started as a blow would land, blow-about-to-land), and the full
-                // thornbush in place of the sapling. Until then the cast gives what a perfect dodge gives, and a thornbush
-                // grows beside the sapling.
+                // Started as a blow would land (UpgradeEffect.BlowLanding), it is a perfect dodge (UpgradeAction.PerfectDodgeNow), and a
+                // thornbush grows. NEEDS: the full thornbush in place of the sapling (shape-sets-aside); until then it grows beside it.
                 new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Mana, Amount = 12f },
-                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.CutCooldowns, Amount = 1.5f },
-                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Hazard, At = EffectAt.Self, Shape = HazardShape.Patch, Grown = true, Limit = 2, Radius = 2f, Seconds = 8f, Interval = 0.5f, Damage = 4f, Affliction = AfflictionKind.Seeded, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, BlowLanding = 0.3f, Do = UpgradeAction.PerfectDodgeNow },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, BlowLanding = 0.3f, Do = UpgradeAction.Hazard, At = EffectAt.Self, Shape = HazardShape.Patch, Grown = true, Limit = 2, Radius = 2f, Seconds = 8f, Interval = 0.5f, Damage = 4f, Affliction = AfflictionKind.Seeded, Stacks = 1 },
                 },
                 "Started in the instant a blow would land on you, it counts as a perfect dodge, and the sapling left behind is a full thornbush.",
                 learnEffects: new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Hazard, At = EffectAt.Self, Shape = HazardShape.Patch, Grown = true, Limit = 2, Radius = 3.5f, Seconds = 6f, Interval = 1.5f, Damage = 6f, Stagger = 8f, Affliction = AfflictionKind.Seeded, Stacks = 1 } });

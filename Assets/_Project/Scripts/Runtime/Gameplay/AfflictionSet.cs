@@ -45,12 +45,16 @@ namespace Clover.Gameplay
         private float windupFor;
 
         /// <summary>Its body tells it each step whether it is showing an attack: the time it has shown it is counted from its start.</summary>
-        public void NoteWindup(bool showing, float deltaTime)
+        public void NoteWindup(bool showing, float deltaTime, float strikeIn = float.MaxValue)
         {
             if (showing && !windingUp) windupFor = 0f;
             else if (showing) windupFor += deltaTime;
             windingUp = showing;
+            StrikeIn = showing ? strikeIn : float.MaxValue;
         }
+
+        /// <summary>Seconds until the blow it shows lands (the ledger's blow-about-to-land); float.MaxValue when it shows none.</summary>
+        public float StrikeIn { get; private set; } = float.MaxValue;
 
         /// <summary>Seconds since it last froze, while it is frozen (a cast landing within a moment of the freeze).</summary>
         public float FrozenFor => IsFrozen ? frozenFor : float.MaxValue;
@@ -271,6 +275,7 @@ namespace Clover.Gameplay
             owedSeconds = 0f;
             windingUp = false;
             windupFor = 0f;
+            StrikeIn = float.MaxValue;
             frozenFor = 0f;
             present = 0;
             keptForGood = 0;

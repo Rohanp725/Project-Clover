@@ -262,11 +262,9 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** When you cast Wildfire Rush. Wildfire Rush must be in a spell slot.
 
-**The numbers.** 3 Shards. For now, every cast gives you what a perfect dodge gives: 12 mana, and 1.5 seconds off the wait on every spell that is waiting.
+**The numbers.** 3 Shards. It only counts if you start it in the last 0.3 seconds before an enemy's blow (one within 6 metres) lands on you. Then it is a perfect dodge: you get 12 mana, the game slows for a moment, the blow misses, and every mark that answers a perfect dodge answers this one. Your Heat also rises five levels, to five if it was empty.
 
 **Works with.** Heat and White Heat.
-
-**Not built yet.** The timing (starting it right as a blow would land) and Heat going to five. Both need the game to know the moment an enemy's blow lands.
 
 **Example.** Charge out of a brute's swing and through its friends, and every other spell is that much closer to ready.
 

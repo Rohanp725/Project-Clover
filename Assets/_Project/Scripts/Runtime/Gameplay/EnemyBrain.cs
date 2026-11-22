@@ -53,6 +53,8 @@ namespace Clover.Gameplay
         public float FlinchProgress => State == EnemyState.Flinch && flinchFor > 0f ? Math.Min(1f, stateElapsed / flinchFor) : 0f;
         /// <summary>Seconds spent in the current state.</summary>
         public float StateSeconds => stateElapsed;
+        /// <summary>Seconds until the blow it shows lands, at its own pace; float.MaxValue when it shows none.</summary>
+        public float StrikeIn => State == EnemyState.Telegraph && Current != null ? Math.Max(0f, Current.Telegraph - attackElapsed) : float.MaxValue;
         /// <summary>+1 to walk toward the target, -1 to back away, 0 to stand.</summary>
         public int MoveWish { get; private set; }
         /// <summary>True while the enemy is holding back because it is not its turn to attack.</summary>

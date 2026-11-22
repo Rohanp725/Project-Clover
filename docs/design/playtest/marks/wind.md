@@ -183,11 +183,11 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** For now, every time you cast Closing Circle. It must be in a spell slot.
 
-**The numbers.** 3 Shards. You get what a perfect dodge gives: 12 mana, and 1.5 seconds off the wait on every spell that is waiting.
+**The numbers.** 3 Shards. It only counts if you start it in the last 0.3 seconds before an enemy's blow (one within 6 metres) lands on you. Then it is a perfect dodge: you get 12 mana, the game slows for a moment, the blow misses, and every mark that answers a perfect dodge answers this one.
 
 **Works with.** Lifting Wind's Master mark and the other marks a perfect dodge sets off; Leaf on the Wind.
 
-**Not built yet.** The timing (starting it right as a blow would land), and running the circle around the attacker within 8 metres. For now, every cast gives the dodge's mana and time off.
+**Not built yet.** Running the circle around the attacker within 8 metres.
 
 **Example.** A spearman thrusts at you. Start the circle into it, and you run around it as the spear passes, with your mana and spell waits paid back.
 

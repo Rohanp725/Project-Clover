@@ -117,6 +117,28 @@ namespace Clover.Tests
             Assert.AreEqual(0.3f, Upgrade.ById(SpellBranch.MasterId(WaterTree.Whirlpool)).Effects.Single().NeedsWindup, 1e-5f, "in the instant its attack mark shows");
         }
 
+        [Test]
+        public void AMovementSpellStartedAsABlowWouldLandIsAPerfectDodge()
+        {
+            var set = Quiet();
+            Assert.AreEqual(float.MaxValue, set.StrikeIn, "no blow shown");
+            set.NoteWindup(true, 0f, 0.25f);
+            Assert.AreEqual(0.25f, set.StrikeIn, 1e-5f);
+            Assert.IsTrue(PlayerCombat.AboutToLand(set.StrikeIn, 0.3f), "about to land");
+            set.NoteWindup(true, 0.1f, 0.6f);
+            Assert.IsFalse(PlayerCombat.AboutToLand(set.StrikeIn, 0.3f), "too early");
+            set.NoteWindup(false, 0.1f, 0.1f);
+            Assert.AreEqual(float.MaxValue, set.StrikeIn, "the blow has come");
+            var masters = Upgrade.All.Where(mark => mark.Effects != null && mark.Effects.Any(effect => effect.Do == UpgradeAction.PerfectDodgeNow)).ToList();
+            Assert.AreEqual(8, masters.Count, "the eight Masters of the shared movement rule");
+            foreach (var master in masters)
+            {
+                Assert.IsTrue(master.Effects.Where(effect => effect.Do == UpgradeAction.PerfectDodgeNow).All(effect => effect.BlowLanding == 0.3f && effect.On == UpgradeTrigger.SpellCast), master.Id);
+                Assert.IsFalse(master.Effects.Any(effect => effect.Do == UpgradeAction.Mana && effect.Amount == 12f), master.Id + ": no stand-in perfect dodge's mana on every cast");
+            }
+            Assert.IsTrue(Upgrade.All.Any(mark => mark.Effects != null && mark.Effects.Any(effect => effect.Do == UpgradeAction.RaiseHeat && effect.Count == 5 && effect.BlowLanding > 0f)), "Wildfire Rush: Heat to five");
+        }
+
         private sealed class Afflicted : IAfflictable
         {
             public Afflicted(AfflictionSet set) => Afflictions = set;

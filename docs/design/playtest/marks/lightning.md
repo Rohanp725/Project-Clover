@@ -253,9 +253,9 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** When you cast Lightning Rod. Lightning Rod must be in a spell slot.
 
-**The numbers.** 3 Shards. For now, every cast gives you what a perfect dodge gives: 12 mana, and 1.5 seconds off the wait on every spell that is waiting.
+**The numbers.** 3 Shards. It only counts if you start it in the last 0.3 seconds before an enemy's blow (one within 6 metres) lands on you. Then it is a perfect dodge: you get 12 mana, the game slows for a moment, the blow misses, and every mark that answers a perfect dodge answers this one.
 
-**Not built yet.** The timing (casting it right as a blow would land), and the flash to the rod that would use it up.
+**Not built yet.** Flashing to the rod still uses it up.
 
 **Example.** Plant the rod in the brute's face as it swings.
 

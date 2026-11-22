@@ -1629,6 +1629,40 @@ namespace Clover.Player
             return found;
         }
 
+        /// <summary>Metres within which an enemy's blow about to land is looked for (the shared movement rule).</summary>
+        public float AboutToLandRange = 6f;
+
+        /// <summary>True when a blow that lands in <paramref name="strikeIn"/> seconds is about to land, within <paramref name="window"/>.</summary>
+        public static bool AboutToLand(float strikeIn, float window) => window > 0f && strikeIn <= window;
+
+        /// <summary>
+        /// The nearest enemy within <see cref="AboutToLandRange"/> whose shown blow lands within <paramref name="window"/>
+        /// seconds, and when; null when none (the ledger's blow-about-to-land: a movement spell started as a blow would land
+        /// counts as a perfect dodge).
+        /// </summary>
+        public Component BlowAboutToLand(float window, out float strikeIn)
+        {
+            strikeIn = float.MaxValue;
+            Component found = null;
+            float best = float.MaxValue;
+            int count = Overlap(transform.position + Vector3.up, AboutToLandRange);
+            for (int i = 0; i < count; i++)
+            {
+                var other = overlaps[i];
+                if (other.transform.root == transform.root) continue;
+                var enemy = other.GetComponentInParent<IAfflictable>();
+                if (enemy == null || !AboutToLand(enemy.Afflictions.StrikeIn, window)) continue;
+                var body = enemy as Component;
+                if (body == null) continue;
+                float distance = (body.transform.position - transform.position).sqrMagnitude;
+                if (distance >= best) continue;
+                best = distance;
+                found = body;
+                strikeIn = enemy.Afflictions.StrikeIn;
+            }
+            return found;
+        }
+
         private int Overlap(Vector3 centre, float radius)
         {
             int count = Physics.OverlapSphereNonAlloc(centre, radius, overlaps, HitLayers, QueryTriggerInteraction.Ignore);

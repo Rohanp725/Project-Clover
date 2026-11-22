@@ -172,11 +172,11 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** For now, every time you cast The Tide Turns, and when you cast it within a second after a perfect dodge. The Tide Turns must be in a spell slot.
 
-**The numbers.** 3 Shards. You get what a perfect dodge gives: 12 mana, and 1.5 seconds off the wait on every spell that is waiting. If you cast it within 1 second after a perfect dodge, while the spell is ready, it doesn't start a wait.
+**The numbers.** 3 Shards. It only counts if you start it in the last 0.3 seconds before an enemy's blow (one within 6 metres) lands on you. Then it is a perfect dodge: you get 12 mana, the game slows for a moment, the blow misses, and every mark that answers a perfect dodge answers this one. If you cast it within 1 second after a perfect dodge, while the spell is ready, it doesn't start a wait.
 
 **Works with.** The dodge; Ebb and Flood; every spell whose wait this shortens.
 
-**Not built yet.** The timing (starting it right as a blow would land), and the wave's own press. For now, every cast gives the dodge's mana and time off, and a perfect dodge makes your next cast skip its wait.
+**Not built yet.** The wave's own press. For now, a perfect dodge makes your next cast skip its wait.
 
 **Example.** Dodge a brute's swing perfectly, and rush through it right away. The spell is ready again before the brute turns around.
 

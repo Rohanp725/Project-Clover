@@ -182,12 +182,12 @@ namespace Clover.Player.Trees
                     Description = "You go six metres back out of the fight in a roll of black smoke, and the line of fire is left between you and them. The escape.",
                     Change = new SpellChange { Reach = 6f, Damage = 4f } },
                 "Opens two shapes of Wildfire Rush, chosen at any rest fire: Fire Front, a wall that carries a crowd, or Smoke Road, the escape.",
-                // NEEDS: the shared movement rule's timing (started as a blow would land, blow-about-to-land), and
-                // Heat rising to five. Until then the cast gives what a perfect dodge gives.
+                // Started as a blow would land (UpgradeEffect.BlowLanding), it is a perfect dodge (UpgradeAction.PerfectDodgeNow) and Heat
+                // rises five levels, to five from nothing.
                 new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Mana, Amount = 12f },
-                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.CutCooldowns, Amount = 1.5f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, BlowLanding = 0.3f, Do = UpgradeAction.PerfectDodgeNow },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, BlowLanding = 0.3f, Do = UpgradeAction.RaiseHeat, Count = 5 },
                 },
                 "Started in the instant a blow would land on you, it counts as a perfect dodge, and your Heat goes to five.");
 

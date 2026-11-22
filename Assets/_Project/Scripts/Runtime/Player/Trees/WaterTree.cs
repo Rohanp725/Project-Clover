@@ -220,13 +220,12 @@ namespace Clover.Player.Trees
                         new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Soaked, Stacks = 1 },
                     } },
                 "Opens two shapes of The Tide Turns, chosen at any rest fire: King Tide, a wide flood that throws a crowd down, or Out to Sea, an enemy drawn away with you.",
-                // NEEDS: the shared movement rule's timing (started as a blow would land, blow-about-to-land), and the flood's
-                // own press. Until then the cast gives what a perfect dodge gives, and the next cast within a second of a perfect
-                // dodge starts no clock.
+                // Started as a blow would land (UpgradeEffect.BlowLanding), it is a perfect dodge (UpgradeAction.PerfectDodgeNow). NEEDS: the
+                // flood pressed as a blow would land starting no cooldown (the flood's own press, second-press); until then the next
+                // cast within a second of a perfect dodge starts no clock.
                 new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Mana, Amount = 12f },
-                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.CutCooldowns, Amount = 1.5f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, BlowLanding = 0.3f, Do = UpgradeAction.PerfectDodgeNow },
                     new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, Do = UpgradeAction.InstantNext, Seconds = 1f },
                 },
                 "Started in the instant a blow would land on you, it counts as a perfect dodge, and a flood pressed in the instant a blow would land starts no cooldown.",

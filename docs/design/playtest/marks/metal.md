@@ -306,17 +306,15 @@ the steel you throw and plant: Flung Blade, the blades of Grave of Swords.
 **Example.** Put Chain across the entrance to a hallway. The soldiers that follow you through it arrive notched and off balance.
 
 ## metal.toblade.master
-**What it does.** Cast it at the moment of a perfect dodge, and you are untouchable from the moment you press, and To the Blade is ready again.
+**What it does.** Cast it right as a blow would land on you, and it counts as a perfect dodge, you are untouchable from the moment you press, and To the Blade is ready again.
 
-**When it happens.** For now, if you cast To the Blade within 1 second after a perfect dodge, while it is ready, it doesn't start its wait. To the Blade must be in a spell slot.
+**When it happens.** Each time you cast To the Blade right as a blow would land on you. To the Blade must be in a spell slot.
 
-**The numbers.** 3 Shards. A cast in that second doesn't start a wait.
+**The numbers.** 3 Shards. It only counts if you start it in the last 0.3 seconds before an enemy's blow (one within 6 metres) lands on you. Then it is a perfect dodge: you get 12 mana, the game slows for a moment, the blow misses, and every mark that answers a perfect dodge answers this one. You are untouchable for 0.6 seconds from the press, and the spell's wait ends.
 
 **Works with.** The perfect dodge, Flung Blade and Grave of Swords (a blade to fly to), Counter Cut on the enemy you arrive at.
 
-**Not built yet.** The timing shared by the movement spells: cast it right as a blow would land, and it counts as a perfect dodge and you are untouchable from the moment you press. For now, casting it after a perfect dodge skips its wait.
-
-**Example.** Perfect-dodge a brute's swing and fly right away to the blade in the archer behind it, then on to the next one.
+**Example.** Cast it just as a brute's swing comes down. The swing misses, you fly to the blade in the archer behind it, and the spell is ready again for the next one.
 
 ## metal.devotion
 **What it does.** The Guard Holds, Metal's Devotion, for going all in on Metal only. It is Metal's basic bonus, defence, at full strength. Your guard never breaks. A blow your stamina can't cover is still blocked, and whatever your stamina can't cover comes through as grey health. Every blow you block notches the attacker and throws sparks into it. You take less damage from everything. Red attacks still need a dodge or a perfect guard.

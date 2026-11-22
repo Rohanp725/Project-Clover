@@ -216,6 +216,21 @@ namespace Clover.Player
         public static bool GuardMadePerfect(Component attacker) =>
             attacker is Clover.Gameplay.IAfflictable carrier && carrier.Afflictions.Conditions.Has(Clover.Gameplay.ConditionFlags.GuardMadePerfect);
 
+        /// <summary>
+        /// A spell started as a blow would land counts as a perfect dodge of it (the shared movement rule): what a perfect
+        /// dodge gives, the marks that answer one told, and no blow lands for the moment it had left.
+        /// </summary>
+        public void CountAsPerfectDodge(Vector3 attacker, float strikeIn)
+        {
+            PerfectDodges++;
+            if (combat != null) combat.Mana.Gain(PerfectDodgeMana);
+            if (hitStop != null) hitStop.Slow(PerfectDodgeSlowSeconds, PerfectDodgeSlowScale);
+            Callout("Perfect dodge");
+            UntouchableUntil = Mathf.Max(UntouchableUntil, Time.time + Mathf.Clamp(strikeIn, 0f, 1f) + 0.15f);
+            if (upgrades != null) upgrades.OnPerfectDodge(attacker);
+            PerfectDodged?.Invoke();
+        }
+
         public void GiveWards(int count)
         {
             if (count > 0) Wards = Mathf.Min(MaximumWards, Wards + count);

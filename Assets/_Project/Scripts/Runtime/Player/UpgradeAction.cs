@@ -164,5 +164,11 @@ namespace Clover.Player
         /// Reads: Condition.
         /// </summary>
         EndCondition,
+        /// <summary>
+        /// Counts as a perfect dodge of the enemy blow about to land on the player within Seconds (0.3): what a perfect dodge
+        /// gives, its marks answered, and the blow missed (the shared movement rule). Nothing when none is about to land.
+        /// Reads: Seconds.
+        /// </summary>
+        PerfectDodgeNow,
     }
 }

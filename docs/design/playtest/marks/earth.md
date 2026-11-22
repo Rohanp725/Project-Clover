@@ -62,11 +62,11 @@ Rise's rocks, a pillar, a heap of rubble.
 
 **When it happens.** For now, every time you cast Under the Mound. It must be in a spell slot.
 
-**The numbers.** 3 Shards. Each cast gives you what a perfect dodge gives: 12 mana, and 1.5 seconds off the wait on every spell and strike that is waiting. For 3 seconds, or until your next blow lands, your blows break 50% more balance and each adds one more stack.
+**The numbers.** 3 Shards. It only counts if you start it in the last 0.3 seconds before an enemy's blow (one within 6 metres) lands on you. Then it is a perfect dodge: you get 12 mana, the game slows for a moment, the blow misses, and every mark that answers a perfect dodge answers this one. For 3 seconds after that, or until your next blow lands, your blows break 50% more balance and each adds one more stack.
 
 **Works with.** Tremor (the extra stack on the next blow), Heavy Hand and The Slow Hand, Cairn (the mana it gives back).
 
-**Not built yet.** It should only work when you go under right as a blow would land, like the other movement spells, and bring you up behind the attacker, with the next blow counting as a heavy blow. For now, every cast gives the dodge's reward and the stronger next blow.
+**Not built yet.** It doesn't yet bring you up behind the attacker, and the next blow doesn't yet count as a heavy blow.
 
 **Example.** A brute's overhead swing is coming down. Go under it, come up behind it, and your next blow nearly breaks its balance.
 

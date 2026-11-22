@@ -288,13 +288,11 @@ namespace Clover.Player.Trees
                     Description = "While you slide you loose three shards of ice at the nearest enemy, 8 damage and a Chill each, as she shoots from her skis.",
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Projectile, Flight = Flight.Homing, Count = 3, Damage = 8f, Stagger = 6f, Radius = 0.5f, Speed = 18f, Seconds = 0.8f, Affliction = AfflictionKind.Chill, Stacks = 1 } } },
                 "Opens two shapes of Ski Run, chosen at any rest fire: Thin Ice, a lane that gives under those who follow, or Shooting Run, shards loosed as you slide.",
-                // NEEDS: the shared movement rule's timing (started as a blow would land, blow-about-to-land), and the moment of a
-                // shatter. Until then the cast gives what a perfect dodge gives, and sliding through a Frozen enemy freezes
-                // everything on the lane on from it.
+                // Started as a blow would land (UpgradeEffect.BlowLanding), it is a perfect dodge (UpgradeAction.PerfectDodgeNow). NEEDS: the
+                // moment of a shatter; until then sliding through a Frozen enemy freezes everything on the lane on from it.
                 new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Mana, Amount = 12f },
-                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.CutCooldowns, Amount = 1.5f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, BlowLanding = 0.3f, Do = UpgradeAction.PerfectDodgeNow },
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = AfflictionKind.Chill, NeedsFull = true, Do = UpgradeAction.Lane, Reach = 9f, Radius = 1f, Damage = 0f, Stagger = 0f, Affliction = AfflictionKind.Chill, Stacks = 5, Cooldown = 1f },
                 },
                 "Started in the instant a blow would land on you, it counts as a perfect dodge. Slide through an enemy in the moment it shatters, and the lane freezes everything standing on it.");

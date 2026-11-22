@@ -184,6 +184,8 @@ namespace Clover.Player
         public int Overflows { get; private set; }
         /// <summary>Reactions struck again by a mark (Strikes Twice, Spreading Water), counted for probes.</summary>
         public int Echoes { get; private set; }
+        /// <summary>Movement spells started as a blow would land, counted as perfect dodges, for probes.</summary>
+        public int MovementDodges { get; private set; }
         /// <summary>Conditions ended on demand (Cold Snap), counted for probes.</summary>
         public int ConditionsEnded { get; private set; }
         // The reactions' adapter, which strikes a reaction again; looked up once.
@@ -1337,6 +1339,8 @@ namespace Clover.Player
             if (effect.NeedsAirborne && !(target is IAfflictable flying && flying.Afflictions.IsAirborne)) return;
             if (effect.NeedsFrozen && !(target is IAfflictable icy && icy.Afflictions.IsFrozen)) return;
             if (effect.NeedsWindup > 0f && !InWindup(target as IAfflictable, effect.NeedsWindup)) return;
+            // Only as an enemy's blow is about to land (the shared movement rule's timing).
+            if (effect.BlowLanding > 0f && (combat == null || combat.BlowAboutToLand(effect.BlowLanding, out _) == null)) return;
             // Only in the moment after a red attack was turned (Mountain Stance's, Circle of Steel's and Gone to Ash's Masters).
             if (effect.RedOnly && !RedJustTurned(Time.time, redTurnedAt)) return;
             if (effect.OnBeat > 0f && !(target is IAfflictable beaten && beaten.Afflictions.NearBeat(effect.OnBeat))) return;
@@ -1976,6 +1980,16 @@ namespace Clover.Player
                     if (load <= 0) break;
                     Coat.Load(kind, load, effect.SetsDepth, effect.LightOnly, Or(effect.Count, 3), effect.Seconds > 0f ? Time.time + effect.Seconds : 0f);
                     ElementLook.Sparks(look, self + Vector3.up * 1.1f + transform.forward * 0.5f, transform.forward, 0.6f);
+                    break;
+                }
+                case UpgradeAction.PerfectDodgeNow:
+                {
+                    var attacker = combat.BlowAboutToLand(Or(effect.Seconds, 0.3f), out float strikeIn);
+                    if (attacker != null && defence != null)
+                    {
+                        defence.CountAsPerfectDodge(attacker.transform.position, strikeIn);
+                        MovementDodges++;
+                    }
                     break;
                 }
                 case UpgradeAction.EndCondition:

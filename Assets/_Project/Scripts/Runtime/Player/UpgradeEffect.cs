@@ -240,6 +240,8 @@ namespace Clover.Player
         /// ledger's enemy-begins-attack; 99: anywhere in its wind-up; 0.3: in the instant its attack mark shows).
         /// </summary>
         public float NeedsWindup;
+        /// <summary>Above zero: only when an enemy's blow is about to land on the player within this many seconds (the shared movement rule's timing: 0.3).</summary>
+        public float BlowLanding;
 
         /// <summary>A copy with every number, its slot and its mark (an Empower's twin of its Learn's effect).</summary>
         internal UpgradeEffect Twin() => (UpgradeEffect)MemberwiseClone();

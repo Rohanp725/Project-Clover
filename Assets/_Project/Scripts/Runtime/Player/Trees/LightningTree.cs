@@ -180,11 +180,11 @@ namespace Clover.Player.Trees
                     Description = "The rod is thrown up to ten metres, into a far enemy or the ground, so the step goes that far.",
                     Change = new SpellChange { Reach = 10f } },
                 "Opens two shapes of Lightning Rod, chosen at any rest fire: Lodestone, a rod that pulls, or Thrown Rod, a rod planted far.",
-                // NEEDS: the shared movement rule's timing (cast as a blow would land), and the rod not spent by the step.
+                // Cast as a blow would land (UpgradeEffect.BlowLanding), it is a perfect dodge (UpgradeAction.PerfectDodgeNow). NEEDS: the rod
+                // not spent by the step (press-on-standing-thing).
                 new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Mana, Amount = 12f },
-                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.CutCooldowns, Amount = 1.5f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, BlowLanding = 0.3f, Do = UpgradeAction.PerfectDodgeNow },
                 },
                 "Cast in the instant a blow would land on you, it counts as a perfect dodge, and the rod is not spent by the step.");
 

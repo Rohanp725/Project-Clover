@@ -162,12 +162,11 @@ namespace Clover.Player.Trees
                     Description = "You run round a group up to six metres across. The column takes everyone inside, but lifts each for only a moment.",
                     Change = new SpellChange { Reach = 7f, Radius = 4f, Seconds = 0.6f } },
                 "Opens two shapes of Closing Circle, chosen at any rest fire: Half Circle, ending behind it, or Wide Circle, a ring round a group.",
-                // NEEDS: the shared movement rule's timing (started as a blow would land, blow-about-to-land), and the ring run
-                // round the attacker wherever it stands within 8 m. Until then the cast gives what a perfect dodge gives.
+                // Started as a blow would land (UpgradeEffect.BlowLanding), it is a perfect dodge (UpgradeAction.PerfectDodgeNow). NEEDS: the
+                // ring run round the attacker wherever it stands within 8 m (form-pieces).
                 new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Mana, Amount = 12f },
-                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.CutCooldowns, Amount = 1.5f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, BlowLanding = 0.3f, Do = UpgradeAction.PerfectDodgeNow },
                 },
                 "Started in the instant a blow would land on you, it counts as a perfect dodge, and the ring is run round the attacker wherever it stands within eight metres.");
 
