@@ -66,7 +66,7 @@ namespace Clover.Player.Forms
                     toward.y = 0f;
                     // A shove moves a body two thirds of its length: half as much again drags it the whole way.
                     if (share > 0f && times[i] > 0f && toward.sqrMagnitude > 0.01f && thing is IShovable body)
-                        body.Push(toward.normalized * (times[i] * share * 1.5f));
+                        body.Push(toward.normalized * (times[i] * share * 1.5f), PushKind.Drag);
                     // The line it is dragged by: thick for one that carries much Static, with a white thread in it.
                     float thick = 1.6f + 0.35f * Mathf.Min(8f, times[i]);
                     Lay(solids[i], hand, chest, thick);

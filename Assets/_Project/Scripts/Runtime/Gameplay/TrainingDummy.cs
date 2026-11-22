@@ -86,10 +86,14 @@ namespace Clover.Gameplay
         /// <summary>A post set in the ground is not dragged; a probe may make it light to see a drag.</summary>
         public float Weight { get; set; } = 10f;
 
-        public void Push(Vector3 impulse)
+        /// <summary>The kind of the last push, so a probe can tell a shove from a drag.</summary>
+        public PushKind LastPushKind { get; private set; }
+
+        public void Push(Vector3 impulse, PushKind kind = PushKind.Blow)
         {
             Shoves++;
             LastShove = impulse;
+            LastPushKind = kind;
             if (impulse.sqrMagnitude > 0.0001f) Rock(impulse.normalized, 1f);
         }
 

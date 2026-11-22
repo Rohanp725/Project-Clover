@@ -785,13 +785,13 @@ namespace Clover.Gameplay
         public float Weight => Kind != null ? Kind.Weight : 1f;
 
         /// <summary>A pull or a push from outside a blow. The great are moved less.</summary>
-        public void Push(Vector3 impulse)
+        public void Push(Vector3 impulse, PushKind kind = PushKind.Blow)
         {
             if (IsDead) return;
             impulse.y = 0f;
             shove += impulse * (Kind.IsBoss ? 0.3f : Kind.IsElite ? 0.6f : 1f);
             // A real shove, not a pull's steady drag, is a moment its conditions answer (Windthrow tears out, Ill Wind sheds).
-            if (ShoveRules.IsMoment(impulse.magnitude, Time.time, lastShoveMoment))
+            if (ShoveRules.IsMoment(kind, impulse.magnitude, Time.time, lastShoveMoment))
             {
                 lastShoveMoment = Time.time;
                 Afflictions.Conditions.Shoved();

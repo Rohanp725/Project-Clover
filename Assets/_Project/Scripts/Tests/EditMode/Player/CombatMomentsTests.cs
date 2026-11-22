@@ -140,6 +140,45 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void AGustIsOneShovePerBodyAndACarryOrDragIsNone()
+        {
+            // The wind's push given the way TapForm gives it, a frame at a time, at three frame rates: one shove for each body it reaches.
+            foreach (float frame in new[] { 1f / 30f, 1f / 60f, 1f / 144f })
+            {
+                float last = -100f, blown = 0f, now = 5f, pushed = 0f;
+                int moments = 0;
+                // The first step is the cast's own 0.1 s; then the frames while it blows.
+                for (float step = 0.1f; blown < 1f; step = frame, now += frame)
+                {
+                    float share = System.Math.Min(step / 0.45f, 1f - blown);
+                    var kind = Clover.Player.Forms.GustRules.KindAt(blown);
+                    blown += share;
+                    float impulse = Clover.Player.Forms.GustRules.Impulse * share;
+                    pushed += impulse;
+                    if (ShoveRules.IsMoment(kind, impulse, now, last)) { moments++; last = now; }
+                }
+                Assert.AreEqual(1, moments, $"one shove at {1f / frame:0} fps");
+                Assert.AreEqual(Clover.Player.Forms.GustRules.Impulse, pushed, 1e-3f, "the whole push still given");
+            }
+            Assert.IsTrue(ShoveRules.IsMoment(PushKind.Shove, 0.01f, 5f, -100f), "a wind's first touch, however small its step");
+            Assert.IsFalse(ShoveRules.IsMoment(PushKind.Shove, 1f, 5.1f, 5f), "the same moment as a shove just before");
+            Assert.IsFalse(ShoveRules.IsMoment(PushKind.Drag, 5f, 5f, -100f), "Eye's carry or Lodestone's drag, even in a long frame");
+            Assert.IsTrue(ShoveRules.IsMoment(PushKind.Blow, 1f, 5f, -100f), "a strong blow's push");
+            Assert.IsFalse(ShoveRules.IsMoment(PushKind.Blow, 0.5f, 5f, -100f), "a light blow's push");
+            var dummy = new UnityEngine.GameObject("shove probe").AddComponent<TrainingDummy>();
+            try
+            {
+                // A still push (no rocking needed off a scene): only the kind is read.
+                IShovable body = dummy;
+                body.Push(UnityEngine.Vector3.zero);
+                Assert.AreEqual(PushKind.Blow, dummy.LastPushKind, "a plain push is a blow's");
+                body.Push(UnityEngine.Vector3.zero, PushKind.Drag);
+                Assert.AreEqual(PushKind.Drag, dummy.LastPushKind);
+            }
+            finally { UnityEngine.Object.DestroyImmediate(dummy.gameObject); }
+        }
+
+        [Test]
         public void AShoveIsAMomentOnlyWhatAnswersAShoveHears()
         {
             Assert.IsTrue(ShoveRules.IsMoment(1f, 5f, -100f), "a Gust's metre");

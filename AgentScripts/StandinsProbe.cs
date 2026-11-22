@@ -153,11 +153,14 @@ public class StandinsProbeRunner : MonoBehaviour
         Say($"scene {gameObject.scene.name}/{player.gameObject.scene.name}: {everyone.Length} enemies, soldier {(soldier != null ? soldier.transform.position.ToString("0.0") : "MISSING")}, captain {(captain != null ? captain.transform.position.ToString("0.0") + " rank " + captain.Afflictions.Rank : "MISSING")}");
         if (soldier == null || captain == null) { Finish(); yield break; }
 
-        yield return Windup();
-        yield return Landing();
-        yield return Shove();
-        yield return Guard();
-        yield return Badge();
+        // AgentScripts/standins_only.txt (comma list of pieces) runs only those.
+        string only = File.Exists("AgentScripts/standins_only.txt") ? File.ReadAllText("AgentScripts/standins_only.txt").Trim() : "";
+        bool Wants(string piece) => only.Length == 0 || only.Split(',').Any(p => p.Trim() == piece);
+        if (Wants("windup")) yield return Windup();
+        if (Wants("landing")) yield return Landing();
+        if (Wants("shove")) yield return Shove();
+        if (Wants("guard")) yield return Guard();
+        if (Wants("badge")) yield return Badge();
         Finish();
     }
 
@@ -225,32 +228,74 @@ public class StandinsProbeRunner : MonoBehaviour
     private IEnumerator Shove()
     {
         const string id = "probe.untilshoved";
+        bool seenFix = false;
         OnlyAwake(null);
         yield return FaceSoldier(3f);
-        soldier.Afflictions.Conditions.Set(new ConditionSpec { Id = id, Seconds = 30f, EndsWith = ConditionBlow.Shove }, player);
+        // A second soldier beside the first, so the wind reaches two bodies: each must feel exactly one shove.
+        var second = everyone.Where(e => e != soldier && e.Kind.Name == EnemyKind.SoldierName && !e.IsDead).OrderBy(e => (e.transform.position - SoldierSpot).sqrMagnitude).FirstOrDefault();
+        if (second != null) { second.Brain.Reset(); second.transform.SetPositionAndRotation(SoldierSpot + Vector3.right * 1.4f, Quaternion.Euler(0f, 180f, 0f)); }
+        var bodies = second != null ? new[] { soldier, second } : new[] { soldier };
+        var lastMoment = typeof(Enemy).GetField("lastShoveMoment", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        float MomentOf(Enemy e) => (float)lastMoment.GetValue(e);
+        yield return Real(0.3f);
+        foreach (var body in bodies) body.Afflictions.Conditions.Set(new ConditionSpec { Id = id, Seconds = 30f, EndsWith = ConditionBlow.Shove }, player);
         Vector3 before = soldier.transform.position;
         soldier.Push(Vector3.forward * 0.3f);
         yield return Real(0.3f);
-        bool keptByDrag = soldier.Afflictions.Conditions.Holds(id);
+        bool keptByLight = soldier.Afflictions.Conditions.Holds(id);
         float dragged = (soldier.transform.position - before).magnitude;
+        // A drag a step at a time, as Eye's carry and Lodestone's pull give it, even with a long frame's big step: never a shove.
+        float dragMoment = MomentOf(soldier);
+        for (int step = 0; step < 20; step++) { soldier.Push(Vector3.back * 1.2f, PushKind.Drag); yield return null; }
+        yield return Real(0.4f);
+        bool keptByDrag = keptByLight && soldier.Afflictions.Conditions.Holds(id) && MomentOf(soldier) == dragMoment;
+        yield return FaceSoldier(3f);
         build.Attune(Elements.Wind, "");
         upgrades.RefreshNow();
         combat.Mana.Gain(1000f);
         before = soldier.transform.position;
+        // The second soldier set beside the first just before the wind, its post moved there so it does not walk home.
+        // Some soldiers are held in place by their own post (a sentry on a wall): the first that stays where it is set is used.
+        if (second != null)
+        {
+            Vector3 spot = soldier.transform.position + Vector3.right * 1.3f;
+            var homeField = typeof(Enemy).GetField("home", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            var candidates = everyone.Where(e => e != soldier && e.Kind.Name == EnemyKind.SoldierName && !e.IsDead).OrderBy(e => (e.transform.position - SoldierSpot).sqrMagnitude).ToArray();
+            second = null;
+            foreach (var candidate in candidates)
+            {
+                candidate.Brain.Reset();
+                candidate.transform.SetPositionAndRotation(spot, Quaternion.Euler(0f, 180f, 0f));
+                homeField?.SetValue(candidate, spot);
+                Physics.SyncTransforms();
+                yield return null;
+                yield return null;
+                if ((candidate.transform.position - spot).sqrMagnitude < 0.25f) { second = candidate; break; }
+                Say($"soldier {candidate.name} did not stay at the spot ({candidate.transform.position:0.0}); next");
+            }
+            bodies = second != null ? new[] { soldier, second } : new[] { soldier };
+            seenFix = true;
+        }
+        _ = seenFix;
+        var starts = bodies.Select(b => b.transform.position).ToArray();
+        var seen = bodies.Select(MomentOf).ToArray();
+        var moments = new int[bodies.Length];
         bool gust = element.CastBase(Elements.Wind);
         float far = 0f;
         float end = Time.time + 1.2f;
         bool stillTaken = false;
         while (Time.time < end)
         {
+            for (int b = 0; b < bodies.Length; b++)
+                if (MomentOf(bodies[b]) != seen[b]) { moments[b]++; seen[b] = MomentOf(bodies[b]); }
             far = Mathf.Max(far, (soldier.transform.position - before).magnitude);
             if (!stillTaken && Time.time > end - 0.85f) { stillTaken = true; yield return Still("shove"); }
             yield return null;
         }
-        bool ended = !soldier.Afflictions.Conditions.Holds(id);
-        Judge("shove", keptByDrag && gust && ended && far > 0.75f,
-            $"a 0.3 push moved it {dragged:0.00} m and the condition held {keptByDrag}; Gust cast {gust}, pushed it {far:0.00} m, the condition ended {ended} (ShoveRules.MomentAt {ShoveRules.MomentAt})");
-        soldier.Afflictions.Conditions.Clear();
+        bool ended = bodies.All(b => !b.Afflictions.Conditions.Holds(id));
+        Judge("shove", keptByDrag && gust && ended && far > 0.75f && moments.All(m => m == 1),
+            $"a 0.3 push moved it {dragged:0.00} m and the condition held {keptByLight}; 20 drag steps of 1.2 held it {keptByDrag}; Gust cast {gust}, pushed it {far:0.00} m, shove moments per body [{string.Join(",", moments)}] over {bodies.Length} bodies at {string.Join(" ", starts.Select(p => (p - player.transform.position).ToString("0.0")))} moved {string.Join(",", bodies.Select((b, i) => (b.transform.position - starts[i]).magnitude.ToString("0.00")))} m, the conditions ended {ended} ({1f / Time.smoothDeltaTime:0} fps)");
+        foreach (var body in bodies) body.Afflictions.Conditions.Clear();
     }
 
     // ---- Snapped Blade: a plain held guard against the snapped soldier is perfect; without it, a block.

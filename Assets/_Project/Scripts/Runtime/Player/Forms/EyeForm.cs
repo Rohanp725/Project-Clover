@@ -148,7 +148,7 @@ namespace Clover.Player.Forms
                         ElementLook.Sparks(cast.Element, chest, Vector3.up, 0.7f);
                     }
                     if (set != null && set.IsLifted && thing is IShovable carried && from.sqrMagnitude > 0.04f)
-                        carried.Push(Vector3.Cross(Vector3.up, from.normalized) * (CarryPerSecond * deltaTime));
+                        carried.Push(Vector3.Cross(Vector3.up, from.normalized) * (CarryPerSecond * deltaTime), PushKind.Drag);
                 }
                 bool held = HoldForProbe || (cast.Caster != null && cast.Caster.SpellHeld);
                 if ((held || run.Age < Least) && run.Age < run.T0) return true;

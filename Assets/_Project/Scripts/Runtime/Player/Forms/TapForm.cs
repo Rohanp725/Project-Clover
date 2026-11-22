@@ -299,11 +299,13 @@ namespace Clover.Player.Forms
             float share = Mathf.Min(deltaTime / blows, 1f - run.T3);
             if (share > 0f)
             {
+                // The wind's push is spread over the time it blows; its first touch is the one shove each body feels.
+                var kind = GustRules.KindAt(run.T3);
                 run.T3 += share;
                 var blown = SpellWorks.Things(run);
                 Vector3 push = run.B * (GustRules.Impulse * share * cast.Combat.StatPush);
                 for (int i = 0; i < run.Phase; i++)
-                    if (FormKit.Alive(blown[i]) && blown[i] is IShovable body) body.Push(push);
+                    if (FormKit.Alive(blown[i]) && blown[i] is IShovable body) body.Push(push, kind);
             }
             run.T2 -= deltaTime;
             // The look draws the wind; only the shove is the code's.

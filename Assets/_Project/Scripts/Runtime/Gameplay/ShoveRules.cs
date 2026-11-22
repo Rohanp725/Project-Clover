@@ -9,6 +9,16 @@ namespace Clover.Gameplay
         public const float Apart = 0.25f;
 
         /// <summary>True when a push this strong, now, is a new shove moment after the last one at <paramref name="last"/>.</summary>
-        public static bool IsMoment(float impulse, float now, float last) => impulse >= MomentAt && now - last >= Apart;
+        public static bool IsMoment(float impulse, float now, float last) => IsMoment(PushKind.Blow, impulse, now, last);
+
+        /// <summary>
+        /// True when a push of this kind is a new shove moment: a drag never is, a spread push's first touch always is (its
+        /// step is small however hard the whole push), and a blow's push is when it is strong enough.
+        /// </summary>
+        public static bool IsMoment(PushKind kind, float impulse, float now, float last)
+        {
+            if (kind == PushKind.Drag || now - last < Apart) return false;
+            return kind == PushKind.Shove || impulse >= MomentAt;
+        }
     }
 }
