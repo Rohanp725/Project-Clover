@@ -373,8 +373,15 @@ namespace Clover.Player
             {
                 element.Advance(deltaTime, !busy && (combat == null || !combat.IsAttacking));
                 // The four slots, their cooldowns and the fight's clock, right after the element in the one order.
-                if (spells != null) spells.Advance(deltaTime, !busy && (combat == null || !combat.IsAttacking));
-                casting = element.IsCasting;
+                // On the Wind: a spell may be cast in the middle of a dodge or a swing without ending it, and one cast in a dodge
+                // carries it further.
+                var rules = upgrades != null ? upgrades.Rules : null;
+                bool inMotion = rules != null && rules.CastInMotion;
+                int castsBefore = spells != null ? spells.Casts : 0;
+                bool spellsFree = inMotion ? !helpless && (defence == null || !defence.IsDrinking) : !busy && (combat == null || !combat.IsAttacking);
+                if (spells != null) spells.Advance(deltaTime, spellsFree);
+                if (inMotion && Dodge.IsRolling && spells != null && spells.Casts > castsBefore) Dodge.Carry(rules.DodgeCastCarry);
+                casting = element.IsCasting && !inMotion;
             }
             if (combat != null)
             {

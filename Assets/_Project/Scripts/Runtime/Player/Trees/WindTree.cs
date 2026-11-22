@@ -29,6 +29,8 @@ namespace Clover.Player.Trees
         public const string NothingBeneath = "wind.nothing";
         public const string CarriedFar = "wind.lift";
         public const string OnTheWind = "wind.devotion";
+        /// <summary>On the Wind: metres a spell cast in a dodge carries it further.</summary>
+        public const float DodgeCastCarry = 2f;
         // The spells: each is its branch's Learn mark and the branch's id.
         public const string Gust = "wind.base";
         public const string LiftingWind = "wind.lifting";
@@ -125,13 +127,15 @@ namespace Clover.Player.Trees
                 Description = "An enemy in the air stays there for as long as you keep striking it, and each blow up there gives double mana. Your blows on an enemy that is not Unsteady are weaker.",
                 Stats = new[] { new StatMod(PlayerStat.AirBlows, 20f), new StatMod(PlayerStat.ManaFromBlows, 1f, StatWhen.AirborneBlow), new StatMod(PlayerStat.WeaponDamage, -0.15f), new StatMod(PlayerStat.WeaponDamage, 0.15f, AfflictionKind.Unsteady) } },
                 BranchPattern.TrunkLeft));
-            // NEEDS: spells with no wind-up, cast in the middle of a dodge or a swing without ending it, and a spell cast in a
-            // dodge carrying it 2 m further (cast-in-motion: a RuleBook switch that PlayerController's order and PlayerSpells
-            // would read, and casts that leave the dodge and the swing running, which only play can prove). Until then every
-            // dodge carries further.
+            // The RuleBook's CastInMotion (read by PlayerController's order and PlayerSpells): spells free in a dodge or a swing,
+            // the kit's cast loosed with no wind-up, and a spell cast in a dodge carrying it two metres further (DodgeRoll.Carry).
             to.Add(BranchPattern.Put(new Upgrade { Id = OnTheWind, Name = "On the Wind", Element = E, Kind = UpgradeKind.Devotion, Requires = new[] { CarriedFar }, Icon = UpgradeIcons.Wing,
                 Description = "All in on Wind only. Your spells have no wind-up, and can be cast in the middle of a dodge or a swing without ending it. A spell cast in a dodge carries you two metres further along it. Nearly all of the fight is spent in motion.",
-                Stats = new[] { new StatMod(PlayerStat.DodgeDistance, 0.3f) } },
+                Rules = book =>
+                {
+                    book.CastInMotion = true;
+                    book.DodgeCastCarry = DodgeCastCarry;
+                } },
                 BranchPattern.TrunkRight));
 
             // ---- The left bough: Slipstream. The dodge and the guard as weapons.

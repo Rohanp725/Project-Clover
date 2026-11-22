@@ -42,6 +42,22 @@ namespace Clover.Player
 
         private float elapsed;
         private float sinceEnd = float.MaxValue;
+        // Metres added to the roll part-way through (a spell cast in it, On the Wind), paid over what is left of it.
+        private float carry;
+        private float carryFrom;
+
+        /// <summary>
+        /// The roll now under way goes <paramref name="metres"/> further along its way, paid out over what is left of it, eased
+        /// as the roll is (a spell cast in a dodge: On the Wind). Nothing when not rolling.
+        /// </summary>
+        public void Carry(float metres)
+        {
+            if (!IsRolling || metres <= 0f) return;
+            // What is still owed of an earlier carry is kept, measured from now.
+            float owed = carry * (1f - Eased(elapsed)) / Mathf.Max(0.0001f, 1f - carryFrom);
+            carry = owed + metres;
+            carryFrom = Eased(elapsed);
+        }
 
         public void Reset()
         {
@@ -89,6 +105,8 @@ namespace Clover.Player
             Direction = direction.normalized;
             IsRolling = true;
             elapsed = 0f;
+            carry = 0f;
+            carryFrom = 0f;
             Flowed = flowing;
             if (flowing) FlowsTaken++;
             WholeSafe = terms.WholeSafe;
@@ -114,7 +132,8 @@ namespace Clover.Player
                 IsRolling = false;
                 sinceEnd = 0f;
             }
-            return Direction * (Distance * (after - before));
+            float carried = carry > 0f ? carry * (after - before) / Mathf.Max(0.0001f, 1f - carryFrom) : 0f;
+            return Direction * (Distance * (after - before) + carried);
         }
 
         // Ease-out: covers most of the distance early, so the roll feels like a burst that settles.

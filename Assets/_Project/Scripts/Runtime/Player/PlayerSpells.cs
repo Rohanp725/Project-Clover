@@ -614,7 +614,8 @@ namespace Clover.Player
                         if (!upgrades.Cast(Upgrade.ById(id))) return false;
                     }
                     // A slot made instant by a mark (Thunderclap's Master) is loosed with no wind-up.
-                    else if (!element.CastBase(castIn, Cooldowns.IsInstant(slot))) return false;
+                    // With spells cast in motion (On the Wind) every kit cast is loosed so, too.
+                    else if (!element.CastBase(castIn, Cooldowns.IsInstant(slot) || (upgrades != null && upgrades.Rules.CastInMotion))) return false;
                     // A base spell's later presses (its Master's: Riptide's wave sent on again) wait for their press now.
                     var baseLearn = upgrades != null ? Upgrade.ById(id) : null;
                     if (baseLearn != null && upgrades.PressesOf(baseLearn, out float baseWindow) != null)

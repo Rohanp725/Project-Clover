@@ -388,5 +388,37 @@ namespace Clover.Tests
 
             Assert.AreEqual(GuardResult.NotGuarded, guard.Resolve(20f, true, Pool(100f), out _, true), "a red attack still lands");
         }
+
+        [Test]
+        public void OnTheWindCastsInMotionAndASpellCastInADodgeCarriesItFurther()
+        {
+            var book = new RuleBook();
+            Assert.IsTrue(book.Apply(Upgrade.ById(WindTree.OnTheWind)));
+            Assert.IsTrue(book.CastInMotion, "spells cast in a dodge or a swing, with no wind-up");
+            Assert.AreEqual(2f, book.DodgeCastCarry, 1e-5f, "two metres further");
+            Assert.IsFalse(book.IsStandard);
+            book.Reset();
+            Assert.IsFalse(book.CastInMotion);
+            Assert.IsTrue(book.IsStandard);
+            Assert.IsEmpty(Upgrade.ById(WindTree.OnTheWind).Stats, "the stand-in longer dodge is gone");
+
+            var plain = new DodgeRoll { Distance = 4f, Duration = 0.4f, StaminaCost = 0f };
+            var carried = new DodgeRoll { Distance = 4f, Duration = 0.4f, StaminaCost = 0f };
+            var stamina = new StaminaPool();
+            Assert.IsTrue(plain.TryStart(UnityEngine.Vector3.forward, stamina));
+            Assert.IsTrue(carried.TryStart(UnityEngine.Vector3.forward, stamina));
+            float a = plain.Tick(0.1f).z, b = carried.Tick(0.1f).z;
+            Assert.AreEqual(a, b, 1e-5f);
+            carried.Carry(2f);
+            for (int i = 0; i < 10; i++)
+            {
+                a += plain.Tick(0.1f).z;
+                b += carried.Tick(0.1f).z;
+            }
+            Assert.AreEqual(4f, a, 1e-3f, "the plain roll's own four metres");
+            Assert.AreEqual(6f, b, 1e-3f, "two metres further, paid over what was left of it");
+            carried.Carry(2f);
+            Assert.AreEqual(UnityEngine.Vector3.zero, carried.Tick(0.1f), "nothing once the roll is over");
+        }
     }
 }

@@ -127,11 +127,9 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Only while you carry Wind twice (all in). It is always on then.
 
-**The numbers.** 6 Shards. A spell cast during a dodge carries you 2 metres farther. Buying this also gives you the deep strike, Whirl Cut. Use it with L2 and R2 while you carry Wind alone or twice. The crescent becomes a small whirlwind that holds the first enemy it reaches in the air for a second.
+**The numbers.** 6 Shards. Your Wind spell (Gust) leaves your hand at once, with no wind-up. Every spell can be cast while you dodge or swing, and neither stops. A spell cast during a dodge carries you 2 metres farther along the dodge. Buying this also gives you the deep strike, Whirl Cut. Use it with L2 and R2 while you carry Wind alone or twice. The crescent becomes a small whirlwind that holds the first enemy it reaches in the air for a second.
 
 **Works with.** Every spell in the Wind tree; Passing Cut and Leaf on the Wind; the deep strike.
-
-**Not built yet.** Spells with no wind-up, cast during a dodge or a swing without stopping it, and the 2 metres added to a dodge you cast in. For now, every dodge carries you 30% farther.
 
 **Example.** Roll at a pack, cast Indrawn Breath during the roll, and come out of it with the pack piled up in front of you.
 

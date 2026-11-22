@@ -27,6 +27,12 @@ namespace Clover.Player.Growth
         public CooldownMode Cooldowns;
         /// <summary>Seconds after a perfect guard or a perfect dodge in which spells have no cooldown (In One Breath); zero for none.</summary>
         public float BreathAfterPerfect;
+        /// <summary>
+        /// Spells cast in motion (On the Wind): no wind-up, cast in the middle of a dodge or a swing without ending either, and a
+        /// spell cast in a dodge carries it <see cref="DodgeCastCarry"/> metres further along its way.
+        /// </summary>
+        public bool CastInMotion;
+        public float DodgeCastCarry;
         /// <summary>How many spell slots the Hand has (One Word: 1).</summary>
         public int SlotCount = StandardSlots;
         /// <summary>How many elements are carried (Three Bloods: 3).</summary>
@@ -72,6 +78,8 @@ namespace Clover.Player.Growth
         {
             Cooldowns = CooldownMode.Normal;
             BreathAfterPerfect = 0f;
+            CastInMotion = false;
+            DodgeCastCarry = 0f;
             SlotCount = StandardSlots;
             AttunementCount = StandardAttunements;
             Mana = ManaMode.Normal;
@@ -106,7 +114,7 @@ namespace Clover.Player.Growth
 
         /// <summary>True while every rule is the standard one.</summary>
         public bool IsStandard =>
-            Cooldowns == CooldownMode.Normal && BreathAfterPerfect <= 0f && SlotCount == StandardSlots && AttunementCount == StandardAttunements
+            Cooldowns == CooldownMode.Normal && BreathAfterPerfect <= 0f && !CastInMotion && SlotCount == StandardSlots && AttunementCount == StandardAttunements
             && Mana == ManaMode.Normal && Blade == BladeMode.Normal && Guard == GuardMode.Normal && Dodge == DodgeMode.Normal
             && PerfectGuardOpen && PerfectDodgeOpen && StaminaUsed && FlasksAllowed && Health == HealthMode.Bar
             && StaggerFrom == StaggerSource.Blows && !Afflictions.Any;
