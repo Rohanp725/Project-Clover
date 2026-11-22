@@ -69,16 +69,15 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.Foot));
 
-            // NEEDS: the one dodged apart from everything near (attacker-of-turned-blow); now everything within 2.5 m of you is
-            // Cursed and made two deeper Unsteady, at most once a second.
+            // The one dodged alone (the perfect dodge's own enemy, UpgradeEffect.NeedsAttacker), not everything near.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = IllOmen, Name = "Ill Omen", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Moon,
                 Description = "A perfect dodge Curses the one dodged and leaves it two deeper in Unsteady.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, At = EffectAt.Self, Cooldown = 1f, Do = UpgradeAction.Afflict, Radius = 2.5f, Affliction = AfflictionKind.Cursed, Stacks = 1 },
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, At = EffectAt.Self, Cooldown = 1f, Do = UpgradeAction.Afflict, Radius = 2.5f, Affliction = AfflictionKind.Unsteady, Stacks = 2 },
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, NeedsAttacker = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Cursed, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, NeedsAttacker = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Unsteady, Stacks = 2 },
                 },
             }, HeartPattern.LeftLow));
 

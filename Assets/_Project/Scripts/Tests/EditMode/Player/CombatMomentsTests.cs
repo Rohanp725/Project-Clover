@@ -236,6 +236,21 @@ namespace Clover.Tests
             Assert.AreEqual(1f, kettle.Amount, 1e-5f, "at full strength");
         }
 
+        [Test]
+        public void AnAnswerMeantForTheAttackerTakesOnlyIt()
+        {
+            object attacker = new object(), bystander = new object();
+            Assert.IsTrue(PlayerUpgrades.IsAttacker(attacker, attacker, 10f, 11f));
+            Assert.IsFalse(PlayerUpgrades.IsAttacker(bystander, attacker, 10f, 11f), "not one its answer merely struck");
+            Assert.IsFalse(PlayerUpgrades.IsAttacker(attacker, attacker, 10f, 13f), "too long after");
+            Assert.IsFalse(PlayerUpgrades.IsAttacker(attacker, null, 10f, 10f), "a bolt from afar has no attacker");
+            var chair = Upgrade.ById(SpellBranch.ShapeId(MetalTree.CircleOfSteel)).Shapes.First(shape => shape.Name == "The Golden Chair");
+            Assert.AreEqual(360f, chair.Spell.Arc, 1e-5f, "the cut all round kept");
+            Assert.IsTrue(chair.Effects.All(effect => effect.NeedsAttacker), "only the attacker bound");
+            Assert.IsTrue(Upgrade.ById(IllWindDuo.GustAtTheHeel).Effects.Single().NeedsAttacker);
+            Assert.IsTrue(Upgrade.ById(BreathTakenDuo.IllOmen).Effects.All(effect => effect.NeedsAttacker && effect.Radius == 0f));
+        }
+
         private sealed class Afflicted : IAfflictable
         {
             public Afflicted(AfflictionSet set) => Afflictions = set;

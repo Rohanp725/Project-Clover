@@ -33,13 +33,11 @@ are both carried.
 
 **When it happens.** Each perfect dodge, while you carry both Poison and Wind.
 
-**The numbers.** Mix, 3 Shards. Everything within 2.5 metres of you is thrown 3 metres, at most once every half second.
+**The numbers.** Mix, 3 Shards. The enemy whose blow you dodged is thrown 3 metres straight away from you, at most once every half second. The throw knocks its loose dust off, like any shove.
 
 **Works with.** Ill Wind, No Still Air, Spring Dust.
 
 **Example.** Dodge a poisoned brute's swing at the last moment, and it is blown away from you.
-
-**Not built yet.** For now, it throws everything near you, not only the attacker, and the throw doesn't knock the dust loose yet.
 
 ## illwind.finedust
 **What it does.** Ill Wind's trails last 2 seconds longer.

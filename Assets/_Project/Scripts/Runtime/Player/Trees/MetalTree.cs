@@ -226,16 +226,16 @@ namespace Clover.Player.Trees
                 // The roster's numbers alone (the owner's answer of 2026-11-20: an Empower may strengthen without a shorter wait).
                 new Empower { Damage = 16f },
                 "It turns two blows, and its answer strikes for 16.",
-                // NEEDS: the cut all round kept and only the attacker bound (attacker-of-turned-blow). Until then the answer is a
-                // cone at the one who struck, and what it strikes is bound; "passes any guard" is that it cannot raise one.
+                // The cut all round kept, and only the attacker bound (UpgradeEffect.NeedsAttacker: the one whose blow was turned);
+                // "passes any guard" is that it cannot raise one.
                 new ShapeDef { Name = "The Golden Chair", Form = SpellForms.Parry,
                     Description = "A blow turned closes bands of gold round the attacker, a faint shimmer that turns bright as they lock. It is held two seconds, less for a god or an elite, notched twice, and your blows on it pass any guard.",
-                    Spell = new SpellSpec { Seconds = 1.2f, Reach = 3f, Arc = 90f, Damage = 14f, Stagger = 20f, Stacks = 1 },
+                    Spell = new SpellSpec { Seconds = 1.2f, Reach = 3f, Arc = 360f, Damage = 14f, Stagger = 20f, Stacks = 1 },
                     Effects = new[]
                     {
-                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Hold, Seconds = 2f },
-                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Afflict, Affliction = S, Stacks = 1 },
-                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = GoldenChair, Seconds = 2f, Flags = ConditionFlags.CannotGuard } },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, NeedsAttacker = true, Do = UpgradeAction.Hold, Seconds = 2f },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, NeedsAttacker = true, Do = UpgradeAction.Afflict, Affliction = S, Stacks = 1 },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, NeedsAttacker = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = GoldenChair, Seconds = 2f, Flags = ConditionFlags.CannotGuard } },
                     } },
                 // NEEDS: every blow turned in 1.5 s ringing, four at most, each ring wider than the last (parry-count). Until then
                 // the first blow turned rings once.

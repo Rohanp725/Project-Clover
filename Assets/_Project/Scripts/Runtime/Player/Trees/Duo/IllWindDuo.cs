@@ -77,12 +77,12 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.LeftLow));
 
-            // NEEDS: the attacker of the dodged blow alone (attacker-of-turned-blow); now everything within 2.5 m of you is thrown.
+            // The attacker of the dodged blow alone is thrown (UpgradeEffect.NeedsAttacker), straight away from you.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = GustAtTheHeel, Name = "Gust at the Heel", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Boot,
                 Description = "A perfect dodge leaves a gust behind you that throws the attacker 3 m, so a poisoned attacker trails at once.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, At = EffectAt.Self, Do = UpgradeAction.Push, Radius = 2.5f, Amount = 3f, Cooldown = 0.5f } },
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, NeedsAttacker = true, Do = UpgradeAction.Push, Shape = HazardShape.Downwind, Amount = 3f, Cooldown = 0.5f } },
             }, HeartPattern.RightLow));
 
             // Changes its reaction's own numbers while it is in force (reaction-numbers, ReactionNumbers):

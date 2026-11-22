@@ -186,6 +186,23 @@ namespace Clover.Player
         public int Overflows { get; private set; }
         /// <summary>Reactions struck again by a mark (Strikes Twice, Spreading Water), counted for probes.</summary>
         public int Echoes { get; private set; }
+        // The enemy whose blow was last turned or dodged, and when: the one an answer meant only for it is done to.
+        private Component turnedBy;
+        private float turnedAt = -100f;
+        /// <summary>Seconds after a blow is turned or dodged in which its attacker is still "the one whose blow it was".</summary>
+        public const float AttackerWindow = 2f;
+
+        /// <summary>A blow was turned or dodged; <paramref name="attacker"/> dealt it (null when it is not known: a bolt from afar).</summary>
+        public void NoteTurned(Component attacker)
+        {
+            turnedBy = attacker;
+            turnedAt = Time.time;
+        }
+
+        /// <summary>True when <paramref name="target"/> is the one whose blow was turned or dodged at <paramref name="at"/>, still within the window.</summary>
+        public static bool IsAttacker(object target, object turned, float at, float now) =>
+            target != null && turned != null && ReferenceEquals(target, turned) && now - at <= AttackerWindow;
+
         /// <summary>Movement spells started as a blow would land, counted as perfect dodges, for probes.</summary>
         public int MovementDodges { get; private set; }
         /// <summary>Conditions ended on demand (Cold Snap), counted for probes.</summary>
@@ -1345,6 +1362,7 @@ namespace Clover.Player
             if (effect.NeedsWindup > 0f && !InWindup(target as IAfflictable, effect.NeedsWindup)) return;
             // Only for a cast timed to the poison's beat (Miasma's, One by One's and Share Alike's Masters).
             if (effect.OnCastBeat && !castOnBeat) return;
+            if (effect.NeedsAttacker && !IsAttacker(target, turnedBy != null ? turnedBy : null, turnedAt, Time.time)) return;
             // Only as an enemy's blow is about to land (the shared movement rule's timing).
             if (effect.BlowLanding > 0f && (combat == null || combat.BlowAboutToLand(effect.BlowLanding, out _) == null)) return;
             // Only in the moment after a red attack was turned (Mountain Stance's, Circle of Steel's and Gone to Ash's Masters).
@@ -2692,6 +2710,7 @@ namespace Clover.Player
                 Vfx.Play(VfxKind.Shock, transform.position + Vector3.up * 1.2f, Vector3.up, 0.8f);
             }
             var struckBy = combat.EnemyAt(attacker, 2.5f);
+            NoteTurned(struckBy);
             // Twin Break: Burn and Static on the one who struck are spent together, before anything sets either off alone.
             if (struckBy is IAfflictable both && both.Afflictions.Has(AfflictionKind.Burn) && both.Afflictions.Has(AfflictionKind.Static) && Has(Trees.PlasmaTree.TwinBreak))
                 TwinBreak(struckBy, both.Afflictions);
@@ -2932,6 +2951,7 @@ namespace Clover.Player
         {
             // The attacker is the target, as with a perfect guard; a thrown bolt leaves only the place it came from.
             var dodged = combat != null ? combat.EnemyAt(attacker, 2.5f) : null;
+            NoteTurned(dodged);
             if (dodged != null) Trigger(UpgradeTrigger.PerfectDodge, dodged, attacker);
             else Trigger(UpgradeTrigger.PerfectDodge, null, transform.position, false);
             if (!hasAfterimage) return;

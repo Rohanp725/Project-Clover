@@ -244,6 +244,11 @@ namespace Clover.Player
         public float BlowLanding;
         /// <summary>For a spell's moments: only when the cast was timed to the poison's beat, within 0.2 s of a bite on any enemy within 8 m (the ledger's cast-on-beat).</summary>
         public bool OnCastBeat;
+        /// <summary>
+        /// Only on the enemy whose blow was just turned or dodged (a counter's guard, a perfect guard or a perfect dodge), not
+        /// on all its answer strikes (the ledger's attacker-of-turned-blow: The Golden Chair, Gust at the Heel, Ill Omen).
+        /// </summary>
+        public bool NeedsAttacker;
 
         /// <summary>A copy with every number, its slot and its mark (an Empower's twin of its Learn's effect).</summary>
         internal UpgradeEffect Twin() => (UpgradeEffect)MemberwiseClone();

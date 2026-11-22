@@ -429,6 +429,8 @@ namespace Clover.Player
                 // A red attack turned: the counters' Masters answer only that (the ledger's red-attack).
                 if (hit.Unblockable && upgrades != null) upgrades.RedTurned();
                 player.FormParriedFrom = hit.HasOrigin ? hit.Origin : transform.position - hit.Direction;
+                // Whose blow it was, for an answer meant only for the attacker (The Golden Chair).
+                if (upgrades != null && combat != null) upgrades.NoteTurned(combat.EnemyAt(player.FormParriedFrom, 2.5f));
                 PerfectGuards++;
                 Vfx.Play(VfxKind.PerfectGuard, GuardPoint(), transform.forward);
                 Vfx.Play(VfxKind.Impact, GuardPoint());

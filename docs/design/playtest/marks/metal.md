@@ -186,11 +186,11 @@ the steel you throw and plant: Flung Blade, the blades of Grave of Swords.
 
 **When it happens.** Whenever you cast Circle of Steel, using the shape you picked. If you have not bought this, you cast the plain circle.
 
-**The numbers.** 3 Shards. The Golden Chair: the answer is a cut 3 metres long and 90 degrees wide at the enemy that hit you, for 14 damage, 20 stagger and a notch. Whatever it hits is held for 2 seconds (a god or an elite for 0.4 of that), gets one more notch, and can't raise its guard for 2 seconds. Ringing Plate: ready for 1.5 seconds. The blocked blow rings out 4 metres all around, for 8 damage, 20 stagger and a notch.
+**The numbers.** 3 Shards. The Golden Chair: the answer is a cut all around you, 3 metres, for 14 damage, 20 stagger and a notch to everything it hits. Only the enemy whose blow you blocked is bound: it is held for 2 seconds (a god or an elite for 0.4 of that), gets one more notch, and can't raise its guard for 2 seconds. Ringing Plate: ready for 1.5 seconds. The blocked blow rings out 4 metres all around, for 8 damage, 20 stagger and a notch.
 
 **Works with.** The Golden Chair: Open Line, Poured Bronze (two notches and a held enemy), Counter Cut. Ringing Plate: being surrounded, Every Crack Rings.
 
-**Not built yet.** The Golden Chair's bands should go on the attacker alone, while keeping the cut all around (for now, the answer is a cone at the attacker, and everything the cone hits is bound). Ringing Plate should ring for every blow it blocks in its 1.5 seconds, up to four, each ring wider (for now, the first blocked blow rings once).
+**Not built yet.** Ringing Plate should ring for every blow it blocks in its 1.5 seconds, up to four, each ring wider (for now, the first blocked blow rings once).
 
 **Example.** Use The Golden Chair on a shield bearer's charge. It stands trapped in gold with its shield down while you cut.
 

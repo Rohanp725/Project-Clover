@@ -22,13 +22,11 @@ both carried.
 
 **When it happens.** Each perfect dodge, while you carry both Dark and Wind.
 
-**The numbers.** Mix, 3 Shards. A Curse and two stacks of Unsteady, at most once a second.
+**The numbers.** Mix, 3 Shards. A Curse and two stacks of Unsteady on the enemy you dodged, and on no one else.
 
 **Works with.** Breath Taken (one perfect dodge adds both afflictions), Short of Breath, Blown Through.
 
 **Example.** Slip past the swing at the last moment, and the enemy's breath is taken.
-
-**Not built yet.** For now, it hits every enemy within 2.5 metres of you, not only the one you dodged.
 
 ## breathtaken.short
 **What it does.** Your heavy blows on a winded enemy hit 50% harder. Each one also takes 1 second off the wait on every spell that is waiting to be cast again.
