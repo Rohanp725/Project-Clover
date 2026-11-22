@@ -66,6 +66,52 @@ namespace Clover.Core
         /// </summary>
         public static Color Glow(Color tint, float brightness) => Lit(tint, brightness, 1f, brightness * 0.45f);
 
+        /// <summary>
+        /// The most a spark's palest channel may be, as a share of its strongest. The glow shader lights a spark's hot
+        /// core to 3.2 times the hue it is thrown in, so a pale hue (Ice's, Light's, Earth's tan, a plain white) burned a
+        /// pure-white star at every arrow, shatter and crackle however low it was thrown (the bow's films of 2026-11-22).
+        /// </summary>
+        public const float SparkPalestShare = 0.2f;
+
+        /// <summary>The colour of a core under the glow shader for a particle thrown in <paramref name="tint"/> (as clover_glow.shader works it out).</summary>
+        public static Color CoreOf(Color tint)
+        {
+            float peak = Mathf.Max(Peak(tint), 0.001f);
+            float scale = 3.2f / peak * Mathf.Clamp01(peak * 4f);
+            return new Color(tint.r * scale, tint.g * scale, tint.b * scale, 1f);
+        }
+
+        /// <summary>
+        /// A colour to throw a spark, a crackle or a bolt in (an effect whose material is lit past white and whose core
+        /// is the hue at 3.2): the tint's hue made deep enough that its palest channel is at most
+        /// <see cref="SparkPalestShare"/> of its strongest, lit to <paramref name="brightness"/> at its strongest. Ice
+        /// comes out a deep cyan, Light a gold, white a grey that is never white.
+        /// </summary>
+        public static Color Spark(Color tint, float brightness)
+        {
+            float peak = Peak(tint);
+            if (peak <= 1e-4f) return new Color(0f, 0f, 0f, 1f);
+            float r = tint.r / peak, g = tint.g / peak, b = tint.b / peak;
+            float palest = Mathf.Min(r, Mathf.Min(g, b));
+            if (palest > 0.999f)
+            {
+                // White or grey has no hue to deepen: a warm steel gold, as an untinted blow's flash.
+                r = 1f;
+                g = 0.6f;
+                b = SparkPalestShare;
+            }
+            else if (palest > SparkPalestShare)
+            {
+                // Each channel's distance below the strongest is stretched so the palest lands on the share: the hue
+                // keeps its order and its lean, and only loses its paleness.
+                float stretch = (1f - SparkPalestShare) / (1f - palest);
+                r = 1f - (1f - r) * stretch;
+                g = 1f - (1f - g) * stretch;
+                b = 1f - (1f - b) * stretch;
+            }
+            return new Color(r * brightness, g * brightness, b * brightness, 1f);
+        }
+
         /// <summary>The ink under the cut streak: unchanged for a plain blow, as faint as the stroke under an element.</summary>
         public static Color Ink(Color plain, Color tint) => Tinted(tint) ? new Color(plain.r, plain.g, plain.b, plain.a * TintStrength) : plain;
     }

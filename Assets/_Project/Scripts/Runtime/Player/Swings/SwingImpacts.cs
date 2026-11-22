@@ -25,6 +25,9 @@ namespace Clover.Player.Swings
         /// </summary>
         public const float GlintGlow = 0.17f, ShockGlow = 0.3f;
 
+        /// <summary>The ice that bursts from the ground and splinters off a blow: a clear blue whose red stays low, so a lit face is never white.</summary>
+        public static readonly Color IceCrystal = new Color(0.42f, 0.7f, 0.92f, 1f);
+
         private static Color ColourOf(int element)
         {
             var all = Elements.All;
@@ -63,7 +66,7 @@ namespace Clover.Player.Swings
                 case ElementSubstance.Lightning:
                     // The crack where it struck and its crackle in the bolt's violet-blue, not a white starburst (2026-11-20).
                     FormFx.Lay(FormMark.Crack, feet, 1.5f * weight, FormKit.Lit(colour, 1.6f), 0.4f, 1.8f * weight, 0f, Random.value * 360f);
-                    Vfx.Play(VfxKind.Shock, at, flat, 0.9f * weight, StruckLook.Glow(colour, ShockGlow));
+                    Vfx.Play(VfxKind.Shock, at, flat, 0.9f * weight, StruckLook.Spark(colour, ShockGlow));
                     break;
                 case ElementSubstance.Wind:
                     FormFx.Fly(FormMesh.Gust, at, at + flat * (2.4f * weight) + Vector3.up * 0.3f, Quaternion.LookRotation(flat), new Vector3(1.4f, 1.4f, 1.8f) * weight, ElementSubstance.Pale(colour), 0.35f);
@@ -72,13 +75,15 @@ namespace Clover.Player.Swings
                 case ElementSubstance.Ice:
                 {
                     // Frost bursts out of the ground about it, thick at the foot, and splinters fly and fall.
-                    Color pale = ElementSubstance.Pale(colour);
+                    // Clear ice blue, not the element's pale: lit by the sun, the pale crystals' faces burned white (2026-11-22).
+                    Color pale = IceCrystal;
                     for (int i = 0; i < 3; i++)
                     {
                         Vector3 spot = feet + Outward(i, 3, flat, 0.3f) * 0.45f;
                         FormFx.Erupt(FormMesh.Crystal, spot, Quaternion.Euler(0f, Random.value * 360f, 0f), new Vector3(0.45f, 0.7f + 0.2f * Random.value, 0.45f) * weight, pale, 0.06f, 0.35f, 0.25f);
                     }
-                    Vfx.Play(VfxKind.TintSpark, at, flat, 1.4f * weight, pale);
+                    // The splinters' glint in a deep ice cyan: the pale lit a white star at every blow (2026-11-22).
+                    Vfx.Play(VfxKind.TintSpark, at, flat, 1.4f * weight, StruckLook.Spark(colour, PlayerCombat.ImpactGlow));
                     for (int i = 0; i < 4; i++) Shard(at, Outward(i, 4, flat, 0.6f), ground, pale);
                     break;
                 }
@@ -143,7 +148,7 @@ namespace Clover.Player.Swings
                     break;
                 case ElementSubstance.Ice:
                     for (int i = 0; i < ring; i++)
-                        FormFx.Erupt(FormMesh.Crystal, feet + Outward(i, ring, flat, 0f) * (radius * 0.55f), Quaternion.Euler(0f, Random.value * 360f, 0f), new Vector3(0.6f, 0.9f + 0.4f * Random.value, 0.6f) * weight, ElementSubstance.Pale(colour), 0.07f, 0.6f, 0.3f);
+                        FormFx.Erupt(FormMesh.Crystal, feet + Outward(i, ring, flat, 0f) * (radius * 0.55f), Quaternion.Euler(0f, Random.value * 360f, 0f), new Vector3(0.6f, 0.9f + 0.4f * Random.value, 0.6f) * weight, IceCrystal, 0.07f, 0.6f, 0.3f);
                     break;
                 case ElementSubstance.Water:
                     // No ring of light round the slam (the owner: no rings or circles, 2026-11-20): the water thrown out alone.
@@ -160,11 +165,11 @@ namespace Clover.Player.Swings
                     break;
                 case ElementSubstance.Metal:
                     Vfx.Play(VfxKind.Glint, feet + Vector3.up * 0.2f, Vector3.up, 1f, StruckLook.Glow(colour, GlintGlow));
-                    for (int i = 0; i < 4; i++) Vfx.Play(VfxKind.TintSpark, feet + Outward(i, 4, flat, 0f) * 0.4f + Vector3.up * 0.1f, Outward(i, 4, flat, 0f), 0.5f, StruckLook.Glow(colour, 0.8f));
+                    for (int i = 0; i < 4; i++) Vfx.Play(VfxKind.TintSpark, feet + Outward(i, 4, flat, 0f) * 0.4f + Vector3.up * 0.1f, Outward(i, 4, flat, 0f), 0.5f, StruckLook.Spark(colour, 0.3f));
                     break;
                 case ElementSubstance.Light:
                     // Gold flecks thrown up off the slam, cooling to burnt gold: no ring and no white-hot star (2026-11-20).
-                    Vfx.Play(VfxKind.TintSpark, feet + Vector3.up * 0.3f, Vector3.up, 1.2f * weight, Gilt);
+                    Vfx.Play(VfxKind.TintSpark, feet + Vector3.up * 0.3f, Vector3.up, 1.2f * weight, StruckLook.Spark(Gilt, 0.3f));
                     FormFx.Lay(FormMark.Scorch, feet, radius * 0.9f, FormKit.Stain(new Color(0.42f, 0.2f, 0.02f), 0.6f), 1.2f);
                     break;
                 case ElementSubstance.Dark:
@@ -189,7 +194,8 @@ namespace Clover.Player.Swings
                     Vfx.Play(VfxKind.Embers, tip, Vector3.up, 0.35f * weight);
                     break;
                 case SwingShed.Crackle:
-                    Vfx.Play(VfxKind.Shock, tip, way, 0.3f * weight);
+                    // A cyan-violet crackle, never a plain white one (its cores burned white, 2026-11-22).
+                    Vfx.Play(VfxKind.Shock, tip, way, 0.3f * weight, StruckLook.Spark(colour, ShockGlow));
                     break;
                 case SwingShed.FrostBreath:
                     // Cold breath in the elements 3 frost mist's blue: the pale of ice lit to a white dot on film (2026-11-20).

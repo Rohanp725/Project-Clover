@@ -93,6 +93,12 @@ namespace Clover.Gameplay
         /// <summary>The flash a landed blow gives the body: white for a plain one, the element's colour softened under one (<see cref="StruckLook"/>).</summary>
         public static Color FlashColour(Color tint) => StruckLook.Flash(StruckFlash, tint);
 
+        /// <summary>
+        /// What the lightning leaving a body is thrown in (the crackle as it falls, the bolt and wisps as it burns away):
+        /// a deep cyan held low. Plain, the bolt's and the sparks' cores burned pure white (the films of 2026-11-22).
+        /// </summary>
+        public static readonly Color SpiritSpark = StruckLook.Spark(new Color(0.45f, 0.78f, 1f, 1f), 0.25f);
+
         /// <summary>The hue a blow that carries no tint at all flashes the body in: a warm steel, softened like any tint.</summary>
         public static readonly Color UntintedFlashTint = new Color(0.95f, 0.82f, 0.62f, 1f);
 
@@ -683,9 +689,12 @@ namespace Clover.Gameplay
             {
                 detonated += Afflictions.Shatter();
                 CombatEvents.RaiseShattered(this);
-                Vfx.Play(VfxKind.Burst, transform.position + Vector3.up * 1.2f, Vector3.up, 1f, StruckLook.Glow(Gameplay.Afflictions.Spec(AfflictionKind.Chill).Colour, 0.22f));
-                Vfx.Play(VfxKind.TintSpark, transform.position + Vector3.up * 1.2f, Vector3.up, 2.5f, Gameplay.Afflictions.Spec(AfflictionKind.Chill).Colour);
-                Vfx.Play(VfxKind.TintRing, transform.position + Vector3.up * 0.3f, Vector3.up, 1f, Gameplay.Afflictions.Spec(AfflictionKind.Chill).Colour);
+                // Ice's deep cyan held low: thrown in the pale chill colour the burst, its sparks and its ring burned a
+                // pure-white star round the body (the bow's Ice film of 2026-11-22).
+                Color chill = Gameplay.Afflictions.Spec(AfflictionKind.Chill).Colour;
+                Vfx.Play(VfxKind.Burst, transform.position + Vector3.up * 1.2f, Vector3.up, 1f, StruckLook.Spark(chill, 0.22f));
+                Vfx.Play(VfxKind.TintSpark, transform.position + Vector3.up * 1.2f, Vector3.up, 2.5f, StruckLook.Spark(chill, 0.22f));
+                Vfx.Play(VfxKind.TintRing, transform.position + Vector3.up * 0.3f, Vector3.up, 1f, StruckLook.Glow(chill, 0.18f));
             }
             // Read before this blow lays anything of its own: the blow is judged against what was already there.
             float takes = Afflictions.DamageTakenMultiplier(hit.Spell, hit.Heavy) * harder;
@@ -784,7 +793,7 @@ namespace Clover.Gameplay
                 Vfx.Play(VfxKind.Embers, transform.position + Vector3.up * 1.2f, Vector3.up, 1.5f);
                 Vfx.Play(VfxKind.Dust, transform.position, Vector3.up);
             }
-            else Vfx.Play(VfxKind.Shock, transform.position + Vector3.up, Vector3.up, 1.5f);
+            else Vfx.Play(VfxKind.Shock, transform.position + Vector3.up, Vector3.up, 1.5f, SpiritSpark);
             // The body no longer stands in anyone's way.
             SetPassing(false);
             body.enabled = false;
@@ -1260,7 +1269,7 @@ namespace Clover.Gameplay
                 else if (attack.Ranged) LightningBolts.Strike(centre, 0.5f);
                 else
                 {
-                    Vfx.Play(VfxKind.Shock, centre + Vector3.up, Vector3.up, 2.5f);
+                    Vfx.Play(VfxKind.Shock, centre + Vector3.up, Vector3.up, 2.5f, SpiritSpark);
                     Vfx.Play(VfxKind.Ring, centre + Vector3.up * 0.3f, Vector3.up);
                 }
                 Vector3 offset = target.position - centre;
@@ -1591,8 +1600,8 @@ namespace Clover.Gameplay
                 }
                 else
                 {
-                    Vfx.Play(VfxKind.Bolt, lying + Vector3.up * 0.2f);
-                    Vfx.Play(VfxKind.Wisp, lying + Vector3.up * 0.5f);
+                    Vfx.Play(VfxKind.Bolt, lying + Vector3.up * 0.2f, Vector3.up, 1f, SpiritSpark);
+                    Vfx.Play(VfxKind.Wisp, lying + Vector3.up * 0.5f, Vector3.up, 1f, SpiritSpark);
                 }
                 foreach (var bodyRenderer in bodyRenderers)
                 {

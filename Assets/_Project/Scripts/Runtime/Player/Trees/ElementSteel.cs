@@ -62,8 +62,9 @@ namespace Clover.Player
             {
                 CombatEvents.RaiseShattered(body);
                 var colour = Afflictions.Spec(AfflictionKind.Chill).Colour;
-                Vfx.Play(VfxKind.Burst, body.transform.position + Vector3.up * 1.2f);
-                Vfx.Play(VfxKind.TintSpark, body.transform.position + Vector3.up * 1.2f, Vector3.up, 2.5f, colour);
+                // Ice's deep cyan held low, never the pale chill colour or a plain burst, which burned white.
+                Vfx.Play(VfxKind.Burst, body.transform.position + Vector3.up * 1.2f, Vector3.up, 1f, StruckLook.Spark(colour, 0.22f));
+                Vfx.Play(VfxKind.TintSpark, body.transform.position + Vector3.up * 1.2f, Vector3.up, 2.5f, StruckLook.Spark(colour, 0.22f));
             }
             return broke;
         }

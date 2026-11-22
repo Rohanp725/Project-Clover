@@ -9,7 +9,7 @@ Shader "Clover/Spell"
     Properties
     {
         [HDR] _Color ("Colour", Color) = (1, 1, 1, 1)
-        _Hot ("Heat (0 = its colour, 1 = white)", Range(0, 1)) = 0
+        _Hot ("Heat (0 = its colour, 1 = its hue lit hot, never white)", Range(0, 1)) = 0
         _OutlineWidth ("Ink width (metres)", Float) = 0.035
         _OutlineColor ("Ink colour", Color) = (0.035, 0.02, 0.07, 1)
         _Sheen ("White on faces turned to the light", Range(0, 1)) = 0.42
@@ -123,7 +123,13 @@ Shader "Clover/Spell"
                 }
                 half3 foam = lit > -0.05 ? half3(0.96, 0.98, 1.0) : half3(0.6, 0.76, 0.92);
                 shown = input.paint.a < 0.5 ? foam : shown;
-                shown = lerp(shown, half3(2.3, 2.3, 2.3), _Hot);
+                // The landing frame is the shape's own hue lit hot, its palest channel held low: lit to plain white it
+                // burned pure-white crystals round every Ice blow (the swing films of 2026-11-22; nothing pure white).
+                half hotPeak = max(max(shown.r, shown.g), max(shown.b, 0.001));
+                half3 hotHue = shown / hotPeak;
+                half hotPalest = min(min(hotHue.r, hotHue.g), hotHue.b);
+                hotHue = hotPalest > 0.999 ? half3(1.0, 0.72, 0.4) : hotPalest > 0.45 ? 1.0 - (1.0 - hotHue) * (0.55 / (1.0 - hotPalest)) : hotHue;
+                shown = lerp(shown, hotHue * 1.25, _Hot);
                 return half4(shown, 1);
             }
             ENDHLSL
@@ -189,8 +195,8 @@ Shader "Clover/Spell"
             {
                 clip(Stipple(input.positionCS.xy) - _Thin);
                 if (_DrawHead < 0.999 || _DrawTail > 0.001) clip(min(_DrawHead - input.along, input.along - _DrawTail));
-                // At full heat the whole shape is one white frame, line and all.
-                return half4(lerp(_OutlineColor.rgb, half3(2.3, 2.3, 2.3), step(0.95, _Hot)), 1);
+                // At full heat the line keeps its ink: a white line burned pure white round the hot frame (2026-11-22).
+                return half4(_OutlineColor.rgb, 1);
             }
             ENDHLSL
         }

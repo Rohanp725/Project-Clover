@@ -1015,8 +1015,11 @@ namespace Clover.Player
             while (step.Beats != null && beatsDone < step.Beats.Length && at >= step.Beats[beatsDone].Time)
             {
                 var beat = step.Beats[beatsDone++];
-                Vfx.Play(beat.Effect, where, transform.forward);
-                if (Weapon.ElementColoured) Vfx.Play(VfxKind.TintSpark, where, transform.forward, 0.6f, EffectColour);
+                // The beat's sparks in the blow's own hue held low: plain, their cores lit a white star at the bow as its
+                // shot was staged (the bow's films of 2026-11-22). Dust stays dust.
+                if (beat.Effect == VfxKind.Dust) Vfx.Play(beat.Effect, where, transform.forward);
+                else Vfx.Play(beat.Effect, where, transform.forward, 1f, StruckLook.Spark(BlowTint, ImpactGlow));
+                if (Weapon.ElementColoured) Vfx.Play(VfxKind.TintSpark, where, transform.forward, 0.6f, StruckLook.Spark(EffectColour, ImpactGlow));
                 if (hitStop != null && beat.HitStopSeconds > 0f) hitStop.Freeze(beat.HitStopSeconds);
                 if (shaker != null && beat.Shake > 0f) shaker.Shake(beat.Shake, 0.1f);
                 if (beat.DashBeyond > 0f)

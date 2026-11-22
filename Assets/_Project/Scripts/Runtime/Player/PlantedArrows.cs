@@ -207,12 +207,15 @@ namespace Clover.Player
             }
         }
 
+        // With no combat to ask, a warm bowstring tan.
+        private static readonly Color PlainSpark = new Color(1f, 0.78f, 0.45f, 1f);
+
         private SpellBlow Blow(float damage, float stagger, bool laysElement)
         {
             var held = laysElement && element != null ? element.Info : null;
             return new SpellBlow
             {
-                Damage = damage, Stagger = stagger, Effect = VfxKind.TintSpark, Tinted = true, Tint = combat != null ? combat.EffectColour : Color.white,
+                Damage = damage, Stagger = stagger, Effect = VfxKind.TintSpark, Tinted = true, Tint = StruckLook.Spark(combat != null ? combat.EffectColour : PlainSpark, PlayerCombat.ImpactGlow),
                 Affliction = held != null ? held.Affliction : AfflictionKind.None, Stacks = held != null && held.Affliction != AfflictionKind.None ? 1 : 0,
             };
         }
@@ -255,7 +258,8 @@ namespace Clover.Player
                         End(i);
                         Snapped++;
                         combat.StrikeOne(host, Blow(SnapDamage, SnapStagger, true), transform.position);
-                        Vfx.Play(VfxKind.TintSpark, at, Vector3.up, 1.3f, Color.white);
+                        // The snap in the weapon's or the element's hue, never a white star (the bow's films of 2026-11-22).
+                        Vfx.Play(VfxKind.TintSpark, at, Vector3.up, 1.3f, StruckLook.Spark(combat != null ? combat.BlowTint : PlainSpark, PlayerCombat.ImpactGlow));
                         continue;
                     }
                 }

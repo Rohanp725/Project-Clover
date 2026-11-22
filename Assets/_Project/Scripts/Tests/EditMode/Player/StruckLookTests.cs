@@ -150,6 +150,47 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void NoSparkIsLitToWhite()
+        {
+            // The bow's arrow star, Ice's shatter, Lightning's crackle and the burn-away bolt were thrown in pale or plain
+            // colours under materials lit past white, and their cores (3.2 times the hue) burned pure white. A spark's
+            // colour keeps one channel low in its core and in what the brightest spark material (Burst, 6) makes of it.
+            var colours = new System.Collections.Generic.List<(string, Color)> { ("white", Color.white), ("the chill", Clover.Gameplay.Afflictions.Spec(AfflictionKind.Chill).Colour) };
+            foreach (var info in Elements.All) colours.Add((info.Name, info.Colour));
+            foreach (var look in SwingLooks.All) colours.Add((look.Name + "'s trail", look.Tint));
+            foreach (var weapon in new[] { Weapons.GreatBow(), Weapons.Katana(), Weapons.MassiveSword(), Weapons.Fists() }) colours.Add((weapon.Name, PlayerCombat.CutTintOf(weapon, null)));
+            foreach (var (what, colour) in colours)
+                foreach (float brightness in new[] { PlayerCombat.ImpactGlow, 0.25f, 0.3f })
+                {
+                    Color spark = StruckLook.Spark(colour, brightness);
+                    Assert.AreEqual(brightness, Peak(spark), 1e-4f, what + ": lit to the brightness asked");
+                    Assert.LessOrEqual(Palest(StruckLook.CoreOf(spark)), 0.7f, what + "'s spark core is lit to white");
+                    Assert.LessOrEqual(Palest(spark) * 6f, 0.5f, what + "'s spark is lit to white by its material");
+                }
+            Assert.LessOrEqual(Palest(StruckLook.CoreOf(Enemy.SpiritSpark)), 0.7f, "the burn-away bolt's core is lit to white");
+            // The ice crystals a blow throws up are lit by the sun: their palest channel stays low enough that a lit face keeps its blue.
+            Assert.LessOrEqual(Palest(Clover.Player.Swings.SwingImpacts.IceCrystal), 0.5f, "the ice crystals are pale enough to burn white");
+            // The spark keeps the hue's lean: Ice stays blue over red, Light gold over blue.
+            Color ice = StruckLook.Spark(Clover.Gameplay.Afflictions.Spec(AfflictionKind.Chill).Colour, 0.22f);
+            Assert.Greater(ice.b, ice.r, "Ice's spark is blue");
+            Color light = StruckLook.Spark(Elements.ByName(Elements.Light).Colour, 0.22f);
+            Assert.Greater(light.r, light.b, "Light's spark is gold");
+        }
+
+        [Test]
+        public void TheBowsSparksTheShatterTheCrackleAndTheBurnAwayAreNeverThrownPlain()
+        {
+            // The sources the films of 2026-11-22 caught throwing white: each now names a Spark colour.
+            var plain = new System.Text.RegularExpressions.Regex(@"Vfx\.Play\(VfxKind\.(Shock|Bolt|Wisp|TintSpark)\b[^;]*;");
+            foreach (var file in new[] { "Gameplay/Enemy.cs", "Player/PlantedArrows.cs", "Player/WeaponShots.cs", "Player/Trees/ElementSteel.cs", "Player/Swings/SwingImpacts.cs" })
+            {
+                string text = System.IO.File.ReadAllText("Assets/_Project/Scripts/Runtime/" + file);
+                foreach (System.Text.RegularExpressions.Match call in plain.Matches(text))
+                    Assert.That((call.Value.Contains("StruckLook.Spark(") || call.Value.Contains("SpiritSpark")) && !call.Value.Contains("Color.white"), file + " throws a spark not held below white: " + call.Value);
+            }
+        }
+
+        [Test]
         public void EveryBlowThePlayerMakesIsGivenATint()
         {
             // Each Hit the player's code builds names its tint, so no new path lands untinted and falls to the backstop
