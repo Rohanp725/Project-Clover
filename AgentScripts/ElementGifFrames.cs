@@ -64,7 +64,7 @@ public class ElementGifFramesRunner : MonoBehaviour
     private const int Rate = 20, Before = 3, After = 8, MostFrames = 400, Width = 960, Height = 540;
     private const float SurgeSeconds = 4f, AfflictionSeconds = 3f;
     private const string Root = "review/gifs/elements/frames/";
-    private static readonly string[] Moments = { "affliction", "spell", "hit", "charged", "infused", "surge" };
+    private static readonly string[] Moments = { "affliction", "spell", "hit", "charged", "infused", "surge", "surgemove" };
     // Seconds from the cast to the spell's strongest moment, by the element's place on the ring (from FxProbe).
     private static readonly float[] SpellPeak = { 0.5f, 0.2f, 0.42f, 0.62f, 0.72f, 1.0f, 0.95f, 0.34f, 0.26f, 0.5f, 1.3f };
 
@@ -324,11 +324,14 @@ public class ElementGifFramesRunner : MonoBehaviour
         int guard = 0;
         while (ReadingBox.Instance != null && ReadingBox.Instance.IsOpen && guard++ < 40) yield return Tap(Key.E);
         guard = 0;
-        while (GuidePage.Showing && guard++ < 40) yield return Tap(Key.E);
-        // A guide opened as a list (the playtest's guide since Phase 4b) turns its pages on E and never closes on it:
-        // the back key closes it, and failing that it is closed outright, so time is never left stopped.
-        if (GuidePage.Showing) yield return Tap(Key.Space);
+        // The guide closed with Escape (the rule for every probe and film), then time shown to run.
+        while (GuidePage.Showing && guard++ < 20) yield return Tap(Key.Escape);
         if (GuidePage.Showing) GuidePage.Instance.Close();
+        int frameWas = Time.frameCount;
+        float timeWas = Time.time;
+        float wait = Time.unscaledTime + 0.4f;
+        while (Time.unscaledTime < wait) yield return null;
+        Debug.Log($"[Probe] guide {(GuidePage.Showing ? "STILL OPEN" : "closed")} after {guard} Escape; time runs: {Time.time > timeWas} ({Time.frameCount - frameWas} frames)");
         if (Time.timeScale <= 0f) Debug.Log("[Probe] WRONG: time still stopped after the guide");
 
         // The owner's switch on the new effects.
@@ -486,7 +489,7 @@ public class ElementGifFramesRunner : MonoBehaviour
             // Turned away from the enemy, far behind, so no blow can find it.
             case "charged": stand = Middle + Vector3.left * 8f; about = stand + Vector3.left * 1.2f + chest; facing = Vector3.left; break;
             // The surge spreads on the floor round the feet, so the window is about them.
-            case "surge": stand = Middle + Vector3.left * 3f; about = Middle + Vector3.left * 2.4f + Vector3.up * 0.4f; break;
+            case "surge": case "surgemove": stand = Middle + Vector3.left * 3f; about = Middle + Vector3.left * 2.4f + Vector3.up * 0.4f; break;
             case "spell": stand = Middle + Vector3.left * 3f; about = Middle + Vector3.left * 0.6f + chest; break;
             default: stand = Middle + Vector3.left * 3f; about = Middle + Vector3.right * 0.3f + Vector3.up * 1.2f; break;
         }
@@ -497,7 +500,7 @@ public class ElementGifFramesRunner : MonoBehaviour
         yield return Ready(stand, facing);
         clip.CleanBefore = !Busy();
         if (!clip.CleanBefore) clip.Dirty = Why();
-        if (moment == "infused" || moment == "spell" || moment == "surge")
+        if (moment == "infused" || moment == "spell" || moment.StartsWith("surge"))
         {
             spells.Cooldowns.ResetAll();
             combat.Mana.Gain(100f);
@@ -506,7 +509,7 @@ public class ElementGifFramesRunner : MonoBehaviour
         float windowWas = spells.ChargeWindow;
         if (moment == "spell") spells.ChargeWindow = -1f;
         float surgeWas = element.SurgeKit != null ? element.SurgeKit.SurgeSeconds : 0f;
-        if (moment == "surge" && element.SurgeKit != null) element.SurgeKit.SurgeSeconds = SurgeSeconds;
+        if (moment.StartsWith("surge") && element.SurgeKit != null) element.SurgeKit.SurgeSeconds = SurgeSeconds;
 
         // The camera holds on where the player stood, so a lunge does not move the floor and the GIF loops on the same
         // ground; it still shakes and closes in as the game makes it.
@@ -515,7 +518,7 @@ public class ElementGifFramesRunner : MonoBehaviour
             anchor.position = player.transform.position;
             view.Configure(anchor);
         }
-        window = WindowAbout(about, moment == "infused" || moment == "spell" || moment == "surge" || moment == "affliction" ? 1.25f : 1f);
+        window = WindowAbout(about, moment == "infused" || moment == "spell" || moment.StartsWith("surge") || moment == "affliction" ? 1.25f : 1f);
         Time.captureFramerate = Rate;
         frame = 0;
         filming = true;
@@ -604,6 +607,31 @@ public class ElementGifFramesRunner : MonoBehaviour
                 clip.SetOff = element.SurgeActive;
                 clip.Peak = clip.Start + 22;
                 break;
+            case "surgemove":
+            {
+                // The surge worn while moving and swinging (Kindle's flames, Overdrive's arcs and Fever's sweat ride the
+                // bones): a few steps toward the enemy (east, kept inside the held window), three light blows, a few steps back.
+                clip.Label = (element.SurgeKit != null ? element.SurgeKit.SurgeName : "surge") + " moving and swinging";
+                yield return Tap(Key.F);
+                yield return Until(() => element.SurgeActive, 20);
+                clip.SetOff = element.SurgeActive;
+                clip.Peak = clip.Start + 30;
+                int walked = frame + 6;
+                Keys(Key.D);
+                yield return Until(() => frame >= walked, 8);
+                Keys();
+                for (int blow = 0; blow < 3; blow++)
+                {
+                    yield return Tap(Key.J);
+                    int next = frame + 7;
+                    yield return Until(() => frame >= next, 9);
+                }
+                int back = frame + 6;
+                Keys(Key.A);
+                yield return Until(() => frame >= back, 8);
+                Keys();
+                break;
+            }
         }
 
         // Until the moment has cleared, then the tail.
@@ -618,7 +646,7 @@ public class ElementGifFramesRunner : MonoBehaviour
         if (view != null) view.Configure(player.transform);
         Time.captureFramerate = 0;
         suppress = false;
-        if (moment == "surge" && element.SurgeKit != null) element.SurgeKit.SurgeSeconds = surgeWas;
+        if (moment.StartsWith("surge") && element.SurgeKit != null) element.SurgeKit.SurgeSeconds = surgeWas;
         spells.ChargeWindow = windowWas;
         clip.Frames = frame;
         clip.Peak = Mathf.Clamp(clip.Peak, 0, Mathf.Max(0, frame - 1));

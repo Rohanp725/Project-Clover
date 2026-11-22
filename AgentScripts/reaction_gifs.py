@@ -91,6 +91,9 @@ def contact_sheet(entries, out_path):
     font = label_font(18)
     for i, (name, folder, info) in enumerate(entries):
         paths = frame_paths(folder)
+        # A folder left with no frames (an old doc's) has no picture to show.
+        if not paths:
+            continue
         index = min(int(info.get("impact_frame", "0")), len(paths) - 1)
         thumb = Image.open(paths[index]).convert("RGB").resize((thumb_w, thumb_h), Image.LANCZOS)
         x, y = (i % columns) * thumb_w, (i // columns) * (thumb_h + label_h)

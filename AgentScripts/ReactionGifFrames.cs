@@ -406,11 +406,14 @@ public class ReactionGifFramesRunner : MonoBehaviour
         int guard = 0;
         while (ReadingBox.Instance != null && ReadingBox.Instance.IsOpen && guard++ < 40) yield return Tap(Key.E);
         guard = 0;
-        while (GuidePage.Showing && guard++ < 40) yield return Tap(Key.E);
-        // A guide opened as a list (the playtest's guide since Phase 4b) turns its pages on E and never closes on it:
-        // the back key closes it, and failing that it is closed outright, so time is never left stopped.
-        if (GuidePage.Showing) yield return Tap(Key.Space);
+        // The guide closed with Escape (the rule for every probe and film), then time shown to run.
+        while (GuidePage.Showing && guard++ < 20) yield return Tap(Key.Escape);
         if (GuidePage.Showing) GuidePage.Instance.Close();
+        int frameWas = Time.frameCount;
+        float timeWas = Time.time;
+        float wait = Time.unscaledTime + 0.4f;
+        while (Time.unscaledTime < wait) yield return null;
+        Debug.Log($"[Probe] guide {(GuidePage.Showing ? "STILL OPEN" : "closed")} after {guard} Escape; time runs: {Time.time > timeWas} ({Time.frameCount - frameWas} frames)");
         if (Time.timeScale <= 0f) Debug.Log("[Probe] WRONG: time still stopped after the guide");
 
         const BindingFlags Private = BindingFlags.NonPublic | BindingFlags.Instance;
@@ -558,6 +561,7 @@ public class ReactionGifFramesRunner : MonoBehaviour
             laid.Clear();
             struckLog.Clear();
             reactedFrame = -1;
+            bladesCalledOff = false;
             recording = true;
             mainBody = main;
             for (; frame < Before; frame++)
@@ -633,6 +637,9 @@ public class ReactionGifFramesRunner : MonoBehaviour
                     }
                     Say($"{name} at {(frame - start) / (float)Rate:0.0} s: {AfflictionPairs.First(pair)} {main.Afflictions.Stacks(AfflictionPairs.First(pair))}, {AfflictionPairs.Second(pair)} {main.Afflictions.Stacks(AfflictionPairs.Second(pair))}; others: {others}; {LooksPlaying()}");
                 }
+                // The trigger spell's own planted blade (Metal's Flung Blade, since the standins merge) is called off once the
+                // reaction fires, so it flies home cutting no one: nothing but the reaction strikes after it.
+                if (reactedFrame >= 0 && !bladesCalledOff) { Clover.Player.PlantedBlades.Clear(); bladesCalledOff = true; }
                 bool longEnough = (frame - start) / (float)Rate >= least;
                 if (tail < 0 && frame - start >= 4 && PoolEmpty() && longEnough && (shownAt >= 0 || frame - start > 40)) tail = 0;
                 if (tail >= 0 && tail++ >= After) break;
@@ -776,6 +783,7 @@ public class ReactionGifFramesRunner : MonoBehaviour
     private PlayerElement element;
     private bool recording;
     private int clipFrame, reactedFrame = -1, passed, checkedClips;
+    private bool bladesCalledOff;
     private Enemy mainBody;
     private RectInt lastWindow;
     private readonly List<(int frame, int body, AfflictionKind kind, int stacks, LaySource source)> laid = new List<(int, int, AfflictionKind, int, LaySource)>();

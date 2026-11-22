@@ -156,11 +156,14 @@ public class StandinsProbeRunner : MonoBehaviour
         // AgentScripts/standins_only.txt (comma list of pieces) runs only those.
         string only = File.Exists("AgentScripts/standins_only.txt") ? File.ReadAllText("AgentScripts/standins_only.txt").Trim() : "";
         bool Wants(string piece) => only.Length == 0 || only.Split(',').Any(p => p.Trim() == piece);
-        if (Wants("windup")) yield return Windup();
-        if (Wants("landing")) yield return Landing();
-        if (Wants("shove")) yield return Shove();
-        if (Wants("guard")) yield return Guard();
-        if (Wants("badge")) yield return Badge();
+        // AgentScripts/standins_film.txt present: each piece is also filmed, 20 frames a second of game time, the whole game
+        // view to review/gifs/standins/frames/<piece>/<nnn>.png (assembled by Pillow into review/gifs/standins/<piece>.gif).
+        bool film = File.Exists("AgentScripts/standins_film.txt");
+        if (Wants("windup")) { if (film) Roll("windup"); yield return Windup(); Cut(); }
+        if (Wants("landing")) { if (film) Roll("landing"); yield return Landing(); Cut(); }
+        if (Wants("shove")) { if (film) Roll("shove"); yield return Shove(); Cut(); }
+        if (Wants("guard")) { if (film) Roll("guard"); yield return Guard(); Cut(); }
+        if (Wants("badge")) { if (film) Roll("badge"); yield return Badge(); Cut(); }
         Finish();
     }
 
@@ -312,7 +315,8 @@ public class StandinsProbeRunner : MonoBehaviour
             if (round == 1)
                 soldier.Afflictions.Conditions.Set(new ConditionSpec { Id = Clover.Player.Trees.Duo.ColdShortDuo.Snapped, Seconds = 30f,
                     Flags = ConditionFlags.DamageDealtShare | ConditionFlags.GuardMadePerfect, Scale = 0.5f }, player);
-            yield return Until(() => soldier.Afflictions.WindingUp && soldier.Afflictions.StrikeIn > 0.35f, 8f);
+            // A blow a guard can meet: the lunge is unblockable, so a wind-up into it is let pass for the next.
+            yield return Until(() => soldier.Afflictions.WindingUp && soldier.Afflictions.StrikeIn > 0.35f && soldier.Brain.Current != null && !soldier.Brain.Current.Unblockable, 12f);
             attacks[round] = soldier.Brain.Current?.Name;
             // Held well before the blow, so it is no timed guard of its own.
             Keys(Key.LeftShift);
@@ -361,6 +365,32 @@ public class StandinsProbeRunner : MonoBehaviour
         defence.Afflictions.Clear();
     }
 
+    private string rolling;
+    private int rolled;
+
+    private void Roll(string piece)
+    {
+        rolling = $"review/gifs/standins/frames/{piece}";
+        Directory.CreateDirectory(rolling);
+        foreach (var old in Directory.GetFiles(rolling, "*.png")) File.Delete(old);
+        rolled = 0;
+        Time.captureFramerate = 20;
+    }
+
+    private void Cut()
+    {
+        if (rolling != null) Say($"filmed {Path.GetFileName(rolling)}: {rolled} frames");
+        rolling = null;
+        Time.captureFramerate = 0;
+    }
+
+    private void LateUpdate()
+    {
+        if (rolling == null) return;
+        ScreenCapture.CaptureScreenshot($"{rolling}/{rolled:000}.png");
+        rolled++;
+    }
+
     private static string BadgeWords()
     {
         var marks = FindAnyObjectByType<AfflictionBadges>();
@@ -376,6 +406,7 @@ public class StandinsProbeRunner : MonoBehaviour
         if (build != null) build.Attune(Elements.Fire, "");
         if (upgrades != null) upgrades.RefreshNow();
         if (defence != null) defence.Afflictions.Clear();
+        Cut();
         InputSystem.settings.backgroundBehavior = backgroundWas;
         InputSystem.settings.editorInputBehaviorInPlayMode = editorWas;
         Time.timeScale = 1f;

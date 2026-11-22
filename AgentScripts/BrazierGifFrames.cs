@@ -61,11 +61,14 @@ public class BrazierGifFramesRunner : MonoBehaviour
         int guard = 0;
         while (ReadingBox.Instance != null && ReadingBox.Instance.IsOpen && guard++ < 40) yield return Tap(Key.E);
         guard = 0;
-        while (GuidePage.Showing && guard++ < 40) yield return Tap(Key.E);
-        // A guide opened as a list (the playtest's guide since Phase 4b) turns its pages on E and never closes on it:
-        // the back key closes it, and failing that it is closed outright, so time is never left stopped.
-        if (GuidePage.Showing) yield return Tap(Key.Space);
+        // The guide closed with Escape (the rule for every probe and film), then time shown to run.
+        while (GuidePage.Showing && guard++ < 20) yield return Tap(Key.Escape);
         if (GuidePage.Showing) GuidePage.Instance.Close();
+        int frameWas = Time.frameCount;
+        float timeWas = Time.time;
+        float wait = Time.unscaledTime + 0.4f;
+        while (Time.unscaledTime < wait) yield return null;
+        Debug.Log($"[Probe] guide {(GuidePage.Showing ? "STILL OPEN" : "closed")} after {guard} Escape; time runs: {Time.time > timeWas} ({Time.frameCount - frameWas} frames)");
         if (Time.timeScale <= 0f) Debug.Log("[Probe] WRONG: time still stopped after the guide");
         foreach (var canvas in FindObjectsByType<Canvas>(FindObjectsInactive.Exclude))
             if (canvas.isRootCanvas && canvas.renderMode != RenderMode.WorldSpace && canvas.enabled)

@@ -27,7 +27,7 @@ TRANSPARENT = 255
 NEAR = 24
 MOST_BYTES = 4.9e6
 SCALES = (1.0, 0.8, 0.65, 0.5)
-MOMENTS = ["affliction", "spell", "hit", "charged", "infused", "surge"]
+MOMENTS = ["affliction", "spell", "hit", "charged", "infused", "surge", "surgemove"]
 # The infused strike keeps the probe's frame: its element's own art comes after the carrier's brighter blow.
 STRONGEST = ("hit", "charged")
 
