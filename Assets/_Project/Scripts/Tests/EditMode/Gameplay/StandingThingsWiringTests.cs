@@ -941,6 +941,31 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void WitnessedCountsTheBearersBlowsOnYou()
+        {
+            Assert.AreEqual(0, EnemyConditions.TheirBlowCount(0, 1, true), "a condition that does not count them");
+            Assert.AreEqual(2, EnemyConditions.TheirBlowCount(2, 1, false));
+            Assert.AreEqual(3, EnemyConditions.TheirBlowCount(2, 1, true), "15 more for a perfect guard");
+            var enemy = new AfflictionSet { Reactions = new ReactionEngine((who, pair, laid) => { }, () => 0) };
+            var spec = new ConditionSpec { Id = LightTree.Witnessed, Seconds = 6f, TheirBlowPoints = 2, TurnedPoints = 1 };
+            int slot = enemy.Conditions.Set(spec, null, 1, null, false, true);
+            enemy.Conditions.Struck(10f, false, false);
+            Assert.AreEqual(0, enemy.Conditions.Run(slot).Blows, "your own blows are not written");
+            enemy.Conditions.Attacked(false);
+            enemy.Conditions.Attacked(true);
+            Assert.AreEqual(5, enemy.Conditions.Run(slot).Blows, "one blow landed or guarded (2) and one turned (3)");
+
+            var witnessed = Upgrade.ById(SpellBranch.ShapeId(LightTree.Reckoning)).Shapes.Single(each => each.Name == "Witnessed").Effects;
+            Assert.AreEqual(2, witnessed[0].State.TheirBlowPoints);
+            Assert.AreEqual(1, witnessed[0].State.TurnedPoints);
+            var pay = witnessed.Single(each => each.On == UpgradeTrigger.ConditionEnded && each.PerStack);
+            Assert.AreEqual(15f, pay.Damage, 1e-5f, "15 a point: 30 a blow written, 45 one turned");
+            Assert.AreEqual(10, pay.PerMost, "150 at most");
+            Assert.AreEqual(1, pay.SpentAtLeast, "nothing written, nothing paid");
+            Assert.IsTrue(witnessed.Any(each => each.On == UpgradeTrigger.ConditionEnded && each.Do == UpgradeAction.Falling && each.Stagger == 40f), "the column and its stagger");
+        }
+
+        [Test]
         public void CircleOfSteelTurnsMoreThanOneBlowAndTheRingsGrow()
         {
             Assert.IsFalse(Clover.Player.Forms.ParryForm.TurnsAnother(1, 0, 0.2f, 1.2f), "the plain circle: the first blow only");

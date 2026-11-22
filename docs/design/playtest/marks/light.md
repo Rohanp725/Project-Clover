@@ -49,11 +49,9 @@ the next blows on that enemy critical.
 
 **When it happens.** Whenever you cast Reckoning, using the shape you picked. If you have not bought this, you cast the plain seal.
 
-**The numbers.** 3 Shards. Witnessed: when the six seconds end, a column falls on the sealed enemy within 1.2 metres, for 30 damage, 40 stagger and a Mark. Spoken Sentence: for 8 seconds, your next heavy blow on the sealed enemy makes a blade fall a moment later on every Marked enemy within 8 metres. Each blade deals 20 damage, plus 12 more for each stack of Mark, and 40 stagger within 1.2 metres, and uses up their Marks. With either shape, the plain seal's own count doesn't pay out.
+**The numbers.** 3 Shards. Witnessed: for six seconds the seal counts every blow the sealed enemy lands on you or your guard. Your own blows on it don't count. When the six seconds end, a column falls on it within 1.2 metres, for 40 stagger and a Mark, and deals 30 damage for each of its blows, plus 15 more for each one you blocked with a perfect guard, up to 150. If it never hit at you, the column deals no damage. Spoken Sentence: for 8 seconds, your next heavy blow on the sealed enemy makes a blade fall a moment later on every Marked enemy within 8 metres. Each blade deals 20 damage, plus 12 more for each stack of Mark, and 40 stagger within 1.2 metres, and uses up their Marks. With either shape, the plain seal's own count doesn't pay out.
 
 **Works with.** Witnessed: a build that counters attacks, perfect guards, Standing Light, the root mark (perfect guards Mark the attacker). Spoken Sentence: Weighed (stacked Marks), Ring of Spears and Glare's Seven Horses shape (lots of Marked enemies at once), Brimming, heavy weapons.
-
-**Not built yet.** Witnessed should count the enemy's blows on you, at 30 per blow, plus 15 more for each one you perfectly guarded. For now, the column is worth one blow.
 
 **Example.** Use Spoken Sentence on a captain with three Marked soldiers around it. One heavy blow, and four blades fall.
 

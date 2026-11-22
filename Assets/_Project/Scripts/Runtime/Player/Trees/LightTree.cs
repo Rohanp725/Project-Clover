@@ -82,15 +82,16 @@ namespace Clover.Player.Trees
                 // on the Learn's own burst (empower-effects).
                 new Empower { Effects = new[] { new EffectChange { Index = 1, Damage = 10f, PerMost = 18 } } },
                 "Reckoning pays back 10 for each blow, not 8, up to 180.",
-                // The Learn's own count set aside (ShapeDef.SetsAside: its clock and both its payouts). NEEDS: the bearer's blows
-                // on you and your guard counted, 15 more for each turned with a perfect guard (seal-counts-bearer). Until then a
-                // column falls on the sealed enemy for one blow's worth as the seal ends.
+                // The Learn's own count set aside (ShapeDef.SetsAside: its clock and both its payouts). The seal counts the
+                // bearer's blows on you and your guard (ConditionSpec.TheirBlowPoints): 2 points a blow and 1 more for each turned
+                // with a perfect guard, paid 15 a point (30 a blow, 45 turned), 10 points (150) at most, as the column falls.
                 new ShapeDef { Name = "Witnessed", SetsAside = new[] { 0, 1, 2 },
                     Description = "The seal counts the bearer's deeds, not yours. For six seconds every blow it lands on you or your guard is scratched in gold on the clock's rim. On the last tick a column falls on it: 30 for each blow written and 15 more for each you turned with a perfect guard, 150 at most, and 40 stagger. Guard well and the sun judges for you.",
                     Effects = new[]
                     {
-                        new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Witnessed, Seconds = 6f } },
-                        new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Witnessed, Do = UpgradeAction.Falling, Radius = 1.2f, Delay = 0.3f, Damage = 30f, Stagger = 40f, Affliction = M, Stacks = 1 },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Witnessed, Seconds = 6f, TheirBlowPoints = 2, TurnedPoints = 1 } },
+                        new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Witnessed, SpentAtLeast = 1, Do = UpgradeAction.Burst, PerStack = true, PerMost = 10, Unseen = true, Radius = 0.6f, Damage = 15f, Stagger = 0f, Stacks = 0 },
+                        new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Witnessed, Do = UpgradeAction.Falling, Radius = 1.2f, Delay = 0.3f, Damage = 0f, Stagger = 40f, Affliction = M, Stacks = 1 },
                     } },
                 // Sentence and What It Owes, once majors, folded in here. No clock (ShapeDef.SetsAside: the Learn's clock and its
                 // payouts): the heavy blow sets a short sentence on every Marked enemy within eight metres whose end drops a blade

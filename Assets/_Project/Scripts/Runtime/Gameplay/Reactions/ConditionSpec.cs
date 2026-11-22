@@ -118,5 +118,12 @@ namespace Clover.Gameplay
         public float AloneLeash;
         /// <summary>With <see cref="ConditionFlags.Chained"/>: spell blows pass along the chain too, not only weapon blows (Shared Wound).</summary>
         public bool SharesSpells;
+        /// <summary>
+        /// Above zero: its count of blows counts its carrier's blows on you or your guard instead of yours on it, this many
+        /// points each, and <see cref="TurnedPoints"/> more for each one turned by a perfect guard (Witnessed: 2 and 1, paid 15 a
+        /// point). Its end carries the count, as any end carries the weapon blows it took.
+        /// </summary>
+        public int TheirBlowPoints;
+        public int TurnedPoints;
     }
 }

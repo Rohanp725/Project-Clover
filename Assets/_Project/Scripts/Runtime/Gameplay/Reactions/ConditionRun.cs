@@ -12,8 +12,10 @@ namespace Clover.Gameplay
         public float BeatClock;
         /// <summary>Beats come so far.</summary>
         public int Count;
-        /// <summary>Weapon blows taken so far.</summary>
+        /// <summary>Weapon blows taken so far; or, for one that counts its carrier's blows, their points (<see cref="ConditionSpec.TheirBlowPoints"/>).</summary>
         public int Blows;
+        public int TheirBlowPoints;
+        public int TurnedPoints;
         /// <summary>The place in the catalogue of the mark that set it, or -1.</summary>
         public int Mark;
         public ConditionFlags Flags;

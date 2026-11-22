@@ -373,6 +373,8 @@ namespace Clover.Gameplay
             run.Leash = Math.Max(0f, spec.Leash);
             run.LeashToPlayer = spec.LeashToPlayer;
             run.SharesSpells = spec.SharesSpells;
+            run.TheirBlowPoints = Math.Max(0, spec.TheirBlowPoints);
+            run.TurnedPoints = Math.Max(0, spec.TurnedPoints);
             if (fresh) run.Anchor = who != null ? who.transform.position : Vector3.zero;
             // A chain to another enemy is kept where its other end can find it.
             if ((spec.Flags & ConditionFlags.Chained) != 0 && link != null && who != null) EnemyChains.Note(who);
@@ -460,7 +462,8 @@ namespace Clover.Gameplay
                 ref var run = ref runs[i];
                 // One that hears only critical blows lets every other blow pass as if it were not there (Kindling Point's shapes).
                 if (run.CriticalOnly && (spell || !critical)) continue;
-                if (!spell) run.Blows++;
+                // One that counts its carrier's blows does not count yours (Witnessed).
+                if (!spell && run.TheirBlowPoints == 0) run.Blows++;
                 blowSide = SideDegrees(run.Facing.sqrMagnitude > 0.0001f ? run.Facing : facing, travel);
                 if (run.AnswersStruck) Tell(ConditionMoment.Struck, in run, damage, heavy, spell, shattered, critical, finisher && !spell);
                 blowSide = -1f;
@@ -484,6 +487,7 @@ namespace Clover.Gameplay
             {
                 if (!runs[i].Active) continue;
                 ref var run = ref runs[i];
+                run.Blows += TheirBlowCount(run.TheirBlowPoints, run.TurnedPoints, turned);
                 if (run.AnswersAttack) Tell(ConditionMoment.Attacked, in run, 0f, false, false, turned: turned);
                 if (run.EndsWith != ConditionBlow.TheirBlow) continue;
                 runs[i] = default;
@@ -491,6 +495,12 @@ namespace Clover.Gameplay
             }
             if (spentAny) Recount();
         }
+
+        /// <summary>
+        /// The points one of its carrier's blows on the player adds to a condition that counts them: <paramref name="each"/>, and
+        /// <paramref name="turned"/> more when a perfect guard turned it; nothing for one that does not count them.
+        /// </summary>
+        public static int TheirBlowCount(int each, int turnedPoints, bool turned) => each <= 0 ? 0 : each + (turned ? Math.Max(0, turnedPoints) : 0);
 
         /// <summary>True when a linked condition joins it to <paramref name="host"/>, with the share the link passes on.</summary>
         public bool LinkedTo(Component host, out float share)
