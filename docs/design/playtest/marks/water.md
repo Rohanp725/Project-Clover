@@ -46,11 +46,9 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Whenever you cast Deep Crack, using the shape you picked. If you have not bought this, you cast the single bubble.
 
-**The numbers.** 3 Shards. Ink: a pool with a 1.5-metre radius that lasts 5 seconds. Once a second, it deals 1 damage and adds Soaked. Any enemy standing in the ink can't see farther than 3 metres, and sees again soon after it steps out. String of Bubbles: a line of water 7 metres long and 2 metres wide, moving at 13 metres a second. It deals 18 damage and 40 stagger to everything it crosses, and the crack spreads from each Soaked enemy, like above.
+**The numbers.** 3 Shards. Ink: a pool with a 1.5-metre radius that lasts 5 seconds. Once a second, it deals 1 damage and adds Soaked. Any enemy standing in the ink can't see farther than 3 metres, and sees again soon after it steps out. String of Bubbles: three bubbles in a row along the way you face, 2, 4 and 6 metres ahead, each cracking 0.15 seconds after the last. Each deals 18 damage and 40 stagger to everything within 1 metre of it, and the crack spreads from each Soaked enemy, like above.
 
 **Works with.** Blowhole and Whirlpool, to hold enemies in the ink; Riptide's Breaking Swell shape, to line them up for the string.
-
-**Not built yet.** String of Bubbles should be three bubbles 2 metres apart (for now, it is one moving line).
 
 **Example.** Use Ink in a doorway. The archers behind it lose track of you, and the soldiers in it stay Soaked for the next crack.
 

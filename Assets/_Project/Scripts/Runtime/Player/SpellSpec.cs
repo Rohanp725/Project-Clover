@@ -101,6 +101,8 @@ namespace Clover.Player
         public float Lasts;
         /// <summary>Above zero: seconds between a form's pieces landing in turn (In Turn: a quarter second between spears); zero keeps the form's own quick fall.</summary>
         public float Between;
+        /// <summary>For the pillars form: above zero, its pillars stand in a row along the way you face, this many metres apart, the first that far ahead, whoever stands there (String of Bubbles).</summary>
+        public float InLine;
         /// <summary>Above zero: seconds a form's whole mark glows on the ground before it breaks open (Fissure's crack: 0.9); zero breaks it just behind its running mark.</summary>
         public float Glow;
         /// <summary>Above zero: the share of the run's pace the player may walk at while the form's stance holds (Firewalker: half); zero roots them.</summary>

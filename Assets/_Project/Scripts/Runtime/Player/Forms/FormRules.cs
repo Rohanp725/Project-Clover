@@ -5,6 +5,14 @@ namespace Clover.Player.Forms
     /// <summary>The plain geometry spell forms share: where the n-th of a count of things goes, and whether a wall stands between two points.</summary>
     public static class FormRules
     {
+        /// <summary>The place of the piece numbered <paramref name="index"/> in a row along <paramref name="way"/> from <paramref name="from"/>, <paramref name="apart"/> metres apart, the first that far ahead.</summary>
+        public static Vector3 InRow(Vector3 from, Vector3 way, float apart, int index)
+        {
+            way.y = 0f;
+            if (way.sqrMagnitude < 0.0001f) way = Vector3.forward;
+            return from + way.normalized * (apart * (index + 1));
+        }
+
         /// <summary>Forms that must show themselves forming before they strike never wait less than this, whatever the spell's own delay.</summary>
         public const float LeastWarning = 0.22f;
 

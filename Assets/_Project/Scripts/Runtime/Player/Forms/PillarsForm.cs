@@ -29,8 +29,18 @@ namespace Clover.Player.Forms
             // Only under those carrying what it seeks: a line from the nearest to the nearest to it (One by One).
             var seeks = cast.Spec.OnlyCarrying;
             Vector3 from = cast.Origin;
+            float between = Pace(cast);
             for (int i = 0; i < run.Count; i++)
             {
+                // A row along the way faced, whoever stands there (String of Bubbles' bubbles 2 m apart).
+                if (cast.Spec.InLine > 0f)
+                {
+                    points[i] = FormRules.InRow(cast.Origin, cast.Forward, cast.Spec.InLine, i);
+                    things[i] = null;
+                    FormFx.Lay(FormMark.Ring, points[i], radius * 4.4f, FormKit.Lit(cast.Colour, 3f), run.T0 + i * between, radius * 2.1f);
+                    if (i < marks.Length) marks[i] = FormFx.HoldMark(FormMark.Disc, FormKit.Lit(cast.Colour, 2f));
+                    continue;
+                }
                 // The first rises under what the spell seeks (SpellSpec.AimAt), when it found one; the rest under the nearest.
                 // A line starts at the one faced when it carries what is sought (All Into One's single pillar), else the nearest.
                 var faced = i == 0 && cast.Target != null ? cast.Target.GetComponentInParent<Clover.Gameplay.IDamageable>() as Component : null;
@@ -52,7 +62,7 @@ namespace Clover.Player.Forms
                 }
                 else if (i == 0) points[i] = FormKit.AimPoint(cast);
                 else points[i] = points[0] + FormRules.OnRing(i, run.Count, radius * 2.1f, 35f);
-                FormFx.Lay(FormMark.Ring, points[i], radius * 4.4f, FormKit.Lit(cast.Colour, 3f), run.T0 + i * Between, radius * 2.1f);
+                FormFx.Lay(FormMark.Ring, points[i], radius * 4.4f, FormKit.Lit(cast.Colour, 3f), run.T0 + i * between, radius * 2.1f);
                 if (i < marks.Length) marks[i] = FormFx.HoldMark(FormMark.Disc, FormKit.Lit(cast.Colour, 2f));
             }
             taken.Clear();
@@ -77,6 +87,9 @@ namespace Clover.Player.Forms
             return null;
         }
 
+        // Seconds between one pillar and the next: the spell's own (SpellSpec.Between: String of Bubbles' 0.15), else the quick rise.
+        private static float Pace(in SpellCast cast) => cast.Spec.Between > 0f ? cast.Spec.Between : Between;
+
         public override bool Tick(ref SpellRun run, float deltaTime)
         {
             var cast = run.Cast;
@@ -84,15 +97,16 @@ namespace Clover.Player.Forms
             var things = SpellWorks.Things(run);
             var marks = SpellWorks.Marks(run);
             float radius = cast.Spec.Radius;
+            float between = Pace(cast);
             for (int i = run.Done; i < run.Count; i++)
             {
                 // Each mark keeps under its enemy until just before its pillar comes.
-                float due = run.T0 + i * Between;
+                float due = run.T0 + i * between;
                 if (run.Age < due - 0.12f && FormKit.Alive(things[i]))
                     points[i] = new Vector3(things[i].transform.position.x, cast.Origin.y, things[i].transform.position.z);
                 if (i < marks.Length) FormFx.PlaceMark(marks[i], points[i], Quaternion.identity, new Vector3(radius * 2f, 1f, radius * 2f));
             }
-            while (run.Done < run.Count && run.Age >= run.T0 + run.Done * Between)
+            while (run.Done < run.Count && run.Age >= run.T0 + run.Done * between)
             {
                 int i = run.Done++;
                 if (i < marks.Length)

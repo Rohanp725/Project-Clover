@@ -170,6 +170,7 @@ namespace Clover.Player
             into.HealthShare = from.HealthShare;
             into.Lasts = from.Lasts;
             into.Between = from.Between;
+            into.InLine = from.InLine;
             into.Glow = from.Glow;
             into.Walk = from.Walk;
             into.Quiet = from.Quiet;

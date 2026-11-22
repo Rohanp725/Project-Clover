@@ -95,11 +95,11 @@ namespace Clover.Player.Trees
                         new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Radius = 1.5f, Seconds = 5f, Interval = 1f, Damage = 1f, Affliction = AfflictionKind.Soaked, Stacks = 1, Cooldown = 0.5f,
                             Inside = new ConditionSpec { Id = InInk, Seconds = 0.5f, Flags = ConditionFlags.SightShort, Sight = 3f } },
                     } },
-                // NEEDS: three bubbles 2 m apart each cracking 0.15 s after the last. Until then one line of water runs seven
-                // metres along the way you face at that pace and cracks on all it crosses.
-                new ShapeDef { Name = "String of Bubbles", Form = SpellForms.Spikes,
+                // Three bubbles 2 m apart along the way you face, each cracking 0.15 s after the last (the pillars form in a row:
+                // SpellSpec.InLine, Between).
+                new ShapeDef { Name = "String of Bubbles", Form = SpellForms.Pillars,
                     Description = "Three bubbles in a row, two metres apart along the line you face, each cracking a moment after the last. Aim it down a corridor.",
-                    Spell = new SpellSpec { Reach = 7f, Speed = 13f, Count = 1, Radius = 1f, Damage = 18f, Stagger = 40f, Stacks = 0 } },
+                    Spell = new SpellSpec { Reach = 7f, Count = 3, InLine = 2f, Between = 0.15f, Delay = 0.4f, Radius = 1f, Damage = 18f, Stagger = 40f, Stacks = 0 } },
                 "Opens two shapes of Deep Crack, chosen at any rest fire: Ink, a pool that hides you, or String of Bubbles, three cracks down a corridor.",
                 // Every Soaked enemy within twenty metres cracks where it stands (UpgradeEffect.EachWithin). NEEDS: the snap
                 // timed to the heavy blow's landing, not the crack's (spell-windows); until then a heavy blow on the cracked enemy

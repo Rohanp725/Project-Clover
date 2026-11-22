@@ -457,6 +457,21 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void TheBubblesStandInARowAndCrackInTurn()
+        {
+            Assert.AreEqual(new Vector3(0f, 0f, 2f), FormRules.InRow(Vector3.zero, Vector3.forward, 2f, 0));
+            Assert.AreEqual(new Vector3(6f, 0f, 0f), FormRules.InRow(Vector3.zero, new Vector3(3f, 1f, 0f), 2f, 2), "flat, along the way faced");
+            var bubbles = Upgrade.ById(SpellBranch.ShapeId(WaterTree.DeepCrack)).Shapes.Single(each => each.Name == "String of Bubbles");
+            Assert.AreEqual(SpellForms.Pillars, bubbles.Form);
+            Assert.AreEqual(3, bubbles.Spell.Count);
+            Assert.AreEqual(2f, bubbles.Spell.InLine, 1e-5f, "2 m apart");
+            Assert.AreEqual(0.15f, bubbles.Spell.Between, 1e-5f, "each 0.15 s after the last");
+            var copy = new SpellSpec();
+            SpellChange.Copy(bubbles.Spell, copy);
+            Assert.AreEqual(2f, copy.InLine, 1e-5f);
+        }
+
+        [Test]
         public void TheSeaComesInQuickensYouOnlyInYourOwnWater()
         {
             var sea = Upgrade.ById(WaterTree.TheSeaComesIn);
