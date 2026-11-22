@@ -12,6 +12,8 @@ namespace Clover.Player.Way.Aspects
     {
         public const float SettledRecovery = 0.9f;
         public const float RisingDamage = 12f, RisingStagger = 12f, RisingArc = 150f, RisingReach = 2.4f;
+        /// <summary>Tsuka-ate: the hilt out of the roll (way_plan.md: 6 damage, 45 stagger, a guard broken 1 s).</summary>
+        public const float TsukaDamage = 6f, TsukaStagger = 45f, TsukaReach = 1.6f, TsukaArc = 60f, TsukaOpens = 1f;
         public const float TemperThreeReach = 0.2f;
         public const float TemperFiveFinisher = 1.15f;
         /// <summary>The Rising Draw: a light press in the last 40% of a roll.</summary>
@@ -41,6 +43,21 @@ namespace Clover.Player.Way.Aspects
                 weapon.Combo.DashAttack = rising;
                 // The last 40% of the roll. NEEDS (way-chain-rules): the 0.15 s after the roll, and the cut as the chain's first step.
                 weapon.Combo.DashCutFrom = RisingFrom;
+            }
+            if (marks.Has(KatanaWay.TsukaAte) && weapon.Combo.Heavy != null)
+            {
+                // The hilt out of the roll, on the heavy's clip until attack_katana_tsuka_ate is made (way-clips): short, straight,
+                // little damage, much balance, and a raised guard or shield broken for a second.
+                var hilt = weapon.Combo.Heavy.Clone();
+                hilt.Damage = TsukaDamage;
+                hilt.Stagger = TsukaStagger;
+                hilt.Reach = TsukaReach;
+                hilt.ArcDegrees = TsukaArc;
+                hilt.OpensGuard = TsukaOpens;
+                hilt.Heavy = true;
+                weapon.Combo.DashHeavy = hilt;
+                // A heavy press in the last 40% of the roll, as the Rising Draw's light.
+                if (!marks.Has(KatanaWay.RisingDraw)) weapon.Combo.DashCutFrom = RisingFrom;
             }
             if (marks.Has(KatanaWay.Temper3))
             {

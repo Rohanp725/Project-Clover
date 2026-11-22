@@ -171,7 +171,8 @@ namespace Clover.Player.Trees.Ways
             // first step. The trunk's patch makes it the dodge's cut on the drawing cut's clip.
             Mark(to, RisingDraw, "Rising Draw", UpgradeKind.Major, "", "", UpgradeIcons.Boot,
                 "Press light attack as your dodge ends. You rise out of the roll with a cut. Your combo goes on from there.");
-            // NEEDS: a heavy out of the roll (the roll's second press) and a guard broken for a second, with a clip of its own.
+            // The heavy out of the roll (WeaponCombo.DashHeavy, patched by KatanaTrunk): 6 and 45 stagger, through a raised guard,
+            // which stays open 1 s (AttackStep.OpensGuard). NEEDS: its own clip, attack_katana_tsuka_ate (way-clips); the heavy's plays.
             Mark(to, TsukaAte, "Tsuka-ate", UpgradeKind.Major, "", "", UpgradeIcons.Fist,
                 "Press heavy attack as your dodge ends. You slam the hilt into their face. It does little damage but breaks their balance. It also breaks a raised guard or shield for a moment.");
             Mark(to, SettledHands, "Settled Hands", UpgradeKind.Minor, "", "", UpgradeIcons.Hourglass,

@@ -2005,7 +2005,9 @@ namespace Clover.Player
         {
             // Looked for on the press only, not every frame: a staggered enemy in reach turns the heavy into the finisher.
             finisherTarget = FindEnemy(transform.forward, 360f, FinisherRange, true);
-            Combo.PressHeavy(finisherTarget != null);
+            // Pressed as a dodge ends, the roll's own heavy when the weapon has one (Tsuka-ate).
+            bool rolling = player != null && player.Dodge.IsRolling && player.Dodge.Progress >= Combo.DashCutFrom;
+            Combo.PressHeavy(finisherTarget != null, rolling);
         }
 
         // The chord taken: the light in its first moment is dropped and the technique starts in its place.
@@ -2483,6 +2485,8 @@ namespace Clover.Player
                 float dealtStagger = (lightStagger + (counter ? counterStagger : 0f) + StaggerOnHit + aspectStagger + loaded) * NextBlowStagger * StatStagger * staggerShare * scale * step.BandStagger(distance);
                 if (fromBehind) dealtStagger *= Weapon.BackMultiplier;
                 if (boundTo != null && ReferenceEquals(target, boundTo)) dealtStagger *= BoundStagger;
+                // A hilt driven through the guard leaves it open a moment (Tsuka-ate).
+                if (step.OpensGuard > 0f && target is Enemy guarded) guarded.GuardOpenFor = Mathf.Max(guarded.GuardOpenFor, step.OpensGuard);
                 var outcome = target.TakeHit(new Hit(damage, dealtStagger, transform.forward, heavy, carries && ElementSteel.PassesGuard(moveElement.Name), transform.position,
                     burn, burnStacks, false, kind, kind != AfflictionKind.None ? stacks : 0, lasts, AfflictionPower, false, critical, second, secondStacks, secondLasts, tint: struckTint,
                     finisher: step.Heavy && Combo.IsFinishing));

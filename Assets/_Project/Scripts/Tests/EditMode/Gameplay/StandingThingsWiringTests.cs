@@ -1785,5 +1785,27 @@ namespace Clover.Tests
             Assert.AreEqual(-1, DiscsForm.Nearest(0, at, 3, Vector3.zero), "none left");
             Assert.IsTrue(storm.Effects.Single().EveryOnEnemy == 2, "a Static every other pass, counted on each enemy");
         }
+
+        [Test]
+        public void TsukaAteIsTheRollsHeavyThroughAGuard()
+        {
+            var plain = Clover.Player.Way.Armoury.Resolve(Weapons.KatanaName, Clover.Player.Trees.Ways.KatanaWay.Stream, new Clover.Player.Way.MarkSet(Clover.Player.Trees.Ways.KatanaWay.Stream));
+            Assert.IsNull(plain.Combo.DashHeavy, "no hilt out of the roll without the mark");
+            var hilt = Clover.Player.Way.Armoury.Resolve(Weapons.KatanaName, Clover.Player.Trees.Ways.KatanaWay.Stream,
+                new Clover.Player.Way.MarkSet(Clover.Player.Trees.Ways.KatanaWay.Stream, Clover.Player.Trees.Ways.KatanaWay.TsukaAte)).Combo.DashHeavy;
+            Assert.IsNotNull(hilt);
+            Assert.AreEqual(6f, hilt.Damage, 1e-5f);
+            Assert.AreEqual(45f, hilt.Stagger, 1e-5f);
+            Assert.AreEqual(1f, hilt.OpensGuard, 1e-5f, "a raised guard broken for a second");
+            Assert.IsTrue(hilt.Heavy);
+
+            var combo = new WeaponCombo { Heavy = new AttackStep { Name = "heavy", Heavy = true, Windup = 0.1f, Active = 0.1f, Recovery = 0.1f }, DashHeavy = hilt };
+            combo.Steps.Add(new AttackStep { Name = "light", Windup = 0.1f, Active = 0.1f, Recovery = 0.1f });
+            var stamina = new StaminaPool();
+            stamina.Fill();
+            combo.PressHeavy(false, true);
+            combo.Tick(0.01f, stamina, null);
+            Assert.AreSame(hilt, combo.Current, "a heavy press as the roll ends is the hilt");
+        }
     }
 }
