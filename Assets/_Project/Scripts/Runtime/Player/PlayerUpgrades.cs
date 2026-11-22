@@ -2025,6 +2025,8 @@ namespace Clover.Player
             // A ripe seed in the dead bursts ripe (In Its Season): the burst above was made stronger by the set itself.
             if (withheld != AfflictionKind.Seeded && afflictions.IsRipe(AfflictionKind.Seeded)) RipeBurstAt(who, at, afflictions.Stacks(AfflictionKind.Seeded));
             Trigger(UpgradeTrigger.Kill, null, at, true, 0, afflictions);
+            // Zanshin: the turn to the next enemy (its wider perfect window is the mark's boon).
+            if (combat != null && Has(Trees.Ways.KatanaWay.Zanshin)) combat.Zanshin(who);
         }
 
         private void OnPoisonBit(Component who, int depth, float damage)

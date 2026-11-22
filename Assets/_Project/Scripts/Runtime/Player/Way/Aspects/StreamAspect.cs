@@ -36,16 +36,20 @@ namespace Clover.Player.Way.Aspects
             rising.Sweep = 0f;
             steps.Add(turning);
             steps.Add(rising);
+            // A dodge in a cut's recovery keeps the chain; the next light carries on from where it was.
+            weapon.Combo.ChainKeptThroughDodge = true;
             if (marks.Has(KatanaWay.LightWrist))
                 for (int i = 2; i < steps.Count; i++) Retime(steps[i], LightWristShare);
             if (marks.Has(KatanaWay.SteppingWater))
             {
-                // NEEDS: its clip, katana_roll_cut, and the cut counting as the chain's next step.
+                // From any part of the roll, counting as the chain's next step. NEEDS: its clip, attack_katana_roll_cut (way-clips).
                 var stepping = CopyOf(weapon, 0);
                 stepping.Damage = SteppingDamage;
                 stepping.Stagger = SteppingStagger;
                 stepping.ArcDegrees = SteppingArc;
                 weapon.Combo.DashAttack = stepping;
+                weapon.Combo.DashCutFrom = 0f;
+                weapon.Combo.DashCutInChain = true;
             }
             if (marks.Has(KatanaWay.Unbroken))
                 for (int i = 0; i < steps.Count; i++) steps[i].Poise = Mathf.Max(steps[i].Poise, UnbrokenPoise);

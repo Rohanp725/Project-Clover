@@ -529,6 +529,7 @@ namespace Clover.Player
             PassingThrough = false;
             if (rearmPending && !BusyWithWeapon) Rearm();
             TickAspect(deltaTime);
+            TurnZanshin(deltaTime);
             if (HeavyCriticalLeft > 0f) HeavyCriticalLeft -= deltaTime;
             if (lightAction == null || heavyAction == null) return;
             // The element's strike follows the carrier's blow once the swing is out (or was cut short).
@@ -551,7 +552,7 @@ namespace Clover.Player
             if (lightNow)
             {
                 Chord.Light();
-                Combo.Press(defence != null && defence.IsGuarding, player != null && player.Dodge.IsRolling && player.Dodge.Progress >= 0.5f);
+                Combo.Press(defence != null && defence.IsGuarding, player != null && player.Dodge.IsRolling && player.Dodge.Progress >= Combo.DashCutFrom);
             }
             bool chordAfterTick = false, chordNow = false;
             if (heavyNow)
@@ -597,7 +598,7 @@ namespace Clover.Player
                 if (chordAfterTick || chordNow) PressHeavyNow();
                 // A roll or a flinch takes the place of a return cut still to come.
                 dragFollow = null;
-                Combo.Idle(deltaTime);
+                Combo.Idle(deltaTime, player.Dodge.IsRolling);
                 return;
             }
             if (dragFollow != null)
@@ -1780,6 +1781,51 @@ namespace Clover.Player
             if (heavy && defence != null) defence.UntouchableUntil = Mathf.Max(defence.UntouchableUntil, Time.time + step.Windup + step.Active);
             Answers++;
             return true;
+        }
+
+        // Zanshin: after a kill, the turn to the next enemy, waiting for a swing to end.
+        private Transform zanshinTarget;
+        private float zanshinFor, zanshinTurn;
+        /// <summary>Zanshin's turns made, for probes.</summary>
+        public int ZanshinTurns { get; private set; }
+
+        /// <summary>
+        /// Zanshin (way_build_plan.md 3.1 and question 19): for a second after a kill the player turns to the nearest other
+        /// enemy within 8 m over 0.15 s. No effect is drawn; the turn is the sign.
+        /// </summary>
+        public void Zanshin(Component killed)
+        {
+            var next = FindEnemy(transform.forward, 360f, Way.Aspects.KatanaTrunk.ZanshinRange, false);
+            if (next == null || (killed != null && next == killed.transform)) return;
+            zanshinTarget = next;
+            zanshinFor = Way.Aspects.KatanaTrunk.ZanshinSeconds;
+            zanshinTurn = Way.Aspects.KatanaTrunk.ZanshinTurnSeconds;
+        }
+
+        private void TurnZanshin(float deltaTime)
+        {
+            if (zanshinTarget == null) return;
+            zanshinFor -= deltaTime;
+            if (zanshinFor <= 0f || !zanshinTarget.gameObject.activeInHierarchy)
+            {
+                zanshinTarget = null;
+                return;
+            }
+            // Never mid-swing or mid-roll: it waits for them.
+            if (Combo.Phase == AttackPhase.Windup || Combo.Phase == AttackPhase.Active || (player != null && player.Dodge.IsRolling)) return;
+            Vector3 to = zanshinTarget.position - transform.position;
+            to.y = 0f;
+            if (to.sqrMagnitude < 0.01f)
+            {
+                zanshinTarget = null;
+                return;
+            }
+            float share = Way.Aspects.KatanaTrunk.TurnShare(deltaTime, zanshinTurn);
+            zanshinTurn -= deltaTime;
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(to.normalized, Vector3.up), share);
+            if (share < 1f) return;
+            zanshinTarget = null;
+            ZanshinTurns++;
         }
 
         // Dragging Draw's return cut, waiting its moment after the draw; and the finisher's held pose.

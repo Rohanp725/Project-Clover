@@ -179,7 +179,8 @@ namespace Clover.Player.Trees.Ways
             // NEEDS: the guard's light attack throwing a knife (a shot from the hip, E8) once every 6 s, with its clip and prop.
             Mark(to, Kozuka, "Kozuka", UpgradeKind.Major, "", "", UpgradeIcons.Arrow,
                 "While guarding, press light attack. You flick a small knife at the enemy you face. It barely hurts, but a light enemy flinches. You can throw it every few seconds.");
-            // NEEDS: the turn to the nearest other enemy after a kill, and the thin white glance line. The wider window is a boon.
+            // The turn to the nearest other enemy is PlayerCombat.Zanshin; no effect is drawn (question 19). The wider window is a boon.
+            // NEEDS (turn-to-face): the head leading the turn.
             var zanshin = Mark(to, Zanshin, "Zanshin", UpgradeKind.Major, "", "", UpgradeIcons.Eye,
                 "After a kill, you turn to face the next enemy. For a moment, a perfect guard is easier.");
             zanshin.Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Kill, Do = UpgradeAction.Boon, At = EffectAt.Self, Stat = PlayerStat.PerfectGuardWindow, Amount = 0.28f, Seconds = 1f } };
@@ -270,8 +271,8 @@ namespace Clover.Player.Trees.Ways
 
         private static void AddStream(List<Upgrade> to)
         {
-            // NEEDS: clips of their own for the turning cut and the rising cut (the patch plays the return cut's and the drawing
-            // cut's), and a dodge in a cut's recovery that keeps the chain.
+            // The patch keeps the chain through a dodge (WeaponCombo.ChainKeptThroughDodge). NEEDS: clips of their own for the
+            // turning cut and the rising cut (way-clips; the return cut's and the drawing cut's play).
             Mark(to, Stream, "The Stream", UpgradeKind.Aspect, Stream, "", UpgradeIcons.Wave,
                 "Flow. Your combo is five cuts instead of three. After the third come a turning cut and a rising cut. You can dodge in the middle of the combo and keep going.");
             Mark(to, LightWrist, "Light Wrist", UpgradeKind.Minor, Stream, Stream, UpgradeIcons.Hourglass,
@@ -279,8 +280,8 @@ namespace Clover.Player.Trees.Ways
             // NEEDS: a heavy in the middle of the chain that does not end it (a quick overhead, 26), with its clip.
             Mark(to, RiverBend, "River Bend", UpgradeKind.Major, Stream, LightWrist, UpgradeIcons.Wave,
                 "Press heavy attack in the middle of your combo. You make a quick overhead cut, and the combo keeps going.");
-            // NEEDS: the cut from any part of a dodge, not only its second half, counting as the chain's next step; its clip is
-            // the Rising Draw's katana_roll_cut. The patch makes it the dodge's cut, taking the Rising Draw's place.
+            // The patch makes it the dodge's cut from any part of the roll, the chain's next step (WeaponCombo.DashCutFrom,
+            // DashCutInChain). NEEDS: its clip, the Rising Draw's attack_katana_roll_cut (way-clips).
             Mark(to, SteppingWater, "Stepping Water", UpgradeKind.Major, Stream, RiverBend, UpgradeIcons.Boot,
                 "Press light attack at any point in a dodge. You cut out of the roll, and it counts as the next cut of your combo.");
 

@@ -46,6 +46,12 @@ namespace Clover.Player
         public List<AttackStep> ChainHeavies;
         /// <summary>A step started by a light press made in the second half of a dodge: it begins as the dodge ends. It is no part of the chain. Null: the press is an ordinary light.</summary>
         public AttackStep DashAttack;
+        /// <summary>How far through a dodge a light press is the dodge's cut (<see cref="DashAttack"/>): half by default; the Rising Draw the last 40%, Stepping Water any part.</summary>
+        public float DashCutFrom = 0.5f;
+        /// <summary>The dodge's cut counts as the chain's next step, and the chain goes on from it (Stepping Water).</summary>
+        public bool DashCutInChain;
+        /// <summary>A dodge out of a cut's recovery keeps the chain: its grace does not run while rolling (the Stream).</summary>
+        public bool ChainKeptThroughDodge;
         /// <summary>A step started by a light press behind a raised guard, which stays up through it. It is no part of the chain. Null: the press is an ordinary light.</summary>
         public AttackStep GuardAttack;
         /// <summary>True while the guard's own attack is being made: the one attack the guard does not come down for.</summary>
@@ -237,9 +243,12 @@ namespace Clover.Player
         /// Lets time pass while the weapon cannot be used (during a roll, a flinch, a drink): remembered presses still
         /// fade and the chain's grace still runs out, so nothing stale fires afterwards.
         /// </summary>
-        public void Idle(float deltaTime)
+        public void Idle(float deltaTime) => Idle(deltaTime, false);
+
+        /// <summary>As <see cref="Idle(float)"/>; while <paramref name="dodging"/>, a chain kept through a dodge keeps its grace.</summary>
+        public void Idle(float deltaTime, bool dodging)
         {
-            if (!IsAttacking && sinceEnd < float.MaxValue) sinceEnd += deltaTime;
+            if (!IsAttacking && sinceEnd < float.MaxValue && !(dodging && ChainKeptThroughDodge)) sinceEnd += deltaTime;
             if (buffered > 0f) buffered -= deltaTime;
             if (heavyBuffered > 0f) heavyBuffered -= deltaTime;
             if (skillBuffered > 0f) skillBuffered -= deltaTime;
@@ -300,8 +309,13 @@ namespace Clover.Player
                 }
                 else if (buffered > 0f && dashWanted)
                 {
-                    // Out of the dodge: its own cut, which neither starts nor continues a chain.
-                    if (StartHeavy(DashAttack, stamina)) events |= ComboEvents.Started;
+                    // Out of the dodge: its own cut, which neither starts nor continues a chain, unless it counts as the next step.
+                    int place = nextIndex;
+                    if (StartHeavy(DashAttack, stamina))
+                    {
+                        events |= ComboEvents.Started;
+                        if (DashCutInChain) nextIndex = place + 1;
+                    }
                 }
                 else if (buffered > 0f && StartLight(stamina))
                 {
