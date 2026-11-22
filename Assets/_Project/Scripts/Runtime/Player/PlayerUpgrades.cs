@@ -2578,6 +2578,13 @@ namespace Clover.Player
             finally { baseElement = null; }
         }
 
+        /// <summary>The blows a charge of the blade from this spell lasts as it is cast now (its shape's and Empower's); 0 for the blade's own.</summary>
+        public int ChargeBlowsOf(Upgrade mark)
+        {
+            var spec = mark != null ? branches.SpecOf(mark, RunState.Unlocked, ReadLoadout()) : null;
+            return spec != null ? spec.ChargeBlows : 0;
+        }
+
         /// <summary>The Empower of an element's base spell, when it is learned and in force; null otherwise (its numbers given to the kit's cast).</summary>
         public Empower BaseEmpower(string element)
         {

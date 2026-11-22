@@ -74,5 +74,7 @@ namespace Clover.Player
         public float PassReach;
         /// <summary>Above zero: the caster steps up to the enemy faced, this far at most, before the spell lands on it (Paper Seal's 3 m step).</summary>
         public float StepReach;
+        /// <summary>Above zero: the blows a charge of the blade from this cast lasts, in place of the blade's usual three (Return Stroke: five; the ledger's blade-five).</summary>
+        public int ChargeBlows;
     }
 }

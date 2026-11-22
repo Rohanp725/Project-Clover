@@ -79,6 +79,7 @@ namespace Clover.Player
         private readonly int[] waitingCast = new int[SpellSlots.Count];
         private readonly float[] waitingSince = new float[SpellSlots.Count];
         private readonly string[] waitingElement = { "", "", "", "" };
+        private readonly int[] waitingBlows = new int[SpellSlots.Count];
         private int castSerial;
 
         private void Awake()
@@ -198,7 +199,7 @@ namespace Clover.Player
                 if (waitingCast[slot] != cast) continue;
                 waitingCast[slot] = 0;
                 if (Time.time - waitingSince[slot] > ChargeWindow || combat == null || string.IsNullOrEmpty(waitingElement[slot])) return;
-                combat.Blade.Charge(waitingElement[slot]);
+                combat.Blade.Charge(waitingElement[slot], waitingBlows[slot]);
                 BladeCharges++;
                 Landed?.Invoke(slot, target);
                 return;
@@ -541,6 +542,7 @@ namespace Clover.Player
             }
             float seconds;
             string castIn;
+            int chargeBlows = 0;
             // Every blow this cast deals carries its number, so its own first landing charges the blade.
             int number = ++castSerial;
             element.CastTag = number;
@@ -582,8 +584,9 @@ namespace Clover.Player
                         Refuse(mark.Spell.HealthCost > 0f ? "Not enough health" : "Cannot cast that here");
                         return false;
                     }
-                    // A duo spell charges with its first element (IMPLEMENTATION.md 8.5, question 2).
+                    // A duo spell charges with its first element (IMPLEMENTATION.md 8.5, question 2), for as many blows as it says.
                     castIn = element.ElementOf(mark).Name;
+                    chargeBlows = upgrades.ChargeBlowsOf(mark);
                     // A spell of several presses waits for its next press now.
                     if (mark.Presses != null && mark.Presses.Length > 0)
                     {
@@ -609,6 +612,7 @@ namespace Clover.Player
             waitingCast[slot] = number;
             waitingSince[slot] = Time.time;
             waitingElement[slot] = castIn ?? "";
+            waitingBlows[slot] = chargeBlows;
             heldSlot = slot;
             SlotCast?.Invoke(slot);
             return true;

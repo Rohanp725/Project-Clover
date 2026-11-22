@@ -44,11 +44,11 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Whenever you cast Chain Lance, using the shape you picked.
 
-**The numbers.** 3 Shards. Stepped Leader: it goes up to 12 metres, taking a step every 0.15 seconds, with 4 damage and a Static on each step. 1.2 seconds after you cast it, the return stroke hits the whole path for 14 damage, 10 stagger and a Static. Return Stroke: 0.6 seconds later, each enemy it hit takes 5 damage and 5 stagger again.
+**The numbers.** 3 Shards. Stepped Leader: it goes up to 12 metres, taking a step every 0.15 seconds, with 4 damage and a Static on each step. 1.2 seconds after you cast it, the return stroke hits the whole path for 14 damage, 10 stagger and a Static. Return Stroke: 0.6 seconds later, each enemy it hit takes 5 damage and 5 stagger again, and the charge it gives your blade lasts five blows instead of three.
 
 **Works with.** Static and Single Stroke (the return stroke's Static, then a heavy blow).
 
-**Not built yet.** Steering Stepped Leader with the stick while you fight, having your heavy blow call the return stroke, and Return Stroke charging the blade for five blows.
+**Not built yet.** Steering Stepped Leader with the stick while you fight, and having your heavy blow call the return stroke.
 
 **Example.** Send Stepped Leader down a hallway of soldiers. They all have Static when the return stroke lights up.
 

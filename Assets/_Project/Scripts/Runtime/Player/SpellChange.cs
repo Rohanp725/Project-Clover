@@ -24,11 +24,13 @@ namespace Clover.Player
         public float Speed;
         public float LingerDamage;
         public float AfflictionSeconds;
+        /// <summary>The blows a charge of the blade from the spell lasts (<see cref="SpellSpec.ChargeBlows"/>).</summary>
+        public int ChargeBlows;
 
         /// <summary>True when it changes nothing.</summary>
         public bool IsEmpty =>
             Cooldown == 0f && Mana == 0f && Damage == 0f && Stagger == 0f && Reach == 0f && Radius == 0f && Arc == 0f && Seconds == 0f
-            && Interval == 0f && Count == 0 && Stacks == 0 && Delay == 0f && Speed == 0f && LingerDamage == 0f && AfflictionSeconds == 0f;
+            && Interval == 0f && Count == 0 && Stacks == 0 && Delay == 0f && Speed == 0f && LingerDamage == 0f && AfflictionSeconds == 0f && ChargeBlows == 0;
 
         /// <summary>
         /// Writes what it adds to <paramref name="learn"/>'s numbers onto <paramref name="spec"/>'s (an Empower over a shape that
@@ -97,6 +99,7 @@ namespace Clover.Player
             if (Speed > 0f) spec.Speed = Speed;
             if (LingerDamage > 0f) spec.LingerDamage = LingerDamage;
             if (AfflictionSeconds > 0f) spec.AfflictionSeconds = AfflictionSeconds;
+            if (ChargeBlows > 0) spec.ChargeBlows = ChargeBlows;
         }
 
         /// <summary>Copies every number of one spec into another (no allocation): how a spell's own numbers are taken before changes are laid over them.</summary>
@@ -132,6 +135,7 @@ namespace Clover.Player
             into.PerDose = from.PerDose;
             into.PassReach = from.PassReach;
             into.StepReach = from.StepReach;
+            into.ChargeBlows = from.ChargeBlows;
         }
     }
 

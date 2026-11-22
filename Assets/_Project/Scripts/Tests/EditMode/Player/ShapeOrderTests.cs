@@ -81,6 +81,19 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void ReturnStrokeChargesTheBladeForFiveBlows()
+        {
+            var stroke = Worn(Elements.Lightning, LightningTree.ChainLance, 1);
+            Assert.AreEqual(5, stroke.ChargeBlows, "five blows, not three");
+            Assert.AreEqual(0, Worn(Elements.Lightning, LightningTree.ChainLance, 0).ChargeBlows, "Stepped Leader charges as usual");
+            var blade = new Clover.Player.Magic.ChargedBlade();
+            blade.Charge(Elements.Lightning, stroke.ChargeBlows);
+            Assert.AreEqual(5, blade.Left);
+            blade.Charge(Elements.Lightning, 0);
+            Assert.AreEqual(blade.Blows, blade.Left, "nothing said: the blade's own three");
+        }
+
+        [Test]
         public void EveryShapesSetAsideNamesARealEffect()
         {
             foreach (var mark in Upgrade.All.Where(mark => mark.Part == BranchPart.Shape && mark.Shapes != null))

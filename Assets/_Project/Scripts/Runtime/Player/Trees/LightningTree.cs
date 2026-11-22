@@ -58,9 +58,10 @@ namespace Clover.Player.Trees
                     Description = "The lance is not thrown. A bolt steps out from your blade, one bright step of a metre and a half at a time, up to twelve metres, laying Static on what is near. Then the return stroke lights the whole path at once.",
                     Spell = new SpellSpec { Reach = 12f, Speed = 10f, Count = 8, Radius = 1.5f, Damage = 4f, Stagger = 4f, Stacks = 1 },
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Hazard, At = EffectAt.Self, Shape = HazardShape.Line, Reach = 12f, Count = 8, Radius = 0.75f, Seconds = 0.2f, Interval = 0.2f, Delay = 1.2f, Damage = 14f, Stagger = 10f, Affliction = AfflictionKind.Static, Stacks = 1 } } },
-                // NEEDS: the blade charged for five blows, not three.
+                // The blade it charges lasts five blows, not three (SpellSpec.ChargeBlows).
                 new ShapeDef { Name = "Return Stroke",
                     Description = "After its last leap it comes back along the same path to your blade, striking each enemy again for half. Throw, then fight.",
+                    Change = new SpellChange { ChargeBlows = 5 },
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Burst, Delay = 0.6f, Damage = 5f, Stagger = 5f, Radius = 0.8f } } },
                 "Opens two shapes of Chain Lance, chosen at any rest fire: Stepped Leader, a path you draw, or Return Stroke, a bolt that comes back.",
                 // NEEDS: only when the lance is thrown within 0.5 s after the finisher. Until then a finisher sends the arc itself.
