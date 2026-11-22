@@ -29,3 +29,20 @@ The owner said, word for word: "I have noticed some effects look misplaced on sm
 - **Size:** on-body pieces scale with the body, between about 0.6x and 1.8x. Floor and area effects keep their gameplay size, because their size shows reach. (Owner's pick: "Scale on-body, not areas".)
 - **The check:** a probe films a chosen set of effects side by side on a small enemy (the Knife Acolyte), a medium one (the Temple Soldier) and a large one (the Gate Captain, plus a boss form). Read the close-ups for every effect touched. This becomes the standing size check for every new effect.
 - **When:** in the weekend effects round, before its re-films, so every re-filmed look already sits right on every size.
+
+## The filming rig (the owner, 2026-11-22)
+
+The owner said, word for word: "for some reactions, the enemies are getting hit by something, even after the effect, also a lot of the gifs still have the issue of a second cast of both element afflictions on the enemy, even when it cant react cause the duo reaction just happened. We might need to update how we are taking the gifs".
+
+**Plan: rebuild the reaction filming rig (v2) before any round-4 re-films.**
+- **Fresh bodies for every clip.** Fresh enemies, with every affliction, hazard and look cleared. Nothing carries over between clips.
+- **One trigger per clip.** Lay the first element once, then cast the second element ONCE with the real spell, which sets off the reaction. No re-casting, no player attacks and no auto-blows after it.
+- **Quiet enemies.** Enemies can't attack or cast during the clip; no Storm Caller bolts. They still react: flinch, stagger, knock-down.
+- **No leftovers.** No hazards or ground effects left from earlier clips.
+- **The rig checks itself, and fails the clip if:**
+  - any affliction is laid after the reaction fires, apart from what the reaction itself lays;
+  - any damage lands after the effect ends, apart from the reaction's own damage over time;
+  - the second element's own affliction look shows on a body that just reacted.
+
+  These checks come from logging every affliction, hit and look per frame.
+- **Re-film only after the rig passes on a sample of 5 reactions,** with the frames read by eye.
