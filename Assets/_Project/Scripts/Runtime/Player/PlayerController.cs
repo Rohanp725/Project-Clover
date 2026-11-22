@@ -343,7 +343,8 @@ namespace Clover.Player
                 Vector3 rollDirection = wish.sqrMagnitude > 0.01f ? wish : transform.forward;
                 // A mark may change this roll by which way it goes against the enemy faced (Into the Fire).
                 var terms = upgrades != null ? upgrades.DodgeTermsFor(rollDirection) : DodgeTerms.Plain;
-                if (Dodge.TryStart(rollDirection, Stamina, terms))
+                // How long ago the press was: the Light Body flows only from a press in a dodge's last moment.
+                if (Dodge.TryStart(rollDirection, Stamina, terms, DodgeBufferTime - dodgeBuffered))
                 {
                     dodgeBuffered = 0f;
                     if (attacking) combat.Interrupt();

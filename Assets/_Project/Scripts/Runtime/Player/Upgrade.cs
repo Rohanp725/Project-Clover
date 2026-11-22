@@ -192,6 +192,8 @@ namespace Clover.Player
         public static int UsualCost(Upgrade mark)
         {
             if (mark == null || mark.Currency == Currency.None) return 0;
+            // The Body's marks are 2 each and its bearings 4 (way_plan.md 0.3 and 0.4).
+            if (mark.Tree == MarkTree.Body && mark.Currency == Currency.Memories) return mark.Kind == UpgradeKind.Keystone ? 4 : 2;
             return mark.Currency == Currency.Memories ? UsualWayCost(mark.Kind) : UsualCost(mark.Kind);
         }
 

@@ -163,5 +163,26 @@ namespace Clover.Player
         /// affliction in them (Fuel to It: Burn 25%).
         /// </summary>
         ReactionDamage,
+        /// <summary>Flat, points. Added to the player's greatest stamina (the Body, task 5.4).</summary>
+        StaminaMost,
+        /// <summary>Flat, seconds. Added to the wait before stamina starts to come back; negative is sooner.</summary>
+        StaminaDelay,
+        /// <summary>
+        /// Flat. Poise in every swing of every weapon, added to the swing's own; outside a swing a blow of this much or less
+        /// does not make the player flinch (the Body's Steady).
+        /// </summary>
+        Poise,
+        /// <summary>Flat, metres. Added to every weapon's dodge, at the same cost.</summary>
+        DodgeMetres,
+        /// <summary>Flat, seconds. Added to the wait after a dodge before the next; negative is shorter.</summary>
+        DodgeRecovery,
+        /// <summary>Flat, whole. Dodges that may flow on from the last moment of a dodge at half cost (the Light Body: one).</summary>
+        DodgeFlow,
+        /// <summary>Flat, seconds. Added to how long an unguarded blow makes the player flinch; negative is shorter.</summary>
+        FlinchSeconds,
+        /// <summary>Share. How far a blow that lands pushes the player back; -0.5 is half as far.</summary>
+        KnockbackTaken,
+        /// <summary>Flat, seconds. Added to the wait before grey health starts to fade.</summary>
+        GreyDelay,
     }
 }

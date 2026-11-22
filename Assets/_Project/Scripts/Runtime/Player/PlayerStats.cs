@@ -14,7 +14,7 @@ namespace Clover.Player
     /// </summary>
     public class PlayerStats
     {
-        public const int Count = (int)PlayerStat.ReactionDamage + 1;
+        public const int Count = (int)PlayerStat.GreyDelay + 1;
         public const int WhenCount = (int)StatWhen.AirborneHeavyBlow + 1;
         /// <summary>How many timed boons can run at once; a new one past that takes the place of the one nearest its end.</summary>
         public const int BoonCapacity = 16;
@@ -50,7 +50,9 @@ namespace Clover.Player
             stat == PlayerStat.AfflictionStacks || stat == PlayerStat.Health || stat == PlayerStat.FlaskCount || stat == PlayerStat.CritChance
             || stat == PlayerStat.AfflictionDepth || stat == PlayerStat.Leech || stat == PlayerStat.PlantedSooner || stat == PlayerStat.BloodPrice
             || stat == PlayerStat.GreyStrength || stat == PlayerStat.BaseSpellCount || stat == PlayerStat.HeatBlows || stat == PlayerStat.HeatCap
-            || stat == PlayerStat.AirSeconds || stat == PlayerStat.AirBlows || stat == PlayerStat.GrownLimit || stat == PlayerStat.MarkBlows;
+            || stat == PlayerStat.AirSeconds || stat == PlayerStat.AirBlows || stat == PlayerStat.GrownLimit || stat == PlayerStat.MarkBlows
+            || stat == PlayerStat.StaminaMost || stat == PlayerStat.StaminaDelay || stat == PlayerStat.Poise || stat == PlayerStat.DodgeMetres
+            || stat == PlayerStat.DodgeRecovery || stat == PlayerStat.DodgeFlow || stat == PlayerStat.FlinchSeconds || stat == PlayerStat.GreyDelay;
 
         /// <summary>True for a condition asked of each blow, not held as a state.</summary>
         public static bool IsBlow(StatWhen when) => when == StatWhen.HeavyBlow || when == StatWhen.LightBlow || when == StatWhen.CriticalBlow || when == StatWhen.ChainEndBlow || when == StatWhen.AirborneBlow || when == StatWhen.AirborneHeavyBlow;

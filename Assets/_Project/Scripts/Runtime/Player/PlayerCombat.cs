@@ -84,6 +84,8 @@ namespace Clover.Player
         public float StatStagger = 1f;
         public float StatMana = 1f;
         public float StatSwing = 1f;
+        /// <summary>Poise the Body adds to every swing of every weapon (Steady, task 5.4): flat, on top of the swing's own.</summary>
+        public float StatPoise;
         /// <summary>What damage to an enemy that carries any affliction is multiplied by.</summary>
         public float StatAfflicted = 1f;
         /// <summary>The Blade Drinks Fire: damage added to a weapon blow for each Burn it takes off the enemy struck; 0 for none.</summary>
@@ -440,7 +442,7 @@ namespace Clover.Player
         {
             if (HeavyUnbroken && InHeavySwing) return true;
             var step = Combo.Current;
-            return step != null && step.Poise > 0f && damage <= step.Poise
+            return step != null && Way.BodyRules.Poised(step.Poise + StatPoise, damage)
                 && (Combo.Phase == AttackPhase.Windup || Combo.Phase == AttackPhase.Active);
         }
 
