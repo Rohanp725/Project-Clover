@@ -570,7 +570,8 @@ namespace Clover.Player
                 if (upgrades.Press(pressMark, pressNext))
                 {
                     pressNext++;
-                    if (pressNext >= pressMark.Presses.Length) pressSlot = -1;
+                    var presses = upgrades.PressesOf(pressMark, out _);
+                    if (presses == null || pressNext >= presses.Length) pressSlot = -1;
                     return true;
                 }
                 pressSlot = -1;
@@ -636,12 +637,13 @@ namespace Clover.Player
                     castIn = element.ElementOf(mark).Name;
                     chargeBlows = upgrades.ChargeBlowsOf(mark);
                     // A spell of several presses waits for its next press now.
-                    if (mark.Presses != null && mark.Presses.Length > 0)
+                    // Its own, or the worn shape's (ShapeDef.Presses).
+                    if (upgrades.PressesOf(mark, out float pressWindow) != null)
                     {
                         pressSlot = slot;
                         pressMark = mark;
                         pressNext = 0;
-                        pressUntil = Time.time + mark.PressWindow;
+                        pressUntil = Time.time + pressWindow;
                     }
                     // The wait as its branch makes it (the Empower's is shorter). A spell from outside the table (a lent
                     // one) that asks no mana still waits.

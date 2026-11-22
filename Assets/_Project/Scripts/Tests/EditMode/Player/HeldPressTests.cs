@@ -59,6 +59,22 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void AShapesSecondPressTakesYouBackWhereYouCastIt()
+        {
+            var road = Upgrade.ById(SpellBranch.ShapeId(LightTree.StepIntoLight)).Shapes.First(each => each.Name == "Aruna's Road");
+            var presses = PlayerUpgrades.PressesOf(Upgrade.ById(LightTree.StepIntoLight), road, out float window);
+            Assert.AreEqual(3f, window, 1e-5f, "within three seconds");
+            Assert.AreEqual(UpgradeAction.ReturnToCast, presses.Single().Single().Do, "back along the road to where you began");
+            var back = Upgrade.ById(SpellBranch.ShapeId(MetalTree.ToTheBlade)).Shapes.First(each => each.Name == "There and Back");
+            var flight = PlayerUpgrades.PressesOf(Upgrade.ById(MetalTree.ToTheBlade), back, out window).Single().Single();
+            Assert.AreEqual(2f, window, 1e-5f, "within two seconds of arriving");
+            Assert.AreEqual(UpgradeAction.ReturnToCast, flight.Do);
+            Assert.AreEqual(10f, flight.Damage, 1e-5f, "the line cut a second time");
+            Assert.IsEmpty(back.Effects, "no stand-in cut a second later");
+            Assert.IsNull(PlayerUpgrades.PressesOf(Upgrade.ById(MetalTree.ToTheBlade), null, out window), "no shape worn: no second press");
+        }
+
+        [Test]
         public void GatheredAndDiamondThunderAreHeldOnTheirButtons()
         {
             var gathered = Upgrade.ById(SpellBranch.ShapeId(LightTree.Glare)).Shapes.First(each => each.Name == "Gathered");

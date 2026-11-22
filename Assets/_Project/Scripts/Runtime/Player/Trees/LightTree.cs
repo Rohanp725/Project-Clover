@@ -199,8 +199,9 @@ namespace Clover.Player.Trees
                 UpgradeIcons.Wing,
                 new Empower { Cooldown = 7f, Reach = 9f },
                 "Step Into Light waits 7 seconds, not 8, and carries you nine metres.",
-                // NEEDS: the step back along the road as a second press within 3 s (second-press). The road that marks is data.
-                new ShapeDef { Name = "Aruna's Road",
+                // The step back along the road as a second press within 3 s (ShapeDef.Presses, UpgradeAction.ReturnToCast). The road
+                // that marks is data.
+                new ShapeDef { Name = "Aruna's Road", PressWindow = 3f, Presses = new[] { new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, Do = UpgradeAction.ReturnToCast } } },
                     Description = "The line you stepped stays three seconds as a road of gold dust. It Marks whatever crosses it, and pressing again within the three seconds steps you back along it to where you began. Out and back.",
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Hazard, At = EffectAt.Self, Shape = HazardShape.Line, Reach = 7f, Count = 5, Radius = 0.7f, Seconds = 3f, Interval = 1f, Damage = 0f, Stagger = 0f, Affliction = M, Stacks = 1 } } },
                 // The step already comes out at the enemy's back, turned toward it; the next blow is three times as hard.

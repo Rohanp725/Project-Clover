@@ -209,9 +209,13 @@ namespace Clover.Tests
                 }
             }
             // A Shape mark's two shapes carry effects of their own, each with its slot and its Shape mark as owner; so do a
-            // spell's later presses (Three Weasels).
+            // spell's later presses (Three Weasels) and a shape's (Aruna's Road).
             var every = Upgrade.All.SelectMany(upgrade => upgrade.Effects.Concat(upgrade.Shapes.SelectMany(shape => shape.Effects))
+                .Concat(upgrade.Shapes.Where(shape => shape.Presses != null).SelectMany(shape => shape.Presses.SelectMany(press => press)))
                 .Concat(upgrade.Presses != null ? upgrade.Presses.SelectMany(press => press) : Enumerable.Empty<UpgradeEffect>())).ToList();
+            foreach (var upgrade in Upgrade.All)
+                foreach (var effect in upgrade.Shapes.Where(shape => shape.Presses != null).SelectMany(shape => shape.Presses.SelectMany(press => press)))
+                    Assert.AreSame(upgrade, effect.Owner, upgrade.Id + "'s shape's press");
             foreach (var upgrade in Upgrade.All.Where(upgrade => upgrade.Presses != null))
                 foreach (var effect in upgrade.Presses.SelectMany(press => press))
                     Assert.AreSame(upgrade, effect.Owner, upgrade.Id + "'s press");

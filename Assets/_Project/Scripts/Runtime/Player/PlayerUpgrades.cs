@@ -2132,6 +2132,23 @@ namespace Clover.Player
                     gatherTaken.Clear();
                     break;
                 }
+                case UpgradeAction.ReturnToCast:
+                {
+                    // Back in a straight line to where the spell was cast, cutting the line again when it says so.
+                    Vector3 home = castFrom;
+                    home.y = self.y;
+                    Vector3 way = home - self;
+                    float length = way.magnitude;
+                    if (length < 0.3f) break;
+                    way /= length;
+                    if (eDamage > 0f || eStagger > 0f)
+                        combat.StrikeLane(self, way, length, Or(effect.Radius, 0.6f), Blow(look, kind, eDamage, eStagger, effect.Affliction != AfflictionKind.None ? eStacks : 0));
+                    if (afterimage != null) afterimage.Leave(0.35f);
+                    ElementLook.Sparks(held, self + Vector3.up, way, 1f);
+                    player.StepTo(home);
+                    StepsBack++;
+                    break;
+                }
                 case UpgradeAction.FreeSurge:
                     if (element != null && element.LightSurgeFree(effect.SurgeOf, Or(effect.Seconds, 4f))) SurgesGiven++;
                     break;
@@ -2424,16 +2441,46 @@ namespace Clover.Player
         /// </summary>
         public bool Press(Upgrade mark, int index)
         {
-            if (mark?.Presses == null || index < 0 || index >= mark.Presses.Length || mark.Presses[index] == null) return false;
+            var presses = PressesOf(mark, out _);
+            if (presses == null || index < 0 || index >= presses.Length || presses[index] == null) return false;
             castSource = mark;
             castOrigin = transform.position;
             int before = queued;
-            foreach (var effect in mark.Presses[index]) Consider(effect, null, transform.position, false);
+            foreach (var effect in presses[index]) Consider(effect, null, transform.position, false);
             castSource = null;
             if (queued == before) return false;
             PressesDone++;
             return true;
         }
+
+        /// <summary>
+        /// The later presses of a mark's spell as it is cast now: the worn shape's, when it adds any (ShapeDef.Presses), else the
+        /// mark's own; null for none. <paramref name="window"/> is how long after the cast they may come.
+        /// </summary>
+        public UpgradeEffect[][] PressesOf(Upgrade mark, out float window)
+        {
+            window = 0f;
+            if (mark == null) return null;
+            var worn = SpellBranches.WornShape(!string.IsNullOrEmpty(mark.Branch) ? mark.Branch : mark.Id, RunState.Unlocked, ReadLoadout());
+            return PressesOf(mark, worn, out window);
+        }
+
+        /// <summary>As above, with the shape worn given: its presses stand in place of the mark's.</summary>
+        public static UpgradeEffect[][] PressesOf(Upgrade mark, ShapeDef worn, out float window)
+        {
+            if (worn != null && worn.Presses != null && worn.Presses.Length > 0)
+            {
+                window = worn.PressWindow;
+                return worn.Presses;
+            }
+            window = mark != null ? mark.PressWindow : 0f;
+            return mark != null && mark.Presses != null && mark.Presses.Length > 0 ? mark.Presses : null;
+        }
+
+        // Where the player stood as the slot spell now running was cast (a later press steps back to it).
+        private Vector3 castFrom;
+        /// <summary>Steps taken back to where a spell was cast (Aruna's Road, There and Back), counted for probes.</summary>
+        public int StepsBack { get; private set; }
 
         /// <summary>Counts for probes: freezes made to last longer (Six Levels Down).</summary>
         public int FreezesKept { get; private set; }
@@ -3682,6 +3729,7 @@ namespace Clover.Player
             }
             castSource = mark;
             castOrigin = transform.position;
+            castFrom = transform.position;
             BeginCast();
             form.Cast(cast);
             castSource = mark;

@@ -149,11 +149,9 @@ the next blows on that enemy critical.
 
 **When it happens.** Whenever you cast Step Into Light, using the shape you picked. If you have not bought this, you cast the plain step.
 
-**The numbers.** 3 Shards. Aruna's Road: five patches along 7 metres in front of where you cast it, each 0.7 metres across, Mark whatever stands in them once a second for 3 seconds. Behind the Eye: if the cut lands, your next weapon blow within a second deals three times its damage.
+**The numbers.** 3 Shards. Aruna's Road: five patches along 7 metres in front of where you cast it, each 0.7 metres across, Mark whatever stands in them once a second for 3 seconds. Press the slot again within those 3 seconds to step straight back to where you cast it. Behind the Eye: if the cut lands, your next weapon blow within a second deals three times its damage.
 
 **Works with.** Aruna's Road: a pack that follows you, the root mark, Weighed, Spoken Sentence. Behind the Eye: heavy weapons, the Learn mark's critical heavy blow (the two multiply together), Unblemished.
-
-**Not built yet.** Aruna's Road's step back along the road, with a second press within the three seconds.
 
 **Example.** Use Behind the Eye on a captain. Step, turn, and one heavy blow lands as a critical hit, three times as hard.
 

@@ -270,6 +270,17 @@ namespace Clover.Player
                             effect.Slot = slots++;
                             effect.Owner = upgrade;
                         }
+                        // A shape's later presses are its own too (ShapeDef.Presses).
+                        if (shape.Presses != null)
+                            foreach (var press in shape.Presses)
+                            {
+                                if (press == null) continue;
+                                foreach (var effect in press)
+                                {
+                                    effect.Slot = slots++;
+                                    effect.Owner = upgrade;
+                                }
+                            }
                     }
             }
             // A Learn whose Empower changes its effects keeps a twin of each, with the Empower's numbers, in the same slots:

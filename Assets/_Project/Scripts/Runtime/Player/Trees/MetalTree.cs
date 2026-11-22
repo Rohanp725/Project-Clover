@@ -340,11 +340,11 @@ namespace Clover.Player.Trees
                 new ShapeDef { Name = "Chain",
                     Description = "A bronze chain stays stretched along the line you flew for three seconds. An enemy that crosses it is notched and tripped, 20 stagger. Your path becomes a tripwire.",
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Hazard, At = EffectAt.Self, Shape = HazardShape.Line, Reach = 6f, Count = 5, Radius = 0.6f, Seconds = 3f, Interval = 1f, Damage = 0f, Stagger = 20f, Affliction = S, Stacks = 1 } } },
-                // NEEDS: the flight back as a second press within 2 s of arriving (second-press). Until then what the flight cut
-                // is cut again a second later.
-                new ShapeDef { Name = "There and Back",
+                // The flight back as a second press within 2 s of arriving (ShapeDef.Presses, UpgradeAction.ReturnToCast), cutting the
+                // line a second time as the flight did: 10 damage, 15 stagger and a notch.
+                new ShapeDef { Name = "There and Back", PressWindow = 2f,
                     Description = "Within two seconds of arriving, press again to fly back along the same line, cutting it a second time. In and out.",
-                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Burst, Radius = 0.8f, Delay = 1f, Damage = 10f, Stagger = 15f, Affliction = S, Stacks = 1 } } },
+                    Presses = new[] { new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, Do = UpgradeAction.ReturnToCast, Radius = 1f, Damage = 10f, Stagger = 15f, Affliction = S, Stacks = 1 } } } },
                 "Opens two shapes of To the Blade, chosen at any rest fire: Chain, a tripwire left along your flight, or There and Back, a flight out and home again.",
                 // Cast as a blow would land (UpgradeEffect.BlowLanding): a perfect dodge (UpgradeAction.PerfectDodgeNow), untouchable from the
                 // press to the blade, and its wait ended.

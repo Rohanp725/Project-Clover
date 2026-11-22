@@ -195,5 +195,11 @@ namespace Clover.Player
         /// Master: its cooldown halved; Blown Through: half its own wait back; the ledger's own-clock-share). Reads: Amount.
         /// </summary>
         KeepWaitShare,
+        /// <summary>
+        /// Steps the player back in a straight line to where they stood as the spell was cast, cutting what stands on the way for
+        /// Damage and Stagger in a lane Radius (0.6) wide either side, laying Affliction (Aruna's Road: back along the road; There
+        /// and Back: the flight back, cutting the line again). Reads: Damage, Stagger, Radius, Affliction, Stacks.
+        /// </summary>
+        ReturnToCast,
     }
 }

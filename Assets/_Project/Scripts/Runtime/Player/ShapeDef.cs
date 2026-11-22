@@ -33,6 +33,13 @@ namespace Clover.Player
         /// <summary>What it does when things happen, while this shape is worn: the shape's own rule, often answering the branch's own spell (<see cref="UpgradeEffect.OwnBranch"/>).</summary>
         public UpgradeEffect[] Effects = Array.Empty<UpgradeEffect>();
         /// <summary>
+        /// Later presses this shape adds to its spell (the ledger's second-press), in place of any the Learn has: each list is
+        /// done on the next press of the slot within <see cref="PressWindow"/> seconds of the cast (Aruna's Road: back along the
+        /// road within 3 s; There and Back: the flight back within 2 s).
+        /// </summary>
+        public UpgradeEffect[][] Presses;
+        public float PressWindow = 3f;
+        /// <summary>
         /// The places, in its Learn's own effects, of those this shape sets aside while it is worn (the ledger's
         /// shape-sets-aside: Golden Sickle keeps the garden standing, Red-Hot has no hold). Empty: the Learn's effects all run.
         /// </summary>
