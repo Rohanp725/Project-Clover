@@ -23,6 +23,25 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void AnEnemyThatCannotTurnGoesWhereItFaced()
+        {
+            var enemy = NewEnemy();
+            Assert.AreEqual(1f, enemy.TurnMultiplier, 1e-5f);
+            enemy.Conditions.Set(new ConditionSpec { Id = "test.seized", Seconds = 4f, Flags = ConditionFlags.TurnSlowed, Scale = 0.6f }, null, 1);
+            Assert.AreEqual(0.6f, enemy.TurnMultiplier, 1e-5f, "turning 40% slower");
+            enemy.Conditions.Set(new ConditionSpec { Id = "test.stuck", Seconds = 1f, Flags = ConditionFlags.CannotTurn }, null, 2);
+            Assert.AreEqual(0f, enemy.TurnMultiplier, 1e-5f, "cannot turn at all");
+            enemy.Conditions.Tick(2f);
+            Assert.AreEqual(0.6f, enemy.TurnMultiplier, 1e-5f, "the hold on its turning gone, the slowing left");
+            var sea = Upgrade.ById(Clover.Player.Trees.Duo.RustDuo.TheSeaTakesIt).Effects;
+            var seized = sea.Single(each => each.Do == UpgradeAction.Condition && each.On == UpgradeTrigger.SpellHit).State;
+            Assert.AreEqual(4f, seized.Seconds, 1e-5f);
+            Assert.AreEqual(0.6f, seized.Scale, 1e-5f);
+            Assert.IsTrue((seized.Flags & ConditionFlags.TurnSlowed) != 0);
+            Assert.IsTrue(sea.Any(each => each.On == UpgradeTrigger.ConditionStruck && each.By == StruckBy.Heavy && each.State != null && (each.State.Flags & ConditionFlags.WeaponTakenShare) != 0), "a heavy blow knocks a plate off");
+        }
+
+        [Test]
         public void WhirlpoolAndAshFallHoldTheBalance()
         {
             var churn = Upgrade.ById(WaterTree.Whirlpool).Effects.Single(each => each.Do == UpgradeAction.Condition);

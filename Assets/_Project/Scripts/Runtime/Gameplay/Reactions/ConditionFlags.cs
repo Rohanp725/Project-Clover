@@ -54,5 +54,9 @@ namespace Clover.Gameplay
         GuardMadePerfect = 1 << 16,
         /// <summary>Its balance does not recover while this lasts (Whirlpool's water, Ash Fall's ash; the ledger's enemy-balance-held).</summary>
         BalanceHeld = 1 << 17,
+        /// <summary>It cannot turn: an attack it begins goes where it already faced (the ledger's cannot-turn).</summary>
+        CannotTurn = 1 << 18,
+        /// <summary>It turns at the run's Scale of its usual pace (The Sea Takes It's seized joints: 0.6, turning 40% slower).</summary>
+        TurnSlowed = 1 << 19,
     }
 }

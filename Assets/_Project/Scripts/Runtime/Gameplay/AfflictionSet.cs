@@ -817,7 +817,7 @@ namespace Clover.Gameplay
             * (Afflictions.BuckledShare > 0f && stacks[(int)AfflictionKind.Tremor] > 0 && stacks[(int)AfflictionKind.Sundered] > 0 ? 1f + Afflictions.BuckledShare : 1f)
             * Conditions.StaggerScale;
         public float ShoveMultiplier => 1f + Sum(spec => spec.ShovePerStack);
-        public float TurnMultiplier => HeldLeft > 0f || IsLifted ? 0f : Math.Max(0.3f, 1f - Sum(spec => spec.TurnSlowPerStack));
+        public float TurnMultiplier => HeldLeft > 0f || IsLifted ? 0f : Math.Max(0.3f, 1f - Sum(spec => spec.TurnSlowPerStack)) * Conditions.TurnScale;
         public float DamageDealtMultiplier => Math.Max(0.3f, 1f - Sum(spec => spec.DealsLessPerStack)) * Conditions.DealtScale;
         public float HealOnBlow => Sum(spec => spec.HealOnBlowPerStack);
         public float ManaOnBlow => Sum(spec => spec.ManaPerStack);

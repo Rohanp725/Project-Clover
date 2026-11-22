@@ -68,10 +68,8 @@ carried.
 
 **When it happens.** Cast it from a spell slot while you carry both Water and Metal. Press that slot's button (hold L2 and a face button, or press 1 to 4). The first time it lands, it charges your blade with Water.
 
-**The numbers.** Mix, duo spell, breaker, 5 Shards. It costs no mana. After you cast it, you must wait 13 seconds to cast it again. Fighting with your weapon makes the wait shorter. It reaches 7 metres ahead and is 50 degrees wide. It deals 8 damage, 10 stagger and a Soaked. Notched enemies get their notches filled all the way.
+**The numbers.** Mix, duo spell, breaker, 5 Shards. It costs no mana. After you cast it, you must wait 13 seconds to cast it again. Fighting with your weapon makes the wait shorter. It reaches 7 metres ahead and is 50 degrees wide. It deals 8 damage, 10 stagger and a Soaked. Notched enemies get their notches filled all the way, and their joints go stiff: for 4 seconds they turn 40% slower. A heavy blow on a stiff enemy knocks a plate of armour off, so your weapon blows deal 16% more to it for 6 seconds.
 
 **Works with.** Rust and its shapes, Salt Edge, The Wreck.
 
 **Example.** Notch a pack with Flung Blade, then roll the sea through it.
-
-**Not built yet.** The enemies' joints don't get stiff yet (turning 40% slower), and a heavy blow on a stiff one doesn't knock a plate of armour off yet.

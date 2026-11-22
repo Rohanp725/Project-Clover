@@ -22,6 +22,9 @@ namespace Clover.Player.Trees.Duo
         public const string JointsPlate = "rust.jointsplate";
         public const string Flaking = "rust.flaking";
         public const string FlakingPlate = "rust.flakingplate";
+        /// <summary>The Sea Takes It's seized joints (turning 40% slower for 4 s), and the plate a heavy blow knocks off them.</summary>
+        public const string SeaSeized = "rust.sea.seized";
+        public const string SeaPlate = "rust.sea.plate";
 
         public static void Add(List<Upgrade> to)
         {
@@ -101,14 +104,22 @@ namespace Clover.Player.Trees.Duo
 
             // The duo spell, bought with Shards once both are carried (no god gives it): a breaker on a 13 s cooldown (SpellTimings). The wave form throws a cone of brine ahead
             // that Soaks (the branch's first element); every notched enemy it crosses rusts through to full.
-            // NEEDS: its joints seizing (40% slower turning for 4 s) and a heavy blow on a seized enemy knocking a plate off.
+            // Its joints seize (ConditionFlags.TurnSlowed: 40% slower turning for 4 s), and a heavy blow on a seized enemy knocks a
+            // plate off (weapon blows 16% harder for 6 s, as Rust's own plate).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = TheSeaTakesIt, Name = "The Sea Takes It", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Role = SpellRole.Breaker, Requires = new[] { SaltEdge, SaltGuard }, Icon = UpgradeIcons.Wave,
                 Description = "A wave of brine rolls ahead. Everything it crosses is Soaked, and every notched enemy it crosses rusts through to full at once.",
                 Form = SpellForms.Wave,
                 Spell = new SpellSpec { Reach = 7f, Arc = 50f, Damage = 8f, Stagger = 10f, Stacks = 1 },
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Needs = AfflictionKind.Sundered, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Sundered, Stacks = 99 } },
+                Effects = new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Needs = AfflictionKind.Sundered, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Sundered, Stacks = 99 },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Needs = AfflictionKind.Sundered, Do = UpgradeAction.Condition,
+                        State = new ConditionSpec { Id = SeaSeized, Seconds = 4f, Flags = ConditionFlags.TurnSlowed, Scale = 0.6f, EndsWith = ConditionBlow.Heavy } },
+                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = SeaSeized, By = StruckBy.Heavy, Do = UpgradeAction.Condition,
+                        State = new ConditionSpec { Id = SeaPlate, Seconds = 6f, Flags = ConditionFlags.WeaponTakenShare, Scale = 1.16f } },
+                },
             }, HeartPattern.Spell));
         }
 

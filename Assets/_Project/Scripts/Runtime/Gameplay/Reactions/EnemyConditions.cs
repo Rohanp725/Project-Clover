@@ -38,6 +38,8 @@ namespace Clover.Gameplay
         /// <summary>What the damage it takes, and deals, is multiplied by.</summary>
         public float TakenScale { get; private set; } = 1f;
         public float DealtScale { get; private set; } = 1f;
+        /// <summary>What its turning pace is multiplied by: 0 when it cannot turn, the Scale of each turn-slowing run otherwise.</summary>
+        public float TurnScale { get; private set; } = 1f;
         /// <summary>What the damage it takes from weapon blows, and from spells, is multiplied by beyond <see cref="TakenScale"/>.</summary>
         public float WeaponTakenScale { get; private set; } = 1f;
         public float SpellTakenScale { get; private set; } = 1f;
@@ -531,7 +533,7 @@ namespace Clover.Gameplay
         {
             int count = 0, keeps = 0;
             var flags = ConditionFlags.None;
-            float pace = 1f, windup = 1f, taken = 1f, dealt = 1f, weapon = 1f, spellTaken = 1f, stagger = 1f, sight = 0f, heavyTaken = 1f, weaponStagger = 1f, longer = 0f, shatter = 1f;
+            float pace = 1f, windup = 1f, taken = 1f, dealt = 1f, weapon = 1f, spellTaken = 1f, stagger = 1f, sight = 0f, heavyTaken = 1f, weaponStagger = 1f, longer = 0f, shatter = 1f, turn = 1f;
             for (int i = 0; i < Slots; i++)
             {
                 if (!runs[i].Active) continue;
@@ -548,6 +550,8 @@ namespace Clover.Gameplay
                 if ((run.Flags & ConditionFlags.StaggerTakenShare) != 0) stagger *= run.Scale;
                 if ((run.Flags & ConditionFlags.HeavyTakenShare) != 0) heavyTaken *= run.Scale;
                 if ((run.Flags & ConditionFlags.WeaponStaggerShare) != 0) weaponStagger *= run.Scale;
+                if ((run.Flags & ConditionFlags.TurnSlowed) != 0) turn *= run.Scale;
+                if ((run.Flags & ConditionFlags.CannotTurn) != 0) turn = 0f;
                 longer = Math.Max(longer, run.FreezeLonger);
                 shatter = Math.Max(shatter, run.ShatterHarder);
                 if ((run.Flags & ConditionFlags.SightShort) != 0) sight = sight > 0f ? Math.Min(sight, run.Sight) : run.Sight;
@@ -559,6 +563,7 @@ namespace Clover.Gameplay
             WindupPace = Math.Max(0.05f, windup);
             TakenScale = taken;
             DealtScale = dealt;
+            TurnScale = Math.Max(0f, turn);
             WeaponTakenScale = weapon;
             SpellTakenScale = spellTaken;
             StaggerScale = stagger;
