@@ -292,13 +292,13 @@ The blocked blow also counts as a perfect guard for every other mark that answer
 ## ice.base.master
 **What it does.** Cast Hoarfrost within half a second after a shatter, and the crystals grow out from the shattered spot with four stacks of Chill.
 
-**When it happens.** For now, right after any shatter. Hoarfrost must be in a spell slot.
+**When it happens.** When you cast Hoarfrost within half a second after a shatter. Hoarfrost must be in a spell slot.
 
-**The numbers.** 3 Shards. For 0.8 seconds after a shatter, every enemy within 6 metres of it is marked. The next blow or spell on each one adds two more stacks of Chill.
+**The numbers.** 3 Shards. Everything that cast hits gets two more stacks of Chill: four in all.
 
 **Works with.** Flying Shards (its burst is the hit that uses up the mark); Chill; All at Once.
 
-**Not built yet.** It should only work when you cast Hoarfrost in the half second after a shatter, with the crystals growing from the shattered spot. For now, anything that hits the marked enemies in that moment adds the two extra stacks.
+**Not built yet.** The crystals should grow out from the shattered spot; for now, they come from you as usual.
 
 **Example.** Shatter one soldier and cast right away into the rest. They get the crystals' Chill plus two more, one blow away from freezing.
 

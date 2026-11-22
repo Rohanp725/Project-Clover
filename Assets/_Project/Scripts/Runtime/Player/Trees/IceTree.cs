@@ -245,14 +245,9 @@ namespace Clover.Player.Trees
                     Description = "One branching line of frost creeps ten metres along the floor in a moment, laying two Chill on all it crosses. It reaches the archer behind the shield.",
                     Spell = new SpellSpec { Reach = 10f, Speed = 16f, Count = 1, Radius = 0.7f, Damage = 8f, Stagger = 10f, Stacks = 2 } },
                 "Opens two shapes of Hoarfrost, chosen at any rest fire: Black Ice, a sheet of ice on the ground, or Frost Line, one long creeping line.",
-                // NEEDS: only Hoarfrost cast within 0.5 s after a shatter, its crystals grown from the shattered spot
-                // (spell-windows). Until then, for a moment after a shatter, the next blow or spell on each enemy near it lays
-                // two more Chill.
-                new[]
-                {
-                    new UpgradeEffect { On = UpgradeTrigger.Shatter, Do = UpgradeAction.Condition, Radius = 6f, State = new ConditionSpec { Id = FreshBreak, Seconds = 0.8f, EndsWith = ConditionBlow.Any } },
-                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = FreshBreak, By = StruckBy.Any, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 2 },
-                },
+                // Only Hoarfrost cast within 0.5 s after a shatter (UpgradeEffect.CastAfter): its Chill four deep. NEEDS: the crystals
+                // grown out from the shattered spot (form-pieces).
+                new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, CastAfter = CastMoment.Shatter, CastWindow = 0.5f, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 2 } },
                 "Cast it within half a second after a shatter, and the crystals grow out from the shattered spot, Chill four deep.");
 
             // The drill carries the slide and leaves the lane; nothing can touch you for the whole slide, where the design asks

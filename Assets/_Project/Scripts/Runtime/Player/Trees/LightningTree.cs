@@ -64,8 +64,8 @@ namespace Clover.Player.Trees
                     Change = new SpellChange { ChargeBlows = 5 },
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Burst, Delay = 0.6f, Damage = 5f, Stagger = 5f, Radius = 0.8f } } },
                 "Opens two shapes of Chain Lance, chosen at any rest fire: Stepped Leader, a path you draw, or Return Stroke, a bolt that comes back.",
-                // NEEDS: only when the lance is thrown within 0.5 s after the finisher. Until then a finisher sends the arc itself.
-                new[] { new UpgradeEffect { On = UpgradeTrigger.FinisherHit, Do = UpgradeAction.Arc, Damage = 10f, Stagger = 10f, Count = 8, Reach = 12f, Affliction = AfflictionKind.Static, Stacks = 2, Cooldown = 7f } },
+                // Only when the lance is thrown within 0.5 s after a finisher (UpgradeEffect.CastAfter): it leaps on to every enemy within 12 m.
+                new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, CastAfter = CastMoment.Finisher, CastWindow = 0.5f, Do = UpgradeAction.Arc, Damage = 10f, Stagger = 10f, Count = 8, Reach = 12f, Affliction = AfflictionKind.Static, Stacks = 2 } },
                 "Thrown within half a second after a finisher, it leaps to every enemy within twelve metres.");
 
             SpellBranch.Add(to, E, WaitingThunder, "Waiting Thunder", SpellRole.Breaker, BranchPattern.MiddleB, StrikesTwice, SpellForms.Waiting,

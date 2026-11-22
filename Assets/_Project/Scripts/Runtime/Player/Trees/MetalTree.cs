@@ -106,9 +106,14 @@ namespace Clover.Player.Trees
                         new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Molten, By = StruckBy.Weapon, Do = UpgradeAction.Burst, ByPower = true, Share = 6f, Radius = 0.5f, Stagger = 0f, Stacks = 0 },
                     } },
                 "Opens two shapes of Poured Bronze, chosen at any rest fire: Set, a crust your heavy blow shatters, or Red-Hot, bronze that burns under every blow.",
-                // NEEDS: the attacker's pour doubled (spell-windows). The reset is data: a pour cast within a second of a
-                // perfect guard starts no wait.
-                new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.InstantNext, Seconds = 1f } },
+                // Cast within a second of a perfect guard: the pour starts no wait, and the attacker's pour is doubled, counted by its
+                // notches before the pour spends them (UpgradeEffect.CastAfter, NeedsAttacker, CountsNeeds).
+                new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.InstantNext, Seconds = 1f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, CastAfter = CastMoment.PerfectGuard, CastWindow = 1f, NeedsAttacker = true, Needs = S, CountsNeeds = true, PerStack = true,
+                        Do = UpgradeAction.Burst, Radius = 0.6f, Damage = 12f, Stagger = 15f, Stacks = 0 },
+                },
                 "Cast it within a second after a perfect guard, and the attacker's pour is doubled and Poured Bronze is ready again.",
                 learnEffects: new[]
                 {

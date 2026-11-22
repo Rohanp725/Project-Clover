@@ -89,9 +89,9 @@ namespace Clover.Player.Trees
                     Description = "Everything bursts as before, and each burst sows a new seed in all it reaches. The loop keeps going.",
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SetOff, Spent = AfflictionKind.Seeded, Do = UpgradeAction.Afflict, Radius = 3f, Affliction = AfflictionKind.Seeded, Stacks = 1 } } },
                 "Opens two shapes of Reap What Is Sown, chosen at any rest fire: Golden Sickle, the Seeded reaped and the garden kept, or Second Sowing, every burst sowing again.",
-                // NEEDS: cast within 0.5 s of a Seeded enemy dying (spell-windows), and the garden's bursts and the mending counted
-                // twice too. Until then for half a second after a Seeded enemy dies every seed set off bursts twice as hard.
-                new[] { new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Seeded, Do = UpgradeAction.Boon, Stat = PlayerStat.BurstDamage, Amount = 1f, Seconds = 0.5f } },
+                // Cast within 0.5 s of a Seeded enemy dying (UpgradeEffect.CastAfter), the cast's own seed bursts count twice (a boon
+                // held by the cast). NEEDS: the garden's bursts and the mending counted twice too.
+                new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, CastAfter = CastMoment.Death, CastAfterCarrying = AfflictionKind.Seeded, CastWindow = 0.5f, Do = UpgradeAction.Boon, Stat = PlayerStat.BurstDamage, Amount = 1f, Seconds = 2f, ThisCast = true } },
                 "Cast it within half a second of a Seeded enemy dying, and every burst counts twice.",
                 learnEffects: new[]
                 {

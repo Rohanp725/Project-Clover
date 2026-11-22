@@ -56,13 +56,11 @@ the steel you throw and plant: Flung Blade, the blades of Grave of Swords.
 ## metal.bronze.master
 **What it does.** Cast it within a second after a perfect guard, and the pour on the attacker is doubled, and Poured Bronze is ready again.
 
-**When it happens.** For now, if you cast Poured Bronze within 1 second after a perfect guard, while it is ready, it doesn't start its wait. Poured Bronze must be in a spell slot.
+**When it happens.** When you cast Poured Bronze within 1 second after a perfect guard. Poured Bronze must be in a spell slot.
 
-**The numbers.** 3 Shards. A cast in that second doesn't start a wait, so you can pour again right away.
+**The numbers.** 3 Shards. The cast doesn't start a wait, so you can pour again right away. The enemy whose blow you guarded takes its pour twice: 12 more damage and 15 more stagger for each notch.
 
 **Works with.** Sunder, Open Line and Forged Answer (the same perfect guard notches, holds and makes a blade), Edge Guard (the longer perfect timing window), Master's Answer.
-
-**Not built yet.** Doubling the pour on the attacker. For now, it only skips the wait.
 
 **Example.** Perfect-guard a duellist's thrust and pour right away. It is held under the bronze, and the pour is ready again for the next one.
 

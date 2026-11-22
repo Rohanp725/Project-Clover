@@ -276,6 +276,14 @@ namespace Clover.Player
         public int Kin;
         /// <summary>For FreeSurge: the element whose surge it lights.</summary>
         public string SurgeOf = "";
+        /// <summary>
+        /// Only for a cast begun within CastWindow seconds after this moment (the ledger's spell-windows: Chain Lance's Master
+        /// within 0.5 s after a finisher, Poured Bronze's within 1 s of a perfect guard). For a death, CastAfterCarrying names
+        /// what the dead must have carried (Reap What Is Sown's: a Seeded one).
+        /// </summary>
+        public CastMoment CastAfter;
+        public float CastWindow;
+        public AfflictionKind CastAfterCarrying = AfflictionKind.None;
 
         /// <summary>A copy with every number, its slot and its mark (an Empower's twin of its Learn's effect).</summary>
         internal UpgradeEffect Twin() => (UpgradeEffect)MemberwiseClone();

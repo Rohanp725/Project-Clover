@@ -171,6 +171,7 @@ namespace Clover.Player
 
         // ---- Depth moved between enemies (the ledger's depth-moved).
         private const int MostStruck = 16;
+        private static readonly int AfflictionKinds = System.Enum.GetValues(typeof(AfflictionKind)).Length;
         // The enemies the cast now running has raised to the sickest one's depth (Share Alike), emptied at each cast.
         private readonly List<Component> castStruck = new List<Component>(MostStruck);
         private readonly List<AfflictionSet> depthScratch = new List<AfflictionSet>(MostStruck);
@@ -1420,6 +1421,8 @@ namespace Clover.Player
             if (effect.OnCastBeat && !castOnBeat) return;
             // Only within its branch's own spell's window (Poured on the Edge's 12 s).
             if (effect.WithinOwnCast > 0f && !InCastWindow(LastCastOf(effect.Owner), Time.time, effect.WithinOwnCast)) return;
+            // Only for a cast begun in the window after its moment (the ledger's spell-windows).
+            if (effect.CastAfter != CastMoment.None && !Moments.Within(effect.CastAfter, effect.CastWindow, castBeganAt, effect.CastAfterCarrying)) return;
             if (effect.NeedsAttacker && !IsAttacker(target, turnedBy != null ? turnedBy : null, turnedAt, Time.time)) return;
             // Only as an enemy's blow is about to land (the shared movement rule's timing).
             if (effect.BlowLanding > 0f && (combat == null || combat.BlowAboutToLand(effect.BlowLanding, out _) == null)) return;
@@ -1494,6 +1497,13 @@ namespace Clover.Player
             float wait = Mathf.Max(effect.Cooldown, least);
             if (effect.CooldownPerEnemy && kept != null) kept.Start(effect.Slot, Time.time, wait);
             else readyAt[effect.Slot] = Time.time + wait;
+            // A boon held by the cast is given now, before anything its own blows set going is done (Reap What Is Sown's Master:
+            // the cast's blows land as it is cast, and their bursts are done after).
+            if (effect.Do == UpgradeAction.Boon && effect.ThisCast)
+            {
+                castBoons.Add(answeringCast, effect.Stat, effect.Amount, Time.time + Or(effect.Seconds, 5f) * Stats.Multiplier(PlayerStat.BoonSeconds));
+                return;
+            }
             Enqueue(new Pending { Effect = effect, Target = target, At = at, HasAt = hasAt, Spent = spent, Less = less, Source = source, Power = power, Ripe = ripeScale,
                 ReactionOf = reactionPair + 1, ReactionCast = reactionPair >= 0 ? reactionCast : 0, Link = link, Pair = triggerPair, Again = strikingAgain, CastTag = answeringCast });
         }
@@ -2432,6 +2442,10 @@ namespace Clover.Player
         private void OnEnemyDied(Component who, AfflictionSet afflictions)
         {
             if (who == null) return;
+            // The death is a moment a spell may be cast just after, by what the dead carried (Reap What Is Sown's Master).
+            Moments.Note(CastMoment.Death, Time.time);
+            for (int kind = 1; kind < AfflictionKinds; kind++)
+                if (afflictions != null && afflictions.Has((AfflictionKind)kind)) Moments.NoteDeathCarrying((AfflictionKind)kind, Time.time);
             Vector3 at = who.transform.position;
             // Hollow Strength: a kill stills the draining of the Risen for a few breaths.
             if (hollowStrength && Risen) riseStilledUntil = Time.time + StilledSeconds;
@@ -2470,6 +2484,7 @@ namespace Clover.Player
         private void OnShattered(Component who)
         {
             if (who == null) return;
+            Moments.Note(CastMoment.Shatter, Time.time);
             Trigger(UpgradeTrigger.Shatter, who, who.transform.position);
             // The blow that shattered it is still being counted: it is ended on the next step.
             if (hasCleanBreak && who is Enemy foe && !foe.Kind.IsBoss && foe.HealthFraction < CleanBreakShare && toFinish.Count < 4) toFinish.Add(who);
@@ -2536,7 +2551,11 @@ namespace Clover.Player
             if (combat.LastBlowCritical) Trigger(UpgradeTrigger.CritHit, struck, at);
             var chain = combat.Combo.Steps;
             if (step == combat.Combo.ChainHeavy || (chain.Count > 0 && step == chain[chain.Count - 1])) Trigger(UpgradeTrigger.ChainEnd, struck, at);
-            if (finisher) Trigger(UpgradeTrigger.FinisherHit, struck, at);
+            if (finisher)
+            {
+                Moments.Note(CastMoment.Finisher, Time.time);
+                Trigger(UpgradeTrigger.FinisherHit, struck, at);
+            }
             if (step == combat.Combo.Skill) Trigger(UpgradeTrigger.SkillHit, struck, at);
             else if (heavy || finisher) Trigger(UpgradeTrigger.HeavyHit, struck, at);
             // Storm Front: the heavy blow or finisher that lands is owed a Gust, thrown in the next step once the swing has been reckoned.
@@ -2730,9 +2749,15 @@ namespace Clover.Player
         // While a base spell cast by its kit (or its blow) is being answered: whose element it is (the ledger's base-spell-element).
         private string baseElement;
 
+        /// <summary>When each moment a spell may be cast just after last came (UpgradeEffect.CastAfter).</summary>
+        public CastMoments Moments { get; } = new CastMoments();
+        // When the cast now running began, asked against the moments.
+        private float castBeganAt = -1000f;
+
         // A new cast: none passed by it yet, no doses carried down its line, and whether it was cast on the poison's beat.
         private void BeginCast()
         {
+            castBeganAt = Time.time;
             castStruck.Clear();
             lineCarried = 0;
             castOnBeat = combat != null && combat.AnyNearBeat(transform.position, BeatReach, BeatWindow);
@@ -2863,6 +2888,7 @@ namespace Clover.Player
         /// <summary>A blow was turned at the last moment; the attacker stands at the given place.</summary>
         public void OnPerfectGuard(Vector3 attacker)
         {
+            Moments.Note(CastMoment.PerfectGuard, Time.time);
             NoteGuard(attacker);
             // Open Furnace sets off every burning enemy near, the attacker among them, so the one detonation is not also made.
             bool detonate = hasDetonate && !hasFurnace;
@@ -3144,6 +3170,7 @@ namespace Clover.Player
         /// <summary>A blow was dodged at the last moment; the one who threw it stands at the given place.</summary>
         public void OnPerfectDodge(Vector3 attacker)
         {
+            Moments.Note(CastMoment.PerfectDodge, Time.time);
             // The attacker is the target, as with a perfect guard; a thrown bolt leaves only the place it came from.
             var dodged = combat != null ? combat.EnemyAt(attacker, 2.5f) : null;
             NoteTurned(dodged);
@@ -3444,6 +3471,7 @@ namespace Clover.Player
             }
             Heat.Struck();
             sinceStruck = 0f;
+            Moments.Note(CastMoment.Struck, Time.time);
             // Fed Flame: each blow taken smothers the burning surge.
             var smothered = element != null && element.SurgeActive ? element.SurgeKit : null;
             if (smothered != null && smothered.SurgeSmothers > 0f) smothered.Smother(smothered.SurgeSmothers);

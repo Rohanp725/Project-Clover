@@ -55,13 +55,11 @@ design yet, its **Not built yet** line says what is missing.
 ## lightning.lance.master
 **What it does.** Throw Chain Lance within half a second after a finisher, and it jumps to every enemy within twelve metres.
 
-**When it happens.** When a finisher lands. Chain Lance must be in a spell slot.
+**When it happens.** When you throw Chain Lance within half a second after a finisher lands. Chain Lance must be in a spell slot.
 
-**The numbers.** 3 Shards. For now, the finisher itself throws the bolt: 10 damage, 10 stagger and two Static, jumping to up to eight enemies within 12 metres, once every 7 seconds.
+**The numbers.** 3 Shards. A bolt jumps from the enemy you face to up to eight enemies within 12 metres: 10 damage, 10 stagger and two Static each.
 
 **Works with.** Static, Waiting Thunder.
-
-**Not built yet.** It should only work when you throw the lance within half a second of the finisher.
 
 **Example.** End a chain of blows on the captain, and every soldier in the yard has Static.
 

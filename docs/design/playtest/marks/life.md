@@ -58,13 +58,13 @@ ground: Briar Patch's bed, a thornbush, a sapling, a thicket, a tuft of briar.
 ## life.reap.master
 **What it does.** Cast it within half a second of a Seeded enemy dying, and every burst counts twice.
 
-**When it happens.** For now, for half a second after any Seeded enemy dies. Reap What Is Sown must be in a spell slot.
+**When it happens.** When you cast Reap What Is Sown within half a second after a Seeded enemy dies. Reap What Is Sown must be in a spell slot.
 
-**The numbers.** 3 Shards. For half a second, every seed that goes off bursts twice as hard (seed bursts are 100% stronger).
+**The numbers.** 3 Shards. Every seed that cast sets off bursts twice as hard (100% stronger). Other bursts at the same time are not changed.
 
 **Works with.** Seeded's own death burst (kill one, then reap the rest); Ripening's heavy blow in the same half second.
 
-**Not built yet.** The garden's bursts and the healing should count twice too, and the half second should be tied to casting this spell. For now, any seed that goes off in that half second is doubled.
+**Not built yet.** The garden's bursts and the healing should count twice too.
 
 **Example.** Finish the seeded soldier and reap as it falls. The seeds in its friends burst for twice their thorns.
 
