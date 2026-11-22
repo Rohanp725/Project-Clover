@@ -175,3 +175,6 @@ The owner noticed that the infused strike plays the same arc look on every weapo
 
 - **Slam round 2 (the owner):** "All of them are good in concept, but the visuals in unity need to be well implemented." Polish five before the build: Water gets a crown splash wall, Metal a blade with a hilt and guard, Poison a brighter sickly rim, Light smooth beams with no flame-like spikes, and Wind fewer, fatter curls. Unity must then match the strips closely; check the frames against them before showing the owner.
 - **Metal slam (the owner, round 3):** "the sword is too big out of the ground now, I dont think the hilt should come all the way out of the ground". Only the blade (at most the guard) rises; the grip and pommel stay buried; less height overall.
+
+- **Scythe SPIN (2026-11-22):** the owner approved all 11 as they are (`staging/blender/2026-11-21_strikes/spin/`). Next: THRUST (Great Spear).
+- **New standing rule (the owner, 2026-11-22):** filming and GIF runs happen only at night, unless the owner approves otherwise. Unity keeps a night film list in `scratchpad/run/NIGHT_FILMS.md`.
