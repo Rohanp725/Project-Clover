@@ -174,3 +174,4 @@ The owner noticed that the infused strike plays the same arc look on every weapo
 - **Unity note:** the slam lands 2.5 m ahead (`PlayerCombat.cs:1475`). Remove the hammer's white glow ring (`PlayerCombat.cs:1476-1477`).
 
 - **Slam round 2 (the owner):** "All of them are good in concept, but the visuals in unity need to be well implemented." Polish five before the build: Water gets a crown splash wall, Metal a blade with a hilt and guard, Poison a brighter sickly rim, Light smooth beams with no flame-like spikes, and Wind fewer, fatter curls. Unity must then match the strips closely; check the frames against them before showing the owner.
+- **Metal slam (the owner, round 3):** "the sword is too big out of the ground now, I dont think the hilt should come all the way out of the ground". Only the blade (at most the guard) rises; the grip and pommel stay buried; less height overall.
