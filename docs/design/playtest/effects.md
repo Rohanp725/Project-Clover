@@ -989,7 +989,7 @@ Title: Cold Short (Ice and Metal)
 Group: Reactions
 **What it is.** Chill meets Sundered. Frost fills the notches, and the armour turns brittle.
 
-**The numbers.** The enemy is brittle for 5 seconds, and its notches don't fade. Your next heavy blow cracks the plates of armour off. For 6 seconds, it takes 25% more damage from your weapon, and its notches stay (for two minutes, for now). Then it waits 5 seconds.
+**The numbers.** The enemy is brittle for 5 seconds, and its notches don't fade. Your next heavy blow cracks the plates of armour off. For 6 seconds, it takes 25% more damage from your weapon, and its notches stay for the rest of the fight. They never fade again; only spending them or setting them off takes them away. Then it waits 5 seconds.
 
 **What sets it off.** Chill landing on a notched enemy, or a notch landing on a chilled one.
 

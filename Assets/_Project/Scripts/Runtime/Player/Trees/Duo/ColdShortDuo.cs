@@ -20,7 +20,6 @@ namespace Clover.Player.Trees.Duo
         /// black ice's slip; Snapped Blade's brittle weapon), and Glass Bell's own brittle time.</summary>
         public const string PlateBrittle = "coldshort.plate";
         public const string PlateCracked = "coldshort.platecracked";
-        public const string PlateBare = "coldshort.platebare";
         public const string Slip = "coldshort.slip";
         public const string Snapped = "coldshort.snapped";
         public const string Ringing = "coldshort.ringing";
@@ -49,8 +48,7 @@ namespace Clover.Player.Trees.Duo
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = PlateBrittle, Seconds = 5f, Keeps = AfflictionKind.Sundered, EndsWith = ConditionBlow.Heavy, Is = Reactions.Brittle } },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = PlateBrittle, By = StruckBy.Heavy, Do = UpgradeAction.Condition,
                                 State = new ConditionSpec { Id = PlateCracked, Seconds = 6f, Flags = ConditionFlags.WeaponTakenShare, Scale = 1.25f } },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = PlateBrittle, By = StruckBy.Heavy, Do = UpgradeAction.Condition,
-                                State = new ConditionSpec { Id = PlateBare, Seconds = 120f, Keeps = AfflictionKind.Sundered } },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = PlateBrittle, By = StruckBy.Heavy, Do = UpgradeAction.KeepForGood, Affliction = AfflictionKind.Sundered },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = PlateBrittle, By = StruckBy.Heavy, Do = UpgradeAction.Hazard, Radius = 1f, Seconds = 4f, Interval = 1f,
                                 Affliction = AfflictionKind.Chill, InsideDo = new[] { new UpgradeEffect { On = UpgradeTrigger.InGround, Do = UpgradeAction.Condition, CooldownPerEnemy = true, Cooldown = 1.5f,
                                     State = new ConditionSpec { Id = Slip, Seconds = 0.6f, Flags = ConditionFlags.Down } } } },

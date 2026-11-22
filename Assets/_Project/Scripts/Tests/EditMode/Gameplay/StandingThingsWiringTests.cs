@@ -919,5 +919,25 @@ namespace Clover.Tests
             Assert.AreEqual("react.smoulder", under.Reaction);
             Assert.IsTrue(under.AsLaid, "curse or no curse");
         }
+
+        [Test]
+        public void ColdShortsCrackedPlatesKeepTheNotchesForTheRestOfTheFight()
+        {
+            var plain = Upgrade.ById(ReactionTable.MarkFor(AfflictionPairs.Index(AfflictionKind.Chill, AfflictionKind.Sundered)).Id).Effects;
+            var shed = Upgrade.ById(Clover.Player.Trees.Duo.ColdShortDuo.Shape).Shapes.Single(each => each.Name == "Shed Plate").Effects;
+            foreach (var effects in new[] { plain, shed })
+            {
+                var keep = effects.Single(each => each.Do == UpgradeAction.KeepForGood);
+                Assert.AreEqual(UpgradeTrigger.ConditionStruck, keep.On);
+                Assert.AreEqual(StruckBy.Heavy, keep.By, "the heavy blow that cracks the plates");
+                Assert.AreEqual(AfflictionKind.Sundered, keep.Affliction, "its notches");
+                Assert.IsFalse(effects.Any(each => each.State != null && each.State.Seconds >= 120f), "no two minutes standing in");
+            }
+            var enemy = new AfflictionSet { Reactions = new ReactionEngine((who, pair, laid) => { }, () => 0) };
+            enemy.Lay(AfflictionKind.Sundered, 2, 0f, 1f, LaySource.Weapon);
+            enemy.KeepForGood(AfflictionKind.Sundered);
+            for (int i = 0; i < 3000; i++) enemy.Tick(0.1f);
+            Assert.AreEqual(2, enemy.Stacks(AfflictionKind.Sundered), "five minutes on, its notches are still there");
+        }
     }
 }

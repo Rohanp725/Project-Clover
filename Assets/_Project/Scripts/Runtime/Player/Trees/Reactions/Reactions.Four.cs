@@ -12,7 +12,6 @@ namespace Clover.Player.Trees
         public const string Felled = "loganstone.felled";
         public const string Brittle = "coldshort.brittle";
         public const string PlatesOff = "coldshort.cracked";
-        public const string Bare = "coldshort.bare";
         public const string LightNet = "caughtlight.caught";
         public const string Coils = "girdled.coils";
         public const string Bound = "girdled.bound";
@@ -75,16 +74,15 @@ namespace Clover.Player.Trees
                     Stagger = 40f, Affliction = AfflictionKind.Tremor }));
 
             // Ice and Metal (37), rest 5 s. Brittle 5 s: its notches do not fade. The next heavy blow cracks its plates
-            // off: for 6 s it takes 25% more from weapon blows, and its notches stay for the rest of the fight. No burst.
-            // NEEDS: an affliction that never fades for the fight: two minutes of keeping stands in.
+            // off: for 6 s it takes 25% more from weapon blows, and its notches stay for the rest of the fight: they never fade
+            // from it again (UpgradeAction.KeepForGood), only spent, set off or gone with it. No burst.
             to.Add(Reaction(AfflictionKind.Chill, AfflictionKind.Sundered,
                 "Chill meets Sundered: frost fills the notches and the armour goes brittle for 5 s. Your next heavy blow cracks the plates off: 25% more from your weapon for 6 s, and the notches stay.",
                 5f,
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Brittle, Seconds = 5f, Keeps = AfflictionKind.Sundered, EndsWith = ConditionBlow.Heavy } },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Brittle, By = StruckBy.Heavy, Do = UpgradeAction.Condition,
                     State = new ConditionSpec { Id = PlatesOff, Seconds = 6f, Flags = ConditionFlags.WeaponTakenShare, Scale = 1.25f } },
-                new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Brittle, By = StruckBy.Heavy, Do = UpgradeAction.Condition,
-                    State = new ConditionSpec { Id = Bare, Seconds = 120f, Keeps = AfflictionKind.Sundered } }));
+                new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Brittle, By = StruckBy.Heavy, Do = UpgradeAction.KeepForGood, Affliction = AfflictionKind.Sundered }));
 
             // Water and Light (38), rest 6 s. A net of light on the wet floor 3 m round it for 4 s: what stands in it is
             // Marked, and what stood in it as it fell is 25% slower for the 4 s. The mark that made it is not spent: the
