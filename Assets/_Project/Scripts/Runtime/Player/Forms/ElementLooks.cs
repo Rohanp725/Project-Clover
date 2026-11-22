@@ -22,10 +22,11 @@ namespace Clover.Player.Forms
         public const int MostShowings = 48;
         /// <summary>
         /// The most pieces one look has (Carried Embers' fire whirl and Thunder Gust's funnel are a hundred and more;
-        /// Carried Embers is 183 once every piece the recipe gives its struck body is on it). A look built at the cap has
-        /// lost pieces, so none may reach it (ElementLooksTests).
+        /// Carried Embers is 183 once every piece the recipe gives its struck body is on it; round 4's Wellspring, its 90
+        /// small rain drops each with its own splash and its 24 streams, is 250). A look built at the cap has lost pieces, so none may reach
+        /// it (ElementLooksTests).
         /// </summary>
-        public const int MostParts = 200;
+        public const int MostParts = 256;
         /// <summary>Seconds a kept look waits unkept before it goes, and how long it takes to go.</summary>
         public const float Linger = 0.25f, Going = 0.25f;
         private const float FlatLift = 0.035f;

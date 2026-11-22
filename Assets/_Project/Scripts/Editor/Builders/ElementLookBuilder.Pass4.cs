@@ -132,10 +132,14 @@ namespace Clover.EditorTools
         /// </summary>
         private static List<Dictionary<string, object>> MomentLooks()
         {
-            var looks = Elements3Looks().Where(l => !E4Moments.Contains(Text(l, "slug"))).ToList();
+            // Round 4's redrawn moments (Gust, Tailwind) and new ones (Glare, Flung Blade) in place of the earlier passes'.
+            var fourth = RedesignedMoments();
+            var redrawnHere = new HashSet<string>(fourth.Select(l => Text(l, "slug")));
+            var looks = Elements3Looks().Where(l => !E4Moments.Contains(Text(l, "slug")) && !redrawnHere.Contains(Text(l, "slug"))).ToList();
+            looks.AddRange(fourth);
             foreach (var look in RecipeLooks(E4RecipePath))
             {
-                if (!E4Moments.Contains(Text(look, "slug"))) continue;
+                if (!E4Moments.Contains(Text(look, "slug")) || redrawnHere.Contains(Text(look, "slug"))) continue;
                 var copy = new Dictionary<string, object>(look);
                 copy.Remove("revision_of");
                 looks.Add(Round4Placement(copy, Text(copy, "slug")));

@@ -50,12 +50,12 @@ namespace Clover.Tests
             Assert.GreaterOrEqual(set.Find(ElementMoves.SpellKey(ElementSubstance.Wind, false)), 0, "Gust's fronts of curls");
             Assert.GreaterOrEqual(set.Find(ElementMoves.SpellKey(ElementSubstance.Earth, true)), 0, "Stone Rise's stones under the one struck");
             Assert.IsTrue(set.ArmourPlate != null && set.ArmourMaterial != null, "Bedrock's plate for the bones");
-            // Marked is one beam, not the slatted shaft that read as three.
+            // Marked is a brand on the chest since round 4 (the owner: "I hate this ray of orange light"): no beam, no shaft.
             var marked = PieceNames(set, "light_marked").ToList();
-            Assert.IsTrue(marked.Any(name => name.Contains("vfxe4_beam")), "Marked's one beam");
-            Assert.IsFalse(marked.Any(name => name.Contains("shaft_surge")), "no slatted shaft");
+            Assert.IsTrue(marked.Any(name => name.Contains("vfxrd_sigil")), "Marked's sigil");
+            Assert.IsFalse(marked.Any(name => name.Contains("vfxe4_beam") || name.Contains("shaft_surge")), "no beam, no slatted shaft");
             // Glaze's shoulder crystals and Bedrock's plates are on the bones (GlazeIce, StoneArmour), never in the look.
-            Assert.IsFalse(PieceNames(set, "earth_bedrock").Any(name => name.Contains("vfxe4_rock")));
+            Assert.IsFalse(PieceNames(set, "earth_bedrock").Any(name => name.Contains("vfxe4_rock") || name.Contains("vfxrd_plate")));
             // Seeded is the circling seeds alone, each with its spring-green sprout tip (round 4).
             Assert.IsTrue(PieceNames(set, "life_seeded").All(name => name.Contains("vfxe2_spore") || name.Contains("vfxe2_sprout")), "Seeded: only the circling seeds and their tips");
             Assert.IsTrue(PieceNames(set, "life_seeded").Any(name => name.Contains("vfxe2_sprout")), "Seeded: the sprout tips");

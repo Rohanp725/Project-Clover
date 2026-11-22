@@ -267,7 +267,7 @@ namespace Clover.EditorTools
         /// <paramref name="fromItsBody"/> is the piece's place from its own body.
         /// </summary>
         public static bool IsBodyFlame(string slug, string kitObject, string material, Vector3 fromItsBody) =>
-            ElementLooks.KeepsBodyFlame(slug) && kitObject.StartsWith("vfxe2_flame") && material != null
+            ElementLooks.KeepsBodyFlame(GameSlug(slug)) && kitObject.StartsWith("vfxe2_flame") && material != null
             && (material.StartsWith("m3_flame") || material.StartsWith("r4_blackflame")) && new Vector2(fromItsBody.x, fromItsBody.z).magnitude < BodyFlameReach;
 
         /// <summary>
@@ -1198,10 +1198,11 @@ namespace Clover.EditorTools
                 return null;
             }
             if (LeftOut.Contains(slug + "|" + kitObject) || LeftOutByName(slug, piece)) return "drawn by the look its own way";
-            if (E4BodyDrawn.Contains(slug + "|" + kitObject)) return "drawn on the player's own body (StoneArmour) or left with the stand-in enemies";
+            if (E4BodyDrawn.Contains(slug + "|" + kitObject) || RdBodyDrawn.Contains(slug + "|" + kitObject)) return "drawn on the player's own body (StoneArmour) or left with the stand-in enemies";
             if (kit == Mockup && material != null && ThawedReactions.Contains(slug)) return "a frost shell left off (it lit the body near white)";
             if (IsBodyFlame(slug, kitObject, material, fromItsBody)) return "the body's own real flame (BodyFlames) burns there";
             if (IsLodgedSeed(kitObject, material)) return "a lodged seed, read as a green hexagon chunk";
+            if (material != null && RdReactions.Contains(slug) && RedesignsIn()) return "the reaction is built from its round 4 redesign";
             if (material != null && Reactions5Built.Contains(slug) && Reactions5In()) return "the reaction is built from its reactions 5 redesign";
             if (material != null && RevisedReactions.Contains(slug) && AssetDatabase.LoadAssetAtPath<TextAsset>(RevisionRecipePath) != null)
                 return "the reaction is built from its elements 3 redesign";
@@ -1267,21 +1268,32 @@ namespace Clover.EditorTools
                     lists.Reactions = true;
                     var revised = Revisions();
                     var redrawn = Reactions5();
+                    var fourth = RedesignedReactions();
                     foreach (Dictionary<string, object> combos4Look in (List<object>)((Dictionary<string, object>)ReactionRecipe.ReadJson(reactions.text))["looks"])
                     {
                         string slug = Text(combos4Look, "slug");
                         if (!ReactionsBuilt.Contains(slug)) continue;
-                        // A reaction the Blender worker redrew for the third review (reactions 5) is built from that recipe,
-                        // else one it redesigned in elements 3 from that one.
-                        var look = redrawn.TryGetValue(slug, out var third) ? third : revised.TryGetValue(slug, out var revision) ? revision : combos4Look;
-                        // Round 4's placements (ElementLookBuilder.Round4): blades through the body, thorns shrinking, feathers settling.
-                        look = Round4Placement(look, slug);
+                        // A reaction the Blender worker redesigned for the fourth review (round 4) is built from that recipe under
+                        // its own tweak name; else one redrawn for the third review (reactions 5); else one redesigned in elements 3.
+                        string tweak = slug;
+                        Dictionary<string, object> look;
+                        if (fourth.TryGetValue(slug, out var redesign))
+                        {
+                            look = redesign;
+                            tweak = RdPrefix + slug;
+                        }
+                        else
+                        {
+                            look = redrawn.TryGetValue(slug, out var third) ? third : revised.TryGetValue(slug, out var revision) ? revision : combos4Look;
+                            // Round 4's placements (ElementLookBuilder.Round4): blades through the body, thorns shrinking, feathers settling.
+                            look = Round4Placement(look, slug);
+                        }
                         var bodyAt = new List<Vector3>();
                         foreach (Dictionary<string, object> body in (List<object>)look["bodies"]) bodyAt.Add(Vec(body["position"], Vector3.zero));
                         for (int b = -1; b < Mathf.Max(1, bodyAt.Count); b++)
                         {
                             int before = lists.Looks.Count;
-                            BuildLook(look, slug, ReactionKey(slug, b), b, bodyAt, 0f, lists, elementArt, glow);
+                            BuildLook(look, tweak, ReactionKey(slug, b), b, bodyAt, 0f, lists, elementArt, glow);
                             // A body (or the player) with nothing of the look on it has no look of its own.
                             if (b != 0 && lists.Looks.Count > before && lists.Looks[lists.Looks.Count - 1].PartCount == 0) lists.Looks.RemoveAt(lists.Looks.Count - 1);
                         }
@@ -1297,8 +1309,15 @@ namespace Clover.EditorTools
                 // Six braziers are elements 4's (Lightning's caged storm with more detail, the drop falling into the water...),
                 // and so are thirteen of the element looks (the third review's asks).
                 if (!elementLooks && Elements3Brazier(slug) is Dictionary<string, object> caged) look = caged;
-                if (elementLooks && Elements4For(slug) is Dictionary<string, object> redrawnLook) look = redrawnLook;
-                if (elementLooks) look = Round4Placement(look, slug);
+                string tweak = slug;
+                // Round 4's redesigns (ElementLookBuilder.Redesigns) in place of elements 4's, under their own tweak name.
+                if (elementLooks && RedesignFor(slug) is Dictionary<string, object> fourthLook)
+                {
+                    look = fourthLook;
+                    tweak = RdPrefix + slug;
+                }
+                else if (elementLooks && Elements4For(slug) is Dictionary<string, object> redrawnLook) look = redrawnLook;
+                if (elementLooks && tweak == slug) look = Round4Placement(look, slug);
                 // Drawn as the Blender worker's flat bands, without the solid's sheen (its dark storm lit grey on film).
                 lists.Flat = look != recipeLook;
                 var bodies = (List<object>)look["bodies"];
@@ -1308,20 +1327,23 @@ namespace Clover.EditorTools
                 {
                     float firstOn = Onset(look, 0);
                     for (int b = 0; b < variants.Length && b < bodyAt.Count; b++)
-                        BuildLook(look, slug, variants[b], b, bodyAt, Mathf.Max(0f, Onset(look, b) - firstOn), lists, elementArt, glow);
+                        BuildLook(look, tweak, variants[b], b, bodyAt, Mathf.Max(0f, Onset(look, b) - firstOn), lists, elementArt, glow);
                 }
-                else BuildLook(look, slug, slug, 0, bodyAt, 0f, lists, elementArt, glow);
+                else BuildLook(look, tweak, slug, 0, bodyAt, 0f, lists, elementArt, glow);
             }
-            // The element looks elements 4 adds: Marked's one beam, Glaze's frost and ward, Bedrock's grit about the armour.
+            // The element looks elements 4 adds (Marked, Bedrock's grit about the armour) and round 4 (Kindle), each in its
+            // round-4 redesign where there is one.
             if (elementLooks)
-                foreach (string key in E4NewLooks)
+                foreach (string key in E4NewLooks.Concat(RdNewLooks))
                 {
-                    var look = Elements4For(key);
+                    var look = RedesignFor(key);
+                    string tweak = look != null ? RdPrefix + key : key;
+                    look = look ?? Elements4For(key);
                     if (look == null) continue;
                     lists.Flat = true;
                     var bodyAt = new List<Vector3>();
                     foreach (Dictionary<string, object> body in (List<object>)look["bodies"]) bodyAt.Add(Vec(body["position"], Vector3.zero));
-                    BuildLook(look, key, key, 0, bodyAt, 0f, lists, elementArt, glow);
+                    BuildLook(look, tweak, key, 0, bodyAt, 0f, lists, elementArt, glow);
                 }
             lists.Flat = false;
             // Each element's own moments drawn by the elements 3 pass: the blades' blows, the spells, the strikes, Tailwind.
@@ -1387,7 +1409,9 @@ namespace Clover.EditorTools
             // Where this look's body stood from the main body's (or the player's), for the game to find the real one there.
             if (lists.Reactions && bodyAt.Count > 0) made.FromMain = bodyFrom - bodyAt[0];
             // A reaction whose doing outlasts its look keeps it standing on the body struck as long (ReactionHolds).
-            if (lists.Reactions && (onBody == 0 || onBody > 0 && HeldOnEveryBody.Contains(slug)) && ReactionHolds.TryGetValue(slug, out float hold)) made.Hold = hold;
+            // What the game does with the look is read by its own slug; a round-4 redesign's tweak name is "rd_" and that.
+            string game = GameSlug(slug);
+            if (lists.Reactions && (onBody == 0 || onBody > 0 && HeldOnEveryBody.Contains(game)) && ReactionHolds.TryGetValue(game, out float hold)) made.Hold = hold;
             else if (lists.Reactions && onBody >= 0) made.Hold = AftermathHold;
             // The way the recipe's player faced: toward the main body.
             if (look.TryGetValue("player", out var playerValue) && playerValue is Dictionary<string, object> player && bodyAt.Count > 0)
@@ -1395,7 +1419,7 @@ namespace Clover.EditorTools
                 Vector3 toward = bodyAt[0] - Vec(player["position"], Vector3.zero);
                 made.FacingYaw = Mathf.Atan2(toward.x, toward.z) * Mathf.Rad2Deg;
             }
-            AddRaise(look, slug, onBody, shift, lists, ref made);
+            AddRaise(look, game, onBody, shift, lists, ref made);
             made.FacesCamera = CameraFacing.Contains(key);
             var shellTimes = new List<(float start, float grow)>();
             float bodyFlameFrom = float.MaxValue;
@@ -1422,9 +1446,9 @@ namespace Clover.EditorTools
                     Vector3 turned = Vec(instance[2], Vector3.zero);
                     string pieceName = instance[0] as string ?? "";
                     if (LeftOut.Contains(slug + "|" + kitObject) || LeftOutByName(slug, pieceName)) continue;
-                    if (E4BodyDrawn.Contains(slug + "|" + kitObject)) continue;
-                    // Glaze's ice and Bedrock's stone skin are the player's own material (GlazeIce, StoneArmour).
-                    if (kit == Mockup && (slug == "ice_glaze" || slug == "earth_bedrock")) continue;
+                    if (E4BodyDrawn.Contains(slug + "|" + kitObject) || RdBodyDrawn.Contains(slug + "|" + kitObject)) continue;
+                    // Glaze's ice, Bedrock's stone skin and Fever's flush are the player's own material (GlazeIce, StoneArmour, FeverFlush).
+                    if (kit == Mockup && (game == "ice_glaze" || game == "earth_bedrock" || game == "poison_fever")) continue;
                     // The body the recipe gives the piece, read before it is restaged (its key pose says where it stood).
                     int pieceBody = bodyAt.Count > 0 ? PieceBody(motion, position, bodyAt) : 0;
                     if (lists.Reactions && IsLodgedSeed(kitObject, material)) continue;
@@ -1475,7 +1499,7 @@ namespace Clover.EditorTools
                         continue;
                     }
                     // Winter Seed's frost crust lit the body a pale near white (its film of 2026-11-20): no shell.
-                    if (kit == Mockup && lists.Reactions && ThawedReactions.Contains(slug)) continue;
+                    if (kit == Mockup && lists.Reactions && ThawedReactions.Contains(game)) continue;
                     if (kit == Mockup)
                     {
                         // The shell's band: its window opens when the band snaps on; the scale keys say how long it grows.
@@ -1510,7 +1534,8 @@ namespace Clover.EditorTools
                     string verb = Text(motion, "verb");
                     var mesh = Bake(key, lists.Parts.Count - made.FirstPart, pieceName, filter, comboTurn, material, element, scale, placement == "g", out byte kind, out Material wears, elementArt, glow, lists.Target);
                     if ((lists.Reactions || lists.Flat) && kind == ElementLookSet.Solid)
-                        wears = SolidInks.TryGetValue(slug + "|" + material.Substring(material.IndexOf('|') + 1), out var ownInk) ? ReactionSolid(wears, ownInk) : ReactionSolid(wears);
+                        wears = SolidInks.TryGetValue(slug + "|" + material.Substring(material.IndexOf('|') + 1), out var ownInk)
+                            || RdInks.TryGetValue(material.Substring(material.IndexOf('|') + 1), out ownInk) ? ReactionSolid(wears, ownInk) : ReactionSolid(wears);
                     bool held = hide >= 9f;
                     var part = new ElementLookSet.Part
                     {
@@ -1557,7 +1582,7 @@ namespace Clover.EditorTools
 
             var ribbons = new List<object>();
             if (look.TryGetValue("ribbons", out var ribbonValue) && ribbonValue is List<object> recipeRibbons) ribbons.AddRange(recipeRibbons);
-            if (lists.Reactions && onBody == 0 && ChainSpans.TryGetValue(slug, out var span)) lists.Spans.Add(MakeSpan(slug, element, span, elementArt, lists.Target));
+            if (lists.Reactions && onBody == 0 && ChainSpans.TryGetValue(game, out var span)) lists.Spans.Add(MakeSpan(game, element, span, elementArt, lists.Target));
             {
                 foreach (Dictionary<string, object> ribbon in ribbons)
                 {
@@ -1677,7 +1702,7 @@ namespace Clover.EditorTools
 
             if (lists.Reactions && onBody == 0) AddHealPulse(slug, key, lists, made, glow);
             made.PartCount = lists.Parts.Count - made.FirstPart;
-            if (lists.Reactions && ThawedReactions.Contains(slug)) made.Thawed = true;
+            if (lists.Reactions && ThawedReactions.Contains(game)) made.Thawed = true;
             if (bodyFlameFrom < float.MaxValue)
             {
                 made.BodyFlame = bodyFlameBlack ? ElementLookSet.BlackFlame : ElementLookSet.Fire;
@@ -2182,7 +2207,7 @@ namespace Clover.EditorTools
                 }
             }
             if (KitAliases.TryGetValue(kit + "|" + kitObject, out var alias)) (kit, kitObject) = alias;
-            string path = kit == E2Kit || kit == BrazierKit || kit == E3Kit || kit == E4Kit || kit == R5Kit || kit == StrikesKit || kit == SlamKit ? ReactionArtBuilder.CombosFolder + "/" + kit : ReactionArtBuilder.KitPath(kit);
+            string path = kit == E2Kit || kit == BrazierKit || kit == E3Kit || kit == E4Kit || kit == R5Kit || kit == StrikesKit || kit == SlamKit || kit == RdKit ?ReactionArtBuilder.CombosFolder + "/" + kit : ReactionArtBuilder.KitPath(kit);
             comboTurn = path.StartsWith(ReactionArtBuilder.CombosFolder);
             if (!kits.TryGetValue(path, out var loaded))
             {
@@ -2245,7 +2270,9 @@ namespace Clover.EditorTools
                 // The elements 3 pieces of several paints: the feather's vane, edge, inner band and shaft; the briar's thorns.
                 || filter.sharedMesh.name.StartsWith("vfxe3_")
                 // The slam's sword: its blade, bronze guard and leather grip.
-                || filter.sharedMesh.name.StartsWith("vfxsl_"));
+                || filter.sharedMesh.name.StartsWith("vfxsl_")
+                // Round 4's pieces of several paints: the bloom's petals and heart, the sigil, the plate's top and sides, the leaf's halves.
+                || filter.sharedMesh.name.StartsWith("vfxrd_"));
             var mainPaint = PaintOf(material);
             for (int s = 0; s < source.subMeshCount; s++)
             {
@@ -2562,6 +2589,7 @@ namespace Clover.EditorTools
             if (material != null && Paints.TryGetValue(material, out paint)) return paint;
             if (material != null && StrikePaints.TryGetValue(material, out paint)) return paint;
             if (material != null && SlamPaints.TryGetValue(material, out paint)) return paint;
+            if (material != null && RdPaints.TryGetValue(material, out paint)) return paint;
             if (ReactionArtBuilder.TryPaint(material, out paint)) return paint;
             if (material != null) Unknown.Add(material);
             return new ReactionArtBuilder.Paint(0.5f, 0.5f, 0.5f);

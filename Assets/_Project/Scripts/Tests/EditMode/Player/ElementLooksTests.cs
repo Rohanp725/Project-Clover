@@ -99,8 +99,8 @@ namespace Clover.Tests
         {
             var set = ElementLookBuilder.Set();
             if (set == null) Assert.Ignore("The element looks have not been built; run Clover > Build > Element Looks.");
-            Assert.AreEqual(25, set.Looks.Count(look => !look.Key.Contains("@") && !look.Key.StartsWith(ElementMoves.Prefix) && System.Array.IndexOf(ElementLookBuilder.ReactionsBuilt, look.Key) < 0),
-                "21 looks of batches 1 and 2, Unsteady built for one, three and five stacks, and elements 4's Marked and Bedrock (Glaze's is not built since round 4)");
+            Assert.AreEqual(26, set.Looks.Count(look => !look.Key.Contains("@") && !look.Key.StartsWith(ElementMoves.Prefix) && System.Array.IndexOf(ElementLookBuilder.ReactionsBuilt, look.Key) < 0),
+                "21 looks of batches 1 and 2, Unsteady built for one, three and five stacks, elements 4's Marked and Bedrock (Glaze's is not built since round 4), and round 4's Kindle");
             foreach (AfflictionKind kind in System.Enum.GetValues(typeof(AfflictionKind)))
                 for (int depth = 1; depth <= 6; depth++)
                 {
@@ -377,23 +377,49 @@ namespace Clover.Tests
             var passes = new System.Collections.Generic.List<(TextAsset recipe, bool reactions, bool redrawn)> { (combos, true, false), (elements, false, false) };
             if (combos5 != null) passes.Add((combos5, true, true));
             if (elements4 != null) passes.Add((elements4, false, true));
+            // Round 4's redesigns, built in place of the looks they revise under their tweak names ("rd_" and the game's key).
+            bool fourth = ElementLookBuilder.RedesignsIn();
+            var rdKeys = ElementLookBuilder.RdLooks.ToDictionary(pair => pair.Value, pair => pair.Key);
+            var rdRecipes = new System.Collections.Generic.HashSet<TextAsset>();
+            if (fourth)
+                foreach (string path in ElementLookBuilder.RdRecipePaths)
+                {
+                    var rd = UnityEditor.AssetDatabase.LoadAssetAtPath<TextAsset>(path);
+                    if (rd == null) continue;
+                    rdRecipes.Add(rd);
+                    passes.Add((rd, path.Contains("batch1") || path.Contains("batch2"), true));
+                }
             foreach (var (recipe, reactions, redrawn) in passes)
             {
                 var root = (System.Collections.Generic.Dictionary<string, object>)ReactionRecipe.ReadJson(recipe.text);
+                bool round4 = rdRecipes.Contains(recipe);
                 foreach (System.Collections.Generic.Dictionary<string, object> look in (System.Collections.Generic.List<object>)root["looks"])
                 {
                     string slug = (string)look["slug"];
-                    if (redrawn && reactions)
+                    // The name the builder looked its tweaks up by: a round-4 look's "rd_" and the game's key.
+                    string tweak = null;
+                    if (round4)
+                    {
+                        if (reactions) slug = ElementLookBuilder.GameSlug(slug);
+                        else if (!rdKeys.TryGetValue(slug, out var rdKey)) continue;
+                        else slug = rdKey;
+                        tweak = ElementLookBuilder.RdPrefix + slug;
+                    }
+                    else if (redrawn && reactions)
                     {
                         if (ElementLookBuilder.R5NotPicked.Contains(slug)) continue;
                         if (ElementLookBuilder.R5GameSlugs.TryGetValue(slug, out var game)) slug = game;
+                        if (fourth && ElementLookBuilder.RdReactions.Contains(slug)) continue;
                     }
                     else if (redrawn)
                     {
                         if (!e4Keys.TryGetValue(slug, out var key)) continue;
                         slug = key;
+                        if (fourth && ElementLookBuilder.RdLooks.ContainsKey(slug)) continue;
                     }
                     else if (!reactions && elements4 != null && ElementLookBuilder.E4Looks.ContainsKey(slug)) continue;
+                    else if (!reactions && fourth && ElementLookBuilder.RdLooks.ContainsKey(slug)) continue;
+                    tweak = tweak ?? slug;
                     var bodies = new System.Collections.Generic.List<Vector3>();
                     foreach (System.Collections.Generic.Dictionary<string, object> body in (System.Collections.Generic.List<object>)look["bodies"]) bodies.Add(Vec(body["position"]));
                     foreach (System.Collections.Generic.Dictionary<string, object> group in (System.Collections.Generic.List<object>)look["groups"])
@@ -409,7 +435,7 @@ namespace Clover.Tests
                             int body = onPlayer ? -1 : RecipeBody(motion, Vec(instance[1]), bodies, reactions, piece, wrong);
                             // A burning body's own tongues are its real flame (BodyFlames), by where the piece stands on its body.
                             var fromItsBody = Vec(instance[1]) - (body >= 0 && body < bodies.Count ? bodies[body] : Vector3.zero);
-                            string notAMesh = ElementLookBuilder.NotAMesh(slug, (string)group["kit"], (string)group["kit_object"],
+                            string notAMesh = ElementLookBuilder.NotAMesh(tweak, (string)group["kit"], (string)group["kit_object"],
                                 reactions ? (string)group["material"] : null, fromItsBody, piece, redrawn);
                             string expected = reactions ? ElementLookBuilder.ReactionKey(slug, body)
                                 : ElementLookBuilder.PerBody.TryGetValue(slug, out var variants) ? (body < 0 ? variants[0] : body < variants.Length ? variants[body] : null)
