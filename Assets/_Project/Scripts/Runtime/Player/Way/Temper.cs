@@ -10,7 +10,7 @@ namespace Clover.Player.Way
     ///
     /// Temper V also holds the finisher's pose longer (question 5, the owner's answer): the Katana's finisher stops behind
     /// the enemy with the blade out for 0.2 s before it falls, and at Temper V for 0.4 s, its blow 15% harder. The hold is
-    /// <see cref="AttackStep.HoldSeconds"/> on the finisher, after the blow (<see cref="AttackStep.HoldAt"/>).
+    /// <see cref="AttackStep.PoseHold"/> (and the camera's <see cref="AttackStep.HoldSeconds"/>) on the finisher, after the blow (<see cref="AttackStep.HoldAt"/>).
     /// </summary>
     public static class Temper
     {
@@ -32,6 +32,14 @@ namespace Clover.Player.Way
 
         /// <summary>How long the finisher's pose holds at a rank.</summary>
         public static float FinisherHoldAt(int rank) => rank >= Ranks ? FinisherHoldAtFive : FinisherHold;
+
+        /// <summary>
+        /// True when a finisher's held pose begins now: the finisher has a hold, its clock has reached the hold's moment
+        /// (<see cref="AttackStep.HoldAt"/>, once the blow is in) and it has not held yet. The step's clock then stands
+        /// still for <see cref="AttackStep.PoseHold"/>, so the clip's pose holds (a retiming of the clip, no new frames).
+        /// </summary>
+        public static bool HoldBegins(AttackStep step, bool finishing, float elapsed, bool heldAlready) =>
+            finishing && !heldAlready && step != null && step.PoseHold > 0f && elapsed >= step.HoldAt;
 
         /// <summary>The gate a rank (1 to 5) waits behind: "" for none, else <c>gods.N</c>.</summary>
         public static string GateOf(int rank)

@@ -43,6 +43,7 @@ namespace Clover.Player.Way.Aspects
                 weapon.Combo.Finisher.Damage *= TemperFiveFinisher;
                 // The pose behind the enemy holds twice as long (way_build_plan.md question 5).
                 weapon.Combo.Finisher.HoldSeconds = Temper.FinisherHoldAtFive;
+                weapon.Combo.Finisher.PoseHold = Temper.FinisherHoldAtFive;
             }
         }
     }

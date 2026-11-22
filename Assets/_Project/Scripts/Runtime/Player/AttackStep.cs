@@ -78,6 +78,13 @@ namespace Clover.Player
         /// <summary>Seconds into the step at which the camera leans in for the held pose, and for how long; zero leaves it to the blow.</summary>
         public float HoldAt;
         public float HoldSeconds;
+        /// <summary>
+        /// Seconds the step's clock stands still at <see cref="HoldAt"/>, so its clip's pose holds there (a retiming of the
+        /// clip, no new frames): the Katana's finisher behind the enemy. Zero: none, as every clip with its hold built in.
+        /// </summary>
+        public float PoseHold;
+        /// <summary>The blow stops in the first enemy it meets, the nearest in its reach, and strikes no other (Settling Draw).</summary>
+        public bool FirstOnly;
         /// <summary>Metres a finished enemy is thrown sideways, the way the cut travels: the hammer's last blow.</summary>
         public float Fling;
         /// <summary>A blow of the bow's stave: landing, it snaps every arrow standing in its target (<see cref="PlantedArrows"/>).</summary>

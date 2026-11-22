@@ -360,7 +360,7 @@ namespace Clover.Player
         public Way.InfusionBend LastInfusion { get; private set; }
         // Equip drops all of these, so a re-arm waits for them: a swing or a charge, a weapon thrown or a dash out, the
         // infused strike's element still to come, a follow to what was thrown.
-        private bool BusyWithWeapon => IsAttacking || IsCharging || WeaponAway || IsDashing || infusedPending || followFor != null;
+        private bool BusyWithWeapon => IsAttacking || IsCharging || WeaponAway || IsDashing || infusedPending || followFor != null || dragFollow != null;
 
         /// <summary>
         /// True in a swing's wind-up and blow, when its poise holds (<see cref="Poised"/>); not in its recovery, where the
@@ -395,6 +395,8 @@ namespace Clover.Player
             followStep = null;
             infusedPending = false;
             infusedStep = null;
+            dragFollow = null;
+            holdLeft = 0f;
             boundTo = null;
             pullSelfTo = null;
             Step = Vector3.zero;
@@ -578,8 +580,21 @@ namespace Clover.Player
             if (unavailable)
             {
                 if (chordAfterTick || chordNow) PressHeavyNow();
+                // A roll or a flinch takes the place of a return cut still to come.
+                dragFollow = null;
                 Combo.Idle(deltaTime);
                 return;
+            }
+            if (dragFollow != null)
+            {
+                dragFollowIn -= deltaTime;
+                if (dragFollowIn <= 0f && Combo.Follow(dragFollow, player.Stamina))
+                {
+                    dragFollow = null;
+                    DragFollows++;
+                }
+                // Something else began meanwhile: the return cut is let go.
+                else if (dragFollowIn < -0.5f) dragFollow = null;
             }
 
             bool begun = chordNow && TakeChord();
@@ -591,7 +606,21 @@ namespace Clover.Player
                 strikeBuffered = -1;
                 begun = TryInfused(second);
             }
-            var events = Combo.Tick(deltaTime * SwingSpeed * StatSwing, player.Stamina, Mana);
+            float swingTime = deltaTime * SwingSpeed * StatSwing;
+            // The finisher's held pose (way_build_plan.md question 5): once the blow is in, the step's clock stands still
+            // for its hold, so the clip's pose holds there; 0.2 s on the Katana, 0.4 s at Temper V.
+            if (Way.Temper.HoldBegins(Combo.Current, Combo.IsFinishing, Combo.Elapsed, finisherHeld))
+            {
+                finisherHeld = true;
+                holdLeft = Combo.Current.PoseHold;
+                FinisherHolds++;
+            }
+            if (holdLeft > 0f)
+            {
+                holdLeft -= deltaTime;
+                swingTime = 0f;
+            }
+            var events = Combo.Tick(swingTime, player.Stamina, Mana);
             if (chordAfterTick)
             {
                 // Both pressed in one frame: the light has just started, and is taken at once.
@@ -599,6 +628,11 @@ namespace Clover.Player
                 else PressHeavyNow();
             }
             if (begun) events |= ComboEvents.Started;
+            if ((events & ComboEvents.Started) != 0)
+            {
+                finisherHeld = false;
+                holdLeft = 0f;
+            }
             if ((events & ComboEvents.Charged) != 0)
             {
                 // The first tier flashes white; a counter says what it is.
@@ -1658,6 +1692,39 @@ namespace Clover.Player
             infusedPending = false;
             ElementSteel.Strike(this, infusedElement, LastFootprint, infusedDeep, infusedDamage, infusedFirst);
             infusedFirst = null;
+            // The Way's family mark: the cut lying on the floor, the charged path, and Dragging Draw's return cut to come.
+            Way.InfusionGround.Lay(LastInfusion, infusedElement, LastFootprint);
+            if (LastInfusion.Follow != null)
+            {
+                dragFollow = LastInfusion.Follow;
+                dragFollowIn = LastInfusion.FollowDelay;
+            }
+        }
+
+        // Dragging Draw's return cut, waiting its moment after the draw; and the finisher's held pose.
+        private AttackStep dragFollow;
+        private float dragFollowIn;
+        private bool finisherHeld;
+        private float holdLeft;
+        /// <summary>Counts for probes: Dragging Draw's return cuts played, and finisher poses held.</summary>
+        public int DragFollows { get; private set; }
+        public int FinisherHolds { get; private set; }
+
+        // Puts the overlaps found nearest first, for a blow that stops in the first enemy it meets.
+        private void NearestFirst(int count, Vector3 from)
+        {
+            for (int i = 1; i < count; i++)
+            {
+                var one = overlaps[i];
+                float at = (one.transform.position - from).sqrMagnitude;
+                int j = i - 1;
+                while (j >= 0 && (overlaps[j].transform.position - from).sqrMagnitude > at)
+                {
+                    overlaps[j + 1] = overlaps[j];
+                    j--;
+                }
+                overlaps[j + 1] = one;
+            }
         }
 
         /// <summary>Draws a swing's arc from the player, for effects that follow a blow.</summary>
@@ -1761,12 +1828,15 @@ namespace Clover.Player
             var struckLook = Clover.Player.Swings.SwingLooks.For(SwingElement);
             bool cutsRound = struckLook != null && struckLook.CutsRound;
             int count = Overlap(step.Radius > 0f ? discCentre : origin, step.Radius > 0f ? step.Radius + 0.5f : reach);
+            if (step.FirstOnly) NearestFirst(count, origin);
             for (int i = 0; i < count; i++)
             {
                 var other = overlaps[i];
                 if (other.transform.root == transform.root) continue;
                 var target = other.GetComponentInParent<IDamageable>();
                 if (target == null || struck.Contains(target)) continue;
+                // Settling Draw: the cut stops in the first enemy it meets.
+                if (step.FirstOnly && struck.Count > already) break;
                 // A blade does not reach an enemy on the floor far below or the ledge far above (the gods, whose
                 // parts stand high off the ground, are struck as they always were).
                 if (target is Enemy below && !below.Kind.IsBoss && !HeightReach.Within(transform.position.y, below.transform.position.y)) continue;

@@ -153,9 +153,8 @@ namespace Clover.Player.Trees.Ways
             // slowed while the pose holds, way-finisher-hold) and the finisher's clip with the pose in it.
 
             // The infusion families (steel/weapons.md 1, "Infusion", on the drawing cut): opened once an element is owned.
-            // The infused strike reads them through Way/Infusion.cs (task 5.3): Running Draw's dash and Settling Draw's slow,
-            // unbroken, harder draw are in play. NEEDS (way-infusion-families): the arc lying on the floor, the cut stopping
-            // in the first enemy with the element set in it, the return cut that follows and drags, and Settling Draw's clip.
+            // The infused strike reads them through Way/Infusion.cs and Way/InfusionGround.cs (task 5.3), all four in play.
+            // NEEDS: Settling Draw's own clip (way-infusion-families) and the looks the approved pieces do not give (way-infusion-looks).
             // The player's words are way_build_plan.md 2.2's; the rules are Way/Infusion.cs.
             var ground = Mark(to, InfuseGround, "Lying Draw", UpgradeKind.Major, "", "", UpgradeIcons.Flame,
                 "Your infused draw with Fire, Poison or Life leaves its cut burning on the floor for a few seconds.");

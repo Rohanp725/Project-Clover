@@ -34,6 +34,8 @@ namespace Clover.Player.Way
         public bool WholeCut;
         /// <summary>Running Draw: metres of the dash down the lane. Zero: no dash.</summary>
         public float Dash;
+        /// <summary>Running Draw with Lightning: seconds the dash's path stays charged, giving Static to whoever crosses it. Zero: none.</summary>
+        public float ChargedPath;
         /// <summary>Settling Draw: the cut stops in the first enemy and sets the element in it.</summary>
         public bool StopsInFirst;
         /// <summary>Dragging Draw: the cut that follows by itself, after <see cref="FollowDelay"/>, dragging what the draw struck <see cref="Drag"/> metres onto the point.</summary>
@@ -68,6 +70,8 @@ namespace Clover.Player.Way
         /// <summary>(P) Seconds after the draw's blow that the return cut follows.</summary>
         public const float FollowDelay = 0.15f;
         public const float Drag = 1.5f;
+        /// <summary>(P) Stacks of the element Settling Draw sets in the enemy it stops in.</summary>
+        public const int SettleStacks = 2;
         /// <summary>All in on one element, the deep strike doubles the family's length, time or pull.</summary>
         public const float AllInShare = 2f;
 
@@ -139,6 +143,8 @@ namespace Clover.Player.Way
                     bend.Dash = Dash * share;
                     carrier.Travel = UnityEngine.Mathf.Max(carrier.Travel, bend.Dash);
                     carrier.PassThrough = true;
+                    // With Lightning the path stays charged (the owner's answer, 2026-11-21): Flash Cut alone is the same dash.
+                    if (element == Elements.Lightning) bend.ChargedPath = InfusionGround.ChargedSeconds;
                     break;
                 case InfusionFamily.Weight:
                     // The whole step slowed by one share, so the blow still lands on its clip's frame (way_build_plan.md
@@ -152,6 +158,9 @@ namespace Clover.Player.Way
                     }
                     carrier.Poise = Unbroken;
                     carrier.Stagger *= SettleStagger;
+                    // The cut stops in the first enemy it meets and sets the element in it.
+                    carrier.FirstOnly = true;
+                    carrier.ElementStacks += SettleStacks;
                     bend.StopsInFirst = true;
                     break;
                 case InfusionFamily.Draw:
@@ -161,6 +170,8 @@ namespace Clover.Player.Way
                         bend.Follow = steps[1].Clone();
                         bend.Drag = Drag * share;
                         bend.Follow.Pull = bend.Drag;
+                        // It comes by itself, part of the strike already paid for.
+                        bend.Follow.StaminaCost = 0f;
                         bend.FollowDelay = FollowDelay;
                     }
                     break;
