@@ -38,27 +38,27 @@ Earth are both carried.
 **Example.** A sunken brute can't fight back. Each heavy blow pins it again.
 
 ## thegroundgives.landwassea
-**What it does.** Your dodges become slides. Each one leaves a line of wet sand behind it and gives back its stamina.
+**What it does.** Your dodge through wet sand is a slide. It costs no stamina and leaves a line of wet sand behind it.
 
-**When it happens.** At the end of every dodge, while you carry both Water and Earth.
+**When it happens.** When you start a dodge standing on wet sand of your own, while you carry both Water and Earth. Wet sand is the pool The Ground Gives leaves, Quicksand's pool, the sand The Island Breathes leaves, and this mark's own trail.
 
-**The numbers.** Mix, keystone, 5 Shards. Three patches, each 0.8 metres across, along 3 metres, lasting 3 seconds. They soak whatever stands in them every half second. You get 15 stamina back.
+**The numbers.** Mix, keystone, 5 Shards. The dodge costs no stamina. It leaves three patches, each 0.8 metres across, along 3 metres of its path, lasting 3 seconds. They soak whatever stands in them every half second.
 
 **Works with.** The Ground Gives (shake the enemies you soak), Quicksand, Wake.
 
-**Example.** Roll around a pack and leave it standing in wet sand, ready for your Stone Rise.
+**Example.** Roll from one sand pool to the next around a pack. Every roll is free, and the pack stands in wet sand, ready for your Stone Rise.
 
-**Not built yet.** It is meant to work only on a dodge through wet sand. For now, every dodge slides.
+**Not built yet.** The slide is the plain roll for now. It needs its own sliding move.
 
 ## thegroundgives.island
-**What it does.** The ground where you aim breathes in: it heaves up like the back of a huge animal, and every enemy on it is lifted up, shaken twice and soaked, so it sinks with The Ground Gives when it comes down.
+**What it does.** The ground where you aim breathes in: it heaves up like the back of a huge animal, and every enemy on it is lifted up, shaken twice and soaked, so it sinks with The Ground Gives when it comes down. Then it breathes out, and the spot lies as wet sand.
 
 **When it happens.** Cast it from a spell slot while you carry both Water and Earth. Press that slot's button (hold L2 and a face button, or press 1 to 4). The first time it lands, it charges your blade with Water.
 
-**The numbers.** Mix, duo spell, breaker, 5 Shards. It costs no mana. After you cast it, you must wait 15 seconds to cast it again. Fighting with your weapon makes the wait shorter. Up to five pillars of ground rise under the enemies near where you aim (up to 8 metres away), 0.9 seconds after you cast it. Each deals 10 damage, 30 stagger, a Soaked and two Tremor, and throws its enemy up.
+**The numbers.** Mix, duo spell, breaker, 5 Shards. It costs no mana. After you cast it, you must wait 15 seconds to cast it again. Fighting with your weapon makes the wait shorter. Up to five pillars of ground rise under the enemies near where you aim (up to 8 metres away), 0.9 seconds after you cast it. Each deals 10 damage, 30 stagger, a Soaked and two Tremor, and throws its enemy up. Where it first strikes, wet sand 5 metres across lies for 4 seconds and soaks what stands in it once a second.
 
 **Works with.** The Ground Gives and its shapes, Driven Down, Given to the Bog.
 
 **Example.** Make the ground breathe in under a pack, then fight them while they are sunk.
 
-**Not built yet.** The ground breathing out (the spot slumping into wet sand for 4 seconds) is The Ground Gives on each enemy for now, not a spot of its own. Blows on lifted enemies don't keep them up in the air yet.
+**Not built yet.** Blows on lifted enemies don't keep them up in the air yet, and a heavy blow on a sunk enemy doesn't yet do double stagger.

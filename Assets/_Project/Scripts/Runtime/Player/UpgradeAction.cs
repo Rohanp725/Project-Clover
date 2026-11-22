@@ -305,6 +305,14 @@ namespace Clover.Player
         /// <summary>For Seconds, nothing interrupts your heavy blow being wound up or swung (The Wreck: struck from inside it).</summary>
         HeavyUnbroken,
         /// <summary>
+        /// Lays ground of the player's own by its name (Ground; World.OwnGrounds) for Seconds: Radius round where it is done, or
+        /// with Shape Line a lane Reach long ahead of you, Radius either side (AcrossFront: across your front instead, Amount
+        /// metres ahead). It bites nothing; the stats and marks ask who stands in it (The Closed Ring's stones, The Drawn Line).
+        /// </summary>
+        OwnGround,
+        /// <summary>The dodge just begun costs no stamina: what it took is given back (The Land Was Sea's slide on wet sand).</summary>
+        FreeDodge,
+        /// <summary>
         /// You scatter for Seconds: the body is not drawn and nothing can touch you, then you stand again where you are by then
         /// (Gone to Ash: scattered as ash, standing again 0.4 s later, behind the attacker or where you were).
         /// </summary>

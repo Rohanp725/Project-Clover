@@ -339,14 +339,14 @@ Rise's rocks, a pillar, a heap of rubble.
 **Example.** Light Bedrock and finish a staggered soldier. The hand comes down on that spot and staggers the two soldiers behind it.
 
 ## earth.closedring
-**What it does.** The Closed Ring, a keystone. Lighting Bedrock raises eight stones in a ring around you. For ten seconds, they hit and shake whatever stands among them, and you take a little less damage. Bedrock costs a quarter more.
+**What it does.** The Closed Ring, a keystone. Lighting Bedrock raises a ring of standing stones around you. For ten seconds, nothing can walk or be thrown across the ring, in or out. An enemy knocked hard into a stone is hurt and badly shaken. Inside the ring you are Rooted and take a little less damage. Bedrock costs a quarter more.
 
 **When it happens.** When you light Bedrock, the surge. Always on once you learn it, while you carry Earth.
 
-**The numbers.** 6 Shards. Eight stones in a ring 12 metres across, each a metre wide, for 10 seconds. Once a second, each stone hits whatever stands on it for 8 damage, 20 stagger and one stack of Tremor. You take 8% less damage for the same 10 seconds. Bedrock costs 25% more mana (50 instead of 40).
+**The numbers.** 6 Shards. A ring 12 metres across with eleven stones, for 10 seconds. An enemy driven into a stone takes 20 damage and 35 stagger, at most twice a second. Inside the ring you count as Rooted, however you move. You take 8% less damage for the same 10 seconds. Bedrock costs 25% more mana (50 instead of 40). Gods are not held by the ring.
 
 **Works with.** Cairn, which it comes after on the chart (from its Master mark), Standing Stones and Left in Rubble (more stone around you), Rooted and Immovable (stand inside the ring and let them come), Hand of the Mountain.
 
-**Not built yet.** The ring should act as a wall: nothing can walk, roll or be thrown across it while it stands, an enemy knocked into a stone is hurt and staggered, and you are Rooted inside it. For now, the stones only hit what stands on them, and anything can pass between them.
+**Not built yet.** The stones are shown as puffs of dust and light where they stand. Their own look, eleven rough standing stones, is made and waits to be brought into the game.
 
 **Example.** Light Bedrock with two soldiers on you. The ring rises around all three of you, and every second they stand in it they are shaken closer to a stagger.

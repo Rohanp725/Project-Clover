@@ -490,6 +490,9 @@ namespace Clover.Player
         // The Body's numbers (task 5.4) are added to these, read once as the scene made them.
         private float baseStaminaMost, baseStaminaDelay, baseDodgeRecovery, baseHurtSeconds, baseKnockback, baseGreyDelay;
         private float sinceStruck = 99f, sinceDodge = 99f, sinceMoved;
+        // A dodge begun on wet sand counts as on it until it has run (The Land Was Sea's slide and the sand it leaves).
+        private bool dodgeFromSand;
+        private const float DodgeThroughSeconds = 0.6f;
         private Vector3 lastStill;
         private float attackStamina = 1f;
         // The counts marks keep, by the mark's place in the catalogue, and which of the marks in force keep one.
@@ -1328,7 +1331,20 @@ namespace Clover.Player
                     }
                 }
             }
-            Stats.SetWhen(StatWhen.Planted, sinceDodge >= Mathf.Max(0.5f, PlantedSeconds - Stats.Sum(PlayerStat.PlantedSooner)));
+            // Inside your own ring of stones you are Rooted however you move (The Closed Ring).
+            Stats.SetWhen(StatWhen.Planted, sinceDodge >= Mathf.Max(0.5f, PlantedSeconds - Stats.Sum(PlayerStat.PlantedSooner))
+                || OwnGrounds.Under(OwnGrounds.StoneRing, transform.position, Time.time));
+            // Ground of your own stood in. A dodge begun on wet sand is a dodge through it to its end (The Land Was Sea).
+            foreach (var (when, ground) in OwnGroundStates)
+            {
+                bool inside = InOwnGround(ground);
+                if (when == StatWhen.OnWetSand)
+                {
+                    if (sinceDodge > DodgeThroughSeconds) dodgeFromSand = false;
+                    inside |= dodgeFromSand;
+                }
+                Stats.SetWhen(when, inside);
+            }
             // Stood still: not moved more than a hair since the last step, for a second (Cairn's and Stone Rise's Masters).
             Vector3 here = transform.position;
             sinceMoved = StillRules.Next(sinceMoved, (here - lastStill).sqrMagnitude, deltaTime);
@@ -1748,7 +1764,14 @@ namespace Clover.Player
         {
             switch (effect.Shape)
             {
-                case HazardShape.Line: return self + aim * (reach * (index + 0.5f) / patches);
+                case HazardShape.Line:
+                    if (effect.AcrossFront)
+                    {
+                        // Across your front, Amount metres ahead, from your left to your right (The Drawn Line's spears).
+                        Vector3 right = new Vector3(aim.z, 0f, -aim.x);
+                        return self + aim * Or(effect.Amount, 1.5f) + right * (reach * ((index + 0.5f) / patches - 0.5f));
+                    }
+                    return self + aim * (reach * (index + 0.5f) / patches);
                 case HazardShape.Ring: return centre + Quaternion.Euler(0f, index * 360f / patches, 0f) * Vector3.forward * reach;
                 case HazardShape.Downwind: return centre + aim * (reach + (index - (patches - 1) * 0.5f) * Or(effect.Amount, 1f));
                 default: return centre;
@@ -2251,6 +2274,28 @@ namespace Clover.Player
                     Scatters++;
                     break;
                 }
+                case UpgradeAction.OwnGround:
+                {
+                    // Ground of your own by its name, which bites nothing: the stats and marks ask who stands in it.
+                    float until = Time.time + Or(effect.Seconds, 5f) * Stats.Multiplier(PlayerStat.GroundSeconds);
+                    if (effect.Shape == HazardShape.Line)
+                    {
+                        float length = Or(effect.Reach, 6f) * spread;
+                        Vector3 way = new Vector3(aim.x, 0f, aim.z).normalized;
+                        if (effect.AcrossFront)
+                        {
+                            Vector3 right = new Vector3(way.z, 0f, -way.x);
+                            OwnGrounds.LayLane(effect.Ground, self + way * Or(effect.Amount, 1.5f) - right * (length * 0.5f), right, length, Or(effect.Radius, 0.5f), until);
+                        }
+                        else OwnGrounds.LayLane(effect.Ground, self, way, length, Or(effect.Radius, 1f), until);
+                    }
+                    else OwnGrounds.Lay(effect.Ground, centre, Or(effect.Radius, 1f) * spread, until);
+                    break;
+                }
+                case UpgradeAction.FreeDodge:
+                    player.Stamina.Restore(player.Dodge.StaminaCost);
+                    FreeDodges++;
+                    break;
                 case UpgradeAction.HeavyUnbroken:
                     heavyUnbrokenUntil = Mathf.Max(heavyUnbrokenUntil, Time.time + Or(effect.Seconds, 1f));
                     combat.HeavyUnbroken = true;
@@ -3090,6 +3135,7 @@ namespace Clover.Player
                 StandingLibrary.Burst += OnStandingBurst;
                 Hazards.GroundActs += OnGroundActs;
                 Hazards.GroundEnds += OnGroundEnds;
+                OwnGrounds.Stopped += OnStoppedAtStones;
             }
             while (StandingThings.TakeNews(out var item))
             {
@@ -3204,7 +3250,36 @@ namespace Clover.Player
             StandingLibrary.Burst -= OnStandingBurst;
             Hazards.GroundActs -= OnGroundActs;
             Hazards.GroundEnds -= OnGroundEnds;
+            OwnGrounds.Stopped -= OnStoppedAtStones;
         }
+
+        // An enemy driven against the stones of your ring (The Closed Ring), told to the marks with it as the target.
+        private void OnStoppedAtStones(Component body)
+        {
+            if (body == null) return;
+            StoppedAtStones++;
+            Trigger(UpgradeTrigger.StoppedAtStones, body, body.transform.position);
+        }
+
+        /// <summary>Enemies driven against your ring's stones and stopped there (The Closed Ring): for probes.</summary>
+        public int StoppedAtStones { get; private set; }
+
+        /// <summary>
+        /// The states of standing in ground of your own, each with the name of its ground (World.OwnGrounds): drawn by a form or
+        /// laid by a mark as a named patch (Hazards.NamedUnder).
+        /// </summary>
+        public static readonly (StatWhen When, string Ground)[] OwnGroundStates =
+        {
+            (StatWhen.OnOwnIce, OwnGrounds.Sheet),
+            (StatWhen.OnWetSand, OwnGrounds.WetSand),
+            (StatWhen.InOwnMist, OwnGrounds.LowMist),
+            (StatWhen.InOwnGlow, OwnGrounds.Glow),
+            (StatWhen.InOwnBlood, OwnGrounds.Blood),
+        };
+
+        /// <summary>True when you stand in ground of your own of this name now.</summary>
+        public bool InOwnGround(string ground) =>
+            OwnGrounds.Under(ground, transform.position, Time.time) || Hazards.NamedUnder(transform.position, ground);
 
         // Ground of a mark's that keeps acting, at one of its bites: its state on every enemy standing in it now, and the player
         // mended standing in it.
@@ -4320,6 +4395,9 @@ namespace Clover.Player
             LastDodgeDirection = direction;
             sinceDodge = 0f;
             lastDodgeWay = WayOf(direction, from, true);
+            // Begun on wet sand of your own, the dodge goes through it, whatever it ends on (The Land Was Sea).
+            dodgeFromSand = InOwnGround(OwnGrounds.WetSand);
+            if (dodgeFromSand) Stats.SetWhen(StatWhen.OnWetSand, true);
             if (hasIntoFire && lastDodgeWay == DodgeWay.Toward)
             {
                 // Into the Fire: the roll is a lunge in flame.

@@ -214,7 +214,7 @@ namespace Clover.Player.Trees
                 "Tremor meets Soaked: the wet floor under it turns to sand and it sinks to the knees for 4 s, slowed by half. A heavy blow holds it fast. Others that wade into the sand are slowed too.",
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = SunkInSand, Seconds = 4f, Pace = 0.5f, Flags = ConditionFlags.Mired, Sink = 0.35f } },
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Radius = 1f, Seconds = 4f, Interval = 0.5f, Damage = 0f, Stacks = 0, Affliction = AfflictionKind.Soaked,
-                    InsideSpares = true, InsideDo = new[] { new UpgradeEffect { On = UpgradeTrigger.InGround, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = SandPool, Seconds = 0.75f, Pace = 0.7f } } } },
+                    Ground = Clover.World.OwnGrounds.WetSand, InsideSpares = true, InsideDo = new[] { new UpgradeEffect { On = UpgradeTrigger.InGround, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = SandPool, Seconds = 0.75f, Pace = 0.7f } } } },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = SunkInSand, By = StruckBy.Heavy, Do = UpgradeAction.Hold, Seconds = 0.5f }));
 
             // Life and Metal (17). Iron thorns grow out of it for 6 s; each weapon blow snaps one off and it flies at the

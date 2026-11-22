@@ -143,5 +143,10 @@ namespace Clover.Player
         /// ground (UpgradeEffect.Ground). Target: the enemy standing in it; the point is where it stands.
         /// </summary>
         InGround,
+        /// <summary>
+        /// An enemy driven hard against the stones of a ring of your own (World.OwnGrounds.StoneRing) was stopped there (The
+        /// Closed Ring). Target: that enemy.
+        /// </summary>
+        StoppedAtStones,
     }
 }

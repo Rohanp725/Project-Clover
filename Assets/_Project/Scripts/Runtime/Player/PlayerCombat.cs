@@ -2324,7 +2324,9 @@ namespace Clover.Player
                 if (countered) CounterCuts++;
                 // Turned away (Turned to the Sun, Turned About): a blow on its back is critical.
                 bool onBack = afflictable != null && afflictable.Afflictions.Conditions.Has(ConditionFlags.BackCritical) && target is Component turned && OnItsBack(turned.transform.position, turned.transform.forward, transform.position, BackDot);
-                bool critical = promised || countered || onBack || (afflictable != null && afflictable.Afflictions.MakesBlowsCritical) || (chance > 0f && Random.value < chance);
+                // Struck across a line of your spears (The Drawn Line): critical.
+                bool acrossLine = target is Component across && Clover.World.OwnGrounds.Across(Clover.World.OwnGrounds.SpearLine, transform.position, across.transform.position, Time.time);
+                bool critical = promised || countered || onBack || acrossLine || (afflictable != null && afflictable.Afflictions.MakesBlowsCritical) || (chance > 0f && Random.value < chance);
                 bool counter = step == Combo.Skill && Combo.SkillIsCounter;
                 float damage = (step.Damage + (counter ? counterDamage : 0f)) * scale * step.BandDamage(distance) * DamageMultiplier * UpgradeDamage * NextBlowDamage * StatDamage;
                 float staggerShare = 1f;

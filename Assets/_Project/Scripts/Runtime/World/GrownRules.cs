@@ -75,6 +75,174 @@ namespace Clover.World
             gap.y = 0f;
             return gap.magnitude <= radius;
         }
+
+        /// <summary>
+        /// True when the flat step from <paramref name="a"/> to <paramref name="b"/> crosses the line <paramref name="length"/> long
+        /// from <paramref name="from"/> along <paramref name="way"/> (a blow struck across The Drawn Line).
+        /// </summary>
+        public static bool Crosses(Vector3 a, Vector3 b, Vector3 from, Vector3 way, float length)
+        {
+            way.y = 0f;
+            if (way.sqrMagnitude < 0.0001f || length <= 0f) return false;
+            way = way.normalized * length;
+            float ax = a.x - from.x, az = a.z - from.z, bx = b.x - from.x, bz = b.z - from.z;
+            // Which side of the line each end lies on, and which side of the step each end of the line lies on.
+            float sideA = way.x * az - way.z * ax, sideB = way.x * bz - way.z * bx;
+            if (sideA * sideB > 0f || (sideA == 0f && sideB == 0f)) return false;
+            float sx = bx - ax, sz = bz - az;
+            float startSide = sx * (0f - az) - sz * (0f - ax), endSide = sx * (way.z - az) - sz * (way.x - ax);
+            return startSide * endSide <= 0f;
+        }
+
+        /// <summary>
+        /// True when a body that was at <paramref name="before"/> and is now at <paramref name="now"/> stepped across the circle
+        /// <paramref name="radius"/> round <paramref name="middle"/>, in or out (The Closed Ring's wall).
+        /// </summary>
+        public static bool CrossesRing(Vector3 before, Vector3 now, Vector3 middle, float radius) =>
+            Within(before, middle, radius) != Within(now, middle, radius);
+    }
+
+    /// <summary>
+    /// The player's own grounds by name, those a spell's form draws (Black Ice's sheet, The Drawn Line's spears) and those
+    /// a mark lays (wet sand, the lamp's glow), so the stats and the marks can ask who stands in one (the ledger's
+    /// in-own-ground), and an enemy shoved on a slick one goes farther. Pure: the caller says what time it is.
+    /// </summary>
+    public static class OwnGrounds
+    {
+        /// <summary>Hoarfrost's Black Ice: a sheet of clear ice.</summary>
+        public const string Sheet = "ice.sheet";
+        /// <summary>The Ground Gives' wet sand, The Land Was Sea's trail, The Island Breathes' out-breath.</summary>
+        public const string WetSand = "earth.wetsand";
+        /// <summary>Miasma's Low Mist: a sheet of mist along the floor.</summary>
+        public const string LowMist = "poison.lowmist";
+        /// <summary>Standing Light's glow round its lamp, and Row of Lamps' row.</summary>
+        public const string Glow = "light.glow";
+        /// <summary>Drawn From the Wood's Blood in the Furrow: the ring of green blood.</summary>
+        public const string Blood = "life.blood";
+        /// <summary>Ring of Spears' The Drawn Line: the row of spears across your front.</summary>
+        public const string SpearLine = "light.spearline";
+        /// <summary>The Closed Ring: Bedrock's ring of standing stones.</summary>
+        public const string StoneRing = "earth.stonering";
+
+        private struct Patch
+        {
+            public bool Active;
+            public string Name;
+            public Vector3 At, Way;
+            public float Length, Radius, Until, Thrown;
+        }
+
+        /// <summary>How many grounds can lie at once; one more takes the place of the one nearest its end.</summary>
+        public const int Most = 24;
+        private static readonly Patch[] patches = new Patch[Most];
+
+        // Domain reload is off: no ground from the last play may lie in this one, and no listener from it be told.
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics()
+        {
+            Clear();
+            Stopped = null;
+        }
+
+        /// <summary>Told when a body driven against the rim of The Closed Ring is stopped there (the body; the player's marks strike it).</summary>
+        public static event System.Action<Component> Stopped;
+
+        /// <summary>Tells the listeners that <paramref name="body"/> was driven against a ring's stones and stopped.</summary>
+        public static void TellStopped(Component body) => Stopped?.Invoke(body);
+
+        /// <summary>A step at least this fast, metres a second, is a body driven into the stones, not one walking up to them.</summary>
+        public const float DrivenAtLeast = 3f;
+
+        /// <summary>Forgets every ground (a new play, a test).</summary>
+        public static void Clear()
+        {
+            for (int i = 0; i < Most; i++) patches[i] = default;
+        }
+
+        /// <summary>Lays a round ground <paramref name="radius"/> round <paramref name="at"/> until <paramref name="until"/>; an enemy shoved on it goes <paramref name="thrown"/> times as far.</summary>
+        public static void Lay(string name, Vector3 at, float radius, float until, float thrown = 1f) =>
+            LayLane(name, at, Vector3.zero, 0f, radius, until, thrown);
+
+        /// <summary>Lays a lane <paramref name="length"/> long from <paramref name="from"/> along <paramref name="way"/>, <paramref name="half"/> either side of its line.</summary>
+        public static void LayLane(string name, Vector3 from, Vector3 way, float length, float half, float until, float thrown = 1f)
+        {
+            if (string.IsNullOrEmpty(name)) return;
+            int slot = -1;
+            for (int i = 0; i < Most && slot < 0; i++)
+                if (!patches[i].Active) slot = i;
+            if (slot < 0)
+            {
+                slot = 0;
+                for (int i = 1; i < Most; i++)
+                    if (patches[i].Until < patches[slot].Until) slot = i;
+            }
+            way.y = 0f;
+            patches[slot] = new Patch
+            {
+                Active = true, Name = name, At = from, Way = way.sqrMagnitude > 0.0001f ? way.normalized : Vector3.zero,
+                Length = Mathf.Max(0f, length), Radius = Mathf.Max(0f, half), Until = until, Thrown = Mathf.Max(1f, thrown),
+            };
+        }
+
+        private static bool Live(int i, float now) => patches[i].Active && now < patches[i].Until;
+
+        private static bool On(int i, Vector3 at) =>
+            GroundRules.OnLane(at, patches[i].At, patches[i].Way, patches[i].Length, patches[i].Radius);
+
+        /// <summary>True when <paramref name="at"/> stands in a ground of this name at <paramref name="now"/>.</summary>
+        public static bool Under(string name, Vector3 at, float now)
+        {
+            if (string.IsNullOrEmpty(name)) return false;
+            for (int i = 0; i < Most; i++)
+                if (Live(i, now) && patches[i].Name == name && On(i, at)) return true;
+            return false;
+        }
+
+        /// <summary>How many times as far an enemy at <paramref name="at"/> is thrown by the slick ground under it (1 off it).</summary>
+        public static float ThrownAt(Vector3 at, float now)
+        {
+            float most = 1f;
+            for (int i = 0; i < Most; i++)
+                if (Live(i, now) && patches[i].Thrown > most && On(i, at)) most = patches[i].Thrown;
+            return most;
+        }
+
+        /// <summary>True when the step from <paramref name="a"/> to <paramref name="b"/> crosses a lane of this name (a blow across The Drawn Line).</summary>
+        public static bool Across(string name, Vector3 a, Vector3 b, float now)
+        {
+            if (string.IsNullOrEmpty(name)) return false;
+            for (int i = 0; i < Most; i++)
+                if (Live(i, now) && patches[i].Name == name && patches[i].Length > 0f && GroundRules.Crosses(a, b, patches[i].At, patches[i].Way, patches[i].Length)) return true;
+            return false;
+        }
+
+        /// <summary>
+        /// True when a step from <paramref name="before"/> to <paramref name="now"/> would cross the rim of a round ground of this
+        /// name, in or out (nothing walks or is thrown across The Closed Ring).
+        /// </summary>
+        public static bool AcrossRim(string name, Vector3 before, Vector3 now, float time)
+        {
+            if (string.IsNullOrEmpty(name)) return false;
+            for (int i = 0; i < Most; i++)
+                if (Live(i, time) && patches[i].Name == name && patches[i].Length <= 0f && GroundRules.CrossesRing(before, now, patches[i].At, patches[i].Radius)) return true;
+            return false;
+        }
+
+        /// <summary>How many grounds of this name lie at <paramref name="now"/>.</summary>
+        public static int Count(string name, float now)
+        {
+            int count = 0;
+            for (int i = 0; i < Most; i++)
+                if (Live(i, now) && patches[i].Name == name) count++;
+            return count;
+        }
+
+        /// <summary>Ends every ground of this name now (a ring that falls when its surge ends).</summary>
+        public static void End(string name)
+        {
+            for (int i = 0; i < Most; i++)
+                if (patches[i].Active && patches[i].Name == name) patches[i].Active = false;
+        }
     }
 
     /// <summary>The plain rules of the player's grown things (the ledger's grown-bursts and grows-back), kept apart from the scene.</summary>

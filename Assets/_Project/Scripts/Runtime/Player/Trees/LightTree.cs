@@ -128,12 +128,23 @@ namespace Clover.Player.Trees
                 // The roster's numbers alone (the owner's answer of 2026-11-20: an Empower may strengthen without a shorter wait).
                 new Empower { Stagger = 6.7f },
                 "Its spears break 40 stagger in all.",
-                // NEEDS: a line six metres across your front that holds what crosses it and makes your blows across it critical,
-                // the spears not driving into the enemy (ground-states, form-pieces, shape-sets-aside). Until then the spears
-                // still drive in, and stand five seconds in the floor in their ring round it, Marking and jarring what is inside.
-                new ShapeDef { Name = "The Drawn Line",
+                // The spears go nowhere near the enemy (a quiet brand: SpellSpec.Quiet). They stand in a line six metres across your
+                // front, 1.5 m ahead (Shape Line, AcrossFront): one stepping onto it is held a second and Marked, once in 3 s
+                // (InsideDo), and your weapon blows struck across it are critical (World.OwnGrounds.SpearLine, read by PlayerCombat).
+                new ShapeDef { Name = "The Drawn Line", Form = SpellForms.Brand, Spell = new SpellSpec { Reach = 6f, Damage = 0f, Stagger = 0f, Stacks = 0, Quiet = true },
                     Description = "The six spears drive into the floor in a straight line six metres across your front and stand five seconds, dust lit along them. An enemy that crosses it is held a second and Marked, and your blows across the line are critical. Fight across it.",
-                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Hazard, Shape = HazardShape.Ring, Reach = 3f, Count = 6, Radius = 0.7f, Seconds = 5f, Interval = 1f, Damage = 0f, Stagger = 12f, Affliction = M, Stacks = 1, Cooldown = 1f } } },
+                    Effects = new[]
+                    {
+                        new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.OwnGround, At = EffectAt.Self, Shape = HazardShape.Line, AcrossFront = true, Amount = 1.5f, Reach = 6f, Radius = 0.5f, Seconds = 5f,
+                            Ground = Clover.World.OwnGrounds.SpearLine },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Hazard, At = EffectAt.Self, Shape = HazardShape.Line, AcrossFront = true, Amount = 1.5f, Reach = 6f, Count = 6, Radius = 0.7f,
+                            Seconds = 5f, Interval = 0.25f, Damage = 0f, Stagger = 0f, Affliction = M, Stacks = 0,
+                            InsideDo = new[]
+                            {
+                                new UpgradeEffect { On = UpgradeTrigger.InGround, Do = UpgradeAction.Hold, Seconds = 1f, CooldownPerEnemy = true, Cooldown = 3f },
+                                new UpgradeEffect { On = UpgradeTrigger.InGround, Do = UpgradeAction.Afflict, Affliction = M, Stacks = 1, CooldownPerEnemy = true, Cooldown = 3f },
+                            } },
+                    } },
                 // A quarter second between spears (SpellSpec.Between). NEEDS: a spear landing within 0.1 s of a weapon blow as
                 // the moment (spell-windows). Until then each weapon blow on the enemy for a second and a half after strikes a
                 // spear's worth more.

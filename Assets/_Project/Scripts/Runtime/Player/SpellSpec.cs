@@ -198,6 +198,12 @@ namespace Clover.Player
         public bool Planted;
         /// <summary>For the field form: draws everything standing in it toward its middle, metres a second (The Pit).</summary>
         public float Pull;
+        /// <summary>
+        /// For the field form: the name of the player's own ground it lies as (World.OwnGrounds), so the stats and marks can ask
+        /// who stands on it (Black Ice's sheet), and how many times as far an enemy shoved on it goes (<see cref="Thrown"/>).
+        /// </summary>
+        public string Ground = "";
+        public float Thrown;
         public int Bank;
         public float BankDamage;
         public float BankStagger;

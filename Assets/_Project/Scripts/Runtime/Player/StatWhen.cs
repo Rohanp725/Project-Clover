@@ -55,5 +55,15 @@ namespace Clover.Player
         StoodStill,
         /// <summary>While the player stands in water they have left on the ground: their own ground that Soaks (the ledger's in-own-water).</summary>
         InOwnWater,
+        /// <summary>While the player stands on their own sheet of ice (Hoarfrost's Black Ice; World.OwnGrounds.Sheet).</summary>
+        OnOwnIce,
+        /// <summary>While the player stands on wet sand of their own, or dodges from it (World.OwnGrounds.WetSand).</summary>
+        OnWetSand,
+        /// <summary>While the player stands in their own Low Mist (World.OwnGrounds.LowMist).</summary>
+        InOwnMist,
+        /// <summary>While the player stands in their own lamp's glow (Standing Light; World.OwnGrounds.Glow).</summary>
+        InOwnGlow,
+        /// <summary>While the player stands in their own ring of green blood (Blood in the Furrow; World.OwnGrounds.Blood).</summary>
+        InOwnBlood,
     }
 }

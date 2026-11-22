@@ -16,6 +16,9 @@ namespace Clover.Player.Forms
             if (!begun) return 0;
             run.A = FormKit.AimPoint(cast);
             run.T1 = 0.3f;
+            // A field that is ground of the player's own (Black Ice's sheet) lies as that ground for its time.
+            if (!string.IsNullOrEmpty(cast.Spec.Ground))
+                Clover.World.OwnGrounds.Lay(cast.Spec.Ground, run.A, cast.Spec.Radius, Time.time + Mathf.Max(0.5f, cast.Spec.Seconds), cast.Spec.Thrown);
             SpellWorks.Marks(run)[0] = FormFx.HoldMark(FormMark.Disc, FormKit.Lit(cast.Colour, 1.9f));
             SpellWorks.Marks(run)[1] = FormFx.HoldMark(FormMark.Sigil, FormKit.Lit(cast.Colour, 1.8f));
             FormFx.Lay(FormMark.Ring, run.A, 0.6f, FormKit.Lit(cast.Colour, 3f), 0.3f, cast.Spec.Radius * 2f);

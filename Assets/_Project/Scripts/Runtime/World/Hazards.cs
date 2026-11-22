@@ -248,6 +248,19 @@ namespace Clover.World
             return taken;
         }
 
+        /// <summary>True when <paramref name="at"/> stands in a settled patch of the player's ground of the given name (Wet Ground's sand, Low Mist's sheet).</summary>
+        public static bool NamedUnder(Vector3 at, string name)
+        {
+            if (instance == null || string.IsNullOrEmpty(name)) return false;
+            for (int i = 0; i < instance.zones.Length; i++)
+            {
+                ref var zone = ref instance.zones[i];
+                if (!zone.Active || zone.Delay > 0f || zone.Spec.Name != name) continue;
+                if (GroundRules.Within(at, zone.Position, zone.Spec.Radius + 0.35f)) return true;
+            }
+            return false;
+        }
+
         /// <summary>Writes where each settled patch of ground of the given name lies and how wide it is, as many as fit; returns how many.</summary>
         public static int AllNamed(string name, Vector3[] at, float[] radius)
         {

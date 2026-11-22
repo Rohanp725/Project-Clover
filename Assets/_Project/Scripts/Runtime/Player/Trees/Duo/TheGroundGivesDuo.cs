@@ -41,7 +41,8 @@ namespace Clover.Player.Trees.Duo
                         Effects = new[]
                         {
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Quicksand, Seconds = 4f, Pace = 0.5f, Flags = ConditionFlags.Mired, Sink = 0.35f, Is = Reactions.SunkInSand } },
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Radius = 1.5f, Seconds = 4f, Interval = 0.5f, Damage = 0f, Stacks = 0, Affliction = AfflictionKind.Soaked, Pull = 1f },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Radius = 1.5f, Seconds = 4f, Interval = 0.5f, Damage = 0f, Stacks = 0, Affliction = AfflictionKind.Soaked, Pull = 1f,
+                                Ground = Clover.World.OwnGrounds.WetSand },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Quicksand, By = StruckBy.Heavy, Do = UpgradeAction.Hold, Seconds = 0.5f },
                         },
                     },
@@ -82,30 +83,38 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.RightLow));
 
-            // NEEDS: a dodge through ground of one's own as a slide (ground-states); now every dodge leaves wet sand behind it
-            // and pays back its stamina.
+            // Only a dodge begun on wet sand of your own (StatWhen.OnWetSand: the sand pools, Quicksand's, The Island Breathes'
+            // and this trail, World.OwnGrounds.WetSand): it is free (UpgradeAction.FreeDodge) and lays 3 m of wet sand along its
+            // way. NEEDS: the slide itself as its own move (the clip roll_slide); it is the plain roll now.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = TheLandWasSea, Name = "The Land Was Sea", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { GivenToTheBog, DrivenDown }, Icon = UpgradeIcons.Wave,
                 Description = "Your dodge through wet sand is a slide: it costs no stamina and leaves 3 m of wet sand behind it for 3 s.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.DodgeEnd, At = EffectAt.Self, Do = UpgradeAction.Hazard, Shape = HazardShape.Line, Count = 3, Reach = 3f, Radius = 0.8f, Seconds = 3f, Interval = 0.5f, Affliction = AfflictionKind.Soaked, Stacks = 1 },
-                    new UpgradeEffect { On = UpgradeTrigger.DodgeEnd, Do = UpgradeAction.Stamina, Amount = 15f },
+                    new UpgradeEffect { On = UpgradeTrigger.DodgeStart, While = StatWhen.OnWetSand, Do = UpgradeAction.FreeDodge },
+                    new UpgradeEffect { On = UpgradeTrigger.DodgeStart, While = StatWhen.OnWetSand, At = EffectAt.Self, Do = UpgradeAction.Hazard, Shape = HazardShape.Line, Count = 3, Reach = 3f, Radius = 0.8f, Seconds = 3f, Interval = 0.5f,
+                        Affliction = AfflictionKind.Soaked, Stacks = 1, Ground = Clover.World.OwnGrounds.WetSand },
                 },
             }, HeartPattern.Keystone));
 
             // The duo spell, bought with Shards once both are carried (no god gives it): a breaker on a 15 s cooldown (SpellTimings). The pillars form heaves the ground up under
             // the enemies at the aim point; each one struck is shaken twice as well as soaked, so The Ground Gives sinks it.
-            // NEEDS: the in-breath and out-breath as one place (the heave, then 4 s of wet sand); blows on the lifted holding
-            // them up and a heavy blow on the sunk at double stagger.
+            // The out-breath: where it heaved, 4 s of wet sand 2.5 m round (World.OwnGrounds.WetSand), soaking what stands in it,
+            // laid once a cast where it first strikes. NEEDS: blows on the lifted holding them up (the pillars form lifts nothing
+            // yet) and a heavy blow on the sunk at double stagger.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = TheIslandBreathes, Name = "The Island Breathes", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Role = SpellRole.Breaker, Requires = new[] { GivenToTheBog, DrivenDown }, Icon = UpgradeIcons.Rock,
-                Description = "The ground at the aim point breathes in: it heaves up like a back, and every enemy on it is lifted, shaken twice and soaked, so it sinks as The Ground Gives when it comes down.",
+                Description = "The ground at the aim point breathes in: it heaves up like a back, and every enemy on it is lifted, shaken twice and soaked, so it sinks as The Ground Gives when it comes down. Then it breathes out: the ground lies as wet sand for 4 s.",
                 Form = "pillars",
                 Spell = new SpellSpec { Count = 5, Reach = 8f, Radius = 2.5f, Damage = 10f, Stagger = 30f, Stacks = 1, Delay = 0.9f },
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Tremor, Stacks = 2 } },
+                Effects = new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Tremor, Stacks = 2 },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Hazard, Radius = 2.5f, Seconds = 4f, Interval = 1f, Damage = 0f, Stagger = 0f, Affliction = AfflictionKind.Soaked, Stacks = 1,
+                        Ground = Clover.World.OwnGrounds.WetSand, Cooldown = 1f },
+                },
             }, HeartPattern.Spell));
         }
     }

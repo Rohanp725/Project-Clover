@@ -281,11 +281,11 @@ The blocked blow also counts as a perfect guard for every other mark that answer
 
 **When it happens.** Whenever you cast Hoarfrost, using the shape you picked. If you have not bought this, you cast the crystals.
 
-**The numbers.** 3 Shards. Black Ice: a sheet with a 2.3-metre radius, 2.5 metres ahead of you, lasting 5 seconds. Each second, it deals 1 damage and a stack of Chill to whatever stands on it. Frost Line: a line 10 metres long and 1.4 metres wide that spreads out in a moment. It deals 8 damage, 10 stagger and two stacks of Chill.
+**The numbers.** 3 Shards. Black Ice: a sheet with a 2.3-metre radius, 2.5 metres ahead of you, lasting 5 seconds. Each second, it deals 1 damage and a stack of Chill to whatever stands on it. An enemy on it is thrown 50% farther by your blows and shoves. Your dodge that starts on it goes twice as far. Frost Line: a line 10 metres long and 1.4 metres wide that spreads out in a moment. It deals 8 damage, 10 stagger and two stacks of Chill.
 
 **Works with.** Winter Wall and Rime Guard, to keep enemies on the ice (Black Ice); Eight Points and Hanging Ice on the archer it reaches (Frost Line).
 
-**Not built yet.** Black Ice should make enemies on it get thrown 50% farther, and make a dodge on it slide twice as far.
+**Not built yet.** The sheet is still drawn as the plain field of frost spikes, not as clear ice. The long dodge is the plain roll pushed farther, not a slide of its own.
 
 **Example.** Put Black Ice down a hallway. The soldiers who walk in reach you with two or three stacks before you have swung.
 

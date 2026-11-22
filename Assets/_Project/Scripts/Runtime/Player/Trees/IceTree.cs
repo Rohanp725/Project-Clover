@@ -247,11 +247,13 @@ namespace Clover.Player.Trees
                 // Chill three deep. The Empower's numbers reach the kit's own cast too (PlayerUpgrades.BaseEmpower, read by PlayerElement).
                 new Empower { Cooldown = 5.5f, Stacks = 3 },
                 "Hoarfrost waits 5.5 seconds, not 7, and chills three deep.",
-                // Black Ice, once a major, folded in. NEEDS: enemies on the sheet thrown half again as far, and a dodge on it
-                // sliding twice as far.
+                // Black Ice, once a major, folded in. The sheet is ground of your own (SpellSpec.Ground, World.OwnGrounds): an enemy
+                // shoved on it goes half again as far (SpellSpec.Thrown, read by Enemy), and your dodge from it slides twice as far
+                // (StatWhen.OnOwnIce). NEEDS: the slide as its own move (the clip roll_slide); it is the plain roll, farther.
                 new ShapeDef { Name = "Black Ice", Form = SpellForms.Field,
                     Description = "No crystals. A sheet of clear ice covers the fan's ground for five seconds. Enemies on it gain a Chill a second and are thrown half again as far, and a dodge on it slides twice as far.",
-                    Spell = new SpellSpec { Reach = 2.5f, Radius = 2.3f, Seconds = 5f, Interval = 1f, Damage = 0f, Stagger = 0f, LingerDamage = 1f, Stacks = 1 } },
+                    Spell = new SpellSpec { Reach = 2.5f, Radius = 2.3f, Seconds = 5f, Interval = 1f, Damage = 0f, Stagger = 0f, LingerDamage = 1f, Stacks = 1, Ground = Clover.World.OwnGrounds.Sheet, Thrown = 1.5f },
+                    Stats = new[] { new StatMod(PlayerStat.DodgeDistance, 1f, StatWhen.OnOwnIce) } },
                 new ShapeDef { Name = "Frost Line", Form = SpellForms.Spikes,
                     Description = "One branching line of frost creeps ten metres along the floor in a moment, laying two Chill on all it crosses. It reaches the archer behind the shield.",
                     Spell = new SpellSpec { Reach = 10f, Speed = 16f, Count = 1, Radius = 0.7f, Damage = 8f, Stagger = 10f, Stacks = 2 } },

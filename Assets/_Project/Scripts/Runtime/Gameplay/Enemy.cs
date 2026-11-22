@@ -681,7 +681,8 @@ namespace Clover.Gameplay
             // Read before this blow lays anything of its own: the blow is judged against what was already there.
             float takes = Afflictions.DamageTakenMultiplier(hit.Spell, hit.Heavy) * harder;
             float unsteadies = Afflictions.StaggerTakenFor(hit.Spell) * harder;
-            float shoved = Afflictions.ShoveMultiplier;
+            // On a slick ground of the player's (Black Ice's sheet) it is thrown farther.
+            float shoved = Afflictions.ShoveMultiplier * Clover.World.OwnGrounds.ThrownAt(transform.position, Time.time);
             Afflictions.TakeFrom(hit, this, shattered);
             // Ground that only lays an affliction is not a blow: it does not shove, flinch, wear poise or meet the guard.
             if (hit.OnlyLays && detonated <= 0f) return HitOutcome.Landed;
@@ -795,7 +796,7 @@ namespace Clover.Gameplay
         {
             if (IsDead) return;
             impulse.y = 0f;
-            shove += impulse * (Kind.IsBoss ? 0.3f : Kind.IsElite ? 0.6f : 1f);
+            shove += impulse * (Kind.IsBoss ? 0.3f : Kind.IsElite ? 0.6f : 1f) * Clover.World.OwnGrounds.ThrownAt(transform.position, Time.time);
             // A real shove, not a pull's steady drag, is a moment its conditions answer (Windthrow tears out, Ill Wind sheds).
             if (ShoveRules.IsMoment(impulse.magnitude, Time.time, lastShoveMoment))
             {
@@ -1210,6 +1211,19 @@ namespace Clover.Gameplay
             // beyond. A god is never leashed.
             if (!Afflictions.IsGod && EnemyChains.LeashOf(this, target != null ? target.position : transform.position, out Vector3 leashAnchor, out float leash))
                 step = EnemyChains.Leash(transform.position, step, leashAnchor, leash, deltaTime);
+            // Nothing walks, leaps or is thrown across The Closed Ring's stones (World.OwnGrounds.StoneRing); a god is not held.
+            // One driven against them hard is stopped there and told, for the ring's own blow.
+            if (!Afflictions.IsGod && deltaTime > 0f)
+            {
+                Vector3 flat = new Vector3(step.x, 0f, step.z);
+                if (flat.sqrMagnitude > 0f && Clover.World.OwnGrounds.AcrossRim(Clover.World.OwnGrounds.StoneRing, transform.position, transform.position + flat, Time.time))
+                {
+                    if (flat.magnitude / deltaTime >= Clover.World.OwnGrounds.DrivenAtLeast) Clover.World.OwnGrounds.TellStopped(this);
+                    step.x = 0f;
+                    step.z = 0f;
+                    shove = Vector3.zero;
+                }
+            }
             if (body.enabled) body.Move(step);
 
             // Its guard is up only while it stands ready and knows the player is there: the band going out is the opening.

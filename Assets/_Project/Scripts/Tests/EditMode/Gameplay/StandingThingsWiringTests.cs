@@ -17,6 +17,7 @@ namespace Clover.Tests
         {
             StandingThings.Clear();
             Pickups.Clear();
+            OwnGrounds.Clear();
         }
 
         [TearDown]
@@ -24,6 +25,122 @@ namespace Clover.Tests
         {
             StandingThings.Clear();
             Pickups.Clear();
+            OwnGrounds.Clear();
+        }
+
+        [Test]
+        public void OwnGroundsLieByNameUntilTheirTimeAndSlickOnesThrowFarther()
+        {
+            OwnGrounds.Lay(OwnGrounds.Sheet, Vector3.zero, 2.3f, 5f, 1.5f);
+            Assert.IsTrue(OwnGrounds.Under(OwnGrounds.Sheet, new Vector3(1f, 0f, 1f), 1f));
+            Assert.IsFalse(OwnGrounds.Under(OwnGrounds.Sheet, new Vector3(3f, 0f, 0f), 1f), "off the sheet");
+            Assert.IsFalse(OwnGrounds.Under(OwnGrounds.WetSand, Vector3.zero, 1f), "another ground's name");
+            Assert.IsFalse(OwnGrounds.Under(OwnGrounds.Sheet, Vector3.zero, 5.5f), "melted");
+            Assert.AreEqual(1.5f, OwnGrounds.ThrownAt(new Vector3(0f, 0f, 2f), 1f), 1e-5f, "thrown half again as far on it");
+            Assert.AreEqual(1f, OwnGrounds.ThrownAt(new Vector3(0f, 0f, 4f), 1f), 1e-5f);
+            Assert.AreEqual(1, OwnGrounds.Count(OwnGrounds.Sheet, 1f));
+            for (int i = 0; i < OwnGrounds.Most + 3; i++) OwnGrounds.Lay(OwnGrounds.Glow, new Vector3(50f, 0f, 0f), 1f, 10f + i);
+            Assert.AreEqual(OwnGrounds.Most, OwnGrounds.Count(OwnGrounds.Glow, 1f), "the one nearest its end gives way");
+        }
+
+        [Test]
+        public void ALineIsCrossedOnlyWithinItsLengthAndARingsRimBothWays()
+        {
+            // The Drawn Line: six metres across your front, 1.5 m ahead.
+            OwnGrounds.LayLane(OwnGrounds.SpearLine, new Vector3(-3f, 0f, 1.5f), Vector3.right, 6f, 0.5f, 5f);
+            Assert.IsTrue(OwnGrounds.Across(OwnGrounds.SpearLine, Vector3.zero, new Vector3(0f, 0f, 3f), 1f), "a blow across it");
+            Assert.IsTrue(OwnGrounds.Across(OwnGrounds.SpearLine, new Vector3(2f, 0f, 3f), new Vector3(-1f, 0f, 0f), 1f), "slanting, either way");
+            Assert.IsFalse(OwnGrounds.Across(OwnGrounds.SpearLine, Vector3.zero, new Vector3(0f, 0f, 1f), 1f), "short of it");
+            Assert.IsFalse(OwnGrounds.Across(OwnGrounds.SpearLine, new Vector3(5f, 0f, 0f), new Vector3(5f, 0f, 3f), 1f), "past its end");
+            Assert.IsTrue(OwnGrounds.Under(OwnGrounds.SpearLine, new Vector3(2f, 0f, 1.7f), 1f), "standing on the line");
+            // The Closed Ring: twelve metres across.
+            OwnGrounds.Lay(OwnGrounds.StoneRing, Vector3.zero, 6f, 10f);
+            Assert.IsTrue(OwnGrounds.AcrossRim(OwnGrounds.StoneRing, new Vector3(0f, 0f, 5.9f), new Vector3(0f, 0f, 6.1f), 1f), "out");
+            Assert.IsTrue(OwnGrounds.AcrossRim(OwnGrounds.StoneRing, new Vector3(7f, 0f, 0f), new Vector3(5.8f, 0f, 0f), 1f), "in");
+            Assert.IsFalse(OwnGrounds.AcrossRim(OwnGrounds.StoneRing, new Vector3(1f, 0f, 0f), new Vector3(2f, 0f, 0f), 1f), "inside it");
+            Assert.IsFalse(OwnGrounds.AcrossRim(OwnGrounds.StoneRing, new Vector3(8f, 0f, 0f), new Vector3(9f, 0f, 0f), 1f), "outside it");
+            Assert.IsFalse(OwnGrounds.AcrossRim(OwnGrounds.StoneRing, new Vector3(0f, 0f, 5.9f), new Vector3(0f, 0f, 6.1f), 11f), "fallen");
+            OwnGrounds.End(OwnGrounds.StoneRing);
+            Assert.AreEqual(0, OwnGrounds.Count(OwnGrounds.StoneRing, 1f));
+        }
+
+        [Test]
+        public void StandingInYourOwnGroundIsAStateTheStatsAndMarksRead()
+        {
+            Assert.Greater(PlayerStats.WhenCount, (int)StatWhen.InOwnBlood);
+            var states = PlayerUpgrades.OwnGroundStates;
+            foreach (var when in new[] { StatWhen.OnOwnIce, StatWhen.OnWetSand, StatWhen.InOwnMist, StatWhen.InOwnGlow, StatWhen.InOwnBlood })
+                Assert.AreEqual(1, states.Count(each => each.When == when), when + " has its ground");
+            Assert.AreEqual(states.Length, states.Select(each => each.Ground).Distinct().Count());
+            Assert.IsFalse(PlayerStats.IsBlow(StatWhen.OnOwnIce), "a state, not a kind of blow");
+            Assert.IsFalse(Hazards.NamedUnder(Vector3.zero, OwnGrounds.WetSand), "no ground with no hazards in the scene");
+        }
+
+        [Test]
+        public void BlackIceIsASheetThatThrowsFartherAndSlidesYourDodge()
+        {
+            var shape = Upgrade.ById(SpellBranch.ShapeId(IceTree.Hoarfrost)).Shapes.Single(each => each.Name == "Black Ice");
+            Assert.AreEqual(OwnGrounds.Sheet, shape.Spell.Ground);
+            Assert.AreEqual(1.5f, shape.Spell.Thrown, 1e-5f, "half again as far");
+            var slide = shape.Stats.Single();
+            Assert.AreEqual(PlayerStat.DodgeDistance, slide.Stat);
+            Assert.AreEqual(StatWhen.OnOwnIce, slide.When);
+            var stats = new PlayerStats();
+            stats.AddLearned(slide);
+            stats.SetWhen(StatWhen.OnOwnIce, true);
+            Assert.AreEqual(2f, stats.Multiplier(PlayerStat.DodgeDistance), 1e-5f, "twice as far on the sheet");
+            var copy = new SpellSpec();
+            SpellChange.Copy(shape.Spell, copy);
+            Assert.AreEqual(OwnGrounds.Sheet, copy.Ground, "the sheet goes with the spell's numbers");
+            Assert.AreEqual(1.5f, copy.Thrown, 1e-5f);
+        }
+
+        [Test]
+        public void TheClosedRingIsAWallThatStopsAndStrikesWhatIsDrivenIntoIt()
+        {
+            var ring = Upgrade.ById(EarthTree.TheClosedRing);
+            var wall = ring.Effects.Single(each => each.Do == UpgradeAction.OwnGround);
+            Assert.AreEqual(OwnGrounds.StoneRing, wall.Ground);
+            Assert.AreEqual(6f, wall.Radius, 1e-5f, "twelve metres across");
+            Assert.AreEqual(EffectAt.Self, wall.At);
+            Assert.AreEqual(11, ring.Effects.Single(each => each.Do == UpgradeAction.Hazard).Count, "the eleven stones drawn");
+            Assert.AreEqual(0f, ring.Effects.Single(each => each.Do == UpgradeAction.Hazard).Damage, "the stones strike nothing standing by them");
+            var driven = ring.Effects.Single(each => each.On == UpgradeTrigger.StoppedAtStones);
+            Assert.AreEqual(20f, driven.Damage, 1e-5f);
+            Assert.AreEqual(35f, driven.Stagger, 1e-5f);
+            Assert.AreNotEqual("its moment comes", TriggerWords.Of(UpgradeTrigger.StoppedAtStones));
+            Assert.Greater(OwnGrounds.DrivenAtLeast, 2f, "a walk up to the stones is not a drive into them");
+        }
+
+        [Test]
+        public void WetSandIsGroundOfYourOwnAndADodgeFromItSlidesFree()
+        {
+            var land = Upgrade.ById(Clover.Player.Trees.Duo.TheGroundGivesDuo.TheLandWasSea).Effects;
+            Assert.IsFalse(land.Any(each => each.On == UpgradeTrigger.DodgeEnd), "not every dodge");
+            Assert.IsTrue(land.All(each => each.On == UpgradeTrigger.DodgeStart && each.While == StatWhen.OnWetSand));
+            Assert.AreEqual(1, land.Count(each => each.Do == UpgradeAction.FreeDodge));
+            Assert.AreEqual(OwnGrounds.WetSand, land.Single(each => each.Do == UpgradeAction.Hazard).Ground, "its trail is wet sand too");
+            Assert.AreEqual(OwnGrounds.WetSand, ReactionOf(AfflictionKind.Soaked, AfflictionKind.Tremor).Single(each => each.Do == UpgradeAction.Hazard).Ground, "the plain sand");
+            Assert.AreEqual(OwnGrounds.WetSand, ShapeOf(Clover.Player.Trees.Duo.TheGroundGivesDuo.Shape, "Quicksand").Single(each => each.Do == UpgradeAction.Hazard).Ground);
+            var breath = Upgrade.ById(Clover.Player.Trees.Duo.TheGroundGivesDuo.TheIslandBreathes).Effects.Single(each => each.Do == UpgradeAction.Hazard);
+            Assert.AreEqual(OwnGrounds.WetSand, breath.Ground, "the out-breath");
+            Assert.AreEqual(4f, breath.Seconds, 1e-5f);
+            Assert.Greater(breath.Cooldown, 0f, "one place a cast");
+        }
+
+        [Test]
+        public void TheDrawnLineStandsAcrossYourFrontHoldingWhoCrosses()
+        {
+            var shape = Upgrade.ById(SpellBranch.ShapeId(LightTree.RingOfSpears)).Shapes.Single(each => each.Name == "The Drawn Line");
+            Assert.IsTrue(shape.Spell.Quiet, "the spears do not drive into the enemy");
+            var line = shape.Effects.Single(each => each.Do == UpgradeAction.OwnGround);
+            Assert.AreEqual(OwnGrounds.SpearLine, line.Ground);
+            Assert.IsTrue(line.AcrossFront);
+            Assert.AreEqual(6f, line.Reach, 1e-5f);
+            var spears = shape.Effects.Single(each => each.Do == UpgradeAction.Hazard);
+            Assert.IsTrue(spears.AcrossFront);
+            Assert.AreEqual(1f, spears.InsideDo.Single(each => each.Do == UpgradeAction.Hold).Seconds, 1e-5f, "held a second");
+            Assert.IsTrue(spears.InsideDo.Any(each => each.Do == UpgradeAction.Afflict && each.Affliction == AfflictionKind.Marked));
         }
 
         [Test]

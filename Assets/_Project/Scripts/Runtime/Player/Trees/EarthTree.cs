@@ -151,15 +151,18 @@ namespace Clover.Player.Trees
 
             // The third keystone, back under its id (the owner's word of 2026-11-20: trees may keep three). It stands at the
             // top of the trunk, grown from Cairn's Master, the stones' own spell.
-            // NEEDS: the ring as a wall: nothing walks, rolls or is thrown across it while the surge lasts, an enemy driven into
-            // a stone takes 20 damage and 35 stagger, and inside it the player is Rooted (closed-ring). Until then: eight stones
-            // in a ring round the player that strike and shake what stands among them, and less harm taken.
+            // The ring is a wall (World.OwnGrounds.StoneRing, read by Enemy): nothing walks or is thrown across it while the surge
+            // lasts, a god excepted; an enemy driven hard into it is stopped and told (UpgradeTrigger.StoppedAtStones) for 20 and
+            // 35 stagger; inside it you are Rooted (StatWhen.Planted). Its eleven stones are drawn as the ground's puffs until
+            // their look (lk_g_closed_ring) is brought in.
             to.Add(BranchPattern.Put(new Upgrade { Id = TheClosedRing, Name = "The Closed Ring", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { SpellBranch.MasterId(Cairn) }, Icon = UpgradeIcons.Ring,
-                Description = "Bedrock raises eight stones in a ring round you for ten seconds. They strike and shake what stands among them, and you take a little less harm. Bedrock costs a quarter more mana.",
+                Description = "Bedrock raises a ring of standing stones round you, twelve metres across, for ten seconds. Nothing walks or is thrown across it. An enemy driven into a stone takes 20 and is badly shaken. Inside it you are Rooted and take a little less harm. Bedrock costs a quarter more mana.",
                 Stats = new[] { new StatMod(PlayerStat.SurgeCost, 0.25f) },
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.Hazard, At = EffectAt.Self, Shape = HazardShape.Ring, Reach = 6f, Count = 8, Radius = 1f, Seconds = 10f, Interval = 1f, Damage = 8f, Stagger = 20f, Affliction = T, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.OwnGround, At = EffectAt.Self, Ground = Clover.World.OwnGrounds.StoneRing, Radius = 6f, Seconds = 10f },
+                    new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.Hazard, At = EffectAt.Self, Shape = HazardShape.Ring, Reach = 6f, Count = 11, Radius = 0.5f, Seconds = 10f, Interval = 1f, Damage = 0f, Stagger = 0f, Affliction = T, Stacks = 0 },
+                    new UpgradeEffect { On = UpgradeTrigger.StoppedAtStones, Do = UpgradeAction.Burst, Radius = 0.5f, Damage = 20f, Stagger = 35f, Affliction = T, Stacks = 0, CooldownPerEnemy = true, Cooldown = 0.5f },
                     new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.Boon, Stat = PlayerStat.DamageTaken, Amount = -0.08f, Seconds = 10f },
                 } },
                 BranchPattern.TrunkRight));
