@@ -93,6 +93,28 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void ALayingIsToldAndGraftedEdgeAnswersANotchOnTheSeeded()
+        {
+            int told = 0;
+            AfflictionKind heard = AfflictionKind.None;
+            System.Action<UnityEngine.Component, AfflictionKind, int, LaySource> listen = (who, kind, stacks, source) => { told++; heard = kind; };
+            CombatEvents.Laid += listen;
+            try
+            {
+                CombatEvents.Report(null, AfflictionKind.Sundered, 1, new AfflictionResult(true, false, false), LaySource.Weapon);
+                CombatEvents.Report(null, AfflictionKind.Sundered, 1, new AfflictionResult(false, false, false), LaySource.Weapon);
+            }
+            finally { CombatEvents.Laid -= listen; }
+            Assert.AreEqual(1, told, "only what took is told");
+            Assert.AreEqual(AfflictionKind.Sundered, heard);
+            var graft = Upgrade.ById(Clover.Player.Trees.Duo.IronThornsDuo.GraftedEdge).Effects.Single();
+            Assert.AreEqual(UpgradeTrigger.AfflictionLaid, graft.On);
+            Assert.AreEqual(AfflictionKind.Sundered, graft.Spent, "a notch laid");
+            Assert.AreEqual(AfflictionKind.Seeded, graft.Needs, "on a Seeded enemy");
+            Assert.AreEqual(1, graft.Stacks, "lays one more");
+        }
+
+        [Test]
         public void TheMarksAnswerWhatTheReactionStruck()
         {
             UpgradeEffect Struck(string id) => Upgrade.ById(id).Effects.Single(effect => effect.On == UpgradeTrigger.ReactionStruck);

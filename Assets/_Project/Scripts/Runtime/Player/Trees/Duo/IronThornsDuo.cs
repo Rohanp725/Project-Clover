@@ -73,13 +73,12 @@ namespace Clover.Player.Trees.Duo
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.AnyHit, While = StatWhen.NearGrown, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Sundered, Stacks = 1, Cooldown = 0.5f } },
             }, HeartPattern.RightLow));
 
-            // NEEDS: an answer to a laying (a notch laid on a Seeded enemy lays two); now a blow on a seeded, notched enemy
-            // adds a notch.
+            // A notch laid on a Seeded enemy lays one more (UpgradeTrigger.AfflictionLaid; the second is not answered again).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = GraftedEdge, Name = "Grafted Edge", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 1, Requires = new[] { SapOfIron }, Icon = UpgradeIcons.Blade,
                 Description = "A notch laid on a Seeded enemy lays two.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.AnyHit, Needs = AfflictionKind.Seeded, Needs2 = AfflictionKind.Sundered, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Sundered, Stacks = 1, Cooldown = 0.5f } },
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.AfflictionLaid, Spent = AfflictionKind.Sundered, Needs = AfflictionKind.Seeded, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Sundered, Stacks = 1 } },
             }, HeartPattern.LeftHigh));
 
             // The duo spell, bought with Shards once both are carried (no god gives it): its pair's larger spell, 45 mana (SpellTimings). The minions form sends helpers that

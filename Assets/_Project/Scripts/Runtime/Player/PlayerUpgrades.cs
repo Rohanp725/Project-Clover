@@ -412,6 +412,7 @@ namespace Clover.Player
             CombatEvents.Died += OnEnemyDied;
             CombatEvents.AfflictionFull += OnAfflictionFull;
             CombatEvents.Carried += OnCarried;
+            CombatEvents.Laid += OnLaid;
             CombatEvents.Shattered += OnShattered;
             CombatEvents.Landed += OnLanded;
             CombatEvents.PoisonBit += OnPoisonBit;
@@ -423,6 +424,7 @@ namespace Clover.Player
             CombatEvents.Died -= OnEnemyDied;
             CombatEvents.AfflictionFull -= OnAfflictionFull;
             CombatEvents.Carried -= OnCarried;
+            CombatEvents.Laid -= OnLaid;
             CombatEvents.Shattered -= OnShattered;
             CombatEvents.Landed -= OnLanded;
             CombatEvents.PoisonBit -= OnPoisonBit;
@@ -1484,11 +1486,13 @@ namespace Clover.Player
             laying = pending.Source;
             layingReaction = pending.ReactionOf;
             layingCast = pending.ReactionCast;
+            answeringLaid = pending.Effect != null && pending.Effect.On == UpgradeTrigger.AfflictionLaid;
             try { Do(pending); }
             finally
             {
                 laying = LaySource.Effect;
                 layingReaction = layingCast = 0;
+                answeringLaid = false;
             }
         }
 
@@ -2175,6 +2179,14 @@ namespace Clover.Player
             Trigger(UpgradeTrigger.AfflictionFull, who, at);
         }
 
+        // An affliction laid on an enemy: whatever answers a laying is told, unless the laying is such an answer's own
+        // (Grafted Edge's second notch must not lay a third).
+        private void OnLaid(Component who, AfflictionKind kind, int stacks, LaySource source)
+        {
+            if (who == null || answeringLaid || byTrigger == null || byTrigger[(int)UpgradeTrigger.AfflictionLaid].Count == 0) return;
+            Trigger(UpgradeTrigger.AfflictionLaid, who, who.transform.position, true, stacks, null, kind, "", source == LaySource.Reaction ? LaySource.Reaction : LaySource.Effect);
+        }
+
         private void OnCarried(Component who, AfflictionKind kind, int stacks)
         {
             if (who == null) return;
@@ -2811,6 +2823,8 @@ namespace Clover.Player
         // The reaction whose own effects are being put in the line (-1: none), the times reactions have gone off, and the
         // reaction whose effect is being done now (pair plus one) with its time: what its blows carry.
         private int reactionPair = -1, reactionCast, layingReaction, layingCast;
+        // True while an answer to a laying is being done: what it lays is not answered again.
+        private bool answeringLaid;
         private readonly StruckOnce struckOnce = new StruckOnce();
 
         /// <summary>

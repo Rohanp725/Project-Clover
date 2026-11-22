@@ -97,5 +97,10 @@ namespace Clover.Player
         /// <see cref="UpgradeEffect.ReactionWith"/> picks which reactions. Target: that enemy.
         /// </summary>
         ReactionStruck,
+        /// <summary>
+        /// An affliction was laid on an enemy (the ledger's laying-answer); an effect's <see cref="UpgradeEffect.Spent"/> names
+        /// which kind it answers. Target: that enemy; carries the stacks laid. What the answer itself lays is not answered again.
+        /// </summary>
+        AfflictionLaid,
     }
 }

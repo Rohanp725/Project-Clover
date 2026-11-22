@@ -46,15 +46,13 @@ both carried.
 ## ironthorns.grafted
 **What it does.** A notch added to a Seeded enemy adds two instead.
 
-**When it happens.** Always on once you learn it, while you carry both Life and Metal.
+**When it happens.** Each time a notch is added to a Seeded enemy, by a blow, a spell or anything else, while you carry both Life and Metal.
 
-**The numbers.** Mix, a minor mark, 1 Shard. For now: each blow on an enemy that has both Seeded and Sundered adds one more notch, at most twice a second.
+**The numbers.** Mix, a minor mark, 1 Shard. One more notch each time. The extra notch doesn't add another.
 
 **Works with.** Sap of Iron, which it comes after on the chart, Iron Thorns (more notches, more thorns), Flung Blade.
 
 **Example.** Two blows on a seeded soldier, and its armour has three notches.
-
-**Not built yet.** For now, it works on each blow, not each time a notch is added.
 
 ## ironthorns.sownmen
 **What it does.** You throw five teeth ahead of you. They sink into the ground, and warriors made of bronze and roots rise from the soil. Each one goes to the nearest enemy and hits it again and again, adding Seeded, and every third hit adds a notch. After 6 seconds, they crumble into rust and leaves.

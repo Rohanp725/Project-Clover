@@ -14,6 +14,8 @@ namespace Clover.Gameplay
         public static event Action<Component, AfflictionSet> Died;
         public static event Action<Component, AfflictionKind> AfflictionFull;
         public static event Action<Component, AfflictionKind, int> Carried;
+        /// <summary>An affliction was laid on something (how many stacks were asked, and what laid it): the moment marks answer a laying (the ledger's laying-answer).</summary>
+        public static event Action<Component, AfflictionKind, int, LaySource> Laid;
         /// <summary>A frozen thing was shattered by a heavy blow.</summary>
         public static event Action<Component> Shattered;
         /// <summary>Something that was thrown into the air has come down.</summary>
@@ -26,6 +28,7 @@ namespace Clover.Gameplay
             Died = null;
             AfflictionFull = null;
             Carried = null;
+            Laid = null;
             LaidBy = LaySource.Effect;
             Shattered = null;
             Landed = null;
@@ -70,6 +73,7 @@ namespace Clover.Gameplay
             LaidBy = source;
             if (result.ReachedFull) AfflictionFull?.Invoke(who, kind);
             if (result.Carried) Carried?.Invoke(who, kind, stacks);
+            if (result.Applied && stacks > 0) Laid?.Invoke(who, kind, stacks, source);
             LaidBy = LaySource.Effect;
         }
     }
