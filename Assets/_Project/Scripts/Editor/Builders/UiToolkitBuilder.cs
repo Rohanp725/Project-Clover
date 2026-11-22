@@ -30,6 +30,8 @@ namespace Clover.EditorTools
         public const string ControlsPath = "Assets/_Project/Settings/Controls.inputactions";
         public const string GlyphFolder = "Assets/_Project/Art/Textures/UI/Glyphs";
         public const string GlyphPicturesPath = Folder + "/GlyphPictures.asset";
+        /// <summary>The reading face as a plain font, for the HUD's words drawn by the old Text (the affliction marks).</summary>
+        public const string HudReadingFont = "Assets/_Project/Art/Fonts/atkinson_hyperlegible_bold.ttf";
         /// <summary>The menus draw over the HUD canvas.</summary>
         public const float MenuSorting = 100f;
 
@@ -149,6 +151,13 @@ namespace Clover.EditorTools
             var serialized = new SerializedObject(screen);
             serialized.FindProperty("glyphPictures").objectReferenceValue = AssetDatabase.LoadAssetAtPath<GlyphPictures>(GlyphPicturesPath);
             serialized.ApplyModifiedPropertiesWithoutUndo();
+            // The HUD's affliction marks read in the same face as the menus.
+            foreach (var hud in Object.FindObjectsByType<Clover.UI.PlayerHud>(FindObjectsInactive.Include))
+            {
+                var hudSerialized = new SerializedObject(hud);
+                hudSerialized.FindProperty("markFont").objectReferenceValue = AssetDatabase.LoadAssetAtPath<Font>(HudReadingFont);
+                hudSerialized.ApplyModifiedPropertiesWithoutUndo();
+            }
             return menus;
         }
 

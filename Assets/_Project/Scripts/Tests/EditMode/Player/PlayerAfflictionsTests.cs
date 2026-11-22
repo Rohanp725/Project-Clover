@@ -81,6 +81,16 @@ namespace Clover.Tests
         {
             Assert.AreEqual("Burn 3", Clover.UI.AfflictionBadges.Words(AfflictionKind.Burn, 2.2f));
             Assert.AreEqual("Burn 0", Clover.UI.AfflictionBadges.Words(AfflictionKind.Burn, -1f));
+            // The menus' smallest size (ui_rest_fire_plan.md 4.1): 24 on the 1080 board, so 16 px at 720p.
+            Assert.GreaterOrEqual(Clover.UI.AfflictionBadges.WordsSize, 24);
+            Assert.Less(Clover.UI.AfflictionBadges.WordsColour.b, 1f, "near-white, never pure white");
+            // A mark takes its square or its words, whichever is wider, so long names never run into the next square.
+            var starts = new float[3];
+            Clover.UI.AfflictionBadges.Lay(new[] { 10f, 120f, 60f }, 3, starts);
+            float size = Clover.UI.AfflictionBadges.Size, gap = Clover.UI.AfflictionBadges.Gap;
+            Assert.AreEqual(0f, starts[0], 1e-4f);
+            Assert.AreEqual(size + gap, starts[1], 1e-4f, "short words: the square's width");
+            Assert.AreEqual(size + gap + 120f + gap, starts[2], 1e-4f, "long words: their own width");
         }
 
         [Test]

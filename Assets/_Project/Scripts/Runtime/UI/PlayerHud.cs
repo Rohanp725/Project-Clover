@@ -30,6 +30,11 @@ namespace Clover.UI
         [SerializeField] private RectTransform[] heatPips = new RectTransform[0];
         [SerializeField] private RectTransform healthLag;
         [SerializeField] private Image manaImage;
+        [Tooltip("The reading face for the affliction marks' words (Atkinson Hyperlegible Bold, set by UiToolkitBuilder); the status line's font when empty.")]
+        [SerializeField] private Font markFont;
+
+        /// <summary>Sets the reading face the affliction marks' words are drawn in.</summary>
+        public void ConfigureMarkFont(Font font) => markFont = font;
 
         /// <summary>Real seconds the ember count swells for when a mote lands, and by how much.</summary>
         public float EmberPulseSeconds = 0.28f;
@@ -123,7 +128,7 @@ namespace Clover.UI
             // The line under the Shards count that says Memories were paid, and the amber light that brings them (task 5.6).
             if (embers != null) Memories = MemoryGain.Make(embers);
             // The marks for what elites and gods laid on the player, beside the health bar.
-            if (healthFill != null && defence != null) Marks = AfflictionBadges.Make(healthFill.parent as RectTransform, status != null ? status.font : null, defence);
+            if (healthFill != null && defence != null) Marks = AfflictionBadges.Make(healthFill.parent as RectTransform, markFont != null ? markFont : status != null ? status.font : null, defence);
         }
 
         private void LateUpdate()

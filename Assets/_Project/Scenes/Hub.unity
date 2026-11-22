@@ -3391,6 +3391,8 @@ MonoBehaviour:
     PerfectWindow: 0.18
     PerfectFrom: 0
     SpamLockout: 0.4
+    EdgeLockout: 0.2
+    Edge: 0
     StaminaPerDamage: 0.9
     ChipFraction: 0.35
     ArcDegrees: 200
@@ -3490,6 +3492,7 @@ MonoBehaviour:
   FormSwordOut: 0
   Hidden: 0
   FormParrying: 0
+  FormWalk: 0
   FormParried: 0
   FormParriedFrom: {x: 0, y: 0, z: 0}
 --- !u!114 &93815478
@@ -3721,6 +3724,7 @@ MonoBehaviour:
   RecallSeconds: 0.5
   HoldSlowScale: 0.4
   StatPush: 1
+  AboutToLandRange: 6
   BackDot: -0.3
 --- !u!114 &93815483
 MonoBehaviour:
@@ -44672,6 +44676,7 @@ MonoBehaviour:
   - {fileID: 1989253424}
   healthLag: {fileID: 1196880307}
   manaImage: {fileID: 2068226505}
+  markFont: {fileID: 12800000, guid: 3aaf5f090352c774d86c61b99b6c4883, type: 3}
   EmberPulseSeconds: 0.28
   EmberPulseSwell: 0.55
   LagHold: 0.45
@@ -120774,75 +120779,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1814305623}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &1815847751
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1815847754}
-  - component: {fileID: 1815847753}
-  - component: {fileID: 1815847752}
-  m_Layer: 0
-  m_Name: Menus
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1815847752
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1815847751}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df1819461142c5148a4e3246fbcc70aa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Clover.Runtime::Clover.UI.Toolkit.LoadoutScreen
-  glyphPictures: {fileID: 11400000, guid: 93f153688c2d34e49a21b5fbe5e090f7, type: 2}
---- !u!114 &1815847753
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1815847751}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
-  m_PanelSettings: {fileID: 11400000, guid: a0a1a80ebdd01f84db8bc8f4d5a02812, type: 2}
-  m_ParentUI: {fileID: 0}
-  sourceAsset: {fileID: 9197481963319205126, guid: 0b37c22b711d053448a35b8d07e8e377, type: 3}
-  m_SortingOrder: 0
-  m_Position: 0
-  m_WorldSpaceSizeMode: 1
-  m_WorldSpaceWidth: 1920
-  m_WorldSpaceHeight: 1080
-  m_PivotReferenceSize: 0
-  m_Pivot: 0
-  m_WorldSpaceCollider: {fileID: 0}
---- !u!4 &1815847754
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1815847751}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1827767510
 GameObject:
   m_ObjectHideFlags: 0
@@ -130089,6 +130025,75 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2076551654}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &2078024073
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2078024076}
+  - component: {fileID: 2078024075}
+  - component: {fileID: 2078024074}
+  m_Layer: 0
+  m_Name: Menus
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2078024074
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2078024073}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df1819461142c5148a4e3246fbcc70aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.UI.Toolkit.LoadoutScreen
+  glyphPictures: {fileID: 11400000, guid: 93f153688c2d34e49a21b5fbe5e090f7, type: 2}
+--- !u!114 &2078024075
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2078024073}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
+  m_PanelSettings: {fileID: 11400000, guid: a0a1a80ebdd01f84db8bc8f4d5a02812, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 9197481963319205126, guid: 0b37c22b711d053448a35b8d07e8e377, type: 3}
+  m_SortingOrder: 0
+  m_Position: 0
+  m_WorldSpaceSizeMode: 1
+  m_WorldSpaceWidth: 1920
+  m_WorldSpaceHeight: 1080
+  m_PivotReferenceSize: 0
+  m_Pivot: 0
+  m_WorldSpaceCollider: {fileID: 0}
+--- !u!4 &2078024076
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2078024073}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2078085654
 GameObject:
   m_ObjectHideFlags: 0
@@ -134748,4 +134753,4 @@ SceneRoots:
   - {fileID: 139932740}
   - {fileID: 1372455110}
   - {fileID: 435527157}
-  - {fileID: 1815847754}
+  - {fileID: 2078024076}
