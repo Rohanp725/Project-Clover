@@ -377,6 +377,15 @@ namespace Clover.Player
         /// ledger's seams: Earthlight).
         /// </summary>
         public int Seams;
+        /// <summary>For a Hazard: the ground goes with the enemy it was laid on (Heavy Silver's mercury pooling under it as it walks).</summary>
+        public bool Follows;
+        /// <summary>For a Hazard: its <see cref="InsideDo"/> is done only on those that moved since its last bite; one standing still is spared (Step Current).</summary>
+        public bool InsideMovingOnly;
+        /// <summary>
+        /// For a Hazard: above zero, it does nothing until an enemy first stands in it, then cracks once, striking all within this
+        /// many metres with its blow, and is gone (Fire-Cracked's stones).
+        /// </summary>
+        public float CracksAt;
         /// <summary>For BurstGround: the Hazard effect whose standing patches it bursts.</summary>
         public UpgradeEffect BurstsGround;
 

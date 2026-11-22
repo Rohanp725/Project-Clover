@@ -410,6 +410,25 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void GroundFollowsBitesTheMovingAndCracksOnce()
+        {
+            Assert.IsFalse(GroundRules.Moved(Vector3.zero, new Vector3(0.1f, 3f, 0f)), "a hair, or up and down, is standing still");
+            Assert.IsTrue(GroundRules.Moved(Vector3.zero, new Vector3(0.2f, 0f, 0f)));
+            var silver = ShapeOf(Clover.Player.Trees.Duo.QuicksilverDuo.Shape, "Heavy Silver");
+            Assert.IsTrue(silver.Where(each => each.Do == UpgradeAction.Hazard).All(each => each.Follows), "the mercury goes with it");
+            Assert.AreEqual(0.7f, silver.Single(each => each.Inside != null).Inside.Pace, 1e-5f, "30% slower only in the mercury");
+            Assert.IsTrue(silver.Where(each => each.Do == UpgradeAction.Condition).All(each => each.State.Pace == 1f), "not slowed everywhere");
+            var step = ShapeOf(Clover.Player.Trees.Duo.EarthedDuo.Shape, "Step Current").Single(each => each.Do == UpgradeAction.Hazard);
+            Assert.IsTrue(step.InsideMovingOnly && step.InsideSpares);
+            Assert.AreEqual(0f, step.Damage, 1e-5f, "the figure itself bites no one standing still");
+            Assert.AreEqual(4f, step.InsideDo.Single().Damage, 1e-5f);
+            var stones = ShapeOf(Clover.Player.Trees.Duo.BurntMoundDuo.Shape, "Fire-Cracked").Single(each => each.Do == UpgradeAction.Hazard);
+            Assert.AreEqual(2f, stones.CracksAt, 1e-5f, "12 and a Burn in 2 m");
+            Assert.AreEqual(12f, stones.Damage, 1e-5f);
+            Assert.AreEqual(1f, stones.Radius, 1e-5f, "as an enemy steps within 1 m");
+        }
+
+        [Test]
         public void TheSeaComesInQuickensYouOnlyInYourOwnWater()
         {
             var sea = Upgrade.ById(WaterTree.TheSeaComesIn);

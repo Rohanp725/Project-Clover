@@ -35,7 +35,7 @@ namespace Clover.Player.Trees.Duo
 
             // NEEDS: standing-things (Thunderstone's knee-high stone of glass standing where the enemy stood, set off by a
             // heavy blow on it or any discharge within 4 m; now the enemy itself keeps its charge 6 s and your heavy blow on it
-            // throws it); ground-states (Step Current's figure biting only what moves on it; now everything on it).
+            // throws it). Step Current's figure bites only what moved on it since its last bite (UpgradeEffect.InsideMovingOnly).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Earthed: Thunderstone or Step Current", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -63,7 +63,9 @@ namespace Clover.Player.Trees.Duo
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Static },
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Burst, Radius = 6f, Damage = 5f, Stagger = 3f, PerStack = true, Affliction = AfflictionKind.Static },
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Burst, Radius = 6f, Affliction = AfflictionKind.Tremor, Stacks = 1 },
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Radius = 6f, Seconds = 3f, Interval = 0.5f, Damage = 4f, Stagger = 6f, Affliction = AfflictionKind.Static, SparesTarget = true },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Radius = 6f, Seconds = 3f, Interval = 0.5f, Damage = 0f, Stagger = 0f, Stacks = 0, Affliction = AfflictionKind.Static,
+                                InsideSpares = true, InsideMovingOnly = true,
+                                InsideDo = new[] { new UpgradeEffect { On = UpgradeTrigger.InGround, Do = UpgradeAction.Burst, Radius = 0.3f, Damage = 4f, Stagger = 6f, Affliction = AfflictionKind.Static } } },
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = CurrentRooted, Seconds = 1f, Flags = ConditionFlags.Rooted } },
                         },
                     },

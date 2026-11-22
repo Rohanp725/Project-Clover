@@ -1965,6 +1965,8 @@ namespace Clover.Player
                         AlsoLays = effect.BitesLay,
                         // Ground that keeps acting on whoever stands in it (the ledger's ground-states).
                         Acts = effect.ActsAsGround ? effect : null, Pull = effect.Pull, LaidFor = pending.Target, Source = effect,
+                        // Ground that goes with its enemy (Heavy Silver), and a stone that cracks once when stood at (Fire-Cracked).
+                        Follow = effect.Follows && target != null, Target = effect.Follows ? target : null, CrackReach = effect.CracksAt,
                         // A lane of foam carries what stands in it away from the player (the ledger's lane-shove).
                         Carry = effect.Carry > 0f ? aim * GroundRules.PullStep(effect.Carry, Or(effect.Interval, 0.5f)) : Vector3.zero,
                     };
@@ -3177,6 +3179,8 @@ namespace Clover.Player
 
         private readonly Dictionary<UpgradeEffect, UpgradeEffect> groundStates = new Dictionary<UpgradeEffect, UpgradeEffect>();
         private readonly HashSet<IDamageable> standingTaken = new HashSet<IDamageable>();
+        // Where each one standing in ground that bites only the moving was at its last bite.
+        private readonly Dictionary<(UpgradeEffect, Component), Vector3> standingSeen = new Dictionary<(UpgradeEffect, Component), Vector3>();
         // The ground whose bite is told as InGround now, for the trigger's filter.
         private string groundTold = "";
 
@@ -3204,7 +3208,16 @@ namespace Clover.Player
                 standingTaken.Add(one);
                 if (near is Enemy fallen && fallen.IsDead) continue;
                 if (!GroundRules.Within(near.transform.position, at, radius)) continue;
-                if (inside != null && !(effect.InsideSpares && ReferenceEquals(near, laidFor)))
+                bool moved = true;
+                if (effect.InsideMovingOnly)
+                {
+                    var key = (effect, near);
+                    Vector3 now = near.transform.position;
+                    moved = standingSeen.TryGetValue(key, out Vector3 before) && GroundRules.Moved(before, now);
+                    if (standingSeen.Count > 256) standingSeen.Clear();
+                    standingSeen[key] = now;
+                }
+                if (inside != null && moved && !(effect.InsideSpares && ReferenceEquals(near, laidFor)))
                     foreach (var inner in inside)
                         if (inner != null) Fire(inner, near, near.transform.position, source);
                 if (!string.IsNullOrEmpty(ground))

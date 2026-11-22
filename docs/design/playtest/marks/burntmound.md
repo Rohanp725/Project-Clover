@@ -9,13 +9,13 @@ are both carried.
 
 **When it happens.** Every time Burnt Mound goes off while you carry both Earth and Fire. Burnt Mound goes off when a Burn lands on a shaken enemy, or when Tremor lands on a burning one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Burnt Mound.
 
-**The numbers.** Mix, 3 Shards. Heaped Stones: one red-hot boulder appears 1.5 metres from the enemy and stays for 6 seconds. It burns anything that touches it (3 damage and a Burn every half second). Your first heavy blow on the enemy sends the boulder rolling 8 metres away from you. Each enemy it rolls over takes 20 damage, 20 stagger, two Burns and two Tremors. Fire-Cracked: three stones appear 1.5 metres from the enemy and stay for 6 seconds. Once a second, each one deals 6 damage and a Burn to anything within 1 metre of it. After Burnt Mound goes off on an enemy, it can't go off on that enemy again for 6 seconds.
+**The numbers.** Mix, 3 Shards. Heaped Stones: one red-hot boulder appears 1.5 metres from the enemy and stays for 6 seconds. It burns anything that touches it (3 damage and a Burn every half second). Your first heavy blow on the enemy sends the boulder rolling 8 metres away from you. Each enemy it rolls over takes 20 damage, 20 stagger, two Burns and two Tremors. Fire-Cracked: three stones appear 1.5 metres from the enemy and stay for 6 seconds. Each one cracks once, the first time an enemy steps within 1 metre of it: 12 damage and a Burn to everything within 2 metres, and the stone is gone. After Burnt Mound goes off on an enemy, it can't go off on that enemy again for 6 seconds.
 
 **Works with.** Timber-Laced, Hot Stones, Brick and Fire (which keeps both afflictions coming), Vitrified Wall.
 
 **Example.** A line of soldiers: use Heaped Stones, and hit the first one toward the rest with a heavy blow. A crowd rushing at you: use Fire-Cracked, and fight from behind the stones.
 
-**Not built yet.** Heaped Stones' boulder doesn't yet roll from where it lies. For now, your heavy blow on the enemy sends the roll out from the enemy itself. Fire-Cracked's stones bite every second, instead of each cracking once when an enemy steps up, for 12 damage and a Burn within 2 metres.
+**Not built yet.** Heaped Stones' boulder doesn't yet roll from where it lies. For now, your heavy blow on the enemy sends the roll out from the enemy itself.
 
 ## burntmound.timberlaced
 **What it does.** Rock you raise catches fire from a burning enemy within 2 metres. It burns anything that touches it for 4 damage and a Burn every half second. When it ends, it bursts into shards of glass that deal 12 damage within 2.5 metres.

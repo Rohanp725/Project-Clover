@@ -20,6 +20,17 @@ namespace Clover.World
         /// </summary>
         public static float StateSeconds(float biteEvery) => Mathf.Max(0.05f, biteEvery) + 0.25f;
 
+        /// <summary>How far one must have gone between two bites to count as moving on ground that bites only the moving.</summary>
+        public const float MovedAtLeast = 0.15f;
+
+        /// <summary>True when one seen at <paramref name="before"/> and now at <paramref name="now"/> moved, flat, between two bites.</summary>
+        public static bool Moved(Vector3 before, Vector3 now)
+        {
+            Vector3 gap = now - before;
+            gap.y = 0f;
+            return gap.magnitude >= MovedAtLeast;
+        }
+
         /// <summary>How far either side of its line a seam of a star of cracks strikes, in metres.</summary>
         public const float SeamHalf = 0.5f;
 

@@ -27,8 +27,8 @@ namespace Clover.Player.Trees.Duo
         {
             const string A = Elements.Metal, B = Elements.Poison;
 
-            // NEEDS: a puddle that follows the enemy and slows only inside it (Heavy Silver; now a puddle where it reacts, and
-            // the enemy slowed while it carries both). Running Silver passes on every dose and notch at death (CarriesDepth).
+            // Heavy Silver's mercury pools under the enemy and goes with it for 6 s (UpgradeEffect.Follows), slowing whatever
+            // stands in it 30% while it does (UpgradeEffect.Inside), the enemy itself too. Running Silver passes on every dose and notch at death (CarriesDepth).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Quicksilver: Heavy Silver or Running Silver", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -41,10 +41,11 @@ namespace Clover.Player.Trees.Duo
                         Description = "While it carries both, each of your weapon blows makes its poison bite at once, as before; it moves 30% slower, and the mercury pools under it 1.5 m across for 6 s, dosing and notching what steps in.",
                         Effects = new[]
                         {
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = HeavySilver, Seconds = 30f, Pace = 0.7f, While = AfflictionKind.Sundered, While2 = AfflictionKind.Poison } },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = HeavySilver, Seconds = 30f, While = AfflictionKind.Sundered, While2 = AfflictionKind.Poison } },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = HeavySilver, By = StruckBy.Weapon, Cooldown = 0.5f, CooldownPerEnemy = true, Do = UpgradeAction.Bite },
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Radius = 0.75f, Seconds = 6f, Interval = 1f, Affliction = AfflictionKind.Poison, Stacks = 1 },
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Radius = 0.75f, Seconds = 6f, Interval = 2f, Affliction = AfflictionKind.Sundered, Stacks = 1 },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Radius = 0.75f, Seconds = 6f, Interval = 1f, Affliction = AfflictionKind.Poison, Stacks = 1, Follows = true,
+                                Inside = new ConditionSpec { Id = HeavySilver + ".in", Seconds = 0.5f, Pace = 0.7f } },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Radius = 0.75f, Seconds = 6f, Interval = 2f, Affliction = AfflictionKind.Sundered, Stacks = 1, Follows = true },
                         },
                     },
                     new ShapeDef

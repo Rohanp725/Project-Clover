@@ -616,6 +616,19 @@ namespace Clover.World
                 if (zone.UntilBite <= 0f && owner != null)
                 {
                     zone.UntilBite = zone.Spec.BiteEvery;
+                    if (zone.Spec.CrackReach > 0f)
+                    {
+                        // A stone that cracks once, when an enemy first stands at it (Fire-Cracked): nothing until then.
+                        if (owner.EnemyNear(zone.Position, zone.Spec.Radius, null) != null)
+                        {
+                            owner.StrikeArea(zone.Position, zone.Spec.CrackReach, zone.Spec.Blow);
+                            Vfx.Play(VfxKind.Burst, zone.Position + Vector3.up * 0.3f);
+                            zone.Active = false;
+                            continue;
+                        }
+                        if (zone.Left <= 0f) zone.Active = false;
+                        continue;
+                    }
                     int hits = zone.Spec.Seams > 0
                         ? owner.StrikeStar(zone.Position, zone.Spec.Seams, zone.Spec.Radius, GroundRules.SeamHalf, zone.Spec.SeamWay, zone.Spec.Blow, LeftAlone(i, zone))
                         : owner.StrikeArea(zone.Position, zone.Spec.Radius, zone.Spec.Blow, LeftAlone(i, zone));

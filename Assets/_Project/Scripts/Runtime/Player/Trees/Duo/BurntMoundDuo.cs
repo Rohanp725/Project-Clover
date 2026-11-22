@@ -24,9 +24,8 @@ namespace Clover.Player.Trees.Duo
             const string A = Elements.Earth, B = Elements.Fire;
 
             // NEEDS: standing-things (Heaped Stones' boulder lying where it was thrown up, rolled 8 m through a line by a heavy
-            // blow beside it; now a heavy blow on the enemy sends a lane of it 8 m on from the enemy, away from you);
-            // ground-states (Fire-Cracked's stones each cracking once as an enemy steps within 1 m, 12 and a Burn in 2 m; now
-            // they bite 6 and a Burn each second whatever stands on them).
+            // blow beside it; now a heavy blow on the enemy sends a lane of it 8 m on from the enemy, away from you).
+            // Fire-Cracked's stones each crack once as an enemy steps within 1 m, 12 and a Burn in 2 m (UpgradeEffect.CracksAt).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Burnt Mound: Heaped Stones or Fire-Cracked", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -54,8 +53,8 @@ namespace Clover.Player.Trees.Duo
                         Description = "No batting. The three stones lie 6 s, and each cracks by itself when an enemy steps within 1 m of it: 12 and a Burn in 2 m. A field to drive them across.",
                         Effects = new[]
                         {
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Shape = HazardShape.Ring, Count = 3, Reach = 1.5f, Radius = 1f, Seconds = 6f, Interval = 1f,
-                                Damage = 6f, Affliction = AfflictionKind.Burn, Stacks = 1 },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Shape = HazardShape.Ring, Count = 3, Reach = 1.5f, Radius = 1f, Seconds = 6f, Interval = 0.2f,
+                                Damage = 12f, Affliction = AfflictionKind.Burn, Stacks = 1, CracksAt = 2f },
                         },
                     },
                 },

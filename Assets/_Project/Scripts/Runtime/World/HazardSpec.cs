@@ -79,6 +79,8 @@ namespace Clover.World
         public Vector3 Carry;
         /// <summary>Above zero: it strikes only along this many seams out from its middle, a star of cracks, the first along <see cref="SeamWay"/>.</summary>
         public int Seams;
+        /// <summary>Above zero: it waits for an enemy to stand in it, then strikes once within this many metres and is gone (Fire-Cracked).</summary>
+        public float CrackReach;
         /// <summary>What laid it (a mark's Player.UpgradeEffect), so a mark can find its own patches again (Weeping Sore's puddles burst).</summary>
         public object Source;
         public Vector3 SeamWay;
