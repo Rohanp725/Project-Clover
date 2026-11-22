@@ -67,20 +67,26 @@ The tracks run side by side. One Unity worker and one Blender worker at a time; 
 - [ ] Reviewing the reactions. When the owner says the comments are done, collect them word for word, then run round 4.
 
 **Blender:**
-- [ ] B1. Finish SLAM (Great Hammer only): read the 11 strips, write the recipe, kit and notes, then send them to the owner.
-- [ ] B2. The other shapes, in order: SPIN (Scythe), THRUST (Great Spear), DASH-THROUGH (Twin Knives), LASH (Chain Sickle), SHOT (Great Bow). The owner sees each one's strips.
+- [x] B1. SLAM (the Great Hammer): all 11 approved after polish; Metal's sword has its hilt buried.
+- [ ] B2. The other shapes:
+  - SPIN: all 11 approved.
+  - THRUST: 6 approved, 5 being fixed.
+  - Then DASH-THROUGH, LASH and SHOT. The owner sees each one's strips.
+- [ ] B2b. Round-4 redesigns: 26 looks, in `feedback/2026-11-22_round4_plan.md` section 2.
 - [ ] B3. New Katana clips for the Way (way_build_plan.md: up to 27 clips), after the Way wiring.
 
 **Unity, in order:**
 - [x] U1. The Twin Knives grip (angles, and fingers closed on the handles). Done 2026-11-21 (6e8fe3a9): the rig has no finger bones, so each knife crosses the fist in a forward grip with the pommel showing below; stills in `review/anim/knife_grip/`.
 - [x] U2. The enemy-size anchors and body-scaled on-body pieces (round-4 notes), before any round-4 re-films. Done 2026-11-21: `BodyAnchors` (measured at build by the enemy builder, read from the live joints in play), on-body pieces placed by anchor and sized 0.6x to 1.8x, floor pieces kept at their size; the standing size check is `AgentScripts/BodySizeProbe.cs`, sheets in `review/checks/size_check/`.
+- [ ] U2b. Filming rig v2, then the round-4 Unity-only fixes (`feedback/2026-11-22_round4_plan.md` sections 0, 1 and 3). Films happen at NIGHT only.
 - [ ] U3. Build each strike shape as the owner approves it; film only that shape's weapons.
 - [ ] U4. Stand-in passes: the rest of 2 and 3, then 4 (`steel/standin_clearance_plan.md`).
 - [ ] U5. Merge the Way wiring from offline (O1), then the Katana's Way per `steel/way_build_plan.md`.
 - [ ] U6. The Loadout screen in UI Toolkit (`ui_rest_fire_plan.md`, layout C).
 
 **Offline:**
-- [ ] O1. The Way's rules and wiring in the worktree `Clover-way`:
+- [x] O2. The Loadout screen code, in UI Toolkit (branch `ui`, 23765809, from `way`). The editor step is in `ui_rest_fire_plan.md` section 7: the fonts and the Kenney prompts through intake, PanelSettings, the hook in RestMenu, then screenshots and a pad walk.
+- [x] O1 (branch `way`, 6f0dd7ea). The Way's rules and wiring in the worktree `Clover-way`:
   - `Armoury.Resolve` used at every equip point;
   - Way marks on a chart;
   - Memories paid out (AreaDirector deaths, god falls, found pickups), with the light that flies in and the +N;
