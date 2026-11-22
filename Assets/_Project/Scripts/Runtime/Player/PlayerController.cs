@@ -352,7 +352,7 @@ namespace Clover.Player
                     if (attacking) combat.Interrupt();
                     if (casting) element.Interrupt();
                     Vfx.Play(VfxKind.Dust, transform.position, -rollDirection);
-                    if (upgrades != null) upgrades.OnDodge(transform.position, Dodge.Direction, Dodge.Distance, Dodge.Duration);
+                    if (upgrades != null) upgrades.OnDodge(transform.position, Dodge.Direction, Dodge.ThisDistance, Dodge.Duration);
                 }
             }
             if (dodgeBuffered > 0f) dodgeBuffered -= deltaTime;

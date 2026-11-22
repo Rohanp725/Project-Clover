@@ -272,11 +272,17 @@ namespace Clover.Player.Trees
                 new Empower { Cooldown = 6f },
                 "Miasma waits 6 seconds, not 7, and its cloud is three metres across.",
                 // The cloud set aside: cast through its mark by a quiet form (SpellSpec.Quiet), so the kit's cloud is not laid,
-                // only the sheet. NEEDS: the sheet stopping at walls and a dodge in it costing an enemy a dose (form-pieces,
-                // ground-states). Until then a row of mist eight metres long is laid from your feet, dosing what stands in it each second.
+                // only the sheet, a row of mist eight metres long from your feet dosing what stands in it each second. The sheet is
+                // ground of your own (World.OwnGrounds.LowMist); a dodge you begin in it (StatWhen.InOwnMist) doses every enemy
+                // in it once (Afflict ThroughGround). NEEDS: the sheet stopping at walls (form-pieces).
                 new ShapeDef { Name = "Low Mist", Form = SpellForms.Brand, Spell = new SpellSpec { Reach = 8f, Damage = 0f, Stagger = 0f, Stacks = 0, Quiet = true },
                     Description = "The cloud is heavier than air. It pours out from your feet along the floor the way you face, a low sheet two and a half metres wide and eight long with a hard top edge, and lies five seconds, stopping at walls. Enemies in it are dosed once a second, and a dodge or roll in it costs them a dose. A lane where the plain cloud is a disc.",
-                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Hazard, At = EffectAt.Self, Shape = HazardShape.Line, Reach = 8f, Count = 6, Radius = 1.25f, Seconds = 5f, Interval = 1f, Damage = 0f, Stagger = 0f, Affliction = P, Stacks = 1 } } },
+                    Effects = new[]
+                    {
+                        new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Hazard, At = EffectAt.Self, Shape = HazardShape.Line, Reach = 8f, Count = 6, Radius = 1.25f, Seconds = 5f, Interval = 1f, Damage = 0f, Stagger = 0f, Affliction = P, Stacks = 1,
+                            Ground = Clover.World.OwnGrounds.LowMist },
+                        new UpgradeEffect { On = UpgradeTrigger.DodgeStart, While = StatWhen.InOwnMist, Do = UpgradeAction.Afflict, ThroughGround = Clover.World.OwnGrounds.LowMist, Affliction = P, Stacks = 1, Cooldown = 0.3f },
+                    } },
                 // Swinging Censer, once a spell, folded in here. NEEDS: the smoke left hanging two seconds after each pass
                 // (form-pieces). The censer is the discs form, one disc at three metres.
                 new ShapeDef { Name = "Censer", Form = SpellForms.Discs,
@@ -331,13 +337,13 @@ namespace Clover.Player.Trees
                 "Rush on the poison's beat, within a fifth of a second of a bite on any enemy you pass, and the doses double.",
                 learnEffects: new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.EvenDepth, Affliction = P, Stacks = 2 } });
 
-            // NEEDS: no poison, cloud or mist harming you, the enemy's included (harmless-clouds), and the healing and the
-            // second dose only while you stand in a cloud (in-own-ground). Until then you mend 2 a second whenever an enemy is
-            // near, and every blow doses once more.
+            // No Poison is laid on you (PlayerAfflictions.ImmuneTo), so no cloud of the enemy's harms you; your own never do. While
+            // you stand in a cloud (StatWhen.InCloud: Miasma's own, or any poison ground of yours) you mend 2 a second and your
+            // blows dose twice. NEEDS: clouds of the enemy's to stand in (no enemy lays one yet; the Poison land's court will).
             to.Add(BranchPattern.Put(new Upgrade { Id = TastedEveryHerb, Name = "Tasted Every Herb", Element = E, Kind = UpgradeKind.Devotion, Requires = new[] { TheDelayedTouch }, Icon = UpgradeIcons.Leaf,
                 Description = "All in on Poison only. No poison, cloud or mist harms you, yours or the enemy's. Standing in any cloud heals you 2 a second, and your blows dose twice while you stand in one. Where everyone else leaves the mist, you fight in it.",
-                Stats = new[] { new StatMod(PlayerStat.AfflictionStacks, 1f) },
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.EverySeconds, Every = 1f, Do = UpgradeAction.Heal, Amount = 2f } } },
+                Stats = new[] { new StatMod(PlayerStat.AfflictionStacks, 1f, StatWhen.InCloud) },
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.EverySeconds, Every = 1f, While = StatWhen.InCloud, Do = UpgradeAction.Heal, Amount = 2f } } },
                 BranchPattern.RightCrown));
 
             // BESPOKE (built): CleanBladeForm; the beat is held through Afflictions.PoisonWaits.

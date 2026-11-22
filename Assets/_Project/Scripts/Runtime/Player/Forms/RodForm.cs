@@ -17,6 +17,8 @@ namespace Clover.Player.Forms
             ElementLook.Strike(cast.Element, at, 0.6f);
             var storm = cast.Ground(at, cast.Spec.Radius, cast.Spec.Seconds, cast.Spec.Interval, cast.Blow(cast.Damage, cast.Stagger));
             storm.Delay = cast.Spec.Delay;
+            // A lamp's glow is ground of the player's own by name (Standing Light: World.OwnGrounds.Glow).
+            if (!string.IsNullOrEmpty(cast.Spec.Ground)) storm.Name = cast.Spec.Ground;
             // One group, so the step to the rod can spend it whole; the rod is told to the marks as the thing the spell left standing.
             storm.Group = Hazards.NewGroup();
             Hazards.Lay(storm);

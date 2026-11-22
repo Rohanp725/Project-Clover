@@ -121,6 +121,8 @@ namespace Clover.World
         public const string Blood = "life.blood";
         /// <summary>Ring of Spears' The Drawn Line: the row of spears across your front.</summary>
         public const string SpearLine = "light.spearline";
+        /// <summary>Miasma's own cloud as it hangs and creeps (laid afresh at each of its bites).</summary>
+        public const string Cloud = "poison.cloud";
         /// <summary>The Closed Ring: Bedrock's ring of standing stones.</summary>
         public const string StoneRing = "earth.stonering";
 

@@ -27,6 +27,8 @@ namespace Clover.Player
         public bool NoPerfect;
         /// <summary>It goes through enemies' bodies, stopping only at walls.</summary>
         public bool PassesBodies;
+        /// <summary>Above zero: it goes this many metres, not the roll's own (carried to an enemy by Eagle's Sight).</summary>
+        public float Reach;
 
         /// <summary>A dodge as written.</summary>
         public static DodgeTerms Plain => new DodgeTerms { CostScale = 1f };
@@ -35,6 +37,26 @@ namespace Clover.Player
     /// <summary>Plain rules for which way a dodge goes.</summary>
     public static class DodgeRules
     {
+        /// <summary>The farthest a dodge toward an enemy that draws it is carried (Eagle's Sight: 6 m).</summary>
+        public const float CarryReach = 6f;
+        /// <summary>How far short of the enemy a carried dodge stops, so the cut lands at arm's length.</summary>
+        public const float CarryShort = 1f;
+
+        /// <summary>
+        /// How far a dodge from <paramref name="from"/> along <paramref name="direction"/> is carried to an enemy at
+        /// <paramref name="enemy"/>: to arm's length of it when it lies toward the dodge and within <see cref="CarryReach"/>; 0 otherwise.
+        /// </summary>
+        public static float CarryTo(Vector3 from, Vector3 direction, Vector3 enemy)
+        {
+            Vector3 to = enemy - from;
+            to.y = 0f;
+            direction.y = 0f;
+            float distance = to.magnitude;
+            if (distance < 0.0001f || distance > CarryReach || direction.sqrMagnitude < 0.0001f) return 0f;
+            if (Vector3.Dot(to / distance, direction.normalized) < WithinDot) return 0f;
+            return Mathf.Max(0.5f, distance - CarryShort);
+        }
+
         /// <summary>The cosine of the widest angle that still counts as toward (or away): 60 degrees.</summary>
         public const float WithinDot = 0.5f;
 

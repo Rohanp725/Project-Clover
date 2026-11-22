@@ -154,11 +154,11 @@ ground: Briar Patch's bed, a thornbush, a sapling, a thicket, a tuft of briar.
 
 **When it happens.** Whenever you cast Drawn From the Wood, using the shape you picked. If you have not bought this, you cast the plain withering.
 
-**The numbers.** 3 Shards. Blood in the Furrow: a ring 8 metres across where you knelt, lasting 6 seconds. Once a second, it deals 1 damage and adds Seeded. Feed the Ground: it costs a quarter of the health you have now, which turns grey so you can win it back with blows. Nothing withers. For 8 seconds, the things you grow hit twice as hard.
+**The numbers.** 3 Shards. Blood in the Furrow: a ring 8 metres across where you knelt, lasting 6 seconds. Once a second, it deals 1 damage and adds Seeded. While you stand in the ring, every weapon blow is a critical hit and heals you a fifth of its damage. Step out and you lose it. Feed the Ground: it costs a quarter of the health you have now, which turns grey so you can win it back with blows. Nothing withers. For 8 seconds, the things you grow hit twice as hard.
 
 **Works with.** Blood in the Furrow: Bitter Rind and Briar Coat, which keep the fight in one place. Feed the Ground: Fallen Seeds, Sapling and Wildwood, for a garden worth feeding; and the Master mark, to pay with grey health.
 
-**Not built yet.** Blood in the Furrow's window should only work while you stand in the ring. Feed the Ground should double the power and speed of what is already standing (for now, only what you grow during the 8 seconds hits harder).
+**Not built yet.** Feed the Ground should double the power and speed of what is already standing (for now, only what you grow during the 8 seconds hits harder).
 
 **Example.** Use Blood in the Furrow at a narrow spot. Wait in the ring and let them come to you, getting Seeded with every step.
 

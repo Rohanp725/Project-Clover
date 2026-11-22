@@ -11,6 +11,10 @@ namespace Clover.Player
     public class DodgeRoll
     {
         public float Distance = 4.5f;
+        // How far this one roll goes when a mark carries it (DodgeTerms.Reach); 0 for the roll's own Distance.
+        private float reachThis;
+        /// <summary>How far the roll under way goes: its own <see cref="Distance"/>, or the reach a mark carried it to.</summary>
+        public float ThisDistance => reachThis > 0f ? reachThis : Distance;
         public float Duration = 0.35f;
         public float StaminaCost = 25f;
         /// <summary>When set, the roll is paid for by asking this (true: paid) and costs no stamina. Leaf on the Wind sets it.</summary>
@@ -112,6 +116,7 @@ namespace Clover.Player
             WholeSafe = terms.WholeSafe;
             NoPerfect = terms.NoPerfect;
             PassesBodies = terms.PassesBodies;
+            reachThis = terms.Reach;
             return true;
         }
 
@@ -133,7 +138,7 @@ namespace Clover.Player
                 sinceEnd = 0f;
             }
             float carried = carry > 0f ? carry * (after - before) / Mathf.Max(0.0001f, 1f - carryFrom) : 0f;
-            return Direction * (Distance * (after - before) + carried);
+            return Direction * (ThisDistance * (after - before) + carried);
         }
 
         // Ease-out: covers most of the distance early, so the roll feels like a burst that settles.

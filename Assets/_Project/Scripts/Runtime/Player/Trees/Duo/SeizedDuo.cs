@@ -25,8 +25,10 @@ namespace Clover.Player.Trees.Duo
         {
             const string A = Elements.Lightning, B = Elements.Water;
 
-            // NEEDS: a film that runs outward as a ring, seizing what its edge crosses (Running Water; now all within 7 m at
-            // once), and a hold capped at 3 s in all (Can't Let Go; now each blow in its 3 s adds 0.3 s).
+            // Running Water is a band of live water 4 m wide that runs on from the seized enemy away from you, 7 m in a second
+            // (HazardShape.Band with Speed), seizing each it crosses 0.5 s and giving it a Static, once (InsideDo). It is live
+            // water by name, so Grounded's discharge runs through it too. NEEDS: a hold capped at 3 s in all (Can't Let Go;
+            // now each blow in its 3 s adds 0.3 s).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Seized: Can't Let Go or Running Water", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -47,11 +49,16 @@ namespace Clover.Player.Trees.Duo
                     new ShapeDef
                     {
                         Name = "Running Water",
-                        Description = "No hold: the water runs outward to 7 m, and every enemy it reaches is seized for 0.5 s and given a Static.",
+                        Description = "No hold: the water runs off it in a band 4 m wide, 7 m on away from you, and every enemy it crosses is seized for 0.5 s and given a Static.",
                         Effects = new[]
                         {
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hold, Radius = 7f, Seconds = 0.5f },
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Afflict, Radius = 7f, Affliction = AfflictionKind.Static, Stacks = 1 },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Shape = HazardShape.Band, Count = 5, Reach = 4f, Radius = 0.8f, Speed = 7f, Seconds = 1f, Interval = 0.1f,
+                                Damage = 0f, Stagger = 0f, Affliction = AfflictionKind.Soaked, Stacks = 0, Ground = Reactions.LiveWater,
+                                InsideDo = new[]
+                                {
+                                    new UpgradeEffect { On = UpgradeTrigger.InGround, Do = UpgradeAction.Hold, Seconds = 0.5f, CooldownPerEnemy = true, Cooldown = 1.5f },
+                                    new UpgradeEffect { On = UpgradeTrigger.InGround, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Static, Stacks = 1, CooldownPerEnemy = true, Cooldown = 1.5f },
+                                } },
                         },
                     },
                 },

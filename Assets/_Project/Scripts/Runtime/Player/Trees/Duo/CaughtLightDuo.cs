@@ -78,15 +78,15 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.LeftLow));
 
-            // NEEDS: the place a dodge ends (dodge-path); now the spray is round you at the perfect dodge itself.
+            // Where the perfect dodge ends (UpgradeTrigger.PerfectDodgeEnd).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = SunOnTheSpray, Name = "Sun on the Spray", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Boot,
                 Description = "A perfect dodge Soaks and Marks every enemy within 3 m of where it ends.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, At = EffectAt.Self, Cooldown = 0.5f, Do = UpgradeAction.Afflict, Radius = 3f, Affliction = AfflictionKind.Soaked, Stacks = 1 },
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, At = EffectAt.Self, Cooldown = 0.5f, Do = UpgradeAction.Afflict, Radius = 3f, Affliction = AfflictionKind.Marked, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectDodgeEnd, At = EffectAt.Self, Cooldown = 0.5f, Do = UpgradeAction.Afflict, Radius = 3f, Affliction = AfflictionKind.Soaked, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectDodgeEnd, At = EffectAt.Self, Cooldown = 0.5f, Do = UpgradeAction.Afflict, Radius = 3f, Affliction = AfflictionKind.Marked, Stacks = 1 },
                 },
             }, HeartPattern.RightLow));
 

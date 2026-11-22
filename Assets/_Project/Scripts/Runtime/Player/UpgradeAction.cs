@@ -313,6 +313,12 @@ namespace Clover.Player
         /// <summary>The dodge just begun costs no stamina: what it took is given back (The Land Was Sea's slide on wet sand).</summary>
         FreeDodge,
         /// <summary>
+        /// Every enemy within Reach (30) carrying the condition named (Condition) goes up at once: the condition ends, a burst of
+        /// Damage and DamagePerSpent more for each count of the mark's tally (emptied), Amount at most, strikes Radius round it, and
+        /// the floor under it burns Seconds (Black Pitch's coat lit by any Burn).
+        /// </summary>
+        LightCoat,
+        /// <summary>
         /// You scatter for Seconds: the body is not drawn and nothing can touch you, then you stand again where you are by then
         /// (Gone to Ash: scattered as ash, standing again 0.4 s later, behind the attacker or where you were).
         /// </summary>

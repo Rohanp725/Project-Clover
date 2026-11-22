@@ -26,8 +26,9 @@ namespace Clover.Player.Trees.Duo
         {
             const string A = Elements.Light, B = Elements.Wind;
 
-            // NEEDS: a dodge toward the enemy carrying you all the way to it, up to 6 m, and ending in a cut (dodge-path); now
-            // your next weapon blow on it within 4 s is critical and cuts 10 more.
+            // Eagle's Sight draws your dodge (ConditionFlags.DrawsDodge): a dodge toward it within 6 m carries you to arm's length
+            // of it (DodgeTerms.Reach, DodgeRules.CarryTo) and ends in a cut of 10 that Marks it (UpgradeTrigger.CarriedTo); the
+            // sight keeps your next weapon blow on it critical, 10 more.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Golden Feathers: Eagle's Sight or Wingbeat", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -40,7 +41,8 @@ namespace Clover.Player.Trees.Duo
                         Description = "No feathers fly. The eagle's sight stays on the enemy: your next dodge toward it carries you all the way to it, up to 6 m, and ends in a cut, 10 and critical.",
                         Effects = new[]
                         {
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Sight, Seconds = 4f, Flags = ConditionFlags.TakesCritical, EndsWith = ConditionBlow.Weapon } },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Sight, Seconds = 4f, Flags = ConditionFlags.TakesCritical | ConditionFlags.DrawsDodge, EndsWith = ConditionBlow.Weapon } },
+                            new UpgradeEffect { On = UpgradeTrigger.CarriedTo, Condition = Sight, InState = Sight, Do = UpgradeAction.Burst, Radius = 0.6f, Damage = 10f, Stagger = 10f, Affliction = AfflictionKind.Marked, Stacks = 1 },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Sight, By = StruckBy.Weapon, Do = UpgradeAction.Burst, Radius = 0.5f, Damage = 10f, Affliction = AfflictionKind.Marked },
                         },
                     },

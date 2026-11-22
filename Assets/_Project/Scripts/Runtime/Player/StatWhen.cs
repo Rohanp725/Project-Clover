@@ -65,5 +65,7 @@ namespace Clover.Player
         InOwnGlow,
         /// <summary>While the player stands in their own ring of green blood (Blood in the Furrow; World.OwnGrounds.Blood).</summary>
         InOwnBlood,
+        /// <summary>While the player stands in a cloud: Miasma's own, or any poison ground of theirs (Tasted Every Herb).</summary>
+        InCloud,
     }
 }

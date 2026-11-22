@@ -1375,7 +1375,7 @@ namespace Clover.Player
         }
 
         public int AfflictArea(Vector3 centre, float radius, AfflictionKind kind, int stacks, Component except = null, LaySource source = LaySource.Effect,
-            AfflictionKind onlyCarrying = AfflictionKind.None)
+            AfflictionKind onlyCarrying = AfflictionKind.None, HashSet<IDamageable> once = null)
         {
             spellStruck.Clear();
             int count = Overlap(centre + Vector3.up, radius + 0.5f);
@@ -1385,6 +1385,8 @@ namespace Clover.Player
                 if (other.transform.root == transform.root) continue;
                 var target = other.GetComponentInParent<IDamageable>();
                 if (target == null || spellStruck.Contains(target) || ReferenceEquals(target, except) || !(target is IAfflictable afflictable)) continue;
+                // Laid once over several patches of one ground (Low Mist's sheet).
+                if (once != null && !once.Add(target)) continue;
                 // Only those carrying the affliction asked for (Sea Ice's web: the Soaked).
                 if (!Carries(target, onlyCarrying)) continue;
                 Vector3 offset = ((Component)target).transform.position - centre;

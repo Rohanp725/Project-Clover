@@ -400,6 +400,11 @@ namespace Clover.Player
         public bool Behind;
         /// <summary>For a Push along the line (Shape Downwind): thrown sideways across your front, to your left, along a sweep from your right (Sweep of Wings), not away from you.</summary>
         public bool Sideways;
+        /// <summary>
+        /// For Afflict with a Radius, or Hazard with Shape Line, on a dodge's end: along the path the dodge just took, from where it
+        /// began to where it ended, not round you (Seed on the Wind, Wake; the ledger's dodge-path).
+        /// </summary>
+        public bool AlongDodge;
         /// <summary>For OwnGround or Hazard with Shape Line: the lane lies across your front, Amount metres ahead, not ahead of you (The Drawn Line).</summary>
         public bool AcrossFront;
         /// <summary>It goes off only once in each fight (the FightClock's), not once in so many seconds (The Burning Tree's first lily).</summary>

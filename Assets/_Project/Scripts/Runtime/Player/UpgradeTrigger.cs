@@ -148,5 +148,9 @@ namespace Clover.Player
         /// Closed Ring). Target: that enemy.
         /// </summary>
         StoppedAtStones,
+        /// <summary>A perfect dodge has run its length. The point is where it ended (Sun on the Spray, Wake along its path).</summary>
+        PerfectDodgeEnd,
+        /// <summary>A dodge carried you to an enemy that draws it (ConditionFlags.DrawsDodge: Eagle's Sight). Target: that enemy.</summary>
+        CarriedTo,
     }
 }

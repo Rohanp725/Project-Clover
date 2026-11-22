@@ -173,11 +173,11 @@ the next blows on that enemy critical.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). Then guard.
 
-**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 12 seconds to cast it again. Fighting with your weapon makes the wait shorter. It is planted 2.5 metres in front of you. The glow has a 5-metre radius and lasts 10 seconds. It hits 0.2 seconds after you plant it, then every 2.5 seconds, for 2 damage and a Mark each time. Each lamp gives three perfect-guard bursts, shown next to the weapon as Lamp. Each burst deals 10 damage and 25 stagger within 3.5 metres of you.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 12 seconds to cast it again. Fighting with your weapon makes the wait shorter. It is planted 2.5 metres in front of you. The glow has a 5-metre radius and lasts 10 seconds. It hits 0.2 seconds after you plant it, then every 2.5 seconds, for 2 damage and a Mark each time. Each lamp gives three perfect-guard bursts, shown next to the weapon as Lamp. A burst comes only from a perfect guard made while you stand inside the glow. Each burst deals 10 damage and 25 stagger within 3.5 metres of you. Empowered: inside the glow, your perfect guard and perfect dodge windows are half again as long.
 
 **Works with.** The root mark (a fresh Mark, and three fresh critical hits, every 2.5 seconds), Unblemished, which comes after it on the chart, Clarity's longer perfect timing windows, Reckoning's Witnessed shape, Condemned.
 
-**Not built yet.** The burst should only come from a perfect guard made inside the glow. For now, your next three perfect guards after each lamp burst, wherever you stand. The glow doesn't clear away enemy clouds, flames or frost yet. The Empower's longer perfect guard and dodge windows inside the glow; for now, the Empower does nothing.
+**Not built yet.** The glow doesn't clear away enemy clouds, flames or frost yet.
 
 **Example.** Plant it in a doorway and fight at its edge. Everything that comes through arrives Marked, and each perfect guard throws them back.
 
@@ -190,7 +190,7 @@ the next blows on that enemy critical.
 
 **Works with.** Row of Lamps: a build that counters attacks, Unblemished, perfect guards. Circled Lamp: a fight on the move, fast weapons, Brimming.
 
-**Not built yet.** Row of Lamps should only affect enemies between two lamps, only fire on a guard made in line with them, and show the three lamps, with nothing placed between them. Circled Lamp should burn away danger zones, and look like a lamp (for now, it is a disc of light).
+**Not built yet.** Row of Lamps should show three lamps, with nothing placed between them. For now the ray fires on a perfect guard made standing on the row or in the glow. Circled Lamp should burn away danger zones, and look like a lamp (for now, it is a disc of light).
 
 **Example.** Use Row of Lamps across a hall. Stand at one end and perfect-guard the brute that comes down it, and the ray runs back through the pack behind it.
 
@@ -199,11 +199,9 @@ the next blows on that enemy critical.
 
 **When it happens.** A perfect guard, while Standing Light is in a spell slot.
 
-**The numbers.** 3 Shards. The waits on Glare, Step Into Light, Ring of Spears, Standing Light and Reckoning end right away, for any that are in a slot. Once every 12 seconds. Daybreak doesn't have a wait, so nothing changes for it.
+**The numbers.** 3 Shards. When you make a perfect guard standing inside the lamp's glow, the waits on Glare, Step Into Light, Ring of Spears, Standing Light and Reckoning end right away, for any that are in a slot. Once every 12 seconds. Daybreak doesn't have a wait, so nothing changes for it.
 
 **Works with.** A Hand full of Light spells, Unblemished, Just Cut, Clarity's longer perfect timing windows.
-
-**Not built yet.** It should only work on a perfect guard made inside the glow. For now, any perfect guard works, once every 12 seconds.
 
 **Example.** Cast everything, plant the lamp, perfect-guard one blow, and cast everything again.
 

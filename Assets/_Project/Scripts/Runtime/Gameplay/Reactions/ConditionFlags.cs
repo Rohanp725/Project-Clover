@@ -84,5 +84,7 @@ namespace Clover.Gameplay
         /// down at the player's feet when it ends (Devouring Maw's Rahu; the ledger's swallowed).
         /// </summary>
         Swallowed = 1 << 26,
+        /// <summary>Your dodge toward it carries you to it, up to Player.DodgeRules.CarryReach, and ends in a cut (Eagle's Sight).</summary>
+        DrawsDodge = 1 << 27,
     }
 }

@@ -1004,6 +1004,8 @@ namespace Clover.Player
             if (combat != null)
             {
                 combat.CounterCut = On(Trees.MetalTree.CounterCut);
+                // Tasted Every Herb: no poison is laid on you, the enemy's clouds' included.
+                if (defence != null) defence.Afflictions.ImmuneTo = On(Trees.PoisonTree.TastedEveryHerb) ? AfflictionKind.Poison : AfflictionKind.None;
                 heavyUnbrokenByMarks = On(Trees.IceTree.Unmoved) || On(Trees.EarthTree.HeavyHand);
                 combat.HeavyUnbroken = heavyUnbrokenByMarks || Time.time < heavyUnbrokenUntil;
                 // Heartwood: no mana. Every price is asked in health and every gain mends.
@@ -1343,6 +1345,8 @@ namespace Clover.Player
                     if (sinceDodge > DodgeThroughSeconds) dodgeFromSand = false;
                     inside |= dodgeFromSand;
                 }
+                // Any poison ground of yours is a cloud too (Low Mist's sheet, Chokedamp's pools).
+                if (when == StatWhen.InCloud) inside |= Hazards.OwnGroundUnder(transform.position, AfflictionKind.Poison);
                 Stats.SetWhen(when, inside);
             }
             // Stood still: not moved more than a hair since the last step, for a second (Cairn's and Stone Rise's Masters).
@@ -1772,6 +1776,12 @@ namespace Clover.Player
                         return self + aim * Or(effect.Amount, 1.5f) + right * (reach * ((index + 0.5f) / patches - 0.5f));
                     }
                     return self + aim * (reach * (index + 0.5f) / patches);
+                case HazardShape.Band:
+                {
+                    // Across your line to the target, centred on it.
+                    Vector3 right = new Vector3(aim.z, 0f, -aim.x);
+                    return centre + right * (reach * ((index + 0.5f) / patches - 0.5f));
+                }
                 case HazardShape.Ring: return centre + Quaternion.Euler(0f, index * 360f / patches, 0f) * Vector3.forward * reach;
                 case HazardShape.Downwind: return centre + aim * (reach + (index - (patches - 1) * 0.5f) * Or(effect.Amount, 1f));
                 default: return centre;
@@ -1893,7 +1903,29 @@ namespace Clover.Player
                 case UpgradeAction.Afflict:
                 {
                     int stacks = eStacks;
-                    if (effect.Radius > 0f)
+                    if (!string.IsNullOrEmpty(effect.ThroughGround))
+                    {
+                        // Everyone standing in every patch of the named ground, once each (Low Mist: a dodge in it).
+                        int patches = Hazards.AllNamed(effect.ThroughGround, groundBurstAt, groundBurstRadius);
+                        fanTaken.Clear();
+                        for (int i = 0; i < patches; i++)
+                            combat.AfflictArea(groundBurstAt[i], groundBurstRadius[i], kind, stacks, null, laying, effect.OnlyCarrying, fanTaken);
+                        fanTaken.Clear();
+                        if (patches > 0) GroundsDosed++;
+                    }
+                    else if (effect.AlongDodge && effect.Radius > 0f)
+                    {
+                        // Everyone the dodge just passed, once each (Seed on the Wind).
+                        Vector3 path = self - dodgeFrom;
+                        path.y = 0f;
+                        int steps = DodgePathSteps(path.magnitude, effect.Radius);
+                        fanTaken.Clear();
+                        for (int i = 0; i <= steps; i++)
+                            combat.AfflictArea(dodgeFrom + path * (i / (float)steps), effect.Radius * spread, kind, stacks, null, laying, effect.OnlyCarrying, fanTaken);
+                        fanTaken.Clear();
+                        if (!bespoke) ElementLook.Ring(look, self + Vector3.up * 0.2f);
+                    }
+                    else if (effect.Radius > 0f)
                     {
                         // Sparing the trigger's own enemy, or only those carrying an affliction, when the mark says so.
                         combat.AfflictArea(centre, effect.Radius * spread, kind, stacks, effect.SparesTarget ? subject : null, laying, effect.OnlyCarrying);
@@ -2005,6 +2037,18 @@ namespace Clover.Player
                 {
                     int patches = effect.Shape == HazardShape.Patch ? 1 : Or(eCount, 4);
                     float reach = Or(effect.Reach, 4f) * spread;
+                    // Laid along the dodge just taken, from where it began (Wake).
+                    if (effect.AlongDodge && effect.Shape == HazardShape.Line)
+                    {
+                        Vector3 path = self - dodgeFrom;
+                        path.y = 0f;
+                        if (path.sqrMagnitude > 0.04f)
+                        {
+                            reach = path.magnitude;
+                            aim = path / reach;
+                            self = dodgeFrom;
+                        }
+                    }
                     var spec = new HazardSpec
                     {
                         Kind = ElementLook.Ground(look), Tint = look.Colour, Radius = Or(effect.Radius, 1f) * spread * Stats.Multiplier(PlayerStat.GroundSize), Seconds = Or(effect.Seconds, 3f) * Stats.Multiplier(PlayerStat.GroundSeconds), BiteEvery = Or(effect.Interval, 0.5f),
@@ -2024,6 +2068,8 @@ namespace Clover.Player
                         Carry = effect.Carry > 0f ? aim * GroundRules.PullStep(effect.Carry, Or(effect.Interval, 0.5f)) : Vector3.zero,
                     };
                     spec.Blow.Unseen = effect.Unseen || bespoke;
+                    // A band that runs on away from you as one (Running Water).
+                    if (effect.Shape == HazardShape.Band && effect.Speed > 0f) spec.Velocity = new Vector3(aim.x, 0f, aim.z) * effect.Speed;
                     for (int i = 0; i < patches; i++)
                     {
                         spec.Position = PatchAt(effect, i, patches, centre, self, aim, reach);
@@ -2290,6 +2336,37 @@ namespace Clover.Player
                         else OwnGrounds.LayLane(effect.Ground, self, way, length, Or(effect.Radius, 1f), until);
                     }
                     else OwnGrounds.Lay(effect.Ground, centre, Or(effect.Radius, 1f) * spread, until);
+                    break;
+                }
+                case UpgradeAction.LightCoat:
+                {
+                    // Every coated enemy goes up at once, harder for each blow that spread the coat (the mark's tally, emptied).
+                    var owner = effect.Owner;
+                    int spreads = 0;
+                    if (owner != null && owner.Tally != null && owner.Index < tally.Length)
+                    {
+                        spreads = tally[owner.Index];
+                        tally[owner.Index] = 0;
+                        tallyDirty = true;
+                    }
+                    float burst = CoatBurst(eDamage, effect.DamagePerSpent, spreads, effect.Amount);
+                    fanTaken.Clear();
+                    coatStruck.Clear();
+                    for (int guard = 0; guard < 32; guard++)
+                    {
+                        var near = combat.EnemyNear(centre, Or(effect.Reach, 30f), fanTaken);
+                        if (!(near is IDamageable one)) break;
+                        fanTaken.Add(one);
+                        if (!(near is IAfflictable coated) || !coated.Afflictions.Conditions.Holds(effect.Condition)) continue;
+                        coated.Afflictions.Conditions.EndNow(effect.Condition);
+                        Vector3 at = near.transform.position;
+                        combat.StrikeArea(at, Or(effect.Radius, 1.2f), Blow(look, kind, burst, eStagger, eStacks), coatStruck);
+                        if (effect.Seconds > 0f) Hazards.Lay(HazardKind.Fire, at, Or(effect.Radius, 1.2f), effect.Seconds, 2f, 0f, 1f);
+                        ElementLook.Puff(look, at + Vector3.up * 0.6f, Vector3.up, 1.4f);
+                        CoatsLit++;
+                    }
+                    fanTaken.Clear();
+                    coatStruck.Clear();
                     break;
                 }
                 case UpgradeAction.FreeDodge:
@@ -3261,6 +3338,24 @@ namespace Clover.Player
             Trigger(UpgradeTrigger.StoppedAtStones, body, body.transform.position);
         }
 
+        /// <summary>How many steps a dodge's path of this length is searched in, for circles of this radius to cover it.</summary>
+        public static int DodgePathSteps(float length, float radius) => Mathf.Clamp(Mathf.CeilToInt(length / Mathf.Max(0.2f, radius)), 1, 12);
+
+        /// <summary>
+        /// A lit coat's burst: <paramref name="first"/> and <paramref name="each"/> more for each blow that spread it, at most
+        /// <paramref name="most"/> (0: no most). Black Pitch: 16, 8 a blow, 70.
+        /// </summary>
+        public static float CoatBurst(float first, float each, int spreads, float most)
+        {
+            float burst = first + each * Mathf.Max(0, spreads);
+            return most > 0f ? Mathf.Min(burst, most) : burst;
+        }
+
+        /// <summary>Coated enemies that went up (UpgradeAction.LightCoat), and grounds whose standers were dosed at once (Low Mist): for probes.</summary>
+        public int CoatsLit { get; private set; }
+        public int GroundsDosed { get; private set; }
+        private readonly HashSet<IDamageable> coatStruck = new HashSet<IDamageable>();
+
         /// <summary>Enemies driven against your ring's stones and stopped there (The Closed Ring): for probes.</summary>
         public int StoppedAtStones { get; private set; }
 
@@ -3275,6 +3370,7 @@ namespace Clover.Player
             (StatWhen.InOwnMist, OwnGrounds.LowMist),
             (StatWhen.InOwnGlow, OwnGrounds.Glow),
             (StatWhen.InOwnBlood, OwnGrounds.Blood),
+            (StatWhen.InCloud, OwnGrounds.Cloud),
         };
 
         /// <summary>True when you stand in ground of your own of this name now.</summary>
@@ -4370,6 +4466,7 @@ namespace Clover.Player
             // The attacker is the target, as with a perfect guard; a thrown bolt leaves only the place it came from.
             var dodged = combat != null ? combat.EnemyAt(attacker, 2.5f) : null;
             NoteTurned(dodged);
+            perfectThisDodge = true;
             if (dodged != null) Trigger(UpgradeTrigger.PerfectDodge, dodged, attacker);
             else Trigger(UpgradeTrigger.PerfectDodge, null, transform.position, false);
             if (!hasAfterimage) return;
@@ -4390,6 +4487,7 @@ namespace Clover.Player
             }
             untilDodgeCount = 0;
             dodgeFrom = from;
+            perfectThisDodge = false;
             DodgeCount++;
             LastDodgeFrom = from;
             LastDodgeDirection = direction;
@@ -4449,7 +4547,20 @@ namespace Clover.Player
                 }
             }
             Trigger(UpgradeTrigger.DodgeEnd, null, transform.position, false);
+            if (perfectThisDodge) Trigger(UpgradeTrigger.PerfectDodgeEnd, null, transform.position, false);
+            perfectThisDodge = false;
+            // Carried to the enemy whose sight drew the dodge (Eagle's Sight): told with it as the target.
+            if (carriedTo != null)
+            {
+                var to = carriedTo;
+                carriedTo = null;
+                if (to != null && to.gameObject.activeInHierarchy) Trigger(UpgradeTrigger.CarriedTo, to, to.transform.position);
+            }
         }
+
+        // The dodge under way was perfect (told again at its end), and the enemy it is carrying you to.
+        private bool perfectThisDodge;
+        private Component carriedTo;
 
         /// <summary>
         /// The terms of a dodge about to go this way (Into the Fire): toward or through the enemy faced, safe for its whole
@@ -4458,6 +4569,25 @@ namespace Clover.Player
         public DodgeTerms DodgeTermsFor(Vector3 direction)
         {
             var terms = DodgeTerms.Plain;
+            // Toward an enemy whose condition draws your dodge (Eagle's Sight), within 6 m: carried all the way to it.
+            carriedTo = null;
+            if (combat != null)
+            {
+                fanTaken.Clear();
+                for (int guard = 0; guard < 16; guard++)
+                {
+                    var near = combat.EnemyNear(transform.position, DodgeRules.CarryReach, fanTaken);
+                    if (!(near is IDamageable one)) break;
+                    fanTaken.Add(one);
+                    if (!(near is IAfflictable drawn) || !drawn.Afflictions.Conditions.Has(ConditionFlags.DrawsDodge)) continue;
+                    float reach = DodgeRules.CarryTo(transform.position, direction, near.transform.position);
+                    if (reach <= 0f) continue;
+                    terms.Reach = reach;
+                    carriedTo = near;
+                    break;
+                }
+                fanTaken.Clear();
+            }
             if (!hasIntoFire) return terms;
             switch (WayOf(direction, transform.position))
             {

@@ -242,11 +242,11 @@ a blow or a cast "on the beat" comes within a fifth of a second of it.
 
 **When it happens.** Whenever you cast Miasma, using the shape you picked. If you have not bought this, you cast the plain cloud.
 
-**The numbers.** 3 Shards. Low Mist: a strip of mist 8 metres long and 2.5 metres wide from your feet, lasting 5 seconds, giving a dose each second to whatever stands in it. The plain cloud is not cast. Censer: one censer swings around you 3 metres away for 8 seconds, going around once every 1.2 seconds. It hits whatever is within 1 metre of it for 4 damage, 4 stagger and a dose.
+**The numbers.** 3 Shards. Low Mist: a strip of mist 8 metres long and 2.5 metres wide from your feet, lasting 5 seconds, giving a dose each second to whatever stands in it. When you start a dodge or roll inside the mist, every enemy in it gets a dose. The plain cloud is not cast. Censer: one censer swings around you 3 metres away for 8 seconds, going around once every 1.2 seconds. It hits whatever is within 1 metre of it for 4 damage, 4 stagger and a dose.
 
 **Works with.** Low Mist: a hallway, Weeping Sore, Tasted Every Herb. Censer: a pack that crowds you, Catching, holding your guard while it swings.
 
-**Not built yet.** Low Mist doesn't stop at walls or take a dose when an enemy dodges. Censer's smoke should hang in the air for 2 seconds after each pass.
+**Not built yet.** Low Mist doesn't stop at walls yet. Censer's smoke should hang in the air for 2 seconds after each pass.
 
 **Example.** Use Censer and hold your ground in a doorway. Anything that crowds you gets poisoned with every swing while you guard.
 
@@ -316,11 +316,11 @@ a blow or a cast "on the beat" comes within a fifth of a second of it.
 
 **When it happens.** Only while you carry Poison twice (all in).
 
-**The numbers.** 6 Shards. You heal 2 a second while an enemy is nearby, and every time you add doses, you add one more. Buying this also gives you the deep strike, Nine Times Refined. Use it with L2 and R2 while you carry Poison alone or twice.
+**The numbers.** 6 Shards. Poison is never put on you, so no cloud or mist hurts you, yours or the enemy's. While you stand in a cloud (Miasma's, or any poison ground of yours), you heal 2 a second and every dose you add is one more. Buying this also gives you the deep strike, Nine Times Refined. Use it with L2 and R2 while you carry Poison alone or twice.
 
 **Works with.** Miasma and its Low Mist shape, Venom, The Delayed Touch, which it comes after on the chart, Fever, Clean Blade.
 
-**Not built yet.** Poison, clouds and mist should not hurt you; for now, the enemy's clouds hurt you like before. The healing and the extra dose should only work while you stand in a cloud; for now, they work in every fight.
+**Not built yet.** No enemy makes clouds yet, so for now only your own clouds count. The Poison land's enemies will bring theirs.
 
 **Example.** A god fills the floor with its own mist. You stay in it, healing, and every blow you land there adds two doses.
 

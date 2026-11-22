@@ -9,13 +9,13 @@ Wind are both carried.
 
 **When it happens.** Every time Golden Feathers goes off while you carry both Light and Wind. Golden Feathers goes off when a Mark lands on an Unsteady enemy, or when Unsteady lands on a Marked one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Golden Feathers.
 
-**The numbers.** Mix, 3 Shards. Eagle's Sight: for 4 seconds, your next weapon blow on the enemy is a critical hit and deals 10 more damage. Wingbeat: everything within 3 metres of the enemy is thrown 3 metres away from it and Marked. After Golden Feathers goes off on an enemy, it can't go off on that enemy again for 4 seconds.
+**The numbers.** Mix, 3 Shards. Eagle's Sight: for 4 seconds, a dodge toward the enemy from up to 6 metres away carries you all the way to it, stopping 1 metre short, and ends in a cut for 10 damage, 10 stagger and a Mark. Your next weapon blow on it is a critical hit. Wingbeat: everything within 3 metres of the enemy is thrown 3 metres away from it and Marked. After Golden Feathers goes off on an enemy, it can't go off on that enemy again for 4 seconds.
 
 **Works with.** Bane of Serpents, Riding High, Wings Behind, Sweep of Wings.
 
 **Example.** One enemy you want to reach: use Eagle's Sight. Surrounded: use Wingbeat, and the crowd is thrown back and Marked.
 
-**Not built yet.** Eagle's Sight doesn't carry your dodge to the enemy yet. For now, it waits for your next weapon blow on it instead.
+**Not built yet.** The carry is the plain roll, made longer. The cut is a burst of light, not a sword swing.
 
 ## goldenfeathers.bane
 **What it does.** A feather that reaches an enemy that is already Marked hits it for 12 damage and 20 stagger.

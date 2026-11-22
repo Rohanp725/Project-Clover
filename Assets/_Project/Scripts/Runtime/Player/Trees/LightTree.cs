@@ -227,26 +227,27 @@ namespace Clover.Player.Trees
                 "Cast it through two enemies standing in one line: both are cut and Marked, and Step Into Light is ready again. Light is straight.");
 
             // The counter: the rod form is the lamp; enemies in its glow are struck lightly and Marked. Its perfect-guard burst is
-            // banked by each lamp (three, the most a lamp is likely to meet). NEEDS: the burst only for a perfect guard made
-            // inside the glow (in-own-ground), and no enemy cloud, flame or frost inside the glow (purify).
+            // banked by each lamp (three, the most a lamp is likely to meet), and only for a perfect guard made inside the glow
+            // (the lamp's ground is the player's own glow, SpellSpec.Ground: StatWhen.InOwnGlow). NEEDS: no enemy cloud, flame or
+            // frost inside the glow (purify).
             SpellBranch.Add(to, E, StandingLight, "Standing Light", SpellRole.Counter, BranchPattern.LeftB, JustCut, SpellForms.Rod,
-                new SpellSpec { Reach = 2.5f, Radius = 5f, Seconds = 10f, Interval = 2.5f, Damage = 2f, Stagger = 0f, Delay = 0.2f, Stacks = 1 },
+                new SpellSpec { Reach = 2.5f, Radius = 5f, Seconds = 10f, Interval = 2.5f, Damage = 2f, Stagger = 0f, Delay = 0.2f, Stacks = 1, Ground = Clover.World.OwnGrounds.Glow },
                 "You plant a lamp of brass. A shaft of light stands over it, dust turning in it, and a glow five metres round lies about it for ten seconds. Enemies in the glow are Marked every two and a half seconds, and a perfect guard made inside it bursts round you: 10 damage and 25 stagger within three and a half metres. No enemy cloud, flame or frost can lie inside the glow.",
                 UpgradeIcons.Tower,
-                // The roster's numbers alone (the owner's answer of 2026-11-20): no shorter wait. NEEDS: the longer windows inside
-                // the glow (in-own-ground: standing inside one's own lamp's glow as a state the stats read). Until then it does
-                // nothing.
+                // The roster's numbers alone (the owner's answer of 2026-11-20): no shorter wait. Its windows half again as long
+                // inside the glow are the Empower mark's stats (StatWhen.InOwnGlow), set below.
                 new Empower(),
                 "Inside its glow, the moments for a perfect guard and a perfect dodge are half again as long.",
-                // NEEDS: the enemies between two lamps, and the guard made in line with them (in-own-ground), the lamps drawn as
-                // three (form-pieces), and nothing laid between them (purify). Until then the lamp still stands, a row of light
-                // six metres ahead Marks what stands on it each second, and a perfect guard throws a ray along the attacker's line.
+                // The lamp still stands; a row of light six metres ahead Marks what stands on it each second, and is glow of your own
+                // (Ground), so the ray down the row comes only from a perfect guard made standing in the row or the glow. NEEDS: the
+                // lamps drawn as three (form-pieces), and nothing laid between them (purify).
                 new ShapeDef { Name = "Row of Lamps",
                     Description = "Three small lamps are set in a line six metres long. Every enemy between two lamps is Marked each second and can carry no cloud, flame or frost, and a perfect guard made in line with them throws a ray down the row: 12 damage and 25 stagger. The guard fires the row.",
                     Effects = new[]
                     {
-                        new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Hazard, At = EffectAt.Self, Shape = HazardShape.Line, Reach = 6f, Count = 3, Radius = 1f, Seconds = 10f, Interval = 1f, Damage = 0f, Stagger = 0f, Affliction = M, Stacks = 1 },
-                        new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Lane, Reach = 6f, Radius = 0.6f, Damage = 12f, Stagger = 25f, Affliction = M, Stacks = 1, Cooldown = 1f },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Hazard, At = EffectAt.Self, Shape = HazardShape.Line, Reach = 6f, Count = 3, Radius = 1f, Seconds = 10f, Interval = 1f, Damage = 0f, Stagger = 0f, Affliction = M, Stacks = 1,
+                            Ground = Clover.World.OwnGrounds.Glow },
+                        new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, While = StatWhen.InOwnGlow, Do = UpgradeAction.Lane, Reach = 6f, Radius = 0.6f, Damage = 12f, Stagger = 25f, Affliction = M, Stacks = 1, Cooldown = 1f },
                     } },
                 // NEEDS: the lamp drawn circling you, and hazards you walk into burned away (form-pieces, purify). The circling is
                 // the discs form, one disc at two metres for eight seconds.
@@ -254,23 +255,29 @@ namespace Clover.Player.Trees
                     Description = "A smaller lamp circles you two metres out, once a second, for eight seconds. It Marks what it passes and burns away any hazard you walk into. It goes where you go.",
                     Spell = new SpellSpec { Count = 1, Radius = 2f, Seconds = 8f, Interval = 1f, Damage = 2f, Stagger = 0f, Stacks = 1 } },
                 "Opens two shapes of Standing Light, chosen at any rest fire: Row of Lamps, a row your perfect guard fires, or Circled Lamp, a lamp that walks round you.",
-                // NEEDS: inside the glow only (in-own-ground). The resets are data, once in twelve seconds; Daybreak waits on no
+                // Inside the glow only (StatWhen.InOwnGlow). The resets are data, once in twelve seconds; Daybreak waits on no
                 // clock, so it has none to end.
                 new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.ResetCooldown, Cooldown = 12f },
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.ResetCooldown, Branch = Glare, Cooldown = 12f },
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.ResetCooldown, Branch = StepIntoLight, Cooldown = 12f },
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.ResetCooldown, Branch = RingOfSpears, Cooldown = 12f },
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.ResetCooldown, Branch = Reckoning, Cooldown = 12f },
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, While = StatWhen.InOwnGlow, Do = UpgradeAction.ResetCooldown, Cooldown = 12f },
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, While = StatWhen.InOwnGlow, Do = UpgradeAction.ResetCooldown, Branch = Glare, Cooldown = 12f },
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, While = StatWhen.InOwnGlow, Do = UpgradeAction.ResetCooldown, Branch = StepIntoLight, Cooldown = 12f },
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, While = StatWhen.InOwnGlow, Do = UpgradeAction.ResetCooldown, Branch = RingOfSpears, Cooldown = 12f },
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, While = StatWhen.InOwnGlow, Do = UpgradeAction.ResetCooldown, Branch = Reckoning, Cooldown = 12f },
                 },
                 "The first perfect guard inside the glow makes every Light spell ready again, once a lamp.",
                 tally: new TallySpec { Name = "Lamp", Cap = 3 },
                 learnEffects: new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Bank, Count = 3 },
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Spends = 1, Do = UpgradeAction.Burst, At = EffectAt.Self, Radius = 3.5f, Damage = 10f, Stagger = 25f, Stacks = 0 },
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, While = StatWhen.InOwnGlow, Spends = 1, Do = UpgradeAction.Burst, At = EffectAt.Self, Radius = 3.5f, Damage = 10f, Stagger = 25f, Stacks = 0 },
                 });
+            // Standing Light's Empower: inside the glow the perfect guard's and the perfect dodge's moments are half again as long.
+            to.Find(each => each.Id == SpellBranch.EmpowerId(StandingLight)).Stats = new[]
+            {
+                new StatMod(PlayerStat.PerfectGuardWindow, 0.5f, StatWhen.InOwnGlow),
+                new StatMod(PlayerStat.DodgeSafeTime, 0.5f, StatWhen.InOwnGlow),
+            };
 
             // Built as data (StatWhen.Unhurt). It grows from Standing Light's Learn, whose line passes clear.
             to.Add(BranchPattern.Put(new Upgrade { Id = Unblemished, Name = "Unblemished", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { StandingLight }, Icon = UpgradeIcons.Star,

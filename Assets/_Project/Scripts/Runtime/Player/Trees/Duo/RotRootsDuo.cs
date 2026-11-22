@@ -61,8 +61,8 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.Foot));
 
-            // NEEDS: a state of standing on the roots (in-own-ground); now each poison bite on a Seeded enemy heals you 1,
-            // wherever you stand, at most twice a second.
+            // NEEDS: a state of standing on the roots (in-own-ground), which waits on the roots being drawn on the floor (Shared
+            // Roots' look); now each poison bite on a Seeded enemy heals you 1, wherever you stand, at most twice a second.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Tasting, Name = "Tasting", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Heart,

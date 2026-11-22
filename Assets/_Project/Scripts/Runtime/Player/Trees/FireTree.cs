@@ -38,6 +38,9 @@ namespace Clover.Player.Trees
         public const string FallingSun = "fire.sun";
         // Conditions the branches set on enemies.
         public const string TorchLit = "fire.torch";
+        /// <summary>Black Pitch's coat on an enemy, and The Torch's deep coat before it is lit.</summary>
+        public const string PitchCoat = "fire.pitch.coat";
+        public const string TorchCoat = "fire.torch.coat";
 
         // Retired in Phase 4 (RetiredMarks): kept as names because hand-written code still asks for them, and finds none.
         public const string OpenFurnace = "fire.furnace";
@@ -243,32 +246,48 @@ namespace Clover.Player.Trees
                 Description = "Your weapon no longer sets enemies on fire. It drinks the fire instead. Each blow on a burning enemy takes one Burn off it and hits 6 harder for it. A heavy blow takes three, a finisher takes all. Burns no longer hurt by themselves, so your fire must come from spells, the ground and reactions."
             }, BranchPattern.RightCrown));
 
-            // NEEDS: the pitch as designed, a coat that blows spread over a crowd and that lights all at once on any Burn (16
-            // and 8 more for each blow that spread it, 70 at most, 35 stagger, 3 Burn, the floor burning 3 s). Until then the
-            // jar brands the enemy faced, and the next three blows on it splash fire over everyone near.
+            // The pitch is a coat (a condition, 8 s) on the enemy faced; each weapon blow on a coated enemy spreads it to every
+            // other within 2 m and counts on the mark's tally; the first Burn laid on any coated enemy lights them all at once
+            // (UpgradeAction.LightCoat: 16 and 8 more a spreading blow, 70 at most, 35 stagger, 3 Burn, the floor burning 3 s).
+            // The jar is a quiet brand (SpellSpec.Quiet): only the throw's gesture, the coat does the rest.
             SpellBranch.Add(to, E, BlackPitch, "Black Pitch", SpellRole.Detonator, BranchPattern.RightB, CatchingFire, SpellForms.Brand,
-                new SpellSpec { Reach = 7f, Seconds = 8f, Count = 3, Radius = 2f, Damage = 16f, Stagger = 35f, Stacks = 3 },
+                new SpellSpec { Reach = 7f, Seconds = 8f, Count = 3, Radius = 2f, Damage = 0f, Stagger = 0f, Stacks = 0, Quiet = true },
                 "You throw a jar of embalmer's pitch at the enemy faced. For eight seconds blows on it splash the pitch over everyone near, and fire takes them all.",
                 UpgradeIcons.Orb,
-                new Empower { Cooldown = 9f, Seconds = 10f },
+                new Empower { Cooldown = 9f, Seconds = 10f, Effects = new[] { new EffectChange { Index = 0, ConditionSeconds = 10f }, new EffectChange { Index = 1, ConditionSeconds = 10f } } },
                 "Black Pitch waits 9 seconds, not 11, and the coat lasts ten seconds.",
-                // NEEDS: the pool coating whoever walks through it, lit by fire.
-                new ShapeDef { Name = "Pitch Pool", Form = SpellForms.Field,
+                // The pool is ground that coats whoever stands in it at each bite (Inside), lit the same way; unseen until the
+                // pitch's look (lk_g_pitch) is in. The Learn's coat on the enemy faced is set aside (SetsAside 0).
+                new ShapeDef { Name = "Pitch Pool", Form = SpellForms.Brand, SetsAside = new[] { 0 },
                     Description = "Thrown on the floor: a pool of pitch three metres across for eight seconds that coats whatever walks through it, lit the same way.",
-                    Spell = new SpellSpec { Reach = 7f, Radius = 1.5f, Seconds = 8f, Interval = 0.5f, LingerDamage = 3f, Stacks = 1 } },
-                // NEEDS: lit only when fire touches it.
-                new ShapeDef { Name = "The Torch",
+                    Spell = new SpellSpec { Reach = 7f, Damage = 0f, Stagger = 0f, Stacks = 0, Quiet = true },
+                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Hazard, Radius = 1.5f, Seconds = 8f, Interval = 0.5f, Damage = 0f, Stagger = 0f, Stacks = 0,
+                        Affliction = AfflictionKind.Burn, Unseen = true, Inside = new ConditionSpec { Id = PitchCoat, Seconds = 8f } } } },
+                // One enemy coated deep: the coat set aside for the torch's own (SetsAside 0, 1: nothing spreads), lit only when a
+                // Burn touches it (AfflictionLaid), then burning 8 s and setting alight all within 2 m each second.
+                new ShapeDef { Name = "The Torch", SetsAside = new[] { 0, 1 },
                     Description = "One enemy coated deep, and nothing splashes. Lit, it burns for eight seconds and sets alight everyone within two metres of it each second as it walks.",
-                    Change = new SpellChange { Count = 1, Radius = 0.8f },
                     Effects = new[]
                     {
-                        new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = TorchLit, Seconds = 8f, Beat = 1f } },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = TorchCoat, Seconds = 8f } },
+                        new UpgradeEffect { On = UpgradeTrigger.AfflictionLaid, Spent = AfflictionKind.Burn, InState = TorchCoat, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = TorchLit, Seconds = 8f, Beat = 1f } },
+                        new UpgradeEffect { On = UpgradeTrigger.AfflictionLaid, Spent = AfflictionKind.Burn, InState = TorchCoat, Do = UpgradeAction.EndCondition, Condition = TorchCoat },
                         new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = TorchLit, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Burn, Stacks = 1, Radius = 2f },
                     } },
                 "Opens two shapes of Black Pitch, chosen at any rest fire: Pitch Pool on the floor, or The Torch, one enemy that walks burning through its friends.",
-                // NEEDS: every other burning enemy within 10 m going up at half, and only when the finisher lights the coat.
-                new[] { new UpgradeEffect { On = UpgradeTrigger.FinisherHit, Needs = AfflictionKind.Burn, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Burn, Damage = 5f, Radius = 4f } },
-                "Light it with a finisher, and every other burning enemy near goes up with the coated, at half.");
+                // A finisher on a coated enemy sets off the Burn of every burning enemy within 10 m (SetOff's Radius). NEEDS: those
+                // going up at half the coat's own burst (a SetOff scaled to another effect's number); now each at its own Burn.
+                new[] { new UpgradeEffect { On = UpgradeTrigger.FinisherHit, InState = PitchCoat, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Burn, Damage = 5f, Radius = 10f } },
+                "Light it with a finisher, and every other burning enemy near goes up with the coated, at half.",
+                tally: new TallySpec { Name = "Pitch", Cap = 7 },
+                learnEffects: new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = PitchCoat, Seconds = 8f } },
+                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = PitchCoat, By = StruckBy.Weapon, Do = UpgradeAction.Condition, EachWithin = 2f, EachOther = true, State = new ConditionSpec { Id = PitchCoat, Seconds = 8f } },
+                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = PitchCoat, By = StruckBy.Weapon, Do = UpgradeAction.Bank, Count = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.AfflictionLaid, Spent = AfflictionKind.Burn, InState = PitchCoat, Do = UpgradeAction.LightCoat, Condition = PitchCoat, Reach = 30f, Radius = 1.2f,
+                        Damage = 16f, DamagePerSpent = 8f, Amount = 70f, Stagger = 35f, Affliction = AfflictionKind.Burn, Stacks = 3, Seconds = 3f, Cooldown = 0.2f },
+                });
 
             // BESPOKE (built): SunForm.
             to.Add(BranchPattern.Put(new Upgrade { Id = FallingSun, Name = "Falling Sun", Element = E, Kind = UpgradeKind.Signature, Icon = UpgradeIcons.Crown,

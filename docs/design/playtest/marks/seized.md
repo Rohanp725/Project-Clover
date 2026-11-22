@@ -9,13 +9,13 @@ Lightning and Water are both carried.
 
 **When it happens.** Every time Seized goes off while you carry both Lightning and Water. Seized goes off when a Soaked enemy has two or more Static. If you have not bought this mark, or you carry only one of the two elements, you get the plain Seized.
 
-**The numbers.** Mix, 3 Shards. Can't Let Go: the enemy is held for 1 second, and for 3 seconds, each of your weapon blows on it holds it 0.3 seconds longer. Running Water: everything within 7 metres is held for 0.5 seconds and gets a Static. After Seized goes off on an enemy, it can't go off on that enemy again for 6 seconds.
+**The numbers.** Mix, 3 Shards. Can't Let Go: the enemy is held for 1 second, and for 3 seconds, each of your weapon blows on it holds it 0.3 seconds longer. Running Water: a band of live water 4 metres wide runs off the enemy, away from you, 7 metres in one second. Each enemy it crosses is held for 0.5 seconds and gets a Static. It counts as live water for Grounded. After Seized goes off on an enemy, it can't go off on that enemy again for 6 seconds.
 
 **Works with.** Riptide and Thunderclap to set it up, Wet Thread, Grounded, The Flashing.
 
 **Example.** One brute: use Can't Let Go, and keep cutting. A wet pack: Running Water locks them all up.
 
-**Not built yet.** Running Water reaches everything within 7 metres at once, instead of spreading out as a ring. Can't Let Go doesn't have its 3-second limit on the hold yet.
+**Not built yet.** Can't Let Go doesn't have its 3-second limit on the hold yet.
 
 ## seized.wetthread
 **What it does.** Light blows on a Soaked enemy add one Static.

@@ -38,6 +38,9 @@ namespace Clover.Player
             }
         }
 
+        /// <summary>The one affliction never laid on the player (Tasted Every Herb: Poison); None for none.</summary>
+        public AfflictionKind ImmuneTo = AfflictionKind.None;
+
         /// <summary>Seconds a dodge takes longer to come back for each Soaked on the player.</summary>
         public const float SoakedDodgeSeconds = 0.1f;
         /// <summary>How much harder blows land on the player for each Mark (an enemy's blow on a marked player strikes as a critical would).</summary>
@@ -138,7 +141,7 @@ namespace Clover.Player
         /// <summary>Lays <paramref name="count"/> stacks for the spec's time (or <paramref name="seconds"/>), scaled. False when nothing took.</summary>
         public bool Lay(AfflictionKind kind, int count, float seconds = 0f)
         {
-            if (shedding || !Valid(kind) || kind == AfflictionKind.None || count <= 0) return false;
+            if (shedding || !Valid(kind) || kind == AfflictionKind.None || kind == ImmuneTo || count <= 0) return false;
             var spec = Afflictions.Spec(kind);
             float time = (seconds > 0f ? seconds : spec.Seconds) * Math.Max(0f, SecondsScale);
             if (time <= 0f) return false;

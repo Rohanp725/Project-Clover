@@ -61,15 +61,15 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.Foot));
 
-            // NEEDS: the dodge's own path (dodge-path); now all within 2 m of where it ends.
+            // Along the dodge's own path, from where it began to where it ended (UpgradeEffect.AlongDodge), each once.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = SeedOnTheWind, Name = "Seed on the Wind", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Leaf,
                 Description = "A dodge that passes within 2 m of an enemy leaves it Seeded and Unsteady.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.DodgeEnd, At = EffectAt.Self, Do = UpgradeAction.Afflict, Radius = 2f, Affliction = AfflictionKind.Seeded, Stacks = 1 },
-                    new UpgradeEffect { On = UpgradeTrigger.DodgeEnd, At = EffectAt.Self, Do = UpgradeAction.Afflict, Radius = 2f, Affliction = AfflictionKind.Unsteady, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.DodgeEnd, At = EffectAt.Self, AlongDodge = true, Do = UpgradeAction.Afflict, Radius = 2f, Affliction = AfflictionKind.Seeded, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.DodgeEnd, At = EffectAt.Self, AlongDodge = true, Do = UpgradeAction.Afflict, Radius = 2f, Affliction = AfflictionKind.Unsteady, Stacks = 1 },
                 },
             }, HeartPattern.LeftLow));
 

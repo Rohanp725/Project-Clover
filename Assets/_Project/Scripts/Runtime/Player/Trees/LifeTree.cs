@@ -195,11 +195,13 @@ namespace Clover.Player.Trees
                 // The thorns doing 16 are the Learn's own, set by the Empower (empower-effects).
                 new Empower { Cooldown = 10f, Effects = new[] { new EffectChange { Index = 2, Damage = 16f } } },
                 "Drawn From the Wood waits 10 seconds, not 12, and its thorns do 16.",
-                // NEEDS: the window held only while you stand in the ring (in-own-ground). Until then the ring is laid where you
-                // knelt and the window goes with you.
-                new ShapeDef { Name = "Blood in the Furrow",
+                // The ring is ground of your own (World.OwnGrounds.Blood): the window's two boons are set aside (SetsAside 0, 1) for
+                // the same numbers held only while you stand in the ring (StatWhen.InOwnBlood), as long as it lies.
+                new ShapeDef { Name = "Blood in the Furrow", SetsAside = new[] { 0, 1 },
                     Description = "The green blood soaks into the ground where you knelt, a ring eight metres across for as long as it lasts, and everything in it is Seeded each second. Fight in a place, not round yourself.",
-                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Hazard, At = EffectAt.Self, Shape = HazardShape.Patch, Radius = 4f, Seconds = 6f, Interval = 1f, Damage = 1f, Affliction = AfflictionKind.Seeded, Stacks = 1 } } },
+                    Stats = new[] { new StatMod(PlayerStat.CritChance, 1f, StatWhen.InOwnBlood), new StatMod(PlayerStat.Leech, 0.2f, StatWhen.InOwnBlood) },
+                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Hazard, At = EffectAt.Self, Shape = HazardShape.Patch, Radius = 4f, Seconds = 6f, Interval = 1f, Damage = 1f, Affliction = AfflictionKind.Seeded, Stacks = 1,
+                        Ground = Clover.World.OwnGrounds.Blood } } },
                 // Nothing withers (ShapeDef.SetsAside: the Learn's withering burst), and it takes a quarter of your present health
                 // (SpellSpec.HealthShare). What you grow in the next eight seconds strikes twice as hard.
                 new ShapeDef { Name = "Feed the Ground", Form = SpellForms.Nova, SetsAside = new[] { 2 },

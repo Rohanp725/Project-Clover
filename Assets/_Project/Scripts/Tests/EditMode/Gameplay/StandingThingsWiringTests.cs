@@ -129,6 +129,111 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void BlackPitchCoatsSpreadsByBlowsAndGoesUpAllAtOnce()
+        {
+            var learn = Upgrade.ById(FireTree.BlackPitch);
+            Assert.IsTrue(learn.Spell.Quiet, "the jar splashes no fire of its own");
+            Assert.AreEqual(FireTree.PitchCoat, learn.Effects[0].State.Id, "the enemy faced is coated");
+            var spread = learn.Effects[1];
+            Assert.AreEqual(UpgradeTrigger.ConditionStruck, spread.On);
+            Assert.AreEqual(StruckBy.Weapon, spread.By);
+            Assert.AreEqual(2f, spread.EachWithin, 1e-5f);
+            Assert.IsTrue(spread.EachOther, "to its neighbours");
+            Assert.AreEqual(UpgradeAction.Bank, learn.Effects[2].Do, "each spreading blow counted");
+            var lit = learn.Effects.Single(each => each.Do == UpgradeAction.LightCoat);
+            Assert.AreEqual(AfflictionKind.Burn, lit.Spent, "any Burn lights it");
+            Assert.AreEqual(FireTree.PitchCoat, lit.InState);
+            Assert.AreEqual(FireTree.PitchCoat, lit.Condition);
+            Assert.AreEqual(16f, PlayerUpgrades.CoatBurst(lit.Damage, lit.DamagePerSpent, 0, lit.Amount), 1e-5f);
+            Assert.AreEqual(40f, PlayerUpgrades.CoatBurst(lit.Damage, lit.DamagePerSpent, 3, lit.Amount), 1e-5f, "8 more a spreading blow");
+            Assert.AreEqual(70f, PlayerUpgrades.CoatBurst(lit.Damage, lit.DamagePerSpent, 20, lit.Amount), 1e-5f, "70 at most");
+            Assert.AreEqual(3f, lit.Seconds, 1e-5f, "the floor burns 3 s");
+            var shapes = Upgrade.ById(SpellBranch.ShapeId(FireTree.BlackPitch)).Shapes;
+            var pool = shapes.Single(each => each.Name == "Pitch Pool");
+            Assert.AreEqual(FireTree.PitchCoat, pool.Effects.Single().Inside.Id, "the pool coats who walks in it");
+            var torch = shapes.Single(each => each.Name == "The Torch");
+            Assert.IsTrue(ShapeDef.SetAside(torch, 0) && ShapeDef.SetAside(torch, 1), "nothing splashes");
+            Assert.IsFalse(torch.Effects.Any(each => each.On == UpgradeTrigger.SpellCast && each.State != null && each.State.Id == FireTree.TorchLit), "not lit as it is thrown");
+            Assert.IsTrue(torch.Effects.Any(each => each.On == UpgradeTrigger.AfflictionLaid && each.Spent == AfflictionKind.Burn && each.State != null && each.State.Id == FireTree.TorchLit), "lit when fire touches it");
+        }
+
+        [Test]
+        public void LowMistIsYourGroundAndADodgeInItDosesAllInIt()
+        {
+            var shape = Upgrade.ById(SpellBranch.ShapeId(PoisonTree.Miasma)).Shapes.Single(each => each.Name == "Low Mist");
+            Assert.AreEqual(OwnGrounds.LowMist, shape.Effects.Single(each => each.Do == UpgradeAction.Hazard).Ground);
+            var dodge = shape.Effects.Single(each => each.On == UpgradeTrigger.DodgeStart);
+            Assert.AreEqual(StatWhen.InOwnMist, dodge.While, "only a dodge begun in it");
+            Assert.AreEqual(OwnGrounds.LowMist, dodge.ThroughGround, "every enemy in the sheet");
+            Assert.AreEqual(AfflictionKind.Poison, dodge.Affliction);
+        }
+
+        [Test]
+        public void RunningWaterIsABandThatRunsOnAndSeizesWhatItCrosses()
+        {
+            var band = ShapeOf(Clover.Player.Trees.Duo.SeizedDuo.Shape, "Running Water").Single();
+            Assert.AreEqual(UpgradeAction.Hazard, band.Do);
+            Assert.AreEqual(HazardShape.Band, band.Shape, "a band, not a ring");
+            Assert.AreEqual(7f, band.Speed * band.Seconds, 1e-4f, "7 m on");
+            Assert.AreEqual(Reactions.LiveWater, band.Ground, "live water: Grounded runs through it");
+            Assert.AreEqual(0.5f, band.InsideDo.Single(each => each.Do == UpgradeAction.Hold).Seconds, 1e-5f);
+            Assert.IsTrue(band.InsideDo.All(each => each.CooldownPerEnemy), "each once as it passes");
+        }
+
+        [Test]
+        public void ADodgesPathIsWhereItsGroundAndDosesLie()
+        {
+            Assert.AreEqual(4.5f, DodgeRules.CarryTo(Vector3.zero, Vector3.forward, new Vector3(0f, 0f, 5.5f)), 1e-4f, "to arm's length");
+            Assert.AreEqual(0f, DodgeRules.CarryTo(Vector3.zero, Vector3.forward, new Vector3(0f, 0f, 7f)), "beyond 6 m");
+            Assert.AreEqual(0f, DodgeRules.CarryTo(Vector3.zero, Vector3.forward, new Vector3(4f, 0f, 0.5f)), "not toward it");
+            Assert.AreEqual(0.5f, DodgeRules.CarryTo(Vector3.zero, Vector3.forward, new Vector3(0f, 0f, 1.2f)), 1e-4f, "already close");
+            Assert.AreEqual(3, PlayerUpgrades.DodgePathSteps(5.5f, 2f));
+            Assert.AreEqual(1, PlayerUpgrades.DodgePathSteps(0f, 2f));
+            var seed = Upgrade.ById(Clover.Player.Trees.Duo.WindthrowDuo.SeedOnTheWind).Effects;
+            Assert.IsTrue(seed.All(each => each.AlongDodge && each.On == UpgradeTrigger.DodgeEnd));
+            var wake = Upgrade.ById(Clover.Player.Trees.Duo.CapsizeDuo.Wake).Effects;
+            Assert.IsTrue(wake.All(each => each.AlongDodge && each.On == UpgradeTrigger.PerfectDodgeEnd && each.Shape == HazardShape.Line));
+            Assert.IsTrue(Upgrade.ById(Clover.Player.Trees.Duo.CaughtLightDuo.SunOnTheSpray).Effects.All(each => each.On == UpgradeTrigger.PerfectDodgeEnd), "where it ends");
+            var sight = ShapeOf(Clover.Player.Trees.Duo.GoldenFeathersDuo.Shape, "Eagle's Sight");
+            Assert.IsTrue((sight[0].State.Flags & ConditionFlags.DrawsDodge) != 0, "the sight draws your dodge");
+            Assert.AreEqual(10f, sight.Single(each => each.On == UpgradeTrigger.CarriedTo).Damage, 1e-5f, "the cut");
+            var terms = DodgeTerms.Plain;
+            Assert.AreEqual(0f, terms.Reach, "a plain roll goes its own way");
+        }
+
+        [Test]
+        public void TastedEveryHerbTakesNoPoisonAndFeedsOnlyInACloud()
+        {
+            var herb = Upgrade.ById(PoisonTree.TastedEveryHerb);
+            Assert.AreEqual(StatWhen.InCloud, herb.Stats.Single().When, "blows dose twice only in a cloud");
+            Assert.AreEqual(StatWhen.InCloud, herb.Effects.Single().While, "mending only in a cloud");
+            Assert.IsTrue(PlayerUpgrades.OwnGroundStates.Any(each => each.When == StatWhen.InCloud && each.Ground == OwnGrounds.Cloud));
+            var on = new PlayerAfflictions();
+            on.ImmuneTo = AfflictionKind.Poison;
+            Assert.IsFalse(on.Lay(AfflictionKind.Poison, 2), "no poison takes");
+            Assert.AreEqual(0, on.Stacks(AfflictionKind.Poison));
+            Assert.IsTrue(on.Lay(AfflictionKind.Chill, 1), "the rest still do");
+        }
+
+        [Test]
+        public void YourOwnGlowAndRingOfBloodHoldWhatOnlyWorksInsideThem()
+        {
+            var lamp = Upgrade.ById(LightTree.StandingLight);
+            Assert.AreEqual(OwnGrounds.Glow, lamp.Spell.Ground, "the lamp's glow is yours");
+            Assert.AreEqual(StatWhen.InOwnGlow, lamp.Effects.Single(each => each.On == UpgradeTrigger.PerfectGuard).While, "its burst only inside");
+            var empower = Upgrade.ById(SpellBranch.EmpowerId(LightTree.StandingLight));
+            Assert.AreEqual(2, empower.Stats.Count(each => each.When == StatWhen.InOwnGlow && each.Amount == 0.5f), "both moments half again as long, inside");
+            Assert.IsTrue(Upgrade.ById(SpellBranch.MasterId(LightTree.StandingLight)).Effects.All(each => each.While == StatWhen.InOwnGlow));
+            var row = Upgrade.ById(SpellBranch.ShapeId(LightTree.StandingLight)).Shapes.Single(each => each.Name == "Row of Lamps").Effects;
+            Assert.AreEqual(OwnGrounds.Glow, row.Single(each => each.Do == UpgradeAction.Hazard).Ground);
+            Assert.AreEqual(StatWhen.InOwnGlow, row.Single(each => each.On == UpgradeTrigger.PerfectGuard).While, "the guard made in the row");
+            var furrow = Upgrade.ById(SpellBranch.ShapeId(LifeTree.DrawnFromTheWood)).Shapes.Single(each => each.Name == "Blood in the Furrow");
+            Assert.IsTrue(ShapeDef.SetAside(furrow, 0) && ShapeDef.SetAside(furrow, 1), "the window does not go with you");
+            Assert.IsTrue(furrow.Stats.All(each => each.When == StatWhen.InOwnBlood));
+            Assert.AreEqual(OwnGrounds.Blood, furrow.Effects.Single().Ground);
+        }
+
+        [Test]
         public void TheDrawnLineStandsAcrossYourFrontHoldingWhoCrosses()
         {
             var shape = Upgrade.ById(SpellBranch.ShapeId(LightTree.RingOfSpears)).Shapes.Single(each => each.Name == "The Drawn Line");

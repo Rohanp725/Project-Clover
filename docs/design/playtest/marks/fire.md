@@ -281,41 +281,41 @@ design yet, its **Not built yet** line says what is missing.
 **Example.** Kill a soldier with five Burn in the middle of a pack. The two next to it get five stacks right away, without you hitting them.
 
 ## fire.pitch
-**What it does.** You throw a jar of embalmer's pitch (a thick, sticky tar) at the enemy you face. Your next blows on it splash fire over everyone near it.
+**What it does.** You throw a jar of embalmer's pitch (a thick, sticky tar) at the enemy you face, and it is coated. Your blows on a coated enemy spread the pitch to the enemies around it. The first fire that touches any coated enemy sets all of them alight at once.
 
-**When it happens.** Cast it from a spell slot. Press that slot's button. Then it works on your next three weapon blows on the coated enemy, within 8 seconds.
+**When it happens.** Cast it from a spell slot. Press that slot's button. The coat lasts 8 seconds. Any Burn laid on a coated enemy lights it: from a spell, a burning patch, a reaction or your blade.
 
-**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 11 seconds to cast it again (its Empower makes it 9, and makes the coat last 10 seconds). You can throw it up to 7 metres. Each of the three blows on the coated enemy sets off a burst 2 metres around it, for 16 damage, 35 stagger and three Burn.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 11 seconds to cast it again (its Empower makes it 9, and makes the coat last 10 seconds). You can throw it up to 7 metres. Each weapon blow on a coated enemy coats every other enemy within 2 metres and counts once, up to 7. When it lights, every coated enemy goes up: 16 damage and 8 more for each blow that spread the pitch (70 at most), 35 stagger and three Burn, and the floor under each one burns for 3 seconds.
 
 **Works with.** Catching Fire, which it comes after on the chart; Cinder; Firebomb Flask.
 
-**Not built yet.** The planned pitch: your blows spread the coat from enemy to enemy without lighting it. Then the first fire that touches any coated enemy (a Burn, a burning patch, or a reaction) sets all of them on fire at once, for 16 damage plus 8 more for each blow that spread it, up to 70, and the floor under each one burns. For now, the coat is a mark that your next blows set off around the coated enemy.
+**Not built yet.** The coat has no look of its own yet: the black, glossy pitch on the floor and on the enemies, and the flames standing up over all of it, are made and wait to be brought in.
 
 **Example.** Coat the soldier in the middle of a pack and cut it three times. The pack burns with three stacks.
 
 ## fire.pitch.shape
-**What it does.** Unlocks two shapes for Black Pitch. You pick one at any rest fire. **Pitch Pool**: it is thrown on the floor as a pool of burning pitch. **The Torch**: one enemy is coated thickly, and nothing splashes. It burns, and every second it sets fire to everyone near it as it walks.
+**What it does.** Unlocks two shapes for Black Pitch. You pick one at any rest fire. **Pitch Pool**: it is thrown on the floor as a pool of pitch. Anything that walks through it is coated, and lights the same way. **The Torch**: one enemy is coated thickly, and nothing spreads. Once fire touches it, it burns, and every second it sets fire to everyone near it as it walks.
 
 **When it happens.** Whenever you cast Black Pitch, using the shape you picked.
 
-**The numbers.** 3 Shards. Pitch Pool: 3 metres across, lasts 8 seconds, and deals 3 damage and a stack of Burn every half second. The Torch: for 8 seconds, every second, everyone within 2 metres of the torch gets a stack of Burn. Your blows on it set off a burst 0.8 metres across.
+**The numbers.** 3 Shards. Pitch Pool: 3 metres across, lasts 8 seconds. Every half second, whatever stands in it is coated for 8 seconds. The Torch: the coat lasts 8 seconds. When a Burn lands on it, it is lit for 8 seconds, and every second everyone within 2 metres of it gets a stack of Burn.
 
 **Works with.** Catching Fire (send The Torch into a crowd); Flame Wave's Running Fire across the pool.
 
-**Not built yet.** The pool should coat anyone who walks through it, and The Torch should only light up when fire touches it (for now, it lights up right away).
+**Not built yet.** The pool can't be seen yet: its look waits to be brought in.
 
 **Example.** Turn the brute into The Torch and let it walk into its friends.
 
 ## fire.pitch.master
 **What it does.** Light it with a finisher, and every other burning enemy nearby goes up in flames along with the coated one, at half strength.
 
-**When it happens.** When a finisher lands on a burning enemy. Black Pitch must be in a spell slot.
+**When it happens.** When a finisher lands on a coated enemy. Black Pitch must be in a spell slot.
 
-**The numbers.** 3 Shards. The finished enemy's burn goes off for 5 damage per stack within 4 metres.
+**The numbers.** 3 Shards. Every burning enemy within 10 metres has its Burn set off, 5 damage for each stack.
 
 **Works with.** Cinder, Catching Fire.
 
-**Not built yet.** Every other burning enemy within 10 metres should go up at half strength, and only when the finisher lights the coat.
+**Not built yet.** The others should go up at half the coat's own burst. For now each goes up by its own Burn.
 
 **Example.** End a string of blows on a coated soldier with a finisher, and the fire spreads to the next one.
 

@@ -149,9 +149,10 @@ namespace Clover.Tests
         [Test]
         public void EveryReactionShapeRidesAReactionsMomentsAndAnswersOnlyTheConditionsItSets()
         {
-            // The pickups a reaction drops give it two moments more: taken, or left to lie (World.Pickups, PlayerUpgrades.AnswerPickup).
+            // The pickups a reaction drops give it two moments more: taken, or left to lie (World.Pickups, PlayerUpgrades.AnswerPickup);
+            // and a condition that draws your dodge, a third: you were carried to the one in it (Eagle's Sight).
             var reactionTriggers = new[] { UpgradeTrigger.Reacted, UpgradeTrigger.ConditionBeat, UpgradeTrigger.ConditionStruck, UpgradeTrigger.ConditionEnded, UpgradeTrigger.ConditionDied, UpgradeTrigger.ConditionAttacked,
-                UpgradeTrigger.PickedUp, UpgradeTrigger.PickupLeft };
+                UpgradeTrigger.PickedUp, UpgradeTrigger.PickupLeft, UpgradeTrigger.CarriedTo };
             var shapeMarks = Upgrade.All.Where(ReactionTable.IsReactionShape).ToList();
             Assert.GreaterOrEqual(shapeMarks.Count, 2, "Flashover's and Sleet Charge's at least");
             var conditionIds = new HashSet<string>();

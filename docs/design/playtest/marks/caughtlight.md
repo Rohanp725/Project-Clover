@@ -31,15 +31,13 @@ Light are both carried.
 ## caughtlight.spray
 **What it does.** A perfect dodge Soaks and Marks every enemy within 3 metres of where the dodge ends.
 
-**When it happens.** Each perfect dodge, while you carry both Water and Light.
+**When it happens.** When a perfect dodge ends, while you carry both Water and Light.
 
 **The numbers.** Mix, 3 Shards. One Soaked and one Mark on every enemy within 3 metres, at most once every half second.
 
 **Works with.** Caught Light (both afflictions at once, so the net opens), Bright Water, The Gods' Road.
 
 **Example.** Dodge through a pack at the last moment, and a net of light opens under each enemy.
-
-**Not built yet.** The spray happens around you at the moment of the perfect dodge, not where the dodge ends.
 
 ## caughtlight.seen
 **What it does.** While an enemy is on the net, your blows on any other enemy on the net are critical hits, as if that enemy were Marked. No Mark is used up.

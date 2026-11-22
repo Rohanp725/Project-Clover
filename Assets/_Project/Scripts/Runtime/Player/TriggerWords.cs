@@ -95,6 +95,8 @@ namespace Clover.Player
                 case UpgradeTrigger.PickupLeft: return "something on the floor is left untaken";
                 case UpgradeTrigger.InGround: return "an enemy stands in the ground";
                 case UpgradeTrigger.StoppedAtStones: return "an enemy is driven into your stones";
+                case UpgradeTrigger.PerfectDodgeEnd: return "a perfect dodge ends";
+                case UpgradeTrigger.CarriedTo: return "a dodge carries you to an enemy";
                 default: return "its moment comes";
             }
         }
