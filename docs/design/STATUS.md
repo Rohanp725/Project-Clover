@@ -63,7 +63,7 @@ One page that lists everything done, in progress, parked or not started, so noth
 The tracks run side by side. One Unity worker and one Blender worker at a time; offline workers use their own worktrees. Each item is ticked here when it's done.
 
 **The owner (in parallel):**
-- [ ] The push history fix (the commands are in the chat), then push.
+- [x] The push history fix, then push. Done 2026-11-21 (0ff012fb), and main matches origin. Keep the backup branch `backup/pre-rewrite` until the next push succeeds.
 - [ ] Reviewing the reactions. When the owner says the comments are done, collect them word for word, then run round 4.
 
 **Blender:**
