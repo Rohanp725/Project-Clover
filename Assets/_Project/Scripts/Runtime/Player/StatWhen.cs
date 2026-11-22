@@ -69,5 +69,7 @@ namespace Clover.Player
         InCloud,
         /// <summary>While the player stands on the line between Need-Fire's two fires (World.OwnGrounds.NeedFireLine).</summary>
         BetweenFires,
+        /// <summary>While the player stands on Earthlight's glowing seams (World.OwnGrounds.Seams).</summary>
+        OnSeams,
     }
 }

@@ -234,7 +234,8 @@ namespace Clover.Player.Trees
             to.Add(Reaction(AfflictionKind.Tremor, AfflictionKind.Marked,
                 "Tremor meets Marked: the floor under it cracks in a star and light breaks up through the seams, 14 and Marked to all standing on them. Its own Mark is renewed.",
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Marked, Stacks = 1 },
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Burst, Radius = 3f, Delay = 0.5f, Damage = 14f, Stagger = 25f, Affliction = AfflictionKind.Marked, Stacks = 1, Seams = 6 }));
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Burst, Radius = 3f, Delay = 0.5f, Damage = 14f, Stagger = 25f, Affliction = AfflictionKind.Marked, Stacks = 1, Seams = 6,
+                    Named = Clover.World.OwnGrounds.Seams, GroundSeconds = 1f }));
 
             // Metal and Dark (19). A chain to the nearest other enemy within 6 m for 5 s, set as a condition on that one,
             // joined to this.

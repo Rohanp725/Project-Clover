@@ -28,8 +28,8 @@ namespace Clover.Player.Trees.Duo
             const string A = Elements.Earth, B = Elements.Light;
 
             // The seams themselves: only enemies standing on the star of six cracks are struck (UpgradeEffect.Seams), and Lit Seam's
-            // flash runs along a star of seams round the one struck. NEEDS: the flash along the seams where they were first laid,
-            // if the enemy has moved off them (now round where it stands).
+            // flash runs along the star of seams where they were first laid (UpgradeEffect.AtOwnGround: the seams are your own ground
+            // while they glow, World.OwnGrounds.Seams), even if the enemy has moved off them.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Earthlight: Down the Passage or Lit Seam", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -53,9 +53,11 @@ namespace Clover.Player.Trees.Duo
                         Effects = new[]
                         {
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Marked, Stacks = 1 },
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Burst, Radius = 3f, Delay = 0.5f, Damage = 14f, Stagger = 25f, Affliction = AfflictionKind.Marked, Stacks = 1, Seams = 6 },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Burst, Radius = 3f, Delay = 0.5f, Damage = 14f, Stagger = 25f, Affliction = AfflictionKind.Marked, Stacks = 1, Seams = 6,
+                                Named = Clover.World.OwnGrounds.Seams, GroundSeconds = 5f },
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = LitSeam, Seconds = 5f } },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = LitSeam, By = StruckBy.Heavy, Do = UpgradeAction.Burst, Radius = 3f, Damage = 10f, Stagger = 15f, Cooldown = 0.3f, Seams = 6 },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = LitSeam, By = StruckBy.Heavy, Do = UpgradeAction.Burst, Radius = 3f, Damage = 10f, Stagger = 15f, Cooldown = 0.3f, Seams = 6,
+                                AtOwnGround = Clover.World.OwnGrounds.Seams },
                         },
                     },
                 },
@@ -73,15 +75,15 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.LeftLow));
 
-            // NEEDS: a perfect guard made on the seams (now against any marked enemy).
+            // Only a perfect guard made standing on glowing seams (StatWhen.OnSeams: Earthlight's star while it glows, 5 s for Lit Seam).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = DawnThroughTheDoor, Name = "Dawn Through the Door", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Sun,
-                Description = "A perfect guard against a marked enemy blinds the attacker: Marked, and Tremor to full depth.",
+                Description = "A perfect guard made on glowing seams blinds the attacker: Marked, and Tremor to full depth.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Needs = AfflictionKind.Marked, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Marked, Stacks = 1 },
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Needs = AfflictionKind.Marked, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Tremor, Stacks = 99 },
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, While = StatWhen.OnSeams, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Marked, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, While = StatWhen.OnSeams, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Tremor, Stacks = 99 },
                 },
             }, HeartPattern.RightLow));
 

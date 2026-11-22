@@ -493,6 +493,13 @@ namespace Clover.Player
         public float PowerMost;
         /// <summary>Above zero: its stagger is this share of the stagger the weapon's last blow dealt (One Noose for Two: half the finisher's).</summary>
         public float StaggerOfBlow;
+        /// <summary>
+        /// For Burst with Seams: the star is laid as your own ground of the name <see cref="Named"/> for this many seconds after it
+        /// lands (Earthlight's glowing seams, so a guard can be made on them).
+        /// </summary>
+        public float GroundSeconds;
+        /// <summary>For Burst: struck at the star of your own ground of this name nearest the trigger's place, as it was laid, not round the enemy (Lit Seam's flash).</summary>
+        public string AtOwnGround = "";
         public int HarderBlowsMost = 5;
 
         /// <summary>True when a Hazard effect lays ground that keeps acting, told to the marks at each bite (Hazards.GroundActs).</summary>

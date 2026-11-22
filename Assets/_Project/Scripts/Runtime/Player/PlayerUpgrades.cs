@@ -2048,6 +2048,16 @@ namespace Clover.Player
                 }
                 case UpgradeAction.Burst:
                 {
+                    // Along the seams where they were first laid, if they still glow near (Lit Seam).
+                    if (!string.IsNullOrEmpty(effect.AtOwnGround) && OwnGrounds.NearestLane(effect.AtOwnGround, centre, Time.time, 6f, out Vector3 laidAt, out Vector3 laidWay))
+                    {
+                        centre = laidAt;
+                        aim = laidWay;
+                    }
+                    // A star laid as your own ground for a while (Earthlight's glowing seams).
+                    if (effect.Seams > 0 && effect.GroundSeconds > 0f && !string.IsNullOrEmpty(effect.Named))
+                        for (int seam = 0; seam < effect.Seams; seam++)
+                            OwnGrounds.LayLane(effect.Named, centre, GroundRules.SeamWay(aim, seam, effect.Seams), Or(effect.Radius, 2.5f) * spread, GroundRules.SeamHalf, Time.time + effect.Delay + effect.GroundSeconds);
                     var burst = new HazardSpec
                     {
                         Kind = ElementLook.Ground(look), Tint = look.Colour, Position = centre, Radius = Or(effect.Radius, 2.5f) * spread, Seconds = 0.12f, BiteEvery = 0.1f,
@@ -3632,6 +3642,7 @@ namespace Clover.Player
             (StatWhen.InOwnBlood, OwnGrounds.Blood),
             (StatWhen.InCloud, OwnGrounds.Cloud),
             (StatWhen.BetweenFires, OwnGrounds.NeedFireLine),
+            (StatWhen.OnSeams, OwnGrounds.Seams),
         };
 
         /// <summary>True when you stand in ground of your own of this name now.</summary>

@@ -9,13 +9,13 @@ are both carried.
 
 **When it happens.** Every time Earthlight goes off while you carry both Earth and Light. Earthlight goes off when a Mark lands on a shaken enemy, or when Tremor lands on a Marked one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Earthlight.
 
-**The numbers.** Mix, 3 Shards. Both shapes put a fresh Mark on the enemy. Down the Passage: half a second later, a line 8 metres long and 1 metre wide past the enemy deals 12 damage and a Mark to everything on it. Lit Seam: the light breaks out along a star of six seams like the plain one (14 damage, 25 stagger and a Mark to everyone standing on a seam, each seam 3 metres long). Then for 5 seconds, each heavy blow on the enemy flashes a star of seams around it for 10 damage and 15 stagger on everything standing on them. After Earthlight goes off on an enemy, it can't go off on that enemy again for 4 seconds.
+**The numbers.** Mix, 3 Shards. Both shapes put a fresh Mark on the enemy. Down the Passage: half a second later, a line 8 metres long and 1 metre wide past the enemy deals 12 damage and a Mark to everything on it. Lit Seam: the light breaks out along a star of six seams like the plain one (14 damage, 25 stagger and a Mark to everyone standing on a seam, each seam 3 metres long). The seams then stay lit for 5 seconds where they cracked. Each heavy blow on the enemy in that time flashes those same seams again for 10 damage and 15 stagger on everything standing on them, even if the enemy has moved off them. After Earthlight goes off on an enemy, it can't go off on that enemy again for 4 seconds.
 
 **Works with.** Stone Rise and Glare to set it up, Keeping the Hour, Quartz Vein, Dawn Through the Door.
 
 **Example.** A line of archers stands behind a shaken soldier. Mark the soldier from the front, and Down the Passage lights up the whole line.
 
-**Not built yet.** The cracks aren't drawn as a star on the floor yet. Lit Seam's flash runs along a star around where the enemy stands now, not along the first seams if it has moved off them.
+**Not built yet.** The cracks aren't drawn as a star on the floor yet.
 
 ## earthlight.hour
 **What it does.** Every 6 seconds during a fight, your next heavy blow is right on the hour: it is a critical hit and shakes the enemy twice. A small dial at your feet fills up to show when the hour comes.
@@ -29,17 +29,15 @@ are both carried.
 **Example.** Keep your heavy blows six seconds apart, and each one shakes and lights up a Marked soldier.
 
 ## earthlight.dawn
-**What it does.** A perfect guard against a Marked enemy blinds the attacker. It gets Marked again, and its Tremor is filled all the way.
+**What it does.** A perfect guard made while you stand on Earthlight's glowing seams blinds the attacker. It gets Marked, and its Tremor is filled all the way.
 
-**When it happens.** Each perfect guard (press the guard button just before a blow lands) against an enemy that has a Mark.
+**When it happens.** Each perfect guard (press the guard button just before a blow lands) made while you stand on a glowing seam. The plain Earthlight's seams glow for about a second and a half after they crack; Lit Seam's glow for 5 seconds.
 
 **The numbers.** Mix, 3 Shards. A Mark, and Tremor filled all the way.
 
 **Works with.** Earthlight (both afflictions at once start it), Glare, Mountain Stance.
 
-**Example.** A Marked brute swings. Guard it perfectly, and Earthlight goes off under it.
-
-**Not built yet.** It's meant to work when you make a perfect guard while standing on the glowing cracks. For now, it works against any Marked attacker.
+**Example.** Earthlight cracks the floor under a brute. Step onto a seam and guard its swing perfectly: it is Marked and shaken all the way.
 
 ## earthlight.quartz
 **What it does.** Earthlight's star of light is 0.5 metres wider.

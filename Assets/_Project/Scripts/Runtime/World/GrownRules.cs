@@ -125,6 +125,8 @@ namespace Clover.World
         public const string Cloud = "poison.cloud";
         /// <summary>The Closed Ring: Bedrock's ring of standing stones.</summary>
         public const string StoneRing = "earth.stonering";
+        /// <summary>Earthlight's star of glowing seams, while they glow.</summary>
+        public const string Seams = "earthlight.seams";
         /// <summary>Need-Fire: the line of sparks between its two fires.</summary>
         public const string NeedFireLine = "firebloom.needfire";
 
@@ -276,6 +278,31 @@ namespace Clover.World
                 return true;
             }
             return false;
+        }
+
+        /// <summary>
+        /// Where the nearest live lane of this name within <paramref name="within"/> of <paramref name="near"/> begins, and its way
+        /// (Lit Seam: the star of seams where it was first laid); false when none lies near.
+        /// </summary>
+        public static bool NearestLane(string name, Vector3 near, float now, float within, out Vector3 at, out Vector3 way)
+        {
+            at = near;
+            way = Vector3.forward;
+            if (string.IsNullOrEmpty(name)) return false;
+            float best = within * within;
+            bool found = false;
+            for (int i = 0; i < Most; i++)
+            {
+                if (!Live(i, now) || patches[i].Name != name || patches[i].Length <= 0f) continue;
+                Vector3 apart = patches[i].At - near;
+                apart.y = 0f;
+                if (apart.sqrMagnitude > best) continue;
+                best = apart.sqrMagnitude;
+                at = patches[i].At;
+                way = patches[i].Way;
+                found = true;
+            }
+            return found;
         }
 
         /// <summary>How many grounds of this name lie at <paramref name="now"/>.</summary>

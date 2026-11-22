@@ -1748,5 +1748,28 @@ namespace Clover.Tests
             Assert.AreEqual(0.5f, noose.StaggerOfBlow, 1e-5f, "half its stagger");
             Assert.AreEqual(0f, noose.Stagger, 1e-5f, "no set 30 any more");
         }
+
+        [Test]
+        public void EarthlightsSeamsAreGroundAGuardAndAFlashCanFind()
+        {
+            var plain = Upgrade.ById(AfflictionPairs.Id(AfflictionPairs.Index(AfflictionKind.Tremor, AfflictionKind.Marked))).Effects.Single(each => each.Seams > 0);
+            Assert.AreEqual(OwnGrounds.Seams, plain.Named, "the seams glow as your own ground");
+            Assert.Greater(plain.GroundSeconds, 0f);
+            var lit = Upgrade.ById(Clover.Player.Trees.Duo.EarthlightDuo.Shape).Shapes.Single(each => each.Name == "Lit Seam").Effects;
+            Assert.AreEqual(5f, lit.Single(each => each.On == UpgradeTrigger.Reacted && each.Seams > 0).GroundSeconds, 1e-5f, "lit 5 s");
+            Assert.AreEqual(OwnGrounds.Seams, lit.Single(each => each.On == UpgradeTrigger.ConditionStruck).AtOwnGround, "the flash where the seams were laid");
+            var dawn = Upgrade.ById(Clover.Player.Trees.Duo.EarthlightDuo.DawnThroughTheDoor).Effects;
+            Assert.IsTrue(dawn.All(each => each.While == StatWhen.OnSeams && each.Needs == AfflictionKind.None), "only a guard made on the seams");
+            Assert.IsTrue(PlayerUpgrades.OwnGroundStates.Any(each => each.When == StatWhen.OnSeams && each.Ground == OwnGrounds.Seams));
+
+            for (int seam = 0; seam < 6; seam++)
+                OwnGrounds.LayLane(OwnGrounds.Seams, new Vector3(5f, 0f, 5f), GroundRules.SeamWay(Vector3.forward, seam, 6), 3f, GroundRules.SeamHalf, 5f);
+            Assert.IsTrue(OwnGrounds.Under(OwnGrounds.Seams, new Vector3(5f, 0f, 7f), 1f), "on a seam");
+            Assert.IsFalse(OwnGrounds.Under(OwnGrounds.Seams, new Vector3(6.6f, 0f, 7.4f), 1f), "between two seams");
+            Assert.IsTrue(OwnGrounds.NearestLane(OwnGrounds.Seams, new Vector3(7f, 0f, 5f), 1f, 6f, out Vector3 at, out Vector3 way));
+            Assert.AreEqual(5f, at.x, 1e-4f, "the star's middle, where it was laid");
+            Assert.AreEqual(5f, at.z, 1e-4f);
+            Assert.IsFalse(OwnGrounds.NearestLane(OwnGrounds.Seams, new Vector3(20f, 0f, 5f), 1f, 6f, out _, out _), "too far");
+        }
     }
 }
